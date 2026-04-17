@@ -110,4 +110,4 @@ El historial de commits sigue el estándar **Conventional Commits**.
 
 ---
 
-*Desarrollado en el marco de la materia Práctica Profesionalizante III · Universidad Nacional de Salta · 2026*
+*Desarrollado en el marco de la materia Práctica Profesionalizante III · IES 6023 'Dr Alfredo Loutaif' · 2026*
