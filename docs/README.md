@@ -12,8 +12,7 @@ Esta carpeta contiene **exclusivamente documentación en formato texto** (Markdo
 
 Los documentos formales de la materia (PDFs, presentaciones, plantillas) se encuentran en Dropbox para mantener el repositorio liviano y facilitar el acceso del profesor:
 
-> 📁 **[Carpeta Dropbox — Lumapse / PP3](https://www.dropbox.com/TU_ENLACE_AQUI)**  
-> *(reemplazar con el enlace público de Dropbox)*
+> 📁 **[Carpeta Dropbox — Lumapse / PP3](https://www.dropbox.com/scl/fo/efl03t0ywteggi6dk3mvu/AGodfqlsy7t68P7atK_NqPg?rlkey=mk50fjx0wwb58jpn92ygqbrwp&st=jtv5846&dl=0)**
 
 ### Contenido en Dropbox
 
