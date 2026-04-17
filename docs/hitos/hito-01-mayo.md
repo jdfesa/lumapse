@@ -3,8 +3,10 @@
 **Período:** Mayo 2026  
 **Hito:** 01 — Fundación  
 **Proyecto:** Lumapse PWA  
-**Autor:** Jose David Sandoval  
-**Materia:** Prácticas Profesionalizantes III
+**Autor:** José David Sandoval  
+**Profesor:** Ing. Mauricio Parada  
+**Materia:** Prácticas Profesionalizantes III  
+**Institución:** IES 6023 'Dr. Alfredo Loutaif'
 
 ---
 
