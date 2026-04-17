@@ -1,0 +1,100 @@
+/* ============================================================
+   Lumapse — Design Tokens & Base Styles
+   Hito 01: Sistema de diseño base
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* --- Tokens ------------------------------------------------- */
+:root {
+  /* Colors */
+  --color-bg:          #0f0f0f;
+  --color-surface:     #171717;
+  --color-border:      #262626;
+  --color-text:        #e5e5e5;
+  --color-text-muted:  #737373;
+  --color-accent:      #a3e635;
+  --color-accent-dim:  rgba(163, 230, 53, 0.12);
+
+  /* Typography */
+  --font-sans:  'Inter', system-ui, sans-serif;
+  --font-mono:  'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Transitions */
+  --transition: 150ms ease;
+}
+
+/* --- Reset -------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  min-height: 100dvh;
+}
+
+#app {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Splash (Hito 01 placeholder) -------------------------- */
+.splash {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.splash__logo {
+  font-family: var(--font-mono);
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--color-accent);
+}
+
+.splash__tagline {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+
+.splash__badge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.05em;
+}

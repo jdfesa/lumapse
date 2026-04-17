@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Presentation</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Reveal.js -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css" id="theme">
+  <!-- Highlight.js for code -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+/* Responsive Overflow Fix */
+.reveal .slides section {
+  max-height: 100%;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* Scroll Indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 80px;
+  right: 40px;
+  color: var(--accent-primary, rgba(200,200,216,0.8));
+  width: 40px;
+  height: 40px;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.scroll-indicator svg {
+  width: 32px;
+  height: 32px;
+  stroke-width: 3;
+}
+@keyframes flash-scroll {
+  0% { opacity: 0; transform: translateY(-10px); }
+  15% { opacity: 1; transform: translateY(0); }
+  85% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(8px); }
+}
+.scroll-indicator.active {
+  animation: flash-scroll 2.5s ease-in-out 6 forwards;
+}
+/* ══════════════════════════════════════════════
+   md-deck — Default Theme (Dark Premium)
+   Extracted from the reference presentation.
+   ══════════════════════════════════════════════ */
+
+:root {
+  --r-background-color: #0a0a0f;
+  --r-main-font: 'Inter', sans-serif;
+  --r-heading-font: 'Inter', sans-serif;
+  --r-code-font: 'JetBrains Mono', monospace;
+  --r-main-font-size: 28px;
+  --r-heading-color: #e8e8f0;
+  --r-main-color: #c8c8d8;
+  --r-link-color: #7c6aef;
+  --r-selection-background-color: #7c6aef;
+  --r-selection-color: #fff;
+
+  --accent-primary: #7c6aef;
+  --accent-secondary: #06d6a0;
+  --accent-warning: #ffd166;
+  --accent-danger: #ef476f;
+  --accent-info: #118ab2;
+  --surface-1: #12121a;
+  --surface-2: #1a1a28;
+  --surface-3: #22223a;
+  --border-subtle: rgba(124, 106, 239, 0.2);
+}
+
+.reveal {
+  font-weight: 400;
+}
+
+/* ── Global Slide Styles ── */
+.reveal .slides section {
+  text-align: left;
+  padding: 40px;
+}
+
+.reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-transform: none;
+}
+
+.reveal h1 {
+  font-size: 2.4em;
+  line-height: 1.1;
+}
+.reveal h2 {
+  font-size: 1.6em;
+  margin-bottom: 0.6em;
+}
+.reveal h3 {
+  font-size: 1.15em;
+  color: var(--accent-primary);
+  margin-bottom: 0.5em;
+}
+
+.reveal p, .reveal li {
+  line-height: 1.65;
+  font-size: 0.78em;
+}
+
+.reveal ul {
+  list-style: none;
+  padding-left: 0;
+}
+.reveal ul li::before {
+  content: "›";
+  color: var(--accent-primary);
+  font-weight: 700;
+  margin-right: 10px;
+}
+
+.reveal ol {
+  padding-left: 1.2em;
+}
+.reveal ol li {
+  padding-left: 6px;
+}
+.reveal ol li::marker {
+  color: var(--accent-primary);
+  font-weight: 700;
+}
+
+.reveal strong {
+  color: #f0f0ff;
+  font-weight: 600;
+}
+
+.reveal em {
+  color: var(--accent-secondary);
+  font-style: italic;
+}
+
+.reveal code {
+  font-family: var(--r-code-font);
+  background: var(--surface-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 0.85em;
+  color: var(--accent-primary);
+}
+
+.reveal pre {
+  width: 100%;
+  box-shadow: none;
+}
+.reveal pre code {
+  padding: 20px 24px;
+  font-size: 0.7em;
+  line-height: 1.5;
+  border-radius: 12px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  max-height: 480px;
+}
+
+/* ── Title Slide ── */
+.title-slide {
+  text-align: center !important;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.title-slide .institution-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(124,106,239,0.15), rgba(6,214,160,0.1));
+  border: 1px solid var(--border-subtle);
+  border-radius: 50px;
+  padding: 8px 24px;
+  font-size: 0.48em;
+  color: var(--accent-secondary);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+
+.title-slide h1 {
+  background: linear-gradient(135deg, #e8e8f0, var(--accent-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+}
+
+.title-slide .subtitle {
+  font-size: 0.75em;
+  color: var(--r-main-color);
+  font-weight: 400;
+  margin-bottom: 48px;
+  opacity: 0.8;
+}
+
+.title-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 40px;
+  font-size: 0.48em;
+  color: rgba(200, 200, 216, 0.7);
+  text-align: left;
+  background: var(--surface-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 24px 32px;
+  max-width: 600px;
+}
+
+.title-meta .meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.title-meta .meta-label {
+  font-size: 0.8em;
+  color: var(--accent-primary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.title-meta .meta-value {
+  color: var(--r-main-color);
+  font-weight: 400;
+}
+
+/* ── Section Title Slides ── */
+.section-title {
+  text-align: center !important;
+}
+
+.section-title .section-number {
+  font-size: 5em;
+  font-weight: 900;
+  background: linear-gradient(180deg, rgba(124,106,239,0.3), transparent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: -10px;
+}
+
+.section-title h2 {
+  font-size: 2em;
+  text-align: center;
+  background: linear-gradient(135deg, #f0f0ff, var(--accent-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-title .section-desc {
+  font-size: 0.7em;
+  color: rgba(200,200,216,0.6);
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ── Content Cards ── */
+.content-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin: 16px 0;
+}
+
+.content-card.accent-danger {
+  border-left: 4px solid var(--accent-danger);
+}
+.content-card.accent-info {
+  border-left: 4px solid var(--accent-info);
+}
+.content-card.accent-warning {
+  border-left: 4px solid var(--accent-warning);
+}
+.content-card.accent-success {
+  border-left: 4px solid var(--accent-secondary);
+}
+.content-card.accent-primary {
+  border-left: 4px solid var(--accent-primary);
+}
+
+.content-card h3 {
+  margin: 0 0 12px 0;
+  font-size: 1em;
+}
+
+.content-card p, .content-card li {
+  font-size: 0.68em;
+  margin: 4px 0;
+}
+
+/* ── Badges ── */
+.badge {
+  display: inline-block;
+  font-size: 0.5em;
+  padding: 4px 14px;
+  border-radius: 50px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-right: 8px;
+}
+
+.badge-danger { background: rgba(239,71,111,0.15); color: var(--accent-danger); }
+.badge-info { background: rgba(17,138,178,0.15); color: var(--accent-info); }
+.badge-warning { background: rgba(255,209,102,0.15); color: var(--accent-warning); }
+.badge-success { background: rgba(6,214,160,0.15); color: var(--accent-secondary); }
+.badge-primary { background: rgba(124,106,239,0.15); color: var(--accent-primary); }
+
+/* ── Tags ── */
+.tag {
+  display: inline-block;
+  font-size: 0.5em;
+  padding: 3px 12px;
+  border-radius: 50px;
+  font-weight: 500;
+  margin: 2px 4px 2px 0;
+}
+
+.tag-danger { background: rgba(239,71,111,0.12); color: var(--accent-danger); border: 1px solid rgba(239,71,111,0.25); }
+.tag-info { background: rgba(17,138,178,0.12); color: var(--accent-info); border: 1px solid rgba(17,138,178,0.25); }
+.tag-warning { background: rgba(255,209,102,0.12); color: var(--accent-warning); border: 1px solid rgba(255,209,102,0.25); }
+.tag-success { background: rgba(6,214,160,0.12); color: var(--accent-secondary); border: 1px solid rgba(6,214,160,0.25); }
+.tag-primary { background: rgba(124,106,239,0.12); color: var(--accent-primary); border: 1px solid rgba(124,106,239,0.25); }
+
+/* ── Diagram Container ── */
+.diagram-container {
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  margin: 20px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.diagram-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  border-radius: 16px 16px 0 0;
+}
+
+.diagram-container img {
+  max-width: 100%;
+  max-height: 420px;
+  border-radius: 8px;
+}
+
+/* ── Highlight Box ── */
+.highlight-box {
+  background: rgba(124,106,239,0.1);
+  border-left: 3px solid var(--accent-primary);
+  padding: 12px 20px;
+  border-radius: 0 8px 8px 0;
+  margin: 12px 0;
+  font-size: 0.68em;
+  font-style: italic;
+  color: rgba(200,200,216,0.85);
+}
+
+.highlight-box.tip {
+  border-left-color: var(--accent-secondary);
+  background: rgba(6,214,160,0.08);
+}
+
+.highlight-box.warning {
+  border-left-color: var(--accent-warning);
+  background: rgba(255,209,102,0.08);
+}
+
+.highlight-box.important {
+  border-left-color: var(--accent-danger);
+  background: rgba(239,71,111,0.08);
+}
+
+/* ── Problem Statement ── */
+.problem-box {
+  background: linear-gradient(135deg, rgba(124,106,239,0.08), rgba(6,214,160,0.05));
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 24px 28px;
+  margin: 16px 0;
+}
+
+.problem-box p {
+  font-size: 0.65em;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ── Summary Table ── */
+.reveal table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.55em;
+  background: var(--surface-2);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.reveal table thead th {
+  background: var(--surface-3);
+  color: var(--accent-primary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 0.9em;
+  border-bottom: 2px solid var(--accent-primary);
+}
+
+.reveal table tbody td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(124,106,239,0.08);
+  color: var(--r-main-color);
+  vertical-align: top;
+}
+
+.reveal table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.reveal table tbody tr:hover {
+  background: rgba(124,106,239,0.05);
+}
+
+/* ── Two Column Layout ── */
+.two-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.two-cols-wide-left {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* ── Progress Bar ── */
+.reveal .progress {
+  height: 4px;
+  background: rgba(124,106,239,0.15);
+}
+.reveal .progress span {
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+}
+
+/* ── Controls ── */
+.reveal .controls {
+  color: var(--accent-primary);
+}
+
+/* ── Slide Number ── */
+.reveal .slide-number {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 4px 10px;
+  color: rgba(200,200,216,0.5);
+  right: 16px;
+  bottom: 16px;
+}
+
+/* ── Glow effects ── */
+.glow-purple {
+  text-shadow: 0 0 40px rgba(124,106,239,0.3);
+}
+
+.glow-green {
+  text-shadow: 0 0 40px rgba(6,214,160,0.3);
+}
+
+/* ── Background decorations ── */
+.bg-dots {
+  background-image: radial-gradient(rgba(124,106,239,0.07) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+/* ── Guide / Summary Cards ── */
+.guide-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.guide-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 20px 22px;
+}
+
+.guide-card h4 {
+  font-size: 0.72em;
+  margin: 0 0 8px 0;
+  color: #f0f0ff;
+}
+
+.guide-card p {
+  font-size: 0.52em;
+  margin: 0;
+  line-height: 1.6;
+  color: rgba(200,200,216,0.75);
+}
+
+.guide-card .symbol {
+  font-family: var(--r-code-font);
+  font-size: 0.55em;
+  color: var(--accent-primary);
+  background: var(--surface-3);
+  padding: 2px 10px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+/* ── Emoji icon style ── */
+.icon-xl {
+  font-size: 2em;
+  margin-bottom: 12px;
+  display: block;
+}
+
+/* ── End Slide ── */
+.end-slide {
+  text-align: center !important;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.end-slide h1 {
+  background: linear-gradient(135deg, #e8e8f0, var(--accent-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.end-slide .closing-info {
+  font-size: 0.55em;
+  color: rgba(200,200,216,0.4);
+  margin-top: 24px;
+}
+
+/* ── Expiration Notice ── */
+.expiration-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--r-background-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  font-family: var(--r-main-font);
+  color: var(--r-main-color);
+}
+
+.expiration-overlay h1 {
+  font-size: 2em;
+  color: var(--accent-danger);
+  margin-bottom: 16px;
+}
+
+.expiration-overlay p {
+  font-size: 1em;
+  opacity: 0.6;
+}
+
+/* ── Responsive adjustments ── */
+@media (max-width: 900px) {
+  .two-cols, .two-cols-wide-left, .guide-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Editor Style for Code Blocks */
+.reveal pre {
+  box-shadow: 0 16px 40px rgba(0,0,0,0.5) !important;
+  border-radius: 12px !important;
+  background: var(--surface-1, #1e1e1e) !important;
+  border: 1px solid var(--border-subtle) !important;
+  position: relative !important;
+  margin-top: 24px !important;
+  padding-top: 40px !important;
+}
+.reveal pre::before {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: 18px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ff5f56;
+  box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f;
+  z-index: 10;
+}
+.reveal pre code {
+  padding: 8px 24px 24px !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 0 12px 12px !important;
+  display: block !important;
+  overflow-x: auto !important;
+  text-align: left !important;
+  white-space: pre !important;
+}
+  </style>
+</head>
+<body>
+  
+  <div class="reveal">
+    <div class="slides">
+      <section class="title-slide" data-background-color="#0a0a0f">
+        
+        <h1>Lumapse: Defensa de Anteproyecto</h1>
+        <div class="subtitle" style="margin-bottom: 48px; opacity: 0.8; font-size: 0.75em;"><ul>
+<li><strong>Proyecto:</strong> Gestión de conocimiento minimalista</li>
+<li><strong>Integrante:</strong> Sandoval, José David Fernando</li>
+<li><strong>Materia:</strong> Prácticas Profesionalizantes III / Prof. Ing. Parada Mauricio</li>
+</ul>
+</div>
+        
+      </section>
+
+      <section data-auto-animate>
+        <h2>El Problema</h2>
+        <ul>
+        <li>Fricción inicial (Logins, configuraciones complejas).</li>
+        <li>Dependencia de internet.</li>
+        <li>Herramientas inadecuadas (demasiado simples o demasiado complejas).</li>
+        </ul>
+        
+      </section>
+
+      <section data-auto-animate>
+        <h2>Contexto / Usuario</h2>
+        <ul>
+        <li>Usuarios: Estudiantes de nivel superior.</li>
+        <li>Contexto: Aulas, bibliotecas, transporte público.</li>
+        </ul>
+        
+      </section>
+
+      <section data-auto-animate>
+        <h2>La Solución</h2>
+        <ul>
+        <li>Lumapse: Aplicación Web Progresiva (PWA).</li>
+        <li>Minimalista y rápida.</li>
+        <li>&quot;Offline-first&quot; (Primero sin conexión).</li>
+        </ul>
+        
+      </section>
+
+      <section data-auto-animate>
+        <h2>Valor Diferencial</h2>
+        <ul>
+        <li>Estructura académica &quot;Opinionada&quot; (Inbox, Materias, Archivo).</li>
+        <li>Soporte Markdown nativo.</li>
+        <li>Privacidad total (Datos locales).</li>
+        </ul>
+        
+      </section>
+
+      <section data-auto-animate>
+        <h2>Alcance del Proyecto</h2>
+        <ul>
+        <li>Incluye: Creación de notas, Markdown, guardado local (MVP). Exportación manual.</li>
+        <li>NO incluye: Sincronización en la nube entre dispositivos.</li>
+        </ul>
+        
+      </section>
+
+      <section data-auto-animate>
+        <h2>Viabilidad</h2>
+        <ul>
+        <li>Cero costos de infraestructura.</li>
+        <li>Base de datos en el navegador (IndexedDB).</li>
+        <li>Tecnologías estándar (HTML, JS, PWA).</li>
+        </ul>
+        
+      </section>
+
+      <section data-auto-animate>
+        <h2>Cierre / Pitch Final</h2>
+        <ul>
+        <li>Lumapse: El conocimiento siempre accesible, sin fricción y sin conexión.</li>
+        </ul>
+        
+      </section>
+    </div>
+  </div>
+
+  <!-- Reveal.js Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/markdown/markdown.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      width: 1200,
+      height: 700,
+      margin: 0.04,
+      center: false,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      plugins: [RevealHighlight],
+      keyboard: {
+        70: () => {
+          const elem = document.documentElement;
+          if (!document.fullscreenElement) {
+            elem.requestFullscreen?.() || elem.webkitRequestFullscreen?.();
+          } else {
+            document.exitFullscreen?.() || document.webkitExitFullscreen?.();
+          }
+        }
+      }
+    });
+
+    // Setup Scroll Indicator
+    const scrollIndicator = document.createElement('div');
+    scrollIndicator.className = 'scroll-indicator';
+    scrollIndicator.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+    document.querySelector('.reveal').appendChild(scrollIndicator);
+
+    function checkScroll() {
+      const currentSlide = Reveal.getCurrentSlide();
+      if (!currentSlide) return;
+      
+      // Wait a tiny bit for render
+      setTimeout(() => {
+        if (currentSlide.scrollHeight > currentSlide.clientHeight + 10) {
+          scrollIndicator.classList.remove('active');
+          void scrollIndicator.offsetWidth; // trigger reflow
+          scrollIndicator.classList.add('active');
+        } else {
+          scrollIndicator.classList.remove('active');
+        }
+      }, 50);
+    }
+
+    Reveal.on('ready', checkScroll);
+    Reveal.on('slidechanged', checkScroll);
+  </script>
+</body>
+</html>
