@@ -95,6 +95,7 @@ lumapse/
 
 - [Architecture Decision Records](./docs/adr/) — Decisiones técnicas justificadas
 - [Informes de hito](./docs/hitos/) — Avance mensual del proyecto
+- [Documentación de producto](./docs/producto/) — Personas, requisitos, análisis competitivo, Lean Canvas (Design Thinking)
 - [Anteproyecto](./docs/anteproyecto/) — Documento formal de definición
 
 ---

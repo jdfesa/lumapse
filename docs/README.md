@@ -4,6 +4,7 @@ Esta carpeta contiene **exclusivamente documentación en formato texto** (Markdo
 
 - [`adr/`](./adr/) — Architecture Decision Records: decisiones técnicas justificadas
 - [`hitos/`](./hitos/) — Informes de avance mensual del proyecto
+- [`producto/`](./producto/) — Documentación de producto: personas, requisitos, análisis competitivo, Lean Canvas (Design Thinking)
 - [`diagramas/`](./diagramas/) — Diagramas de arquitectura y flujo (SVG/PNG)
 
 ---
