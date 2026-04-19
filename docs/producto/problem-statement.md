@@ -10,7 +10,7 @@
 
 ### Formato POV (Point of View)
 
-> **[Estudiantes de nivel terciario y universitario en Argentina]**  
+> **[Estudiantes de nivel terciario y universitario hispanohablantes]**  
 > necesitan **[una herramienta de captura y organización de notas de estudio que funcione offline, sin cuenta, y sin fricción]**  
 > porque **[las herramientas existentes requieren conexión permanente, cuentas obligatorias, y están diseñadas para un público con necesidades y recursos diferentes a los suyos.]**
 
@@ -18,7 +18,9 @@
 
 ## Contexto del problema
 
-### Realidad del estudiante terciario/universitario argentino
+### Realidad del estudiante terciario/universitario hispanohablante
+
+Si bien las personas de usuario fueron construidas desde el contexto local (Salta, Argentina), las restricciones que se describen a continuación son comunes a estudiantes de instituciones terciarias y universitarias en toda Latinoamérica y otras regiones hispanohablantes:
 
 El contexto de uso de Lumapse no es el de un estudiante con MacBook y WiFi ilimitado en una universidad del primer mundo. El contexto real es:
 

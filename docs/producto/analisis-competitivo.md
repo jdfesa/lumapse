@@ -8,7 +8,7 @@
 
 ## Objetivo del análisis
 
-Evaluar las herramientas de notas existentes contra los criterios que importan al público objetivo de Lumapse (estudiantes terciarios/universitarios argentinos) para demostrar que el espacio del problema no está resuelto por las alternativas actuales.
+Evaluar las herramientas de notas existentes contra los criterios que importan al público objetivo de Lumapse — estudiantes terciarios y universitarios hispanohablantes, particularmente aquellos con conectividad limitada y recursos económicos acotados — para demostrar que el espacio del problema no está resuelto por las alternativas actuales.
 
 ---
 

@@ -24,7 +24,7 @@ El Lean Canvas es una adaptación del Business Model Canvas (Osterwalder) orient
 │    notas requie- │ first con       │ "Tus notas.     │ parte del       │ Estudiantes de   │
 │    ren conexión  │ Markdown,       │  En tu equipo.  │ público         │ nivel terciario  │
 │    permanente    │ almacenamiento  │  Sin cuenta.    │ objetivo:       │ y universitario  │
-│                  │ 100% local      │  Sin internet.  │ entiende el     │ en Argentina     │
+│                  │ 100% local      │  Sin internet.  │ entiende el     │ hispanohablantes │
 │ 2. Requieren     │ (IndexedDB),    │  Sin excusas."  │ problema        │ (18-30 años)     │
 │    cuenta obli-  │ instalable      │                 │ de primera      │                  │
 │    gatoria       │ como app        │                 │ mano.           │ Early adopters:  │
@@ -92,9 +92,15 @@ La UVP comunica en una línea los tres diferenciadores clave: propiedad de los d
 
 ### 5. Segmento de Clientes
 
-**Público primario:** Estudiantes de nivel terciario y universitario en Argentina, particularmente en ciudades intermedias donde la conectividad y los recursos económicos son más limitados.
+El segmento de clientes se define en círculos concéntricos, desde la validación local hacia el alcance global:
 
-**Early adopters:** Compañeros de cursada del IES 6023 y de la UNSa, que pueden probar la app y dar feedback directo.
+| Círculo | Segmento | Rol |
+|---|---|---|
+| **Primario (validación)** | Compañeros del IES 6023 y UNSa, Salta, Argentina | Early adopters con acceso directo para feedback |
+| **Secundario (alcanzable)** | Estudiantes terciarios y universitarios hispanohablantes con conectividad limitada y recursos acotados | Mercado natural si se publica en Play Store |
+| **Terciario (aspiracional)** | Cualquier estudiante a nivel global | Alcanzable con internacionalización (i18n) futura |
+
+Las restricciones que definen al público (conectividad limitada, dispositivos modestos, sin presupuesto para herramientas premium) son comunes en toda Latinoamérica y otras regiones hispanohablantes, no son exclusivas de Argentina.
 
 ### 6. Canales de distribución
 
