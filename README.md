@@ -3,7 +3,7 @@
 > PWA minimalista de captura de notas y gestión del conocimiento personal.  
 > Offline-first · Markdown · Sin cuentas · Sin servidores.
 
-[![Estado del proyecto](https://img.shields.io/badge/estado-en%20desarrollo-a3e635?style=flat-square)](https://github.com)
+[![Estado del proyecto](https://img.shields.io/badge/estado-en%20desarrollo-a3e635?style=flat-square)](https://github.com/jdfesa/lumapse)
 [![Hito actual](https://img.shields.io/badge/hito-01%20fundaci%C3%B3n-a3e635?style=flat-square)](./docs/hitos/hito-01-mayo.md)
 [![Licencia](https://img.shields.io/badge/licencia-MIT-737373?style=flat-square)](./LICENSE)
 [![Conventional Commits](https://img.shields.io/badge/commits-conventional-a3e635?style=flat-square)](https://www.conventionalcommits.org)
@@ -39,7 +39,7 @@ El problema que resuelve: las aplicaciones de notas existentes requieren cuenta,
 
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/JoseDavidSandoval/lumapse.git
+git clone https://github.com/jdfesa/lumapse.git
 cd lumapse
 
 # 2. Instalar dependencias
