@@ -28,3 +28,6 @@ dist/
 # Logs
 logs/
 *.log
+
+# Temporary files (reference PDFs, etc.)
+tmp/

@@ -68,8 +68,9 @@ lumapse/
 │   └── manifest.json       # Web App Manifest
 ├── docs/                   # Documentación del proyecto
 │   ├── adr/                # Architecture Decision Records
+│   ├── diagramas/          # Diagramas UML (Mermaid)
 │   ├── hitos/              # Informes de avance mensuales
-│   └── diagramas/          # Arquitectura visual
+│   └── producto/           # Design Thinking, requisitos, HU
 ├── .github/                # Templates de GitHub
 ├── README.md
 ├── CHANGELOG.md
@@ -94,8 +95,9 @@ lumapse/
 ## Documentación técnica
 
 - [Architecture Decision Records](./docs/adr/) — Decisiones técnicas justificadas
+- [Diagramas UML](./docs/diagramas/) — Casos de Uso, Secuencia, Modelo de Dominio (Mermaid)
 - [Informes de hito](./docs/hitos/) — Avance mensual del proyecto
-- [Documentación de producto](./docs/producto/) — Personas, requisitos, análisis competitivo, Lean Canvas (Design Thinking)
+- [Documentación de producto](./docs/producto/) — Personas, requisitos, historias de usuario, análisis competitivo, Lean Canvas (Design Thinking)
 - [Anteproyecto](./docs/anteproyecto/) — Documento formal de definición
 
 ---

@@ -3,9 +3,10 @@
 Esta carpeta contiene **exclusivamente documentación en formato texto** (Markdown):
 
 - [`adr/`](./adr/) — Architecture Decision Records: decisiones técnicas justificadas
+- [`anteproyecto/`](./anteproyecto/) — Documento formal de definición del proyecto
+- [`diagramas/`](./diagramas/) — Diagramas UML del sistema (Mermaid)
 - [`hitos/`](./hitos/) — Informes de avance mensual del proyecto
-- [`producto/`](./producto/) — Documentación de producto: personas, requisitos, análisis competitivo, Lean Canvas (Design Thinking)
-- [`diagramas/`](./diagramas/) — Diagramas de arquitectura y flujo (SVG/PNG)
+- [`producto/`](./producto/) — Documentación de producto: personas, requisitos, historias de usuario, análisis competitivo, Lean Canvas (Design Thinking)
 
 ---
 
@@ -23,7 +24,8 @@ Los documentos formales de la materia (PDFs, presentaciones, plantillas) se encu
 | `01-lluvia-de-ideas/` | Actividad inicial de brainstorming |
 | `02-definiendo-anteproyecto/` | Anteproyecto formal entregado |
 | `03-presentacion-anteproyecto/` | Pitch y presentación del anteproyecto |
-| *(futuras entregas...)* | Se irán agregando a medida que avance el año |
+| `04-design-thinking/` | Ejercicios y material de Design Thinking |
+| `05-analisis-y-relevamiento/` | Material de análisis y relevamiento de sistemas |
 
 ---
 
