@@ -113,8 +113,6 @@ El historial de commits sigue el estándar **Conventional Commits**.
 
 ---
 
----
-
 ## Información Académica
 
 - **Materia:** Práctica Profesionalizante III
