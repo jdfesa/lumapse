@@ -90,7 +90,7 @@ El formulario es anónimo, autoadministrado y no requiere cuenta de Google para 
 
 ### Criterios de diseño
 
-- **Máximo 11 preguntas** para minimizar abandono.
+- **Máximo 12 preguntas** para minimizar abandono (una condicional, por lo que cada encuestado responde 11 como máximo).
 - Preguntas cerradas (opción múltiple o casillas) para facilitar respuesta rápida y análisis cuantitativo.
 - Solo 1 pregunta abierta opcional al final.
 - Cada pregunta está vinculada a un artefacto del proyecto que valida.
@@ -119,10 +119,18 @@ Tipo: Casillas (múltiple selección)
 Opciones: Cuaderno/papel · Celular · Notebook/PC · Tablet · No tomo notas  
 *Valida: `personas.md`, `problem-statement.md`*
 
-**P5. ¿Cuáles son los principales problemas con tu forma actual de tomar notas? (elegí hasta 3)**  
+**P5. ¿Sentís que tenés alguna dificultad con tu forma actual de tomar notas?**  
+Tipo: Opción múltiple  
+Opciones: Sí · No  
+*Valida: `problem-statement.md` — cuantifica la proporción de estudiantes que perciben un problema real*
+
+> **Lógica de ramificación (Google Forms):** si la respuesta es **"Sí"**, se muestra P5b. Si la respuesta es **"No"**, se salta directamente a P6.
+
+**P5b. ¿Cuáles son las principales dificultades? (elegí hasta 3)**  
 Tipo: Casillas (máximo 3)  
-Opciones: No encuentro lo que busco · Se desorganizan rápido · No puedo acceder sin internet · El formato es incómodo · Pierdo notas con frecuencia · No tengo problemas  
-*Valida: `problem-statement.md`, `requisitos-funcionales.md`*
+Condición: Solo se muestra si P5 = "Sí"  
+Opciones: No encuentro lo que busco · Se desorganizan rápido · No puedo acceder sin internet · El formato es incómodo · Pierdo notas con frecuencia · Otra  
+*Valida: `problem-statement.md`, `requisitos-funcionales.md` — identifica los pain points específicos para priorizar funcionalidades*
 
 **P6. ¿Tenés acceso estable a internet en el instituto?**  
 Tipo: Opción múltiple  
@@ -200,12 +208,13 @@ Una vez recolectadas las respuestas:
 |---|---|
 | Distribución demográfica | Frecuencias y porcentajes por turno/carrera/edad |
 | Hábitos de toma de notas | Frecuencias de P4, gráfico de barras |
-| Problemas principales | Ranking de P5, gráfico de Pareto |
+| Proporción con dificultades | Distribución de P5 (Sí/No), porcentaje |
+| Dificultades principales | Ranking de P5b (solo respondentes con P5 = "Sí"), gráfico de Pareto |
 | Validación offline-first | Distribución de P6 |
 | Interés en la propuesta | Media y distribución de P7 |
 | Priorización de features | Ranking ponderado de P8 |
 | Dispositivo principal | Distribución de P9 |
-| Cruce turno × problemas | Tabla cruzada P1 × P5 |
+| Cruce turno × dificultades | Tabla cruzada P1 × P5b (filtrado por P5 = "Sí") |
 | Cruce carrera × dispositivo | Tabla cruzada P2 × P9 |
 | Cruce edad × hábitos de notas | Tabla cruzada P3 × P4 (valida supuesto de afinidad tecnológica) |
 | Cruce edad × features prioritarias | Tabla cruzada P3 × P8 (detecta necesidades diferenciadas por segmento etario) |
