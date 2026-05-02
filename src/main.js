@@ -5,6 +5,8 @@ import './styles/main.css'
 import * as NoteStore from './store/NoteStore.js'
 import { NoteList } from './components/NoteList.js'
 
+import { NoteEditor } from './components/NoteEditor.js'
+
 async function initApp() {
   const app = document.getElementById('app')
   
@@ -14,22 +16,22 @@ async function initApp() {
   app.style.height = '100vh'
   app.style.alignItems = 'stretch'
   app.style.justifyContent = 'flex-start'
+  app.style.overflow = 'hidden' // Evitar scroll del body
   
-  // Construir Layout inicial (Sidebar + Main Editor Placeholder)
+  // Construir Layout inicial (Sidebar + Main Editor)
   app.innerHTML = `
     <div id="sidebar-container"></div>
-    <main id="editor-container" style="flex: 1; display: flex; align-items: center; justify-content: center; color: var(--color-text-muted);">
-      <div style="text-align: center;">
-        <p>Selecciona una nota de la lista o crea una nueva para comenzar.</p>
-      </div>
-    </main>
+    <main id="editor-container" style="flex: 1; display: flex; flex-direction: column; overflow: hidden;"></main>
   `
   
   // Instanciar componentes
   const sidebarContainer = document.getElementById('sidebar-container')
   new NoteList(sidebarContainer)
   
-  // Cargar datos iniciales (esto disparará el renderizado de la lista)
+  const editorContainer = document.getElementById('editor-container')
+  new NoteEditor(editorContainer)
+  
+  // Cargar datos iniciales
   await NoteStore.loadNotes()
 }
 

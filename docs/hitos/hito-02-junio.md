@@ -22,13 +22,20 @@ En este hito nos enfocamos en el corazón de la aplicación: el editor de notas 
 | Pruebas de CRUD manuales en consola | ✅ Completado |
 | `NoteStore` (Estado reactivo en memoria) | ✅ Completado |
 | Componente `NoteList` (Listado UI) | ✅ Completado |
-| Componente `NoteEditor` (Editor UI) | ⏳ Pendiente |
-| Integración de Layout principal | ⏳ Pendiente |
-| Auto-guardado automático | ⏳ Pendiente |
+| Componente `NoteEditor` (Editor UI) | ✅ Completado |
+| Integración de Layout principal | ✅ Completado |
+| Auto-guardado automático | ✅ Completado |
 
 ---
 
 ## Avance Actual (Paso a Paso)
+
+### 4. Componente UI: `NoteEditor` y Auto-guardado
+- Se implementó `src/components/NoteEditor.js` para renderizar y gestionar la vista de edición de la nota activa.
+- Se resolvió el problema común de pérdida de foco al usar un estado reactivo evitando el re-renderizado total si la nota activa no cambia de ID.
+- Se implementó el **Auto-guardado automático (HU-005)** escuchando los eventos de los campos de texto y aplicando un `debounce` (800ms) que actualiza el `NoteStore` (y por ende la base de datos local).
+- Se configuró la acción de **Eliminar nota (HU-003)** con validación de seguridad nativa (`window.confirm`) directamente en el panel del editor.
+- Se pulió la UI en `NoteEditor.css` quitando los bordes nativos de los inputs y mejorando las tipografías para simular una experiencia limpia de edición.
 
 ### 3. Componente UI: `NoteList`
 - Se creó `src/components/NoteList.js` para renderizar dinámicamente la barra lateral de notas.

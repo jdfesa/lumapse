@@ -14,6 +14,8 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - `src/services/NoteService.js` — Capa de persistencia con IndexedDB (operaciones CRUD).
 - `src/store/NoteStore.js` — Gestor de estado reactivo (patrón Observer) para mantener la UI sincronizada con los datos.
 - Componente `NoteList` (`.js` y `.css`) — Barra lateral UI para renderizar el listado y permitir la creación/selección de notas.
+- Componente `NoteEditor` (`.js` y `.css`) — UI principal de escritura con borrado y título.
+- Funcionalidad de Auto-guardado en tiempo real (debounce 800ms) implementada dentro del editor.
 - Integración del layout base usando *Flexbox* en `main.js`.
 
 ---
