@@ -20,7 +20,7 @@ En este hito nos enfocamos en el corazón de la aplicación: el editor de notas 
 | Instalación de dependencia `idb` | ✅ Completado |
 | `NoteService` (Capa de persistencia IndexedDB) | ✅ Completado |
 | Pruebas de CRUD manuales en consola | ✅ Completado |
-| `NoteStore` (Estado reactivo en memoria) | ⏳ Pendiente |
+| `NoteStore` (Estado reactivo en memoria) | ✅ Completado |
 | Componente `NoteList` (Listado UI) | ⏳ Pendiente |
 | Componente `NoteEditor` (Editor UI) | ⏳ Pendiente |
 | Integración de Layout principal | ⏳ Pendiente |
@@ -29,6 +29,12 @@ En este hito nos enfocamos en el corazón de la aplicación: el editor de notas 
 ---
 
 ## Avance Actual (Paso a Paso)
+
+### 2. Estado Reactivo (`NoteStore`)
+- Se implementó el patrón *Observer* en `src/store/NoteStore.js`.
+- Se gestionó el estado interno con `notes` y `activeNoteId`.
+- Se integraron las operaciones CRUD del `NoteService` para que los cambios modifiquen el estado en memoria de forma sincrónica.
+- Se verificó el funcionamiento reactivo desde el navegador.
 
 ### 1. Capa de Persistencia (`NoteService`)
 - Se instaló la librería `idb` para envolver la API nativa de IndexedDB con Promesas.

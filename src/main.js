@@ -2,10 +2,10 @@
 // Hito 02: Core del Editor
 
 import './styles/main.css'
-import * as NoteService from './services/NoteService.js'
+import * as NoteStore from './store/NoteStore.js'
 
-// --- Exponer NoteService en consola para testing (temporal) ---
-window.NoteService = NoteService
+// --- Exponer NoteStore en consola para testing (temporal) ---
+window.NoteStore = NoteStore
 
 const app = document.getElementById('app')
 
