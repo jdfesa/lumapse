@@ -7,8 +7,15 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ---
 
-## [0.1.0] — 2026-05 — Hito 01: Fundación
+## [0.2.0] — 2026-06 — Hito 02: Core del Editor (En progreso)
 
+### Added
+- Dependencia `idb` para el manejo de IndexedDB con promesas.
+- `src/services/NoteService.js` — Capa de persistencia con IndexedDB (operaciones CRUD).
+
+---
+
+## [0.1.0] — 2026-05 — Hito 01: Fundación
 ### Added
 - Inicialización del repositorio Git con estructura profesional
 - Configuración de Vite 6 como build tool

@@ -1,7 +1,11 @@
 // Lumapse — Punto de entrada principal
-// Hito 01: Bootstrap del proyecto
+// Hito 02: Core del Editor
 
 import './styles/main.css'
+import * as NoteService from './services/NoteService.js'
+
+// --- Exponer NoteService en consola para testing (temporal) ---
+window.NoteService = NoteService
 
 const app = document.getElementById('app')
 

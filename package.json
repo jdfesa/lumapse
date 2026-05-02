@@ -12,7 +12,16 @@
   "devDependencies": {
     "vite": "^6.3.3"
   },
-  "keywords": ["pwa", "notes", "offline", "markdown", "knowledge-management"],
+  "keywords": [
+    "pwa",
+    "notes",
+    "offline",
+    "markdown",
+    "knowledge-management"
+  ],
   "author": "Jose David Sandoval",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "idb": "^8.0.3"
+  }
 }
