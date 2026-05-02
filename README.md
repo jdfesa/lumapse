@@ -149,6 +149,21 @@ Cerrar el proyecto con documentación completa y presentación.
 
 ---
 
+## Investigación de Producto
+
+Paralelamente al desarrollo, se lleva a cabo un proceso de validación con usuarios reales para verificar las hipótesis del producto y ajustar los requisitos.
+
+| Actividad | Estado | Documentación |
+|---|---|---|
+| Diseño de la encuesta | ✅ Completado | [relevamiento-datos.md](./docs/producto/relevamiento-datos.md) |
+| Metodología muestral y cálculo de muestra | ✅ Completado | [metodologia-muestral.md](./docs/producto/metodologia-muestral.md) |
+| Ejecución de la encuesta (recolección de respuestas) | ⏳ Pendiente | — |
+| Análisis de resultados y conclusiones | ⏳ Pendiente | — |
+
+> **Nota:** Los resultados de la encuesta podrán retroalimentar los requisitos funcionales y las prioridades del roadmap en hitos futuros.
+
+---
+
 ## Documentación técnica
 
 - [Architecture Decision Records](./docs/adr/) — Decisiones técnicas justificadas
