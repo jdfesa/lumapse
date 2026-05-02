@@ -81,14 +81,71 @@ lumapse/
 
 ## Roadmap
 
-| Hito | Mes | Objetivo principal |
-|---|---|---|
-| **01** | Mayo 2026 | Fundación: repo, estructura, documentación base |
-| **02** | Junio 2026 | Editor core: crear/editar/eliminar notas + IndexedDB |
-| **03** | Julio 2026 | MVP completo: Markdown, export/import, PWA instalable |
-| **04** | Agosto 2026 | Organización y UX: etiquetas, modo oscuro, responsive |
-| **05** | Septiembre 2026 | Testing y robustez: Vitest, Lighthouse, correcciones |
-| **06** | Octubre 2026 | Entrega final: documentación completa, demo |
+### ✅ Hito 01 — Fundación (Mayo 2026) → [Informe](./docs/hitos/hito-01-mayo.md)
+
+Establecer los cimientos técnicos y organizativos del proyecto.
+
+- Inicialización del repositorio Git con estructura profesional
+- Configuración de Vite 6 como build tool
+- Sistema de diseño base: design tokens, tipografía, paleta de colores
+- Web App Manifest (PWA shell) e `index.html` con meta tags
+- Architecture Decision Records (ADR-001 a ADR-004)
+- Documentación de producto: personas, requisitos, historias de usuario, Lean Canvas
+
+### 🔄 Hito 02 — Core del Editor (Junio 2026) → [Informe](./docs/hitos/hito-02-junio.md)
+
+Construir el corazón funcional de la aplicación: editor de notas con persistencia local.
+
+- `NoteService`: capa de persistencia CRUD con IndexedDB (vía `idb`)
+- `NoteStore`: gestor de estado reactivo (patrón Observer)
+- Componente `NoteList`: barra lateral con listado de notas
+- Componente `NoteEditor`: editor de título y contenido
+- Auto-guardado automático con debounce (800ms)
+- Eliminación de notas con confirmación de seguridad
+
+### ⏳ Hito 03 — MVP Completo (Julio 2026)
+
+Convertir el editor en un producto mínimo viable con Markdown y capacidad offline real.
+
+- Renderizado de Markdown en tiempo real (preview)
+- Soporte de sintaxis básica: encabezados, negritas, listas, código, enlaces
+- Modo edición / modo lectura (toggle)
+- Exportar nota individual como `.md`
+- Exportar todas las notas como `.zip`
+- Importar archivos `.md`
+- Service Worker para funcionamiento offline completo
+- PWA instalable desde el navegador
+
+### ⏳ Hito 04 — Organización y UX (Agosto 2026)
+
+Mejorar la experiencia de uso con herramientas de organización y pulido visual.
+
+- Sistema de etiquetas (tags) por nota
+- Filtrado de notas por etiqueta
+- Búsqueda por texto en tiempo real (título y contenido)
+- Modo oscuro / modo claro con toggle
+- Diseño responsive (320px a 1920px)
+- Conteo de palabras y caracteres
+- Pantalla de bienvenida (onboarding) en primer uso
+- Indicador de estado offline/online
+
+### ⏳ Hito 05 — Testing y Robustez (Septiembre 2026)
+
+Garantizar la calidad del código y la experiencia del usuario.
+
+- Suite de tests unitarios con Vitest
+- Auditoría Lighthouse (Performance, Accessibility, PWA)
+- Corrección de bugs y edge cases
+- Sección "Acerca de" con información del sistema
+
+### ⏳ Hito 06 — Entrega Final (Octubre 2026)
+
+Cerrar el proyecto con documentación completa y presentación.
+
+- Documentación técnica final
+- Demo funcional desplegada
+- Informe de cierre del proyecto
+- Presentación académica
 
 ---
 
