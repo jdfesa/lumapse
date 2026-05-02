@@ -4,7 +4,7 @@
 > Offline-first · Markdown · Sin cuentas · Sin servidores.
 
 [![Estado del proyecto](https://img.shields.io/badge/estado-en%20desarrollo-a3e635?style=flat-square)](https://github.com/jdfesa/lumapse)
-[![Hito actual](https://img.shields.io/badge/hito-01%20fundaci%C3%B3n-a3e635?style=flat-square)](./docs/hitos/hito-01-mayo.md)
+[![Hito actual](https://img.shields.io/badge/hito-02%20core%20del%20editor-a3e635?style=flat-square)](./docs/hitos/hito-02-junio.md)
 [![Licencia](https://img.shields.io/badge/licencia-MIT-737373?style=flat-square)](./LICENSE)
 [![Conventional Commits](https://img.shields.io/badge/commits-conventional-a3e635?style=flat-square)](https://www.conventionalcommits.org)
 
