@@ -13,6 +13,8 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - Dependencia `idb` para el manejo de IndexedDB con promesas.
 - `src/services/NoteService.js` — Capa de persistencia con IndexedDB (operaciones CRUD).
 - `src/store/NoteStore.js` — Gestor de estado reactivo (patrón Observer) para mantener la UI sincronizada con los datos.
+- Componente `NoteList` (`.js` y `.css`) — Barra lateral UI para renderizar el listado y permitir la creación/selección de notas.
+- Integración del layout base usando *Flexbox* en `main.js`.
 
 ---
 

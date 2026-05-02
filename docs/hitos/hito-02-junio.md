@@ -21,7 +21,7 @@ En este hito nos enfocamos en el corazón de la aplicación: el editor de notas 
 | `NoteService` (Capa de persistencia IndexedDB) | ✅ Completado |
 | Pruebas de CRUD manuales en consola | ✅ Completado |
 | `NoteStore` (Estado reactivo en memoria) | ✅ Completado |
-| Componente `NoteList` (Listado UI) | ⏳ Pendiente |
+| Componente `NoteList` (Listado UI) | ✅ Completado |
 | Componente `NoteEditor` (Editor UI) | ⏳ Pendiente |
 | Integración de Layout principal | ⏳ Pendiente |
 | Auto-guardado automático | ⏳ Pendiente |
@@ -29,6 +29,13 @@ En este hito nos enfocamos en el corazón de la aplicación: el editor de notas 
 ---
 
 ## Avance Actual (Paso a Paso)
+
+### 3. Componente UI: `NoteList`
+- Se creó `src/components/NoteList.js` para renderizar dinámicamente la barra lateral de notas.
+- Se implementó `src/components/NoteList.css` modular utilizando las *Custom Properties* del sistema de diseño base.
+- El componente se suscribió a `NoteStore` para reaccionar a cambios: se actualiza automáticamente al crear, editar o eliminar notas.
+- Permite seleccionar visualmente la nota activa y delegar el evento al Store.
+- Se configuró el maquetado *Flexbox* base en `main.js` para soportar el Sidebar.
 
 ### 2. Estado Reactivo (`NoteStore`)
 - Se implementó el patrón *Observer* en `src/store/NoteStore.js`.

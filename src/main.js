@@ -3,16 +3,35 @@
 
 import './styles/main.css'
 import * as NoteStore from './store/NoteStore.js'
+import { NoteList } from './components/NoteList.js'
 
-// --- Exponer NoteStore en consola para testing (temporal) ---
-window.NoteStore = NoteStore
+async function initApp() {
+  const app = document.getElementById('app')
+  
+  // Restablecer estilos de #app para el layout completo
+  app.style.display = 'flex'
+  app.style.width = '100vw'
+  app.style.height = '100vh'
+  app.style.alignItems = 'stretch'
+  app.style.justifyContent = 'flex-start'
+  
+  // Construir Layout inicial (Sidebar + Main Editor Placeholder)
+  app.innerHTML = `
+    <div id="sidebar-container"></div>
+    <main id="editor-container" style="flex: 1; display: flex; align-items: center; justify-content: center; color: var(--color-text-muted);">
+      <div style="text-align: center;">
+        <p>Selecciona una nota de la lista o crea una nueva para comenzar.</p>
+      </div>
+    </main>
+  `
+  
+  // Instanciar componentes
+  const sidebarContainer = document.getElementById('sidebar-container')
+  new NoteList(sidebarContainer)
+  
+  // Cargar datos iniciales (esto disparará el renderizado de la lista)
+  await NoteStore.loadNotes()
+}
 
-const app = document.getElementById('app')
-
-app.innerHTML = `
-  <div class="splash">
-    <h1 class="splash__logo">lumapse</h1>
-    <p class="splash__tagline">Tu espacio de notas. Offline. Siempre.</p>
-    <span class="splash__badge">hito 01 — fundación</span>
-  </div>
-`
+// Iniciar aplicación
+initApp()
