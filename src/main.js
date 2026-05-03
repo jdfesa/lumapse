@@ -1,11 +1,14 @@
 // Lumapse — Punto de entrada principal
-// Hito 02: Core del Editor
+// Hito 03: MVP Completo
 
 import './styles/main.css'
 import * as NoteStore from './store/NoteStore.js'
 import { NoteList } from './components/NoteList.js'
-
 import { NoteEditor } from './components/NoteEditor.js'
+import * as MarkdownService from './services/MarkdownService.js'
+
+// --- Exponer MarkdownService en consola para testing (temporal) ---
+window.MarkdownService = MarkdownService
 
 async function initApp() {
   const app = document.getElementById('app')
