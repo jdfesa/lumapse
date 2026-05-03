@@ -34,7 +34,7 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 | Tarea | Estado |
 |---|---|
 | `MarkdownService` (Renderizado Markdown → HTML) | ✅ Completado |
-| Componente `MarkdownPreview` (Vista previa en tiempo real) | ⏳ Pendiente |
+| Componente `MarkdownPreview` (Vista previa en tiempo real) | ✅ Completado |
 | Toggle edición/lectura en `NoteEditor` | ⏳ Pendiente |
 | Exportar nota individual como `.md` | ⏳ Pendiente |
 | Exportar todas las notas como `.zip` | ⏳ Pendiente |
@@ -62,6 +62,14 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 - Se implementó sanitización de HTML con `DOMPurify` para prevenir ataques XSS, con lista blanca de etiquetas y atributos permitidos.
 - Se exportan dos funciones: `renderMarkdown(text)` y `hasMarkdownSyntax(text)`.
 - Se verificó el funcionamiento desde la consola del navegador: los encabezados, negritas, cursivas, listas, código y enlaces se renderizan correctamente.
+
+### 2. Componente UI: `MarkdownPreview`
+- Se creó `src/components/MarkdownPreview.js` como clase modular que recibe texto Markdown y lo renderiza como HTML seguro.
+- Se creó `src/components/MarkdownPreview.css` con estilos completos para el HTML renderizado: encabezados (h1-h6), párrafos, listas, código inline y bloques, blockquotes, tablas GFM, enlaces y separadores.
+- Se integró el componente dentro de `NoteEditor`: el editor ahora presenta un layout split (textarea a la izquierda, preview a la derecha) separados por un borde visual.
+- El preview se actualiza de forma **instantánea** con cada keystroke (sin debounce), mientras que el auto-guardado a IndexedDB mantiene su debounce de 800ms.
+- Se implementó un cache interno (`lastContent`) para evitar re-renders innecesarios cuando el contenido no cambia.
+- Se verificó visualmente en el navegador: el Markdown se renderiza correctamente en tiempo real.
 
 ---
 

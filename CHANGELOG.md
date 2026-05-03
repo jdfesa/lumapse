@@ -12,7 +12,11 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 ### Added
 - Dependencias `marked` (v18) y `dompurify` (v3) para renderizado de Markdown seguro.
 - `src/services/MarkdownService.js` — Servicio de conversión Markdown → HTML sanitizado (RF-010, RF-011).
+- `src/components/MarkdownPreview.js` + `.css` — Componente de vista previa de Markdown en tiempo real (RF-010).
 - `docs/hitos/hito-03-julio.md` — Informe de seguimiento del Hito 03.
+
+### Changed
+- `NoteEditor`: integración de layout split (editor + preview) con actualización en tiempo real.
 
 ---
 

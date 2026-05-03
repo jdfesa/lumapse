@@ -5,10 +5,6 @@ import './styles/main.css'
 import * as NoteStore from './store/NoteStore.js'
 import { NoteList } from './components/NoteList.js'
 import { NoteEditor } from './components/NoteEditor.js'
-import * as MarkdownService from './services/MarkdownService.js'
-
-// --- Exponer MarkdownService en consola para testing (temporal) ---
-window.MarkdownService = MarkdownService
 
 async function initApp() {
   const app = document.getElementById('app')

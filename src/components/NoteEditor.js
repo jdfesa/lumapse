@@ -1,13 +1,16 @@
 // =============================================================
 // Componente: NoteEditor
-// Hito 02: Core del Editor
+// Hito 03: MVP Completo
 //
 // Responsabilidad: Renderizar la nota activa y permitir su edición.
 // Detectar cambios en tiempo real, guardarlos en IndexedDB vía Store
-// (Auto-guardado) y permitir la eliminación de la nota.
+// (Auto-guardado) y mostrar una vista previa de Markdown en vivo.
+//
+// Integra: MarkdownPreview (RF-010)
 // =============================================================
 
 import * as NoteStore from '../store/NoteStore.js';
+import { MarkdownPreview } from './MarkdownPreview.js';
 import './NoteEditor.css';
 
 export class NoteEditor {
@@ -15,6 +18,7 @@ export class NoteEditor {
     this.container = container;
     this.currentNoteId = null;
     this.saveTimeout = null;
+    this.preview = null; // Instancia de MarkdownPreview
     
     // Bind manual para mantener el contexto de 'this'
     this.handleInput = this.handleInput.bind(this);
@@ -56,6 +60,12 @@ export class NoteEditor {
    * Renderiza el estado vacío cuando no hay nada seleccionado.
    */
   renderEmpty() {
+    // Limpiar la instancia de preview si existe
+    if (this.preview) {
+      this.preview.destroy();
+      this.preview = null;
+    }
+
     this.container.innerHTML = `
       <div class="note-editor note-editor--empty">
         <p>Selecciona una nota del listado o presiona <strong>+</strong> para crear una nueva.</p>
@@ -64,7 +74,8 @@ export class NoteEditor {
   }
 
   /**
-   * Renderiza el formulario de edición de la nota (Título y Contenido).
+   * Renderiza el formulario de edición de la nota (Título y Contenido)
+   * junto con el panel de vista previa de Markdown.
    */
   renderEditor(note) {
     // Si el título es 'Sin título' (default), mostramos el input vacío 
@@ -89,11 +100,14 @@ export class NoteEditor {
             </svg>
           </button>
         </header>
-        <textarea 
-          id="editor-content" 
-          class="note-editor__content" 
-          placeholder="Empieza a escribir aquí..."
-        >${note.content || ''}</textarea>
+        <div class="note-editor__body">
+          <textarea 
+            id="editor-content" 
+            class="note-editor__content" 
+            placeholder="Empieza a escribir en Markdown..."
+          >${note.content || ''}</textarea>
+          <div id="preview-container" class="note-editor__preview-container"></div>
+        </div>
       </div>
     `;
 
@@ -112,6 +126,15 @@ export class NoteEditor {
       }
     });
 
+    // Instanciar el MarkdownPreview en su contenedor
+    const previewContainer = this.container.querySelector('#preview-container');
+    this.preview = new MarkdownPreview(previewContainer);
+
+    // Renderizar el preview con el contenido actual de la nota
+    if (note.content) {
+      this.preview.update(note.content);
+    }
+
     // UX: Si la nota está recién creada (vacía), ponemos foco en el contenido automáticamente
     if (!note.content && !displayTitle) {
       contentInput.focus();
@@ -121,8 +144,17 @@ export class NoteEditor {
   /**
    * Maneja el evento de escritura en los inputs y aplica debounce
    * para no saturar la base de datos (Auto-guardado).
+   * También actualiza el preview de Markdown en tiempo real.
    */
   handleInput() {
+    const contentInput = this.container.querySelector('#editor-content');
+
+    // Actualizar el preview en tiempo real (sin debounce, es instantáneo)
+    if (this.preview && contentInput) {
+      this.preview.update(contentInput.value);
+    }
+
+    // Debounce para el auto-guardado en IndexedDB
     if (this.saveTimeout) {
       clearTimeout(this.saveTimeout);
     }
@@ -132,7 +164,6 @@ export class NoteEditor {
       if (!this.currentNoteId) return;
       
       const titleInput = this.container.querySelector('#editor-title');
-      const contentInput = this.container.querySelector('#editor-content');
       
       const newTitle = titleInput.value.trim() || 'Sin título';
       const newContent = contentInput.value;
@@ -150,6 +181,8 @@ export class NoteEditor {
   destroy() {
     if (this.unsubscribe) this.unsubscribe();
     if (this.saveTimeout) clearTimeout(this.saveTimeout);
+    if (this.preview) this.preview.destroy();
     this.container.innerHTML = '';
   }
 }
+

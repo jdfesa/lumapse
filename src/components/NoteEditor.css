@@ -1,6 +1,6 @@
 /* ============================================================
    Componente: NoteEditor
-   Hito 02: Core del Editor
+   Hito 03: MVP Completo
    ============================================================ */
 
 .note-editor {
@@ -76,6 +76,13 @@
   color: #ef4444; /* Red color token inline para acciones destructivas */
 }
 
+/* --- Body: Editor + Preview lado a lado -------------------- */
+.note-editor__body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
 /* --- Content Textarea --- */
 .note-editor__content {
   flex: 1;
@@ -95,6 +102,13 @@
   opacity: 0.6;
 }
 
+/* --- Preview Container --- */
+.note-editor__preview-container {
+  flex: 1;
+  border-left: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
 /* Scrollbar styling for textarea */
 .note-editor__content::-webkit-scrollbar {
   width: 8px;
@@ -112,3 +126,4 @@
 .note-editor__content::-webkit-scrollbar-thumb:hover {
   background-color: var(--color-text-muted);
 }
+
