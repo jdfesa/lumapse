@@ -16,7 +16,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ---
 
-## [0.2.0] — 2026-06 — Hito 02: Core del Editor (En progreso)
+## [0.2.0] — 2026-06 — Hito 02: Core del Editor ✅
 
 ### Added
 - Dependencia `idb` para el manejo de IndexedDB con promesas.

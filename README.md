@@ -4,7 +4,7 @@
 > Offline-first · Markdown · Sin cuentas · Sin servidores.
 
 [![Estado del proyecto](https://img.shields.io/badge/estado-en%20desarrollo-a3e635?style=flat-square)](https://github.com/jdfesa/lumapse)
-[![Hito actual](https://img.shields.io/badge/hito-02%20core%20del%20editor-a3e635?style=flat-square)](./docs/hitos/hito-02-junio.md)
+[![Hito actual](https://img.shields.io/badge/hito-03%20MVP%20completo-a3e635?style=flat-square)](./docs/hitos/hito-03-julio.md)
 [![Licencia](https://img.shields.io/badge/licencia-MIT-737373?style=flat-square)](./LICENSE)
 [![Conventional Commits](https://img.shields.io/badge/commits-conventional-a3e635?style=flat-square)](https://www.conventionalcommits.org)
 
@@ -92,7 +92,7 @@ Establecer los cimientos técnicos y organizativos del proyecto.
 - Architecture Decision Records (ADR-001 a ADR-004)
 - Documentación de producto: personas, requisitos, historias de usuario, Lean Canvas
 
-### 🔄 Hito 02 — Core del Editor (Junio 2026) → [Informe](./docs/hitos/hito-02-junio.md)
+### ✅ Hito 02 — Core del Editor (Junio 2026) → [Informe](./docs/hitos/hito-02-junio.md)
 
 Construir el corazón funcional de la aplicación: editor de notas con persistencia local.
 
@@ -103,7 +103,7 @@ Construir el corazón funcional de la aplicación: editor de notas con persisten
 - Auto-guardado automático con debounce (800ms)
 - Eliminación de notas con confirmación de seguridad
 
-### ⏳ Hito 03 — MVP Completo (Julio 2026)
+### 🔄 Hito 03 — MVP Completo (Julio 2026) → [Informe](./docs/hitos/hito-03-julio.md)
 
 Convertir el editor en un producto mínimo viable con Markdown y capacidad offline real.
 
@@ -146,6 +146,8 @@ Cerrar el proyecto con documentación completa y presentación.
 - Demo funcional desplegada
 - Informe de cierre del proyecto
 - Presentación académica
+
+> **Nota sobre la planificación:** Los meses asociados a cada hito representan *estimaciones iniciales* basadas en la complejidad técnica prevista al momento de la planificación. El desarrollo de software es un proceso iterativo e incremental: los tiempos reales pueden variar —tanto adelantarse como extenderse— en función de la complejidad de implementación, imprevistos técnicos, o decisiones de diseño que surjan durante el proceso. El progreso real del proyecto se refleja de forma transparente en los [informes de hito](./docs/hitos/), el [Changelog](./CHANGELOG.md) y el historial de commits del repositorio.
 
 ---
 
