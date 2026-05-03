@@ -3,7 +3,7 @@
 **Período:** Junio 2026  
 **Hito:** 02 — Core del Editor  
 **Proyecto:** Lumapse PWA  
-**Estado:** En curso
+**Estado:** Completado
 
 ---
 
@@ -71,8 +71,8 @@ En este hito nos enfocamos en el corazón de la aplicación: el editor de notas 
 
 ## Próximos Pasos
 
-El siguiente paso es avanzar con el **NoteStore**, que actuará como intermediario entre la UI y el `NoteService`. Su responsabilidad será mantener en memoria el estado actual de la aplicación (lista de notas cargadas, nota activa seleccionada) y reaccionar a los cambios.
+El desarrollo continúa en el **Hito 03 — MVP Completo**, donde se integrará la renderización de Markdown, exportación/importación de archivos, y la capacidad offline mediante Service Workers.
 
 ---
 
-*Documento vivo — Actualizado durante el desarrollo del Hito 02*
+*Documento finalizado — Hito 02 completado exitosamente*
