@@ -21,7 +21,7 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 | RF-009 | Service Worker para caché de assets | MUST | ⏳ Pendiente |
 | RF-010 | Renderizado de Markdown en tiempo real | MUST | ⏳ Pendiente |
 | RF-011 | Soporte de sintaxis Markdown básica | MUST | ⏳ Pendiente |
-| RF-012 | Modo edición / modo lectura (toggle) | SHOULD | ⏳ Pendiente |
+| RF-012 | Modo edición / modo lectura (toggle) | SHOULD | ✅ Completado |
 | RF-016 | Exportar nota individual como `.md` | MUST | ⏳ Pendiente |
 | RF-017 | Exportar todas las notas como `.zip` | SHOULD | ⏳ Pendiente |
 | RF-018 | Importar archivos `.md` | SHOULD | ⏳ Pendiente |
@@ -35,7 +35,7 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 |---|---|
 | `MarkdownService` (Renderizado Markdown → HTML) | ✅ Completado |
 | Componente `MarkdownPreview` (Vista previa en tiempo real) | ✅ Completado |
-| Toggle edición/lectura en `NoteEditor` | ⏳ Pendiente |
+| Toggle edición/lectura en `NoteEditor` | ✅ Completado |
 | Exportar nota individual como `.md` | ⏳ Pendiente |
 | Exportar todas las notas como `.zip` | ⏳ Pendiente |
 | Importar archivos `.md` | ⏳ Pendiente |
@@ -70,6 +70,11 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 - El preview se actualiza de forma **instantánea** con cada keystroke (sin debounce), mientras que el auto-guardado a IndexedDB mantiene su debounce de 800ms.
 - Se implementó un cache interno (`lastContent`) para evitar re-renders innecesarios cuando el contenido no cambia.
 - Se verificó visualmente en el navegador: el Markdown se renderiza correctamente en tiempo real.
+
+### 3. Toggle de Modos de Vista (`NoteEditor`)
+- Se implementó un selector de modos de vista en la cabecera del editor: **Edición** (solo texto), **Dividido** (texto y preview, por defecto) y **Lectura** (solo preview).
+- Se actualizaron los estilos de `NoteEditor.css` para ocultar o mostrar las áreas correspondientes según la clase `view-edit`, `view-split` o `view-read` aplicada dinámicamente al contenedor.
+- Se agregaron iconos SVG para que la interfaz sea más intuitiva y profesional.
 
 ---
 

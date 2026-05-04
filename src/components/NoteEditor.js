@@ -19,6 +19,7 @@ export class NoteEditor {
     this.currentNoteId = null;
     this.saveTimeout = null;
     this.preview = null; // Instancia de MarkdownPreview
+    this.viewMode = 'split'; // Modos: 'edit', 'split', 'read'
     
     // Bind manual para mantener el contexto de 'this'
     this.handleInput = this.handleInput.bind(this);
@@ -93,14 +94,27 @@ export class NoteEditor {
             value="${displayTitle}"
             autocomplete="off"
           />
-          <button id="btn-delete-note" class="note-editor__delete-btn" aria-label="Eliminar nota" title="Eliminar nota">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="3 6 5 6 21 6"></polyline>
-              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-            </svg>
-          </button>
+          <div class="note-editor__actions">
+            <div class="note-editor__view-toggles">
+              <button class="view-btn ${this.viewMode === 'edit' ? 'active' : ''}" data-view="edit" title="Modo Edición">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+              </button>
+              <button class="view-btn ${this.viewMode === 'split' ? 'active' : ''}" data-view="split" title="Modo Dividido">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="3" x2="12" y2="21"></line></svg>
+              </button>
+              <button class="view-btn ${this.viewMode === 'read' ? 'active' : ''}" data-view="read" title="Modo Lectura">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+              </button>
+            </div>
+            <button id="btn-delete-note" class="note-editor__delete-btn" aria-label="Eliminar nota" title="Eliminar nota">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+            </button>
+          </div>
         </header>
-        <div class="note-editor__body">
+        <div class="note-editor__body view-${this.viewMode}">
           <textarea 
             id="editor-content" 
             class="note-editor__content" 
@@ -118,6 +132,14 @@ export class NoteEditor {
 
     titleInput.addEventListener('input', this.handleInput);
     contentInput.addEventListener('input', this.handleInput);
+    
+    // Configurar toggle de vistas
+    const viewBtns = this.container.querySelectorAll('.view-btn');
+    viewBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        this.setViewMode(e.currentTarget.dataset.view);
+      });
+    });
     
     // HU-003: Confirmación al eliminar
     deleteBtn.addEventListener('click', async () => {
@@ -138,6 +160,30 @@ export class NoteEditor {
     // UX: Si la nota está recién creada (vacía), ponemos foco en el contenido automáticamente
     if (!note.content && !displayTitle) {
       contentInput.focus();
+    }
+  }
+
+  /**
+   * Cambia el modo de vista actual (edit, split, read)
+   */
+  setViewMode(mode) {
+    if (this.viewMode === mode) return;
+    this.viewMode = mode;
+    
+    // Actualizar clases de los botones
+    const viewBtns = this.container.querySelectorAll('.view-btn');
+    viewBtns.forEach(btn => {
+      if (btn.dataset.view === mode) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    // Actualizar clase del contenedor principal del body
+    const bodyContainer = this.container.querySelector('.note-editor__body');
+    if (bodyContainer) {
+      bodyContainer.className = `note-editor__body view-${mode}`;
     }
   }
 

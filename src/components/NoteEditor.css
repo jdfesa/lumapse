@@ -52,6 +52,43 @@
   opacity: 0.8;
 }
 
+.note-editor__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.note-editor__view-toggles {
+  display: flex;
+  background: var(--color-surface);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+  border: 1px solid var(--color-border);
+}
+
+.view-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+}
+
+.view-btn:hover {
+  color: var(--color-text);
+}
+
+.view-btn.active {
+  background: var(--color-border);
+  color: var(--color-text);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
 .note-editor__delete-btn {
   background: transparent;
   border: none;
@@ -81,6 +118,22 @@
   display: flex;
   flex: 1;
   overflow: hidden;
+}
+
+/* Modos de vista */
+.note-editor__body.view-edit .note-editor__preview-container {
+  display: none;
+}
+
+.note-editor__body.view-read .note-editor__content {
+  display: none;
+}
+
+.note-editor__body.view-read .note-editor__preview-container {
+  border-left: none;
+  /* Centramos un poco el contenido en modo lectura para mejor experiencia */
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 /* --- Content Textarea --- */
