@@ -205,10 +205,16 @@ export class NoteEditor {
    */
   exportToMarkdown(note) {
     if (!note) return;
+    
+    // Obtener la fecha en formato YYYY-MM-DD
+    const dateStr = note.createdAt ? note.createdAt.split('T')[0] : new Date().toISOString().split('T')[0];
+    
     const title = note.title === 'Sin título' ? 'nota' : note.title;
     // Sanitizar nombre del archivo
     const safeTitle = title.toLowerCase().replace(/[^a-z0-9áéíóúñ]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
-    const filename = `${safeTitle || 'nota'}.md`;
+    
+    // Formato de archivo: YYYY-MM-DD - titulo.md
+    const filename = `${dateStr} - ${safeTitle || 'nota'}.md`;
     
     // Crear el Blob con el contenido en Markdown
     // Si la nota no tiene contenido, exportamos al menos el título como h1

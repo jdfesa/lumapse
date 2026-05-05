@@ -31,13 +31,16 @@ export async function exportAllNotesToZip() {
   const filenames = new Set();
 
   notes.forEach(note => {
-    // 1. Sanitizar el título para usarlo como nombre de archivo
+    // 1. Obtener la fecha en formato YYYY-MM-DD
+    const dateStr = note.createdAt ? note.createdAt.split('T')[0] : new Date().toISOString().split('T')[0];
+
+    // 2. Sanitizar el título para usarlo como nombre de archivo
     const title = note.title === 'Sin título' ? 'nota' : note.title;
     let safeTitle = title.toLowerCase().replace(/[^a-z0-9áéíóúñ]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
     if (!safeTitle) safeTitle = 'nota';
 
-    // 2. Manejo de duplicados
-    let filename = `${safeTitle}.md`;
+    // 3. Manejo de duplicados
+    let filename = `${dateStr} - ${safeTitle}.md`;
     let counter = 1;
     while (filenames.has(filename)) {
       filename = `${safeTitle}-${counter}.md`;
