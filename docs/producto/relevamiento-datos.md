@@ -90,7 +90,7 @@ El formulario es anónimo, autoadministrado y no requiere cuenta de Google para 
 
 ### Criterios de diseño
 
-- **Máximo 12 preguntas** para minimizar abandono (una condicional, por lo que cada encuestado responde 11 como máximo).
+- **Máximo 13 preguntas** para minimizar abandono (una condicional, por lo que cada encuestado responde 12 como máximo).
 - Preguntas cerradas (opción múltiple o casillas) para facilitar respuesta rápida y análisis cuantitativo.
 - Solo 1 pregunta abierta opcional al final.
 - Cada pregunta está vinculada a un artefacto del proyecto que valida.
@@ -157,7 +157,12 @@ Tipo: Opción múltiple
 Opciones: Sí · Tal vez · No  
 *Valida: interés real, potenciales beta testers*
 
-**P11. ¿Algún comentario o sugerencia? (opcional)**  
+**P12. ¿Cómo preferirías organizar tus notas de estudio?**  
+Tipo: Opción múltiple  
+Opciones: En carpetas por materia (ej: "Álgebra", "Historia") · Con etiquetas/tags (ej: #parcial, #resumen) · En una lista simple sin organización · No me importa, con tal de encontrarlas rápido  
+*Valida: arquitectura de navegación (Inbox/Subjects/Archive), decisión carpetas vs tags — informa directamente el diseño del Hito 04*
+
+**P13. ¿Algún comentario o sugerencia? (opcional)**  
 Tipo: Respuesta corta  
 *Captura insights cualitativos no previstos*
 
@@ -174,12 +179,12 @@ Tipo: Respuesta corta
                                            │
                     ┌──────────────────────┼──────────────────────┐
                     │                      │                      │
-            ┌───────▼───────┐    ┌─────────▼─────────┐           │
-            │  Relevamiento │    │  Hito 02 (dev)    │           │
-            │  (encuesta)   │    │  Editor core,     │           │
-            │  En paralelo  │    │  StorageService,  │           │
-            │               │    │  NoteService      │           │
-            └───────┬───────┘    └─────────┬─────────┘           │
+            ┌───────▼───────┐    ┌─────────▼─────────┐            │
+            │  Relevamiento │    │  Hito 02 (dev)    │            │
+            │  (encuesta)   │    │  Editor core,     │            │
+            │  En paralelo  │    │  StorageService,  │            │
+            │               │    │  NoteService      │            │
+            └───────┬───────┘    └─────────┬─────────┘            │
                     │                      │                      │
                     └──────────┬───────────┘                      │
                                │                                  │
@@ -214,8 +219,10 @@ Una vez recolectadas las respuestas:
 | Interés en la propuesta | Media y distribución de P7 |
 | Priorización de features | Ranking ponderado de P8 |
 | Dispositivo principal | Distribución de P9 |
+| Modelo de organización preferido | Distribución de P12 |
 | Cruce turno × dificultades | Tabla cruzada P1 × P5b (filtrado por P5 = "Sí") |
 | Cruce carrera × dispositivo | Tabla cruzada P2 × P9 |
+| Cruce dispositivo × organización | Tabla cruzada P9 × P12 (detecta si quienes usan celular prefieren organización más simple) |
 | Cruce edad × hábitos de notas | Tabla cruzada P3 × P4 (valida supuesto de afinidad tecnológica) |
 | Cruce edad × features prioritarias | Tabla cruzada P3 × P8 (detecta necesidades diferenciadas por segmento etario) |
 
