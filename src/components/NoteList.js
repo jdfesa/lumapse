@@ -38,11 +38,20 @@ export class NoteList {
       <aside class="note-list">
         <header class="note-list__header">
           <h2 class="note-list__title">Notas</h2>
-          <button id="btn-create-note" class="note-list__create-btn" aria-label="Crear nueva nota">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 5v14M5 12h14"/>
-            </svg>
-          </button>
+          <div class="note-list__actions">
+            <button id="btn-export-all" class="note-list__action-btn" aria-label="Exportar todas las notas como ZIP" title="Exportar notas (ZIP)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+            </button>
+            <button id="btn-create-note" class="note-list__action-btn" aria-label="Crear nueva nota" title="Crear nueva nota">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+            </button>
+          </div>
         </header>
         <div id="note-list-items" class="note-list__items">
           <!-- Las notas se inyectan aquí dinámicamente vía renderNotes() -->
@@ -59,6 +68,16 @@ export class NoteList {
     const createBtn = this.container.querySelector('#btn-create-note');
     createBtn.addEventListener('click', async () => {
       await NoteStore.createNote();
+    });
+
+    const exportAllBtn = this.container.querySelector('#btn-export-all');
+    exportAllBtn.addEventListener('click', async () => {
+      const { exportAllNotesToZip } = await import('../services/ExportService.js');
+      try {
+        await exportAllNotesToZip();
+      } catch (error) {
+        alert(error.message || 'Error al exportar las notas.');
+      }
     });
 
     const listContainer = this.container.querySelector('#note-list-items');

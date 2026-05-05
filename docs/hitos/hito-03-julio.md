@@ -23,7 +23,7 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 | RF-011 | Soporte de sintaxis Markdown básica | MUST | ⏳ Pendiente |
 | RF-012 | Modo edición / modo lectura (toggle) | SHOULD | ✅ Completado |
 | RF-016 | Exportar nota individual como `.md` | MUST | ✅ Completado |
-| RF-017 | Exportar todas las notas como `.zip` | SHOULD | ⏳ Pendiente |
+| RF-017 | Exportar todas las notas como `.zip` | SHOULD | ✅ Completado |
 | RF-018 | Importar archivos `.md` | SHOULD | ⏳ Pendiente |
 | RF-021 | PWA instalable desde el navegador | MUST | ⏳ Pendiente |
 
@@ -37,7 +37,7 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 | Componente `MarkdownPreview` (Vista previa en tiempo real) | ✅ Completado |
 | Toggle edición/lectura en `NoteEditor` | ✅ Completado |
 | Exportar nota individual como `.md` | ✅ Completado |
-| Exportar todas las notas como `.zip` | ⏳ Pendiente |
+| Exportar todas las notas como `.zip` | ✅ Completado |
 | Importar archivos `.md` | ⏳ Pendiente |
 | Service Worker para funcionamiento offline | ⏳ Pendiente |
 | PWA instalable + auditoría Lighthouse | ⏳ Pendiente |
@@ -50,6 +50,7 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 |---|---|---|
 | `marked` | ^18.0.3 | Parser de Markdown a HTML |
 | `dompurify` | ^3.4.2 | Sanitizador de HTML para prevención de XSS |
+| `jszip` | ^3.10.1 | Librería para generar archivos .zip dinámicos |
 
 ---
 
@@ -82,6 +83,12 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 - Se implementó la funcionalidad en `NoteEditor` para exportar la nota activa como archivo `.md` (RF-016).
 - Se agregó un botón de exportación en la cabecera del editor junto al botón de eliminar.
 - El archivo generado utiliza el título de la nota sanitizado como nombre de archivo y contiene el Markdown nativo.
+
+### 5. Exportar todas las notas a ZIP
+- Se instaló la dependencia `jszip` para habilitar la compresión de archivos desde el navegador.
+- Se implementó `src/services/ExportService.js` con lógica para iterar sobre todas las notas almacenadas en IndexedDB.
+- Se previene la colisión de nombres de archivos si varias notas tienen el mismo título.
+- Se agregó un botón en la cabecera de `NoteList` (barra lateral) para disparar la exportación total (RF-017).
 
 ---
 

@@ -15,6 +15,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - `src/components/MarkdownPreview.js` + `.css` — Componente de vista previa de Markdown en tiempo real (RF-010).
 - Toggle de modos de vista en `NoteEditor` permitiendo alternar entre modo Edición, Dividido (Split) y Lectura (RF-012).
 - Botón y funcionalidad para exportar nota individual como archivo `.md` (RF-016) en el `NoteEditor`.
+- Botón y `ExportService` con `jszip` para exportar el workspace completo como `.zip` (RF-017) en el `NoteList`.
 - `docs/hitos/hito-03-julio.md` — Informe de seguimiento del Hito 03.
 
 ### Changed
