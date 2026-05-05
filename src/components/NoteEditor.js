@@ -1,10 +1,15 @@
 // =============================================================
 // Componente: NoteEditor
-// Hito 03: MVP Completo
+// Hito 04: Organización y UX
 //
 // Responsabilidad: Renderizar la nota activa y permitir su edición.
 // Detectar cambios en tiempo real, guardarlos en IndexedDB vía Store
 // (Auto-guardado) y mostrar una vista previa de Markdown en vivo.
+//
+// DP-001: Título unificado — El título de la nota se extrae
+// automáticamente de la primera línea que comience con "# "
+// en el contenido Markdown (estilo Typora). No existe un campo
+// de título separado.
 //
 // Integra: MarkdownPreview (RF-010)
 // =============================================================
@@ -12,6 +17,31 @@
 import * as NoteStore from '../store/NoteStore.js';
 import { MarkdownPreview } from './MarkdownPreview.js';
 import './NoteEditor.css';
+
+/**
+ * Extrae el título de un texto Markdown.
+ * Busca la primera línea que comience con "# " y retorna el texto
+ * que le sigue. Si no hay ninguna línea con ese patrón, retorna
+ * 'Sin título'.
+ *
+ * @param {string} content Contenido Markdown completo
+ * @returns {string} Título extraído o 'Sin título'
+ */
+function extractTitleFromContent(content) {
+  if (!content) return 'Sin título';
+
+  // Buscar la primera línea que empiece con "# " (h1 de Markdown)
+  const lines = content.split('\n');
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed.startsWith('# ')) {
+      const title = trimmed.slice(2).trim();
+      return title || 'Sin título';
+    }
+  }
+
+  return 'Sin título';
+}
 
 export class NoteEditor {
   constructor(container) {
@@ -75,25 +105,14 @@ export class NoteEditor {
   }
 
   /**
-   * Renderiza el formulario de edición de la nota (Título y Contenido)
-   * junto con el panel de vista previa de Markdown.
+   * DP-001: Renderiza el editor sin campo de título separado.
+   * El contenido Markdown ocupa todo el espacio y el título se
+   * extrae automáticamente de la primera línea "# ".
    */
   renderEditor(note) {
-    // Si el título es 'Sin título' (default), mostramos el input vacío 
-    // con placeholder para invitar al usuario a escribir.
-    const displayTitle = note.title === 'Sin título' ? '' : note.title;
-
     this.container.innerHTML = `
       <div class="note-editor">
         <header class="note-editor__header">
-          <input 
-            type="text" 
-            id="editor-title" 
-            class="note-editor__title" 
-            placeholder="Título de la nota" 
-            value="${displayTitle}"
-            autocomplete="off"
-          />
           <div class="note-editor__actions">
             <div class="note-editor__view-toggles">
               <button class="view-btn ${this.viewMode === 'edit' ? 'active' : ''}" data-view="edit" title="Modo Edición">
@@ -125,7 +144,7 @@ export class NoteEditor {
           <textarea 
             id="editor-content" 
             class="note-editor__content" 
-            placeholder="Empieza a escribir en Markdown..."
+            placeholder="# Título de tu nota&#10;&#10;Empieza a escribir en Markdown..."
           >${note.content || ''}</textarea>
           <div id="preview-container" class="note-editor__preview-container"></div>
         </div>
@@ -133,12 +152,10 @@ export class NoteEditor {
     `;
 
     // Adjuntar manejadores de eventos
-    const titleInput = this.container.querySelector('#editor-title');
     const contentInput = this.container.querySelector('#editor-content');
     const deleteBtn = this.container.querySelector('#btn-delete-note');
     const exportBtn = this.container.querySelector('#btn-export-md');
 
-    titleInput.addEventListener('input', this.handleInput);
     contentInput.addEventListener('input', this.handleInput);
     
     // Configurar toggle de vistas
@@ -158,7 +175,10 @@ export class NoteEditor {
 
     // RF-016: Exportar nota actual como Markdown
     exportBtn.addEventListener('click', () => {
-      this.exportToMarkdown(note);
+      // Leer el estado actual del contenido (no el de la nota original)
+      const currentContent = contentInput.value;
+      const currentTitle = extractTitleFromContent(currentContent);
+      this.exportToMarkdown({ ...note, title: currentTitle, content: currentContent });
     });
 
     // Instanciar el MarkdownPreview en su contenedor
@@ -170,10 +190,11 @@ export class NoteEditor {
       this.preview.update(note.content);
     }
 
-    // UX: Si la nota está recién creada (vacía), ponemos foco en el contenido automáticamente
-    if (!note.content && !displayTitle) {
-      contentInput.focus();
-    }
+    // UX: Poner foco en el textarea al abrir la nota
+    contentInput.focus();
+
+    // Si la nota está vacía (recién creada), el cursor ya está
+    // al inicio, listo para que el usuario escriba "# Título"
   }
 
   /**
@@ -217,7 +238,6 @@ export class NoteEditor {
     const filename = `${dateStr} - ${safeTitle || 'nota'}.md`;
     
     // Crear el Blob con el contenido en Markdown
-    // Si la nota no tiene contenido, exportamos al menos el título como h1
     const content = note.content || `# ${note.title}\n`;
     const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
     
@@ -237,8 +257,9 @@ export class NoteEditor {
   }
 
   /**
-   * Maneja el evento de escritura en los inputs y aplica debounce
-   * para no saturar la base de datos (Auto-guardado).
+   * DP-001: Maneja el evento de escritura en el textarea.
+   * Extrae el título de la primera línea "# " del contenido
+   * y lo guarda como campo derivado en la base de datos.
    * También actualiza el preview de Markdown en tiempo real.
    */
   handleInput() {
@@ -258,10 +279,10 @@ export class NoteEditor {
     this.saveTimeout = setTimeout(async () => {
       if (!this.currentNoteId) return;
       
-      const titleInput = this.container.querySelector('#editor-title');
-      
-      const newTitle = titleInput.value.trim() || 'Sin título';
       const newContent = contentInput.value;
+      
+      // DP-001: Extraer el título de la primera línea "# " del contenido
+      const newTitle = extractTitleFromContent(newContent);
       
       await NoteStore.updateNote(this.currentNoteId, {
         title: newTitle,
@@ -280,4 +301,3 @@ export class NoteEditor {
     this.container.innerHTML = '';
   }
 }
-

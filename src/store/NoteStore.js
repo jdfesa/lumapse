@@ -60,10 +60,20 @@ export async function loadNotes() {
 
 /**
  * Crea una nueva nota, la pone primera y la selecciona como activa.
- * @param {string} title Título inicial (opcional)
+ * DP-001: El contenido por defecto comienza con "# " para que el
+ * usuario escriba el título directamente en el cuerpo Markdown.
+ * El campo 'title' se deriva automáticamente del contenido.
+ *
+ * @param {string} title Título inicial (opcional, usado por ImportService)
  * @param {string} content Contenido inicial (opcional)
  */
 export async function createNote(title = 'Sin título', content = '') {
+  // Si no se proporcionó contenido explícito (nota nueva desde la UI),
+  // inicializamos con "# " para guiar al usuario
+  if (!content && title === 'Sin título') {
+    content = '# '
+  }
+  
   const newNote = await NoteService.createNote(title, content)
   state.notes = [newNote, ...state.notes]
   state.activeNoteId = newNote.id

@@ -7,7 +7,21 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ---
 
-## [0.3.0] — 2026-07 — Hito 03: MVP Completo (En progreso)
+## [0.4.0] — 2026-08 — Hito 04: Organización y UX (En progreso)
+
+### Changed
+- **DP-001: Título unificado (estilo Typora).** Se eliminó el campo de título separado del editor. El título de la nota se extrae automáticamente de la primera línea `# ` del contenido Markdown. El campo `title` en la base de datos se mantiene como valor derivado/caché para la barra lateral y la exportación.
+- `NoteEditor.js`: reescrito para eliminar el `<input>` de título, extraer título vía `extractTitleFromContent()`, y pre-cargar `# ` como contenido por defecto en notas nuevas.
+- `NoteEditor.css`: simplificado el header (solo contiene botones de acciones, alineados a la derecha).
+- `NoteStore.js`: `createNote()` inicializa el contenido con `# ` para guiar al usuario.
+
+### Added
+- `docs/producto/decisiones-producto.md` — Registro de decisiones de producto con trazabilidad hacia la encuesta de validación.
+- P12 agregada a la encuesta de relevamiento: preferencia de organización (carpetas vs tags).
+
+---
+
+## [0.3.0] — 2026-07 — Hito 03: MVP Completo ✅
 
 ### Added
 - Dependencias `marked` (v18) y `dompurify` (v3) para renderizado de Markdown seguro.

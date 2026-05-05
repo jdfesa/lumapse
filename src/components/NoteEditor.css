@@ -25,31 +25,13 @@
   font-weight: 600;
 }
 
-/* --- Header & Title --- */
+/* --- Header (solo acciones, sin título separado — DP-001) --- */
 .note-editor__header {
   display: flex;
   align-items: center;
-  padding: var(--space-4) var(--space-6);
+  justify-content: flex-end;
+  padding: var(--space-2) var(--space-6);
   gap: var(--space-4);
-  margin-top: var(--space-4);
-}
-
-.note-editor__title {
-  flex: 1;
-  background: transparent;
-  border: none;
-  color: var(--color-text);
-  font-family: var(--font-sans);
-  font-size: 2.2rem;
-  font-weight: 600;
-  outline: none;
-  letter-spacing: -0.02em;
-  padding: 0;
-}
-
-.note-editor__title::placeholder {
-  color: var(--color-border);
-  opacity: 0.8;
 }
 
 .note-editor__actions {
