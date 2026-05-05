@@ -175,8 +175,17 @@ export class NoteEditor {
 
     // RF-016: Exportar nota actual como Markdown
     exportBtn.addEventListener('click', () => {
-      // Leer el estado actual del contenido (no el de la nota original)
-      const currentContent = contentInput.value;
+      // Leer el estado actual del contenido directamente del DOM
+      const textarea = this.container.querySelector('#editor-content');
+      const currentContent = textarea ? textarea.value : '';
+
+      // Validar que haya contenido significativo para exportar
+      const trimmedContent = currentContent.replace(/^#\s*/, '').trim();
+      if (!trimmedContent) {
+        alert('La nota está vacía. Escribí algo antes de exportar.');
+        return;
+      }
+
       const currentTitle = extractTitleFromContent(currentContent);
       this.exportToMarkdown({ ...note, title: currentTitle, content: currentContent });
     });

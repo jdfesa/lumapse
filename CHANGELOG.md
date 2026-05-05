@@ -19,6 +19,9 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - `docs/producto/decisiones-producto.md` — Registro de decisiones de producto con trazabilidad hacia la encuesta de validación.
 - P12 agregada a la encuesta de relevamiento: preferencia de organización (carpetas vs tags).
 
+### Fixed
+- **Exportación de notas vacías:** Se corrigió un bug en `NoteEditor.js` donde exportar una nota recién creada sin contenido resultaba en un archivo `.md` vacío ("nota.md"). Ahora valida si hay contenido significativo y muestra un mensaje de alerta guiando al usuario. Además, se mejoró la forma de extraer el contenido actual desde el DOM para prevenir race conditions durante el auto-guardado.
+
 ---
 
 ## [0.3.0] — 2026-07 — Hito 03: MVP Completo ✅
