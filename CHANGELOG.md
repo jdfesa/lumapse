@@ -17,6 +17,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - Botón y funcionalidad para exportar nota individual como archivo `.md` (RF-016) en el `NoteEditor`.
 - Botón y `ExportService` con `jszip` para exportar el workspace completo como `.zip` (RF-017) en el `NoteList`.
 - Botón e `ImportService` para importar archivos `.md` locales como nuevas notas (RF-018) en el `NoteList`.
+- Dependencia `vite-plugin-pwa` y configuración en `vite.config.js` para generación automática de Service Worker y caché estático (RF-008, RF-009, RF-021).
 - `docs/hitos/hito-03-julio.md` — Informe de seguimiento del Hito 03 actualizado.
 
 ### Changed

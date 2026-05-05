@@ -17,8 +17,8 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 
 | RF | Descripción | Prioridad | Estado |
 |---|---|---|---|
-| RF-008 | Funcionamiento completamente offline | MUST | ⏳ Pendiente |
-| RF-009 | Service Worker para caché de assets | MUST | ⏳ Pendiente |
+| RF-008 | Funcionamiento completamente offline | MUST | ✅ Completado |
+| RF-009 | Service Worker para caché de assets | MUST | ✅ Completado |
 | RF-010 | Renderizado de Markdown en tiempo real | MUST | ⏳ Pendiente |
 | RF-011 | Soporte de sintaxis Markdown básica | MUST | ⏳ Pendiente |
 | RF-012 | Modo edición / modo lectura (toggle) | SHOULD | ✅ Completado |
@@ -39,8 +39,8 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 | Exportar nota individual como `.md` | ✅ Completado |
 | Exportar todas las notas como `.zip` | ✅ Completado |
 | Importar archivos `.md` | ✅ Completado |
-| Service Worker para funcionamiento offline | ⏳ Pendiente |
-| PWA instalable + auditoría Lighthouse | ⏳ Pendiente |
+| Service Worker para funcionamiento offline | ✅ Completado |
+| PWA instalable + auditoría Lighthouse | ✅ Completado |
 
 ---
 
@@ -51,6 +51,7 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 | `marked` | ^18.0.3 | Parser de Markdown a HTML |
 | `dompurify` | ^3.4.2 | Sanitizador de HTML para prevención de XSS |
 | `jszip` | ^3.10.1 | Librería para generar archivos .zip dinámicos |
+| `vite-plugin-pwa` | ^0.20.0 | Plugin para generar el Service Worker usando Workbox |
 
 ---
 
@@ -95,6 +96,13 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 - Se lee el contenido del archivo local y se usa el nombre del archivo (sin extensión) como título de la nota.
 - Se actualizó `NoteStore.createNote()` para aceptar parámetros iniciales (título y contenido) y delegarlos a `NoteService`.
 - Se agregó un botón de importación en la cabecera de `NoteList`, junto a los de crear y exportar (RF-018).
+
+### 7. PWA y Soporte Offline (Service Worker)
+- Se instaló la dependencia de desarrollo `vite-plugin-pwa` para habilitar el soporte PWA de forma profesional y mantenible.
+- Se configuró `vite.config.js` inyectando el plugin `VitePWA` con registro automático (`injectRegister: 'auto'`).
+- Se definió el modo `autoUpdate` para actualizar el Service Worker automáticamente sin interrumpir al usuario.
+- Workbox se configuró para cachear todos los assets (`js, css, html, ico, png, svg, json`) garantizando que Lumapse pueda cargarse completamente sin conexión a internet (RF-008, RF-009).
+- La aplicación ahora es reconocible como PWA instalable por los navegadores (RF-021) al unir el Service Worker con el `manifest.json` existente.
 
 ---
 

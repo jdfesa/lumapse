@@ -10,7 +10,8 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^6.3.3"
+    "vite": "^6.3.3",
+    "vite-plugin-pwa": "^1.3.0"
   },
   "keywords": [
     "pwa",
