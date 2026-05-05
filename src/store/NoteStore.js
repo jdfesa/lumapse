@@ -60,9 +60,11 @@ export async function loadNotes() {
 
 /**
  * Crea una nueva nota, la pone primera y la selecciona como activa.
+ * @param {string} title Título inicial (opcional)
+ * @param {string} content Contenido inicial (opcional)
  */
-export async function createNote() {
-  const newNote = await NoteService.createNote()
+export async function createNote(title = 'Sin título', content = '') {
+  const newNote = await NoteService.createNote(title, content)
   state.notes = [newNote, ...state.notes]
   state.activeNoteId = newNote.id
   notify()

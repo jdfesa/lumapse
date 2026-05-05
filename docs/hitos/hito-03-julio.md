@@ -24,7 +24,7 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 | RF-012 | Modo edición / modo lectura (toggle) | SHOULD | ✅ Completado |
 | RF-016 | Exportar nota individual como `.md` | MUST | ✅ Completado |
 | RF-017 | Exportar todas las notas como `.zip` | SHOULD | ✅ Completado |
-| RF-018 | Importar archivos `.md` | SHOULD | ⏳ Pendiente |
+| RF-018 | Importar archivos `.md` | SHOULD | ✅ Completado |
 | RF-021 | PWA instalable desde el navegador | MUST | ⏳ Pendiente |
 
 ---
@@ -38,7 +38,7 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 | Toggle edición/lectura en `NoteEditor` | ✅ Completado |
 | Exportar nota individual como `.md` | ✅ Completado |
 | Exportar todas las notas como `.zip` | ✅ Completado |
-| Importar archivos `.md` | ⏳ Pendiente |
+| Importar archivos `.md` | ✅ Completado |
 | Service Worker para funcionamiento offline | ⏳ Pendiente |
 | PWA instalable + auditoría Lighthouse | ⏳ Pendiente |
 
@@ -89,6 +89,12 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 - Se implementó `src/services/ExportService.js` con lógica para iterar sobre todas las notas almacenadas en IndexedDB.
 - Se previene la colisión de nombres de archivos si varias notas tienen el mismo título.
 - Se agregó un botón en la cabecera de `NoteList` (barra lateral) para disparar la exportación total (RF-017).
+
+### 6. Importar archivos Markdown
+- Se implementó `src/services/ImportService.js` con lógica para abrir un selector de archivos del sistema.
+- Se lee el contenido del archivo local y se usa el nombre del archivo (sin extensión) como título de la nota.
+- Se actualizó `NoteStore.createNote()` para aceptar parámetros iniciales (título y contenido) y delegarlos a `NoteService`.
+- Se agregó un botón de importación en la cabecera de `NoteList`, junto a los de crear y exportar (RF-018).
 
 ---
 
