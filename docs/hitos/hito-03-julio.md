@@ -19,13 +19,13 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 |---|---|---|---|
 | RF-008 | Funcionamiento completamente offline | MUST | ✅ Completado |
 | RF-009 | Service Worker para caché de assets | MUST | ✅ Completado |
-| RF-010 | Renderizado de Markdown en tiempo real | MUST | ⏳ Pendiente |
-| RF-011 | Soporte de sintaxis Markdown básica | MUST | ⏳ Pendiente |
+| RF-010 | Renderizado de Markdown en tiempo real | MUST | ✅ Completado |
+| RF-011 | Soporte de sintaxis Markdown básica | MUST | ✅ Completado |
 | RF-012 | Modo edición / modo lectura (toggle) | SHOULD | ✅ Completado |
 | RF-016 | Exportar nota individual como `.md` | MUST | ✅ Completado |
 | RF-017 | Exportar todas las notas como `.zip` | SHOULD | ✅ Completado |
 | RF-018 | Importar archivos `.md` | SHOULD | ✅ Completado |
-| RF-021 | PWA instalable desde el navegador | MUST | ⏳ Pendiente |
+| RF-021 | PWA instalable desde el navegador | MUST | ✅ Completado |
 
 ---
 
