@@ -106,6 +106,13 @@ export class NoteEditor {
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
               </button>
             </div>
+            <button id="btn-export-md" class="note-editor__export-btn" aria-label="Exportar a Markdown" title="Exportar a Markdown">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+            </button>
             <button id="btn-delete-note" class="note-editor__delete-btn" aria-label="Eliminar nota" title="Eliminar nota">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="3 6 5 6 21 6"></polyline>
@@ -129,6 +136,7 @@ export class NoteEditor {
     const titleInput = this.container.querySelector('#editor-title');
     const contentInput = this.container.querySelector('#editor-content');
     const deleteBtn = this.container.querySelector('#btn-delete-note');
+    const exportBtn = this.container.querySelector('#btn-export-md');
 
     titleInput.addEventListener('input', this.handleInput);
     contentInput.addEventListener('input', this.handleInput);
@@ -146,6 +154,11 @@ export class NoteEditor {
       if (window.confirm('¿Estás seguro de que deseas eliminar esta nota de forma permanente?')) {
         await NoteStore.deleteNote(this.currentNoteId);
       }
+    });
+
+    // RF-016: Exportar nota actual como Markdown
+    exportBtn.addEventListener('click', () => {
+      this.exportToMarkdown(note);
     });
 
     // Instanciar el MarkdownPreview en su contenedor
@@ -185,6 +198,36 @@ export class NoteEditor {
     if (bodyContainer) {
       bodyContainer.className = `note-editor__body view-${mode}`;
     }
+  }
+
+  /**
+   * RF-016: Exportar la nota actual como archivo .md
+   */
+  exportToMarkdown(note) {
+    if (!note) return;
+    const title = note.title === 'Sin título' ? 'nota' : note.title;
+    // Sanitizar nombre del archivo
+    const safeTitle = title.toLowerCase().replace(/[^a-z0-9áéíóúñ]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+    const filename = `${safeTitle || 'nota'}.md`;
+    
+    // Crear el Blob con el contenido en Markdown
+    // Si la nota no tiene contenido, exportamos al menos el título como h1
+    const content = note.content || `# ${note.title}\n`;
+    const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
+    
+    // Crear un elemento <a> para disparar la descarga
+    const a = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    
+    // Limpieza
+    setTimeout(() => {
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }, 0);
   }
 
   /**

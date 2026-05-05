@@ -22,7 +22,7 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 | RF-010 | Renderizado de Markdown en tiempo real | MUST | ⏳ Pendiente |
 | RF-011 | Soporte de sintaxis Markdown básica | MUST | ⏳ Pendiente |
 | RF-012 | Modo edición / modo lectura (toggle) | SHOULD | ✅ Completado |
-| RF-016 | Exportar nota individual como `.md` | MUST | ⏳ Pendiente |
+| RF-016 | Exportar nota individual como `.md` | MUST | ✅ Completado |
 | RF-017 | Exportar todas las notas como `.zip` | SHOULD | ⏳ Pendiente |
 | RF-018 | Importar archivos `.md` | SHOULD | ⏳ Pendiente |
 | RF-021 | PWA instalable desde el navegador | MUST | ⏳ Pendiente |
@@ -36,7 +36,7 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 | `MarkdownService` (Renderizado Markdown → HTML) | ✅ Completado |
 | Componente `MarkdownPreview` (Vista previa en tiempo real) | ✅ Completado |
 | Toggle edición/lectura en `NoteEditor` | ✅ Completado |
-| Exportar nota individual como `.md` | ⏳ Pendiente |
+| Exportar nota individual como `.md` | ✅ Completado |
 | Exportar todas las notas como `.zip` | ⏳ Pendiente |
 | Importar archivos `.md` | ⏳ Pendiente |
 | Service Worker para funcionamiento offline | ⏳ Pendiente |
@@ -75,6 +75,13 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 - Se implementó un selector de modos de vista en la cabecera del editor: **Edición** (solo texto), **Dividido** (texto y preview, por defecto) y **Lectura** (solo preview).
 - Se actualizaron los estilos de `NoteEditor.css` para ocultar o mostrar las áreas correspondientes según la clase `view-edit`, `view-split` o `view-read` aplicada dinámicamente al contenedor.
 - Se agregaron iconos SVG para que la interfaz sea más intuitiva y profesional.
+
+---
+
+### 4. Exportar nota a Markdown
+- Se implementó la funcionalidad en `NoteEditor` para exportar la nota activa como archivo `.md` (RF-016).
+- Se agregó un botón de exportación en la cabecera del editor junto al botón de eliminar.
+- El archivo generado utiliza el título de la nota sanitizado como nombre de archivo y contiene el Markdown nativo.
 
 ---
 

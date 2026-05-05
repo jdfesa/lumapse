@@ -89,6 +89,30 @@
   box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
+.note-editor__export-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+  opacity: 0; /* Aparece al hacer hover sobre el header */
+}
+
+.note-editor__header:hover .note-editor__export-btn,
+.note-editor__export-btn:focus {
+  opacity: 1;
+}
+
+.note-editor__export-btn:hover {
+  background-color: var(--color-border);
+  color: var(--color-text);
+}
+
 .note-editor__delete-btn {
   background: transparent;
   border: none;
