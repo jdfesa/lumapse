@@ -21,13 +21,29 @@ El relevamiento **no bloquea** el avance del proyecto. El desarrollo del Hito 02
 | Unidad de análisis | Estudiante regular del IES 6023 "Dr. Alfredo Loutaif" |
 | Tamaño de la población (N) | 1.239 |
 | Turnos | Mañana, Tarde, Noche |
-| Carreras | 4 profesorados + 2 tecnicaturas |
+| Carreras | 5 profesorados + 2 tecnicaturas (7 carreras con matrícula activa) |
 | Exclusiones | Estudiantes que asisten únicamente a rendir examen |
 | Ciclo lectivo | 2026 |
 
 ### Justificación
 
 La población coincide con el público objetivo de Lumapse: estudiantes de nivel superior que necesitan herramientas de captura y organización de notas. Al ser estudiante del IES 6023, el investigador tiene acceso directo para distribuir el instrumento.
+
+### Composición de la oferta académica (ciclo 2026)
+
+El IES 6023 ofrece carreras de formación docente (profesorados, 4 años) y carreras técnicas (tecnicaturas, 3 años). En el ciclo lectivo 2026 se produjo un cambio en la oferta: se abrió el Profesorado en Física y se cerró la inscripción al Profesorado en Lengua y Literatura. Ambas carreras tienen matrícula activa durante este ciclo.
+
+| Carrera | Tipo | Duración | Años activos en 2026 | Observaciones |
+|---|---|---|---|---|
+| Prof. Educación Especial | Profesorado | 4 años | 1° a 4° | — |
+| Prof. Educación Primaria | Profesorado | 4 años | 1° a 4° | — |
+| Prof. Danzas con orientación Folklórica | Profesorado | 4 años | 1° a 4° | — |
+| Prof. Física | Profesorado | 4 años | Solo 1° | Apertura 2026 |
+| Prof. Lengua y Literatura | Profesorado | 4 años | 2° a 4° | Sin ingreso 2026 (carrera en cierre progresivo) |
+| Tec. Análisis de Sistemas y Desarrollo de Software | Tecnicatura | 3 años | 1° a 3° | — |
+| Tec. Superior en Turismo | Tecnicatura | 3 años | 1° a 3° | — |
+
+> **Nota:** Los estudiantes del Prof. en Lengua y Literatura siguen cursando hasta completar la carrera, por lo que forman parte de la población encuestable. El Prof. en Física, al ser de reciente apertura, solo aporta alumnos de primer año, lo que puede sesgar las respuestas de esa carrera hacia un perfil de ingresante.
 
 ---
 
@@ -163,8 +179,9 @@ Opciones: En carpetas por materia (ej: "Álgebra", "Historia") · Con etiquetas/
 *Valida: arquitectura de navegación (Inbox/Subjects/Archive), decisión carpetas vs tags — informa directamente el diseño del Hito 04*
 
 **P12. ¿Algún comentario o sugerencia? (opcional)**  
-Tipo: Respuesta corta  
-*Captura insights cualitativos no previstos*
+Tipo: Párrafo  
+Descripción: *"¿Hay algo específico de tu carrera que te complique tomar notas? (ej: fórmulas en Física, planificaciones en los Profesorados, diagramas en Sistemas). ¡Cualquier necesidad que nos cuentes nos ayuda un montón a diseñar la app!"*  
+*Captura insights cualitativos no previstos, segmentados por carrera*
 
 ---
 
