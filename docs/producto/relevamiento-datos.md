@@ -167,7 +167,7 @@ Opciones: Mañana · Tarde · Noche
 
 **P2. ¿Qué carrera cursás?**  
 Tipo: Opción múltiple  
-Opciones: [Las 6 carreras del IES 6023]  
+Opciones: [Las 7 carreras del IES 6023 con matrícula activa]  
 *Valida: estratificación de la muestra*
 
 **P3. ¿En qué rango de edad te encontrás?**  
@@ -283,13 +283,15 @@ Una vez recolectadas las respuestas:
 |---|---|
 | Distribución demográfica | Frecuencias y porcentajes por turno/carrera/edad |
 | Hábitos de toma de notas | Frecuencias de P4, gráfico de barras |
-| Proporción con dificultades | Distribución de P5 (Sí/No), porcentaje |
+| Proporción con dificultades | Distribución de P5 (Sí/No), porcentaje — **base: solo quienes toman notas** (P4 ≠ "No tomo notas") |
 | Dificultades principales | Ranking de P5b (solo respondentes con P5 = "Sí"), gráfico de Pareto |
 | Validación offline-first | Distribución de P6 |
 | Interés en la propuesta | Media y distribución de P7 |
 | Priorización de features | Ranking ponderado de P8 |
 | Dispositivo principal | Distribución de P9 |
+| Interés en beta testing | Distribución de P10 (Sí/Tal vez/No), porcentaje — identifica potenciales testers para el Hito 04 |
 | Modelo de organización preferido | Distribución de P11 |
+| Insights cualitativos | Categorización temática de respuestas abiertas de P12, segmentadas por carrera (P2) |
 | Cruce turno × dificultades | Tabla cruzada P1 × P5b (filtrado por P5 = "Sí") |
 | Cruce carrera × dispositivo | Tabla cruzada P2 × P9 |
 | Cruce dispositivo × organización | Tabla cruzada P9 × P11 (detecta si quienes usan celular prefieren organización más simple) |
