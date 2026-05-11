@@ -1,5 +1,6 @@
 # Relevamiento de Datos — Lumapse
 
+> **Fase Design Thinking:** Empatizar  
 > **Fecha de diseño:** 2026-04-28  
 > **Estado:** En curso — la encuesta se ejecuta en paralelo al desarrollo  
 > **Instrumento:** Encuesta autoadministrada (Google Forms + código QR)

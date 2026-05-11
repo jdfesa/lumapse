@@ -1,5 +1,7 @@
 # Documentación de Producto — Lumapse
 
+**Última actualización:** 2026-05-11
+
 Esta carpeta contiene la documentación centrada en el **usuario y el producto**, siguiendo los principios de **Design Thinking** como marco metodológico de diseño.
 
 > **¿Por qué Design Thinking?**
@@ -13,12 +15,26 @@ Esta carpeta contiene la documentación centrada en el **usuario y el producto**
 | Documento | Fase Design Thinking | Descripción |
 |---|---|---|
 | [`personas.md`](./personas.md) | Empatizar | Perfiles arquetípicos de los usuarios objetivo |
+| [`relevamiento-datos.md`](./relevamiento-datos.md) | Empatizar | Diseño del instrumento de encuesta — 12 preguntas + 1 condicional, ramificación, análisis previsto |
+| [`metodologia-muestral.md`](./metodologia-muestral.md) | Empatizar | Fórmula de muestreo para poblaciones finitas, cálculo de n, escenarios y contingencia |
 | [`problem-statement.md`](./problem-statement.md) | Definir | Declaración formal del problema que Lumapse resuelve |
 | [`analisis-competitivo.md`](./analisis-competitivo.md) | Definir / Idear | Comparación con herramientas existentes y diferenciación |
 | [`requisitos-funcionales.md`](./requisitos-funcionales.md) | Idear / Prototipar | Funcionalidades concretas del sistema (RF) — 24 requisitos |
 | [`requisitos-no-funcionales.md`](./requisitos-no-funcionales.md) | Idear / Prototipar | Atributos de calidad del sistema (RNF) — 26 requisitos |
 | [`historias-de-usuario.md`](./historias-de-usuario.md) | Idear / Prototipar | Historias de Usuario con Criterios de Aceptación — Hito 02 |
 | [`lean-canvas.md`](./lean-canvas.md) | Idear | Modelo de negocio y propuesta de valor |
+| [`decisiones-producto.md`](./decisiones-producto.md) | Transversal | Decisiones de diseño de producto documentadas |
+
+### Materiales de distribución
+
+La subcarpeta [`encuesta/`](./encuesta/) contiene los materiales para la distribución presencial y digital del relevamiento:
+
+| Archivo | Uso |
+|---|---|
+| `qr-encuesta.png` | QR alta resolución para impresión (820×820px) |
+| `qr-encuesta-small.png` | QR compacto para difusión por WhatsApp (410×410px) |
+| `poster-encuesta.html` | Póster A4 imprimible (optimizado para B&W) |
+| `encuesta_como_tomas_notas_ies_6023.pdf` | PDF listo para imprimir |
 
 ---
 
@@ -29,10 +45,10 @@ Esta carpeta contiene la documentación centrada en el **usuario y el producto**
 │  EMPATIZAR  │──▶│   DEFINIR   │──▶│    IDEAR    │──▶│ PROTOTIPAR  │──▶│   TESTEAR   │
 │             │   │             │   │             │   │             │   │             │
 │  Personas   │   │  Problem    │   │  Lean       │   │  PWA funcio-│   │  Feedback   │
-│  Observación│   │  Statement  │   │  Canvas     │   │  nal (Hitos │   │  real de    │
-│  Entrevistas│   │  Análisis   │   │  Requisitos │   │  02-05)     │   │  usuarios   │
-│             │   │  Competitivo│   │  RF / RNF   │   │             │   │  (Hito 05)  │
-│             │   │             │   │  Historias  │   │             │   │             │
+│  Relevamien-│   │  Statement  │   │  Canvas     │   │  nal (Hitos │   │  real de    │
+│  to de Datos│   │  Análisis   │   │  Requisitos │   │  02-05)     │   │  usuarios   │
+│  Metodología│   │  Competitivo│   │  RF / RNF   │   │             │   │  (Hito 05)  │
+│  Muestral   │   │             │   │  Historias  │   │             │   │             │
 │             │   │             │   │  de Usuario │   │             │   │             │
 └─────────────┘   └─────────────┘   └─────────────┘   └─────────────┘   └─────────────┘
 ```
