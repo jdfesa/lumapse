@@ -196,7 +196,7 @@ Opciones: Sí · No
 **P5b. ¿Cuáles son las principales dificultades? (elegí hasta 3)**  
 Tipo: Casillas (máximo 3)  
 Condición: Solo se muestra si P5 = "Sí"  
-Opciones: No encuentro lo que busco · Se desorganizan rápido · No puedo acceder sin internet · El formato es incómodo · Pierdo notas con frecuencia · Otra  
+Opciones: No encuentro lo que busco · Se desorganizan rápido · No puedo acceder sin internet · Me cuesta organizar el formato (títulos, listas, tablas, fórmulas) · Pierdo notas con frecuencia · Otra  
 *Valida: `problem-statement.md`, `requisitos-funcionales.md` — identifica los pain points específicos para priorizar funcionalidades*
 
 #### Sección 4 — Conectividad, interés y preferencias (P6–P12)
