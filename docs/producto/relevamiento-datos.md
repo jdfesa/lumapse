@@ -297,6 +297,7 @@ Una vez recolectadas las respuestas:
 | Cruce dispositivo × organización | Tabla cruzada P9 × P11 (detecta si quienes usan celular prefieren organización más simple) |
 | Cruce edad × hábitos de notas | Tabla cruzada P3 × P4 (valida supuesto de afinidad tecnológica) |
 | Cruce edad × features prioritarias | Tabla cruzada P3 × P8 (detecta necesidades diferenciadas por segmento etario) |
+| Cruce método actual × dispositivo deseado | Tabla cruzada P4 × P9 (detecta la brecha entre el hábito actual de toma de notas y el dispositivo preferido para la app) |
 
 Los resultados se documentarán en `docs/producto/resultados-relevamiento.md` cuando estén disponibles.
 
