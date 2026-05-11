@@ -233,7 +233,7 @@ Opciones: En carpetas por materia (ej: "Álgebra", "Historia") · Con etiquetas/
 
 **P12. ¿Algún comentario o sugerencia? (opcional)**  
 Tipo: Párrafo  
-Descripción: *"¿Hay algo específico de tu carrera que te complique tomar notas? (ej: fórmulas en Física, planificaciones en los Profesorados, diagramas en Sistemas). ¡Cualquier necesidad que nos cuentes nos ayuda un montón a diseñar la app!"*  
+Descripción: *"¿Hay algo específico de tu carrera que te complique tomar notas? (ej: fórmulas en Física, planificaciones en los Profesorados, diagramas en Sistemas). ¡Cualquier necesidad que me cuentes me ayuda un montón a diseñar la app!"*  
 *Captura insights cualitativos no previstos, segmentados por carrera*
 
 ---
