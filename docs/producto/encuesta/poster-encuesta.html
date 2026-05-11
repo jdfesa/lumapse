@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Encuesta — ¿Cómo tomás notas en el IES 6023?</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fff;
+      color: #000;
+    }
+
+    .poster {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      padding: 18mm 20mm;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      page-break-after: always;
+    }
+
+    /* ─── Header ─── */
+    .header {
+      text-align: center;
+      width: 100%;
+    }
+
+    .emoji-top {
+      font-size: 52px;
+      margin-bottom: 6px;
+    }
+
+    .title {
+      font-size: 36px;
+      font-weight: 900;
+      color: #000;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 17px;
+      font-weight: 600;
+      color: #000;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+    }
+
+    .divider {
+      width: 80px;
+      height: 3px;
+      background: #000;
+      margin: 0 auto 18px;
+    }
+
+    /* ─── Descripción ─── */
+    .description {
+      font-size: 17px;
+      line-height: 1.65;
+      color: #222;
+      text-align: center;
+      max-width: 440px;
+      margin: 0 auto 20px;
+    }
+
+    .description strong {
+      color: #000;
+    }
+
+    /* ─── QR ─── */
+    .qr-container {
+      border: 3px solid #000;
+      border-radius: 16px;
+      padding: 20px 28px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 12px 0;
+    }
+
+    .qr-container img {
+      width: 200px;
+      height: 200px;
+    }
+
+    .scan-text {
+      font-size: 15px;
+      font-weight: 700;
+      color: #000;
+      margin-top: 10px;
+      letter-spacing: 0.3px;
+    }
+
+    /* ─── Features ─── */
+    .features {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      margin: 18px 0;
+    }
+
+    .feature {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #000;
+    }
+
+    .feature-icon {
+      font-size: 20px;
+    }
+
+    /* ─── URL ─── */
+    .url-box {
+      background: #000;
+      color: #fff;
+      padding: 12px 32px;
+      border-radius: 8px;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-top: 8px;
+    }
+
+    /* ─── Alternativa ─── */
+    .alt-text {
+      font-size: 13px;
+      color: #555;
+      margin-top: 10px;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* ─── Footer ─── */
+    .footer {
+      text-align: center;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #ccc;
+      width: 100%;
+    }
+
+    .footer-badge {
+      font-size: 13px;
+      font-weight: 600;
+      color: #555;
+      letter-spacing: 0.5px;
+    }
+
+    @media print {
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="poster">
+    <div class="header">
+      <div class="emoji-top">📝</div>
+      <h1 class="title">¿Cómo tomás notas<br>en el IES 6023?</h1>
+      <p class="subtitle">Encuesta para estudiantes</p>
+      <div class="divider"></div>
+    </div>
+
+    <div class="description">
+      Estoy desarrollando una <strong>app gratuita para tomar notas de estudio</strong>,
+      pensada especialmente para estudiantes del IES 6023.
+      Quiero saber cómo tomás apuntes hoy y qué te gustaría mejorar.
+    </div>
+
+    <div class="qr-container">
+      <img src="qr-encuesta.png" alt="Código QR de la encuesta">
+      <span class="scan-text">📱 Escaneá el QR con tu celular</span>
+    </div>
+
+    <div class="features">
+      <div class="feature">
+        <span class="feature-icon">🔒</span>
+        <span>Anónima</span>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">⏱️</span>
+        <span>2 minutos</span>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">📵</span>
+        <span>Sin cuenta</span>
+      </div>
+    </div>
+
+    <div class="url-box">
+      forms.gle/UNhWLW5XQcBFzFS57
+    </div>
+
+    <p class="alt-text">
+      Si no podés escanear el QR, copiá el link de arriba en tu navegador.
+    </p>
+
+    <div class="footer">
+      <span class="footer-badge">Proyecto Lumapse — IES 6023 "Dr. Alfredo Loutaif" — 2026</span>
+    </div>
+  </div>
+
+</body>
+</html>
