@@ -116,13 +116,16 @@ El formulario es anónimo, autoadministrado y no requiere cuenta de Google para 
 
 ### Estructura del formulario (secciones y ramificación)
 
-El formulario se organiza en **3 secciones** con lógica de ramificación condicional en Google Forms. El objetivo es que cada encuestado solo vea las preguntas que le corresponden según sus respuestas previas, evitando contradicciones lógicas y datos inconsistentes.
+El formulario se organiza en **4 secciones** con lógica de ramificación condicional en Google Forms. El objetivo es que cada encuestado solo vea las preguntas que le corresponden según sus respuestas previas, evitando contradicciones lógicas y datos inconsistentes.
+
+> **¿Por qué 4 secciones?** Google Forms aplica la ramificación condicional **entre secciones**, no entre preguntas individuales dentro de una misma sección. Por eso P4 y P5 deben estar en secciones separadas: si estuvieran juntas, el encuestado vería P5 aun habiendo seleccionado "No tomo notas" en P4.
 
 | Sección | Contenido | Quién la ve |
 |---|---|---|
-| Sección 1 | P1 a P5 — Datos demográficos, método de toma de notas, percepción de dificultad | Todos los encuestados |
-| Sección 2 | P5b — Detalle de dificultades concretas | Solo quienes respondieron P5 = "Sí" |
-| Sección 3 | P6 a P12 — Conectividad, interés en la app, features, dispositivo, organización, comentarios | Todos los encuestados |
+| Sección 1 | P1 a P4 — Datos demográficos y método de toma de notas | Todos los encuestados |
+| Sección 2 | P5 — Percepción de dificultad | Solo quienes toman notas (P4 ≠ "No tomo notas") |
+| Sección 3 | P5b — Detalle de dificultades concretas | Solo quienes respondieron P5 = "Sí" |
+| Sección 4 | P6 a P12 — Conectividad, interés en la app, features, dispositivo, organización, comentarios | Todos los encuestados |
 
 **Flujo de ramificación:**
 
@@ -132,29 +135,30 @@ El formulario se organiza en **3 secciones** con lógica de ramificación condic
                           ┌─────── Sí ─┴─ No ───────┐
                           │                         │
                           ▼                         │
-                    P5: ¿Dificultad?                │
+                    Sección 2: P5                   │
+                    ¿Dificultad?                    │
                       │          │                  │
                    Sí ┘          └ No               │
                    │                │               │
                    ▼                │               │
-              Sección 2: P5b        │               │
+              Sección 3: P5b        │               │
                    │                │               │
                    └────────┬───────┘               │
                             │                       │
                             ▼                       ▼
-                       Sección 3: P6 → P7 → … → P12
+                       Sección 4: P6 → P7 → … → P12
 ```
 
 **Justificación de las ramificaciones:**
 
-1. **P4 = "No tomo notas" → salta a Sección 3.** Si el encuestado declara que no toma notas, preguntarle por dificultades con una actividad que no realiza (P5) generaría confusión y datos inconsistentes. El salto directo a P6 preserva la coherencia lógica del instrumento.
-2. **P5 = "No" → salta a Sección 3.** Si el encuestado toma notas pero no percibe dificultades, forzarlo a elegir problemas en P5b introduciría ruido en los datos. Solo quienes declaran tener dificultades las detallan.
+1. **P4 = "No tomo notas" → salta a Sección 4.** Si el encuestado declara que no toma notas, preguntarle por dificultades con una actividad que no realiza (P5) generaría confusión y datos inconsistentes. El salto directo a P6 preserva la coherencia lógica del instrumento.
+2. **P5 = "No" → salta a Sección 4.** Si el encuestado toma notas pero no percibe dificultades, forzarlo a elegir problemas en P5b introduciría ruido en los datos. Solo quienes declaran tener dificultades las detallan.
 
 ---
 
 ### Preguntas
 
-#### Sección 1 — Perfil del encuestado y método de toma de notas
+#### Sección 1 — Perfil del encuestado y método de toma de notas (P1–P4)
 
 **P1. ¿En qué turno cursás?**  
 Tipo: Opción múltiple  
@@ -176,16 +180,18 @@ Tipo: Opción múltiple
 Opciones: Cuaderno/papel · Celular · Notebook/PC · Tablet · No tomo notas  
 *Valida: `personas.md`, `problem-statement.md`*
 
-> **Ramificación:** si la respuesta es **"No tomo notas"**, se salta directamente a la Sección 3 (P6). Las demás opciones continúan a P5.
+> **Ramificación:** si la respuesta es **"No tomo notas"**, se salta directamente a la Sección 4 (P6). Las demás opciones continúan a P5 (Sección 2).
+
+#### Sección 2 — Percepción de dificultad (P5)
 
 **P5. ¿Sentís que tenés alguna dificultad con tu forma actual de tomar notas?**  
 Tipo: Opción múltiple  
 Opciones: Sí · No  
 *Valida: `problem-statement.md` — cuantifica la proporción de estudiantes que perciben un problema real*
 
-> **Ramificación:** si la respuesta es **"Sí"**, se muestra P5b (Sección 2). Si la respuesta es **"No"**, se salta directamente a P6 (Sección 3).
+> **Ramificación:** si la respuesta es **"Sí"**, se muestra P5b (Sección 3). Si la respuesta es **"No"**, se salta directamente a P6 (Sección 4).
 
-#### Sección 2 — Detalle de dificultades (condicional)
+#### Sección 3 — Detalle de dificultades (condicional)
 
 **P5b. ¿Cuáles son las principales dificultades? (elegí hasta 3)**  
 Tipo: Casillas (máximo 3)  
@@ -193,7 +199,7 @@ Condición: Solo se muestra si P5 = "Sí"
 Opciones: No encuentro lo que busco · Se desorganizan rápido · No puedo acceder sin internet · El formato es incómodo · Pierdo notas con frecuencia · Otra  
 *Valida: `problem-statement.md`, `requisitos-funcionales.md` — identifica los pain points específicos para priorizar funcionalidades*
 
-#### Sección 3 — Conectividad, interés y preferencias
+#### Sección 4 — Conectividad, interés y preferencias (P6–P12)
 
 **P6. ¿Tenés acceso estable a internet en el instituto?**  
 Tipo: Opción múltiple  
