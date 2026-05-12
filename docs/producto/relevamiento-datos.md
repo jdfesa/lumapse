@@ -3,7 +3,8 @@
 > **Fase Design Thinking:** Empatizar  
 > **Fecha de diseño:** 2026-04-28  
 > **Estado:** En curso — la encuesta se ejecuta en paralelo al desarrollo  
-> **Instrumento:** Encuesta autoadministrada (Google Forms + código QR)
+> **Instrumento:** Encuesta autoadministrada (Google Forms + código QR)  
+> **Vigencia:** 2026-05-11 → 2026-05-25 (14 días naturales)
 
 ---
 
@@ -100,6 +101,40 @@ No probabilístico por conveniencia con control de cobertura por turno. Se busca
 | Grupos de WhatsApp | Difusión en grupos estudiantiles del IES 6023 |
 
 El formulario es anónimo, autoadministrado y no requiere cuenta de Google para responder. El tiempo estimado de respuesta es de **2-3 minutos**.
+
+### Vigencia del instrumento
+
+| Parámetro | Valor |
+|---|---|
+| Fecha de lanzamiento | 2026-05-11, 21:00 (hora local, GMT-3) |
+| Fecha de cierre planificada | 2026-05-25 |
+| Duración prevista | 14 días naturales |
+| Respuestas al lanzamiento (primeras 6 h) | 28 |
+
+**Protocolo de cierre:**
+
+**Escenario A — Se alcanzan 90+ respuestas antes del plazo:**  
+Se cierra la encuesta anticipadamente, se registra la fecha real de cierre en esta sección y se procede al análisis con inferencia estadística (confianza 95%, margen ±10% o mejor según el n logrado).
+
+**Escenario B — Se cumple el plazo sin alcanzar el mínimo (< 90):**  
+Se cierra la encuesta el 2026-05-25. Los datos **no se descartan**: se reportan como **exploratorios** (ver §3, "Objetivo y contingencia"). Esto significa que:
+- Los resultados **no permiten inferencia estadística** sobre la población total (N = 1.239).
+- Sin embargo, **sí aportan evidencia indicativa** de tendencias, preferencias y pain points reales de los estudiantes que respondieron.
+- Esta evidencia es superior a decisiones basadas exclusivamente en supuestos del diseñador y se utiliza para informar — no para afirmar — las decisiones de producto.
+- Se documenta el tamaño de muestra logrado, su distribución por turno/carrera, y las limitaciones explícitas.
+
+**Acciones intermedias:**
+
+1. **Día 3 (2026-05-14):** primer control de tasa de respuestas.
+2. **Día 7 (2026-05-18):** si la tasa de respuestas nuevas es inferior a 3 por día, se ejecuta un **recordatorio** por WhatsApp y se solicita a preceptores una segunda difusión en cada curso.
+3. **Día 14 (2026-05-25):** cierre definitivo. Se registra el total de respuestas y la fecha/hora de cierre.
+4. La encuesta **no se extiende más allá de 14 días** salvo decisión justificada y documentada.
+
+| Registro | Valor |
+|---|---|
+| Fecha real de cierre | *(pendiente)* |
+| Total de respuestas al cierre | *(pendiente)* |
+| Escenario aplicado | *(A o B — pendiente)* |
 
 ---
 
