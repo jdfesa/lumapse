@@ -27,6 +27,7 @@ Los documentos formales de la materia (PDFs, presentaciones, plantillas) se encu
 | `04-design-thinking/` | Ejercicios y material de Design Thinking |
 | `05-analisis-y-relevamiento/` | Material de análisis y relevamiento de sistemas |
 | `06-estimacion-y-medicion/` | Libro de estimación y medición de proyectos software |
+| `07-guia-relevamiento-y-analisis/` | Guía de relevamiento y análisis |
 
 ---
 
