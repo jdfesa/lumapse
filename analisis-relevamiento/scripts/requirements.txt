@@ -1,0 +1,8 @@
+# Dependencias para el análisis de datos del relevamiento
+# Instalar con: pip install -r requirements.txt
+#
+# pandas  — Lectura de CSV, limpieza, frecuencias, tablas cruzadas (crosstab)
+# matplotlib — Generación de gráficos estáticos (barras, tortas, Pareto)
+
+pandas==2.2.3
+matplotlib==3.9.4
