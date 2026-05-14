@@ -68,6 +68,8 @@ def cargar_y_limpiar() -> pd.DataFrame:
     df["p1_turno"] = df["p1_turno"].map(turno_map).fillna(df["p1_turno"])
 
     # --- P2: reclasificar carrera doble ---
+    # strip() elimina espacios invisibles del CSV que impiden el match
+    df["p2_carrera"] = df["p2_carrera"].str.strip()
     df["p2_carrera"] = df["p2_carrera"].replace({
         "Prof. en Lengua y Literatura/ Prof. Educación Especial":
             "Prof. en Lengua y Literatura"
