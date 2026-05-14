@@ -1,5 +1,5 @@
-# Entorno virtual Python (se recrea con: python3 -m venv venv)
-venv/
+# Entorno virtual Python (se recrea con: python3 -m venv .venv)
+.venv/
 
 # Plan interno de trabajo entre sesiones (no forma parte del entregable)
 plan_analisis.md

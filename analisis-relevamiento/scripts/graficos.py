@@ -5,7 +5,6 @@ de Lumapse, listos para insertar en el informe de resultados.
 """
 
 import matplotlib
-matplotlib.use("Agg")  # Backend sin GUI para generar PNGs
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -17,6 +16,7 @@ from config import (
 
 def _configurar_estilo():
     """Configura el estilo visual global de matplotlib."""
+    matplotlib.use("Agg")  # Backend sin GUI para generar PNGs
     plt.rcParams.update({
         "figure.facecolor": COLOR_FONDO,
         "axes.facecolor": COLOR_FONDO,
