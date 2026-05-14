@@ -3,3 +3,7 @@
 
 # Plan interno de trabajo entre sesiones (no forma parte del entregable)
 plan_analisis.md
+
+# Archivos compilados de Python
+__pycache__/
+
