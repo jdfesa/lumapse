@@ -71,4 +71,4 @@ Esta carpeta contiene los materiales utilizados durante la ejecución:
 |---|---|
 | [`relevamiento-datos.md`](../relevamiento-datos.md) | Diseño del instrumento: preguntas, justificación, lógica de ramificación |
 | [`metodologia-muestral.md`](../metodologia-muestral.md) | Fundamentación estadística: fórmula, escenarios, tipo de muestreo |
-| `resultados-relevamiento.md` | Análisis de resultados y conclusiones *(pendiente)* |
+| [`resultados-relevamiento.md`](../resultados-relevamiento.md) | Análisis de resultados y conclusiones — 120 respuestas, hallazgos, cruces estadísticos y recomendaciones |
