@@ -159,7 +159,7 @@ Paralelamente al desarrollo, se lleva a cabo un proceso de validación con usuar
 |---|---|---|
 | Diseño de la encuesta | ✅ Completado | [relevamiento-datos.md](./docs/producto/relevamiento-datos.md) |
 | Metodología muestral y cálculo de muestra | ✅ Completado | [metodologia-muestral.md](./docs/producto/metodologia-muestral.md) |
-| Ejecución de la encuesta (recolección de respuestas) | ⏳ Pendiente | — |
+| Ejecución de la encuesta (recolección de respuestas) | ✅ Completado | [encuesta/README.md](./docs/producto/encuesta/README.md) |
 | Análisis de resultados y conclusiones | ⏳ Pendiente | — |
 
 > **Nota:** Los resultados de la encuesta podrán retroalimentar los requisitos funcionales y las prioridades del roadmap en hitos futuros.

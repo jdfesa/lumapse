@@ -2,9 +2,9 @@
 
 > **Fase Design Thinking:** Empatizar  
 > **Fecha de diseño:** 2026-04-28  
-> **Estado:** En curso — la encuesta se ejecuta en paralelo al desarrollo  
+> **Estado:** Finalizado — recolección de respuestas completada  
 > **Instrumento:** Encuesta autoadministrada (Google Forms + código QR)  
-> **Vigencia:** 2026-05-11 → 2026-05-25 (14 días naturales)
+> **Vigencia:** 2026-05-11 → 2026-05-13 (2 días naturales)
 
 ---
 
@@ -132,9 +132,9 @@ Se cierra la encuesta el 2026-05-25. Los datos **no se descartan**: se reportan 
 
 | Registro | Valor |
 |---|---|
-| Fecha real de cierre | *(pendiente)* |
-| Total de respuestas al cierre | *(pendiente)* |
-| Escenario aplicado | *(A o B — pendiente)* |
+| Fecha real de cierre | 2026-05-13, 21:00 (Duración total: 48 hs) |
+| Total de respuestas al cierre | 120 |
+| Escenario aplicado | Escenario A (Cierre anticipado por alcanzar meta) |
 
 ---
 
