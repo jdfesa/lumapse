@@ -99,4 +99,4 @@ datos/respuestas_*.csv  →  scripts/analizar.py  →  docs/producto/resultados-
 | Diseño de la encuesta | [`relevamiento-datos.md`](../docs/producto/relevamiento-datos.md) | Preguntas, justificación, lógica de ramificación |
 | Metodología muestral | [`metodologia-muestral.md`](../docs/producto/metodologia-muestral.md) | Fórmula, escenarios, tipo de muestreo |
 | Bitácora de ejecución | [`encuesta/README.md`](../docs/producto/encuesta/README.md) | Canales de distribución, cronología, resultado |
-| Informe de resultados | [`resultados-relevamiento.md`](../docs/producto/resultados-relevamiento.md) | Análisis, conclusiones y recomendaciones *(pendiente)* |
+| Informe de resultados | [`resultados-relevamiento.md`](../docs/producto/resultados-relevamiento.md) | Análisis, conclusiones y recomendaciones |
