@@ -45,7 +45,8 @@ Esta carpeta contiene los materiales utilizados durante la ejecución:
 |---|---|
 | 2026-05-11, 21:00 | Lanzamiento de la encuesta — distribución inicial por WhatsApp y colocación de pósters en aulas |
 | 2026-05-12, 03:00 (~6 h) | Primer corte: 28 respuestas registradas |
-| 2026-05-13, 21:00 | Cierre de la encuesta — 120 respuestas alcanzadas |
+| 2026-05-12, 21:00 (~24 h) | Segundo corte: 96 respuestas registradas |
+| 2026-05-13, 21:00 (~48 h) | Cierre de la encuesta — 120 respuestas alcanzadas |
 
 ---
 
