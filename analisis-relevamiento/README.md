@@ -22,9 +22,15 @@ analisis-relevamiento/
 ├── datos/                     ← Datos crudos exportados de Google Forms
 │   └── respuestas_relevamiento_2026_05.csv
 ├── scripts/                   ← Scripts de análisis (Python)
-│   ├── analizar.py            ← Script principal
-│   └── requirements.txt      ← Dependencias del entorno
-└── graficos/                  ← Gráficos generados por el script
+│   ├── analizar.py            ← Orquestador principal
+│   ├── config.py              ← Constantes, rutas y configuración central
+│   ├── limpieza.py            ← Carga del CSV y limpieza de datos
+│   ├── frecuencias.py         ← Frecuencias simples y métricas clave
+│   ├── cruces.py              ← Tablas cruzadas (crosstabs)
+│   ├── cualitativo.py         ← Análisis de respuestas abiertas (P12)
+│   ├── graficos.py            ← Generación de gráficos PNG
+│   └── requirements.txt       ← Dependencias del entorno
+└── graficos/                  ← Gráficos generados por los scripts
 ```
 
 ---
@@ -39,7 +45,9 @@ analisis-relevamiento/
 
 **¿Por qué Python y no JavaScript?** Si bien el proyecto Lumapse está desarrollado en JavaScript, el análisis de datos es una tarea distinta que requiere herramientas especializadas. Python con pandas es el estándar reconocido para este tipo de trabajo; JavaScript no posee equivalentes maduros para análisis estadístico tabular.
 
-**¿Por qué un entorno virtual?** El entorno virtual (`venv/`) aísla las dependencias del análisis del sistema operativo. Esto garantiza reproducibilidad: cualquier persona puede recrear el entorno exacto ejecutando los pasos de instalación.
+**¿Por qué un entorno virtual?** El entorno virtual (`.venv/`) aísla las dependencias del análisis del sistema operativo. Esto garantiza reproducibilidad: cualquier persona puede recrear el entorno exacto ejecutando los pasos de instalación.
+
+**¿Por qué scripts modulares y no un solo archivo?** Siguiendo el principio de responsabilidad única (SRP), cada módulo encapsula una fase específica del análisis. Esto facilita la lectura, el mantenimiento y la extensión futura del código. El orquestador (`analizar.py`) importa y ejecuta cada módulo en orden, manteniéndose en ~75 líneas frente a las 600+ que tendría un archivo monolítico.
 
 ---
 
@@ -50,17 +58,19 @@ analisis-relevamiento/
 cd analisis-relevamiento
 
 # 2. Crear y activar el entorno virtual
-python3 -m venv venv
-source venv/bin/activate    # macOS/Linux
+python3 -m venv .venv
+source .venv/bin/activate    # macOS/Linux
 
 # 3. Instalar dependencias
 pip install -r scripts/requirements.txt
 
-# 4. Ejecutar el script de análisis
+# 4. Ejecutar el análisis completo
 python scripts/analizar.py
 ```
 
 Los gráficos se generan automáticamente en `graficos/`.
+
+Para ejecutar un módulo individual (por ejemplo, solo la limpieza de datos), se puede importar desde un intérprete Python o modificar el orquestador.
 
 ---
 
