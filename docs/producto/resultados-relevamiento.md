@@ -224,3 +224,90 @@ Solo el 7.5% utiliza algún dispositivo digital (celular, notebook o tablet) par
 ![P11. Organización preferida](../../analisis-relevamiento/graficos/P11_organizacion.png)
 
 **Hallazgo:** El modelo de **carpetas por materia** es el preferido por el 69.2%. Esto es coherente con P8 donde "organizar por materia" fue la segunda feature más votada. La navegación principal del MVP debe estructurarse en torno a materias/asignaturas como eje organizativo principal.
+
+---
+
+## 11. Análisis cualitativo — Comentarios abiertos (P12)
+
+**Tasa de participación:** 41 de 120 encuestados dejaron comentarios (34.2%). Esta tasa es alta para una pregunta abierta opcional, lo que indica compromiso con el tema.
+
+Los 41 comentarios fueron categorizados temáticamente mediante palabras clave. Cada comentario puede pertenecer a más de una categoría.
+
+### 11.1 Distribución por categoría temática
+
+| Categoría | Menciones | Descripción |
+|---|---|---|
+| Otros | 10 | Comentarios generales no clasificables |
+| Positivos / apoyo | 7 | Expresiones de entusiasmo ("Éxitos", "buena idea") |
+| Planificaciones docentes | 7 | Necesidad de plantillas para planificaciones didácticas |
+| Organización avanzada | 6 | Mapas mentales, esquemas jerárquicos, cuadros sinópticos |
+| Multimedia (fotos, audio) | 5 | Adjuntar fotos de pizarrón, grabar audios de clase |
+| Velocidad de captura | 4 | Dificultad para seguir el ritmo del docente |
+| Fórmulas / contenido técnico | 4 | Ecuaciones, diagramas, análisis sintáctico en latín |
+| Conectividad | 3 | Refuerzan la necesidad offline |
+| Recuperación / historial | 3 | Guardar versiones, recuperar notas eliminadas |
+| Agenda / calendario | 3 | Fechas de parciales, horarios de materias |
+
+### 11.2 Necesidades emergentes por carrera
+
+Los comentarios revelan necesidades diferenciadas según el perfil académico:
+
+- **Ed. Primaria / Ed. Especial (profesorados):** Plantillas de planificación didáctica, cuadros sinópticos y la posibilidad de adjuntar imágenes. Sus necesidades están orientadas a la **producción docente**, no solo a la captura de notas.
+- **Lengua y Literatura:** Esquemas jerárquicos, análisis de sintagma, compatibilidad con grabador de voz. Requieren **estructura textual avanzada**.
+- **Sistemas:** Diagramas técnicos, interfaz similar a un gestor de texto profesional, fechas de parciales. Perfil más **orientado a herramientas**.
+- **Danzas / Turismo:** Comentarios menos específicos, centrados en la organización general y resúmenes de contenido teórico.
+
+### 11.3 Citas textuales destacadas
+
+> *"Tomar notas desde una app es una buena idea pero tiene que ser sin Internet porque en el instituto no todos tienen acceso."* — Ed. Especial
+
+> *"Que la app permita el diseño de mapas mentales o esquemas jerárquicos de información."* — Lengua y Lit.
+
+> *"Que no solo se escriban notas, sino que también se pueda incluir audios y fotos."* — Ed. Primaria
+
+> *"Para tomar nota se necesita ser muy rápido porque sino se pierde información importante."* — Lengua y Lit.
+
+---
+
+## 12. Cruces estadísticos
+
+Se generaron 6 tablas cruzadas para detectar relaciones entre variables. A continuación se presentan los hallazgos más relevantes.
+
+### 12.1 Carrera × Dispositivo (P2 × P9)
+
+| Carrera | Celular | Cualquiera | Notebook/PC | Tablet |
+|---|---|---|---|---|
+| Ed. Primaria | 30 | 4 | 1 | 0 |
+| Ed. Especial | 17 | 8 | 1 | 0 |
+| Sistemas | 16 | 6 | 1 | 0 |
+| Lengua y Lit. | 15 | 5 | 1 | 0 |
+| Danzas | 6 | 3 | 0 | 0 |
+| Turismo | 3 | 1 | 1 | 1 |
+
+**Interpretación:** El celular domina en **todas las carreras** sin excepción. Incluso en Sistemas —donde se podría esperar mayor afinidad con Notebook/PC— el celular es preferido por el 70%. No hay evidencia de que alguna carrera requiera un enfoque desktop-first.
+
+### 12.2 Método actual × Dispositivo deseado (P4 × P9)
+
+| Método actual | Celular | Cualquiera | Notebook/PC | Tablet |
+|---|---|---|---|---|
+| Cuaderno/papel | 79 | 24 | 3 | 0 |
+| Celular | 3 | 3 | 1 | 0 |
+| No tomo notas | 5 | 0 | 0 | 0 |
+
+**Hallazgo clave:** De los 106 estudiantes que actualmente usan cuaderno/papel, el **74.5% elegiría el celular** como dispositivo para una app de notas. Esto revela la **brecha entre el hábito actual y la aspiración tecnológica**: los estudiantes no usan digital porque no tienen la herramienta adecuada, no porque rechacen la tecnología.
+
+### 12.3 Edad × Método de notas (P3 × P4)
+
+**Interpretación:** El cuaderno/papel domina en todos los rangos etarios (>85% en cada grupo). No se observa que los más jóvenes (18-22) usen más dispositivos digitales que los mayores. El hábito analógico es transversal a la edad.
+
+### 12.4 Dispositivo × Organización (P9 × P11)
+
+**Interpretación:** Quienes prefieren celular eligen mayoritariamente carpetas por materia (71%). El modelo de organización preferido no varía significativamente según el dispositivo, lo que simplifica el diseño de la interfaz: un único modelo de navegación por carpetas/materias funciona para todos los segmentos.
+
+### 12.5 Edad × Features (P3 × P8)
+
+**Interpretación:** "Funcionar sin internet" y "organizar por materia" lideran en todos los rangos etarios. No se detectan necesidades diferenciadas por edad para las funcionalidades core. La priorización del MVP puede ser universal sin necesidad de segmentar por edad.
+
+### 12.6 Turno × Dificultades (P1 × P5b)
+
+**Interpretación:** Las dificultades reportadas son homogéneas entre turnos. "Pierdo notas" y "Se desorganizan rápido" lideran tanto en turno tarde como noche. No hay evidencia de que un turno específico requiera funcionalidades diferenciadas.
