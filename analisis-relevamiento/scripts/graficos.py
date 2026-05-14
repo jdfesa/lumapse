@@ -92,56 +92,56 @@ def generar_graficos(df: pd.DataFrame, resultados: dict):
 
     # 1. Turno
     _barras_h(resultados["p1"]["n"],
-              "P1. Distribución por turno", "turno", base=n)
+              "P1. Distribución por turno", "P01_turno", base=n)
 
     # 2. Carrera
     _barras_h(resultados["p2"]["n"],
-              "P2. Distribución por carrera", "carrera",
+              "P2. Distribución por carrera", "P02_carrera",
               color=COLOR_SECUNDARIO, base=n)
 
     # 3. Edad
     _barras_h(resultados["p3"]["n"],
-              "P3. Rango de edad", "edad",
+              "P3. Rango de edad", "P03_edad",
               color=COLOR_TERCIARIO, base=n)
 
     # 4. Método de notas
     _barras_h(resultados["p4"]["n"],
-              "P4. Método de toma de notas", "metodo_notas", base=n)
+              "P4. Método de toma de notas", "P04_metodo_notas", base=n)
 
     # 5. Dificultad (torta)
     _torta(resultados["p5"]["n"],
-           "P5. ¿Dificultad con la toma de notas?", "dificultad")
+           "P5. ¿Dificultad con la toma de notas?", "P05_dificultad")
 
     # 6. Dificultades detalle
     _barras_h(resultados["p5b"]["n"],
               "P5b. Principales dificultades",
-              "dificultades_detalle", color="#f472b6")
+              "P05b_dificultades_detalle", color="#f472b6")
 
     # 7. Internet
     _barras_h(resultados["p6"]["n"],
-              "P6. Acceso estable a internet", "internet",
+              "P6. Acceso estable a internet", "P06_internet",
               color="#fb923c", base=n)
 
     # 8. Utilidad percibida
     _barras_h(resultados["p7"]["n"],
-              "P7. Utilidad percibida (escala 1-5)", "utilidad",
+              "P7. Utilidad percibida (escala 1-5)", "P07_utilidad",
               color=COLOR_ACENTO, base=n)
 
     # 9. Features
     _barras_h(resultados["p8"]["n"],
               "P8. Características más valoradas (multi-respuesta)",
-              "features", color=COLOR_SECUNDARIO, base=n)
+              "P08_features", color=COLOR_SECUNDARIO, base=n)
 
     # 10. Dispositivo
     _barras_h(resultados["p9"]["n"],
-              "P9. Dispositivo preferido", "dispositivo",
+              "P9. Dispositivo preferido", "P09_dispositivo",
               color=COLOR_TERCIARIO, base=n)
 
     # 11. Prototipo (torta)
     _torta(resultados["p10"]["n"],
-           "P10. ¿Probaría un prototipo?", "prototipo")
+           "P10. ¿Probaría un prototipo?", "P10_prototipo")
 
     # 12. Organización
     _barras_h(resultados["p11"]["n"],
-              "P11. Organización preferida", "organizacion",
+              "P11. Organización preferida", "P11_organizacion",
               color="#818cf8", base=n)
