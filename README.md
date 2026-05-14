@@ -66,6 +66,10 @@ lumapse/
 ├── public/                 # Assets estáticos
 │   ├── icons/              # Iconos PWA (múltiples tamaños)
 │   └── manifest.json       # Web App Manifest
+├── analisis-relevamiento/  # Análisis de datos del relevamiento (Python)
+│   ├── datos/              # CSV con respuestas crudas
+│   ├── scripts/            # Script de análisis y dependencias
+│   └── graficos/           # Gráficos generados
 ├── docs/                   # Documentación del proyecto
 │   ├── adr/                # Architecture Decision Records
 │   ├── diagramas/          # Diagramas UML (Mermaid)
