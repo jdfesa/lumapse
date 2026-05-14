@@ -159,3 +159,68 @@ Solo el 7.5% utiliza algún dispositivo digital (celular, notebook o tablet) par
 ![P07. Utilidad percibida](../../analisis-relevamiento/graficos/P07_utilidad.png)
 
 **Hallazgo clave:** El **80.8% califica la propuesta como útil o muy útil** (puntuaciones 4 y 5). La media de 4.25 sobre 5 indica una percepción fuertemente positiva. Solo el 5% la considera poco o nada útil. Este nivel de aceptación valida que existe demanda real para el producto.
+
+---
+
+## 7. Priorización de funcionalidades (P8)
+
+**Multi-respuesta:** Cada encuestado seleccionó hasta 3 características de una lista predefinida (base: 120).
+
+| Característica | n | % |
+|---|---|---|
+| Que funcione sin internet | 89 | 74.2% |
+| Que permita organizar por materia | 88 | 73.3% |
+| Que funcione en celular y PC | 64 | 53.3% |
+| Que guarde automáticamente | 63 | 52.5% |
+| Que sea rápida | 54 | 45.0% |
+| Que no pida cuenta | 13 | 10.8% |
+
+![P08. Características más valoradas](../../analisis-relevamiento/graficos/P08_features.png)
+
+**Hallazgo clave:** Las dos funcionalidades más demandadas —**offline** (74.2%) y **organización por materia** (73.3%)— están prácticamente empatadas y fueron seleccionadas por 3 de cada 4 encuestados. La multiplataforma (53.3%) y el guardado automático (52.5%) completan un segundo bloque de prioridades.
+
+**Implicancia para el MVP:** Estas 4 funcionalidades constituyen el núcleo mínimo que los usuarios esperan. La baja demanda de "que no pida cuenta" (10.8%) sugiere que un sistema de autenticación ligero es aceptable si aporta beneficios (sincronización, backup).
+
+---
+
+## 8. Dispositivo de uso (P9)
+
+| Dispositivo | n | % |
+|---|---|---|
+| Celular | 87 | 72.5% |
+| Cualquiera por igual | 27 | 22.5% |
+| Notebook/PC | 5 | 4.2% |
+| Tablet | 1 | 0.8% |
+
+![P09. Dispositivo preferido](../../analisis-relevamiento/graficos/P09_dispositivo.png)
+
+**Hallazgo crítico:** El **72.5% usaría Lumapse desde el celular**. Si sumamos "Cualquiera por igual" (que incluye celular), el 95% de los usuarios potenciales espera poder usar la app desde un dispositivo móvil. Este dato tiene implicancias directas en la decisión de arquitectura (ver §14. Conclusiones).
+
+---
+
+## 9. Disposición a probar el prototipo (P10)
+
+| Respuesta | n | % |
+|---|---|---|
+| Sí | 97 | 80.8% |
+| Tal vez | 22 | 18.3% |
+| No | 1 | 0.8% |
+
+![P10. Disposición a probar el prototipo](../../analisis-relevamiento/graficos/P10_prototipo.png)
+
+**Hallazgo:** El **99.2% estaría dispuesto a probar un prototipo** (sumando "Sí" y "Tal vez"). Solo 1 persona respondió "No". Este nivel de apertura garantiza que existe masa crítica para un beta testing real cuando el prototipo esté disponible.
+
+---
+
+## 10. Modelo de organización preferido (P11)
+
+| Organización | n | % |
+|---|---|---|
+| Carpetas por materia | 83 | 69.2% |
+| Etiquetas/tags | 24 | 20.0% |
+| No me importa cómo se organice | 10 | 8.3% |
+| Lista simple | 3 | 2.5% |
+
+![P11. Organización preferida](../../analisis-relevamiento/graficos/P11_organizacion.png)
+
+**Hallazgo:** El modelo de **carpetas por materia** es el preferido por el 69.2%. Esto es coherente con P8 donde "organizar por materia" fue la segunda feature más votada. La navegación principal del MVP debe estructurarse en torno a materias/asignaturas como eje organizativo principal.
