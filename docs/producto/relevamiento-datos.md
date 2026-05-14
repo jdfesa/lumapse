@@ -133,7 +133,7 @@ Se cierra la encuesta el 2026-05-25. Los datos **no se descartan**: se reportan 
 | Registro | Valor |
 |---|---|
 | Fecha real de cierre | 2026-05-13, 21:00 (Duración total: 48 hs) |
-| Total de respuestas al cierre | 120 |
+| Total de respuestas al cierre | 121 |
 | Escenario aplicado | Escenario A (Cierre anticipado por alcanzar meta) |
 
 ---

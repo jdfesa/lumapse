@@ -2,7 +2,7 @@
 
 > **Actividad:** Recolección de respuestas del Relevamiento de Datos  
 > **Período:** 2026-05-11 21:00 → 2026-05-13 21:00 (48 horas exactas)  
-> **Resultado:** 120 respuestas · Escenario A (cierre anticipado por alcanzar meta)
+> **Resultado:** 121 respuestas · Escenario A (cierre anticipado por alcanzar meta)
 
 ---
 
@@ -10,7 +10,7 @@
 
 La encuesta "¿Cómo tomás notas?" se ejecutó como parte de la fase de empatía (Design Thinking) del proyecto Lumapse. El instrumento fue diseñado previamente en [`relevamiento-datos.md`](../relevamiento-datos.md) y el cálculo muestral se fundamentó en [`metodologia-muestral.md`](../metodologia-muestral.md).
 
-La recolección se realizó entre el **11 y el 13 de mayo de 2026**, alcanzando **120 respuestas** en **48 horas exactas**, superando el objetivo mínimo de 90 respuestas y activando el **Escenario A** (cierre anticipado) del protocolo de cierre definido en la planificación.
+La recolección se realizó entre el **11 y el 13 de mayo de 2026**, alcanzando **121 respuestas** en **48 horas exactas**, superando el objetivo mínimo de 90 respuestas y activando el **Escenario A** (cierre anticipado) del protocolo de cierre definido en la planificación.
 
 ---
 
@@ -46,7 +46,7 @@ Esta carpeta contiene los materiales utilizados durante la ejecución:
 | 2026-05-11, 21:00 | Lanzamiento de la encuesta — distribución inicial por WhatsApp y colocación de pósters en aulas |
 | 2026-05-12, 03:00 (~6 h) | Primer corte: 28 respuestas registradas |
 | 2026-05-12, 21:00 (~24 h) | Segundo corte: 96 respuestas registradas |
-| 2026-05-13, 21:00 (~48 h) | Cierre de la encuesta — 120 respuestas alcanzadas |
+| 2026-05-13, 21:00 (~48 h) | Cierre de la encuesta — 121 respuestas alcanzadas |
 
 ---
 
@@ -54,14 +54,14 @@ Esta carpeta contiene los materiales utilizados durante la ejecución:
 
 | Métrica | Valor |
 |---|---|
-| Respuestas obtenidas | 120 |
+| Respuestas obtenidas | 121 |
 | Duración de la recolección | 48 horas (2 días naturales) |
 | Objetivo mínimo (confianza 95%, margen ±10%) | 90 |
 | Objetivo deseable (confianza 90%, margen ±7%) | 125 |
 | Escenario aplicado | **A** — Cierre anticipado por alcanzar meta |
 | Nivel estadístico alcanzado | Confianza 95%, margen de error ~8.5% |
 
-> Con 120 respuestas sobre una población de 1.239 estudiantes, la muestra supera el umbral mínimo de 90 respuestas (confianza 95%, margen ±10%) y se aproxima al objetivo deseable de 125 (confianza 90%, margen ±7%). Los resultados permiten **inferencia estadística** sobre la población del IES 6023.
+> Con 121 respuestas sobre una población de 1.239 estudiantes, la muestra supera el umbral mínimo de 90 respuestas (confianza 95%, margen ±10%) y se aproxima al objetivo deseable de 125 (confianza 90%, margen ±7%). Los resultados permiten **inferencia estadística** sobre la población del IES 6023.
 
 ---
 
