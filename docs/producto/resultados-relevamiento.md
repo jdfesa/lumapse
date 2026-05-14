@@ -87,3 +87,75 @@
 **Hallazgo clave:** El **88.3% de los estudiantes toma notas en cuaderno/papel**. Esto confirma que el público objetivo actual no utiliza herramientas digitales para esta actividad, lo cual representa tanto una oportunidad (mercado sin explotar) como un desafío (hábito arraigado que requiere una propuesta de valor convincente para migrar).
 
 Solo el 7.5% utiliza algún dispositivo digital (celular, notebook o tablet) para tomar notas, lo que indica que Lumapse no competiría contra otras apps, sino contra el cuaderno físico.
+
+---
+
+## 4. Dificultades percibidas (P5, P5b)
+
+### 4.1 ¿Tienen dificultades con la toma de notas?
+
+**Base de cálculo:** 115 estudiantes (se excluyen los 5 que declararon "No tomo notas", ya que P5 solo aplica a quienes toman notas activamente).
+
+| Respuesta | n | % |
+|---|---|---|
+| No | 59 | 51.3% |
+| Sí | 56 | 48.7% |
+
+![P05. Dificultad con la toma de notas](../../analisis-relevamiento/graficos/P05_dificultad.png)
+
+**Hallazgo:** Prácticamente la mitad de los estudiantes que toman notas reconoce dificultades en el proceso. Este dato valida la hipótesis central del proyecto: existe un problema real percibido por los usuarios.
+
+### 4.2 Dificultades concretas (P5b)
+
+**Base de cálculo:** 56 estudiantes que respondieron "Sí" en P5 (multi-respuesta, hasta 3 opciones).
+
+| Dificultad | n | % |
+|---|---|---|
+| Pierdo notas con frecuencia | 33 | 58.9% |
+| Se desorganizan rápido | 33 | 58.9% |
+| Me cuesta organizar el formato (títulos, listas, tablas, fórmulas) | 22 | 39.3% |
+| No encuentro lo que busco | 13 | 23.2% |
+| No puedo acceder desde otro dispositivo | 3 | 5.4% |
+
+![P05b. Principales dificultades](../../analisis-relevamiento/graficos/P05b_dificultades_detalle.png)
+
+**Hallazgo clave:** Las dos dificultades principales —pérdida de notas y desorganización— están empatadas en el 58.9%. Ambas son problemas que una aplicación digital resuelve directamente (persistencia automática y organización por materia/carpeta). El formato de contenido (39.3%) también es abordable con un editor estructurado.
+
+---
+
+## 5. Conectividad en el instituto (P6)
+
+| Frecuencia de acceso | n | % |
+|---|---|---|
+| A veces | 42 | 35.0% |
+| Raramente | 29 | 24.2% |
+| Nunca | 27 | 22.5% |
+| Casi siempre | 15 | 12.5% |
+| Siempre | 7 | 5.8% |
+
+![P06. Acceso estable a internet](../../analisis-relevamiento/graficos/P06_internet.png)
+
+**Hallazgo crítico:** El **81.7% de los encuestados percibe conectividad deficiente** en el instituto (sumando "A veces", "Raramente" y "Nunca"). Solo el 18.3% reporta acceso estable. Este dato es determinante para la arquitectura de la aplicación: **el funcionamiento offline no es un nice-to-have, es un requisito esencial**.
+
+---
+
+## 6. Interés en la propuesta de valor (P7)
+
+**Pregunta:** "¿Qué tan útil te parecería una app que te ayude a organizar tus notas de clase de forma rápida y desde tu celular?" (Escala Likert 1-5)
+
+| Valoración | n | % |
+|---|---|---|
+| 5 — Muy útil | 61 | 50.8% |
+| 4 — Útil | 36 | 30.0% |
+| 3 — Algo útil | 17 | 14.2% |
+| 2 — Poco útil | 4 | 3.3% |
+| 1 — Nada útil | 2 | 1.7% |
+
+| Métrica | Valor |
+|---|---|
+| Media | 4.25 / 5 |
+| Mediana | 5 (Muy útil) |
+
+![P07. Utilidad percibida](../../analisis-relevamiento/graficos/P07_utilidad.png)
+
+**Hallazgo clave:** El **80.8% califica la propuesta como útil o muy útil** (puntuaciones 4 y 5). La media de 4.25 sobre 5 indica una percepción fuertemente positiva. Solo el 5% la considera poco o nada útil. Este nivel de aceptación valida que existe demanda real para el producto.
