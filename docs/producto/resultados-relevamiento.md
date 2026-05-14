@@ -311,3 +311,113 @@ Se generaron 6 tablas cruzadas para detectar relaciones entre variables. A conti
 ### 12.6 Turno × Dificultades (P1 × P5b)
 
 **Interpretación:** Las dificultades reportadas son homogéneas entre turnos. "Pierdo notas" y "Se desorganizan rápido" lideran tanto en turno tarde como noche. No hay evidencia de que un turno específico requiera funcionalidades diferenciadas.
+
+---
+
+## 13. Validación de artefactos de diseño
+
+Los hallazgos del relevamiento se contrastan con los artefactos producidos en fases anteriores del Design Thinking para verificar si los datos **confirman**, **matizan** o **contradicen** las decisiones previas.
+
+### 13.1 Problem Statement
+
+| Supuesto original | Evidencia empírica | Veredicto |
+|---|---|---|
+| Los estudiantes tienen dificultades para organizar sus notas | 48.7% reconoce dificultades; las dos principales son pérdida y desorganización | ✅ **Confirmado** |
+| La desorganización provoca pérdida de información | 58.9% reporta pérdida de notas y desorganización rápida | ✅ **Confirmado** |
+| Una herramienta digital mejoraría la situación | 80.8% la considera útil o muy útil (media 4.25/5) | ✅ **Confirmado** |
+
+### 13.2 Personas
+
+| Persona definida | Contraste con datos | Veredicto |
+|---|---|---|
+| Estudiante joven (18-27) como usuario principal | 75.8% de la muestra tiene 18-27 años | ✅ **Confirmado** |
+| Uso predominante de celular | 72.5% prefiere celular; 95% lo incluye | ✅ **Confirmado** |
+| Conectividad limitada como contexto | 81.7% reporta conectividad deficiente | ✅ **Confirmado** |
+| Necesidad de organización por materia | 73.3% la prioriza como feature; 69.2% prefiere carpetas por materia | ✅ **Confirmado** |
+
+### 13.3 Requisitos funcionales
+
+| Requisito previsto | Demanda detectada | Veredicto |
+|---|---|---|
+| Funcionamiento offline | 74.2% lo prioriza (feature #1) | ✅ **Confirmado como crítico** |
+| Organización por materia | 73.3% lo prioriza (feature #2) | ✅ **Confirmado como crítico** |
+| Multiplataforma (celular + PC) | 53.3% lo valora | ✅ **Confirmado** |
+| Guardado automático | 52.5% lo valora | ✅ **Confirmado** |
+| Editor de contenido rico (fórmulas, esquemas) | Mencionado en P12 por múltiples carreras | ⚠️ **Matizado**: es una necesidad real pero secundaria para el MVP |
+| Multimedia (fotos, audio) | Mencionado en P12 por profesorados | ⚠️ **Matizado**: emergente, no contemplado inicialmente |
+
+### 13.4 Lean Canvas
+
+| Hipótesis del Canvas | Evidencia | Veredicto |
+|---|---|---|
+| Problema: los estudiantes pierden o desorganizan sus notas | Validado cuantitativamente (P5, P5b) | ✅ **Confirmado** |
+| Segmento: estudiantes de nivel superior | 120 respuestas de 6 carreras del IES 6023 | ✅ **Confirmado** |
+| Propuesta de valor: app rápida y offline para notas | 74.2% offline + 45% rapidez + 80.8% utilidad percibida | ✅ **Confirmado** |
+| Canal: distribución directa (sin app store) | Solo 10.8% prioriza "sin cuenta". La distribución por APK o PWA es viable | ✅ **Viable** |
+
+---
+
+## 14. Conclusiones y recomendaciones
+
+### 14.1 Hallazgos principales
+
+1. **El problema existe y es percibido:** El 48.7% de los estudiantes que toman notas reconoce dificultades. Las principales son la pérdida de notas (58.9%) y la desorganización rápida (58.9%).
+
+2. **La demanda es real:** El 80.8% califica la propuesta como útil o muy útil (media 4.25/5). El 99.2% estaría dispuesto a probar un prototipo.
+
+3. **El celular es el dispositivo dominante:** El 72.5% usaría la app desde el celular. Este dato es consistente en todas las carreras y rangos etarios.
+
+4. **El offline es un requisito, no una feature:** El 81.7% percibe conectividad deficiente y el 74.2% prioriza el funcionamiento sin internet como la característica más importante.
+
+5. **La organización por materia es el modelo esperado:** El 73.3% la prioriza como feature y el 69.2% prefiere carpetas por materia como estructura organizativa.
+
+6. **El competidor no es otra app, es el cuaderno:** El 88.3% toma notas en papel. La propuesta de valor debe ser lo suficientemente convincente para migrar un hábito arraigado.
+
+### 14.2 Recomendaciones para el producto
+
+| Prioridad | Recomendación | Evidencia |
+|---|---|---|
+| 🔴 Crítica | Implementar funcionamiento offline robusto | P6 (81.7% sin internet) + P8 (74.2% feature #1) |
+| 🔴 Crítica | Diseñar la interfaz mobile-first | P9 (72.5% celular) + cruce P2×P9 (transversal) |
+| 🔴 Crítica | Organizar notas por materia/carpeta | P8 (73.3%) + P11 (69.2%) |
+| 🟡 Alta | Guardado automático y persistente | P8 (52.5%) + P5b (58.9% pérdida de notas) |
+| 🟡 Alta | Interfaz rápida y minimalista | P8 (45%) + P12 (velocidad de captura) |
+| 🟢 Media | Multiplataforma (celular + PC) | P8 (53.3%) |
+| 🟢 Media | Evaluar soporte multimedia (fotos, audio) | P12 (5 menciones cualitativas) |
+| ⚪ Baja | Sistema de autenticación ligero | P8 ("sin cuenta" solo 10.8%) |
+
+### 14.3 Evaluación de arquitectura: PWA vs. App Nativa
+
+Los datos presentan señales que deben evaluarse para la decisión de arquitectura:
+
+**Señales a favor de priorizar mobile (app nativa o PWA optimizada):**
+- El 72.5% usaría la app desde el celular (P9)
+- El 81.7% tiene conectividad deficiente (P6), requiriendo offline robusto
+- El 88.3% actualmente usa cuaderno; la adopción digital requiere mínima fricción
+
+**Consideraciones técnicas (a evaluar en el ADR correspondiente):**
+- Una PWA ofrece multiplataforma con codebase única, pero su persistencia offline (IndexedDB) tiene limitaciones de cuota
+- Una app nativa (APK) ofrece mejor persistencia (SQLite), distribución más intuitiva y acceso a hardware (cámara, micrófono)
+- La decisión final se documentará en un Architecture Decision Record (ADR) con esta evidencia como input
+
+> **Nota:** Este informe presenta los datos de forma neutral. La decisión de arquitectura es posterior al análisis y se tomará considerando factores adicionales (recursos del equipo, timeline, complejidad técnica).
+
+---
+
+## 15. Limitaciones del estudio
+
+1. **Muestreo no probabilístico:** La encuesta fue distribuida por conveniencia (WhatsApp y QR en aulas), lo que puede introducir sesgo de autoselección. Los resultados son representativos de la muestra, pero no necesariamente generalizables a toda la población.
+
+2. **Margen de error:** Con 120 respuestas de una población de 1.239, el margen de error es de ~8.5% (confianza 95%). Los porcentajes deben interpretarse como tendencias, no como valores exactos.
+
+3. **Sesgo de deseabilidad social:** Las preguntas sobre utilidad percibida (P7) y disposición a probar (P10) pueden tener sesgo positivo, ya que los encuestados podrían responder favorablemente por cortesía o entusiasmo momentáneo.
+
+4. **Período de recolección corto:** 48 horas puede no capturar a todos los segmentos de la población (ej: estudiantes que solo asisten ciertos días).
+
+5. **Pregunta abierta (P12):** La categorización temática fue realizada mediante búsqueda de palabras clave, lo cual puede no capturar matices de lenguaje. Una revisión manual complementaria refinaría los resultados.
+
+6. **Ausencia de datos de uso real:** La encuesta mide percepción e intención declarada, no comportamiento real. La validación definitiva ocurrirá con el prototipo funcional.
+
+---
+
+*Documento generado a partir del análisis automatizado de 120 respuestas válidas. Script de análisis disponible en [`analisis-relevamiento/scripts/`](../../analisis-relevamiento/scripts/). Datos crudos en [`analisis-relevamiento/datos/`](../../analisis-relevamiento/datos/).*
