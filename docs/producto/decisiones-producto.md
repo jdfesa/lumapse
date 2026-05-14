@@ -1,7 +1,7 @@
 # Decisiones de Producto — Lumapse
 
 > **Documento vivo** — Se actualiza a medida que se toman decisiones de producto y se incorporan datos del relevamiento.  
-> **Última actualización:** 2026-05-05
+> **Última actualización:** 2026-05-14
 
 ---
 
@@ -60,10 +60,11 @@ Si la encuesta revela que los usuarios valoran la organización manual más que 
 
 ---
 
-## DP-002: Estructura de navegación Inbox / Subjects / Archive
+## DP-002: Estructura de navegación Entrada / Materias / Archivo
 
 **Fecha:** 2026-05-05  
-**Estado:** Pendiente de validación
+**Actualización:** 2026-05-14  
+**Estado:** ✅ Confirmada (con datos del relevamiento)
 
 ### Contexto
 
@@ -71,65 +72,70 @@ La versión actual de Lumapse presenta una lista plana de notas sin ninguna jera
 
 ### Decisión
 
-Implementar una navegación con tres secciones predefinidas:
+Implementar una navegación con tres secciones predefinidas, con nomenclatura en español para mantener consistencia con el idioma de los usuarios:
 
-- **📥 Inbox (Entrada):** Destino por defecto de toda nota nueva. La bandeja de captura rápida. El usuario no piensa en dónde guardar, solo escribe.
-- **📚 Subjects (Materias):** Carpetas que el usuario crea manualmente, una por cada materia que cursa. Las notas se mueven desde el Inbox cuando el usuario tiene tiempo de organizarlas.
-- **🗄️ Archive (Archivo):** Notas que ya no son activas pero que el usuario quiere conservar (ej: apuntes de un parcial ya rendido).
+- **📥 Entrada:** Destino por defecto de toda nota nueva. La bandeja de captura rápida. El usuario no piensa en dónde guardar, solo escribe.
+- **📚 Materias:** Carpetas que el usuario crea manualmente, una por cada materia que cursa. Las notas se mueven desde Entrada cuando el usuario tiene tiempo de organizarlas.
+- **📦 Archivo:** Notas que ya no son activas pero que el usuario quiere conservar (ej: apuntes de materias ya aprobadas).
 
 ### Justificación
 
 - **Opinionada pero no rígida:** La app le da al estudiante una estructura predefinida que tiene sentido para su contexto (materias → parciales → aprobadas → archivadas), sin obligarlo a diseñarla desde cero como en Notion u Obsidian.
-- **Reduce la parálisis de decisión:** "¿Dónde guardo esta nota?" → En el Inbox. Siempre. Después la organizás.
+- **Reduce la parálisis de decisión:** "¿Dónde guardo esta nota?" → En Entrada. Siempre. Después la organizás.
 - **Flujo natural:** Captura rápida → Organización cuando hay tiempo → Archivo cuando ya no se necesita.
-- **Público objetivo:** Los estudiantes manejan su vida académica por materias. La estructura refleja su modelo mental.
+- **Nomenclatura en español:** Los usuarios son estudiantes de un instituto argentino. Términos como "Inbox" o "Subjects" no aportan claridad; "Entrada", "Materias" y "Archivo" son palabras familiares que cualquier estudiante entiende sin explicación.
 
-### Datos de soporte
+### Datos de soporte (validación empírica)
 
-- **Pendiente (clave):** P12 de la encuesta ("¿Cómo preferirías organizar tus notas de estudio?").
-  - Si la mayoría elige **"En carpetas por materia"** → decisión validada directamente.
-  - Si la mayoría elige **"Con etiquetas/tags"** → evaluar si agregamos tags como sistema complementario o alternativo.
-  - Si la mayoría elige **"Lista simple"** o **"No me importa"** → podría mantenerse la estructura actual (lista plana) con una búsqueda robusta como alternativa.
-- **Pendiente:** Cruce P9 × P12 → si los usuarios de celular prefieren organización simple, priorizamos el Inbox y dejamos las carpetas como algo secundario.
-- **Pendiente:** P5b → si "Se desorganizan rápido" es un pain point frecuente, refuerza la necesidad de estructura predefinida.
+Resultados del [relevamiento de datos](resultados-relevamiento.md) (n=120):
+
+- **P11:** El **69.2% prefiere carpetas por materia** como modelo de organización → **decisión validada directamente**.
+- **P8:** El **73.3% prioriza "organizar por materia"** como feature → refuerza la estructura de Materias.
+- **P5b:** El **58.9% reporta desorganización rápida** como dificultad → refuerza la necesidad de estructura predefinida.
+- **Cruce P9×P11:** Quienes prefieren celular eligen carpetas por materia en el 71% de los casos → el modelo funciona para mobile.
+- **Tags (20%):** Una minoría significativa prefiere etiquetas. Se evaluará como sistema complementario (ver DP-004).
 
 ### Condición de pivote
 
-- Si P12 muestra preferencia clara por tags (>40%) → implementar sistema de tags como mecanismo principal, carpetas como secundario.
-- Si P12 muestra preferencia por lista simple (>40%) → mantener lista plana con búsqueda potente, posponer la estructura de carpetas.
+No aplica — la decisión fue validada empíricamente. Si en futuras iteraciones el feedback de uso real muestra que los usuarios no utilizan la estructura, se simplificará.
 
 ---
 
-## DP-003: Mobile-first vs Desktop-first
+## DP-003: Mobile-first
 
 **Fecha:** 2026-05-05  
-**Estado:** Pendiente de validación (bloqueado por encuesta)
+**Actualización:** 2026-05-14  
+**Estado:** ✅ Confirmada (con datos del relevamiento)
 
 ### Contexto
 
-Lumapse es una PWA que debe funcionar bien en ambos entornos. Sin embargo, el enfoque de diseño inicial (¿diseñamos primero para celular y adaptamos a desktop, o viceversa?) impacta la arquitectura de la interfaz, los gestos, el tamaño de los elementos interactivos y la disposición del layout.
+Lumapse debe funcionar bien en múltiples dispositivos. Sin embargo, el enfoque de diseño (¿diseñamos primero para celular y adaptamos a desktop, o viceversa?) impacta la arquitectura de la interfaz, los gestos, el tamaño de los elementos interactivos y la disposición del layout.
 
 ### Decisión
 
-**Pospuesta.** Se espera el resultado de la encuesta (P9) antes de definir el enfoque.
+**Mobile-first.** La interfaz se diseña y optimiza primero para pantallas de celular, con adaptación posterior a pantallas más grandes si el tiempo lo permite.
+
+Esta decisión se complementa con el [ADR-005](../adr/ADR-005-pivote-app-nativa.md) que documenta el pivote de PWA a app nativa empaquetada con Capacitor.
 
 ### Justificación
 
-- No hay datos concretos sobre el dispositivo principal de los estudiantes del IES 6023.
-- Diseñar para el dispositivo equivocado primero podría requerir refactorizaciones costosas.
-- La encuesta se cierra este fin de semana, por lo que el bloqueo es de días, no semanas.
+- El **72.5%** de los encuestados usaría la app desde el celular (P9).
+- Sumando "Cualquiera por igual", el **95%** incluye celular como dispositivo de uso.
+- El celular domina en **todas las carreras** sin excepción, incluso en Sistemas (70%).
+- El **88.3%** toma notas en cuaderno/papel — la migración a digital requiere mínima fricción, y el celular es el dispositivo que ya llevan al aula.
 
-### Datos de soporte
+### Datos de soporte (validación empírica)
 
-- **Pendiente (clave):** P9 de la encuesta ("¿Desde qué dispositivo usarías más una app de notas?").
-  - Si **Celular** > 50% → Mobile-first.
-  - Si **Notebook/PC** > 50% → Desktop-first.
-  - Si **Cualquiera por igual** > 40% → Diseño responsive equilibrado sin priorizar un factor de forma.
-- **Pendiente:** P4 ("¿Cómo tomás notas habitualmente?") → proporciona contraste entre el dispositivo que *ya usan* y el que *usarían* (P9).
+Resultados del [relevamiento de datos](resultados-relevamiento.md) (n=120):
+
+- **P9:** Celular 72.5%, Cualquiera 22.5%, Notebook/PC 4.2%, Tablet 0.8%.
+- **P4:** El 88.3% usa cuaderno/papel → el celular no compite con otra app sino con el cuaderno.
+- **Cruce P4×P9:** De los 106 que usan cuaderno, el 74.5% elegiría celular → brecha entre hábito actual y aspiración tecnológica.
+- **Cruce P2×P9:** El celular domina en todas las carreras → no hay segmento que requiera desktop-first.
 
 ### Condición de pivote
 
-La decisión se toma directamente con los datos. No hay supuesto previo que pivotar.
+No aplica — la evidencia es inequívoca. Mobile-first es la dirección correcta.
 
 ---
 
