@@ -16,7 +16,7 @@ Al inicializar el proyecto era necesario definir cómo organizar los archivos de
 lumapse/
 ├── src/                    # Código fuente de la PWA
 │   ├── components/         # Componentes UI reutilizables
-│   ├── services/           # Lógica de negocio (IndexedDB, parsers)
+│   ├── services/           # Lógica de negocio (persistencia, parsers)
 │   ├── store/              # Estado de la aplicación (patrón observable)
 │   ├── styles/             # CSS modular (main.css + partials)
 │   └── main.js             # Punto de entrada de la aplicación

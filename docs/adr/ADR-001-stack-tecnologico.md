@@ -39,4 +39,4 @@ Vite proporciona: servidor de desarrollo con HMR, resolución de módulos ES, op
 
 ## Revisión
 
-Este ADR se revisa al cierre del Hito 03. Si la complejidad del estado justifica un cambio, se documentará en ADR-005.
+Este ADR se revisa al cierre del Hito 03. Si la complejidad del estado justifica un cambio, se documentará en un nuevo ADR.
