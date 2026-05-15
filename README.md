@@ -76,6 +76,7 @@ lumapse/
 ├── docs/                   # Documentación del proyecto
 │   ├── adr/                # Architecture Decision Records (5 ADRs)
 │   ├── diagramas/          # Diagramas UML (Mermaid)
+│   ├── gestion/            # Estimación, planificación y control de avance
 │   ├── hitos/              # Informes de avance mensuales
 │   ├── informe-final/      # Esqueleto del informe académico final (PP3)
 │   ├── inspiracion/        # Benchmarking e ideas UX/UI externas

@@ -5,6 +5,7 @@ Esta carpeta contiene **exclusivamente documentación en formato texto** (Markdo
 - [`adr/`](./adr/) — Architecture Decision Records: decisiones técnicas justificadas
 - [`anteproyecto/`](./anteproyecto/) — Documento formal de definición del proyecto
 - [`diagramas/`](./diagramas/) — Diagramas UML del sistema (Mermaid)
+- [`gestion/`](./gestion/) — Estimación, planificación y control de avance del proyecto
 - [`hitos/`](./hitos/) — Informes de avance mensual del proyecto
 - [`producto/`](./producto/) — Documentación de producto: personas, requisitos, historias de usuario, análisis competitivo, Lean Canvas (Design Thinking)
 - [`inspiracion/`](./inspiracion/) — Benchmarking y análisis de productos de referencia externos. Ideas UX/UI con horizonte temporal (corto, mediano, largo plazo)
