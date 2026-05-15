@@ -21,7 +21,7 @@
     "knowledge-management"
   ],
   "author": "Jose David Sandoval",
-  "license": "MIT",
+  "license": "GPL-3.0-or-later",
   "dependencies": {
     "dompurify": "^3.4.2",
     "idb": "^8.0.3",
