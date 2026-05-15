@@ -1,0 +1,46 @@
+# ──────────────────────────────────────────────────────────────
+# Workflow: CI — Lint
+# Propósito: Verificar la calidad del código JavaScript en cada
+#            push o pull request a la rama main.
+#
+# ¿Qué hace?
+#   1. Instala Node.js y las dependencias del proyecto.
+#   2. Corre ESLint sobre la carpeta src/.
+#   3. Reporta advertencias y errores en la pestaña Actions de GitHub.
+#
+# ¿Bloquea el push? NO. Solo informa.
+# ¿Modifica el código?  NO. Solo lee y reporta.
+# ──────────────────────────────────────────────────────────────
+
+name: CI — Lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Verificar calidad del código (ESLint)
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Descargar el código del repositorio
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      # 2. Configurar Node.js (misma versión LTS que usamos localmente)
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      # 3. Instalar dependencias (usa el package-lock.json para reproducibilidad)
+      - name: Instalar dependencias
+        run: npm ci
+
+      # 4. Correr el linter
+      - name: Correr ESLint
+        run: npm run lint
