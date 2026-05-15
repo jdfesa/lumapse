@@ -5,7 +5,7 @@
 
 [![Estado del proyecto](https://img.shields.io/badge/estado-en%20desarrollo-a3e635?style=flat-square)](https://github.com/jdfesa/lumapse)
 [![Hito actual](https://img.shields.io/badge/hito-03%20MVP%20completo-a3e635?style=flat-square)](./docs/hitos/hito-03-julio.md)
-[![Licencia](https://img.shields.io/badge/licencia-MIT-737373?style=flat-square)](./LICENSE)
+[![Licencia](https://img.shields.io/badge/licencia-GPLv3-737373?style=flat-square)](./LICENSE)
 [![Conventional Commits](https://img.shields.io/badge/commits-conventional-a3e635?style=flat-square)](https://www.conventionalcommits.org)
 
 ---
