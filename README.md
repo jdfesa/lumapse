@@ -78,6 +78,7 @@ lumapse/
 │   ├── diagramas/          # Diagramas UML (Mermaid)
 │   ├── hitos/              # Informes de avance mensuales
 │   ├── informe-final/      # Esqueleto del informe académico final (PP3)
+│   ├── inspiracion/        # Benchmarking e ideas UX/UI externas
 │   └── producto/           # Design Thinking, requisitos, HU y encuesta
 ├── .github/                # Templates de GitHub
 ├── README.md               # Documentación principal
