@@ -77,6 +77,7 @@ lumapse/
 │   ├── adr/                # Architecture Decision Records (5 ADRs)
 │   ├── diagramas/          # Diagramas UML (Mermaid)
 │   ├── hitos/              # Informes de avance mensuales
+│   ├── informe-final/      # Esqueleto del informe académico final (PP3)
 │   └── producto/           # Design Thinking, requisitos, HU
 ├── .github/                # Templates de GitHub
 ├── README.md               # Documentación principal
