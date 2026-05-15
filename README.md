@@ -79,8 +79,9 @@ lumapse/
 │   ├── hitos/              # Informes de avance mensuales
 │   └── producto/           # Design Thinking, requisitos, HU
 ├── .github/                # Templates de GitHub
-├── README.md
-├── CHANGELOG.md
+├── README.md               # Documentación principal
+├── CHANGELOG.md            # Registro histórico de cambios y versiones
+├── BACKLOG.md              # Deuda técnica y tareas pendientes por hacer
 └── package.json
 ```
 
