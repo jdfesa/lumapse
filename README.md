@@ -80,8 +80,10 @@ lumapse/
 │   └── producto/           # Design Thinking, requisitos, HU
 ├── .github/                # Templates de GitHub
 ├── README.md               # Documentación principal
+├── CONTRIBUTING.md         # Reglas de contribución, ramas y estándares
 ├── CHANGELOG.md            # Registro histórico de cambios y versiones
 ├── BACKLOG.md              # Deuda técnica y tareas pendientes por hacer
+├── LICENSE                 # Licencia legal de código abierto (MIT)
 └── package.json
 ```
 
