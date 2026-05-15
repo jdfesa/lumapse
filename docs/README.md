@@ -7,6 +7,7 @@ Esta carpeta contiene **exclusivamente documentación en formato texto** (Markdo
 - [`diagramas/`](./diagramas/) — Diagramas UML del sistema (Mermaid)
 - [`hitos/`](./hitos/) — Informes de avance mensual del proyecto
 - [`producto/`](./producto/) — Documentación de producto: personas, requisitos, historias de usuario, análisis competitivo, Lean Canvas (Design Thinking)
+- [`inspiracion/`](./inspiracion/) — Benchmarking y análisis de productos de referencia externos. Ideas UX/UI con horizonte temporal (corto, mediano, largo plazo)
 
 ---
 
