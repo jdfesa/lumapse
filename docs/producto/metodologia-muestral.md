@@ -117,7 +117,7 @@ Si p = 0.5, entonces q = 1 - 0.5 = 0.5.
 | Margen de error | Interpretación | Muestra necesaria (95% confianza) |
 |---|---|---|
 | 5% | Alta precisión, difícil de alcanzar | 293 |
-| **7%** | **Precisión aceptable, realista** | **166** |
+| **7%** | **Precisión aceptable, realista** | **170** |
 | 10% | Precisión baja pero útil para tendencias | 90 |
 
 ---
@@ -156,12 +156,12 @@ $$
 **Resultado:**
 
 $$
-n = \frac{1189.94}{7.0266} = 169.4 \approx 166
+n = \frac{1189.94}{7.0266} = 169.35
 $$
 
-Se redondea hacia arriba al entero más cercano: **n = 166 respuestas**.
+Se redondea hacia arriba (función techo) al entero más cercano para garantizar la confianza estadística: **n = 170 respuestas**.
 
-> **Nota:** El ligero ajuste a 166 (en lugar de 170) refleja la aplicación precisa de la fórmula con los decimales completos. En la práctica, cualquier valor entre 165 y 170 es aceptable.
+> **Nota:** El ajuste a 170 refleja la aplicación estricta de la fórmula con sus decimales. En estadística muestral, cualquier fracción de individuo siempre se redondea hacia el entero superior.
 
 ### Verificación con fórmula de población infinita
 
@@ -171,7 +171,7 @@ $$
 n_{\infty} = \frac{Z^2 \cdot p \cdot q}{e^2} = \frac{3.8416 \cdot 0.25}{0.0049} = \frac{0.9604}{0.0049} = 196
 $$
 
-La muestra sin corrección sería 196. La corrección por finitud la reduce a 166. Esto confirma que usar la fórmula correcta (poblaciones finitas) nos evita pedir 30 respuestas innecesarias.
+La muestra sin corrección sería 196. La corrección por finitud la reduce a 170. Esto confirma que usar la fórmula correcta (poblaciones finitas) nos evita pedir 26 respuestas innecesarias.
 
 ---
 
@@ -179,12 +179,12 @@ La muestra sin corrección sería 196. La corrección por finitud la reduce a 16
 
 | Confianza | Z | e | N | p | q | n calculado |
 |---|---|---|---|---|---|---|
-| 95% | 1.96 | 5% | 1.239 | 0.5 | 0.5 | **293** |
-| 95% | 1.96 | 7% | 1.239 | 0.5 | 0.5 | **166** |
+| 95% | 1.96 | 5% | 1.239 | 0.5 | 0.5 | **294** |
+| 95% | 1.96 | 7% | 1.239 | 0.5 | 0.5 | **170** |
 | 95% | 1.96 | 10% | 1.239 | 0.5 | 0.5 | **90** |
-| 90% | 1.645 | 5% | 1.239 | 0.5 | 0.5 | **213** |
+| 90% | 1.645 | 5% | 1.239 | 0.5 | 0.5 | **223** |
 | 90% | 1.645 | 7% | 1.239 | 0.5 | 0.5 | **125** |
-| 90% | 1.645 | 10% | 1.239 | 0.5 | 0.5 | **68** |
+| 90% | 1.645 | 10% | 1.239 | 0.5 | 0.5 | **65** |
 
 ---
 
@@ -195,7 +195,7 @@ La muestra sin corrección sería 196. La corrección por finitud la reduce a 16
 | Usar fórmula de poblaciones finitas | N = 1.239 es conocido y acotado; la fórmula infinita sobreestimaría la muestra |
 | p = 0.5 | No hay datos previos; es el valor más conservador (máxima varianza) |
 | Objetivo mínimo: n = 90 | Permite conclusiones con 95% de confianza y 10% de margen de error. Es alcanzable con distribución por QR y preceptores |
-| Objetivo deseable: n = 125-166 | Mejora la precisión a 7% de margen de error. Se intenta pero no se garantiza |
+| Objetivo deseable: n = 125-170 | Mejora la precisión a 7% de margen de error. Se intenta pero no se garantiza |
 | No se usa muestreo probabilístico estricto | No se dispone de lista nominal de los 1.239 estudiantes para sortear. Se usa muestreo por conveniencia con cobertura de los 3 turnos |
 
 ---
