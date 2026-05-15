@@ -76,3 +76,5 @@ El desarrollo continúa en el **Hito 03 — MVP Completo**, donde se integrará 
 ---
 
 *Documento finalizado — Hito 02 completado exitosamente*
+
+> **Nota de evolución (mayo 2026):** Este hito se implementó con IndexedDB como capa de persistencia inicial. La migración a SQLite con Capacitor fue decidida posteriormente en el [ADR-005](../adr/ADR-005-pivote-app-nativa.md), fundamentada en el [relevamiento de datos](../producto/resultados-relevamiento.md). El código de este hito sigue funcionando con IndexedDB hasta que se ejecute la migración en el Hito 03.

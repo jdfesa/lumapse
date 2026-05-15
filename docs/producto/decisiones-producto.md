@@ -32,7 +32,8 @@ Cada decisión sigue esta estructura:
 ## DP-001: Título unificado al estilo Typora
 
 **Fecha:** 2026-05-05  
-**Estado:** Pendiente de validación
+**Actualización:** 2026-05-14  
+**Estado:** ✅ Implementada
 
 ### Contexto
 

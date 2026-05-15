@@ -83,3 +83,5 @@ Objetivos principales:
 ---
 
 *Documento generado al cierre del Hito 01 — Mayo 2026*
+
+> **Nota de evolución (mayo 2026):** Este hito se desarrolló bajo la arquitectura PWA/IndexedDB original. Al final del período, el [relevamiento de datos](../producto/resultados-relevamiento.md) (n=120) y el [ADR-005](../adr/ADR-005-pivote-app-nativa.md) fundamentaron el pivote a app nativa con Capacitor + SQLite. Los documentos de este hito reflejan el estado vigente al momento de su cierre.

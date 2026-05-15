@@ -1,7 +1,7 @@
 # Requisitos Funcionales — Lumapse
 
 **Fase Design Thinking:** Idear / Prototipar  
-**Última actualización:** Abril 2026  
+**Última actualización:** Mayo 2026  
 **Autor:** José David Sandoval
 
 ---
@@ -20,11 +20,11 @@
 
 | ID | Requisito | Prioridad | Persona | Hito | Estado |
 |---|---|---|---|---|---|
-| RF-001 | El sistema debe permitir **crear una nueva nota** con título y contenido en texto plano/Markdown. | MUST | Lucía, Martín | 02 | Pendiente |
-| RF-002 | El sistema debe permitir **editar** el título y contenido de una nota existente. | MUST | Lucía, Martín | 02 | Pendiente |
-| RF-003 | El sistema debe permitir **eliminar** una nota, con confirmación previa para evitar borrado accidental. | MUST | Lucía | 02 | Pendiente |
-| RF-004 | El sistema debe mostrar un **listado de todas las notas** ordenadas por fecha de última modificación (más reciente primero). | MUST | Lucía | 02 | Pendiente |
-| RF-005 | El sistema debe **auto-guardar** la nota activa cada 3 segundos de inactividad del usuario o al cambiar de nota. | MUST | Lucía | 02 | Pendiente |
+| RF-001 | El sistema debe permitir **crear una nueva nota** con título y contenido en texto plano/Markdown. | MUST | Lucía, Martín | 02 | Implementado |
+| RF-002 | El sistema debe permitir **editar** el título y contenido de una nota existente. | MUST | Lucía, Martín | 02 | Implementado |
+| RF-003 | El sistema debe permitir **eliminar** una nota, con confirmación previa para evitar borrado accidental. | MUST | Lucía | 02 | Implementado |
+| RF-004 | El sistema debe mostrar un **listado de todas las notas** ordenadas por fecha de última modificación (más reciente primero). | MUST | Lucía | 02 | Implementado |
+| RF-005 | El sistema debe **auto-guardar** la nota activa cada 800ms de inactividad del usuario o al cambiar de nota. | MUST | Lucía | 02 | Implementado |
 | RF-006 | El sistema debe mostrar el **conteo de palabras y caracteres** de la nota activa. | COULD | Martín | 04 | Pendiente |
 
 ---
@@ -33,9 +33,9 @@
 
 | ID | Requisito | Prioridad | Persona | Hito | Estado |
 |---|---|---|---|---|---|
-| RF-007 | El sistema debe almacenar todas las notas en **IndexedDB** de forma local, sin enviar datos a ningún servidor. | MUST | Lucía, Martín | 02 | Pendiente |
-| RF-008 | El sistema debe funcionar **completamente offline** después de la primera carga. | MUST | Lucía | 03 | Pendiente |
-| RF-009 | El sistema debe registrar **Service Workers** para cachear los assets de la aplicación y permitir el funcionamiento offline. | MUST | Lucía | 03 | Pendiente |
+| RF-007 | El sistema debe almacenar todas las notas de forma **local en el dispositivo**, sin enviar datos a ningún servidor. Actualmente implementado con IndexedDB; la migración a SQLite está aprobada en [ADR-005](../adr/ADR-005-pivote-app-nativa.md). | MUST | Lucía, Martín | 02 | Implementado |
+| RF-008 | El sistema debe funcionar **completamente offline** después de la primera carga. | MUST | Lucía | 03 | Implementado |
+| RF-009 | El sistema debe registrar **Service Workers** para cachear los assets de la aplicación y permitir el funcionamiento offline. | MUST | Lucía | 03 | Implementado |
 
 ---
 
@@ -43,9 +43,9 @@
 
 | ID | Requisito | Prioridad | Persona | Hito | Estado |
 |---|---|---|---|---|---|
-| RF-010 | El sistema debe renderizar **Markdown en tiempo real** (preview) mientras el usuario escribe. | MUST | Martín | 03 | Pendiente |
-| RF-011 | El sistema debe soportar al menos la sintaxis Markdown básica: encabezados, negritas, cursivas, listas, código inline, bloques de código, y enlaces. | MUST | Martín | 03 | Pendiente |
-| RF-012 | El sistema debe ofrecer un **modo de solo lectura** (preview) y un **modo de edición** para cada nota. | SHOULD | Martín | 03 | Pendiente |
+| RF-010 | El sistema debe renderizar **Markdown en tiempo real** (preview) mientras el usuario escribe. | MUST | Martín | 03 | Implementado |
+| RF-011 | El sistema debe soportar al menos la sintaxis Markdown básica: encabezados, negritas, cursivas, listas, código inline, bloques de código, y enlaces. | MUST | Martín | 03 | Implementado |
+| RF-012 | El sistema debe ofrecer un **modo de solo lectura** (preview) y un **modo de edición** para cada nota. | SHOULD | Martín | 03 | Implementado |
 
 ---
 
@@ -63,9 +63,9 @@
 
 | ID | Requisito | Prioridad | Persona | Hito | Estado |
 |---|---|---|---|---|---|
-| RF-016 | El sistema debe permitir **exportar una nota individual** como archivo `.md` descargable. | MUST | Martín | 03 | Pendiente |
-| RF-017 | El sistema debe permitir **exportar todas las notas** como un archivo `.zip` conteniendo archivos `.md`. | SHOULD | Martín | 03 | Pendiente |
-| RF-018 | El sistema debe permitir **importar archivos `.md`** para crear notas a partir de ellos. | SHOULD | Martín | 03 | Pendiente |
+| RF-016 | El sistema debe permitir **exportar una nota individual** como archivo `.md` descargable. | MUST | Martín | 03 | Implementado |
+| RF-017 | El sistema debe permitir **exportar todas las notas** como un archivo `.zip` conteniendo archivos `.md`. | SHOULD | Martín | 03 | Implementado |
+| RF-018 | El sistema debe permitir **importar archivos `.md`** para crear notas a partir de ellos. | SHOULD | Martín | 03 | Implementado |
 
 ---
 
@@ -75,7 +75,7 @@
 |---|---|---|---|---|---|
 | RF-019 | El sistema debe ofrecer un **modo oscuro** y un modo claro, con toggle visible. | SHOULD | Martín | 04 | Pendiente |
 | RF-020 | El sistema debe ser **responsive**, adaptándose a pantallas desde 320px (móvil) hasta 1920px (desktop). | MUST | Lucía | 04 | Pendiente |
-| RF-021 | El sistema debe ser **instalable como PWA** desde el navegador (prompt de instalación o manual). | MUST | Lucía | 03 | Pendiente |
+| RF-021 | El sistema debe ser **instalable como PWA** desde el navegador (prompt de instalación o manual). La arquitectura objetivo es APK nativa con Capacitor ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)). | MUST | Lucía | 03 | Implementado |
 | RF-022 | El sistema debe mostrar una **pantalla de bienvenida** (onboarding) solo en el primer uso, explicando las funcionalidades principales. | COULD | Lucía | 04 | Pendiente |
 
 ---

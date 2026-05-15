@@ -10,7 +10,7 @@ Salida:   - Tablas de frecuencias y cruces en consola
 
 Ejecución:
     cd analisis-relevamiento
-    source venv/bin/activate
+    source .venv/bin/activate
     python scripts/analizar.py
 
 Módulos:

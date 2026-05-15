@@ -26,11 +26,12 @@ El problema que resuelve: las aplicaciones de notas existentes requieren cuenta,
 |---|---|---|
 | Build | [Vite 6](https://vite.dev) | Estándar de la industria, HMR, configuración mínima |
 | Lenguaje | JavaScript (ES2022+) | Sin transpilación adicional, módulos nativos |
-| Empaquetado nativo | [Capacitor](https://capacitorjs.com/) | Envuelve la web app en contenedor Android nativo |
-| Persistencia | SQLite (vía `@capacitor-community/sqlite`) | Robusta, sin riesgo de purga, estándar móvil |
-| Markdown | `markdown-it` + `KaTeX` | Renderizado de texto enriquecido y fórmulas LaTeX |
+| Persistencia actual | IndexedDB (vía `idb`) | Implementación inicial; migración a SQLite aprobada en [ADR-005](./docs/adr/ADR-005-pivote-app-nativa.md) |
+| Persistencia objetivo | SQLite (vía `@capacitor-community/sqlite`) | Robusta, sin riesgo de purga, estándar móvil |
+| Empaquetado nativo (objetivo) | [Capacitor](https://capacitorjs.com/) | Envuelve la web app en contenedor Android nativo |
+| Markdown | `marked` + `DOMPurify` | Renderizado de texto enriquecido con sanitización XSS |
 | Estilos | CSS nativo / Custom Properties | Sin dependencias externas, máximo control |
-| Tests | Vitest | Integrado con Vite, misma configuración |
+| Tests (planificado) | Vitest | Integrado con Vite, misma configuración (Hito 05) |
 | Control de versiones | Git + GitHub | Seguimiento del proyecto, GitHub Projects |
 | Commits | [Conventional Commits](https://www.conventionalcommits.org) | Historial legible y estandarizado |
 
@@ -61,12 +62,11 @@ El servidor corre en `http://localhost:3000` con Hot Module Replacement activo.
 ```
 lumapse/
 ├── src/                    # Código fuente de la aplicación
-│   ├── components/         # Componentes UI reutilizables
-│   ├── services/           # Lógica de negocio (SQLite, parsers)
-│   ├── store/              # Estado de la aplicación
+│   ├── components/         # Componentes UI (NoteEditor, NoteList, MarkdownPreview)
+│   ├── services/           # Lógica de negocio (NoteService, MarkdownService, Export/Import)
+│   ├── store/              # Estado de la aplicación (NoteStore)
 │   ├── styles/             # CSS modular
 │   └── main.js             # Punto de entrada
-├── android/                # Proyecto Android (generado por Capacitor)
 ├── public/                 # Assets estáticos
 │   └── icons/              # Iconos de la aplicación
 ├── analisis-relevamiento/  # Análisis de datos del relevamiento (Python)
@@ -81,7 +81,6 @@ lumapse/
 ├── .github/                # Templates de GitHub
 ├── README.md
 ├── CHANGELOG.md
-├── capacitor.config.ts     # Configuración de Capacitor
 └── package.json
 ```
 

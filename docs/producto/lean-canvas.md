@@ -2,7 +2,10 @@
 
 **Fase Design Thinking:** Idear  
 **Última actualización:** Abril 2026  
+**Versión:** 1.0 — Pre-relevamiento  
 **Autor:** José David Sandoval
+
+> **⚠️ Nota de evolución (mayo 2026):** Este canvas fue elaborado **antes** del [relevamiento de datos](resultados-relevamiento.md) (n=120) y del pivote arquitectónico documentado en [ADR-005](../adr/ADR-005-pivote-app-nativa.md). Las referencias a PWA, TWA e IndexedDB reflejan la arquitectura original. La dirección actual del proyecto es **app nativa con Capacitor + SQLite**, distribuida como APK. El modelo de negocio y los canales se mantienen vigentes; la implementación técnica cambia.
 
 ---
 
@@ -165,13 +168,13 @@ En un escenario de producto real, las métricas se medirían con analytics respe
 
 Este canvas valida retroactivamente varias decisiones técnicas ya tomadas:
 
-| Decisión técnica | Validación desde el canvas |
-|---|---|
-| PWA en vez de app nativa | ✅ Una base de código → web + móvil (via TWA) |
-| Vanilla JS sin framework | ✅ Bundle mínimo → descarga rápida en 3G |
-| IndexedDB local | ✅ No necesita backend → costos de operación = $0 |
-| No requiere cuenta | ✅ Elimina fricción → conversión más alta |
-| Markdown como formato | ✅ Sin vendor lock-in → portabilidad total |
+| Decisión técnica | Validación original | Estado post-pivote |
+|---|---|---|
+| PWA en vez de app nativa | ✅ Una base de código → web + móvil (via TWA) | ↪️ Pivotado a Capacitor/APK nativa ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)) |
+| Vanilla JS sin framework | ✅ Bundle mínimo → descarga rápida en 3G | ✅ Vigente |
+| IndexedDB local | ✅ No necesita backend → costos de operación = $0 | ↪️ Migrar a SQLite para mayor robustez |
+| No requiere cuenta | ✅ Elimina fricción → conversión más alta | ✅ Vigente |
+| Markdown como formato | ✅ Sin vendor lock-in → portabilidad total | ✅ Vigente |
 
 ---
 

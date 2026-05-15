@@ -1,8 +1,11 @@
 # Análisis Competitivo — Lumapse
 
 **Fase Design Thinking:** Definir / Idear  
-**Última actualización:** Abril 2026  
+**Última actualización:** Mayo 2026  
+**Versión:** 1.1 — Actualizado post-relevamiento  
 **Autor:** José David Sandoval
+
+> **Nota (mayo 2026):** La fila de Lumapse fue actualizada para reflejar el pivote a app nativa con Capacitor ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)). El análisis de competidores sigue vigente.
 
 ---
 
@@ -41,7 +44,7 @@ Los criterios se derivan directamente de las necesidades identificadas en las [p
 | **Evernote** | ⚠️ Parcial | ❌ Email | ~150 MB | ❌ | ❌ Freemium | ✅ | ❌ Lenta |
 | **Standard Notes** | ✅ | ❌ Email | ~30 MB | ✅ Ext. paga | ⚠️ Freemium | ✅ | ✅ Rápida |
 | **Joplin** | ✅ | ✅ | ~80 MB | ✅ | ✅ | ✅ | ⚠️ Media |
-| **Lumapse** | ✅ | ✅ | **< 2 MB** | ✅ | ✅ | ✅ (PWA) | ✅ **Instantánea** |
+| **Lumapse** | ✅ | ✅ | **< 10 MB** | ✅ | ✅ | ✅ (APK nativa) | ✅ **Instantánea** |
 
 > **Leyenda:** ✅ Cumple · ⚠️ Cumple parcialmente · ❌ No cumple
 
@@ -114,7 +117,7 @@ Los criterios se derivan directamente de las necesidades identificadas en las [p
 |---|---|
 | **Zero-account** | No hay registro, login, ni recuperación de contraseña. Abrís la app y escribís. |
 | **True offline** | No es "offline con sync pendiente". Es offline por diseño. Los datos nunca salen del dispositivo. |
-| **Peso pluma** | Bundle < 2 MB. Una PWA que se instala en segundos, incluso con conexión 3G. |
+| **Peso pluma** | APK nativa liviana (< 10 MB estimado). Se instala directamente, sin depender del navegador. |
 | **Arranque instantáneo** | Sin splash screens, sin carga de workspace, sin sincronización inicial. |
 | **Markdown nativo** | No es un add-on o extensión. Es el formato base de todas las notas. |
 | **Sin vendor lock-in** | Export/Import en Markdown puro. Tus notas son archivos `.md` estándar. |

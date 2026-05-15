@@ -2,7 +2,7 @@
 
 **Período:** Agosto 2026 (En progreso)
 **Hito:** 04 — Organización y UX
-**Proyecto:** Lumapse PWA
+**Proyecto:** Lumapse
 **Estado:** En curso
 
 ---
@@ -11,7 +11,7 @@
 
 Este hito se enfoca en mejorar la experiencia de uso general, incorporar herramientas de organización de notas, y pulir detalles visuales y de interacción. Durante el inicio de este hito, se introdujo un cambio importante de UX inspirado en Typora: la unificación del título con el contenido Markdown. 
 
-Adicionalmente, estamos pendientes de los resultados de la encuesta de validación para definir aspectos clave de producto (ej: priorizar sistema de etiquetas vs. carpetas, enfoque Mobile-first vs. Desktop-first).
+Adicionalmente, los resultados de la [encuesta de validación](../producto/resultados-relevamiento.md) (n=120) ya están disponibles y han confirmado las decisiones de producto [DP-002](../producto/decisiones-producto.md) (organización por materia, 69.2% de preferencia) y [DP-003](../producto/decisiones-producto.md) (mobile-first, 72.5% prefiere celular).
 
 ---
 
@@ -25,7 +25,7 @@ Adicionalmente, estamos pendientes de los resultados de la encuesta de validaci�
 | RF-014 | Filtrado de notas por etiqueta | ⏳ Pendiente |
 | RF-015 | Búsqueda por texto en tiempo real | ⏳ Pendiente |
 | UX-001 | Modo oscuro / modo claro | ⏳ Pendiente |
-| DP-003 | Enfoque de diseño adaptativo (Mobile/Desktop) | ⏳ Pendiente (Depende de validación P9) |
+| DP-003 | Enfoque mobile-first | ✅ Confirmado (datos del relevamiento) |
 
 ---
 
@@ -47,9 +47,9 @@ Adicionalmente, estamos pendientes de los resultados de la encuesta de validaci�
 
 ## Próximos Pasos (Para la siguiente sesión)
 
-1. **Revisar estado de la encuesta de validación:** Antes de avanzar con la arquitectura de organización (carpetas vs tags), se debe evaluar si ya existen respuestas para definir la Decisión de Producto DP-002 y DP-003.
-2. **Implementar Búsqueda en tiempo real:** Avanzar con la funcionalidad de búsqueda para que el usuario pueda encontrar notas rápidamente (independientemente de cómo se organicen después).
-3. **Mejoras UI/UX:** Planificar la integración de modo oscuro/claro y refinamientos de estilos *responsive*.
+1. **Implementar estructura de navegación Entrada / Materias / Archivo:** La [DP-002](../producto/decisiones-producto.md) está confirmada con datos. Crear el modelo de carpetas por materia.
+2. **Implementar Búsqueda en tiempo real:** Avanzar con la funcionalidad de búsqueda para que el usuario pueda encontrar notas rápidamente (RF-015).
+3. **Mejoras UI/UX:** Planificar la integración de modo oscuro/claro y refinamientos de estilos mobile-first (DP-003).
 
 ---
 *Documento vivo — Actualizado durante el desarrollo del Hito 04*

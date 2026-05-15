@@ -2,7 +2,7 @@
 
 **Período:** Julio 2026  
 **Hito:** 03 — MVP Completo  
-**Proyecto:** Lumapse PWA  
+**Proyecto:** Lumapse  
 **Estado:** En curso
 
 ---
@@ -51,7 +51,7 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 | `marked` | ^18.0.3 | Parser de Markdown a HTML |
 | `dompurify` | ^3.4.2 | Sanitizador de HTML para prevención de XSS |
 | `jszip` | ^3.10.1 | Librería para generar archivos .zip dinámicos |
-| `vite-plugin-pwa` | ^0.20.0 | Plugin para generar el Service Worker usando Workbox |
+| `vite-plugin-pwa` | ^1.3.0 | Plugin para generar el Service Worker usando Workbox |
 
 ---
 

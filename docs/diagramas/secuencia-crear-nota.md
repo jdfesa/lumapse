@@ -1,7 +1,7 @@
 # Diagrama de Secuencia — Crear y Auto-guardar Nota
 
 **Tipo:** Diagrama UML de Comportamiento (Secuencia)  
-**Última actualización:** Abril 2026  
+**Última actualización:** Mayo 2026  
 **Autor:** José David Sandoval
 
 ---
@@ -46,7 +46,7 @@ sequenceDiagram
     participant IDB as IndexedDB
 
     EST ->> UI: Escribe contenido en el editor
-    UI ->> TIMER: Reinicia temporizador (3 segundos)
+    UI ->> TIMER: Reinicia temporizador (800ms)
 
     Note over TIMER: El estudiante deja de escribir...
 
@@ -91,7 +91,7 @@ sequenceDiagram
 | **Estudiante** | Actor principal. Inicia las acciones de crear, editar y navegar entre notas. | — |
 | **Interfaz (UI)** | Capa de presentación. Maneja eventos del DOM, renderiza el listado y el editor. | `src/components/` |
 | **Estado (Store)** | Gestión del estado de la aplicación. Coordina las operaciones CRUD y mantiene la nota activa en memoria. | `src/store/` |
-| **Debounce Timer** | Mecanismo de temporización que evita escrituras excesivas a IndexedDB. Solo persiste después de 3 segundos de inactividad. | `src/services/` |
+| **Debounce Timer** | Mecanismo de temporización que evita escrituras excesivas a la base de datos. Solo persiste después de 800ms de inactividad. | `src/components/NoteEditor.js` |
 | **IndexedDB** | Capa de persistencia local del navegador. Almacena las notas como objetos estructurados. | `src/services/` (vía librería `idb`) |
 
 ---
@@ -100,9 +100,9 @@ sequenceDiagram
 
 | Decisión | Justificación | ADR relacionado |
 |---|---|---|
-| Debounce de 3 segundos | Evita escrituras innecesarias a disco; equilibra entre persistencia frecuente y rendimiento. | — |
+| Debounce de 800ms | Evita escrituras innecesarias a disco; equilibra entre persistencia frecuente y rendimiento. El valor original de diseño fue 3 segundos, pero se implementó en 800ms para mayor responsividad. | — |
 | `crypto.randomUUID()` para IDs | Genera UUIDs v4 sin dependencias externas, soportado en todos los navegadores modernos. | [ADR-001](../adr/ADR-001-stack-tecnologico.md) |
-| IndexedDB como persistencia | Almacenamiento transaccional, asíncrono, con capacidad superior a localStorage. | [ADR-002](../adr/ADR-002-persistencia-indexeddb.md) |
+| IndexedDB como persistencia | Almacenamiento transaccional, asíncrono, con capacidad superior a localStorage. Migración a SQLite aprobada en [ADR-005](../adr/ADR-005-pivote-app-nativa.md). | [ADR-002](../adr/ADR-002-persistencia-indexeddb.md) |
 | Guardado al cambiar de nota | Garantiza que nunca se pierde contenido, incluso si el usuario no espera al debounce. | — |
 
 ---

@@ -114,7 +114,7 @@
 
 | CA | Descripción | Verificación |
 |---|---|---|
-| CA-01 | La nota activa se persiste en IndexedDB después de 3 segundos de inactividad del usuario. | Test unitario con timer mock |
+| CA-01 | La nota activa se persiste en IndexedDB después de 800ms de inactividad del usuario. | Test unitario con timer mock |
 | CA-02 | La nota activa se persiste al cambiar a otra nota o al cerrar el editor. | Test funcional |
 | CA-03 | Se muestra un indicador visual sutil de estado de guardado (ej: "Guardado" / "Guardando..."). | Inspección visual |
 | CA-04 | Después de un cierre inesperado del navegador, al reabrir la app la nota conserva el último contenido guardado. | Test manual |
