@@ -10,7 +10,7 @@ de Gómez (2014).
 
 | Documento | Contenido | Estado |
 |---|---|---|
-| *(próximo)* `estimacion-pert.md` | Estimación de 3 puntos (PERT) para el módulo de mayor riesgo | Pendiente |
+| [`estimacion-pert.md`](./estimacion-pert.md) | Estimación de 3 puntos (PERT) para los módulos de mayor riesgo | ✅ Completado |
 | *(próximo)* `lineas-base.md` | Registro de líneas base (tags Git) y releases formales | Pendiente |
 | *(próximo)* `seguimiento-velocidad.md` | Tabla de velocidad: SP planificados vs. entregados por hito | Pendiente |
 
