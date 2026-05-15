@@ -42,7 +42,7 @@ Utilizamos [Conventional Commits](https://www.conventionalcommits.org/) para man
 ## 4. Estilo de Código y Arquitectura
 
 - **Vanilla JS:** Lumapse está construido intencionalmente sin frameworks pesados (React, Vue) para garantizar velocidad y bajo peso. No incluyas librerías a menos que estén rigurosamente justificadas en un ADR.
-- **Offline-first:** Cualquier funcionalidad nueva debe contemplar cómo se comporta sin conexión a internet. Los datos del usuario nunca deben salir del dispositivo (solo SQLite / IndexedDB locales).
+- **Offline-first:** Cualquier funcionalidad nueva debe contemplar cómo se comporta sin conexión a internet. Los datos del usuario nunca deben salir del dispositivo (solo SQLite local).
 
 ## 5. Proceso de Pull Request (PR)
 
