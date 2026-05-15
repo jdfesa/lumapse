@@ -32,3 +32,6 @@ logs/
 # Temporary files (reference PDFs, etc.)
 tmp/
 .venv/
+
+# Internal AI skills and workflows (local tooling)
+.skills/
