@@ -144,8 +144,22 @@
 .note-card__content p:last-child {
   margin-bottom: 0;
 }
-.note-card__content h1, 
-.note-card__content h2, 
+.note-card__content h1 {
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-2);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-text-bright);
+}
+
+.note-card__content h2 {
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-2);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--color-text-bright);
+}
+
 .note-card__content h3 {
   margin-top: var(--space-3);
   margin-bottom: var(--space-2);
