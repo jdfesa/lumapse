@@ -1,14 +1,15 @@
 /* ============================================================
    Componente: Heatmap (Calendario de Actividad)
-   Hito 04: Cyber Aesthetic con Calendario Clásico
+   Hito 04: Notion/Obsidian Clean Aesthetic
    ============================================================ */
 
 .heatmap-container {
-  background-color: var(--color-bg);
+  background-color: var(--color-surface); /* Notion-style subtle card */
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   padding: var(--space-4);
   margin-top: var(--space-4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .heatmap-header {
@@ -20,11 +21,11 @@
 }
 
 .heatmap-title {
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 0.95rem;
+  font-weight: 600;
   margin: 0;
   font-family: var(--font-mono);
-  color: var(--color-accent);
+  color: var(--color-text-bright);
 }
 
 .heatmap-controls {
@@ -47,9 +48,9 @@
 }
 
 .heatmap-btn:hover {
-  background: var(--color-surface);
-  color: var(--color-accent);
-  border-color: var(--color-accent);
+  background: var(--color-surface-hover);
+  color: var(--color-text-bright);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .heatmap-grid {
@@ -60,8 +61,8 @@
 
 .heatmap-day-header {
   text-align: center;
-  font-size: 0.8rem;
-  font-weight: 700;
+  font-size: 0.75rem;
+  font-weight: 600;
   color: var(--color-text-muted);
   padding-bottom: var(--space-2);
   font-family: var(--font-mono);
@@ -72,7 +73,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-family: var(--font-mono);
   color: var(--color-text-bright);
   border-radius: var(--radius-sm);
@@ -88,18 +89,18 @@
 }
 
 .heatmap-day:hover:not(.heatmap-day--empty) {
-  background-color: var(--color-surface);
+  background-color: var(--color-surface-hover);
   border-color: var(--color-border);
 }
 
 .heatmap-day--today {
-  color: var(--color-accent);
+  color: var(--color-text-bright);
   font-weight: 700;
-  border: 1px dashed var(--color-accent);
+  border: 1px dashed var(--color-text-muted);
 }
 
 .heatmap-day--active {
-  background-color: var(--color-surface);
+  background-color: var(--color-surface-hover);
   border: 1px solid var(--color-accent);
   color: var(--color-accent);
   font-weight: 700;
@@ -117,10 +118,10 @@
   transition: all 0.2s ease;
 }
 
-/* Niveles de intensidad con verde neón */
-.heatmap-day[data-level="1"]::after { background-color: rgba(74, 222, 128, 0.4); }
-.heatmap-day[data-level="2"]::after { background-color: rgba(74, 222, 128, 0.7); }
-.heatmap-day[data-level="3"]::after { background-color: rgba(74, 222, 128, 1); box-shadow: 0 0 4px rgba(74, 222, 128, 0.5); }
+/* Niveles de intensidad con el acento suave (Indigo) */
+.heatmap-day[data-level="1"]::after { background-color: rgba(129, 140, 248, 0.4); }
+.heatmap-day[data-level="2"]::after { background-color: rgba(129, 140, 248, 0.7); }
+.heatmap-day[data-level="3"]::after { background-color: rgba(129, 140, 248, 1); box-shadow: 0 0 4px rgba(129, 140, 248, 0.4); }
 
 /* Clear filter button */
 .heatmap-clear {
@@ -140,7 +141,7 @@
 }
 
 .heatmap-clear:hover {
-  background: var(--color-surface);
+  background: var(--color-surface-hover);
   color: var(--color-accent);
   border-color: var(--color-accent);
 }

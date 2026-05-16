@@ -1,6 +1,6 @@
 /* ============================================================
    Componente: MarkdownPreview
-   Hito 04: Minimalist Cyber/Terminal Aesthetic
+   Hito 04: Notion/Obsidian Clean Aesthetic
    ============================================================ */
 
 /* --- Contenedor del Preview --------------------------------- */
@@ -35,7 +35,7 @@
 .md-preview__content h1 {
   font-size: 1.6rem;
   font-weight: 700;
-  color: var(--color-accent);
+  color: var(--color-text-bright);
   margin-top: var(--space-6);
   margin-bottom: var(--space-4);
   padding-bottom: var(--space-2);
@@ -44,8 +44,8 @@
 
 .md-preview__content h2 {
   font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--color-accent);
+  font-weight: 600;
+  color: var(--color-text-bright);
   margin-top: var(--space-6);
   margin-bottom: var(--space-3);
   padding-bottom: var(--space-1);
@@ -56,7 +56,7 @@
 .md-preview__content h4,
 .md-preview__content h5,
 .md-preview__content h6 {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-text-bright);
   margin-top: var(--space-4);
   margin-bottom: var(--space-2);
@@ -100,7 +100,7 @@
 .md-preview__content pre {
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   padding: var(--space-4);
   margin-bottom: var(--space-4);
   overflow-x: auto;
@@ -130,7 +130,7 @@
 
 .md-preview__content th {
   background-color: var(--color-surface);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-text-bright);
 }
 

@@ -1,16 +1,17 @@
 /* ============================================================
    Componente: Composer (antes NoteEditor)
-   Hito 04: Minimalist Cyber/Terminal Aesthetic
+   Hito 04: Notion/Obsidian Clean Aesthetic
    ============================================================ */
 
 .composer {
-  background-color: var(--color-bg);
+  background-color: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-lg);
   padding: var(--space-4);
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
 .composer__textarea {
@@ -59,14 +60,14 @@
 }
 
 .composer__tool-btn:hover {
-  background: var(--color-surface);
-  color: var(--color-accent);
+  background: var(--color-surface-hover);
+  color: var(--color-text-bright);
 }
 
 .composer__save-btn {
-  background-color: transparent;
-  color: var(--color-accent);
-  border: 1px solid var(--color-accent);
+  background-color: var(--color-accent);
+  color: #ffffff;
+  border: none;
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-sm);
   font-weight: 600;
@@ -77,12 +78,14 @@
 }
 
 .composer__save-btn:hover:not(:disabled) {
-  background-color: var(--color-accent-dim);
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
 .composer__save-btn:disabled {
-  border-color: var(--color-border);
-  color: var(--color-text-muted);
   background-color: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
   cursor: not-allowed;
+  transform: none;
 }
