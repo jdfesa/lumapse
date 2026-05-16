@@ -35,3 +35,12 @@ tmp/
 
 # Internal AI skills and workflows (local tooling)
 .skills/
+
+# Android / Capacitor (la carpeta android/ SÍ se commitea)
+android/app/build/
+android/.gradle/
+android/build/
+android/app/release/
+android/*.iml
+android/local.properties
+android/hs_err_pid*.log

@@ -11,6 +11,7 @@
     "lint": "eslint src/"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.3.4",
     "@eslint/js": "^10.0.1",
     "eslint": "^10.4.0",
     "vite": "^6.3.3",
@@ -26,6 +27,8 @@
   "author": "Jose David Sandoval",
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "@capacitor/android": "^8.3.4",
+    "@capacitor/core": "^8.3.4",
     "dompurify": "^3.4.2",
     "idb": "^8.0.3",
     "jszip": "^3.10.1",
