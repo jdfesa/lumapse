@@ -83,6 +83,7 @@ lumapse/
 │   ├── store/              # Estado de la aplicación (NoteStore)
 │   ├── styles/             # CSS modular
 │   └── main.js             # Punto de entrada
+├── android/                # Proyecto Android nativo (generado por Capacitor)
 ├── public/                 # Assets estáticos
 │   └── icons/              # Iconos de la aplicación
 ├── analisis-relevamiento/  # Análisis de datos del relevamiento (Python)
@@ -96,17 +97,22 @@ lumapse/
 │   ├── hitos/              # Informes de avance mensuales
 │   ├── informe-final/      # Esqueleto del informe académico final (PP3)
 │   ├── inspiracion/        # Benchmarking e ideas UX/UI externas
-│   └── producto/           # Design Thinking, requisitos, HU y encuesta
+│   ├── producto/           # Design Thinking, requisitos, HU y encuesta
+│   └── flujo-desarrollo-android.md  # Guía operativa: build, deploy, scrcpy
 ├── .github/                # Automatización y templates de GitHub
 │   ├── workflows/          # CI: lint automático en cada push (ESLint)
 │   ├── ISSUE_TEMPLATE/     # Templates para issues (features y bugs)
 │   └── PULL_REQUEST_TEMPLATE.md
+├── index.html              # Punto de entrada HTML de la aplicación
+├── capacitor.config.json   # Configuración de Capacitor (appId, webDir)
+├── vite.config.js          # Configuración de Vite (build tool + PWA plugin)
+├── eslint.config.js        # Configuración de ESLint (reglas de calidad)
+├── package.json            # Dependencias y scripts del proyecto
 ├── README.md               # Documentación principal
 ├── CONTRIBUTING.md         # Reglas de contribución, ramas y estándares
 ├── CHANGELOG.md            # Registro histórico de cambios y versiones
 ├── BACKLOG.md              # Deuda técnica y tareas pendientes por hacer
-├── LICENSE                 # Licencia legal Copyleft (GNU GPLv3)
-└── package.json
+└── LICENSE                 # Licencia legal Copyleft (GNU GPLv3)
 ```
 
 ---
