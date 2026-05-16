@@ -15,6 +15,10 @@ export class NoteList {
     // Bindings
     this.handleDelete = this.handleDelete.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
+    this.handleGlobalClick = this.handleGlobalClick.bind(this);
+    
+    // Escuchar clics globales para cerrar dropdowns
+    document.addEventListener('click', this.handleGlobalClick);
     
     // Render base (sin notas aún)
     this.container.innerHTML = `<div class="feed" id="feed-items"></div>`;
@@ -22,10 +26,24 @@ export class NoteList {
 
     // Delegación de eventos para botones de la card
     this.feedContainer.addEventListener('click', (e) => {
+      const btnMenu = e.target.closest('.js-btn-menu');
       const btnEdit = e.target.closest('.js-btn-edit');
       const btnDelete = e.target.closest('.js-btn-delete');
       
-      if (btnEdit) {
+      // Si el clic no fue en un botón de menú, cerramos todos
+      if (!btnMenu) {
+        this.closeAllDropdowns();
+      }
+
+      if (btnMenu) {
+        e.stopPropagation(); // Evitar que el global click lo atrape
+        const dropdown = btnMenu.nextElementSibling;
+        const isOpen = dropdown.classList.contains('is-open');
+        this.closeAllDropdowns();
+        if (!isOpen) {
+          dropdown.classList.add('is-open');
+        }
+      } else if (btnEdit) {
         this.handleEdit(btnEdit.dataset.id);
       } else if (btnDelete) {
         this.handleDelete(btnDelete.dataset.id);
@@ -38,6 +56,17 @@ export class NoteList {
       const notesToRender = NoteStore.getFilteredNotes();
       this.renderNotes(notesToRender, state.searchQuery);
     });
+  }
+
+  closeAllDropdowns() {
+    const dropdowns = this.container.querySelectorAll('.note-card__dropdown.is-open');
+    dropdowns.forEach(d => d.classList.remove('is-open'));
+  }
+
+  handleGlobalClick(e) {
+    if (!e.target.closest('.note-card__actions')) {
+      this.closeAllDropdowns();
+    }
   }
 
   // UX-03: Timestamps relativos
@@ -113,12 +142,19 @@ export class NoteList {
           <header class="note-card__header">
             <span class="note-card__time">${timeStr}</span>
             <div class="note-card__actions">
-              <button class="note-card__action-btn js-btn-edit" data-id="${note.id}" title="Editar">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              <button class="note-card__action-btn js-btn-menu" title="Opciones">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
               </button>
-              <button class="note-card__action-btn note-card__action-btn--delete js-btn-delete" data-id="${note.id}" title="Eliminar">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-              </button>
+              <div class="note-card__dropdown">
+                <button class="note-card__dropdown-btn js-btn-edit" data-id="${note.id}">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                  Editar
+                </button>
+                <button class="note-card__dropdown-btn note-card__dropdown-btn--delete js-btn-delete" data-id="${note.id}">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                  Eliminar
+                </button>
+              </div>
             </div>
           </header>
           <div class="note-card__content markdown-body">
@@ -131,6 +167,7 @@ export class NoteList {
 
   destroy() {
     if (this.unsubscribe) this.unsubscribe();
+    document.removeEventListener('click', this.handleGlobalClick);
     this.container.innerHTML = '';
   }
 }
