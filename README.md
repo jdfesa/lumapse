@@ -81,7 +81,10 @@ lumapse/
 │   ├── informe-final/      # Esqueleto del informe académico final (PP3)
 │   ├── inspiracion/        # Benchmarking e ideas UX/UI externas
 │   └── producto/           # Design Thinking, requisitos, HU y encuesta
-├── .github/                # Templates de GitHub
+├── .github/                # Automatización y templates de GitHub
+│   ├── workflows/          # CI: lint automático en cada push (ESLint)
+│   ├── ISSUE_TEMPLATE/     # Templates para issues (features y bugs)
+│   └── PULL_REQUEST_TEMPLATE.md
 ├── README.md               # Documentación principal
 ├── CONTRIBUTING.md         # Reglas de contribución, ramas y estándares
 ├── CHANGELOG.md            # Registro histórico de cambios y versiones
