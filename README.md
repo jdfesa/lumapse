@@ -64,35 +64,12 @@ npm run lint
 
 El servidor corre en `http://localhost:5173` con Hot Module Replacement activo.
 
-### Requisitos previos — Android (compilación del APK nativo)
+### Compilación Android (APK nativo)
 
-Estos requisitos son necesarios **solo** para generar el `.apk` con Capacitor.
-Para contribuir al código web (JS/CSS/HTML) basta con los requisitos de la sección anterior.
+Para compilar el `.apk` con Capacitor se requiere Android Studio, JDK 17+ y el Android SDK.
+La guía completa de instalación, dispositivos de prueba y flujo de trabajo está en:
 
-| Herramienta | Versión verificada | Verificar con |
-|---|---|---|
-| **Android Studio** | 2024+ | Abrir la app → About |
-| **Android SDK** (Platform) | API 34+ | `ls $ANDROID_HOME/platforms/` |
-| **Build Tools** | 34.0.0+ | `ls $ANDROID_HOME/build-tools/` |
-| **JDK** | 17+ (se usa OpenJDK 21) | `java -version` |
-| **ADB** | 36+ | `adb version` |
-
-**Variables de entorno requeridas** (agregar a `~/.zshrc` o `~/.bashrc`):
-
-```bash
-export JAVA_HOME="/usr/local/opt/openjdk@21"        # Ajustar según instalación
-export ANDROID_HOME="/usr/local/share/android-commandlinetools"  # o ~/Library/Android/sdk
-export PATH="$ANDROID_HOME/platform-tools:$PATH"
-```
-
-### Dispositivos de prueba utilizados
-
-| Dispositivo | Android | Uso | Conexión |
-|---|---|---|---|
-| Samsung Galaxy S7 Edge | 10 (root, pantalla dañada — se usa [scrcpy](https://github.com/Genymobile/scrcpy)) | Desarrollo y debugging diario | Micro USB + ADB |
-| Samsung Galaxy S20 FE | 13 (sin root) | Validación final y demos | USB-C + ADB |
-
-> Para el flujo de trabajo completo (build, deploy, scrcpy, troubleshooting), ver [`docs/flujo-desarrollo-android.md`](./docs/flujo-desarrollo-android.md).
+> 📱 [`docs/flujo-desarrollo-android.md`](./docs/flujo-desarrollo-android.md)
 
 ---
 
