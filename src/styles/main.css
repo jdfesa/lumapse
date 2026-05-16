@@ -1,11 +1,10 @@
 /* ============================================================
-   Lumapse — Design Tokens & Base Styles
-   Hito 04: Mobile-first redesign (RF-020)
+   Lumapse — Microblog Layout Tokens & Base (Memos style)
+   Hito 04: Mobile-first redesign
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
-/* --- Tokens ------------------------------------------------- */
 :root {
   /* Colors */
   --color-bg:          #0f0f0f;
@@ -14,7 +13,7 @@
   --color-border:      #262626;
   --color-text:        #e5e5e5;
   --color-text-muted:  #737373;
-  --color-accent:      #a3e635;
+  --color-accent:      #a3e635; /* or maybe a nice blue like Memos? Let's stick to our green for now */
   --color-accent-dim:  rgba(163, 230, 53, 0.12);
   --color-danger:      #ef4444;
   --color-danger-dim:  rgba(239, 68, 68, 0.1);
@@ -23,7 +22,11 @@
   --font-sans:  'Inter', system-ui, sans-serif;
   --font-mono:  'JetBrains Mono', 'Fira Code', monospace;
 
-  /* Spacing */
+  /* Layout */
+  --header-height: 60px;
+  --max-content-width: 800px;
+  --drawer-width: 300px;
+  
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -32,52 +35,18 @@
   --space-6: 1.5rem;
   --space-8: 2rem;
 
-  /* Radius */
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-full: 9999px;
-
-  /* Transitions */
+  
   --transition: 150ms ease;
   --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-
-  /* Layout — mobile-first */
-  --sidebar-width: 100%;
-  --header-height: 56px;
-  --touch-target: 48px;
-
-  /* Safe area for Android notch/nav bar */
-  --safe-area-top: env(safe-area-inset-top, 0px);
-  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* Tablet+ override */
-@media (min-width: 768px) {
-  :root {
-    --sidebar-width: 320px;
-  }
-}
-
-/* Desktop override */
-@media (min-width: 1024px) {
-  :root {
-    --sidebar-width: 340px;
-  }
-}
-
-/* --- Reset -------------------------------------------------- */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
-
-html {
-  font-size: 16px;
-  -webkit-font-smoothing: antialiased;
-  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -86,141 +55,152 @@ body {
   font-family: var(--font-sans);
   line-height: 1.6;
   min-height: 100dvh;
-  overflow: hidden;
-  /* Prevent overscroll bounce on mobile */
-  overscroll-behavior: none;
+  overflow-y: scroll;
 }
 
-/* --- App Shell --------------------------------------------- */
+/* --- App Shell --- */
 #app {
   display: flex;
-  width: 100vw;
-  height: 100dvh;
-  overflow: hidden;
-  position: relative;
+  flex-direction: column;
+  min-height: 100dvh;
 }
 
-/* --- Mobile Navigation: sidebar as overlay ----------------- */
+/* --- Header --- */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-4);
+  height: var(--header-height);
+  background-color: var(--color-bg);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid var(--color-border);
+}
 
-/* Sidebar container */
-#sidebar-container {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  transform: translateX(-100%);
-  transition: transform var(--transition-smooth);
+.app-logo {
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.app-logo svg {
+  color: var(--color-accent);
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.icon-btn:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+/* --- Main Layout --- */
+.main-layout {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  padding: var(--space-4);
+}
+
+.feed-container {
   width: 100%;
+  max-width: var(--max-content-width);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
 }
 
-#sidebar-container.is-open {
+/* --- Drawer (Sidebar) --- */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--drawer-width);
+  background-color: var(--color-surface);
+  z-index: 100;
+  transform: translateX(100%);
+  transition: transform var(--transition-smooth);
+  border-left: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+}
+
+.drawer.is-open {
   transform: translateX(0);
 }
 
-/* Backdrop when sidebar is open */
-.sidebar-backdrop {
-  display: none;
+.drawer__header {
+  height: var(--header-height);
+  padding: 0 var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.drawer__content {
+  padding: var(--space-4);
+  flex: 1;
+  overflow-y: auto;
+}
+
+.drawer-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 99;
+  background: rgba(0,0,0,0.5);
+  z-index: 90;
   opacity: 0;
+  pointer-events: none;
   transition: opacity var(--transition-smooth);
 }
 
-.sidebar-backdrop.is-visible {
-  display: block;
+.drawer-backdrop.is-visible {
   opacity: 1;
+  pointer-events: auto;
 }
 
-/* Editor container — full width on mobile */
-#editor-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+/* --- UI Utilities --- */
+.search-box {
+  position: relative;
+  margin-bottom: var(--space-6);
+}
+
+.search-box input {
   width: 100%;
-}
-
-/* --- Tablet+ (768px): persistent sidebar ------------------- */
-@media (min-width: 768px) {
-  #sidebar-container {
-    position: relative;
-    inset: auto;
-    transform: none;
-    width: var(--sidebar-width);
-    flex-shrink: 0;
-    z-index: auto;
-  }
-
-  #sidebar-container.is-open {
-    transform: none;
-  }
-
-  .sidebar-backdrop {
-    display: none !important;
-  }
-
-  #editor-container {
-    flex: 1;
-  }
-}
-
-/* --- Utility: touch-friendly buttons ----------------------- */
-.touch-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: var(--touch-target);
-  min-height: var(--touch-target);
-  background: transparent;
-  border: none;
-  color: var(--color-text-muted);
-  cursor: pointer;
-  border-radius: var(--radius-md);
-  transition: background-color var(--transition), color var(--transition);
-  -webkit-tap-highlight-color: transparent;
-}
-
-.touch-btn:hover {
-  background-color: var(--color-accent-dim);
-  color: var(--color-accent);
-}
-
-.touch-btn:active {
-  transform: scale(0.95);
-}
-
-/* --- Splash (Hito 01 placeholder — kept for reference) ---- */
-.splash {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-4);
-}
-
-.splash__logo {
-  font-family: var(--font-mono);
-  font-size: clamp(2.5rem, 8vw, 5rem);
-  font-weight: 500;
-  letter-spacing: -0.03em;
-  color: var(--color-accent);
-}
-
-.splash__tagline {
-  font-size: 1rem;
-  color: var(--color-text-muted);
-  font-weight: 300;
-  letter-spacing: 0.02em;
-}
-
-.splash__badge {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--color-text-muted);
-  background: var(--color-surface);
+  background: var(--color-bg);
   border: 1px solid var(--color-border);
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-sm);
-  letter-spacing: 0.05em;
+  padding: var(--space-2) var(--space-3) var(--space-2) 2.5rem;
+  border-radius: var(--radius-lg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  outline: none;
+}
+
+.search-box input:focus {
+  border-color: var(--color-accent);
+}
+
+.search-box svg {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
 }
