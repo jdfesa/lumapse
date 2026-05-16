@@ -7,8 +7,10 @@ Esta carpeta contiene **exclusivamente documentación en formato texto** (Markdo
 - [`diagramas/`](./diagramas/) — Diagramas UML del sistema (Mermaid)
 - [`gestion/`](./gestion/) — Estimación, planificación y control de avance del proyecto
 - [`hitos/`](./hitos/) — Informes de avance mensual del proyecto
-- [`producto/`](./producto/) — Documentación de producto: personas, requisitos, historias de usuario, análisis competitivo, Lean Canvas (Design Thinking)
-- [`inspiracion/`](./inspiracion/) — Benchmarking y análisis de productos de referencia externos. Ideas UX/UI con horizonte temporal (corto, mediano, largo plazo)
+- [`informe-final/`](./informe-final/) — Esqueleto del informe académico final (PP3)
+- [`inspiracion/`](./inspiracion/) — Benchmarking y análisis de productos de referencia externos
+- [`producto/`](./producto/) — Documentación de producto: personas, requisitos, HU, Lean Canvas
+- [`flujo-desarrollo-android.md`](./flujo-desarrollo-android.md) — Guía operativa: build, deploy, scrcpy, dispositivos de prueba
 
 ---
 

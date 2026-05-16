@@ -89,8 +89,10 @@ export PATH="$ANDROID_HOME/platform-tools:$PATH"
 
 | Dispositivo | Android | Uso | Conexión |
 |---|---|---|---|
-| Samsung Galaxy S7 Edge | 10 (root) | Desarrollo y debugging diario | USB + ADB |
-| Samsung Galaxy S20 FE | 12 | Validación y testing final | USB + ADB |
+| Samsung Galaxy S7 Edge | 10 (root, pantalla dañada — se usa [scrcpy](https://github.com/Genymobile/scrcpy)) | Desarrollo y debugging diario | Micro USB + ADB |
+| Samsung Galaxy S20 FE | 13 (sin root) | Validación final y demos | USB-C + ADB |
+
+> Para el flujo de trabajo completo (build, deploy, scrcpy, troubleshooting), ver [`docs/flujo-desarrollo-android.md`](./docs/flujo-desarrollo-android.md).
 
 ---
 
