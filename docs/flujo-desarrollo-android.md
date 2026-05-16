@@ -47,7 +47,137 @@ en dispositivos Android físicos conectados por USB.
 
 ---
 
-## 2. Dispositivos de prueba
+## 2. Prerequisitos e instalación desde cero
+
+Si estás clonando el repositorio por primera vez y necesitás compilar el APK Android,
+seguí estos pasos en orden.
+
+### 2.1 Herramientas base
+
+Estas herramientas son necesarias para **cualquier** contribución al proyecto (web o nativa):
+
+```bash
+# Node.js (v18+) y npm (v9+)
+brew install node
+
+# Git
+brew install git
+
+# Verificar
+node --version    # v18+
+npm --version     # v9+
+git --version     # v2+
+```
+
+### 2.2 Android Studio y SDK
+
+Android Studio incluye el SDK, Gradle embebido, el emulador y las herramientas de
+compilación. Es el único instalador que se necesita para la parte nativa:
+
+1. **Descargar** desde [developer.android.com/studio](https://developer.android.com/studio)
+2. **Instalar** arrastrando a `/Applications/`
+3. **Abrir** Android Studio → SDK Manager → instalar:
+   - SDK Platform: **API 34** (mínimo)
+   - Build Tools: **34.0.0** (mínimo)
+   - Command-line Tools (latest)
+   - Platform-Tools (incluye ADB)
+
+> **Nota:** No es necesario instalar Gradle globalmente. El proyecto Android generado
+> por Capacitor incluye su propio `gradlew` (Gradle Wrapper) que descarga la versión
+> correcta automáticamente.
+
+### 2.3 JDK (Java Development Kit)
+
+Android requiere JDK 17 o superior. En este proyecto se usa OpenJDK 21:
+
+```bash
+# Instalar OpenJDK 21 vía Homebrew
+brew install openjdk@21
+
+# Verificar
+java -version    # openjdk 21.x.x
+```
+
+### 2.4 Variables de entorno
+
+Agregar al archivo `~/.zshrc` (o `~/.bashrc`):
+
+```bash
+# Java
+export JAVA_HOME="/usr/local/opt/openjdk@21"
+
+# Android SDK (ajustar según la instalación)
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+# O bien si se instaló vía Homebrew:
+# export ANDROID_HOME="/usr/local/share/android-commandlinetools"
+
+export PATH="$ANDROID_HOME/platform-tools:$PATH"
+```
+
+Aplicar los cambios:
+
+```bash
+source ~/.zshrc
+```
+
+### 2.5 scrcpy (mirror de pantalla Android)
+
+Solo necesario si se trabaja con un dispositivo de pantalla dañada (ver [sección 4.1](#41-scrcpy--screen-copy)):
+
+```bash
+brew install scrcpy
+
+# Verificar
+scrcpy --version    # 3.x.x
+```
+
+### 2.6 Dependencias del proyecto
+
+```bash
+# Clonar el repositorio
+git clone https://github.com/jdfesa/lumapse.git
+cd lumapse
+
+# Instalar dependencias de Node
+npm install
+
+# Compilar la web app
+npm run build
+
+# Sincronizar con el proyecto Android
+npx cap sync android
+
+# (Opcional) Correr en un dispositivo conectado
+npx cap run android
+```
+
+### 2.7 Verificación final
+
+Para verificar que todo está configurado correctamente:
+
+```bash
+echo "=== Node ===" && node --version
+echo "=== Java ===" && java -version 2>&1 | head -1
+echo "=== ADB ===" && adb version | head -1
+echo "=== SDK ===" && ls $ANDROID_HOME/platforms/
+echo "=== Build Tools ===" && ls $ANDROID_HOME/build-tools/
+echo "=== Dispositivos ===" && adb devices
+```
+
+| Herramienta | Versión mínima | Versión utilizada en este proyecto |
+|---|---|---|
+| Node.js | v18+ | v22 |
+| npm | v9+ | v10 |
+| JDK | 17+ | OpenJDK 21 |
+| Android SDK (Platform) | API 34+ | API 34 y 36 |
+| Build Tools | 34.0.0+ | 34.0.0, 35.0.0, 36.0.0 |
+| ADB | 30+ | 36.0.2 |
+| scrcpy | 2.0+ | 3.3.4 |
+| Capacitor | 7+ | *(ver `package.json`)* |
+
+---
+
+## 3. Dispositivos de prueba
 
 | Dispositivo | Samsung Galaxy S7 Edge | Samsung Galaxy S20 FE |
 |---|---|---|
@@ -70,9 +200,9 @@ en dispositivos Android físicos conectados por USB.
 
 ---
 
-## 3. Herramientas del entorno
+## 4. Herramientas del entorno
 
-### 3.1 scrcpy — Screen Copy
+### 4.1 scrcpy — Screen Copy
 
 **scrcpy** es una herramienta open source desarrollada por [Genymobile](https://github.com/Genymobile/scrcpy)
 que permite **proyectar y controlar la pantalla de un dispositivo Android** desde la
@@ -121,7 +251,7 @@ adb connect 192.168.x.x:5555
 scrcpy -K
 ```
 
-### 3.2 ADB — Android Debug Bridge
+### 4.2 ADB — Android Debug Bridge
 
 ADB es la herramienta de línea de comandos del Android SDK que permite comunicarse
 con dispositivos Android conectados.
@@ -147,9 +277,9 @@ adb install android/app/build/outputs/apk/debug/app-debug.apk
 
 ---
 
-## 4. Flujo de trabajo paso a paso
+## 5. Flujo de trabajo paso a paso
 
-### 4.1 Desarrollo de UI (ciclo rápido — sin compilar APK)
+### 5.1 Desarrollo de UI (ciclo rápido — sin compilar APK)
 
 Para cambios de interfaz (CSS, layout, textos), el ciclo más rápido es usar el
 servidor de desarrollo de Vite directamente desde el navegador del celular:
@@ -166,7 +296,7 @@ npm run dev
 > **Limitación:** Este modo NO tiene acceso a plugins nativos de Capacitor
 > (SQLite, filesystem, etc.). Solo sirve para UI.
 
-### 4.2 Compilación y despliegue en dispositivo (ciclo completo)
+### 5.2 Compilación y despliegue en dispositivo (ciclo completo)
 
 Cuando se necesita probar funcionalidades nativas o validar la app como APK:
 
@@ -185,7 +315,7 @@ npx cap run android
 npx cap run android --target <DEVICE_ID>
 ```
 
-### 4.3 Interacción con el S7 Edge (pantalla dañada)
+### 5.3 Interacción con el S7 Edge (pantalla dañada)
 
 ```bash
 # 1. Conectar el S7 Edge por USB
@@ -201,7 +331,7 @@ scrcpy --turn-screen-off -K
 #    - Scroll = desplazamiento
 ```
 
-### 4.4 Ciclo completo resumido
+### 5.4 Ciclo completo resumido
 
 ```bash
 # Editar código → Build → Sync → Run → Verificar en scrcpy
@@ -211,7 +341,7 @@ scrcpy --turn-screen-off -K
 
 ---
 
-## 5. Resolución de problemas frecuentes
+## 6. Resolución de problemas frecuentes
 
 | Problema | Causa probable | Solución |
 |---|---|---|
@@ -223,7 +353,7 @@ scrcpy --turn-screen-off -K
 
 ---
 
-## 6. Ubicación de artefactos generados
+## 7. Ubicación de artefactos generados
 
 | Artefacto | Ruta | Descripción |
 |---|---|---|
