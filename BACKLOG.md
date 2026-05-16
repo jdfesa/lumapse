@@ -9,7 +9,7 @@ Este documento funciona como una bandeja de entrada local para las tareas, mejor
 ## 💻 Código y Arquitectura
 - [ ] **Seguridad (XSS en Markdown):** Revisar la configuración de DOMPurify en `MarkdownService.js`. Actualmente permite `img src`, lo que podría generar peticiones externas no deseadas.
 - [ ] **Offline estricto (Google Fonts):** Eliminar el `@import` remoto de Google Fonts en `main.css`. Descargar las fuentes y servirlas localmente para garantizar el 100% de funcionamiento offline (RNF-009).
-- [ ] **Assets Manifest:** Agregar los íconos requeridos (`icon-192.png`, `icon-512.png`) en `public/icons/` para cumplir con las validaciones del `manifest.json`.
+- [x] **Assets Manifest:** Agregar los íconos requeridos (`icon-192.png`, `icon-512.png`) en `public/icons/` para cumplir con las validaciones del `manifest.json`.
 - [ ] **Deuda Técnica (Menú Contextual):** Implementar las funcionalidades de "Archivar" y "Fijar (Pin)" notas, agregando la lógica correspondiente a los botones dentro del menú dropdown en `NoteList.js` y `NoteStore.js`.
 
 ## ⚙️ DevOps y Procesos
