@@ -1,9 +1,10 @@
 // =============================================================
 // NoteStore — Estado reactivo en memoria
-// Hito 02: Core del Editor
+// Hito 04: Organización y UX
 //
 // Responsabilidad: Mantener el estado en memoria (lista de notas,
-// nota activa), conectar con NoteService y notificar a la UI
+// nota activa, query de búsqueda, visibilidad del sidebar),
+// conectar con NoteService y notificar a la UI
 // sobre los cambios usando el patrón Observer.
 // =============================================================
 
@@ -12,7 +13,9 @@ import * as NoteService from '../services/NoteService.js'
 // --- Estado Interno ---
 const state = {
   notes: [],           // Todas las notas cargadas
-  activeNoteId: null   // ID de la nota seleccionada actualmente
+  activeNoteId: null,  // ID de la nota seleccionada actualmente
+  searchQuery: '',     // RF-015: Query de búsqueda actual
+  sidebarOpen: true,   // RF-020: Sidebar visible (true por defecto en desktop)
 }
 
 // --- Sistema de Suscripciones (Observer Pattern) ---
@@ -77,6 +80,8 @@ export async function createNote(title = 'Sin título', content = '') {
   const newNote = await NoteService.createNote(title, content)
   state.notes = [newNote, ...state.notes]
   state.activeNoteId = newNote.id
+  // RF-015: Limpiar búsqueda al crear nota nueva para que sea visible
+  state.searchQuery = ''
   notify()
 }
 
@@ -126,5 +131,62 @@ export async function deleteNote(id) {
     state.activeNoteId = null
   }
   
+  notify()
+}
+
+// --- RF-015: Búsqueda ---
+
+/**
+ * Actualiza el query de búsqueda y notifica a los suscriptores.
+ * El filtrado se realiza en getFilteredNotes(), no aquí.
+ * @param {string} query Texto a buscar
+ */
+export function setSearchQuery(query) {
+  state.searchQuery = query
+  notify()
+}
+
+/**
+ * Retorna las notas filtradas por el query de búsqueda actual.
+ * Busca por título y contenido (case-insensitive).
+ * @returns {object[]} Array de notas filtradas
+ */
+export function getFilteredNotes() {
+  if (!state.searchQuery.trim()) {
+    return state.notes
+  }
+
+  const query = state.searchQuery.toLowerCase().trim()
+
+  return state.notes.filter(note => {
+    const title = (note.title || '').toLowerCase()
+    const content = (note.content || '').toLowerCase()
+    return title.includes(query) || content.includes(query)
+  })
+}
+
+// --- RF-020: Sidebar / Navegación mobile ---
+
+/**
+ * Abre el sidebar (visible en mobile).
+ */
+export function openSidebar() {
+  state.sidebarOpen = true
+  notify()
+}
+
+/**
+ * Cierra el sidebar.
+ */
+export function closeSidebar() {
+  state.sidebarOpen = false
+  notify()
+}
+
+/**
+ * Toggle del sidebar.
+ */
+export function toggleSidebar() {
+  state.sidebarOpen = !state.sidebarOpen
   notify()
 }

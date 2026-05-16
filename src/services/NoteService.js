@@ -39,6 +39,21 @@ function getDB() {
 // --- Operaciones CRUD ---
 
 /**
+ * Genera un UUID v4.
+ * Fallback para contextos no seguros (HTTP en móvil) donde crypto.randomUUID no está disponible.
+ */
+function generateUUID() {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID()
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0
+    const v = c === 'x' ? r : (r & 0x3 | 0x8)
+    return v.toString(16)
+  })
+}
+
+/**
  * Crea una nueva nota con valores por defecto.
  *
  * @param {string} [title='Sin título'] — título inicial
@@ -49,7 +64,7 @@ export async function createNote(title = 'Sin título', content = '') {
   const db = await getDB()
 
   const note = {
-    id: crypto.randomUUID(),
+    id: generateUUID(),
     title,
     content,
     createdAt: new Date().toISOString(),

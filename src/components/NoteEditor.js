@@ -1,6 +1,6 @@
 // =============================================================
 // Componente: NoteEditor
-// Hito 04: Organización y UX
+// Hito 04: Organización y UX (RF-020)
 //
 // Responsabilidad: Renderizar la nota activa y permitir su edición.
 // Detectar cambios en tiempo real, guardarlos en IndexedDB vía Store
@@ -49,7 +49,7 @@ export class NoteEditor {
     this.currentNoteId = null;
     this.saveTimeout = null;
     this.preview = null; // Instancia de MarkdownPreview
-    this.viewMode = 'split'; // Modos: 'edit', 'split', 'read'
+    this.viewMode = 'edit'; // RF-020: Mobile-first → default 'edit' (no 'split')
     
     // Bind manual para mantener el contexto de 'this'
     this.handleInput = this.handleInput.bind(this);
@@ -89,6 +89,7 @@ export class NoteEditor {
 
   /**
    * Renderiza el estado vacío cuando no hay nada seleccionado.
+   * RF-020: En mobile, muestra un botón para abrir el sidebar.
    */
   renderEmpty() {
     // Limpiar la instancia de preview si existe
@@ -99,20 +100,46 @@ export class NoteEditor {
 
     this.container.innerHTML = `
       <div class="note-editor note-editor--empty">
-        <p>Selecciona una nota del listado o presiona <strong>+</strong> para crear una nueva.</p>
+        <div>
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.3; margin-bottom: 16px;">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          <p>Seleccioná una nota o creá una nueva</p>
+          <button id="btn-open-sidebar-empty" class="note-editor__open-sidebar-btn" aria-label="Ver notas">
+            Ver mis notas
+          </button>
+        </div>
       </div>
     `;
+
+    // RF-020: Botón para abrir sidebar en mobile (estado vacío)
+    const openBtn = this.container.querySelector('#btn-open-sidebar-empty');
+    if (openBtn) {
+      openBtn.addEventListener('click', () => {
+        NoteStore.openSidebar();
+      });
+    }
   }
 
   /**
    * DP-001: Renderiza el editor sin campo de título separado.
    * El contenido Markdown ocupa todo el espacio y el título se
    * extrae automáticamente de la primera línea "# ".
+   * RF-020: Incluye botón "atrás" para mobile navigation.
    */
   renderEditor(note) {
     this.container.innerHTML = `
       <div class="note-editor">
         <header class="note-editor__header">
+          <button id="btn-back" class="note-editor__back-btn" aria-label="Volver a la lista" title="Volver">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
           <div class="note-editor__actions">
             <div class="note-editor__view-toggles">
               <button class="view-btn ${this.viewMode === 'edit' ? 'active' : ''}" data-view="edit" title="Modo Edición">
@@ -155,9 +182,15 @@ export class NoteEditor {
     const contentInput = this.container.querySelector('#editor-content');
     const deleteBtn = this.container.querySelector('#btn-delete-note');
     const exportBtn = this.container.querySelector('#btn-export-md');
+    const backBtn = this.container.querySelector('#btn-back');
 
     contentInput.addEventListener('input', this.handleInput);
     
+    // RF-020: Botón "atrás" para mobile — abre sidebar y deselecciona nota
+    backBtn.addEventListener('click', () => {
+      NoteStore.openSidebar();
+    });
+
     // Configurar toggle de vistas
     const viewBtns = this.container.querySelectorAll('.view-btn');
     viewBtns.forEach(btn => {

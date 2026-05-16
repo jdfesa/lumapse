@@ -1,6 +1,6 @@
 /* ============================================================
    Lumapse — Design Tokens & Base Styles
-   Hito 01: Sistema de diseño base
+   Hito 04: Mobile-first redesign (RF-020)
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -10,11 +10,14 @@
   /* Colors */
   --color-bg:          #0f0f0f;
   --color-surface:     #171717;
+  --color-surface-alt: #1e1e1e;
   --color-border:      #262626;
   --color-text:        #e5e5e5;
   --color-text-muted:  #737373;
   --color-accent:      #a3e635;
   --color-accent-dim:  rgba(163, 230, 53, 0.12);
+  --color-danger:      #ef4444;
+  --color-danger-dim:  rgba(239, 68, 68, 0.1);
 
   /* Typography */
   --font-sans:  'Inter', system-ui, sans-serif;
@@ -25,6 +28,7 @@
   --space-2: 0.5rem;
   --space-3: 0.75rem;
   --space-4: 1rem;
+  --space-5: 1.25rem;
   --space-6: 1.5rem;
   --space-8: 2rem;
 
@@ -32,9 +36,35 @@
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
 
   /* Transitions */
   --transition: 150ms ease;
+  --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Layout — mobile-first */
+  --sidebar-width: 100%;
+  --header-height: 56px;
+  --touch-target: 48px;
+
+  /* Safe area for Android notch/nav bar */
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Tablet+ override */
+@media (min-width: 768px) {
+  :root {
+    --sidebar-width: 320px;
+  }
+}
+
+/* Desktop override */
+@media (min-width: 1024px) {
+  :root {
+    --sidebar-width: 340px;
+  }
 }
 
 /* --- Reset -------------------------------------------------- */
@@ -47,6 +77,7 @@
 html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -55,16 +86,111 @@ body {
   font-family: var(--font-sans);
   line-height: 1.6;
   min-height: 100dvh;
+  overflow: hidden;
+  /* Prevent overscroll bounce on mobile */
+  overscroll-behavior: none;
 }
 
+/* --- App Shell --------------------------------------------- */
 #app {
-  min-height: 100dvh;
   display: flex;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* --- Mobile Navigation: sidebar as overlay ----------------- */
+
+/* Sidebar container */
+#sidebar-container {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  transform: translateX(-100%);
+  transition: transform var(--transition-smooth);
+  width: 100%;
+}
+
+#sidebar-container.is-open {
+  transform: translateX(0);
+}
+
+/* Backdrop when sidebar is open */
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  opacity: 0;
+  transition: opacity var(--transition-smooth);
+}
+
+.sidebar-backdrop.is-visible {
+  display: block;
+  opacity: 1;
+}
+
+/* Editor container — full width on mobile */
+#editor-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 100%;
+}
+
+/* --- Tablet+ (768px): persistent sidebar ------------------- */
+@media (min-width: 768px) {
+  #sidebar-container {
+    position: relative;
+    inset: auto;
+    transform: none;
+    width: var(--sidebar-width);
+    flex-shrink: 0;
+    z-index: auto;
+  }
+
+  #sidebar-container.is-open {
+    transform: none;
+  }
+
+  .sidebar-backdrop {
+    display: none !important;
+  }
+
+  #editor-container {
+    flex: 1;
+  }
+}
+
+/* --- Utility: touch-friendly buttons ----------------------- */
+.touch-btn {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-width: var(--touch-target);
+  min-height: var(--touch-target);
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition), color var(--transition);
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* --- Splash (Hito 01 placeholder) -------------------------- */
+.touch-btn:hover {
+  background-color: var(--color-accent-dim);
+  color: var(--color-accent);
+}
+
+.touch-btn:active {
+  transform: scale(0.95);
+}
+
+/* --- Splash (Hito 01 placeholder — kept for reference) ---- */
 .splash {
   text-align: center;
   display: flex;
