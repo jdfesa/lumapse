@@ -1,6 +1,6 @@
 /* ============================================================
    Componente: Feed (antes NoteList)
-   Hito 04: Minimalist & Accessible Redesign
+   Hito 04: Minimalist Cyber/Terminal Aesthetic
    ============================================================ */
 
 .feed {
@@ -14,22 +14,22 @@
   text-align: center;
   padding: var(--space-8) 0;
   color: var(--color-text-muted);
-  font-size: 1.05rem;
+  font-size: 0.95rem;
 }
 
 .note-card {
-  background-color: var(--color-surface);
+  background-color: var(--color-bg);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-sm);
   padding: var(--space-4);
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  transition: box-shadow var(--transition);
+  transition: border-color var(--transition);
 }
 
 .note-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border-color: var(--color-text-muted);
 }
 
 .note-card__header {
@@ -39,9 +39,8 @@
 }
 
 .note-card__time {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--color-text-muted);
-  font-weight: 500;
 }
 
 .note-card__actions {
@@ -64,23 +63,23 @@
 }
 
 .note-card__action-btn:hover {
-  background: var(--color-surface-hover);
-  color: var(--color-text);
+  background: var(--color-surface);
+  color: var(--color-accent);
 }
 
 .note-card__action-btn--delete:hover {
-  background: var(--color-danger);
-  color: #121212;
+  background: rgba(248, 113, 113, 0.1);
+  color: var(--color-danger);
 }
 
 .note-card__content {
-  font-size: 1rem;
+  font-size: 0.95rem;
   line-height: 1.6;
-  color: var(--color-text);
+  color: var(--color-text-bright);
   word-wrap: break-word;
 }
 
-/* Markdown Rendering Overrides for clean readability */
+/* Markdown Rendering Overrides */
 .note-card__content p {
   margin-bottom: var(--space-2);
 }
@@ -92,9 +91,9 @@
 .note-card__content h3 {
   margin-top: var(--space-3);
   margin-bottom: var(--space-2);
-  font-size: 1.25rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-accent);
 }
 
 .note-card__content ul, 
@@ -110,16 +109,17 @@
 .note-card__content pre {
   margin: var(--space-3) 0;
   padding: var(--space-3);
-  border-radius: var(--radius-md);
-  background: var(--color-bg);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   overflow-x: auto;
 }
 
 .note-card__content code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.9em;
-  background: var(--color-surface-hover);
+  background: var(--color-surface);
+  color: var(--color-accent);
   padding: 0.1em 0.3em;
   border-radius: 4px;
 }
