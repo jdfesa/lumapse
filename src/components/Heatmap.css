@@ -1,0 +1,136 @@
+/* ============================================================
+   Componente: Heatmap (Calendario de Actividad)
+   Hito 04: Componente Modular
+   ============================================================ */
+
+.heatmap-container {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.heatmap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+.heatmap-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.heatmap-controls {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.heatmap-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.heatmap-btn:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+.heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.heatmap-day-header {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  padding-bottom: var(--space-2);
+}
+
+.heatmap-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  color: var(--color-text);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  background-color: transparent;
+  border: 1px solid transparent;
+}
+
+.heatmap-day--empty {
+  visibility: hidden;
+}
+
+.heatmap-day:hover:not(.heatmap-day--empty) {
+  background-color: var(--color-surface-hover);
+}
+
+.heatmap-day--today {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.heatmap-day--active {
+  background-color: var(--color-accent-dim);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+/* Activity Marker (The "Heat") */
+.heatmap-day::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: transparent;
+  transition: all 0.2s ease;
+}
+
+.heatmap-day[data-level="1"]::after { background-color: rgba(129, 199, 132, 0.4); }
+.heatmap-day[data-level="2"]::after { background-color: rgba(129, 199, 132, 0.7); }
+.heatmap-day[data-level="3"]::after { background-color: rgba(129, 199, 132, 1); }
+
+/* Clear filter button */
+.heatmap-clear {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: var(--space-2);
+  margin-top: var(--space-4);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.heatmap-clear:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}

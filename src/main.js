@@ -7,6 +7,7 @@ import './styles/main.css'
 import * as NoteStore from './store/NoteStore.js'
 import { NoteList as Feed } from './components/NoteList.js'
 import { NoteEditor as Composer } from './components/NoteEditor.js'
+import { Heatmap } from './components/Heatmap.js'
 
 async function initApp() {
   const app = document.getElementById('app')
@@ -31,10 +32,8 @@ async function initApp() {
           <input type="text" id="drawer-search-input" placeholder="Buscar notas..." autocomplete="off">
         </div>
         
-        <!-- Placeholder para el calendario/etiquetas -->
-        <div style="color: var(--color-text-muted); font-size: 0.9rem; margin-top: var(--space-6);">
-          <p>Etiquetas y calendario próximamente...</p>
-        </div>
+        <!-- Heatmap (RF-017) -->
+        <div id="heatmap-container"></div>
       </div>
     </aside>
     <div id="drawer-backdrop" class="drawer-backdrop"></div>
@@ -67,6 +66,8 @@ async function initApp() {
   
   const feedItemsContainer = document.getElementById('feed-items-container')
   new Feed(feedItemsContainer)
+
+  new Heatmap('heatmap-container')
   
   // --- Drawer Navigation ---
   const drawer = document.getElementById('drawer')

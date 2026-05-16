@@ -15,6 +15,7 @@ const state = {
   notes: [],           // Todas las notas cargadas
   activeNoteId: null,  // ID de la nota seleccionada actualmente
   searchQuery: '',     // RF-015: Query de búsqueda actual
+  dateFilter: null,    // Filtro por fecha (YYYY-MM-DD)
   sidebarOpen: true,   // RF-020: Sidebar visible (true por defecto en desktop)
 }
 
@@ -80,8 +81,9 @@ export async function createNote(title = 'Sin título', content = '') {
   const newNote = await NoteService.createNote(title, content)
   state.notes = [newNote, ...state.notes]
   state.activeNoteId = newNote.id
-  // RF-015: Limpiar búsqueda al crear nota nueva para que sea visible
+  // RF-015: Limpiar búsqueda y filtros al crear nota nueva
   state.searchQuery = ''
+  state.dateFilter = null
   notify()
 }
 
@@ -147,22 +149,43 @@ export function setSearchQuery(query) {
 }
 
 /**
+ * Filtra las notas por una fecha específica.
+ * @param {string|null} dateStr Fecha en formato 'YYYY-MM-DD' o null para limpiar
+ */
+export function setDateFilter(dateStr) {
+  state.dateFilter = dateStr
+  notify()
+}
+
+/**
  * Retorna las notas filtradas por el query de búsqueda actual.
  * Busca por título y contenido (case-insensitive).
  * @returns {object[]} Array de notas filtradas
  */
 export function getFilteredNotes() {
-  if (!state.searchQuery.trim()) {
-    return state.notes
+  let filtered = state.notes
+
+  // 1. Filtrar por búsqueda de texto
+  if (state.searchQuery.trim()) {
+    const query = state.searchQuery.toLowerCase().trim()
+    filtered = filtered.filter(note => {
+      const title = (note.title || '').toLowerCase()
+      const content = (note.content || '').toLowerCase()
+      return title.includes(query) || content.includes(query)
+    })
   }
 
-  const query = state.searchQuery.toLowerCase().trim()
+  // 2. Filtrar por fecha exacta (usando updatedAt)
+  if (state.dateFilter) {
+    filtered = filtered.filter(note => {
+      if (!note.updatedAt) return false
+      // Formato simple YYYY-MM-DD usando substring o split
+      const noteDate = new Date(note.updatedAt).toISOString().split('T')[0]
+      return noteDate === state.dateFilter
+    })
+  }
 
-  return state.notes.filter(note => {
-    const title = (note.title || '').toLowerCase()
-    const content = (note.content || '').toLowerCase()
-    return title.includes(query) || content.includes(query)
-  })
+  return filtered
 }
 
 // --- RF-020: Sidebar / Navegación mobile ---
