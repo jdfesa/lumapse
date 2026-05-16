@@ -1,6 +1,6 @@
 /* ============================================================
    Componente: Feed (antes NoteList)
-   Hito 04: Interfaz Microblog (estilo Memos)
+   Hito 04: Terminal Aesthetic
    ============================================================ */
 
 .feed {
@@ -13,22 +13,36 @@
 .feed__empty {
   text-align: center;
   padding: var(--space-8) 0;
-  color: var(--color-text-muted);
+  color: var(--color-text-comment);
+  font-style: italic;
+}
+
+.feed__empty::before {
+  content: '/* ';
+}
+.feed__empty::after {
+  content: ' */';
 }
 
 .note-card {
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4);
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px dashed var(--color-border);
+  padding: var(--space-4) 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  transition: border-color var(--transition);
+  transition: all var(--transition);
 }
 
 .note-card:hover {
-  border-color: rgba(255,255,255,0.1);
+  background-color: var(--color-surface);
+  padding-left: var(--space-2);
+  padding-right: var(--space-2);
+  margin-left: calc(-1 * var(--space-2));
+  margin-right: calc(-1 * var(--space-2));
+  border-bottom-color: transparent;
+  border-radius: var(--radius-sm);
 }
 
 .note-card__header {
@@ -38,9 +52,14 @@
 }
 
 .note-card__time {
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-  font-weight: 500;
+  font-size: 0.8rem;
+  color: var(--color-text-comment);
+}
+.note-card__time::before {
+  content: '[';
+}
+.note-card__time::after {
+  content: ']';
 }
 
 .note-card__actions {
@@ -50,10 +69,10 @@
 
 .note-card__action-btn {
   background: transparent;
-  border: none;
-  color: var(--color-text-muted);
-  width: 28px;
-  height: 28px;
+  border: 1px solid transparent;
+  color: var(--color-text-comment);
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -63,23 +82,23 @@
 }
 
 .note-card__action-btn:hover {
-  background: rgba(255,255,255,0.05);
-  color: var(--color-text);
+  color: var(--color-accent-orange);
+  border-color: var(--color-accent-orange);
 }
 
 .note-card__action-btn--delete:hover {
-  background: var(--color-danger-dim);
   color: var(--color-danger);
+  border-color: var(--color-danger);
 }
 
 .note-card__content {
-  font-size: 1rem;
+  font-size: 0.95rem;
   line-height: 1.6;
-  color: var(--color-text);
+  color: var(--color-text-bright);
   word-wrap: break-word;
 }
 
-/* Reducimos márgenes del markdown renderizado para que quede compacto en la card */
+/* Markdown overrides for Terminal look */
 .note-card__content p {
   margin-bottom: var(--space-2);
 }
@@ -89,18 +108,41 @@
 .note-card__content h1, 
 .note-card__content h2, 
 .note-card__content h3 {
+  color: var(--color-accent-cyan);
   margin-top: var(--space-2);
   margin-bottom: var(--space-2);
   font-size: 1.1em;
+  font-weight: 700;
 }
+.note-card__content h1::before { content: '# '; }
+.note-card__content h2::before { content: '## '; }
+.note-card__content h3::before { content: '### '; }
+
 .note-card__content ul, 
 .note-card__content ol {
   margin-bottom: var(--space-2);
   padding-left: var(--space-4);
+  list-style-type: none; /* We will use ascii bullets */
 }
+
+.note-card__content li::before {
+  content: '- ';
+  color: var(--color-accent-orange);
+  margin-left: -1rem;
+}
+
 .note-card__content pre {
   margin: var(--space-2) 0;
   padding: var(--space-2);
   border-radius: var(--radius-sm);
-  background: rgba(0,0,0,0.2);
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+.note-card__content code {
+  color: var(--color-accent-purple);
+  background: var(--color-surface-alt);
+  padding: 0 4px;
+  border-radius: 2px;
 }

@@ -1,26 +1,31 @@
 /* ============================================================
-   Lumapse — Microblog Layout Tokens & Base (Memos style)
-   Hito 04: Mobile-first redesign
+   Lumapse — Terminal Aesthetic Layout Tokens
+   Hito 04: Minimalist / Futuristic Redesign
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 :root {
-  /* Colors */
-  --color-bg:          #0f0f0f;
-  --color-surface:     #171717;
-  --color-surface-alt: #1e1e1e;
-  --color-border:      #262626;
-  --color-text:        #e5e5e5;
-  --color-text-muted:  #737373;
-  --color-accent:      #a3e635; /* or maybe a nice blue like Memos? Let's stick to our green for now */
-  --color-accent-dim:  rgba(163, 230, 53, 0.12);
-  --color-danger:      #ef4444;
-  --color-danger-dim:  rgba(239, 68, 68, 0.1);
+  /* Terminal Colors */
+  --color-bg:          #090a0f; /* Deep dark background */
+  --color-surface:     #11131a; /* Card/Input background */
+  --color-surface-alt: #161922; 
+  --color-border:      #1e222d;
+  
+  /* Text Colors */
+  --color-text:        #a2aabc; /* Default text */
+  --color-text-comment:#5b6270; /* Comments // */
+  --color-text-bright: #e2e8f0; /* Headers, active elements */
+  
+  /* Accent Colors (Neon) */
+  --color-accent-orange: #f5a623;
+  --color-accent-cyan:   #4fc3f7;
+  --color-accent-green:  #69f0ae;
+  --color-accent-purple: #b388ff;
+  --color-danger:        #ff5252;
 
   /* Typography */
-  --font-sans:  'Inter', system-ui, sans-serif;
-  --font-mono:  'JetBrains Mono', 'Fira Code', monospace;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
 
   /* Layout */
   --header-height: 60px;
@@ -35,9 +40,9 @@
   --space-6: 1.5rem;
   --space-8: 2rem;
 
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px; /* Less rounded for terminal feel */
   
   --transition: 150ms ease;
   --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -52,7 +57,8 @@
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
   line-height: 1.6;
   min-height: 100dvh;
   overflow-y: scroll;
@@ -76,38 +82,43 @@ body {
   position: sticky;
   top: 0;
   z-index: 50;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px dashed var(--color-border);
 }
 
 .app-logo {
-  font-weight: 600;
-  font-size: 1.25rem;
-  color: var(--color-text);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-text-bright);
   display: flex;
   align-items: center;
   gap: var(--space-2);
 }
 
-.app-logo svg {
-  color: var(--color-accent);
+.terminal-prompt {
+  color: var(--color-accent-cyan);
+}
+.terminal-command {
+  color: var(--color-accent-orange);
 }
 
 .icon-btn {
   background: transparent;
-  border: none;
-  color: var(--color-text);
-  width: 40px;
-  height: 40px;
+  border: 1px solid transparent;
+  color: var(--color-text-comment);
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background var(--transition);
+  transition: all var(--transition);
 }
 
 .icon-btn:hover {
-  background: rgba(255,255,255,0.05);
+  color: var(--color-accent-orange);
+  border-color: var(--color-border);
+  background: var(--color-surface);
 }
 
 /* --- Main Layout --- */
@@ -133,11 +144,11 @@ body {
   right: 0;
   bottom: 0;
   width: var(--drawer-width);
-  background-color: var(--color-surface);
+  background-color: var(--color-bg);
   z-index: 100;
   transform: translateX(100%);
   transition: transform var(--transition-smooth);
-  border-left: 1px solid var(--color-border);
+  border-left: 1px dashed var(--color-border);
   display: flex;
   flex-direction: column;
 }
@@ -152,7 +163,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px dashed var(--color-border);
 }
 
 .drawer__content {
@@ -164,7 +175,8 @@ body {
 .drawer-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(9, 10, 15, 0.8);
+  backdrop-filter: blur(2px);
   z-index: 90;
   opacity: 0;
   pointer-events: none;
@@ -182,25 +194,31 @@ body {
   margin-bottom: var(--space-6);
 }
 
-.search-box input {
-  width: 100%;
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  padding: var(--space-2) var(--space-3) var(--space-2) 2.5rem;
-  border-radius: var(--radius-lg);
-  color: var(--color-text);
-  font-family: var(--font-sans);
-  outline: none;
-}
-
-.search-box input:focus {
-  border-color: var(--color-accent);
-}
-
-.search-box svg {
+.search-box::before {
+  content: '>';
   position: absolute;
   left: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--color-text-muted);
+  color: var(--color-accent-green);
+  font-weight: 700;
+}
+
+.search-box input {
+  width: 100%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: var(--space-2) var(--space-3) var(--space-2) 2rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-bright);
+  font-family: var(--font-mono);
+  outline: none;
+}
+
+.search-box input:focus {
+  border-color: var(--color-accent-cyan);
+}
+
+.search-box input::placeholder {
+  color: var(--color-text-comment);
 }
