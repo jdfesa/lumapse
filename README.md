@@ -39,7 +39,13 @@ El problema que resuelve: las aplicaciones de notas existentes requieren cuenta,
 
 ## Levantar el entorno de desarrollo
 
-**Requisitos previos:** Node.js v18+ y npm.
+### Requisitos previos — Web (desarrollo y contribución)
+
+| Herramienta | Versión mínima | Verificar con |
+|---|---|---|
+| **Node.js** | v18+ | `node --version` |
+| **npm** | v9+ | `npm --version` |
+| **Git** | v2+ | `git --version` |
 
 ```bash
 # 1. Clonar el repositorio
@@ -51,9 +57,40 @@ npm install
 
 # 3. Iniciar servidor de desarrollo
 npm run dev
+
+# 4. (Opcional) Verificar calidad del código
+npm run lint
 ```
 
-El servidor corre en `http://localhost:3000` con Hot Module Replacement activo.
+El servidor corre en `http://localhost:5173` con Hot Module Replacement activo.
+
+### Requisitos previos — Android (compilación del APK nativo)
+
+Estos requisitos son necesarios **solo** para generar el `.apk` con Capacitor.
+Para contribuir al código web (JS/CSS/HTML) basta con los requisitos de la sección anterior.
+
+| Herramienta | Versión verificada | Verificar con |
+|---|---|---|
+| **Android Studio** | 2024+ | Abrir la app → About |
+| **Android SDK** (Platform) | API 34+ | `ls $ANDROID_HOME/platforms/` |
+| **Build Tools** | 34.0.0+ | `ls $ANDROID_HOME/build-tools/` |
+| **JDK** | 17+ (se usa OpenJDK 21) | `java -version` |
+| **ADB** | 36+ | `adb version` |
+
+**Variables de entorno requeridas** (agregar a `~/.zshrc` o `~/.bashrc`):
+
+```bash
+export JAVA_HOME="/usr/local/opt/openjdk@21"        # Ajustar según instalación
+export ANDROID_HOME="/usr/local/share/android-commandlinetools"  # o ~/Library/Android/sdk
+export PATH="$ANDROID_HOME/platform-tools:$PATH"
+```
+
+### Dispositivos de prueba utilizados
+
+| Dispositivo | Android | Uso | Conexión |
+|---|---|---|---|
+| Samsung Galaxy S7 Edge | 10 (root) | Desarrollo y debugging diario | USB + ADB |
+| Samsung Galaxy S20 FE | 12 | Validación y testing final | USB + ADB |
 
 ---
 
