@@ -1,53 +1,41 @@
 /* ============================================================
    Componente: Composer (antes NoteEditor)
-   Hito 04: Terminal Aesthetic
+   Hito 04: Minimalist & Accessible Redesign
    ============================================================ */
 
 .composer {
-  background-color: var(--color-bg);
+  background-color: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-lg);
   padding: var(--space-4);
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  position: relative;
-}
-
-/* Decoración estilo terminal */
-.composer::before {
-  content: '// input';
-  position: absolute;
-  top: -10px;
-  left: 12px;
-  background: var(--color-bg);
-  padding: 0 4px;
-  color: var(--color-text-comment);
-  font-size: 0.75rem;
+  gap: var(--space-2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Soft shadow for depth */
 }
 
 .composer__textarea {
   width: 100%;
-  min-height: 60px;
+  min-height: 80px;
   background: transparent;
   border: none;
-  color: var(--color-text-bright);
-  font-family: var(--font-mono);
-  font-size: 0.95rem;
-  line-height: 1.5;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  line-height: 1.6;
   resize: none;
   outline: none;
 }
 
 .composer__textarea::placeholder {
-  color: var(--color-text-comment);
+  color: var(--color-text-muted);
 }
 
 .composer__footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px dashed var(--color-border);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
   padding-top: var(--space-3);
   margin-top: var(--space-2);
 }
@@ -59,11 +47,11 @@
 
 .composer__tool-btn {
   background: transparent;
-  border: 1px solid transparent;
-  color: var(--color-text-comment);
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-sm);
+  border: none;
+  color: var(--color-text-muted);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -72,35 +60,31 @@
 }
 
 .composer__tool-btn:hover {
-  color: var(--color-accent-cyan);
-  border-color: var(--color-accent-cyan);
+  background: var(--color-surface-hover);
+  color: var(--color-text);
 }
 
 .composer__save-btn {
-  background-color: transparent;
-  color: var(--color-accent-green);
-  border: 1px solid var(--color-accent-green);
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-sm);
-  font-weight: 700;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
+  background-color: var(--color-accent);
+  color: #121212; /* High contrast against light green */
+  border: none;
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: all var(--transition);
-}
-
-.composer__save-btn::before {
-  content: '$ ';
+  box-shadow: 0 2px 4px rgba(129, 199, 132, 0.2);
 }
 
 .composer__save-btn:hover:not(:disabled) {
-  background-color: var(--color-accent-green);
-  color: #000;
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
 .composer__save-btn:disabled {
-  opacity: 0.3;
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-muted);
+  box-shadow: none;
   cursor: not-allowed;
-  border-color: var(--color-text-comment);
-  color: var(--color-text-comment);
 }

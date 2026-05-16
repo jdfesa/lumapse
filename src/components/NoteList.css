@@ -1,6 +1,6 @@
 /* ============================================================
    Componente: Feed (antes NoteList)
-   Hito 04: Terminal Aesthetic
+   Hito 04: Minimalist & Accessible Redesign
    ============================================================ */
 
 .feed {
@@ -13,36 +13,23 @@
 .feed__empty {
   text-align: center;
   padding: var(--space-8) 0;
-  color: var(--color-text-comment);
-  font-style: italic;
-}
-
-.feed__empty::before {
-  content: '/* ';
-}
-.feed__empty::after {
-  content: ' */';
+  color: var(--color-text-muted);
+  font-size: 1.05rem;
 }
 
 .note-card {
-  background-color: transparent;
-  border: none;
-  border-bottom: 1px dashed var(--color-border);
-  padding: var(--space-4) 0;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-  transition: all var(--transition);
+  gap: var(--space-3);
+  transition: box-shadow var(--transition);
 }
 
 .note-card:hover {
-  background-color: var(--color-surface);
-  padding-left: var(--space-2);
-  padding-right: var(--space-2);
-  margin-left: calc(-1 * var(--space-2));
-  margin-right: calc(-1 * var(--space-2));
-  border-bottom-color: transparent;
-  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .note-card__header {
@@ -52,14 +39,9 @@
 }
 
 .note-card__time {
-  font-size: 0.8rem;
-  color: var(--color-text-comment);
-}
-.note-card__time::before {
-  content: '[';
-}
-.note-card__time::after {
-  content: ']';
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
 }
 
 .note-card__actions {
@@ -69,10 +51,10 @@
 
 .note-card__action-btn {
   background: transparent;
-  border: 1px solid transparent;
-  color: var(--color-text-comment);
-  width: 24px;
-  height: 24px;
+  border: none;
+  color: var(--color-text-muted);
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -82,23 +64,23 @@
 }
 
 .note-card__action-btn:hover {
-  color: var(--color-accent-orange);
-  border-color: var(--color-accent-orange);
+  background: var(--color-surface-hover);
+  color: var(--color-text);
 }
 
 .note-card__action-btn--delete:hover {
-  color: var(--color-danger);
-  border-color: var(--color-danger);
+  background: var(--color-danger);
+  color: #121212;
 }
 
 .note-card__content {
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1.6;
-  color: var(--color-text-bright);
+  color: var(--color-text);
   word-wrap: break-word;
 }
 
-/* Markdown overrides for Terminal look */
+/* Markdown Rendering Overrides for clean readability */
 .note-card__content p {
   margin-bottom: var(--space-2);
 }
@@ -108,41 +90,36 @@
 .note-card__content h1, 
 .note-card__content h2, 
 .note-card__content h3 {
-  color: var(--color-accent-cyan);
-  margin-top: var(--space-2);
+  margin-top: var(--space-3);
   margin-bottom: var(--space-2);
-  font-size: 1.1em;
-  font-weight: 700;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
-.note-card__content h1::before { content: '# '; }
-.note-card__content h2::before { content: '## '; }
-.note-card__content h3::before { content: '### '; }
 
 .note-card__content ul, 
 .note-card__content ol {
   margin-bottom: var(--space-2);
-  padding-left: var(--space-4);
-  list-style-type: none; /* We will use ascii bullets */
+  padding-left: var(--space-5);
 }
 
-.note-card__content li::before {
-  content: '- ';
-  color: var(--color-accent-orange);
-  margin-left: -1rem;
+.note-card__content li {
+  margin-bottom: 0.25rem;
 }
 
 .note-card__content pre {
-  margin: var(--space-2) 0;
-  padding: var(--space-2);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface-alt);
+  margin: var(--space-3) 0;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
   border: 1px solid var(--color-border);
-  color: var(--color-text);
+  overflow-x: auto;
 }
 
 .note-card__content code {
-  color: var(--color-accent-purple);
-  background: var(--color-surface-alt);
-  padding: 0 4px;
-  border-radius: 2px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--color-surface-hover);
+  padding: 0.1em 0.3em;
+  border-radius: 4px;
 }

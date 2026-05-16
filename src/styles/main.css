@@ -1,36 +1,33 @@
 /* ============================================================
-   Lumapse — Terminal Aesthetic Layout Tokens
-   Hito 04: Minimalist / Futuristic Redesign
+   Lumapse — Core Layout Tokens
+   Hito 04: Minimalist & Accessible Redesign
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  /* Terminal Colors */
-  --color-bg:          #090a0f; /* Deep dark background */
-  --color-surface:     #11131a; /* Card/Input background */
-  --color-surface-alt: #161922; 
-  --color-border:      #1e222d;
+  /* Minimalist Color Palette (Soft Dark Mode) */
+  --color-bg:          #121212;
+  --color-surface:     #1e1e1e;
+  --color-surface-hover: #2a2a2a;
+  --color-border:      #333333;
   
   /* Text Colors */
-  --color-text:        #a2aabc; /* Default text */
-  --color-text-comment:#5b6270; /* Comments // */
-  --color-text-bright: #e2e8f0; /* Headers, active elements */
+  --color-text:        #e0e0e0;
+  --color-text-muted:  #9e9e9e;
   
-  /* Accent Colors (Neon) */
-  --color-accent-orange: #f5a623;
-  --color-accent-cyan:   #4fc3f7;
-  --color-accent-green:  #69f0ae;
-  --color-accent-purple: #b388ff;
-  --color-danger:        #ff5252;
+  /* Brand/Accent Colors */
+  --color-accent:      #81c784; /* Soft green, calming and productive */
+  --color-accent-dim:  rgba(129, 199, 132, 0.15);
+  --color-danger:      #e57373;
 
   /* Typography */
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
   /* Layout */
-  --header-height: 60px;
-  --max-content-width: 800px;
-  --drawer-width: 300px;
+  --header-height: 64px;
+  --max-content-width: 680px; /* A bit narrower for better reading focus */
+  --drawer-width: 280px;
   
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -40,12 +37,11 @@
   --space-6: 1.5rem;
   --space-8: 2rem;
 
-  --radius-sm: 2px;
-  --radius-md: 4px;
-  --radius-lg: 6px; /* Less rounded for terminal feel */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
   
-  --transition: 150ms ease;
-  --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: 0.2s ease-in-out;
 }
 
 *, *::before, *::after {
@@ -57,11 +53,12 @@
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
+  font-family: var(--font-sans);
+  font-size: 1rem;
   line-height: 1.6;
   min-height: 100dvh;
   overflow-y: scroll;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* --- App Shell --- */
@@ -78,47 +75,40 @@ body {
   justify-content: space-between;
   padding: 0 var(--space-4);
   height: var(--header-height);
-  background-color: var(--color-bg);
+  background-color: rgba(18, 18, 18, 0.85); /* Slightly translucent for glass effect */
+  backdrop-filter: blur(8px);
   position: sticky;
   top: 0;
   z-index: 50;
-  border-bottom: 1px dashed var(--color-border);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .app-logo {
   font-weight: 700;
-  font-size: 1rem;
-  color: var(--color-text-bright);
+  font-size: 1.15rem;
+  color: var(--color-text);
   display: flex;
   align-items: center;
   gap: var(--space-2);
-}
-
-.terminal-prompt {
-  color: var(--color-accent-cyan);
-}
-.terminal-command {
-  color: var(--color-accent-orange);
+  letter-spacing: -0.02em;
 }
 
 .icon-btn {
   background: transparent;
-  border: 1px solid transparent;
-  color: var(--color-text-comment);
-  width: 36px;
-  height: 36px;
+  border: none;
+  color: var(--color-text);
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-sm);
+  border-radius: 50%; /* Circular for a softer touch */
   cursor: pointer;
-  transition: all var(--transition);
+  transition: background var(--transition);
 }
 
 .icon-btn:hover {
-  color: var(--color-accent-orange);
-  border-color: var(--color-border);
-  background: var(--color-surface);
+  background: var(--color-surface-hover);
 }
 
 /* --- Main Layout --- */
@@ -144,11 +134,11 @@ body {
   right: 0;
   bottom: 0;
   width: var(--drawer-width);
-  background-color: var(--color-bg);
+  background-color: var(--color-surface);
   z-index: 100;
   transform: translateX(100%);
-  transition: transform var(--transition-smooth);
-  border-left: 1px dashed var(--color-border);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: -4px 0 24px rgba(0,0,0,0.5);
   display: flex;
   flex-direction: column;
 }
@@ -163,7 +153,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px dashed var(--color-border);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .drawer__content {
@@ -175,12 +165,11 @@ body {
 .drawer-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(9, 10, 15, 0.8);
-  backdrop-filter: blur(2px);
+  background: rgba(0, 0, 0, 0.6);
   z-index: 90;
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--transition-smooth);
+  transition: opacity 0.3s ease;
 }
 
 .drawer-backdrop.is-visible {
@@ -194,31 +183,31 @@ body {
   margin-bottom: var(--space-6);
 }
 
-.search-box::before {
-  content: '>';
+.search-box svg {
   position: absolute;
   left: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--color-accent-green);
-  font-weight: 700;
+  color: var(--color-text-muted);
 }
 
 .search-box input {
   width: 100%;
-  background: var(--color-surface);
+  background: var(--color-bg);
   border: 1px solid var(--color-border);
-  padding: var(--space-2) var(--space-3) var(--space-2) 2rem;
-  border-radius: var(--radius-sm);
-  color: var(--color-text-bright);
-  font-family: var(--font-mono);
+  padding: var(--space-3) var(--space-3) var(--space-3) 2.5rem;
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
   outline: none;
+  transition: border-color var(--transition);
 }
 
 .search-box input:focus {
-  border-color: var(--color-accent-cyan);
+  border-color: var(--color-accent);
 }
 
 .search-box input::placeholder {
-  color: var(--color-text-comment);
+  color: var(--color-text-muted);
 }
