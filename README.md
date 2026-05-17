@@ -105,7 +105,7 @@ lumapse/
 │   └── PULL_REQUEST_TEMPLATE.md
 ├── index.html              # Punto de entrada HTML de la aplicación
 ├── capacitor.config.json   # Configuración de Capacitor (appId, webDir)
-├── vite.config.js          # Configuración de Vite (build tool + PWA plugin)
+├── vite.config.js          # Configuración de Vite (build tool)
 ├── eslint.config.js        # Configuración de ESLint (reglas de calidad)
 ├── package.json            # Dependencias y scripts del proyecto
 ├── README.md               # Documentación principal
@@ -138,7 +138,9 @@ Establecer los cimientos técnicos, organizativos y de investigación del proyec
 - Inicialización del repositorio Git con estructura profesional
 - Configuración de Vite 6 como build tool
 - Sistema de diseño base: design tokens, tipografía, paleta de colores
-- `index.html` con meta tags y configuración inicial
+- `index.html` — punto de entrada con meta tags y theme-color
+- `src/main.js` — bootstrap de la aplicación
+- `src/styles/main.css` — estilos base con CSS Custom Properties
 - Architecture Decision Records: ADR-001 a ADR-004
 - Documentación de producto: personas, requisitos funcionales y no funcionales, historias de usuario, Lean Canvas, análisis competitivo
 - Relevamiento de datos: diseño de encuesta, metodología muestral, recolección de 120 respuestas

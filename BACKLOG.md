@@ -41,21 +41,17 @@ Estos son los 3 bloques de trabajo a ejecutar en orden. No se avanza al siguient
 
 ---
 
-### Paso 3: Sincronizar documentación viva con el estado real del código
+### ~~Paso 3: Sincronizar documentación viva con el estado real del código~~ ✅ Completado (2026-05-17)
 
 **Módulo:** Documentación / Trazabilidad
 **Refs:** Auditoría 2026-05-14
-**Estimado:** ~1 sesión
 
-El código avanzó significativamente en Hito 04 (UI microblog, menú contextual, heatmap, búsqueda, Capacitor init) pero la documentación viva **no refleja esto**. Antes de seguir sumando funcionalidades, hay que cerrar la brecha.
+**Resumen:** Se cerró la brecha entre código y documentación actualizando todos los documentos vivos del proyecto.
 
-**Tareas:**
-- [ ] **`requisitos-funcionales.md`:** Marcar como "Implementado" los RF que ya están en código: RF-001 a RF-005 (CRUD + auto-guardado), RF-008/009 (PWA/offline), RF-010/011/012 (Markdown), RF-015 (búsqueda), RF-016/017/018 (export/import), RF-020 (mobile-first).
-- [ ] **`CHANGELOG.md`:** Completar la sección `[0.4.0]` con todas las features del Hito 04 que faltan registrar (UI microblog, menú contextual, heatmap, búsqueda en drawer, Capacitor init, ícono nativo).
-- [ ] **KI `lumapse_context.md`:** Actualizar la sección "Estado arquitectónico" para reflejar que `android/`, `capacitor.config.json` y las deps `@capacitor/*` YA existen en el repo.
-- [ ] **`README.md`:** Verificar que la sección de stack/roadmap refleje el estado actual (Capacitor inicializado, Hito 04 en progreso con features concretas).
-
-**Criterio de cierre:** Un lector nuevo que revise `README.md`, `CHANGELOG.md` y `requisitos-funcionales.md` puede entender qué está implementado y qué no, sin ambigüedades.
+- [x] **`requisitos-funcionales.md`:** RF-009/RF-021 marcados como Obsoleto (ADR-005). RF-013 actualizado a Pin/Archivar (implementado). RF-015 y RF-020 marcados como Implementado.
+- [x] **`CHANGELOG.md`:** Sección `[0.4.0]` completada con todas las features del Hito 04: Pin/Archivar, búsqueda, heatmap, menú contextual, fuentes offline, UI Notion/Obsidian, remoción PWA.
+- [x] **KI `lumapse_context.md`:** Actualizada estructura de archivos (android/, public/fonts/, Heatmap, hito-00), inconsistencias de auditoría marcadas como resueltas.
+- [x] **`README.md`:** Limpiadas referencias a PWA plugin en estructura de carpetas y descripción de Hito 01.
 
 ---
 

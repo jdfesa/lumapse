@@ -1,7 +1,7 @@
 # Requisitos Funcionales — Lumapse
 
 **Fase Design Thinking:** Idear / Prototipar  
-**Última actualización:** Mayo 2026  
+**Última actualización:** Mayo 2026 (post Hito 04, sesión 2026-05-17)  
 **Autor:** José David Sandoval
 
 ---
@@ -34,8 +34,8 @@
 | ID | Requisito | Prioridad | Persona | Hito | Estado |
 |---|---|---|---|---|---|
 | RF-007 | El sistema debe almacenar todas las notas de forma **local en el dispositivo**, sin enviar datos a ningún servidor. Actualmente implementado con IndexedDB; la migración a SQLite está aprobada en [ADR-005](../adr/ADR-005-pivote-app-nativa.md). | MUST | Lucía, Martín | 02 | Implementado |
-| RF-008 | El sistema debe funcionar **completamente offline** después de la primera carga. | MUST | Lucía | 03 | Implementado |
-| RF-009 | El sistema debe registrar **Service Workers** para cachear los assets de la aplicación y permitir el funcionamiento offline. | MUST | Lucía | 03 | Implementado |
+| RF-008 | El sistema debe funcionar **completamente offline** después de la instalación. Los assets (HTML, CSS, JS, fuentes) se empaquetan dentro del APK nativo. | MUST | Lucía | 03 | Implementado |
+| RF-009 | ~~El sistema debe registrar **Service Workers** para cachear los assets.~~ Obsoleto: la arquitectura migró a APK nativa con Capacitor ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)). Los assets son locales por diseño; `vite-plugin-pwa` fue removido en `ee90559`. | MUST | Lucía | 03 | Obsoleto (ADR-005) |
 
 ---
 
@@ -53,9 +53,9 @@
 
 | ID | Requisito | Prioridad | Persona | Hito | Estado |
 |---|---|---|---|---|---|
-| RF-013 | El sistema debe permitir **asignar etiquetas** (tags) a cada nota (máximo 5 etiquetas por nota). | SHOULD | Lucía | 04 | Pendiente |
-| RF-014 | El sistema debe permitir **filtrar notas por etiqueta** en el listado principal. | SHOULD | Lucía | 04 | Pendiente |
-| RF-015 | El sistema debe ofrecer una **búsqueda por texto** que filtre notas en tiempo real por título y contenido. | MUST | Lucía, Martín | 04 | Pendiente |
+| RF-013 | El sistema debe permitir **fijar (pin) y archivar** notas para organizar el feed. Las notas fijadas aparecen al tope; las archivadas se ocultan del feed principal y son accesibles desde el drawer. *(Pivote de etiquetas a pin/archivar — ver DP-002)* | SHOULD | Lucía | 04 | Implementado |
+| RF-014 | El sistema debe permitir **filtrar notas por etiqueta** en el listado principal. *(Pendiente: requiere implementación de carpetas/materias — DP-002)* | SHOULD | Lucía | 04 | Pendiente |
+| RF-015 | El sistema debe ofrecer una **búsqueda por texto** que filtre notas en tiempo real por título y contenido. | MUST | Lucía, Martín | 04 | Implementado |
 
 ---
 
@@ -74,8 +74,8 @@
 | ID | Requisito | Prioridad | Persona | Hito | Estado |
 |---|---|---|---|---|---|
 | RF-019 | El sistema debe ofrecer un **modo oscuro** y un modo claro, con toggle visible. | SHOULD | Martín | 04 | Pendiente |
-| RF-020 | El sistema debe ser **responsive**, adaptándose a pantallas desde 320px (móvil) hasta 1920px (desktop). | MUST | Lucía | 04 | Pendiente |
-| RF-021 | El sistema debe ser **instalable como PWA** desde el navegador (prompt de instalación o manual). La arquitectura objetivo es APK nativa con Capacitor ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)). | MUST | Lucía | 03 | Implementado |
+| RF-020 | El sistema debe ser **responsive**, adaptándose a pantallas desde 320px (móvil) hasta 1920px (desktop). | MUST | Lucía | 04 | Implementado |
+| RF-021 | ~~El sistema debe ser **instalable como PWA** desde el navegador.~~ Obsoleto: la distribución será como APK nativa con Capacitor ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)). | MUST | Lucía | 03 | Obsoleto (ADR-005) |
 | RF-022 | El sistema debe mostrar una **pantalla de bienvenida** (onboarding) solo en el primer uso, explicando las funcionalidades principales. | COULD | Lucía | 04 | Pendiente |
 
 ---

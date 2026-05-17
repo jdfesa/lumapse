@@ -9,18 +9,30 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ## [0.4.0] — 2026-08 — Hito 04: Organización y UX (En progreso)
 
-### Changed
-- **DP-001: Título unificado (estilo Typora).** Se eliminó el campo de título separado del editor. El título de la nota se extrae automáticamente de la primera línea `# ` del contenido Markdown. El campo `title` en la base de datos se mantiene como valor derivado/caché para la barra lateral y la exportación.
-- `NoteEditor.js`: reescrito para eliminar el `<input>` de título, extraer título vía `extractTitleFromContent()`, y pre-cargar `# ` como contenido por defecto en notas nuevas.
-- `NoteEditor.css`: simplificado el header (solo contiene botones de acciones, alineados a la derecha).
-- `NoteStore.js`: `createNote()` inicializa el contenido con `# ` para guiar al usuario.
-
 ### Added
+- **Funcionalidad Pin y Archivar (RF-013):** Las notas pueden fijarse (aparecen al tope del feed con indicador visual) o archivarse (ocultas del feed, accesibles desde "Ver archivadas" en el drawer). IndexedDB upgrade a v2 con backfill automático.
+- **Búsqueda en tiempo real (RF-015):** Input de búsqueda en el drawer que filtra notas por título y contenido con debounce de 200ms.
+- **Heatmap de contribuciones:** Componente visual en el drawer que muestra la actividad de creación de notas en formato calendario mensual.
+- **Menú contextual de tres puntos:** Dropdown en cada tarjeta de nota con opciones: Fijar, Archivar, Editar y Eliminar.
+- **Fuentes auto-alojadas:** JetBrains Mono descargada a `public/fonts/` (woff2 variable, subsets latin + latin-ext) para funcionamiento 100% offline.
+- **Botón "Ver archivadas" en drawer:** Toggle entre feed normal y vista de notas archivadas, con estilo activo.
 - `docs/producto/decisiones-producto.md` — Registro de decisiones de producto con trazabilidad hacia la encuesta de validación.
 - P12 agregada a la encuesta de relevamiento: preferencia de organización (carpetas vs tags).
+- `docs/hitos/hito-00-abril.md` — Informe retroactivo del Hito 00 (Investigación y Anteproyecto).
+
+### Changed
+- **DP-001: Título unificado (estilo Typora).** Se eliminó el campo de título separado del editor. El título se extrae automáticamente de la primera línea `# ` del contenido Markdown.
+- **Rediseño UI a estética Notion/Obsidian:** Interfaz minimalista con paleta oscura suave, tipografía monospace y micro-animaciones.
+- **Jerarquía de Markdown en feed:** Encabezados H1-H3 con tamaños y pesos corregidos para legibilidad.
+- **Layout mobile-first (RF-020):** Arquitectura responsive con drawer lateral, sin sidebar fija.
+
+### Removed
+- **`vite-plugin-pwa` y artefactos PWA (ADR-005):** Se eliminó `vite-plugin-pwa` (289 paquetes), `public/manifest.json`, `VitePWA()` de `vite.config.js` y `<link rel="manifest">` de `index.html`. La arquitectura es Capacitor nativa; los assets son locales por diseño.
+- `@import` remoto de Google Fonts en `main.css` — reemplazado por `@font-face` locales.
 
 ### Fixed
-- **Exportación de notas vacías:** Se corrigió un bug en `NoteEditor.js` donde exportar una nota recién creada sin contenido resultaba en un archivo `.md` vacío ("nota.md"). Ahora valida si hay contenido significativo y muestra un mensaje de alerta guiando al usuario. Además, se mejoró la forma de extraer el contenido actual desde el DOM para prevenir race conditions durante el auto-guardado.
+- **Exportación de notas vacías:** Validación de contenido significativo antes de exportar.
+- **Ícono nativo:** Eliminados bordes blancos del ícono de la aplicación.
 
 ---
 
