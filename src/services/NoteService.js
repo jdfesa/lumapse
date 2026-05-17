@@ -1,6 +1,6 @@
 // =============================================================
 // NoteService — Capa de persistencia con IndexedDB
-// Hito 02: Core del Editor
+// Hito 04: Organización y UX
 //
 // Responsabilidad: CRUD de notas contra IndexedDB.
 // No conoce la UI ni el estado de la app, solo la base de datos.
@@ -11,26 +11,41 @@ import { openDB } from 'idb'
 // --- Constantes de la base de datos ---
 
 const DB_NAME = 'lumapse-db'
-const DB_VERSION = 1
+const DB_VERSION = 2
 const STORE_NAME = 'notes'
 
 // --- Inicialización ---
 
 /**
  * Abre (o crea) la base de datos IndexedDB.
- * Si es la primera vez, crea el object store "notes" con un índice
- * por updatedAt para poder ordenar las notas.
+ *
+ * Historial de versiones:
+ *   v1: Store "notes" con índice by-updatedAt.
+ *   v2: Backfill campos pinned y archived en notas existentes.
  *
  * @returns {Promise<IDBPDatabase>} instancia de la base de datos
  */
 function getDB() {
   return openDB(DB_NAME, DB_VERSION, {
-    upgrade(db) {
-      // Se ejecuta solo cuando la DB no existe o sube de versión
+    upgrade(db, oldVersion, _newVersion, transaction) {
+      // v1: Crear store si no existe (primera instalación)
       if (!db.objectStoreNames.contains(STORE_NAME)) {
         const store = db.createObjectStore(STORE_NAME, { keyPath: 'id' })
-        // Índice para ordenar por fecha de última modificación
         store.createIndex('by-updatedAt', 'updatedAt')
+      }
+
+      // v2: Backfill pinned/archived en notas existentes
+      if (oldVersion < 2) {
+        const store = transaction.objectStore(STORE_NAME)
+        store.openCursor().then(function backfill(cursor) {
+          if (!cursor) return
+          const note = cursor.value
+          let needsUpdate = false
+          if (note.pinned === undefined) { note.pinned = false; needsUpdate = true }
+          if (note.archived === undefined) { note.archived = false; needsUpdate = true }
+          if (needsUpdate) cursor.update(note)
+          return cursor.continue().then(backfill)
+        })
       }
     },
   })
@@ -67,6 +82,8 @@ export async function createNote(title = 'Sin título', content = '') {
     id: generateUUID(),
     title,
     content,
+    pinned: false,
+    archived: false,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   }

@@ -29,6 +29,8 @@ export class NoteList {
       const btnMenu = e.target.closest('.js-btn-menu');
       const btnEdit = e.target.closest('.js-btn-edit');
       const btnDelete = e.target.closest('.js-btn-delete');
+      const btnPin = e.target.closest('.js-btn-pin');
+      const btnArchive = e.target.closest('.js-btn-archive');
       
       // Si el clic no fue en un botón de menú, cerramos todos
       if (!btnMenu) {
@@ -43,6 +45,10 @@ export class NoteList {
         if (!isOpen) {
           dropdown.classList.add('is-open');
         }
+      } else if (btnPin) {
+        NoteStore.togglePin(btnPin.dataset.id);
+      } else if (btnArchive) {
+        NoteStore.toggleArchive(btnArchive.dataset.id);
       } else if (btnEdit) {
         this.handleEdit(btnEdit.dataset.id);
       } else if (btnDelete) {
@@ -136,16 +142,31 @@ export class NoteList {
       // Usar MarkdownService para renderizar el contenido completo de forma segura
       const renderedContent = MarkdownService.renderMarkdown(note.content);
       const timeStr = this.formatRelativeDate(note.updatedAt);
+      const isPinned = note.pinned;
+      const isArchived = note.archived;
+      const pinLabel = isPinned ? 'Desfijar' : 'Fijar';
+      const archiveLabel = isArchived ? 'Desarchivar' : 'Archivar';
       
       return `
-        <article class="note-card" data-id="${note.id}">
+        <article class="note-card${isPinned ? ' note-card--pinned' : ''}" data-id="${note.id}">
           <header class="note-card__header">
-            <span class="note-card__time">${timeStr}</span>
+            <span class="note-card__time">
+              ${isPinned ? '<svg class="note-card__pin-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M16 2l-4 4-6-2-2 2 5 5-5 7 2 2 7-5 5 5 2-2-2-6 4-4z"/></svg>' : ''}
+              ${timeStr}
+            </span>
             <div class="note-card__actions">
               <button class="note-card__action-btn js-btn-menu" title="Opciones">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
               </button>
               <div class="note-card__dropdown">
+                <button class="note-card__dropdown-btn js-btn-pin" data-id="${note.id}">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 2l-4 4-6-2-2 2 5 5-5 7 2 2 7-5 5 5 2-2-2-6 4-4z"/></svg>
+                  ${pinLabel}
+                </button>
+                <button class="note-card__dropdown-btn js-btn-archive" data-id="${note.id}">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
+                  ${archiveLabel}
+                </button>
                 <button class="note-card__dropdown-btn js-btn-edit" data-id="${note.id}">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                   Editar

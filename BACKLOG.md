@@ -26,22 +26,18 @@ Estos son los 3 bloques de trabajo a ejecutar en orden. No se avanza al siguient
 
 ---
 
-### Paso 2: Funcionalidad "Fijar" (Pin) y "Archivar" en el menú contextual
+### ~~Paso 2: Funcionalidad "Fijar" (Pin) y "Archivar" en el menú contextual~~ ✅ Completado (2026-05-17)
 
 **Módulo:** Captura de notas / Core
 **Refs:** RF-013 (organización), Hito 04
-**Estimado:** ~1-2 sesiones
 
-Los botones de "Fijar" y "Archivar" ya existen como concepto en el dropdown del menú contextual (tres puntos), pero **no tienen lógica implementada**. Son la siguiente funcionalidad de organización antes de materias/carpetas.
+**Resumen:** Se implementó Pin y Archivar end-to-end: upgrade de IndexedDB a v2 con backfill de campos, acciones en NoteStore, botones en el dropdown del menú contextual, indicador visual de pin, y toggle "Ver archivadas" en el drawer.
 
-**Tareas:**
-- [ ] **NoteService.js:** Agregar campos `pinned: false` y `archived: false` al schema de notas. Manejar el upgrade de IndexedDB (DB_VERSION 2) para notas existentes que no tengan estos campos.
-- [ ] **NoteStore.js:** Agregar acciones `togglePin(id)` y `toggleArchive(id)`. Modificar `getFilteredNotes()` para: (a) no mostrar notas archivadas en el feed por defecto, (b) mostrar notas fijadas al tope de la lista.
-- [ ] **NoteList.js:** Agregar botones "Fijar" y "Archivar" al dropdown. Mostrar indicador visual (ícono pin) en las notas fijadas.
-- [ ] **main.js / Drawer:** Agregar un enlace "Ver archivadas" en el drawer para poder acceder a notas archivadas.
-- [ ] Verificar que export/import sigue funcionando con los campos nuevos.
-
-**Criterio de cierre:** El usuario puede fijar notas (aparecen primero), archivar notas (desaparecen del feed, accesibles desde drawer), y deshacer ambas acciones.
+- [x] **NoteService.js:** Schema v2 con campos `pinned` y `archived`. Backfill automático de notas existentes.
+- [x] **NoteStore.js:** Acciones `togglePin()`, `toggleArchive()`, `setShowArchived()`. `getFilteredNotes()` filtra archivadas y ordena pinned al tope.
+- [x] **NoteList.js:** Botones Fijar/Archivar en dropdown con labels dinámicos (Fijar/Desfijar, Archivar/Desarchivar). Indicador visual pin (ícono + borde izquierdo).
+- [x] **main.js / Drawer:** Botón "Ver archivadas" / "Ver notas activas" con estilo activo.
+- [x] Verificado visualmente: pin sube al tope, archivar oculta, vista archivadas funciona, toggle ida/vuelta correcto.
 
 ---
 

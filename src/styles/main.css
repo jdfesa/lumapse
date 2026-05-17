@@ -239,3 +239,33 @@ body {
 .search-box input::placeholder {
   color: var(--color-text-muted);
 }
+
+/* --- Drawer Navigation Buttons --- */
+.drawer__nav-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  margin-bottom: var(--space-4);
+}
+
+.drawer__nav-btn:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text-bright);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.drawer__nav-btn--active {
+  background: var(--color-accent-dim);
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}

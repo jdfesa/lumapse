@@ -33,6 +33,15 @@
   border-color: rgba(255, 255, 255, 0.15);
 }
 
+.note-card--pinned {
+  border-left: 2px solid var(--color-accent);
+}
+
+.note-card__pin-icon {
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
 .note-card__header {
   display: flex;
   justify-content: space-between;

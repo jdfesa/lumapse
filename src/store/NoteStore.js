@@ -16,6 +16,7 @@ const state = {
   activeNoteId: null,  // ID de la nota seleccionada actualmente
   searchQuery: '',     // RF-015: Query de búsqueda actual
   dateFilter: null,    // Filtro por fecha (YYYY-MM-DD)
+  showArchived: false, // Mostrar notas archivadas (toggle desde drawer)
   sidebarOpen: true,   // RF-020: Sidebar visible (true por defecto en desktop)
 }
 
@@ -136,6 +137,48 @@ export async function deleteNote(id) {
   notify()
 }
 
+// --- Pin y Archivo ---
+
+/**
+ * Fija o desfija una nota. Las notas fijadas aparecen al tope del feed.
+ * @param {string} id ID de la nota
+ */
+export async function togglePin(id) {
+  const note = state.notes.find(n => n.id === id)
+  if (!note) return
+  
+  const updatedNote = await NoteService.updateNote(id, { pinned: !note.pinned })
+  state.notes = state.notes.map(n => n.id === id ? updatedNote : n)
+  notify()
+}
+
+/**
+ * Archiva o desarchiva una nota. Las notas archivadas no aparecen en el feed principal.
+ * @param {string} id ID de la nota
+ */
+export async function toggleArchive(id) {
+  const note = state.notes.find(n => n.id === id)
+  if (!note) return
+  
+  const updatedNote = await NoteService.updateNote(id, { archived: !note.archived })
+  state.notes = state.notes.map(n => n.id === id ? updatedNote : n)
+  
+  // Si la nota archivada era la activa, deseleccionarla
+  if (state.activeNoteId === id && updatedNote.archived) {
+    state.activeNoteId = null
+  }
+  
+  notify()
+}
+
+/**
+ * Alterna la visibilidad de notas archivadas.
+ */
+export function setShowArchived(show) {
+  state.showArchived = show
+  notify()
+}
+
 // --- RF-015: Búsqueda ---
 
 /**
@@ -158,12 +201,22 @@ export function setDateFilter(dateStr) {
 }
 
 /**
- * Retorna las notas filtradas por el query de búsqueda actual.
- * Busca por título y contenido (case-insensitive).
- * @returns {object[]} Array de notas filtradas
+ * Retorna las notas filtradas y ordenadas.
+ * Orden: pinned primero, luego por updatedAt (más reciente primero).
+ * Por defecto, oculta las archivadas salvo que showArchived esté activo.
+ * @returns {object[]} Array de notas filtradas y ordenadas
  */
 export function getFilteredNotes() {
   let filtered = state.notes
+
+  // 0. Filtrar por estado de archivo
+  if (state.showArchived) {
+    // En modo archivo: mostrar SOLO las archivadas
+    filtered = filtered.filter(note => note.archived === true)
+  } else {
+    // En modo normal: ocultar las archivadas
+    filtered = filtered.filter(note => !note.archived)
+  }
 
   // 1. Filtrar por búsqueda de texto
   if (state.searchQuery.trim()) {
@@ -179,11 +232,19 @@ export function getFilteredNotes() {
   if (state.dateFilter) {
     filtered = filtered.filter(note => {
       if (!note.updatedAt) return false
-      // Formato simple YYYY-MM-DD usando substring o split
       const noteDate = new Date(note.updatedAt).toISOString().split('T')[0]
       return noteDate === state.dateFilter
     })
   }
+
+  // 3. Ordenar: pinned al tope, luego por updatedAt
+  filtered.sort((a, b) => {
+    // Pinned primero
+    if (a.pinned && !b.pinned) return -1
+    if (!a.pinned && b.pinned) return 1
+    // Dentro del mismo grupo, más reciente primero
+    return new Date(b.updatedAt) - new Date(a.updatedAt)
+  })
 
   return filtered
 }

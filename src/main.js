@@ -31,6 +31,12 @@ async function initApp() {
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           <input type="text" id="drawer-search-input" placeholder="Buscar notas..." autocomplete="off">
         </div>
+
+        <!-- Filtro: Archivadas -->
+        <button id="btn-toggle-archived" class="drawer__nav-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
+          <span id="archived-btn-label">Ver archivadas</span>
+        </button>
         
         <!-- Heatmap (RF-017) -->
         <div id="heatmap-container"></div>
@@ -100,6 +106,19 @@ async function initApp() {
     searchTimeout = setTimeout(() => {
       NoteStore.setSearchQuery(e.target.value)
     }, 200) // 200ms debounce
+  })
+
+  // --- Archive Toggle ---
+  const btnArchiveToggle = document.getElementById('btn-toggle-archived')
+  const archivedLabel = document.getElementById('archived-btn-label')
+  let showingArchived = false
+
+  btnArchiveToggle.addEventListener('click', () => {
+    showingArchived = !showingArchived
+    NoteStore.setShowArchived(showingArchived)
+    archivedLabel.textContent = showingArchived ? 'Ver notas activas' : 'Ver archivadas'
+    btnArchiveToggle.classList.toggle('drawer__nav-btn--active', showingArchived)
+    closeDrawer()
   })
 
   // Cargar datos iniciales
