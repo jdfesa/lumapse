@@ -1,7 +1,7 @@
 {
   "name": "lumapse",
   "version": "0.1.0",
-  "description": "PWA minimalista de captura de notas y gestión del conocimiento personal",
+  "description": "App móvil offline-first de captura de notas y gestión del conocimiento personal",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,15 +14,15 @@
     "@capacitor/cli": "^8.3.4",
     "@eslint/js": "^10.0.1",
     "eslint": "^10.4.0",
-    "vite": "^6.3.3",
-    "vite-plugin-pwa": "^1.3.0"
+    "vite": "^6.3.3"
   },
   "keywords": [
-    "pwa",
+    "capacitor",
     "notes",
-    "offline",
+    "offline-first",
     "markdown",
-    "knowledge-management"
+    "knowledge-management",
+    "android"
   ],
   "author": "Jose David Sandoval",
   "license": "GPL-3.0-or-later",

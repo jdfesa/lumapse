@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite'
-import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   root: '.',
@@ -12,15 +11,4 @@ export default defineConfig({
     port: 3000,
     open: true,
   },
-  plugins: [
-    VitePWA({
-      registerType: 'autoUpdate',
-      injectRegister: 'auto',
-      manifest: false, // Usamos el manifest.json existente en public/
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,json,woff2}'],
-        cleanupOutdatedCaches: true,
-      },
-    })
-  ]
 })
