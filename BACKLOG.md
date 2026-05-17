@@ -70,6 +70,7 @@ El código avanzó significativamente en Hito 04 (UI microblog, menú contextual
 
 ## 💻 Deuda Técnica — Código y Arquitectura
 
+- [ ] **🔴 Eliminar `vite-plugin-pwa` y artefactos PWA:** La arquitectura objetivo es Capacitor + APK nativa (ADR-005), no PWA. El Service Worker, `manifest.json`, `registerSW.js` y la config de Workbox en `vite.config.js` son infraestructura muerta que contradice la decisión arquitectónica. En Capacitor los assets ya son locales dentro del APK; no se necesita precache ni web manifest. Remover: (1) `vite-plugin-pwa` de `package.json`, (2) la config `VitePWA()` de `vite.config.js`, (3) `public/manifest.json`, (4) verificar que `dist/` post-build no genere `sw.js` ni `registerSW.js`.
 - [ ] **Seguridad (XSS en Markdown):** Revisar la configuración de DOMPurify en `MarkdownService.js`. Actualmente permite `img src`, lo que podría generar peticiones externas no deseadas.
 - [x] **Assets Manifest:** Agregar los íconos requeridos (`icon-192.png`, `icon-512.png`) en `public/icons/` para cumplir con las validaciones del `manifest.json`.
 
