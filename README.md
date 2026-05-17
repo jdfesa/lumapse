@@ -119,6 +119,18 @@ lumapse/
 
 ## Roadmap
 
+### ✅ Hito 00 — Investigación y Anteproyecto (Abril 2026) → [Informe](./docs/hitos/hito-00-abril.md)
+
+Concepción del proyecto, investigación académica y diseño de los instrumentos de relevamiento.
+
+- Inicialización del repositorio Git con identidad académica
+- Anteproyecto formal para PP3
+- Documentación de producto: personas, lean canvas (Design Thinking)
+- Historias de usuario iniciales (HU-001 a HU-005)
+- Diagramas UML: casos de uso, secuencia, modelo de dominio
+- Plan de recolección de datos y metodología estadística
+- Diseño y refinamiento de la encuesta de relevamiento
+
 ### ✅ Hito 01 — Fundación (Mayo 2026) → [Informe](./docs/hitos/hito-01-mayo.md)
 
 Establecer los cimientos técnicos, organizativos y de investigación del proyecto.

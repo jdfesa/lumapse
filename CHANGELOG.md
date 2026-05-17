@@ -78,4 +78,22 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ---
 
+## [0.0.0] — 2026-04 — Hito 00: Investigación y Anteproyecto ✅
+
+> *Documentado retroactivamente a partir de la evidencia en commits (14 commits, 17–29 abr 2026).*
+
+### Added
+- Inicialización del repositorio Git con README e identidad académica (institución, profesor, alumno)
+- `docs/anteproyecto/` — Anteproyecto formal del proyecto para PP3
+- Documentación de producto — Design Thinking: personas y lean canvas
+- Definición de público objetivo: estudiantes hispanohablantes con conectividad limitada
+- Historias de usuario iniciales (HU-001 a HU-005) para CRUD y auto-guardado
+- Diagramas UML: casos de uso, secuencia y modelo de dominio
+- Plan de recolección de datos con metodología estadística
+- Diseño y refinamiento de la encuesta de relevamiento (corrección de sesgos)
+- Tag `LBREQ-v1.0` marcando el cierre del relevamiento de requisitos iniciales
+- `docs/hitos/hito-00-abril.md` — Informe de avance del Hito 00
+
+---
+
 *Los cambios futuros se agregarán encima de esta sección.*
