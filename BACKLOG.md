@@ -172,3 +172,7 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 ## ⚙️ Deuda Técnica — DevOps y Procesos
 
 - [ ] **Templates de GitHub:** Actualizar las plantillas de Issues/PRs en la carpeta `.github/` para incluir campos obligatorios de trazabilidad (ej: "¿Qué RF/HU/ADR resuelve esto?").
+
+## 🧪 Deuda Técnica — Testing (Mediano plazo)
+
+- [ ] **Suite de tests automatizados (Vitest):** Incorporar Vitest como framework de testing unitario. Priorizar tests sobre servicios con lógica pura: `MarkdownService` (sanitización XSS), `ThemeService` (persistencia y detección de OS), `NoteStore` (filtrado, ordenamiento, pin/archivar). Objetivo: prevenir regresiones antes de que la app llegue a usuarios finales. *(Ref: Auditoría 2026-05-18)*

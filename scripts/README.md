@@ -48,3 +48,16 @@ Realiza una auditoría rápida de consistencia en el proyecto antes de realizar 
   ```bash
   ./scripts/check-docs.sh
   ```
+
+### 4. `quality.sh`
+Ejecuta todos los chequeos de calidad del proyecto en un solo comando. Actúa como "puerta de calidad" antes de cerrar una sesión de trabajo o realizar commits importantes.
+
+- **Qué ejecuta (en orden):**
+  1. `npm run lint` (ESLint).
+  2. `npm run build` (compilación de producción con Vite).
+  3. `./scripts/check-docs.sh` (auditoría de TODOs y estado Git).
+- **Comportamiento:** Si algún paso falla, el script continúa los demás y al final reporta el resultado global. Si hay fallos, termina con código de salida 1.
+- **Uso:**
+  ```bash
+  ./scripts/quality.sh
+  ```
