@@ -3,8 +3,8 @@
 Este documento funciona como una bandeja de entrada local para las tareas, mejoras y deuda técnica identificadas durante el desarrollo o en auditorías. Una vez que se inicia un Hito, las tareas relevantes de aquí se planifican y ejecutan.
 
 > **Hito activo:** 04 — Organización y UX (Agosto 2026)
-> **Último commit:** `d36a131` — docs: sincronizar documentación viva con estado real del código
-> **Última auditoría del backlog:** 2026-05-17
+> **Último commit:** `1061663` — docs(android): actualizar flujo de despliegue a instalación limpia
+> **Última auditoría del backlog:** 2026-05-18
 
 ---
 
@@ -55,40 +55,31 @@ Estos son los 3 bloques de trabajo a ejecutar en orden. No se avanza al siguient
 
 ---
 
-### Paso 4: Modo oscuro / modo claro con toggle (RF-019)
+### ~~Paso 4: Modo oscuro / modo claro con toggle (RF-019)~~ ✅ Completado (2026-05-18)
 
 **Módulo:** UX / Diseño visual
 **Refs:** RF-019, Hito 04
-**Estimado:** ~1 sesión
 
-Actualmente la app solo tiene tema oscuro. El relevamiento (n=120) confirmó que el 72.5% usa celular; un modo claro mejora la legibilidad en exteriores y es estándar en apps móviles. La implementación debe ser modular y persistente.
+**Resumen:** Se implementó una paleta de tema claro (estilo Notion cálido) usando custom properties sobre `[data-theme="light"]` y se reemplazaron todos los valores rgba hardcodeados por variables. Se añadió el `ThemeService` modular con persistencia en `localStorage` y toggle en el drawer.
 
-**Tareas:**
-- [ ] **`main.css`:** Crear set de CSS Custom Properties para `:root` (oscuro, actual por defecto) y `[data-theme="light"]` (claro). No duplicar reglas: solo sobrescribir los tokens de color.
-- [ ] **main.js / Drawer:** Agregar botón toggle en el drawer con ícono sol/luna. Persistir preferencia en `localStorage`.
-- [ ] **NoteList.css / NoteEditor.css / Heatmap.css:** Verificar que todos los componentes usan tokens (`var(--color-*)`) y no valores hardcodeados. Corregir si hay alguno.
-- [ ] **Verificación visual:** Testear ambos modos en el navegador (desktop y responsive mobile).
-
-**Criterio de cierre:** El usuario puede alternar entre modo oscuro y claro desde el drawer. La preferencia persiste al recargar. Todos los componentes respetan el tema activo.
+- [x] **`main.css`:** Crear set de CSS Custom Properties para `:root` (oscuro, actual por defecto) y `[data-theme="light"]` (claro). No duplicar reglas: solo sobrescribir los tokens de color.
+- [x] **main.js / Drawer:** Agregar botón toggle en el drawer con ícono sol/luna. Persistir preferencia en `localStorage`.
+- [x] **NoteList.css / NoteEditor.css / Heatmap.css:** Verificar que todos los componentes usan tokens (`var(--color-*)`) y no valores hardcodeados. Corregir si hay alguno.
+- [x] **Verificación visual:** Testear ambos modos en el navegador (desktop y responsive mobile).
 
 ---
 
-### Paso 5: Capacitor sync y validación en dispositivo Android
+### ~~Paso 5: Capacitor sync y validación en dispositivo Android~~ ✅ Completado (2026-05-18)
 
 **Módulo:** Infraestructura / Mobile
 **Refs:** ADR-005, RNF-009, Hito 04
-**Estimado:** ~1 sesión
 
-Desde la remoción de `vite-plugin-pwa` y la adición de fuentes/features, no se ha sincronizado Capacitor ni generado un APK. Es necesario validar que todo funciona en el contenedor nativo antes de seguir agregando features.
+**Resumen:** Se reconstruyó el APK local, se validó el funcionamiento nativo en dispositivo real (Samsung S7) utilizando scrcpy. Se detectó y documentó el problema de caché persistente de WebView durante despliegues in-place, ajustando el flujo de desarrollo oficial.
 
-**Tareas:**
-- [ ] `npm run build` → verificar que `dist/` contiene todos los assets (HTML, CSS, JS, fuentes, íconos).
-- [ ] `npx cap sync android` → sincronizar el contenido web con el proyecto Android.
-- [ ] Abrir en Android Studio → build del APK (debug).
-- [ ] Instalar en dispositivo real (S20 FE o emulador) y verificar: fuentes cargan, Pin/Archivar funciona, drawer abre/cierra, búsqueda funciona, modo oscuro/claro funciona.
-- [ ] Documentar cualquier issue específico de Capacitor/Android que surja.
-
-**Criterio de cierre:** APK debug instalable, funcional y sin errores de consola. Fuentes JetBrains Mono visibles. Features de Hito 04 operativas en el dispositivo.
+- [x] `npm run build` → verificar que `dist/` contiene todos los assets (HTML, CSS, JS, fuentes, íconos).
+- [x] `npx cap sync android` → sincronizar el contenido web con el proyecto Android.
+- [x] Instalar en dispositivo real (S7) usando `cap run android` y visualizar vía scrcpy.
+- [x] Documentar cualquier issue específico de Capacitor/Android que surja (caché persistente de WebView abordado actualizando el flujo con desinstalación limpia).
 
 ---
 
