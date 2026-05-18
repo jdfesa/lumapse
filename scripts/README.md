@@ -24,3 +24,16 @@ Automatiza el ciclo de compilación y despliegue de la aplicación en un disposi
   ```bash
   ./scripts/deploy-android.sh
   ```
+
+### 2. `clean.sh`
+Limpia cachés y artefactos de compilación para devolver el proyecto a un estado fresco. Ideal para solucionar "errores fantasma" causados por dependencias corruptas o código viejo atascado en memoria.
+
+- **Qué limpia:**
+  - `node_modules/.vite` (Caché de desarrollo de Vite).
+  - `dist/` (Archivos web minificados).
+  - `android/app/build/` y `android/.gradle/` (Cachés de compilación nativa Android).
+  - `tmp/` (Opcional: se solicita confirmación interactiva `(y/N)` antes de vaciar su contenido. Esta precaución previene la eliminación accidental de archivos temporales que puedan estar en uso para análisis u otros procesos).
+- **Uso:**
+  ```bash
+  ./scripts/clean.sh
+  ```
