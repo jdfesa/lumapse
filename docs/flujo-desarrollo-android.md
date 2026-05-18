@@ -1,7 +1,7 @@
 # Flujo de Desarrollo Android — Lumapse
 
 > **Documento:** Guía operativa de desarrollo, compilación y testing en dispositivos Android.  
-> **Última actualización:** Mayo 2026  
+> **Última actualización:** Mayo 2026 (flujo de despliegue limpio — Hito 04)  
 > **Autor:** José David Sandoval
 
 ---
@@ -298,22 +298,36 @@ npm run dev
 
 ### 5.2 Compilación y despliegue en dispositivo (ciclo completo)
 
-Cuando se necesita probar funcionalidades nativas o validar la app como APK:
+Cuando se necesita probar funcionalidades nativas o validar la app como APK.
+
+> **Importante:** Siempre se desinstala la app antes de reinstalar. El WebView de
+> Android cachea agresivamente los assets web (HTML/CSS/JS) del paquete anterior,
+> y una actualización in-place con `cap run` puede seguir sirviendo archivos viejos
+> aunque el APK sea nuevo. La desinstalación limpia elimina ese caché y garantiza
+> que los cambios se reflejen correctamente. Este comportamiento se detectó durante
+> el desarrollo del Hito 04 (mayo 2026) y es consistente con issues reportados en
+> el repositorio de Capacitor.
 
 ```bash
-# 1. Compilar la web app
+# 1. Desinstalar la versión anterior (limpia caché del WebView)
+adb uninstall com.lumapse.app
+
+# 2. Compilar la web app
 npm run build
 
-# 2. Sincronizar los assets con el proyecto Android
+# 3. Sincronizar los assets con el proyecto Android
 npx cap sync android
 
-# 3. Compilar el APK e instalar en el dispositivo conectado
+# 4. Compilar el APK e instalar en el dispositivo conectado
 npx cap run android
 
 # Si hay un solo dispositivo conectado, se instala automáticamente.
 # Si hay varios, se puede especificar:
 npx cap run android --target <DEVICE_ID>
 ```
+
+> **Nota:** Si la app no estaba instalada, `adb uninstall` mostrará un error
+> `Failure [DELETE_FAILED_INTERNAL_ERROR]` que puede ignorarse sin problema.
 
 ### 5.3 Interacción con el S7 Edge (pantalla dañada)
 
@@ -334,10 +348,13 @@ scrcpy --turn-screen-off -K
 ### 5.4 Ciclo completo resumido
 
 ```bash
-# Editar código → Build → Sync → Run → Verificar en scrcpy
-npm run build && npx cap sync android && npx cap run android
+# Desinstalar → Build → Sync → Run → Verificar en scrcpy
+adb uninstall com.lumapse.app; npm run build && npx cap sync android && npx cap run android
 scrcpy --turn-screen-off -K
 ```
+
+> Se usa `;` (no `&&`) después de `adb uninstall` porque el comando falla si la
+> app no estaba instalada, y eso no debe detener el resto del flujo.
 
 ---
 
@@ -348,6 +365,7 @@ scrcpy --turn-screen-off -K
 | `adb devices` no muestra el celular | Cable USB o depuración USB desactivada | Verificar que "Depuración USB" esté activada en Opciones de Desarrollador |
 | `npx cap run android` falla con error de Gradle | Primera ejecución o caché corrupto | Ejecutar `cd android && ./gradlew clean && cd ..` y reintentar |
 | La app muestra pantalla en blanco | `dist/` no está generado o desactualizado | Ejecutar `npm run build` antes de `npx cap sync` |
+| La app muestra una versión vieja después de `cap run` | El WebView de Android cachea los assets web del paquete anterior y una actualización in-place no siempre los refresca | Desinstalar la app antes de reinstalar: `adb uninstall com.lumapse.app` y luego `npx cap run android` |
 | scrcpy no conecta | ADB no autorizado en el dispositivo | Verificar el popup de autorización en el celular (o usar `adb kill-server && adb start-server`) |
 | El APK no se instala en el S20 FE | "Fuentes desconocidas" deshabilitado | Habilitar instalación de apps de fuentes desconocidas en Configuración |
 
