@@ -1,7 +1,7 @@
 # Historias de Usuario — Lumapse
 
 **Fase Design Thinking:** Idear / Prototipar  
-**Última actualización:** Abril 2026  
+**Última actualización:** Mayo 2026  
 **Autor:** José David Sandoval
 
 ---
@@ -13,7 +13,7 @@
 - **CA:** Criterio de Aceptación — condición verificable que define cuándo la historia está completa.
 - **SP:** Story Points — complejidad relativa en escala Fibonacci (1, 2, 3, 5, 8, 13). Ver [metodología de estimación](#metodología-de-estimación).
 - **Trazabilidad:** Cada HU referencia el RF que implementa y la Persona que la motiva.
-- **Alcance:** Este documento cubre inicialmente las HU del **Hito 02 (Core del Editor)**. Se ampliará en hitos posteriores.
+- **Alcance:** Este documento cubre las HU de los **Hitos 02, 03 y 04**. Se ampliará en hitos posteriores.
 
 ---
 
@@ -148,30 +148,148 @@
 
 ---
 
+## Hito 03 — MVP Completo (Julio 2026)
+
+### HU-007 — Renderizar Markdown en tiempo real
+
+| Campo | Detalle |
+|---|---|
+| **Historia** | Como **estudiante**, quiero **ver mis notas renderizadas en Markdown** con formato visual (negritas, listas, encabezados), para **leer mis apuntes con la misma claridad que en un documento formal**. |
+| **RF asociados** | [RF-010, RF-011](./requisitos-funcionales.md) |
+| **Persona** | [Lucía](./personas.md#persona-1--lucía-la-estudiante-organizada) |
+| **Prioridad** | MUST |
+| **Story Points** | **5 SP** — Integración de librerías externas (`marked` + `DOMPurify`), servicio de conversión, componente de preview, y modos de vista (edición, split, lectura). |
+| **Hito** | 03 |
+
+**Criterios de Aceptación:**
+
+| CA | Descripción | Verificación |
+|---|---|---|
+| CA-01 | El contenido Markdown se renderiza como HTML visual (encabezados, negritas, listas, código). | Inspección visual con nota de prueba |
+| CA-02 | El HTML generado está sanitizado contra inyección XSS mediante DOMPurify. | Test manual con payload `<script>alert(1)</script>` |
+| CA-03 | El usuario puede alternar entre modo edición, vista dividida (split) y modo lectura. | Test funcional |
+| CA-04 | La vista previa se actualiza en tiempo real mientras se escribe en el editor. | Inspección visual |
+
+---
+
+### HU-008 — Exportar e importar notas
+
+| Campo | Detalle |
+|---|---|
+| **Historia** | Como **estudiante**, quiero **exportar mis notas como archivos `.md` e importar archivos Markdown existentes**, para **hacer backup de mi trabajo o migrar contenido desde otras herramientas**. |
+| **RF asociados** | [RF-016, RF-017, RF-018](./requisitos-funcionales.md) |
+| **Persona** | [Martín](./personas.md#persona-2--martín-el-estudiante-práctico) |
+| **Prioridad** | SHOULD |
+| **Story Points** | **8 SP** — Tres flujos distintos (exportar nota individual, exportar workspace como `.zip`, importar `.md`), manejo del filesystem del dispositivo, y dependencia de `jszip`. |
+| **Hito** | 03 |
+
+**Criterios de Aceptación:**
+
+| CA | Descripción | Verificación |
+|---|---|---|
+| CA-01 | Se puede exportar una nota individual como archivo `.md` desde el editor. | Test funcional (verificar descarga) |
+| CA-02 | Se puede exportar el workspace completo como archivo `.zip` con todas las notas. | Test funcional (verificar contenido del zip) |
+| CA-03 | Se pueden importar uno o más archivos `.md` desde el dispositivo, creando notas nuevas. | Test funcional |
+| CA-04 | Las notas importadas conservan el contenido Markdown original sin alteraciones. | Comparación manual de contenido |
+
+---
+
+## Hito 04 — Organización y UX (Agosto 2026)
+
+### HU-009 — Fijar y archivar notas
+
+| Campo | Detalle |
+|---|---|
+| **Historia** | Como **estudiante**, quiero **fijar las notas más importantes al tope del listado y archivar las que ya no uso activamente**, para **mantener organizado mi espacio de trabajo sin perder información**. |
+| **RF asociados** | [RF-013](./requisitos-funcionales.md) |
+| **Persona** | [Lucía](./personas.md#persona-1--lucía-la-estudiante-organizada) |
+| **Prioridad** | SHOULD |
+| **Story Points** | **5 SP** — Upgrade de schema de la BD (nuevos campos `pinned`, `archived`), lógica de ordenamiento con prioridad, filtro de archivadas, y tres acciones en el menú contextual. |
+| **Hito** | 04 |
+
+**Criterios de Aceptación:**
+
+| CA | Descripción | Verificación |
+|---|---|---|
+| CA-01 | Al fijar una nota, esta aparece en la parte superior del feed con un indicador visual (ícono de pin). | Inspección visual |
+| CA-02 | Al archivar una nota, esta desaparece del feed principal. | Test funcional |
+| CA-03 | Existe una vista "Ver archivadas" accesible desde el drawer para consultar notas archivadas. | Test funcional |
+| CA-04 | Las acciones de fijar y archivar son reversibles (desfijar, desarchivar). | Test funcional (toggle ida/vuelta) |
+
+---
+
+### HU-010 — Buscar notas
+
+| Campo | Detalle |
+|---|---|
+| **Historia** | Como **estudiante**, quiero **buscar notas por título o contenido**, para **encontrar rápidamente un apunte específico sin recorrer todo el listado manualmente**. |
+| **RF asociados** | [RF-015](./requisitos-funcionales.md) |
+| **Persona** | [Martín](./personas.md#persona-2--martín-el-estudiante-práctico) |
+| **Prioridad** | SHOULD |
+| **Story Points** | **3 SP** — Input con debounce, filtrado en memoria sobre el array de notas, y actualización reactiva de la lista. |
+| **Hito** | 04 |
+
+**Criterios de Aceptación:**
+
+| CA | Descripción | Verificación |
+|---|---|---|
+| CA-01 | Existe un campo de búsqueda accesible desde el drawer. | Inspección visual |
+| CA-02 | Al escribir, el listado se filtra en tiempo real mostrando solo las notas cuyo título o contenido coinciden con el texto ingresado. | Test funcional |
+| CA-03 | La búsqueda aplica debounce (≥200ms) para evitar re-renders innecesarios. | Verificación en código |
+| CA-04 | Al borrar el texto de búsqueda, se restaura el listado completo. | Test funcional |
+
+---
+
+### HU-011 — Alternar modo oscuro y claro
+
+| Campo | Detalle |
+|---|---|
+| **Historia** | Como **estudiante**, quiero **alternar entre un modo oscuro y un modo claro** desde la interfaz, para **adaptar la lectura a distintas condiciones de iluminación (aulas, transporte, exteriores)**. |
+| **RF asociados** | [RF-019](./requisitos-funcionales.md) |
+| **Persona** | [Lucía](./personas.md#persona-1--lucía-la-estudiante-organizada) |
+| **Prioridad** | SHOULD |
+| **Story Points** | **5 SP** — Arquitectura de tokens CSS con dos paletas, servicio modular (`ThemeService`) con persistencia en `localStorage`, detección de preferencia del OS, y actualización dinámica del `meta[theme-color]` para la barra de estado nativa. |
+| **Hito** | 04 |
+
+**Criterios de Aceptación:**
+
+| CA | Descripción | Verificación |
+|---|---|---|
+| CA-01 | Existe un botón de toggle accesible desde el drawer con ícono dinámico (sol/luna). | Inspección visual |
+| CA-02 | Al alternar el tema, toda la interfaz cambia de paleta sin recargar la página. | Test funcional |
+| CA-03 | La preferencia de tema persiste al cerrar y reabrir la aplicación. | Test manual (cerrar app, reabrir, verificar tema) |
+| CA-04 | Si no hay preferencia guardada, se respeta la configuración del sistema operativo (`prefers-color-scheme`). | Test manual (cambiar tema del OS) |
+
+---
+
 ## Resumen
 
-| Métrica | Valor |
-|---|---|
-| **Total HU (Hito 02)** | 6 |
-| **Total Story Points (Hito 02)** | **20 SP** |
-| **Total Criterios de Aceptación** | 20 |
-| **Prioridad** | Todas MUST |
-| **Personas cubiertas** | Lucía (4 HU), Martín (2 HU) |
-| **RFs cubiertos** | RF-001 a RF-005, RF-007 |
+| Métrica | Hito 02 | Hito 03 | Hito 04 | Total |
+|---|---|---|---|---|
+| **Total HU** | 6 | 2 | 3 | **11** |
+| **Total Story Points** | 20 | 13 | 13 | **46** |
+| **Total Criterios de Aceptación** | 20 | 8 | 12 | **40** |
+| **Prioridad predominante** | MUST | MUST/SHOULD | SHOULD | — |
+| **Personas cubiertas** | Lucía (4), Martín (2) | Lucía (1), Martín (1) | Lucía (2), Martín (1) | Lucía (7), Martín (4) |
 
 ---
 
 ## Trazabilidad: HU → RF → Persona
 
-| HU | RF | Persona | Funcionalidad | SP |
-|---|---|---|---|---|
-| HU-001 | RF-001 | Lucía | Crear nota | 2 |
-| HU-002 | RF-002 | Martín | Editar nota | 3 |
-| HU-003 | RF-003 | Lucía | Eliminar nota | 2 |
-| HU-004 | RF-004 | Lucía | Listado de notas | 3 |
-| HU-005 | RF-005 | Lucía | Auto-guardado | 5 |
-| HU-006 | RF-007 | Martín | Persistencia local | 5 |
-| | | | **Total Hito 02** | **20** |
+| HU | RF | Persona | Funcionalidad | SP | Hito |
+|---|---|---|---|---|---|
+| HU-001 | RF-001 | Lucía | Crear nota | 2 | 02 |
+| HU-002 | RF-002 | Martín | Editar nota | 3 | 02 |
+| HU-003 | RF-003 | Lucía | Eliminar nota | 2 | 02 |
+| HU-004 | RF-004 | Lucía | Listado de notas | 3 | 02 |
+| HU-005 | RF-005 | Lucía | Auto-guardado | 5 | 02 |
+| HU-006 | RF-007 | Martín | Persistencia local | 5 | 02 |
+| HU-007 | RF-010/011 | Lucía | Renderizar Markdown | 5 | 03 |
+| HU-008 | RF-016/017/018 | Martín | Exportar/Importar notas | 8 | 03 |
+| HU-009 | RF-013 | Lucía | Fijar y archivar notas | 5 | 04 |
+| HU-010 | RF-015 | Martín | Buscar notas | 3 | 04 |
+| HU-011 | RF-019 | Lucía | Modo oscuro/claro | 5 | 04 |
+| | | | **Total** | **46** | |
 
 ---
 
@@ -194,7 +312,7 @@ Lumapse es un proyecto **individual** (José David Sandoval), lo cual impide apl
 
 ---
 
-> **Nota:** Las HU de los Hitos 03 a 06 (Markdown, organización, export/import, PWA, UX) se agregarán al inicio de cada hito, siguiendo el mismo formato y convenciones. Este documento es un artefacto vivo que crece con el proyecto.
+> **Nota:** Las HU de los Hitos 05 y 06 (categorización por materias, SQLite) se agregarán al inicio de cada hito, siguiendo el mismo formato y convenciones. Este documento es un artefacto vivo que crece con el proyecto.
 
 ---
 
