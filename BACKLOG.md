@@ -97,6 +97,67 @@ Estos son los 3 bloques de trabajo a ejecutar en orden. No se avanza al siguient
 
 ---
 
+### Paso 7: Hardening de seguridad XSS en MarkdownService
+
+**Módulo:** Core / Seguridad
+**Refs:** Deuda técnica (Auditoría 2026-05-14), MarkdownService.js
+**Estimado:** ~30 min
+
+La configuración actual de DOMPurify en `MarkdownService.js` permite la etiqueta `<img>` con atributo `src`, lo que habilita la carga de imágenes externas. En un contexto offline-first esto representa dos riesgos: (1) peticiones HTTP no deseadas que revelan la IP del usuario, y (2) posible tracking vía pixel espía. Dado que Lumapse no soporta imágenes embebidas en esta fase, la solución es restringir la configuración.
+
+**Tareas:**
+- [ ] **`MarkdownService.js`:** Revisar `ALLOWED_TAGS` y `ALLOWED_ATTR`. Evaluar si `img` debe mantenerse o eliminarse. Si se mantiene, agregar un hook de DOMPurify que fuerce `src` a solo data URIs o que elimine `img` por completo.
+- [ ] **Test manual:** Crear una nota con payload `![test](https://externo.com/pixel.png)` y verificar que la imagen NO se carga (Network tab vacío).
+- [ ] **Documentar:** Agregar comentario en el código justificando la decisión de seguridad.
+
+**Criterio de cierre:** No se realizan peticiones HTTP externas al renderizar Markdown. La sanitización está documentada en el código.
+
+---
+
+### Paso 8: Migración de persistencia a SQLite
+
+**Módulo:** Core / Persistencia
+**Refs:** ADR-002 (extensión), Hito 04/05
+**Estimado:** ~1-2 sesiones
+
+IndexedDB cumplió su rol para el MVP, pero la migración a SQLite vía `@capacitor-community/sqlite` es necesaria antes de implementar categorización por materias (Paso 9). SQLite ofrece queries relacionales (JOIN, FK), mejor rendimiento con volumen de datos, y es nativo en el contenedor Capacitor.
+
+**Tareas:**
+- [ ] **Instalar dependencia:** `@capacitor-community/sqlite` + `npx cap sync`.
+- [ ] **Crear `SqliteService.js`:** Abstracción sobre el plugin con métodos equivalentes a los actuales de `NoteService` (CRUD, getAll, search).
+- [ ] **Definir schema SQL:** Tabla `notes` con columnas `id`, `title`, `content`, `pinned`, `archived`, `created_at`, `updated_at`. Tabla `subjects` (preparación para Paso 9).
+- [ ] **Migrar datos:** Script de migración one-time que lee las notas de IndexedDB y las inserta en SQLite al primer arranque post-actualización.
+- [ ] **Actualizar `NoteStore.js`:** Reemplazar las llamadas a `NoteService` (IndexedDB) por el nuevo `SqliteService`.
+- [ ] **Eliminar dependencia `idb`:** `npm uninstall idb`. Limpiar imports.
+- [ ] **Verificar en dispositivo:** Build + deploy en S7 (`./scripts/deploy-android.sh`). Validar CRUD, pin, archivar, búsqueda.
+- [ ] **Documentar:** Redactar ADR-006 justificando la migración. Actualizar `modelo-dominio.md`.
+
+**Criterio de cierre:** La app funciona exclusivamente con SQLite. IndexedDB ya no se usa. Los datos existentes se migran sin pérdida. APK funcional en dispositivo.
+
+---
+
+### Paso 9: Categorización por materia (DP-002) — Modelo + UI
+
+**Módulo:** Organización / Feature nueva
+**Refs:** DP-002, RF-013 (extensión), encuesta P12 (69.2% carpetas)
+**Estimado:** ~1-2 sesiones
+**Dependencia:** Paso 8 (SQLite debe estar implementado)
+
+La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere organizar por carpeta/materia. Este paso implementa la estructura de carpetas como sistema de organización principal, aprovechando las capacidades relacionales de SQLite.
+
+**Tareas:**
+- [ ] **`SubjectService.js`:** CRUD de materias (nombre, color opcional). Validación de nombre único.
+- [ ] **`NoteService` (extensión):** Agregar campo `subjectId` a las notas. Método `getNotesBySubject(id)`.
+- [ ] **UI — Drawer:** Sección de materias en el drawer con listado, botón de crear, y selector activo que filtra el feed.
+- [ ] **UI — Composer:** Selector de materia al crear/editar nota (dropdown o chips).
+- [ ] **UI — Feed:** Indicador visual de materia en cada tarjeta de nota (badge de color).
+- [ ] **Verificar en dispositivo:** Build + deploy en S7.
+- [ ] **Documentar:** Actualizar HU, modelo de dominio, casos de uso y CHANGELOG.
+
+**Criterio de cierre:** El usuario puede crear materias, asignar notas a una materia, y filtrar el feed por materia desde el drawer. La funcionalidad persiste en SQLite.
+
+---
+
 ## 📝 Deuda Técnica — Documentación y Diseño
 
 - [x] ~~**Historias de Usuario (Hitos 03 y 04):**~~ ✅ Completado (2026-05-18). HU-007 a HU-011 redactadas con criterios de aceptación, SP y trazabilidad.
