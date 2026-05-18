@@ -30,7 +30,7 @@
 
 .note-card:hover {
   background-color: var(--color-surface);
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--color-border-hover);
 }
 
 .note-card--pinned {
@@ -96,7 +96,7 @@
   min-width: 140px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px var(--color-shadow);
   opacity: 0;
   visibility: hidden;
   transform: translateY(-5px);
@@ -136,7 +136,7 @@
 }
 
 .note-card__dropdown-btn--delete:hover {
-  background-color: rgba(248, 113, 113, 0.1);
+  background-color: var(--color-danger-dim);
 }
 
 .note-card__content {

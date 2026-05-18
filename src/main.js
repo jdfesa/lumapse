@@ -5,6 +5,7 @@
 
 import './styles/main.css'
 import * as NoteStore from './store/NoteStore.js'
+import * as ThemeService from './services/ThemeService.js'
 import { NoteList as Feed } from './components/NoteList.js'
 import { NoteEditor as Composer } from './components/NoteEditor.js'
 import { Heatmap } from './components/Heatmap.js'
@@ -36,6 +37,12 @@ async function initApp() {
         <button id="btn-toggle-archived" class="drawer__nav-btn">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
           <span id="archived-btn-label">Ver archivadas</span>
+        </button>
+
+        <!-- Toggle Tema (RF-019) -->
+        <button id="btn-toggle-theme" class="drawer__nav-btn">
+          <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+          <span id="theme-btn-label">Cambiar tema</span>
         </button>
         
         <!-- Heatmap (RF-017) -->
@@ -119,6 +126,33 @@ async function initApp() {
     archivedLabel.textContent = showingArchived ? 'Ver notas activas' : 'Ver archivadas'
     btnArchiveToggle.classList.toggle('drawer__nav-btn--active', showingArchived)
     closeDrawer()
+  })
+
+  // --- Theme Toggle (RF-019) ---
+  ThemeService.init()
+
+  const themeIcon = document.getElementById('theme-icon')
+  const themeLabel = document.getElementById('theme-btn-label')
+  const btnToggleTheme = document.getElementById('btn-toggle-theme')
+
+  /** Actualiza el ícono y el label del botón según el tema activo */
+  function updateThemeUI(theme) {
+    if (theme === 'light') {
+      // En modo claro, el botón ofrece cambiar a oscuro → ícono luna
+      themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>'
+      themeLabel.textContent = 'Modo oscuro'
+    } else {
+      // En modo oscuro, el botón ofrece cambiar a claro → ícono sol
+      themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>'
+      themeLabel.textContent = 'Modo claro'
+    }
+  }
+
+  updateThemeUI(ThemeService.getTheme())
+  ThemeService.onThemeChange(updateThemeUI)
+
+  btnToggleTheme.addEventListener('click', () => {
+    ThemeService.toggle()
   })
 
   // Cargar datos iniciales
