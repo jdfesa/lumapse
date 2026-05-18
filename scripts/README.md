@@ -37,3 +37,14 @@ Limpia cachés y artefactos de compilación para devolver el proyecto a un estad
   ```bash
   ./scripts/clean.sh
   ```
+
+### 3. `check-docs.sh`
+Realiza una auditoría rápida de consistencia en el proyecto antes de realizar operaciones importantes en Git. Esta herramienta ayuda a mantener la rigurosidad académica exigida en la documentación y el código fuente.
+
+- **Qué verifica:**
+  - Rastrea el código en `src/` buscando etiquetas `TODO` o `FIXME` que pudieran haber quedado olvidadas durante el desarrollo.
+  - Presenta un resumen limpio del estado actual de Git (`git status --short`) para prevenir commits de archivos indeseados o fuera del alcance de la tarea actual.
+- **Uso:**
+  ```bash
+  ./scripts/check-docs.sh
+  ```
