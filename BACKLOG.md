@@ -3,7 +3,7 @@
 Este documento funciona como una bandeja de entrada local para las tareas, mejoras y deuda técnica identificadas durante el desarrollo o en auditorías. Una vez que se inicia un Hito, las tareas relevantes de aquí se planifican y ejecutan.
 
 > **Hito activo:** 04 — Organización y UX (Agosto 2026)
-> **Último commit:** `1061663` — docs(android): actualizar flujo de despliegue a instalación limpia
+> **Último commit:** `dae265b` — docs(hito-04): actualizar informe de progreso con avance real
 > **Última auditoría del backlog:** 2026-05-18
 
 ---
@@ -83,33 +83,24 @@ Estos son los 3 bloques de trabajo a ejecutar en orden. No se avanza al siguient
 
 ---
 
-### Paso 6: Deuda documental — HU de Hitos 03/04 + actualizar modelo de dominio
+### ~~Paso 6: Deuda documental — HU de Hitos 03/04 + actualizar modelo de dominio~~ ✅ Completado (2026-05-18)
 
 **Módulo:** Documentación / Trazabilidad
 **Refs:** Auditoría 2026-05-14, Deuda técnica documentación
-**Estimado:** ~1 sesión
 
-La documentación académica tiene un gap: las Historias de Usuario solo cubren Hito 02 (HU-001 a HU-006), y el modelo de dominio aún referencia etiquetas/tags y PWA/Service Worker. Para la defensa del proyecto, estos documentos deben estar al día.
+**Resumen:** Se cerró la brecha entre código y documentación académica: se redactaron 5 nuevas Historias de Usuario (HU-007 a HU-011, 26 SP), se actualizó el modelo de dominio eliminando la entidad Tag y agregando ThemeService, se corrigieron los casos de uso (PWA→APK, Tags→Pin/Archivar, SW→Tema) y se actualizó el informe del Hito 04 con el avance real.
 
-**Tareas:**
-- [ ] **`historias-de-usuario.md`:** Redactar HU para las features de Hitos 03 y 04:
-  - HU-007: Renderizar Markdown (RF-010/011)
-  - HU-008: Exportar/Importar notas (RF-016/017/018)
-  - HU-009: Fijar y archivar notas (RF-013)
-  - HU-010: Buscar notas (RF-015)
-  - HU-011: Alternar modo oscuro/claro (RF-019)
-- [ ] **`modelo-dominio.md`:** Actualizar entidad `Note` (agregar `pinned`, `archived`; eliminar `tagIds`). Eliminar entidad `Tag` si existe. Actualizar referencias a PWA/SW.
-- [ ] **`casos-de-uso.md`:** Actualizar UC-13 (instalar como PWA → instalar como APK), UC-15 (cachear assets → obsoleto), agregar UC para Pin/Archivar.
-- [ ] **`hito-04-agosto.md`:** Actualizar tabla de estado de RF/UX para reflejar avance real.
-
-**Criterio de cierre:** Un evaluador externo puede leer `historias-de-usuario.md`, `modelo-dominio.md` y `casos-de-uso.md` y entender exactamente qué hace la app sin mirar el código.
+- [x] **`historias-de-usuario.md`:** HU-007 a HU-011 redactadas con criterios de aceptación, SP y trazabilidad.
+- [x] **`modelo-dominio.md`:** Entidad Note actualizada (pinned, archived), Tag eliminada, ThemeService agregada, schema IndexedDB v2.
+- [x] **`casos-de-uso.md`:** UC-06/07 (Tags→Pin/Archivar), UC-13 (PWA→APK), UC-15 (SW→Tema). Actor SW→Capacitor.
+- [x] **`hito-04-agosto.md`:** Tabla de RF/UX completa con 15 ítems y estado de avance real.
 
 ---
 
 ## 📝 Deuda Técnica — Documentación y Diseño
 
-- [ ] **Historias de Usuario (Hitos 03 y 04):** Redactar las HU faltantes para renderizado Markdown, exportación/importación, y estructura por materias *(Ref: Auditoría 2026-05-14)*.
-- [ ] **Actualizar Modelo de Dominio y Casos de Uso:** Revisar `modelo-dominio.md` y `casos-de-uso.md` para reflejar el pivote de etiquetas a carpetas por materia (DP-002) y eliminar referencias obsoletas a PWA/SW.
+- [x] ~~**Historias de Usuario (Hitos 03 y 04):**~~ ✅ Completado (2026-05-18). HU-007 a HU-011 redactadas con criterios de aceptación, SP y trazabilidad.
+- [x] ~~**Actualizar Modelo de Dominio y Casos de Uso:**~~ ✅ Completado (2026-05-18). Entidad Tag eliminada, campos pinned/archived agregados, casos de uso corregidos (PWA→APK, Tags→Pin/Archivar).
 
 ## 💻 Deuda Técnica — Código y Arquitectura
 
