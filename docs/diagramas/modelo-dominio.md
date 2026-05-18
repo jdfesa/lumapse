@@ -1,14 +1,16 @@
 # Modelo de Dominio — Lumapse
 
 **Tipo:** Diagrama UML de Estructura (Clases)  
-**Última actualización:** Abril 2026  
+**Última actualización:** Mayo 2026  
 **Autor:** José David Sandoval
 
 ---
 
 ## Objetivo del diagrama
 
-Modelar las **entidades principales** del dominio de Lumapse y sus relaciones. Este diagrama representa la estructura conceptual de los datos que el sistema maneja, independientemente de cómo se implementan internamente. Es el punto de partida para el diseño de la capa de persistencia (IndexedDB) y del estado de la aplicación (Store).
+Modelar las **entidades principales** del dominio de Lumapse y sus relaciones. Este diagrama representa la estructura conceptual de los datos que el sistema maneja, independientemente de cómo se implementan internamente. Es el punto de partida para el diseño de la capa de persistencia (IndexedDB, con migración planificada a SQLite) y del estado de la aplicación (Store).
+
+> **Nota de evolución:** En versiones anteriores (Hito 00), el modelo incluía una entidad `Tag` para clasificar notas con etiquetas. Esta entidad fue descartada a favor de una organización por carpetas/materias ([DP-002](../producto/decisiones-producto.md)), que aún no ha sido implementada. El modelo actual refleja el código en producción.
 
 ---
 
@@ -22,7 +24,8 @@ classDiagram
         +String id
         +String title
         +String content
-        +String[] tagIds
+        +Boolean pinned
+        +Boolean archived
         +DateTime createdAt
         +DateTime updatedAt
         +getExcerpt(maxLength) String
@@ -31,22 +34,14 @@ classDiagram
         +toMarkdownFile() Blob
     }
 
-    class Tag {
-        +String id
-        +String name
-        +String color
-    }
-
     class AppState {
         +Note[] notes
-        +Tag[] tags
         +String activeNoteId
         +String searchQuery
-        +String filterTagId
+        +Boolean showArchived
         +String sortOrder
         +getActiveNote() Note
         +getFilteredNotes() Note[]
-        +getNotesByTag(tagId) Note[]
     }
 
     class NoteService {
@@ -56,6 +51,8 @@ classDiagram
         +getAll() Note[]
         +getById(id) Note
         +search(query) Note[]
+        +togglePin(id) Note
+        +toggleArchive(id) Note
         +exportAsMarkdown(id) Blob
         +exportAllAsZip() Blob
         +importFromMarkdown(file) Note
@@ -70,11 +67,18 @@ classDiagram
         +clear(storeName) void
     }
 
+    class ThemeService {
+        +init() void
+        +getTheme() String
+        +setTheme(theme) void
+        +toggle() String
+        +onThemeChange(callback) Function
+    }
+
     AppState "1" --> "*" Note : contiene
-    AppState "1" --> "*" Tag : contiene
-    Note "*" --> "*" Tag : etiquetada con
     NoteService --> StorageService : persiste vía
     NoteService --> AppState : actualiza
+    ThemeService ..> AppState : preferencia visual
 ```
 
 ---
@@ -88,9 +92,10 @@ Entidad principal del dominio. Representa una unidad de contenido creada por el 
 | Atributo | Tipo | Descripción |
 |---|---|---|
 | `id` | `String` | Identificador único (UUID v4 generado con `crypto.randomUUID()`). |
-| `title` | `String` | Título de la nota. Valor por defecto: `"Sin título"`. Máximo 200 caracteres. |
+| `title` | `String` | Título de la nota. Se extrae automáticamente de la primera línea `# ` del contenido Markdown ([DP-001](../producto/decisiones-producto.md)). |
 | `content` | `String` | Contenido de la nota en formato Markdown (texto plano). Sin límite de tamaño. |
-| `tagIds` | `String[]` | Lista de IDs de etiquetas asociadas. Máximo 5 por nota ([RF-013](../producto/requisitos-funcionales.md)). |
+| `pinned` | `Boolean` | Indica si la nota está fijada al tope del listado. Default: `false`. |
+| `archived` | `Boolean` | Indica si la nota está archivada (oculta del feed principal). Default: `false`. |
 | `createdAt` | `DateTime` | Fecha y hora de creación (ISO 8601). Inmutable. |
 | `updatedAt` | `DateTime` | Fecha y hora de última modificación. Se actualiza en cada guardado. |
 
@@ -103,36 +108,22 @@ Entidad principal del dominio. Representa una unidad de contenido creada por el 
 
 ---
 
-### Tag (Etiqueta)
-
-Entidad de clasificación. Permite al usuario organizar notas por categoría.
-
-| Atributo | Tipo | Descripción |
-|---|---|---|
-| `id` | `String` | Identificador único (UUID v4). |
-| `name` | `String` | Nombre de la etiqueta (ej: "Matemáticas", "Programación"). Único. Máximo 30 caracteres. |
-| `color` | `String` | Color en formato hex (ej: `#a3e635`). Para diferenciación visual en la UI. |
-
----
-
 ### AppState (Estado de la Aplicación)
 
-Objeto centralizado que mantiene el estado en memoria de la aplicación. No se persiste directamente — se reconstruye a partir de los datos en IndexedDB al iniciar la app.
+Objeto centralizado que mantiene el estado en memoria de la aplicación. No se persiste directamente — se reconstruye a partir de los datos en IndexedDB al iniciar la app. Implementa el patrón Observer para notificar a la UI de los cambios.
 
 | Atributo | Tipo | Descripción |
 |---|---|---|
-| `notes` | `Note[]` | Todas las notas cargadas desde IndexedDB. |
-| `tags` | `Tag[]` | Todas las etiquetas disponibles. |
+| `notes` | `Note[]` | Todas las notas cargadas desde la base de datos. |
 | `activeNoteId` | `String \| null` | ID de la nota actualmente abierta en el editor. |
 | `searchQuery` | `String` | Texto de búsqueda activo. Vacío = sin filtro. |
-| `filterTagId` | `String \| null` | ID de la etiqueta de filtro activa. `null` = sin filtro. |
+| `showArchived` | `Boolean` | Si es `true`, el feed muestra solo las notas archivadas. Default: `false`. |
 | `sortOrder` | `String` | Orden del listado: `"updatedAt:desc"` (default), `"title:asc"`. |
 
 | Método | Retorno | Descripción |
 |---|---|---|
 | `getActiveNote()` | `Note` | Retorna la nota que corresponde a `activeNoteId`. |
-| `getFilteredNotes()` | `Note[]` | Retorna las notas filtradas por `searchQuery` y `filterTagId`, ordenadas por `sortOrder`. |
-| `getNotesByTag(tagId)` | `Note[]` | Retorna todas las notas que contienen el tag indicado. |
+| `getFilteredNotes()` | `Note[]` | Retorna las notas filtradas por `searchQuery` y `showArchived`, ordenadas por `sortOrder`. Las notas fijadas (`pinned`) aparecen siempre al tope. |
 
 ---
 
@@ -142,12 +133,14 @@ Capa de lógica de negocio. Coordina las operaciones sobre notas entre el estado
 
 | Método | Retorno | Descripción |
 |---|---|---|
-| `create(title, content)` | `Note` | Crea una nueva nota, la persiste y la agrega al estado. |
+| `create(title, content)` | `Note` | Crea una nueva nota con `pinned: false` y `archived: false`, la persiste y la agrega al estado. |
 | `update(id, changes)` | `Note` | Actualiza una nota existente, persiste los cambios y actualiza `updatedAt`. |
-| `delete(id)` | `void` | Elimina una nota de IndexedDB y del estado. |
-| `getAll()` | `Note[]` | Recupera todas las notas desde IndexedDB. |
+| `delete(id)` | `void` | Elimina una nota de la base de datos y del estado. |
+| `getAll()` | `Note[]` | Recupera todas las notas desde la base de datos. |
 | `getById(id)` | `Note` | Recupera una nota específica por ID. |
 | `search(query)` | `Note[]` | Búsqueda por texto en título y contenido. |
+| `togglePin(id)` | `Note` | Alterna el estado `pinned` de una nota. |
+| `toggleArchive(id)` | `Note` | Alterna el estado `archived` de una nota. Si la nota estaba activa en el editor, se deselecciona. |
 | `exportAsMarkdown(id)` | `Blob` | Genera un archivo `.md` para descarga. |
 | `exportAllAsZip()` | `Blob` | Genera un `.zip` con todas las notas como archivos `.md`. |
 | `importFromMarkdown(file)` | `Note` | Crea una nota a partir de un archivo `.md` importado. |
@@ -156,18 +149,32 @@ Capa de lógica de negocio. Coordina las operaciones sobre notas entre el estado
 
 ### StorageService (Servicio de Almacenamiento)
 
-Abstracción sobre IndexedDB. Encapsula todas las operaciones de lectura/escritura al storage del navegador.
+Abstracción sobre IndexedDB. Encapsula todas las operaciones de lectura/escritura al storage del dispositivo.
 
 | Método | Retorno | Descripción |
 |---|---|---|
-| `init()` | `void` | Inicializa la base de datos IndexedDB y crea los object stores necesarios. |
+| `init()` | `void` | Inicializa la base de datos y crea los object stores necesarios. |
 | `put(storeName, item)` | `void` | Inserta o actualiza un registro en el store indicado. |
 | `get(storeName, id)` | `Object` | Recupera un registro por ID. |
 | `getAll(storeName)` | `Object[]` | Recupera todos los registros del store. |
 | `delete(storeName, id)` | `void` | Elimina un registro por ID. |
 | `clear(storeName)` | `void` | Elimina todos los registros del store. |
 
-> Esta capa utiliza la librería [`idb`](https://github.com/niceferrari/idb) como wrapper liviano sobre la API nativa de IndexedDB, según lo documentado en [ADR-002](../adr/ADR-002-persistencia-indexeddb.md).
+> Esta capa utiliza la librería [`idb`](https://github.com/niceferrari/idb) como wrapper liviano sobre la API nativa de IndexedDB, según lo documentado en [ADR-002](../adr/ADR-002-persistencia-indexeddb.md). La migración a SQLite (vía `@capacitor-community/sqlite`) está planificada para un hito futuro.
+
+---
+
+### ThemeService (Servicio de Tema Visual)
+
+Servicio modular para la gestión del modo oscuro/claro. No persiste datos de dominio — maneja una preferencia de UI.
+
+| Método | Retorno | Descripción |
+|---|---|---|
+| `init()` | `void` | Carga la preferencia desde `localStorage`. Si no existe, detecta la preferencia del OS (`prefers-color-scheme`). Aplica el atributo `data-theme` al `<html>`. |
+| `getTheme()` | `String` | Retorna el tema activo (`"dark"` o `"light"`). |
+| `setTheme(theme)` | `void` | Aplica un tema, lo persiste en `localStorage` y actualiza el `meta[name="theme-color"]`. |
+| `toggle()` | `String` | Alterna entre oscuro y claro. Retorna el nuevo tema aplicado. |
+| `onThemeChange(callback)` | `Function` | Registra un listener que se ejecuta al cambiar de tema. Retorna una función para desuscribirse. |
 
 ---
 
@@ -176,27 +183,25 @@ Abstracción sobre IndexedDB. Encapsula todas las operaciones de lectura/escritu
 | Relación | Cardinalidad | Descripción |
 |---|---|---|
 | AppState → Note | 1 a muchos | El estado contiene todas las notas de la app. |
-| AppState → Tag | 1 a muchos | El estado contiene todas las etiquetas disponibles. |
-| Note → Tag | Muchos a muchos | Una nota puede tener hasta 5 etiquetas; una etiqueta puede estar en múltiples notas. |
 | NoteService → StorageService | Dependencia | NoteService delega la persistencia al StorageService. |
 | NoteService → AppState | Dependencia | NoteService actualiza el estado en memoria después de cada operación. |
+| ThemeService ↔ AppState | Preferencia visual | ThemeService gestiona una preferencia de interfaz independiente del estado de dominio. |
 
 ---
 
-## Esquema de IndexedDB
+## Esquema de IndexedDB (v2)
 
 ```
-Database: "lumapse-db"
-├── Object Store: "notes"
-│   ├── keyPath: "id"
-│   ├── index: "updatedAt" (para ordenamiento)
-│   └── Registros: { id, title, content, tagIds, createdAt, updatedAt }
-│
-└── Object Store: "tags"
+Database: "lumapse-db" (versión 2)
+└── Object Store: "notes"
     ├── keyPath: "id"
-    ├── index: "name" (unique, para búsqueda)
-    └── Registros: { id, name, color }
+    ├── index: "updatedAt" (para ordenamiento)
+    └── Registros: { id, title, content, pinned, archived, createdAt, updatedAt }
 ```
+
+> **Migración v1 → v2:** Al abrir la BD con versión 2, se ejecuta un backfill automático
+> que agrega `pinned: false` y `archived: false` a todas las notas existentes que no
+> tengan estos campos.
 
 ---
 
