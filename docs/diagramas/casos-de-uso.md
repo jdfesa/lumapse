@@ -1,7 +1,7 @@
 # Diagrama de Casos de Uso — Lumapse
 
 **Tipo:** Diagrama UML de Comportamiento  
-**Última actualización:** Abril 2026  
+**Última actualización:** Mayo 2026  
 **Autor:** José David Sandoval
 
 ---
@@ -9,6 +9,8 @@
 ## Objetivo del diagrama
 
 Representar las funcionalidades principales del sistema desde la perspectiva del usuario, identificando los **actores** que interactúan con la aplicación y los **casos de uso** que el sistema ofrece. Este diagrama es el punto de partida para entender **qué hace Lumapse**, no cómo lo hace internamente.
+
+> **Nota de evolución:** Desde el pivote a app nativa ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)), se eliminaron los casos de uso relacionados con PWA y Service Worker (UC-13 y UC-15 del modelo anterior). Se incorporaron los casos de uso de organización (Pin/Archivar) y personalización visual (tema oscuro/claro) implementados en el Hito 04.
 
 ---
 
@@ -18,7 +20,7 @@ Representar las funcionalidades principales del sistema desde la perspectiva del
 flowchart LR
     %% ── Actores ──
     EST(("👤 Estudiante"))
-    SW["🔧 Service Worker"]
+    CAP["📱 Capacitor (Runtime Nativo)"]
     FS["📁 Sistema de Archivos"]
 
     %% ── Casos de Uso: Gestión de Notas ──
@@ -32,8 +34,8 @@ flowchart LR
 
     %% ── Casos de Uso: Organización ──
     subgraph ORG ["Organización"]
-        UC06["Asignar Etiquetas"]
-        UC07["Filtrar por Etiqueta"]
+        UC06["Fijar Nota"]
+        UC07["Archivar Nota"]
     end
 
     %% ── Casos de Uso: Markdown ──
@@ -50,10 +52,10 @@ flowchart LR
     end
 
     %% ── Casos de Uso: Sistema ──
-    subgraph SIS ["Sistema"]
-        UC13["Instalar como PWA"]
+    subgraph SIS ["Sistema y Personalización"]
+        UC13["Instalar como APK"]
         UC14["Auto-guardar Nota"]
-        UC15["Cachear Assets Offline"]
+        UC15["Alternar Modo Oscuro/Claro"]
     end
 
     %% ── Relaciones: Estudiante ──
@@ -70,6 +72,7 @@ flowchart LR
     EST --- UC11
     EST --- UC12
     EST --- UC13
+    EST --- UC15
 
     %% ── Relaciones: include ──
     UC02 -.->|"«include»"| UC14
@@ -79,7 +82,7 @@ flowchart LR
     UC10 -.->|"«extend»"| UC12
 
     %% ── Relaciones: Sistema ──
-    SW --- UC15
+    CAP --- UC13
     FS --- UC10
     FS --- UC11
 ```
@@ -91,7 +94,7 @@ flowchart LR
 | Actor | Tipo | Descripción |
 |---|---|---|
 | **Estudiante** | Principal | Usuario final de la aplicación. Representa a las personas [Lucía](../producto/personas.md#persona-1--lucía-la-estudiante-organizada) y [Martín](../producto/personas.md#persona-2--martín-el-estudiante-práctico). Interactúa directamente con todas las funcionalidades de la UI. |
-| **Service Worker** | Sistema | Componente del navegador que gestiona el caché de assets y habilita el funcionamiento offline. Opera de forma transparente al usuario. |
+| **Capacitor (Runtime Nativo)** | Sistema | Framework que empaqueta la web app como APK nativo para Android. Gestiona el ciclo de vida de la app, el acceso a APIs nativas y la distribución del binario en el dispositivo ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)). |
 | **Sistema de Archivos** | Sistema | Interfaz del SO que permite la lectura y escritura de archivos `.md` para las funcionalidades de exportación e importación. |
 
 ---
@@ -102,25 +105,25 @@ flowchart LR
 
 | ID | Caso de Uso | Descripción | RF asociado |
 |---|---|---|---|
-| UC-01 | Crear Nota | El estudiante crea una nueva nota con título y contenido vacío. | [RF-001](../producto/requisitos-funcionales.md) |
-| UC-02 | Editar Nota | El estudiante modifica el título y/o contenido de una nota existente. | [RF-002](../producto/requisitos-funcionales.md) |
-| UC-03 | Eliminar Nota | El estudiante elimina una nota con confirmación previa. | [RF-003](../producto/requisitos-funcionales.md) |
-| UC-04 | Ver Listado de Notas | El sistema muestra todas las notas ordenadas por última modificación. | [RF-004](../producto/requisitos-funcionales.md) |
-| UC-05 | Buscar Notas | El estudiante filtra notas por texto en título y contenido. | [RF-015](../producto/requisitos-funcionales.md) |
+| UC-01 | Crear Nota | El estudiante crea una nueva nota con contenido vacío. El título se extrae automáticamente de la primera línea `# ` del Markdown. | [RF-001](../producto/requisitos-funcionales.md) |
+| UC-02 | Editar Nota | El estudiante modifica el contenido de una nota existente. | [RF-002](../producto/requisitos-funcionales.md) |
+| UC-03 | Eliminar Nota | El estudiante elimina una nota con confirmación previa desde el menú contextual. | [RF-003](../producto/requisitos-funcionales.md) |
+| UC-04 | Ver Listado de Notas | El sistema muestra todas las notas en un feed tipo microblog, ordenadas por última modificación. Las notas fijadas aparecen al tope. | [RF-004](../producto/requisitos-funcionales.md) |
+| UC-05 | Buscar Notas | El estudiante filtra notas por texto en título y contenido desde el campo de búsqueda en el drawer. | [RF-015](../producto/requisitos-funcionales.md) |
 
 ### Organización
 
 | ID | Caso de Uso | Descripción | RF asociado |
 |---|---|---|---|
-| UC-06 | Asignar Etiquetas | El estudiante asigna hasta 5 etiquetas a una nota. | [RF-013](../producto/requisitos-funcionales.md) |
-| UC-07 | Filtrar por Etiqueta | El estudiante filtra el listado seleccionando una etiqueta. | [RF-014](../producto/requisitos-funcionales.md) |
+| UC-06 | Fijar Nota | El estudiante fija una nota para que aparezca siempre al tope del feed, con un indicador visual (ícono pin). La acción es reversible (desfijar). | [RF-013](../producto/requisitos-funcionales.md) |
+| UC-07 | Archivar Nota | El estudiante archiva una nota para ocultarla del feed principal. Las notas archivadas son accesibles desde la vista "Ver archivadas" en el drawer. La acción es reversible (desarchivar). | [RF-013](../producto/requisitos-funcionales.md) |
 
 ### Markdown
 
 | ID | Caso de Uso | Descripción | RF asociado |
 |---|---|---|---|
 | UC-08 | Escribir en Markdown | El estudiante escribe contenido usando sintaxis Markdown. | [RF-010, RF-011](../producto/requisitos-funcionales.md) |
-| UC-09 | Previsualizar Nota | El estudiante visualiza el Markdown renderizado en modo lectura. | [RF-012](../producto/requisitos-funcionales.md) |
+| UC-09 | Previsualizar Nota | El estudiante visualiza el Markdown renderizado en modo lectura o en vista dividida (split). | [RF-012](../producto/requisitos-funcionales.md) |
 
 ### Datos y Portabilidad
 
@@ -130,13 +133,13 @@ flowchart LR
 | UC-11 | Importar Nota .md | El estudiante carga un archivo `.md` para crear una nota. | [RF-018](../producto/requisitos-funcionales.md) |
 | UC-12 | Exportar Todas .zip | El estudiante descarga todas las notas como un `.zip`. | [RF-017](../producto/requisitos-funcionales.md) |
 
-### Sistema (transparentes al usuario)
+### Sistema y Personalización
 
 | ID | Caso de Uso | Descripción | RF asociado |
 |---|---|---|---|
-| UC-13 | Instalar como PWA | El estudiante instala la app en su dispositivo desde el navegador. | [RF-021](../producto/requisitos-funcionales.md) |
-| UC-14 | Auto-guardar Nota | El sistema persiste automáticamente la nota activa tras 3s de inactividad. | [RF-005](../producto/requisitos-funcionales.md) |
-| UC-15 | Cachear Assets Offline | El Service Worker almacena los recursos de la app para uso offline. | [RF-009](../producto/requisitos-funcionales.md) |
+| UC-13 | Instalar como APK | El estudiante instala la aplicación en su dispositivo Android como APK nativo, empaquetado mediante Capacitor. | [RF-020](../producto/requisitos-funcionales.md) |
+| UC-14 | Auto-guardar Nota | El sistema persiste automáticamente la nota activa tras 800ms de inactividad. | [RF-005](../producto/requisitos-funcionales.md) |
+| UC-15 | Alternar Modo Oscuro/Claro | El estudiante alterna entre modo oscuro y claro desde el drawer. La preferencia se persiste en `localStorage` y, si no existe, se respeta la configuración del OS. | [RF-019](../producto/requisitos-funcionales.md) |
 
 ---
 
@@ -160,8 +163,8 @@ flowchart LR
 | Hito | Casos de Uso |
 |---|---|
 | **02** (Junio) | UC-01 a UC-04, UC-14 |
-| **03** (Julio) | UC-08 a UC-13, UC-15 |
-| **04** (Agosto) | UC-05 a UC-07 |
+| **03** (Julio) | UC-08 a UC-12 |
+| **04** (Agosto) | UC-05, UC-06, UC-07, UC-13, UC-15 |
 
 ---
 
