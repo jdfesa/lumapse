@@ -61,3 +61,20 @@ Ejecuta todos los chequeos de calidad del proyecto en un solo comando. Actúa co
   ```bash
   ./scripts/quality.sh
   ```
+
+### 5. `check-traceability.py`
+Audita la coherencia y consistencia entre los documentos de trazabilidad del proyecto (RF, HU, ADR, CHANGELOG, BACKLOG) y el código fuente.
+
+- **Problema que resuelve:** El proyecto depende de una estricta coherencia documental. Este script automatiza la verificación para asegurar que ningún requisito, historia de usuario o registro de decisión (ADR) quede "huérfano" o desactualizado respecto al código implementado.
+- **Qué verifica (6 chequeos automáticos):**
+  1. RFs mencionados en el código que no existen en los documentos formales.
+  2. RFs marcados como implementados en el código o changelog, pero que siguen 'Pendientes' en los requisitos funcionales.
+  3. HUs que referencian RFs inexistentes.
+  4. RFs implementados que no tienen ninguna HU asociada.
+  5. ADRs referenciados en documentos pero que no existen físicamente.
+  6. Inconsistencias en la declaración del hito activo entre `BACKLOG.md` y `README.md`.
+- **Características:** Es de sólo lectura (no modifica archivos), está escrito en Python 3.8+ puro sin dependencias externas.
+- **Uso:**
+  ```bash
+  python3 scripts/check-traceability.py
+  ```
