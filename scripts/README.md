@@ -233,3 +233,36 @@ Analizador estático simple para detectar problemas de accesibilidad web (W3C).
   ```bash
   python3 scripts/check-a11y.py
   ```
+
+### 18. `generate-security-report.sh`
+Audita las dependencias del proyecto y documenta el resultado automáticamente.
+
+- **Problema que resuelve:** Presentar un proyecto académico o profesional sin un control explícito de vulnerabilidades (CVEs) es un descuido.
+- **Qué hace:** Ejecuta `npm audit`, formatea el resultado y lo guarda de forma limpia en `docs/gestion/reporte-seguridad.md`.
+- **Cuándo usarlo:** Al final de un hito o antes de la defensa final para demostrar rigor en la gestión de la seguridad.
+- **Uso:**
+  ```bash
+  ./scripts/generate-security-report.sh
+  ```
+
+### 19. `generate-mock-data.py`
+Generador de semillas de base de datos (Seed Data) para SQLite.
+
+- **Problema que resuelve:** Cuando la base de datos se ponga en producción, se necesitan cientos de registros para probar el rendimiento, paginación y carga de la UI sin tener que crearlos a mano.
+- **Qué hace:** Escribe el archivo `src/store/migrations/99999999_999999_seed_mock_data.sql` lleno de sentencias `INSERT` ficticias de aspecto realista (títulos, fechas, contenido markdown, UUIDs).
+- **Cuándo usarlo:** Antes de realizar pruebas de estrés de la UI (Load testing). ¡NO ejecutar en producción!
+- **Uso:**
+  ```bash
+  python3 scripts/generate-mock-data.py
+  ```
+
+### 20. `check-seo-metadata.py`
+Analizador estático simple para validar atributos SEO y metadatos de Progressive Web App (PWA).
+
+- **Problema que resuelve:** Asegura que la aplicación cumple con los estándares mínimos para ser indexada y comportarse correctamente en dispositivos móviles.
+- **Qué mide:** Escanea `index.html` verificando atributos como `lang`, `viewport`, `theme-color`, `description`, y etiquetas táctiles de iOS.
+- **Cuándo usarlo:** Antes de lanzar una versión de producción, para asegurar que la app no perderá puntuación en herramientas de auditoría como Google Lighthouse.
+- **Uso:**
+  ```bash
+  python3 scripts/check-seo-metadata.py
+  ```
