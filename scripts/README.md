@@ -78,3 +78,40 @@ Audita la coherencia y consistencia entre los documentos de trazabilidad del pro
   ```bash
   python3 scripts/check-traceability.py
   ```
+
+### 6. `check-offline.sh`
+Escanea el código fuente y los assets del proyecto en busca de referencias a URLs externas que rompan la arquitectura offline-first.
+
+- **Problema que resuelve:** Como app pensada para funcionar completamente sin conexión y proteger la privacidad del usuario, cualquier referencia no intencional a recursos externos (imágenes, fuentes, scripts) es un riesgo crítico.
+- **Qué verifica:** Busca las cadenas `http://` y `https://` en los archivos JS, CSS e HTML de las carpetas `src/` y `public/`.
+- **Características:** Ignora inteligentemente directorios como `node_modules/` o `docs/`, y marca posibles "falsos positivos" (como comentarios en el código) para revisión manual.
+- **Uso:**
+  ```bash
+  ./scripts/check-offline.sh
+  ```
+
+### 7. `check-doc-links.py`
+Valida todos los enlaces internos dentro de la documentación Markdown del proyecto.
+
+- **Problema que resuelve:** Con más de 45 documentos Markdown interconectados, renombrar o mover archivos puede romper enlaces relativos silenciosamente.
+- **Qué verifica:**
+  - Enlaces a otros archivos `.md`.
+  - Rutas a imágenes locales.
+- **Características:** No revisa URLs externas. Retorna código de salida de error si encuentra al menos 1 enlace roto.
+- **Uso:**
+  ```bash
+  python3 scripts/check-doc-links.py
+  ```
+
+### 8. `bundle-budget.sh`
+Mide y controla el peso final de los archivos estáticos de producción contra límites (presupuestos) establecidos.
+
+- **Problema que resuelve:** Asegura que la aplicación siga siendo extremadamente ligera para dispositivos móviles y contextos de conectividad limitada, alertando tempranamente si una nueva dependencia o feature dispara el tamaño del bundle.
+- **Qué verifica:**
+  - Ejecuta el build de producción.
+  - Compara el tamaño comprimido (gzip) de archivos JS, CSS y HTML contra presupuestos predefinidos (ej. JS máximo 80kB).
+- **Características:** Proporciona barras de progreso visuales directamente en la terminal. Falla automáticamente si se excede el presupuesto.
+- **Uso:**
+  ```bash
+  ./scripts/bundle-budget.sh
+  ```
