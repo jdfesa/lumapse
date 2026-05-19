@@ -155,3 +155,48 @@ Calcula métricas cuantitativas del proyecto para el informe final académico.
   ```bash
   python3 scripts/project-metrics.py
   ```
+
+
+
+### 12. `check-sql-migrations.py`
+Audita las migraciones SQLite antes de que formen parte del flujo de persistencia local.
+
+- **Problema que resuelve:** La base de datos local será una pieza crítica de Lumapse cuando se integre SQLite. Una migración mal nombrada, incompleta o destructiva puede dificultar upgrades, romper datos del usuario o dejar cambios sin posibilidad clara de reversión.
+- **Qué verifica:**
+  - Que los archivos `.sql` en `src/store/migrations/` sigan el formato `YYYYMMDD_HHMMSS_nombre.sql`.
+  - Que cada migración tenga secciones `-- UP` y `-- DOWN`.
+  - Que no aparezca `DROP TABLE` dentro del bloque `UP`, porque sería una operación destructiva durante la aplicación normal de cambios.
+- **Cuándo usarlo:** Antes de probar migraciones SQLite, antes de un commit que agregue archivos `.sql` y como parte de un quality gate cuando la persistencia SQLite esté activa.
+- **Uso:**
+  ```bash
+  python3 scripts/check-sql-migrations.py
+  ```
+
+### 13. `generate-changelog.py`
+Genera un borrador de changelog a partir de los últimos commits del repositorio.
+
+- **Problema que resuelve:** Mantener el `CHANGELOG.md` actualizado manualmente es fácil de olvidar y propenso a omisiones. Este script usa el historial Git como fuente inicial para preparar notas de versión coherentes.
+- **Qué hace:**
+  - Lee los últimos 40 commits con `git log --oneline`.
+  - Ignora merges, reverts y mensajes que no sigan Conventional Commits.
+  - Agrupa cambios en funcionalidades, correcciones, documentación y mantenimiento/refactorización.
+  - Imprime Markdown en consola; no modifica `CHANGELOG.md`.
+- **Cuándo usarlo:** Antes de cerrar una versión, preparar un informe de avance, redactar el changelog manual o revisar qué trabajo reciente debe comunicarse.
+- **Uso:**
+  ```bash
+  python3 scripts/generate-changelog.py
+  ```
+
+### 14. `analyze-complexity.py`
+Detecta señales simples de deuda técnica en archivos JavaScript.
+
+- **Problema que resuelve:** Ayuda a identificar archivos que están creciendo demasiado o acumulando anidación excesiva, dos señales tempranas de código difícil de mantener. También aporta evidencia cuantitativa para justificar refactorizaciones en el informe final.
+- **Qué mide:**
+  - Líneas de código no vacías por archivo `.js` en `src/`.
+  - Líneas con más de 12 espacios iniciales, usadas como indicador de anidación profunda.
+  - Archivos largos (`> 250` líneas) y archivos complejos (`> 10` líneas profundamente anidadas).
+- **Cuándo usarlo:** Antes de planificar refactors, al preparar una revisión técnica, después de implementar features grandes o cuando se necesite justificar deuda técnica con datos reproducibles.
+- **Uso:**
+  ```bash
+  python3 scripts/analyze-complexity.py
+  ```
