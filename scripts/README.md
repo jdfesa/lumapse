@@ -200,3 +200,36 @@ Detecta señales simples de deuda técnica en archivos JavaScript.
   ```bash
   python3 scripts/analyze-complexity.py
   ```
+
+### 15. `prepare-submission.sh`
+Empaqueta el proyecto completo en un archivo `.zip` limpio y ligero.
+
+- **Problema que resuelve:** Al enviar entregables universitarios, es fácil comprimir por error carpetas como `node_modules/` o `.git/`, resultando en archivos de cientos de megabytes.
+- **Qué hace:** Crea automáticamente el archivo `Lumapse_Entrega_YYYYMMDD.zip` en la raíz del proyecto, incluyendo solo el código fuente, configuración y documentación, y omitiendo toda la basura temporal o pesada.
+- **Cuándo usarlo:** Cuando necesites entregar el proyecto al campus virtual o enviar un backup limpio a un profesor.
+- **Uso:**
+  ```bash
+  ./scripts/prepare-submission.sh
+  ```
+
+### 16. `generate-adr.sh`
+Asistente para la creación de registros de decisiones arquitectónicas (ADR).
+
+- **Problema que resuelve:** Mantener la numeración y el formato Markdown de los ADRs a mano es tedioso.
+- **Qué hace:** Busca el número del último ADR creado, lo incrementa, y genera el archivo `.md` correspondiente en `docs/adr/` con la plantilla base oficial del proyecto. Convierte automáticamente el título a *kebab-case*.
+- **Cuándo usarlo:** Antes de tomar una decisión importante en el proyecto (cambios de base de datos, frameworks, UI/UX).
+- **Uso:**
+  ```bash
+  ./scripts/generate-adr.sh "Título de la Decisión"
+  ```
+
+### 17. `check-a11y.py`
+Analizador estático simple para detectar problemas de accesibilidad web (W3C).
+
+- **Problema que resuelve:** Validar controles básicos de accesibilidad de forma estática suma valor académico y empático al producto.
+- **Qué mide:** Busca botones sin el atributo `aria-label`, imágenes sin atributo `alt`, y componentes con un `tabindex` forzado mayor a 0 (anti-patrón).
+- **Características:** No interrumpe builds ni procesos, solo emite advertencias para solucionar proactivamente problemas de UI.
+- **Uso:**
+  ```bash
+  python3 scripts/check-a11y.py
+  ```
