@@ -1,6 +1,6 @@
 # Lumapse — Scripts de Automatización
 
-Esta carpeta contiene scripts de shell (`.sh`) diseñados para automatizar y estandarizar flujos de trabajo repetitivos o propensos a errores durante el desarrollo local de Lumapse.
+Esta carpeta contiene scripts de shell (`.sh`) y Python (`.py`) diseñados para automatizar y estandarizar flujos de trabajo repetitivos o propensos a errores durante el desarrollo local de Lumapse.
 
 ## Por qué usamos scripts
 
@@ -114,4 +114,44 @@ Mide y controla el peso final de los archivos estáticos de producción contra l
 - **Uso:**
   ```bash
   ./scripts/bundle-budget.sh
+  ```
+
+### 9. `install-hooks.sh`
+Instala hooks locales de Git para ejecutar automáticamente los chequeos mínimos antes de hacer commit o push.
+
+- **Problema que resuelve:** Evita que se suban cambios que rompan lint, documentación, trazabilidad, arquitectura offline-first o presupuesto de bundle. Es una protección local para sostener la calidad del proyecto sin depender de recordar cada comando manualmente.
+- **Qué instala:**
+  - `.git/hooks/pre-commit`: ejecuta `npm run lint`, `./scripts/check-offline.sh` y `./scripts/check-docs.sh`.
+  - `.git/hooks/pre-push`: ejecuta `./scripts/quality.sh`, `python3 ./scripts/check-traceability.py` y `./scripts/bundle-budget.sh`.
+- **Cuándo usarlo:** Una vez por clon local del repositorio, especialmente al configurar una nueva máquina o después de clonar el proyecto nuevamente. No instala hooks globales.
+- **Uso:**
+  ```bash
+  ./scripts/install-hooks.sh
+  ```
+
+### 10. `generate-migration.sh`
+Genera el archivo base para una migración SQLite versionada.
+
+- **Problema que resuelve:** La futura integración con `@capacitor-community/sqlite` necesita una forma ordenada de registrar cambios de esquema. Este script estandariza nombres, timestamps y estructura mínima de migraciones.
+- **Qué genera:** Un archivo `.sql` en `src/store/migrations/` con secciones `UP` y `DOWN` listas para completar.
+- **Cuándo usarlo:** Cada vez que se agregue, modifique o elimine estructura persistente de SQLite: tablas, índices, columnas, constraints o datos iniciales necesarios para el esquema.
+- **Uso:**
+  ```bash
+  ./scripts/generate-migration.sh create_notes_table
+  ```
+
+### 11. `project-metrics.py`
+Calcula métricas cuantitativas del proyecto para el informe final académico.
+
+- **Problema que resuelve:** Recolecta datos objetivos sobre tamaño de código, volumen documental y distribución de módulos, evitando conteos manuales difíciles de reproducir.
+- **Qué mide:**
+  - Archivos JS/CSS y líneas de código fuente no vacías en `src/`.
+  - Cantidad de componentes en `src/components/`.
+  - Cantidad de servicios en `src/services/`.
+  - Cantidad de documentos Markdown en `docs/`.
+  - Palabras totales en los Markdown de `docs/` y de la raíz del proyecto.
+- **Cuándo usarlo:** Antes de actualizar el informe final, anexos académicos, reportes de avance o presentaciones donde se necesiten métricas verificables del estado del proyecto.
+- **Uso:**
+  ```bash
+  python3 scripts/project-metrics.py
   ```
