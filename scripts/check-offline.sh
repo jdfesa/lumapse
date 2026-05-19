@@ -70,6 +70,9 @@ scan_file() {
         if is_probable_comment "$line"; then
           COMMENT_COUNT=$((COMMENT_COUNT + 1))
           FINDINGS+=("   $rel_path:$line_number: (comentario?) $line")
+        elif [[ "$line" == *".startsWith("* ]] || [[ "$line" == *".includes("* ]]; then
+          COMMENT_COUNT=$((COMMENT_COUNT + 1))
+          FINDINGS+=("   $rel_path:$line_number: (excepción lógico) $line")
         else
           REAL_COUNT=$((REAL_COUNT + 1))
           FINDINGS+=("   $rel_path:$line_number: $line")
