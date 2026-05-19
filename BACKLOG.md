@@ -97,18 +97,18 @@ Estos son los 3 bloques de trabajo a ejecutar en orden. No se avanza al siguient
 
 ---
 
-### Paso 7: Hardening de seguridad XSS en MarkdownService
+### ~~Paso 7: Hardening de seguridad XSS en MarkdownService~~ ✅ Completado (2026-05-19)
 
 **Módulo:** Core / Seguridad
 **Refs:** Deuda técnica (Auditoría 2026-05-14), MarkdownService.js
 **Estimado:** ~30 min
 
-La configuración actual de DOMPurify en `MarkdownService.js` permite la etiqueta `<img>` con atributo `src`, lo que habilita la carga de imágenes externas. En un contexto offline-first esto representa dos riesgos: (1) peticiones HTTP no deseadas que revelan la IP del usuario, y (2) posible tracking vía pixel espía. Dado que Lumapse no soporta imágenes embebidas en esta fase, la solución es restringir la configuración.
+**Resumen:** Se eliminó `<img>` de `ALLOWED_TAGS` y `src`/`alt` de `ALLOWED_ATTR` en DOMPurify para prevenir peticiones HTTP externas (pixel tracking, IP leaks). Se agregaron `FORBID_TAGS` y `FORBID_ATTR` como defensa en profundidad, y un hook `afterSanitizeAttributes` que bloquea `javascript:`/`data:` en hrefs y fuerza `rel="noopener noreferrer nofollow"` en enlaces externos. Verificado visualmente con payloads XSS: cero peticiones externas, cero ejecución de scripts, Markdown seguro renderiza correctamente.
 
 **Tareas:**
-- [ ] **`MarkdownService.js`:** Revisar `ALLOWED_TAGS` y `ALLOWED_ATTR`. Evaluar si `img` debe mantenerse o eliminarse. Si se mantiene, agregar un hook de DOMPurify que fuerce `src` a solo data URIs o que elimine `img` por completo.
-- [ ] **Test manual:** Crear una nota con payload `![test](https://externo.com/pixel.png)` y verificar que la imagen NO se carga (Network tab vacío).
-- [ ] **Documentar:** Agregar comentario en el código justificando la decisión de seguridad.
+- [x] **`MarkdownService.js`:** Revisar `ALLOWED_TAGS` y `ALLOWED_ATTR`. Evaluar si `img` debe mantenerse o eliminarse. Si se mantiene, agregar un hook de DOMPurify que fuerce `src` a solo data URIs o que elimine `img` por completo.
+- [x] **Test manual:** Crear una nota con payload `![test](https://externo.com/pixel.png)` y verificar que la imagen NO se carga (Network tab vacío).
+- [x] **Documentar:** Agregar comentario en el código justificando la decisión de seguridad.
 
 **Criterio de cierre:** No se realizan peticiones HTTP externas al renderizar Markdown. La sanitización está documentada en el código.
 
@@ -166,7 +166,7 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 ## 💻 Deuda Técnica — Código y Arquitectura
 
 - [x] **🔴 ~~Eliminar `vite-plugin-pwa` y artefactos PWA:~~** ✅ Completado (2026-05-17). Se removió `vite-plugin-pwa` (289 paquetes), `public/manifest.json`, config `VitePWA()` de `vite.config.js`, `<link rel="manifest">` de `index.html`, y referencias PWA en `package.json`. Build limpio: sin `sw.js`, sin `registerSW.js`.
-- [ ] **Seguridad (XSS en Markdown):** Revisar la configuración de DOMPurify en `MarkdownService.js`. Actualmente permite `img src`, lo que podría generar peticiones externas no deseadas.
+- [x] ~~**Seguridad (XSS en Markdown):**~~ ✅ Resuelto (2026-05-19, Paso 7). `img` y `src` eliminados de whitelist DOMPurify. Agregados `FORBID_TAGS`, `FORBID_ATTR` y hook `afterSanitizeAttributes`.
 - [x] **Assets Manifest:** Agregar los íconos requeridos (`icon-192.png`, `icon-512.png`) en `public/icons/` para cumplir con las validaciones del `manifest.json`.
 
 ## ⚙️ Deuda Técnica — DevOps y Procesos

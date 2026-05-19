@@ -69,8 +69,30 @@ export function renderMarkdown(markdown) {
   // 2. Sanitizar HTML para prevenir XSS
   //    DOMPurify elimina scripts, event handlers y cualquier
   //    contenido potencialmente peligroso.
+  //
+  //    ── Decisión de seguridad (Paso 7, Hito 04) ──
+  //    Se ELIMINA la etiqueta <img> y los atributos src/alt de la
+  //    whitelist. Motivos:
+  //
+  //    a) Lumapse es offline-first. Permitir <img src="https://...">
+  //       genera peticiones HTTP no deseadas que:
+  //       - Revelan la IP del usuario (privacy leak).
+  //       - Permiten tracking vía pixel espía (1x1 invisible).
+  //    b) La app no soporta imágenes embebidas en esta fase del
+  //       proyecto, por lo que no hay pérdida de funcionalidad.
+  //    c) Si en el futuro se necesitan imágenes, se deberá
+  //       implementar soporte explícito con data URIs o almacenamiento
+  //       local, nunca carga remota directa.
+  //
+  //    Además se aplica defensa en profundidad:
+  //    - FORBID_TAGS: lista explícita de tags peligrosos como respaldo.
+  //    - Hook afterSanitizeAttributes: elimina cualquier atributo que
+  //      contenga URLs externas (http/https) en caso de que un tag
+  //      permitido intente cargar recursos remotos.
+  //    ─────────────────────────────────────────────
+
   const cleanHtml = DOMPurify.sanitize(rawHtml, {
-    // Permitimos etiquetas seguras para contenido de notas
+    // Whitelist estricta: solo tags necesarios para notas de texto
     ALLOWED_TAGS: [
       'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
       'p', 'br', 'hr',
@@ -80,13 +102,27 @@ export function renderMarkdown(markdown) {
       'code', 'pre',
       'a',
       'table', 'thead', 'tbody', 'tr', 'th', 'td',
-      'img',
+      // img REMOVIDO — ver decisión de seguridad arriba
     ],
-    // Permitimos solo atributos seguros
+    // Atributos permitidos: solo los necesarios para enlaces
     ALLOWED_ATTR: [
       'href', 'target', 'rel',   // enlaces
-      'src', 'alt',              // imágenes
       'class',                   // estilos de bloques de código
+      // src, alt REMOVIDOS — no hay tags que los necesiten
+    ],
+    // Blacklist explícita como defensa en profundidad
+    // (redundante con ALLOWED_TAGS, pero protege ante errores de config)
+    FORBID_TAGS: [
+      'img', 'script', 'iframe', 'object', 'embed',
+      'form', 'input', 'textarea', 'select', 'button',
+      'style', 'link', 'meta', 'base', 'svg', 'math',
+    ],
+    // Blacklist de atributos peligrosos
+    FORBID_ATTR: [
+      'onerror', 'onload', 'onclick', 'onmouseover',
+      'onfocus', 'onblur', 'onsubmit', 'onchange',
+      'src', 'srcset', 'data', 'action', 'formaction',
+      'xlink:href', 'poster', 'background',
     ],
     // Los enlaces se abren en nueva pestaña por seguridad
     ADD_ATTR: ['target'],
@@ -94,6 +130,42 @@ export function renderMarkdown(markdown) {
 
   return cleanHtml
 }
+
+// -------------------------------------------------------------
+// Hook de defensa en profundidad: URLs externas
+// -------------------------------------------------------------
+// Elimina cualquier atributo que contenga una URL http/https
+// en tags que hayan sobrevivido la sanitización. Esto protege
+// contra configuraciones futuras que agreguen tags con atributos
+// de carga de recursos sin considerar el contexto offline-first.
+//
+// El hook se registra una sola vez al cargar el módulo.
+// -------------------------------------------------------------
+DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+  // Verificar href en enlaces: permitir solo URLs relativas o anclas
+  if (node.tagName === 'A') {
+    const href = node.getAttribute('href') || ''
+    // Bloquear javascript: en href (XSS clásico)
+    if (href.startsWith('javascript:') || href.startsWith('data:')) {
+      node.removeAttribute('href')
+      node.setAttribute('rel', 'noopener noreferrer')
+    }
+    // Forzar rel seguro en enlaces externos
+    if (href.startsWith('http://') || href.startsWith('https://')) {
+      node.setAttribute('rel', 'noopener noreferrer nofollow')
+      node.setAttribute('target', '_blank')
+    }
+  }
+
+  // Defensa general: eliminar cualquier src/srcset/data que haya
+  // sobrevivido (no debería ocurrir con la config actual, pero
+  // protege ante cambios futuros)
+  for (const attr of ['src', 'srcset', 'data', 'poster', 'background']) {
+    if (node.hasAttribute(attr)) {
+      node.removeAttribute(attr)
+    }
+  }
+})
 
 /**
  * Verifica si un texto contiene sintaxis Markdown.

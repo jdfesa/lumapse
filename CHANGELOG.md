@@ -34,6 +34,9 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **`vite-plugin-pwa` y artefactos PWA (ADR-005):** Se eliminó `vite-plugin-pwa` (289 paquetes), `public/manifest.json`, `VitePWA()` de `vite.config.js` y `<link rel="manifest">` de `index.html`. La arquitectura es Capacitor nativa; los assets son locales por diseño.
 - `@import` remoto de Google Fonts en `main.css` — reemplazado por `@font-face` locales.
 
+### Security
+- **Hardening XSS en MarkdownService (Paso 7):** Eliminada la etiqueta `<img>` y atributos `src`/`alt` de la whitelist de DOMPurify para prevenir peticiones HTTP externas (tracking por pixel espía, privacy leaks). Agregados `FORBID_TAGS` y `FORBID_ATTR` como defensa en profundidad. Hook `afterSanitizeAttributes` bloquea `javascript:` y `data:` en hrefs y fuerza `rel="noopener noreferrer nofollow"` en enlaces externos. Verificado: cero peticiones externas al renderizar Markdown con payloads maliciosos.
+
 ### Fixed
 - **Exportación de notas vacías:** Validación de contenido significativo antes de exportar.
 - **Ícono nativo:** Eliminados bordes blancos del ícono de la aplicación.
