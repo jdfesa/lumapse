@@ -171,6 +171,7 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 
 ## ⚙️ Deuda Técnica — DevOps y Procesos
 
+- [x] ~~**Script de trazabilidad (`check-traceability.py`):**~~ ✅ Completado (2026-05-19). Audita coherencia entre RF, HU, ADR, CHANGELOG y código fuente con 6 chequeos automáticos. Python 3.8+, sin dependencias externas.
 - [ ] **Templates de GitHub:** Actualizar las plantillas de Issues/PRs en la carpeta `.github/` para incluir campos obligatorios de trazabilidad (ej: "¿Qué RF/HU/ADR resuelve esto?").
 
 ## 🧪 Deuda Técnica — Testing (Mediano plazo)
