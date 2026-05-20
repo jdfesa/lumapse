@@ -100,7 +100,7 @@ export class NoteList {
   }
 
   async handleDelete(id) {
-    if (confirm('¿Eliminar este memo?')) {
+    if (confirm('¿Eliminar esta nota?')) {
       await NoteStore.deleteNote(id);
       // Si la nota borrada estaba en edición, se resetea por el Store
     }
@@ -168,6 +168,11 @@ export class NoteList {
       const subjectBadge = subject
         ? `<span class="note-card__subject-badge" style="--subject-color: ${subject.color}">${this.escapeHtml(subject.name)}</span>`
         : '';
+        
+      // Badge de archivo
+      const archivedBadge = isArchived
+        ? `<span class="note-card__archived-badge">Archivada</span>`
+        : '';
       
       return `
         <article class="note-card${isPinned ? ' note-card--pinned' : ''}" data-id="${note.id}">
@@ -176,6 +181,7 @@ export class NoteList {
               ${isPinned ? '<svg class="note-card__pin-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M16 2l-4 4-6-2-2 2 5 5-5 7 2 2 7-5 5 5 2-2-2-6 4-4z"/></svg>' : ''}
               ${timeStr}
               ${subjectBadge}
+              ${archivedBadge}
             </span>
             <div class="note-card__actions">
               <button class="note-card__action-btn js-btn-menu" title="Opciones">
