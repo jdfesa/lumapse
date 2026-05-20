@@ -74,4 +74,26 @@ Las siguientes restricciones **no pueden modelarse en SQL puro** y deben validar
 
 ---
 
+## 4. Decisión Técnica: Ausencia de ON UPDATE
+
+Las cláusulas de integridad referencial en SQL admiten dos eventos: `ON DELETE` y `ON UPDATE`. En el DDL de Lumapse se define explícitamente `ON DELETE` pero **se omite deliberadamente `ON UPDATE`**.
+
+### ¿Por qué no se usa ON UPDATE?
+
+`ON UPDATE CASCADE` es necesario cuando la **clave primaria referenciada** puede cambiar de valor en algún momento del ciclo de vida del registro. En Lumapse, todas las claves primarias son **UUID v4** generados en el cliente al momento de la creación. Un UUID es un identificador opaco, aleatorio e **inmutable por diseño**: una vez asignado, no existe ningún escenario de negocio ni de mantenimiento que requiera modificar su valor.
+
+### Comparación con otros tipos de clave primaria
+
+| Tipo de PK | ¿Puede cambiar? | ¿Requiere ON UPDATE? | Ejemplo |
+|---|---|---|---|
+| Auto-increment (`1, 2, 3...`) | Sí (reindexación) | Potencialmente | Compactar IDs tras eliminar registros |
+| Clave natural (`DNI`, `legajo`) | Sí | **Sí** | Corrección de un número de legajo erróneo |
+| **UUID v4** (nuestro caso) | **No** | **No** | `"a1b2c3d4-..."` nunca se modifica |
+
+### Conclusión
+
+La ausencia de `ON UPDATE` en las sentencias DDL **no es una omisión**, sino una decisión técnica consciente derivada de la elección de UUID v4 como tipo de clave primaria. Si en el futuro se migrara a claves naturales o secuenciales, sería necesario agregar `ON UPDATE CASCADE` a ambas relaciones FK.
+
+---
+
 *Documento vivo · Lumapse · PP3 · IES 6023 · 2026*
