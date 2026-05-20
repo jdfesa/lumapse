@@ -16,6 +16,7 @@ Carpeta dedicada a los diagramas del diseño de base de datos del proyecto, sigu
 | 01 | `01-modelo-conceptual-der-chen.dot` | Conceptual | Código fuente | Código DOT para regenerar el diagrama en [edotor.net](https://edotor.net) |
 | 02 | `02-normalizacion.md` | Lógico | Documentación | Verificación de 1FN, 2FN y 3FN sobre las entidades del modelo |
 | 03 | `03-modelo-logico-relacional.png` | Lógico | dbdiagram.io (DBML) | Esquema de tablas con PKs, FKs, tipos y restricciones — *pendiente* |
+| 04 | `04-modelo-fisico-ddl.md` | Físico | Documentación | Sentencias DDL SQL, migraciones idempotentes y reglas de negocio |
 
 ## Flujo metodológico
 
@@ -29,7 +30,7 @@ Modelo Lógico (Tablas relacionales)
 Modelo Físico (DDL SQL — en SqliteService.js)
 ```
 
-El modelo físico (sentencias `CREATE TABLE` y `ALTER TABLE`) se encuentra implementado directamente en [`src/services/SqliteService.js`](../../../src/services/SqliteService.js) y documentado en [`modelo-relacional.md`](../modelo-relacional.md).
+El modelo físico (sentencias `CREATE TABLE` y `ALTER TABLE`) se encuentra implementado en [`src/services/SqliteService.js`](../../../src/services/SqliteService.js) y documentado en [`04-modelo-fisico-ddl.md`](04-modelo-fisico-ddl.md).
 
 ---
 
@@ -37,12 +38,12 @@ El modelo físico (sentencias `CREATE TABLE` y `ALTER TABLE`) se encuentra imple
 
 ### 01 — DER Chen (Graphviz DOT)
 
-El código fuente para regenerar el diagrama se encuentra en el archivo [`modelo-relacional.md`](../modelo-relacional.md), sección 3.
+El código fuente para regenerar el diagrama se encuentra en [`01-modelo-conceptual-der-chen.dot`](01-modelo-conceptual-der-chen.dot).
 
 Renderizar en: [graphviz.online](https://dreampuf.github.io/GraphvizOnline/) o [edotor.net](https://edotor.net/)
 
 ### 03 — Modelo Lógico (dbdiagram.io DBML)
 
-El código DBML se encuentra en el archivo [`modelo-relacional.md`](../modelo-relacional.md), pendiente de generación.
+El código DBML se agregará como `03-modelo-logico-relacional.dbml` una vez generado.
 
 Renderizar en: [dbdiagram.io](https://dbdiagram.io/)

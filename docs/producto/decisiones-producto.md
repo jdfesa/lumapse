@@ -155,7 +155,7 @@ Las siguientes decisiones se documentarán formalmente a medida que avance el de
 
 **Fecha:** 2026-05-20  
 **Estado:** ✅ Confirmada  
-**Refs:** [modelo-relacional.md](../diagramas/modelo-relacional.md), RF-013, RF-014  
+**Refs:** [database/](../diagramas/database/), RF-013, RF-014  
 
 ### Contexto
 
@@ -199,7 +199,7 @@ La tabla `notes` referencia a `subjects(id)` mediante `subjectId`:
 - `subjectId = {uuid de Materia}` → la nota está directamente en esa Materia
 - `subjectId = {uuid de Sección}` → la nota está dentro de una Sección de una Materia
 
-Ver [modelo-relacional.md](../diagramas/modelo-relacional.md) para el DER completo y el DDL SQL.
+Ver [docs/diagramas/database/](../diagramas/database/) para el DER completo, la normalización y el DDL SQL.
 
 ### Datos de soporte
 

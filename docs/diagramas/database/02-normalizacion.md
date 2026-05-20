@@ -150,7 +150,7 @@ clave → valor  (directo: la clave determina el valor)
 
 ## Siguiente paso
 
-Con el modelo normalizado, se procede a generar el **Modelo Lógico Relacional** en [dbdiagram.io](https://dbdiagram.io/) utilizando la sintaxis DBML. Ver código fuente en [`modelo-relacional.md`](../modelo-relacional.md).
+Con el modelo normalizado, se procede a generar el **Modelo Lógico Relacional** en [dbdiagram.io](https://dbdiagram.io/) utilizando la sintaxis DBML. El modelo físico (DDL SQL) se documenta en [`04-modelo-fisico-ddl.md`](04-modelo-fisico-ddl.md).
 
 ---
 

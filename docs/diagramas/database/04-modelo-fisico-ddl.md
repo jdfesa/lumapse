@@ -1,0 +1,77 @@
+# Modelo Físico — DDL SQL y Reglas de Negocio
+
+**Motor:** SQLite (vía `@capacitor-community/sqlite`)  
+**Implementación:** [`src/services/SqliteService.js`](../../../src/services/SqliteService.js)  
+**Última actualización:** Mayo 2026  
+
+---
+
+## 1. Creación de tablas (nuevas instalaciones)
+
+Las siguientes sentencias DDL se ejecutan en la inicialización de la base de datos. El orden es importante: `subjects` se crea antes que `notes` porque `notes.subjectId` tiene una clave foránea que referencia a `subjects(id)`.
+
+```sql
+-- Materias y Secciones (estructura jerárquica auto-referencial, máx. 2 niveles)
+CREATE TABLE IF NOT EXISTS subjects (
+    id               TEXT    PRIMARY KEY,
+    name             TEXT    NOT NULL,
+    parentSubjectId  TEXT    REFERENCES subjects(id) ON DELETE CASCADE,
+    archived         INTEGER DEFAULT 0,
+    color            TEXT,
+    createdAt        TEXT    NOT NULL
+);
+
+-- Notas (viven en Entrada, en una Materia, o en una Sección)
+CREATE TABLE IF NOT EXISTS notes (
+    id         TEXT    PRIMARY KEY,
+    title      TEXT,
+    content    TEXT,
+    pinned     INTEGER DEFAULT 0,
+    archived   INTEGER DEFAULT 0,
+    subjectId  TEXT    REFERENCES subjects(id) ON DELETE SET NULL,
+    createdAt  TEXT    NOT NULL,
+    updatedAt  TEXT    NOT NULL
+);
+
+-- Metadatos del sistema (control de migraciones y flags)
+CREATE TABLE IF NOT EXISTS metadata (
+    key   TEXT PRIMARY KEY,
+    value TEXT
+);
+```
+
+---
+
+## 2. Migraciones (instalaciones existentes — idempotentes)
+
+Para usuarios que ya tienen la app instalada con el schema anterior (sin `subjectId`, sin `parentSubjectId`, etc.), las siguientes sentencias `ALTER TABLE` se ejecutan en cada arranque. La función `runMigrations()` en `SqliteService.js` las envuelve en un `try/catch` que ignora el error `duplicate column name` si la columna ya existe.
+
+```sql
+-- Migración v1.1: notas con referencia a materia/sección
+ALTER TABLE notes ADD COLUMN subjectId TEXT REFERENCES subjects(id) ON DELETE SET NULL;
+
+-- Migración v1.1: materias con soporte de sub-secciones, archivo y color
+ALTER TABLE subjects ADD COLUMN parentSubjectId TEXT REFERENCES subjects(id) ON DELETE CASCADE;
+ALTER TABLE subjects ADD COLUMN archived INTEGER DEFAULT 0;
+ALTER TABLE subjects ADD COLUMN color TEXT;
+```
+
+---
+
+## 3. Reglas de Negocio (validadas en código)
+
+Las siguientes restricciones **no pueden modelarse en SQL puro** y deben validarse en la capa de lógica de negocio (`SqliteService.js`):
+
+1. **Profundidad máxima de 2 niveles:** Al crear una Sección (`parentSubjectId NOT NULL`), verificar que el padre no sea ya una Sección (es decir, que `parent.parentSubjectId IS NULL`). Si el padre ya tiene padre, rechazar la operación con un error descriptivo.
+
+2. **Archivar en cascada (UI):** Al archivar una Materia, la UI debe mostrar todas sus Secciones y Notas como archivadas en la vista de Archivo, aunque a nivel de base de datos solo se marca `subjects.archived = 1` en la Materia.
+
+3. **Notas en Entrada por defecto:** Toda nota nueva se crea con `subjectId = NULL`. El usuario debe mover explícitamente la nota a una Materia o Sección.
+
+4. **ON DELETE — comportamiento referencial:**
+   - `subjects.parentSubjectId → ON DELETE CASCADE`: Si se elimina una Materia, todas sus Secciones hijas se eliminan automáticamente.
+   - `notes.subjectId → ON DELETE SET NULL`: Si se elimina una Materia o Sección, las notas asociadas no se eliminan, sino que vuelven a **Entrada** (`subjectId = NULL`).
+
+---
+
+*Documento vivo · Lumapse · PP3 · IES 6023 · 2026*
