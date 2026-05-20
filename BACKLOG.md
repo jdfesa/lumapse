@@ -3,14 +3,48 @@
 Este documento funciona como una bandeja de entrada local para las tareas, mejoras y deuda técnica identificadas durante el desarrollo o en auditorías. Una vez que se inicia un Hito, las tareas relevantes de aquí se planifican y ejecutan.
 
 > **Hito activo:** 04 — Organización y UX (Agosto 2026)
-> **Último commit:** `dae265b` — docs(hito-04): actualizar informe de progreso con avance real
-> **Última auditoría del backlog:** 2026-05-18
+> **Último commit:** `8b3de19` — docs(scripts): documentar scripts de Tanda 3 y actualizar .gitignore
+> **Última auditoría del backlog:** 2026-05-20
 
 ---
 
-## 🎯 Próximos 3 Pasos (Sprint inmediato)
+## 📌 Corte actual — Auditoría 2026-05-20
 
-Estos son los 3 bloques de trabajo a ejecutar en orden. No se avanza al siguiente hasta completar el actual.
+**Estado verificado:** la base técnica para avanzar con materias ya está lista. SQLite está implementado, el schema real y la documentación DDL están sincronizados, el DBML generado desde código coincide con el archivo documentado, la trazabilidad RF/HU/ADR no presenta advertencias, y el README de scripts ya documenta 29 herramientas.
+
+**Comandos de verificación ejecutados:**
+
+```bash
+python3 scripts/check-traceability.py
+python3 scripts/check-schema-sync.py
+python3 scripts/generate-dbml-from-code.py --check
+python3 scripts/generate-velocity-report.py
+python3 scripts/validate-subjects-hierarchy.py
+python3 scripts/analyze-complexity.py
+python3 scripts/project-metrics.py
+```
+
+**Hallazgos relevantes para planificar:**
+
+- El schema ya incluye `subjects`, `subjects.parentSubjectId`, `subjects.archived`, `subjects.color` y `notes.subjectId`, pero todavía falta exponer CRUD de materias y la UI de asignación/filtro.
+- `analyze-complexity.py` marca `src/services/SqliteService.js` como archivo largo y `src/components/NoteList.js` con anidamiento alto. No bloquea el avance, pero conviene abordarlo antes de que Paso 9 agrande esos módulos.
+- La documentación principal todavía tiene zonas a sincronizar post-SQLite/post-scripts: `README.md`, `docs/gestion/seguimiento-velocidad.md`, versiones en `package.json`/`package-lock.json` vs `CHANGELOG.md`, y documentos que aún hablan de IndexedDB como persistencia actual.
+
+---
+
+## 🎯 Próximos 3 Pasos (siguiente sesión)
+
+Estos son los 3 bloques recomendados para continuar. La prioridad es mantener trazabilidad, cerrar Hito 04 con evidencia y dejar Hito 05 listo para testing.
+
+| Orden | Bloque | Objetivo | Criterio de cierre |
+|---|---|---|---|
+| 1 | **Paso 9 — Materias y secciones** | Implementar organización por materias sobre el schema SQLite ya disponible. | Crear materias/secciones, asignar notas, filtrar el feed y validar jerarquía con `validate-subjects-hierarchy.py`. |
+| 2 | **Cierre funcional/documental Hito 04** | Completar RF pequeños pendientes y sincronizar documentación viva. | RF-006/RF-024 evaluados o implementados, docs actualizados, `check-traceability.py` sin advertencias. |
+| 3 | **Preparación Hito 05 — Testing y CI** | Empezar suite Vitest y convertir scripts críticos en chequeos de CI. | Primeros tests unitarios + workflow que ejecute lint, trazabilidad, schema sync, DBML check y links. |
+
+---
+
+## 🗂️ Historial y plan detallado del Hito 04
 
 ### ~~Paso 1: Offline estricto — Fuentes locales + limpieza PWA~~ ✅ Completado (2026-05-16)
 
@@ -136,25 +170,70 @@ IndexedDB cumplió su rol para el MVP, pero la migración a SQLite vía `@capaci
 
 ---
 
-### Paso 9: Categorización por materia (DP-002) — Modelo + UI
+### Paso 9: Categorización por materia (DP-002 / DP-004) — Modelo + UI
 
 **Módulo:** Organización / Feature nueva
-**Refs:** DP-002, RF-013 (extensión), encuesta P12 (69.2% carpetas)
+**Refs:** DP-002, DP-004, RF-014, encuesta P12 (69.2% carpetas)
 **Estimado:** ~1-2 sesiones
 **Dependencia:** Paso 8 (SQLite debe estar implementado)
 
 La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere organizar por carpeta/materia. Este paso implementa la estructura de carpetas como sistema de organización principal, aprovechando las capacidades relacionales de SQLite.
 
+**Estado base:** `SqliteService.js` ya crea las tablas `subjects`, `notes` y `metadata`. El campo `notes.subjectId` y la jerarquía `subjects.parentSubjectId` ya existen en el schema, pero aún no hay servicio/UI para que el usuario los use.
+
 **Tareas:**
-- [ ] **`SubjectService.js`:** CRUD de materias (nombre, color opcional). Validación de nombre único.
-- [ ] **`NoteService` (extensión):** Agregar campo `subjectId` a las notas. Método `getNotesBySubject(id)`.
-- [ ] **UI — Drawer:** Sección de materias en el drawer con listado, botón de crear, y selector activo que filtra el feed.
-- [ ] **UI — Composer:** Selector de materia al crear/editar nota (dropdown o chips).
+- [ ] **`SubjectService.js`:** CRUD de materias/secciones (`id`, `name`, `parentSubjectId`, `archived`, `color`, `createdAt`). Validar nombre requerido, nombre único por nivel, y profundidad máxima 2 niveles (DP-004).
+- [ ] **`SqliteService.js`:** Exponer operaciones para `subjectId` en `createNote()`/`updateNote()`, queries `getNotesBySubject(id)`, `getInboxNotes()` y conteos por materia para el drawer.
+- [ ] **`NoteStore.js`:** Agregar estado `subjects`, `activeSubjectId`, filtros Entrada/Materia/Archivo, y acciones para crear/editar/archivar materias.
+- [ ] **UI — Drawer:** Sección Materias con listado, botón crear, selector activo, estado vacío, colores y conteo de notas.
+- [ ] **UI — Composer/Editor:** Selector de materia al crear/editar nota. Mantener "Entrada" como default cuando `subjectId` es `NULL`.
 - [ ] **UI — Feed:** Indicador visual de materia en cada tarjeta de nota (badge de color).
+- [ ] **Validación offline:** Ejecutar `python3 scripts/validate-subjects-hierarchy.py` contra una base mock/exportada y verificar que no hay huérfanos, ciclos ni profundidad > 2.
 - [ ] **Verificar en dispositivo:** Build + deploy en S7.
-- [ ] **Documentar:** Actualizar HU, modelo de dominio, casos de uso y CHANGELOG.
+- [ ] **Documentar:** Actualizar RF-014, HU asociada, modelo de dominio, casos de uso, DDL/DBML si cambia el schema, README, CHANGELOG y cheatsheet.
 
 **Criterio de cierre:** El usuario puede crear materias, asignar notas a una materia, y filtrar el feed por materia desde el drawer. La funcionalidad persiste en SQLite.
+
+---
+
+### Paso 10: Cierre funcional y documental del Hito 04
+
+**Módulo:** UX / Documentación / Gestión
+**Refs:** RF-006, RF-022, RF-024, Hito 04
+**Estimado:** ~1 sesión
+**Dependencia:** Paso 9 idealmente cerrado o en revisión.
+
+El Hito 04 ya tiene varias piezas implementadas (SQLite, pin/archivar, búsqueda, dark mode, responsive), pero quedan requisitos menores y documentos de gestión que deben alinearse antes de pasar fuerte a Hito 05.
+
+**Tareas:**
+- [ ] **RF-006 — Conteo de palabras/caracteres:** decidir si se implementa en `NoteEditor` como contador visible y actualizar HU/RF según corresponda.
+- [ ] **RF-024 — Indicador offline/online:** decidir si se implementa como chip de estado en drawer/header usando eventos `online`/`offline`.
+- [ ] **RF-022 — Onboarding:** mantener como COULD; implementar solo si no desplaza materias/testing.
+- [ ] **README principal:** sincronizar stack y roadmap con el estado real post-SQLite, evitando hablar de IndexedDB como persistencia actual.
+- [ ] **Seguimiento de velocidad:** actualizar `docs/gestion/seguimiento-velocidad.md` usando `python3 scripts/generate-velocity-report.py`.
+- [ ] **Versionado:** alinear `package.json`/`package-lock.json` con la versión documentada en `CHANGELOG.md` antes de preparar release.
+- [ ] **Informe final/cheatsheet:** regenerar `INFORME-FINAL-COMPLETO.md` y `docs/gestion/cheatsheet-defensa.md` si hubo cambios documentales relevantes.
+
+**Criterio de cierre:** Documentación, backlog, requisitos y métricas reflejan el estado real del Hito 04; `check-traceability.py`, `check-doc-links.py`, `check-schema-sync.py` y `generate-dbml-from-code.py --check` pasan sin advertencias.
+
+---
+
+### Paso 11: Preparación Hito 05 — Testing automatizado y CI de auditorías
+
+**Módulo:** Testing / DevOps
+**Refs:** Hito 05, deuda técnica testing
+**Estimado:** ~1-2 sesiones
+**Dependencia:** Paso 9 cerrado o estabilizado.
+
+El proyecto ya cuenta con muchos scripts de auditoría, pero hoy solo ESLint corre en GitHub Actions. El siguiente salto de calidad es automatizar pruebas unitarias y convertir los scripts críticos en una red de seguridad repetible.
+
+**Tareas:**
+- [ ] **Instalar/configurar Vitest:** agregar `test`/`test:run` a `package.json` y configuración mínima compatible con Vite.
+- [ ] **Tests prioritarios:** cubrir `MarkdownService` (sanitización XSS), `ThemeService` (persistencia/detección), `NoteStore` (filtros, búsqueda, pin/archivar) y lógica pura agregada para materias.
+- [ ] **CI documental:** extender `.github/workflows/lint.yml` o crear workflow separado para `check-traceability.py`, `check-doc-links.py`, `check-schema-sync.py`, `generate-dbml-from-code.py --check` y `validate-subjects-hierarchy.py`.
+- [ ] **Release dry-run:** usar `python3 scripts/release-helper.py --type patch --dry-run` para validar que el flujo de release está listo antes de generar un APK real.
+
+**Criterio de cierre:** El proyecto tiene al menos una suite mínima de tests unitarios ejecutable localmente y un workflow de CI que audita código + documentación sin depender de pasos manuales.
 
 ---
 
@@ -162,17 +241,25 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 
 - [x] ~~**Historias de Usuario (Hitos 03 y 04):**~~ ✅ Completado (2026-05-18). HU-007 a HU-011 redactadas con criterios de aceptación, SP y trazabilidad.
 - [x] ~~**Actualizar Modelo de Dominio y Casos de Uso:**~~ ✅ Completado (2026-05-18). Entidad Tag eliminada, campos pinned/archived agregados, casos de uso corregidos (PWA→APK, Tags→Pin/Archivar).
+- [ ] **Sincronizar README principal post-SQLite:** el stack debe presentar SQLite como persistencia actual y dejar IndexedDB solo como antecedente histórico/migración legacy.
+- [ ] **Actualizar seguimiento de velocidad:** `docs/gestion/seguimiento-velocidad.md` debe reflejar las HU reales actuales (14 HU, 59 SP totales según `generate-velocity-report.py`) y no solo la planificación previa del Hito 04.
+- [ ] **Revisar documentos generados:** regenerar informe completo y cheatsheet cuando se cierren nuevos cambios, para evitar que los artefactos finales queden con métricas anteriores.
 
 ## 💻 Deuda Técnica — Código y Arquitectura
 
 - [x] **🔴 ~~Eliminar `vite-plugin-pwa` y artefactos PWA:~~** ✅ Completado (2026-05-17). Se removió `vite-plugin-pwa` (289 paquetes), `public/manifest.json`, config `VitePWA()` de `vite.config.js`, `<link rel="manifest">` de `index.html`, y referencias PWA en `package.json`. Build limpio: sin `sw.js`, sin `registerSW.js`.
 - [x] ~~**Seguridad (XSS en Markdown):**~~ ✅ Resuelto (2026-05-19, Paso 7). `img` y `src` eliminados de whitelist DOMPurify. Agregados `FORBID_TAGS`, `FORBID_ATTR` y hook `afterSanitizeAttributes`.
 - [x] **Assets Manifest:** Agregar los íconos requeridos (`icon-192.png`, `icon-512.png`) en `public/icons/` para cumplir con las validaciones del `manifest.json`.
+- [ ] **Refactor controlado de `SqliteService.js`:** separar CRUD de notas, materias, migraciones y helpers web si el archivo sigue creciendo durante Paso 9. Hoy `analyze-complexity.py` lo marca como largo.
+- [ ] **Reducir complejidad de `NoteList.js`:** extraer renderizado de cards/dropdowns/empty states a funciones auxiliares o componente menor. Hoy `analyze-complexity.py` marca anidamiento alto.
 
 ## ⚙️ Deuda Técnica — DevOps y Procesos
 
 - [x] ~~**Script de trazabilidad (`check-traceability.py`):**~~ ✅ Completado (2026-05-19). Audita coherencia entre RF, HU, ADR, CHANGELOG y código fuente con 6 chequeos automáticos. Python 3.8+, sin dependencias externas.
-- [ ] **Templates de GitHub:** Actualizar las plantillas de Issues/PRs en la carpeta `.github/` para incluir campos obligatorios de trazabilidad (ej: "¿Qué RF/HU/ADR resuelve esto?").
+- [x] ~~**Templates de GitHub con trazabilidad:**~~ ✅ Completado (2026-05-20). Issues y PRs piden RF/HU/ADR/Hito y checklist de trazabilidad.
+- [x] ~~**Scripts académicos y operativos Tanda 2/3:**~~ ✅ Completado (2026-05-20). Quedaron documentados `check-schema-sync.py`, `assemble-report.py`, `generate-velocity-report.py`, `validate-subjects-hierarchy.py`, `generate-dbml-from-code.py`, `generate-defense-cheatsheet.py`, `export-database-bundle.py`, `run-load-tests.py` y `release-helper.py`.
+- [ ] **CI de scripts críticos:** llevar a GitHub Actions los checks que hoy se ejecutan manualmente: trazabilidad, links, schema sync, DBML check, jerarquía de materias y lint.
+- [ ] **Versionado del paquete:** `package.json` y `package-lock.json` siguen en `0.1.0` mientras `CHANGELOG.md` documenta `0.4.0` en progreso. Resolver antes de cualquier release/APK.
 
 ## 🧪 Deuda Técnica — Testing (Mediano plazo)
 
