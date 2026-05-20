@@ -5,10 +5,14 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "copy-wasm": "mkdir -p public/assets && cp node_modules/sql.js/dist/sql-wasm.wasm public/assets/",
+    "predev": "npm run copy-wasm",
     "dev": "vite",
+    "prebuild": "npm run copy-wasm",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint src/"
+    "lint": "eslint src/",
+    "postinstall": "npm run copy-wasm"
   },
   "devDependencies": {
     "@capacitor/cli": "^8.3.4",
@@ -27,11 +31,13 @@
   "author": "Jose David Sandoval",
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "@capacitor-community/sqlite": "^8.1.0",
     "@capacitor/android": "^8.3.4",
     "@capacitor/core": "^8.3.4",
     "dompurify": "^3.4.2",
-    "idb": "^8.0.3",
+    "jeep-sqlite": "^2.8.0",
     "jszip": "^3.10.1",
-    "marked": "^18.0.3"
+    "marked": "^18.0.3",
+    "sql.js": "^1.14.1"
   }
 }

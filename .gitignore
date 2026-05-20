@@ -44,3 +44,6 @@ android/app/release/
 android/*.iml
 android/local.properties
 android/hs_err_pid*.log
+
+# SQLite WASM simulation files
+public/assets/sql-wasm.wasm

@@ -8,7 +8,7 @@
 // sobre los cambios usando el patrón Observer.
 // =============================================================
 
-import * as NoteService from '../services/NoteService.js'
+import * as NoteService from '../services/SqliteService.js'
 
 // --- Estado Interno ---
 const state = {

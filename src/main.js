@@ -4,6 +4,7 @@
 // =============================================================
 
 import './styles/main.css'
+import { initDatabase } from './services/SqliteService.js'
 import * as NoteStore from './store/NoteStore.js'
 import * as ThemeService from './services/ThemeService.js'
 import { NoteList as Feed } from './components/NoteList.js'
@@ -11,6 +12,9 @@ import { NoteEditor as Composer } from './components/NoteEditor.js'
 import { Heatmap } from './components/Heatmap.js'
 
 async function initApp() {
+  // Inicializar base de datos SQLite antes de renderizar componentes o cargar notas
+  await initDatabase()
+  
   const app = document.getElementById('app')
   
   // Construir Layout (Microblog: Drawer + Feed)
