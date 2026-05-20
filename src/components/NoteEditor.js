@@ -4,6 +4,7 @@
 // =============================================================
 
 import * as NoteStore from '../store/NoteStore.js';
+import { SUBJECT_COLORS } from '../services/SubjectService.js';
 import './NoteEditor.css';
 
 export class NoteEditor {
@@ -35,9 +36,9 @@ export class NoteEditor {
         ></textarea>
         <div class="composer__footer">
           <div class="composer__tools">
-            <button class="composer__tool-btn" title="Etiquetas" disabled>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-            </button>
+            <select id="composer-subject-select" class="composer__subject-select" title="Materia">
+              <option value="">Entrada</option>
+            </select>
             <button class="composer__tool-btn" title="Adjuntos" disabled>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
             </button>
@@ -68,22 +69,26 @@ export class NoteEditor {
 
   async handleSave() {
     const input = this.container.querySelector('#composer-input');
+    const subjectSelect = this.container.querySelector('#composer-subject-select');
     const content = input.value.trim();
     
     if (!content) return;
+
+    const subjectId = subjectSelect.value || null;
 
     if (this.currentEditId) {
       // Estamos editando
       await NoteStore.updateNote(this.currentEditId, {
         content: content,
         // DP-001: Intentamos extraer título, o dejamos sin título si no hay #
-        title: this.extractTitle(content)
+        title: this.extractTitle(content),
+        subjectId: subjectId
       });
       this.currentEditId = null;
       NoteStore.selectNote(null); // Quitar modo edición
     } else {
       // Nueva nota
-      await NoteStore.createNote(this.extractTitle(content), content);
+      await NoteStore.createNote(this.extractTitle(content), content, subjectId);
     }
 
     // Resetear composer
@@ -104,7 +109,10 @@ export class NoteEditor {
   }
 
   onStateChange(state) {
-    const { activeNoteId, notes } = state;
+    const { activeNoteId, notes, subjects } = state;
+
+    // Actualizar opciones del select de materias
+    this.updateSubjectSelect(subjects);
     
     // Si se seleccionó una nota (para editar)
     if (activeNoteId && activeNoteId !== this.currentEditId) {
@@ -113,6 +121,12 @@ export class NoteEditor {
         this.currentEditId = activeNoteId;
         const input = this.container.querySelector('#composer-input');
         input.value = noteToEdit.content;
+        
+        // Pre-seleccionar la materia de la nota
+        const subjectSelect = this.container.querySelector('#composer-subject-select');
+        if (subjectSelect) {
+          subjectSelect.value = noteToEdit.subjectId || '';
+        }
         
         // Trigger resize & btn state
         input.dispatchEvent(new window.Event('input'));
@@ -133,6 +147,35 @@ export class NoteEditor {
       this.container.querySelector('#btn-save-note').textContent = 'Guardar';
       this.container.querySelector('#btn-save-note').disabled = true;
     }
+  }
+
+  /**
+   * Actualiza las opciones del <select> de materias en el composer.
+   * @param {object} subjectsData Árbol de materias del store
+   */
+  updateSubjectSelect(subjectsData) {
+    const select = this.container.querySelector('#composer-subject-select');
+    if (!select || !subjectsData || !subjectsData.tree) return;
+
+    const currentValue = select.value;
+
+    let options = '<option value="">Entrada</option>';
+    for (const subject of subjectsData.tree) {
+      options += `<option value="${subject.id}" style="color: ${subject.color}">● ${this.escapeHtml(subject.name)}</option>`;
+      // Agregar secciones hijas indentadas
+      for (const child of (subject.children || [])) {
+        options += `<option value="${child.id}" style="color: ${child.color || subject.color}">&nbsp;&nbsp;↳ ${this.escapeHtml(child.name)}</option>`;
+      }
+    }
+
+    select.innerHTML = options;
+    // Restaurar selección previa si sigue siendo válida
+    select.value = currentValue;
+  }
+
+  escapeHtml(text) {
+    if (!text) return '';
+    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
   destroy() {

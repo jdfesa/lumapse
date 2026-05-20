@@ -58,9 +58,8 @@ export class NoteList {
 
     // Suscribirse al store
     this.unsubscribe = NoteStore.subscribe((state) => {
-      // Usamos getFilteredNotes para respetar la búsqueda (si implementamos búsqueda luego)
       const notesToRender = NoteStore.getFilteredNotes();
-      this.renderNotes(notesToRender, state.searchQuery);
+      this.renderNotes(notesToRender, state.searchQuery, state.subjects);
     });
   }
 
@@ -118,7 +117,24 @@ export class NoteList {
       .replace(/'/g, "&#039;");
   }
 
-  renderNotes(notes, searchQuery) {
+  /**
+   * Busca una materia en el árbol de subjects por ID.
+   * @param {string} subjectId ID de la materia
+   * @param {object} subjectsData Árbol de materias
+   * @returns {object|null} Materia encontrada o null
+   */
+  findSubject(subjectId, subjectsData) {
+    if (!subjectId || !subjectsData || !subjectsData.tree) return null;
+    for (const subject of subjectsData.tree) {
+      if (subject.id === subjectId) return subject;
+      for (const child of (subject.children || [])) {
+        if (child.id === subjectId) return child;
+      }
+    }
+    return null;
+  }
+
+  renderNotes(notes, searchQuery, subjectsData) {
     if (notes.length === 0) {
       if (searchQuery) {
         this.feedContainer.innerHTML = `
@@ -146,6 +162,12 @@ export class NoteList {
       const isArchived = note.archived;
       const pinLabel = isPinned ? 'Desfijar' : 'Fijar';
       const archiveLabel = isArchived ? 'Desarchivar' : 'Archivar';
+
+      // Badge de materia
+      const subject = this.findSubject(note.subjectId, subjectsData);
+      const subjectBadge = subject
+        ? `<span class="note-card__subject-badge" style="--subject-color: ${subject.color}">${this.escapeHtml(subject.name)}</span>`
+        : '';
       
       return `
         <article class="note-card${isPinned ? ' note-card--pinned' : ''}" data-id="${note.id}">
@@ -153,6 +175,7 @@ export class NoteList {
             <span class="note-card__time">
               ${isPinned ? '<svg class="note-card__pin-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M16 2l-4 4-6-2-2 2 5 5-5 7 2 2 7-5 5 5 2-2-2-6 4-4z"/></svg>' : ''}
               ${timeStr}
+              ${subjectBadge}
             </span>
             <div class="note-card__actions">
               <button class="note-card__action-btn js-btn-menu" title="Opciones">

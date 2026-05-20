@@ -89,3 +89,27 @@
   cursor: not-allowed;
   transform: none;
 }
+
+/* Subject selector in composer toolbar (Paso 9) */
+.composer__subject-select {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  outline: none;
+  cursor: pointer;
+  max-width: 160px;
+  transition: border-color var(--transition);
+}
+
+.composer__subject-select:focus {
+  border-color: var(--color-accent);
+}
+
+.composer__subject-select option {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
