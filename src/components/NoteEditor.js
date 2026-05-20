@@ -83,8 +83,9 @@ export class NoteEditor {
         title: this.extractTitle(content),
         subjectId: subjectId
       });
-      this.currentEditId = null;
-      NoteStore.selectNote(null); // Quitar modo edición
+      // Importante: llamar a selectNote ANTES de limpiar this.currentEditId
+      // para que onStateChange detecte la transición y restaure el botón a "Guardar"
+      NoteStore.selectNote(null); 
     } else {
       // Nueva nota
       await NoteStore.createNote(this.extractTitle(content), content, subjectId);
@@ -93,7 +94,9 @@ export class NoteEditor {
     // Resetear composer
     input.value = '';
     input.style.height = 'auto';
-    this.container.querySelector('#btn-save-note').disabled = true;
+    const btnSave = this.container.querySelector('#btn-save-note');
+    btnSave.textContent = 'Guardar';
+    btnSave.disabled = true;
   }
 
   extractTitle(content) {

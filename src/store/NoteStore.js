@@ -100,7 +100,7 @@ export async function createNote(title = 'Sin título', content = '', subjectId 
   
   const newNote = await NoteService.createNote(title, content, resolvedSubjectId)
   state.notes = [newNote, ...state.notes]
-  state.activeNoteId = newNote.id
+  // Se remueve state.activeNoteId = newNote.id para evitar el "ghost edit state" en el composer
   // RF-015: Limpiar búsqueda y filtros al crear nota nueva
   state.searchQuery = ''
   state.dateFilter = null
