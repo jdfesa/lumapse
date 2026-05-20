@@ -19,10 +19,11 @@ set -Eeuo pipefail
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
 # Presupuestos en kB (gzip)
-BUDGET_JS=80
+# Incrementados para acomodar el motor relacional SQLite y jeep-sqlite (simulación web)
+BUDGET_JS=150
 BUDGET_CSS=20
 BUDGET_HTML=5
-BUDGET_TOTAL=100
+BUDGET_TOTAL=180
 
 JS_GZIP=0
 CSS_GZIP=0
