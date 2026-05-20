@@ -146,6 +146,14 @@ export class NoteEditor {
       this.container.querySelector('#btn-save-note').textContent = 'Guardar';
       this.container.querySelector('#btn-save-note').disabled = true;
     }
+
+    // Sincronizar el select con la materia activa si NO estamos editando una nota
+    if (!activeNoteId && !this.currentEditId) {
+      const select = this.container.querySelector('#composer-subject-select');
+      if (select && select.value !== (state.activeSubjectId || '')) {
+        select.value = state.activeSubjectId || '';
+      }
+    }
   }
 
   /**
@@ -160,10 +168,11 @@ export class NoteEditor {
 
     let options = '<option value="">Entrada</option>';
     for (const subject of subjectsData.tree) {
-      options += `<option value="${subject.id}" style="color: ${subject.color}">● ${this.escapeHtml(subject.name)}</option>`;
+      // En mobile native UI, los estilos en <option> son ignorados, así que removemos el bullet ●
+      options += `<option value="${subject.id}">${this.escapeHtml(subject.name)}</option>`;
       // Agregar secciones hijas indentadas
       for (const child of (subject.children || [])) {
-        options += `<option value="${child.id}" style="color: ${child.color || subject.color}">&nbsp;&nbsp;↳ ${this.escapeHtml(child.name)}</option>`;
+        options += `<option value="${child.id}">&nbsp;&nbsp;↳ ${this.escapeHtml(child.name)}</option>`;
       }
     }
 
