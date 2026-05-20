@@ -160,7 +160,7 @@ Construir el corazón funcional de la aplicación: editor de notas con persisten
 
 > **Nota:** Este hito se implementó con IndexedDB como capa de persistencia inicial. La migración a SQLite se realiza como parte del Hito 03 tras la decisión documentada en [ADR-005](./docs/adr/ADR-005-pivote-app-nativa.md).
 
-### 🔄 Hito 03 — Pivote a App Nativa y MVP (Julio 2026) → [Informe](./docs/hitos/hito-03-julio.md)
+### ✅ Hito 03 — Pivote a App Nativa y MVP (Julio 2026) → [Informe](./docs/hitos/hito-03-julio.md)
 
 Migrar la arquitectura a app nativa y completar el producto mínimo viable.
 
@@ -173,7 +173,7 @@ Migrar la arquitectura a app nativa y completar el producto mínimo viable.
 - Modo edición / modo lectura (toggle)
 - Generación del primer `.apk` funcional
 
-### ⏳ Hito 04 — Organización y UX Móvil (Agosto 2026)
+### 🔄 Hito 04 — Organización y UX Móvil (Agosto 2026)
 
 Implementar el modelo de organización validado por el relevamiento y optimizar la experiencia móvil.
 
