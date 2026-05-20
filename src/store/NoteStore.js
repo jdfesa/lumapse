@@ -3,21 +3,25 @@
 // Hito 04: Organización y UX
 //
 // Responsabilidad: Mantener el estado en memoria (lista de notas,
-// nota activa, query de búsqueda, visibilidad del sidebar),
-// conectar con NoteService y notificar a la UI
+// nota activa, materias, query de búsqueda, visibilidad del sidebar),
+// conectar con SqliteService/SubjectService y notificar a la UI
 // sobre los cambios usando el patrón Observer.
 // =============================================================
 
 import * as NoteService from '../services/SqliteService.js'
+import * as SubjectService from '../services/SubjectService.js'
 
 // --- Estado Interno ---
 const state = {
-  notes: [],           // Todas las notas cargadas
-  activeNoteId: null,  // ID de la nota seleccionada actualmente
-  searchQuery: '',     // RF-015: Query de búsqueda actual
-  dateFilter: null,    // Filtro por fecha (YYYY-MM-DD)
-  showArchived: false, // Mostrar notas archivadas (toggle desde drawer)
-  sidebarOpen: true,   // RF-020: Sidebar visible (true por defecto en desktop)
+  notes: [],              // Todas las notas cargadas
+  activeNoteId: null,     // ID de la nota seleccionada actualmente
+  searchQuery: '',        // RF-015: Query de búsqueda actual
+  dateFilter: null,       // Filtro por fecha (YYYY-MM-DD)
+  sidebarOpen: true,      // RF-020: Sidebar visible (true por defecto en desktop)
+  // --- Paso 9: Materias (DP-002 / DP-004) ---
+  subjects: [],           // Materias cargadas (árbol con conteos)
+  activeSubjectId: null,  // Filtro: null = Entrada, ID = materia específica
+  viewMode: 'inbox',      // 'inbox' | 'subject' | 'archived' | 'all'
 }
 
 // --- Sistema de Suscripciones (Observer Pattern) ---
@@ -56,10 +60,19 @@ export function getState() {
 // --- Acciones de Estado ---
 
 /**
- * Carga inicial de todas las notas desde IndexedDB.
+ * Carga inicial de todas las notas desde SQLite.
  */
 export async function loadNotes() {
   state.notes = await NoteService.getAllNotes()
+  notify()
+}
+
+/**
+ * Carga las materias desde SubjectService (árbol con conteos).
+ * Se llama al inicio y después de crear/archivar/eliminar materias.
+ */
+export async function loadSubjects() {
+  state.subjects = await SubjectService.getSubjectTree()
   notify()
 }
 
@@ -72,19 +85,27 @@ export async function loadNotes() {
  * @param {string} title Título inicial (opcional, usado por ImportService)
  * @param {string} content Contenido inicial (opcional)
  */
-export async function createNote(title = 'Sin título', content = '') {
+export async function createNote(title = 'Sin título', content = '', subjectId = undefined) {
   // Si no se proporcionó contenido explícito (nota nueva desde la UI),
   // inicializamos con "# " para guiar al usuario
   if (!content && title === 'Sin título') {
     content = '# '
   }
+
+  // Si no se especificó materia, usar la materia activa del filtro actual
+  // (solo si estamos en viewMode 'subject', no en 'inbox')
+  const resolvedSubjectId = subjectId !== undefined
+    ? subjectId
+    : (state.viewMode === 'subject' ? state.activeSubjectId : null)
   
-  const newNote = await NoteService.createNote(title, content)
+  const newNote = await NoteService.createNote(title, content, resolvedSubjectId)
   state.notes = [newNote, ...state.notes]
   state.activeNoteId = newNote.id
   // RF-015: Limpiar búsqueda y filtros al crear nota nueva
   state.searchQuery = ''
   state.dateFilter = null
+  // Recargar conteos de materias (la nueva nota afecta el conteo)
+  await loadSubjects()
   notify()
 }
 
@@ -173,9 +194,15 @@ export async function toggleArchive(id) {
 
 /**
  * Alterna la visibilidad de notas archivadas.
+ * Mantiene compatibilidad con el toggle del drawer.
  */
 export function setShowArchived(show) {
-  state.showArchived = show
+  if (show) {
+    state.viewMode = 'archived'
+  } else {
+    // Volver al modo anterior: inbox o la materia que estaba seleccionada
+    state.viewMode = state.activeSubjectId ? 'subject' : 'inbox'
+  }
   notify()
 }
 
@@ -203,22 +230,40 @@ export function setDateFilter(dateStr) {
 /**
  * Retorna las notas filtradas y ordenadas.
  * Orden: pinned primero, luego por updatedAt (más reciente primero).
- * Por defecto, oculta las archivadas salvo que showArchived esté activo.
+ *
+ * viewMode controla el filtro principal:
+ *   'inbox'    → notas sin materia (subjectId IS NULL), no archivadas
+ *   'subject'  → notas de la materia activa (+ secciones hijas), no archivadas
+ *   'archived' → solo notas archivadas (cualquier materia)
+ *   'all'      → todas las no archivadas (usado por búsqueda global)
+ *
  * @returns {object[]} Array de notas filtradas y ordenadas
  */
 export function getFilteredNotes() {
   let filtered = state.notes
 
-  // 0. Filtrar por estado de archivo
-  if (state.showArchived) {
-    // En modo archivo: mostrar SOLO las archivadas
-    filtered = filtered.filter(note => note.archived === true)
-  } else {
-    // En modo normal: ocultar las archivadas
-    filtered = filtered.filter(note => !note.archived)
+  // 0. Filtrar por viewMode
+  switch (state.viewMode) {
+    case 'inbox':
+      filtered = filtered.filter(note => !note.archived && !note.subjectId)
+      break
+    case 'subject': {
+      // Incluir notas de la materia activa Y de sus secciones hijas
+      const childIds = getChildSubjectIds(state.activeSubjectId)
+      const validIds = [state.activeSubjectId, ...childIds]
+      filtered = filtered.filter(note => !note.archived && validIds.includes(note.subjectId))
+      break
+    }
+    case 'archived':
+      filtered = filtered.filter(note => note.archived === true)
+      break
+    case 'all':
+    default:
+      filtered = filtered.filter(note => !note.archived)
+      break
   }
 
-  // 1. Filtrar por búsqueda de texto
+  // 1. Filtrar por búsqueda de texto (global, independiente de viewMode)
   if (state.searchQuery.trim()) {
     const query = state.searchQuery.toLowerCase().trim()
     filtered = filtered.filter(note => {
@@ -247,6 +292,85 @@ export function getFilteredNotes() {
   })
 
   return filtered
+}
+
+/**
+ * Helper: obtiene los IDs de las secciones hijas de una materia.
+ * Usa el árbol cargado en state.subjects para evitar queries extra.
+ * @param {string} parentId ID de la materia padre
+ * @returns {string[]} IDs de las secciones hijas
+ */
+function getChildSubjectIds(parentId) {
+  if (!state.subjects || !state.subjects.tree) return []
+  const parent = state.subjects.tree.find(s => s.id === parentId)
+  if (!parent || !parent.children) return []
+  return parent.children.map(c => c.id)
+}
+
+// --- Paso 9: Acciones de Materias ---
+
+/**
+ * Cambia el modo de vista y la materia activa.
+ * @param {'inbox'|'subject'|'archived'|'all'} mode Modo de vista
+ * @param {string|null} subjectId ID de materia (solo relevante si mode = 'subject')
+ */
+export function setViewMode(mode, subjectId = null) {
+  state.viewMode = mode
+  state.activeSubjectId = mode === 'subject' ? subjectId : null
+  notify()
+}
+
+/**
+ * Atajo: selecciona una materia y cambia a viewMode 'subject'.
+ * Si id es null, vuelve a Entrada (inbox).
+ * @param {string|null} id ID de la materia
+ */
+export function setActiveSubject(id) {
+  if (id) {
+    setViewMode('subject', id)
+  } else {
+    setViewMode('inbox')
+  }
+}
+
+/**
+ * Crea una nueva materia vía SubjectService y recarga el árbol.
+ * @param {string} name Nombre de la materia
+ * @param {string|null} color Color hex
+ * @param {string|null} parentSubjectId ID del padre
+ * @returns {object} La materia creada
+ */
+export async function createSubject(name, color = null, parentSubjectId = null) {
+  const subject = await SubjectService.createSubject(name, color, parentSubjectId)
+  await loadSubjects()
+  return subject
+}
+
+/**
+ * Archiva una materia y recarga el árbol.
+ * Si la materia archivada era la activa, vuelve a Entrada.
+ * @param {string} id ID de la materia
+ */
+export async function archiveSubject(id) {
+  await SubjectService.archiveSubject(id)
+  if (state.activeSubjectId === id) {
+    setViewMode('inbox')
+  }
+  await loadSubjects()
+}
+
+/**
+ * Elimina una materia permanentemente y recarga el árbol.
+ * @param {string} id ID de la materia
+ */
+export async function deleteSubject(id) {
+  await SubjectService.deleteSubject(id)
+  if (state.activeSubjectId === id) {
+    setViewMode('inbox')
+  }
+  // Recargar notas (subjectId puede haber cambiado a NULL por FK)
+  await loadNotes()
+  await loadSubjects()
 }
 
 // --- RF-020: Sidebar / Navegación mobile ---
