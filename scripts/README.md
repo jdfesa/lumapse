@@ -156,8 +156,6 @@ Calcula métricas cuantitativas del proyecto para el informe final académico.
   python3 scripts/project-metrics.py
   ```
 
-
-
 ### 12. `check-sql-migrations.py`
 Audita las migraciones SQLite antes de que formen parte del flujo de persistencia local.
 
@@ -172,7 +170,43 @@ Audita las migraciones SQLite antes de que formen parte del flujo de persistenci
   python3 scripts/check-sql-migrations.py
   ```
 
-### 13. `generate-changelog.py`
+### 13. `check-schema-sync.py`
+Compara el esquema SQLite implementado en código contra el DDL documentado.
+
+- **Problema que resuelve:** Lumapse mantiene el esquema de base de datos en dos lugares: el DDL real embebido en `src/services/SqliteService.js` y la documentación académica en `docs/diagramas/database/04-modelo-fisico-ddl.md`. Si se agrega una columna, tabla o tipo en un lado y se olvida actualizar el otro, el informe técnico queda desincronizado respecto del producto real.
+- **Qué hace:**
+  - Extrae sentencias `CREATE TABLE IF NOT EXISTS` desde los strings SQL de `SqliteService.js`.
+  - Extrae sentencias `ALTER TABLE ... ADD COLUMN` usadas por migraciones idempotentes.
+  - Lee únicamente los bloques de código SQL del documento físico de base de datos.
+  - Construye dos mapas `{tabla -> columna -> tipo}` y compara tablas, columnas y tipos.
+  - Ignora constraints como `PRIMARY KEY`, `DEFAULT`, `REFERENCES`, `ON DELETE` o `NOT NULL`, porque el objetivo es auditar sincronización estructural básica y no reglas completas de integridad.
+- **Cuándo usarlo:** Después de modificar `SqliteService.js`, después de actualizar `04-modelo-fisico-ddl.md`, antes de cerrar un hito que toque persistencia SQLite y antes de entregar documentación técnica de base de datos.
+- **Salida esperada:** Termina con código `0` si no hay diferencias y con código `1` si detecta tablas, columnas o tipos desincronizados.
+- **Uso:**
+  ```bash
+  python3 scripts/check-schema-sync.py
+  ```
+
+### 14. `assemble-report.py`
+Ensambla los capítulos del informe final PP3 en un único documento Markdown.
+
+- **Problema que resuelve:** El informe final se redacta por capítulos en `docs/informe-final/` para facilitar mantenimiento y revisión incremental, pero la entrega universitaria requiere un documento unificado. Ensamblarlo manualmente es repetitivo y puede introducir índices desactualizados, links inter-capítulo rotos o separadores inconsistentes.
+- **Qué hace:**
+  - Ignora `00-indice.md`, porque genera una tabla de contenidos nueva.
+  - Lee en orden los capítulos `01-introduccion.md` a `07-conclusiones.md`.
+  - Genera el encabezado institucional del informe completo.
+  - Construye una tabla de contenidos automática desde headings `##` y `###`.
+  - Concatena capítulos con separadores horizontales `---`.
+  - Convierte links inter-capítulo como `04-arquitectura-diseno.md` en anclas internas.
+  - Conserva links relativos externos como `../adr/...`, `../gestion/...` o `../diagramas/...`, porque el archivo final vive en la misma carpeta que los capítulos.
+- **Cuándo usarlo:** Antes de preparar la entrega final, después de modificar cualquier capítulo del informe, antes de exportar el Markdown a PDF/DOCX y cada vez que se quiera revisar el documento completo como una unidad.
+- **Salida generada:** `docs/informe-final/INFORME-FINAL-COMPLETO.md`.
+- **Uso:**
+  ```bash
+  python3 scripts/assemble-report.py
+  ```
+
+### 15. `generate-changelog.py`
 Genera un borrador de changelog a partir de los últimos commits del repositorio.
 
 - **Problema que resuelve:** Mantener el `CHANGELOG.md` actualizado manualmente es fácil de olvidar y propenso a omisiones. Este script usa el historial Git como fuente inicial para preparar notas de versión coherentes.
@@ -187,7 +221,7 @@ Genera un borrador de changelog a partir de los últimos commits del repositorio
   python3 scripts/generate-changelog.py
   ```
 
-### 14. `analyze-complexity.py`
+### 16. `analyze-complexity.py`
 Detecta señales simples de deuda técnica en archivos JavaScript.
 
 - **Problema que resuelve:** Ayuda a identificar archivos que están creciendo demasiado o acumulando anidación excesiva, dos señales tempranas de código difícil de mantener. También aporta evidencia cuantitativa para justificar refactorizaciones en el informe final.
@@ -201,7 +235,7 @@ Detecta señales simples de deuda técnica en archivos JavaScript.
   python3 scripts/analyze-complexity.py
   ```
 
-### 15. `prepare-submission.sh`
+### 17. `prepare-submission.sh`
 Empaqueta el proyecto completo en un archivo `.zip` limpio y ligero.
 
 - **Problema que resuelve:** Al enviar entregables universitarios, es fácil comprimir por error carpetas como `node_modules/` o `.git/`, resultando en archivos de cientos de megabytes.
@@ -212,7 +246,7 @@ Empaqueta el proyecto completo en un archivo `.zip` limpio y ligero.
   ./scripts/prepare-submission.sh
   ```
 
-### 16. `generate-adr.sh`
+### 18. `generate-adr.sh`
 Asistente para la creación de registros de decisiones arquitectónicas (ADR).
 
 - **Problema que resuelve:** Mantener la numeración y el formato Markdown de los ADRs a mano es tedioso.
@@ -223,7 +257,7 @@ Asistente para la creación de registros de decisiones arquitectónicas (ADR).
   ./scripts/generate-adr.sh "Título de la Decisión"
   ```
 
-### 17. `check-a11y.py`
+### 19. `check-a11y.py`
 Analizador estático simple para detectar problemas de accesibilidad web (W3C).
 
 - **Problema que resuelve:** Validar controles básicos de accesibilidad de forma estática suma valor académico y empático al producto.
@@ -234,7 +268,7 @@ Analizador estático simple para detectar problemas de accesibilidad web (W3C).
   python3 scripts/check-a11y.py
   ```
 
-### 18. `generate-security-report.sh`
+### 20. `generate-security-report.sh`
 Audita las dependencias del proyecto y documenta el resultado automáticamente.
 
 - **Problema que resuelve:** Presentar un proyecto académico o profesional sin un control explícito de vulnerabilidades (CVEs) es un descuido.
@@ -245,7 +279,7 @@ Audita las dependencias del proyecto y documenta el resultado automáticamente.
   ./scripts/generate-security-report.sh
   ```
 
-### 19. `generate-mock-data.py`
+### 21. `generate-mock-data.py`
 Generador de semillas de base de datos (Seed Data) para SQLite.
 
 - **Problema que resuelve:** Cuando la base de datos se ponga en producción, se necesitan cientos de registros para probar el rendimiento, paginación y carga de la UI sin tener que crearlos a mano.
@@ -256,7 +290,7 @@ Generador de semillas de base de datos (Seed Data) para SQLite.
   python3 scripts/generate-mock-data.py
   ```
 
-### 20. `check-seo-metadata.py`
+### 22. `check-seo-metadata.py`
 Analizador estático simple para validar atributos SEO y metadatos de Progressive Web App (PWA).
 
 - **Problema que resuelve:** Asegura que la aplicación cumple con los estándares mínimos para ser indexada y comportarse correctamente en dispositivos móviles.

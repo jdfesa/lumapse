@@ -86,10 +86,16 @@ def strip_heading_markup(text):
 
 def slugify(text):
     text = strip_heading_markup(text).lower()
-    text = re.sub(r"[^\w\s-]", "", text, flags=re.UNICODE)
-    text = re.sub(r"\s+", "-", text.strip())
-    text = re.sub(r"-+", "-", text)
-    return text.strip("-")
+    text = re.sub(r"\s+#+\s*$", "", text).strip()
+    chars = []
+
+    for char in text:
+        if char.isalnum() or char == "-":
+            chars.append(char)
+        elif char.isspace():
+            chars.append("-")
+
+    return "".join(chars).strip("-")
 
 
 def unique_anchor(title, seen):

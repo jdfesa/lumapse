@@ -47,7 +47,7 @@
 - [5.5. Procesamiento de Markdown y Seguridad (XSS)](#55-procesamiento-de-markdown-y-seguridad-xss)
 - [5.6. Empaquetado Nativo (Capacitor)](#56-empaquetado-nativo-capacitor)
 - [5.7. Licenciamiento de Software y Filosofía Open Source](#57-licenciamiento-de-software-y-filosofía-open-source)
-- [5.8. Integración Continua (CI) — Automatización de Calidad de Código](#58-integración-continua-ci-automatización-de-calidad-de-código)
+- [5.8. Integración Continua (CI) — Automatización de Calidad de Código](#58-integración-continua-ci--automatización-de-calidad-de-código)
   - [5.8.1. ¿Qué es la Integración Continua?](#581-qué-es-la-integración-continua)
   - [5.8.2. Herramientas utilizadas](#582-herramientas-utilizadas)
   - [5.8.3. Implementación en Lumapse](#583-implementación-en-lumapse)
