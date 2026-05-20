@@ -345,3 +345,39 @@ Genera una hoja de trucos consolidada (Cheat Sheet) de cara a la defensa del pro
   python3 scripts/generate-defense-cheatsheet.py
   ```
 
+### 27. `export-database-bundle.py`
+Simula y valida la exportación integral de datos de Lumapse en un paquete ZIP de respaldo.
+
+- **Problema que resuelve:** Permite comprobar el flujo de backup de HU-011 sin depender de un dispositivo Android real ni de una base generada por la app. Además, deja evidencia de integridad mediante hash SHA-256 del archivo SQLite exportado.
+- **Qué hace:** Busca una base SQLite indicada por argumento o detectada en el workspace; si no encuentra una, crea una base mock temporal con `subjects`, `notes` y `metadata`. Luego copia la base como `lumapse.sqlite`, genera `metadata.json`, exporta cada nota como Markdown en `notes_markdown/`, empaqueta todo en `lumapse_backup_YYYYMMDD_HHMMSS.zip` y limpia los temporales.
+- **Cuándo usarlo:** Antes de auditar la funcionalidad de exportación, al preparar evidencia de integridad de backups, o cuando se necesite un ZIP de prueba con la estructura esperada por Lumapse.
+- **Uso:**
+  ```bash
+  python3 scripts/export-database-bundle.py
+  python3 scripts/export-database-bundle.py ruta/a/lumapse.db --output-dir tmp/
+  ```
+
+### 28. `run-load-tests.py`
+Ejecuta una prueba de carga en SQLite para validar la decisión DP-001 sobre el título desnormalizado.
+
+- **Problema que resuelve:** Aporta una métrica empírica para justificar por qué Lumapse guarda el campo `title` en la base de datos en vez de parsear el Markdown completo cada vez que se listan muchas notas.
+- **Qué hace:** Crea una base SQLite en memoria, inserta miles de notas con contenido Markdown realista, mide el tiempo de listado extrayendo el título desde `content`, mide el tiempo de listado leyendo directamente el campo `title`, y calcula la mejora relativa de rendimiento.
+- **Cuándo usarlo:** Antes de la defensa, al armar anexos de rendimiento, o después de cambios en el modelo de datos/listado de notas que puedan afectar la validez de DP-001.
+- **Uso:**
+  ```bash
+  python3 scripts/run-load-tests.py
+  python3 scripts/run-load-tests.py --notes 10000
+  ```
+
+### 29. `release-helper.py`
+Asistente de lanzamiento para versionado, changelog, build web, sincronización Capacitor y organización del APK.
+
+- **Problema que resuelve:** Reduce errores manuales durante una publicación: olvidar actualizar `package.json`, dejar el `CHANGELOG.md` incompleto, ejecutar pasos de build fuera de orden o perder el APK generado por Gradle.
+- **Qué hace:** Lee la versión actual de `package.json`, calcula el nuevo número semántico (`patch`, `minor` o `major`), actualiza archivos de versión y changelog, ejecuta limpieza/build/sync/Gradle cuando corresponde, y copia el APK final a `releases/vVERSION/lumapse-vVERSION.apk`.
+- **Protecciones:** Incluye modo `--dry-run` para revisar el plan sin tocar archivos, `--skip-build` para validar solo la parte documental, `--yes` para ejecución no interactiva y `--allow-dirty` para permitir releases con worktree modificado cuando sea una decisión consciente.
+- **Cuándo usarlo:** Al preparar una versión entregable, beta, build de defensa o paquete APK versionado. Lo recomendable es correr primero un dry-run y recién después ejecutar el flujo real.
+- **Uso:**
+  ```bash
+  python3 scripts/release-helper.py --type patch --dry-run
+  python3 scripts/release-helper.py --type minor --yes
+  ```

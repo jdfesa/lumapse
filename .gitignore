@@ -48,3 +48,8 @@ android/hs_err_pid*.log
 # SQLite WASM simulation files
 public/assets/sql-wasm.wasm
 __pycache__/
+
+# Script-generated artifacts
+lumapse_backup_*.zip
+Lumapse_Entrega_*.zip
+releases/
