@@ -114,7 +114,7 @@ Estos son los 3 bloques de trabajo a ejecutar en orden. No se avanza al siguient
 
 ---
 
-### Paso 8: Migración de persistencia a SQLite
+### ~~Paso 8: Migración de persistencia a SQLite~~ ✅ Completado (2026-05-20)
 
 **Módulo:** Core / Persistencia
 **Refs:** ADR-002 (extensión), Hito 04/05
@@ -123,14 +123,14 @@ Estos son los 3 bloques de trabajo a ejecutar en orden. No se avanza al siguient
 IndexedDB cumplió su rol para el MVP, pero la migración a SQLite vía `@capacitor-community/sqlite` es necesaria antes de implementar categorización por materias (Paso 9). SQLite ofrece queries relacionales (JOIN, FK), mejor rendimiento con volumen de datos, y es nativo en el contenedor Capacitor.
 
 **Tareas:**
-- [ ] **Instalar dependencia:** `@capacitor-community/sqlite` + `npx cap sync`.
-- [ ] **Crear `SqliteService.js`:** Abstracción sobre el plugin con métodos equivalentes a los actuales de `NoteService` (CRUD, getAll, search).
-- [ ] **Definir schema SQL:** Tabla `notes` con columnas `id`, `title`, `content`, `pinned`, `archived`, `created_at`, `updated_at`. Tabla `subjects` (preparación para Paso 9).
-- [ ] **Migrar datos:** Script de migración one-time que lee las notas de IndexedDB y las inserta en SQLite al primer arranque post-actualización.
-- [ ] **Actualizar `NoteStore.js`:** Reemplazar las llamadas a `NoteService` (IndexedDB) por el nuevo `SqliteService`.
-- [ ] **Eliminar dependencia `idb`:** `npm uninstall idb`. Limpiar imports.
-- [ ] **Verificar en dispositivo:** Build + deploy en S7 (`./scripts/deploy-android.sh`). Validar CRUD, pin, archivar, búsqueda.
-- [ ] **Documentar:** Redactar ADR-006 justificando la migración. Actualizar `modelo-dominio.md`.
+- [x] **Instalar dependencia:** `@capacitor-community/sqlite` + `npx cap sync`.
+- [x] **Crear `SqliteService.js`:** Abstracción sobre el plugin con métodos equivalentes a los actuales de `NoteService` (CRUD, getAll, search).
+- [x] **Definir schema SQL:** Tabla `notes` con columnas `id`, `title`, `content`, `pinned`, `archived`, `created_at`, `updated_at`. Tabla `subjects` (preparación para Paso 9).
+- [x] **Migrar datos:** Script de migración one-time que lee las notas de IndexedDB y las inserta en SQLite al primer arranque post-actualización.
+- [x] **Actualizar `NoteStore.js`:** Reemplazar las llamadas a `NoteService` (IndexedDB) por el nuevo `SqliteService`.
+- [x] **Eliminar dependencia `idb`:** `npm uninstall idb`. Limpiar imports.
+- [x] **Verificar en dispositivo:** Build + deploy en S7 (`./scripts/deploy-android.sh`). Validar CRUD, pin, archivar, búsqueda.
+- [x] **Documentar:** Redactar ADR-006 justificando la migración. Actualizar `modelo-dominio.md`.
 
 **Criterio de cierre:** La app funciona exclusivamente con SQLite. IndexedDB ya no se usa. Los datos existentes se migran sin pérdida. APK funcional en dispositivo.
 
