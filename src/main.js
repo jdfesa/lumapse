@@ -7,6 +7,7 @@ import './styles/main.css'
 import { initDatabase } from './services/SqliteService.js'
 import * as NoteStore from './store/NoteStore.js'
 import * as ThemeService from './services/ThemeService.js'
+import { SUBJECT_COLORS } from './services/SubjectService.js'
 import { NoteList as Feed } from './components/NoteList.js'
 import { NoteEditor as Composer } from './components/NoteEditor.js'
 import { Heatmap } from './components/Heatmap.js'
@@ -36,6 +37,28 @@ async function initApp() {
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           <input type="text" id="drawer-search-input" placeholder="Buscar notas..." autocomplete="off">
         </div>
+
+        <!-- Navegación por materia (DP-002 / Paso 9) -->
+        <nav class="drawer__subjects">
+          <div class="drawer__subjects-header">
+            <span class="drawer__subjects-title">Materias</span>
+            <button id="btn-add-subject" class="drawer__subjects-add" title="Nueva materia">+</button>
+          </div>
+          <div id="subject-form-container" class="drawer__subject-form" style="display:none">
+            <input type="text" id="subject-name-input" class="drawer__subject-form-input" placeholder="Nombre de materia" maxlength="40" autocomplete="off">
+            <div id="subject-color-picker" class="drawer__color-picker"></div>
+            <div class="drawer__subject-form-actions">
+              <button id="btn-subject-cancel" class="drawer__subject-form-btn">Cancelar</button>
+              <button id="btn-subject-save" class="drawer__subject-form-btn drawer__subject-form-btn--primary">Crear</button>
+            </div>
+          </div>
+          <button id="btn-inbox" class="drawer__subject-btn drawer__subject-btn--active" data-subject="inbox">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>
+            <span>Entrada</span>
+            <span id="inbox-count" class="drawer__subject-count">0</span>
+          </button>
+          <div id="subjects-list"></div>
+        </nav>
 
         <!-- Filtro: Archivadas -->
         <button id="btn-toggle-archived" class="drawer__nav-btn">
@@ -129,7 +152,161 @@ async function initApp() {
     NoteStore.setShowArchived(showingArchived)
     archivedLabel.textContent = showingArchived ? 'Ver notas activas' : 'Ver archivadas'
     btnArchiveToggle.classList.toggle('drawer__nav-btn--active', showingArchived)
+    // Desactivar materia seleccionada cuando se muestran archivadas
+    if (showingArchived) {
+      updateSubjectActiveState(null)
+    }
     closeDrawer()
+  })
+
+  // --- Subjects Navigation (Paso 9) ---
+  const subjectsList = document.getElementById('subjects-list')
+  const btnInbox = document.getElementById('btn-inbox')
+  const inboxCount = document.getElementById('inbox-count')
+  const btnAddSubject = document.getElementById('btn-add-subject')
+  const subjectFormContainer = document.getElementById('subject-form-container')
+  const subjectNameInput = document.getElementById('subject-name-input')
+  const colorPickerContainer = document.getElementById('subject-color-picker')
+  const btnSubjectCancel = document.getElementById('btn-subject-cancel')
+  const btnSubjectSave = document.getElementById('btn-subject-save')
+  let selectedColor = SUBJECT_COLORS[0]
+
+  // Renderizar paleta de colores
+  colorPickerContainer.innerHTML = SUBJECT_COLORS.map((color, i) => `
+    <button class="drawer__color-dot${i === 0 ? ' drawer__color-dot--active' : ''}" 
+            data-color="${color}" 
+            style="background-color: ${color}" 
+            title="${color}"></button>
+  `).join('')
+
+  colorPickerContainer.addEventListener('click', (e) => {
+    const dot = e.target.closest('.drawer__color-dot')
+    if (!dot) return
+    selectedColor = dot.dataset.color
+    colorPickerContainer.querySelectorAll('.drawer__color-dot').forEach(d => d.classList.remove('drawer__color-dot--active'))
+    dot.classList.add('drawer__color-dot--active')
+  })
+
+  // Mostrar/ocultar formulario
+  btnAddSubject.addEventListener('click', () => {
+    const isVisible = subjectFormContainer.style.display !== 'none'
+    subjectFormContainer.style.display = isVisible ? 'none' : 'block'
+    if (!isVisible) {
+      subjectNameInput.value = ''
+      subjectNameInput.focus()
+    }
+  })
+
+  btnSubjectCancel.addEventListener('click', () => {
+    subjectFormContainer.style.display = 'none'
+    subjectNameInput.value = ''
+  })
+
+  btnSubjectSave.addEventListener('click', async () => {
+    const name = subjectNameInput.value.trim()
+    if (!name) return
+    try {
+      await NoteStore.createSubject(name, selectedColor)
+      subjectFormContainer.style.display = 'none'
+      subjectNameInput.value = ''
+    } catch (err) {
+      alert(err.message)
+    }
+  })
+
+  // Enter para guardar, Escape para cancelar
+  subjectNameInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      btnSubjectSave.click()
+    } else if (e.key === 'Escape') {
+      btnSubjectCancel.click()
+    }
+  })
+
+  // Click en Entrada
+  btnInbox.addEventListener('click', () => {
+    NoteStore.setActiveSubject(null)
+    showingArchived = false
+    archivedLabel.textContent = 'Ver archivadas'
+    btnArchiveToggle.classList.remove('drawer__nav-btn--active')
+    updateSubjectActiveState(null)
+    closeDrawer()
+  })
+
+  // Delegación para clicks en materias del listado
+  subjectsList.addEventListener('click', (e) => {
+    const subjectBtn = e.target.closest('.drawer__subject-btn')
+    if (!subjectBtn) return
+    const subjectId = subjectBtn.dataset.subject
+    if (!subjectId) return
+
+    NoteStore.setActiveSubject(subjectId)
+    showingArchived = false
+    archivedLabel.textContent = 'Ver archivadas'
+    btnArchiveToggle.classList.remove('drawer__nav-btn--active')
+    updateSubjectActiveState(subjectId)
+    closeDrawer()
+  })
+
+  /** Actualiza qué botón de materia tiene la clase --active */
+  function updateSubjectActiveState(activeId) {
+    // Inbox
+    btnInbox.classList.toggle('drawer__subject-btn--active', activeId === null && !showingArchived)
+    // Materias
+    subjectsList.querySelectorAll('.drawer__subject-btn').forEach(btn => {
+      btn.classList.toggle('drawer__subject-btn--active', btn.dataset.subject === activeId)
+    })
+  }
+
+  /** Renderiza la lista de materias desde el árbol del store */
+  function renderSubjects(subjectsData) {
+    if (!subjectsData) return
+
+    inboxCount.textContent = subjectsData.inboxCount || 0
+
+    if (!subjectsData.tree || subjectsData.tree.length === 0) {
+      subjectsList.innerHTML = ''
+      return
+    }
+
+    const state = NoteStore.getState()
+    subjectsList.innerHTML = subjectsData.tree.map(subject => {
+      const isActive = state.activeSubjectId === subject.id
+      const childrenHtml = (subject.children || []).map(child => {
+        const isChildActive = state.activeSubjectId === child.id
+        return `
+          <button class="drawer__subject-btn drawer__subject-btn--child${isChildActive ? ' drawer__subject-btn--active' : ''}" data-subject="${child.id}">
+            <span class="drawer__subject-color" style="background-color: ${child.color || subject.color}"></span>
+            <span class="drawer__subject-name">${escapeHtml(child.name)}</span>
+            <span class="drawer__subject-count">${child.noteCount || 0}</span>
+          </button>
+        `
+      }).join('')
+
+      return `
+        <div class="drawer__subject-group">
+          <button class="drawer__subject-btn${isActive ? ' drawer__subject-btn--active' : ''}" data-subject="${subject.id}">
+            <span class="drawer__subject-color" style="background-color: ${subject.color}"></span>
+            <span class="drawer__subject-name">${escapeHtml(subject.name)}</span>
+            <span class="drawer__subject-count">${subject.noteCount || 0}</span>
+          </button>
+          ${childrenHtml}
+        </div>
+      `
+    }).join('')
+  }
+
+  function escapeHtml(text) {
+    if (!text) return ''
+    const div = document.createElement('div')
+    div.textContent = text
+    return div.innerHTML
+  }
+
+  // Suscribirse a cambios del store para re-renderizar materias
+  NoteStore.subscribe((state) => {
+    renderSubjects(state.subjects)
   })
 
   // --- Theme Toggle (RF-019) ---
@@ -160,6 +337,7 @@ async function initApp() {
   })
 
   // Cargar datos iniciales
+  await NoteStore.loadSubjects()
   await NoteStore.loadNotes()
 }
 
