@@ -64,29 +64,37 @@ export async function initDatabase() {
 
     await db.open()
 
-    // Definición del esquema
+    // Definición del esquema (nuevas instalaciones)
+    // subjects debe crearse ANTES que notes por la FK
     const schema = `
-      CREATE TABLE IF NOT EXISTS notes (
-        id TEXT PRIMARY KEY,
-        title TEXT,
-        content TEXT,
-        pinned INTEGER DEFAULT 0,
-        archived INTEGER DEFAULT 0,
-        createdAt TEXT,
-        updatedAt TEXT
-      );
       CREATE TABLE IF NOT EXISTS subjects (
-        id TEXT PRIMARY KEY,
-        name TEXT UNIQUE,
-        createdAt TEXT
+        id              TEXT    PRIMARY KEY,
+        name            TEXT    NOT NULL,
+        parentSubjectId TEXT    REFERENCES subjects(id) ON DELETE CASCADE,
+        archived        INTEGER DEFAULT 0,
+        color           TEXT,
+        createdAt       TEXT    NOT NULL
+      );
+      CREATE TABLE IF NOT EXISTS notes (
+        id        TEXT    PRIMARY KEY,
+        title     TEXT,
+        content   TEXT,
+        pinned    INTEGER DEFAULT 0,
+        archived  INTEGER DEFAULT 0,
+        subjectId TEXT    REFERENCES subjects(id) ON DELETE SET NULL,
+        createdAt TEXT    NOT NULL,
+        updatedAt TEXT    NOT NULL
       );
       CREATE TABLE IF NOT EXISTS metadata (
-        key TEXT PRIMARY KEY,
+        key   TEXT PRIMARY KEY,
         value TEXT
       );
     `
     await db.execute(schema)
     await persistWeb()
+
+    // Migraciones idempotentes para instalaciones existentes
+    await runMigrations()
 
     // Realizar migración de IndexedDB a SQLite si corresponde
     await migrateFromIndexedDB()
@@ -95,6 +103,36 @@ export async function initDatabase() {
   } catch (error) {
     console.error('Error crítico al inicializar base de datos SQLite:', error)
     throw error
+  }
+}
+
+/**
+ * Ejecuta migraciones de schema de forma idempotente.
+ * SQLite lanza un error si la columna ya existe — lo ignoramos silenciosamente.
+ * Esto permite que el mismo código sirva tanto para instalaciones nuevas
+ * (donde las columnas ya están en el CREATE TABLE) como para las existentes.
+ */
+async function runMigrations() {
+  if (!db) return
+
+  // Cada entrada: [nombre descriptivo, SQL de ALTER TABLE]
+  const migrations = [
+    // v1.1 — Estructura Materia > Sección (DP-004)
+    ['notes.subjectId',              'ALTER TABLE notes ADD COLUMN subjectId TEXT REFERENCES subjects(id) ON DELETE SET NULL'],
+    ['subjects.parentSubjectId',     'ALTER TABLE subjects ADD COLUMN parentSubjectId TEXT REFERENCES subjects(id) ON DELETE CASCADE'],
+    ['subjects.archived',            'ALTER TABLE subjects ADD COLUMN archived INTEGER DEFAULT 0'],
+    ['subjects.color',               'ALTER TABLE subjects ADD COLUMN color TEXT'],
+  ]
+
+  for (const [migrationName, sql] of migrations) {
+    try {
+      await db.run(sql)
+    } catch (e) {
+      const msg = e?.message || ''
+      if (!msg.includes('duplicate column name') && !msg.includes('already exists')) {
+        console.warn(`[Migración] Advertencia en "${migrationName}": ${msg}`)
+      }
+    }
   }
 }
 

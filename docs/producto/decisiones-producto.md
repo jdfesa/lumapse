@@ -146,10 +146,72 @@ Las siguientes decisiones se documentarán formalmente a medida que avance el de
 
 | ID | Tema | Disparador |
 |---|---|---|
-| DP-004 | Tags como sistema complementario a carpetas | Resultados de P12 |
 | DP-005 | Diseño de la experiencia de captura rápida (estilo Memos) | Post-validación de P8 y P9 |
 | DP-006 | Onboarding y ayuda contextual | Post Hito 04, cuando la estructura esté implementada |
 
 ---
 
+## DP-004: Estructura de Información Opinionada — Materia › Sección › Nota
+
+**Fecha:** 2026-05-20  
+**Estado:** ✅ Confirmada  
+**Refs:** [modelo-relacional.md](../diagramas/modelo-relacional.md), RF-013, RF-014  
+
+### Contexto
+
+Las aplicaciones de notas existentes en el mercado (Notion, Obsidian, Bear, Joplin) adoptan una filosofía de "lienzo en blanco": el usuario define su propia arquitectura de información desde cero. Para un estudiante que llega a una clase de 2 horas con 20 minutos libres, esta flexibilidad es en realidad un obstáculo: necesita decidir cómo organizar, dónde crear la nota, qué jerarquía usar.
+
+Lumapse está diseñada para un público concreto (estudiantes de nivel superior, 17-35 años, con celular como dispositivo principal) con un contexto de uso muy específico: **capturar conocimiento académico durante o después de una clase**.
+
+### Decisión
+
+Implementar una estructura de información **predefinida y opinionada** con exactamente **3 secciones fijas** en la navegación principal y **máximo 2 niveles de carpetas creadas por el usuario**:
+
+**Secciones fijas del sistema (no modificables):**
+- 📥 **Entrada:** Destino por defecto de toda nota nueva. Actúa como bandeja de entrada. El usuario no piensa dónde guardar — escribe.
+- 📚 **Materias:** Área de organización estructurada. El usuario crea sus propias carpetas (Materias) y opcionalmente sub-carpetas (Secciones) dentro de cada una.
+- 📦 **Archivo:** Vista de materias y notas archivadas. Las materias aprobadas se mueven aquí.
+
+**Jerarquía de contenido (creada por el usuario):**
+```
+Materia (ej. "Base de Datos")        ← Nivel 1 — creado por el usuario
+  └── Sección (ej. "TPs", "U1")      ← Nivel 2 — creado por el usuario
+        └── Nota                      ← Nivel 3 — el contenido
+```
+
+**Regla de profundidad máxima:** Una Sección no puede contener sub-secciones. Esta restricción se valida en código (`SqliteService.js`) y en la interfaz de usuario.
+
+### Justificación
+
+- **Elimina la parálisis de decisión:** El estudiante sabe exactamente dónde irá su nota sin pensar. Si no tiene tiempo de organizar, va a Entrada. Si quiere organizar, arrastra a su Materia.
+- **Refleja el modelo mental real:** El árbol `Materia → Sección → Nota` replica el sistema de organización que los estudiantes ya usan en herramientas de archivo digital (Dropbox, Google Drive) con estructura `Materia → Subcarpeta → Archivo`.
+- **Mobile-first:** Más de 3 interacciones para llegar a una nota en pantalla de celular genera fricción y abandono. La profundidad máxima de 3 niveles garantiza que el usuario nunca necesita más de 2 taps para llegar a cualquier nota desde la pantalla principal.
+- **Diferenciación de producto:** La estructura opinionada es la característica definitoria de Lumapse. Es la respuesta directa a "¿por qué no usar Notion?" que el tribunal evaluador puede plantear en la defensa académica.
+
+### Implementación en base de datos
+
+La tabla `subjects` modela tanto Materias como Secciones mediante auto-referencia:
+- `parentSubjectId = NULL` → es una **Materia** (raíz)
+- `parentSubjectId = {uuid}` → es una **Sección** (hija de esa Materia)
+
+La tabla `notes` referencia a `subjects(id)` mediante `subjectId`:
+- `subjectId = NULL` → la nota está en **Entrada**
+- `subjectId = {uuid de Materia}` → la nota está directamente en esa Materia
+- `subjectId = {uuid de Sección}` → la nota está dentro de una Sección de una Materia
+
+Ver [modelo-relacional.md](../diagramas/modelo-relacional.md) para el DER completo y el DDL SQL.
+
+### Datos de soporte
+
+- **P11 del relevamiento (n=120):** El 69.2% prefiere organizar por carpetas por materia → valida la estructura de Materias como nivel raíz.
+- **Análisis del sistema de archivos académico real del autor:** La jerarquía observada en `Dropbox/20_Academic/` refleja exactamente el patrón `Institución → Materia → [Subcarpeta tipo: teoria/, tps/, U1/]` — confirmando que 2 niveles de carpetas son suficientes y naturales para el contexto académico.
+- **Principio de diseño mobile-first (DP-003):** El 72.5% usará la app desde celular, donde la navegación profunda (>3 niveles) es incómoda e incompatible con patrones de UX móvil modernos.
+
+### Condición de pivote
+
+Si el feedback de uso real (post-lanzamiento) muestra que los usuarios crean consistentemente más de 2 niveles de carpetas y que la restricción genera fricción significativa, se evaluará agregar un tercer nivel opcional de anidamiento. Esta decisión requiere evidencia empírica de uso, no se revisará por consideraciones teóricas.
+
+---
+
 *Este documento se actualiza con cada decisión de producto relevante. Los resultados de la encuesta se incorporarán en `docs/producto/resultados-relevamiento.md` y se referenciarán desde aquí para mantener la trazabilidad.*
+
