@@ -1,15 +1,16 @@
 // ═══════════════════════════════════════════════════
 // Lumapse — Modelo Lógico Relacional
+// Generado automáticamente desde src/services/SqliteService.js
 // PP3 · IES 6023 "Dr. Alfredo Loutaif" · 2026
 // Motor: SQLite · Herramienta: dbdiagram.io
+// Fecha de generación: 2026-05-20
 // ═══════════════════════════════════════════════════
 //
 // Instrucciones para regenerar:
-//   1. Copiar todo el contenido de este archivo.
-//   2. Abrir https://dbdiagram.io en el navegador.
-//   3. Pegar el código en el editor de la izquierda.
-//   4. El diagrama se renderiza automáticamente a la derecha.
-//   5. Exportar como PNG o PDF.
+//   python3 scripts/generate-dbml-from-code.py
+//
+// Verificación sin sobrescribir (CI):
+//   python3 scripts/generate-dbml-from-code.py --check
 //
 // Nota: La tabla "metadata" aparece sin relaciones porque es
 // una tabla técnica de sistema (clave-valor) para control de
@@ -18,30 +19,30 @@
 // ═══════════════════════════════════════════════════
 
 Table subjects {
-  id              TEXT        [pk, note: "UUID v4 generado en cliente"]
-  name            TEXT        [not null, note: "Nombre de la Materia o Sección"]
-  parentSubjectId TEXT        [note: "NULL = Materia raíz | UUID = Sección hija"]
-  archived        INTEGER     [default: 0, note: "0 = activa | 1 = archivada"]
-  color           TEXT        [note: "Hex opcional (ej: #a3e635)"]
-  createdAt       TEXT        [not null, note: "ISO 8601 UTC"]
+  id              TEXT    [pk, note: "UUID v4 generado en cliente"]
+  name            TEXT    [not null, note: "Nombre de la Materia o Sección"]
+  parentSubjectId TEXT    [note: "NULL = Materia raíz | UUID = Sección hija"]
+  archived        INTEGER [default: 0, note: "0 = activa | 1 = archivada"]
+  color           TEXT    [note: "Hex opcional (ej: #a3e635)"]
+  createdAt       TEXT    [not null, note: "ISO 8601 UTC"]
 
   note: "Modela Materias (parentSubjectId = NULL) y Secciones (parentSubjectId = UUID). Profundidad máx: 2 niveles (DP-004)."
 }
 
 Table notes {
-  id         TEXT     [pk, note: "UUID v4 generado en cliente"]
-  title      TEXT     [note: "Campo calculado desnormalizado (DP-001) — extraído del primer H1 del Markdown"]
-  content    TEXT     [note: "Markdown puro, sin límite de tamaño"]
-  pinned     INTEGER  [default: 0, note: "0 = normal | 1 = fijada al tope"]
-  archived   INTEGER  [default: 0, note: "0 = activa | 1 = archivada"]
-  subjectId  TEXT     [note: "NULL = Entrada | UUID = en Materia o Sección"]
-  createdAt  TEXT     [not null, note: "ISO 8601 UTC · Inmutable"]
-  updatedAt  TEXT     [not null, note: "ISO 8601 UTC · Auto-actualizado en cada guardado"]
+  id        TEXT    [pk, note: "UUID v4 generado en cliente"]
+  title     TEXT    [note: "Campo calculado desnormalizado (DP-001) — extraído del primer H1 del Markdown"]
+  content   TEXT    [note: "Markdown puro, sin límite de tamaño"]
+  pinned    INTEGER [default: 0, note: "0 = normal | 1 = fijada al tope"]
+  archived  INTEGER [default: 0, note: "0 = activa | 1 = archivada"]
+  subjectId TEXT    [note: "NULL = Entrada | UUID = en Materia o Sección"]
+  createdAt TEXT    [not null, note: "ISO 8601 UTC · Inmutable"]
+  updatedAt TEXT    [not null, note: "ISO 8601 UTC · Auto-actualizado en cada guardado"]
 }
 
 Table metadata {
-  key   TEXT  [pk, note: "Identificador de propiedad (ej: indexeddb_migrated)"]
-  value TEXT  [note: "Valor de la propiedad"]
+  key   TEXT [pk, note: "Identificador de propiedad (ej: indexeddb_migrated)"]
+  value TEXT [note: "Valor de la propiedad"]
 
   note: "Tabla técnica clave-valor para control de migraciones y flags de sistema."
 }
@@ -49,7 +50,6 @@ Table metadata {
 // ═══════════════════════════════════════════════════
 // RELACIONES
 // ═══════════════════════════════════════════════════
-
 // NOTA pertenece a una MATERIA o SECCIÓN (N:1)
 // ON DELETE SET NULL → si se elimina la materia, la nota vuelve a Entrada
 Ref: notes.subjectId > subjects.id
