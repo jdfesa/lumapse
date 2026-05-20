@@ -5,6 +5,12 @@
 - 
 - 
 
+## Trazabilidad
+<!-- ¿Qué RF/HU/ADR resuelve este PR? -->
+- RF:
+- HU:
+- ADR:
+
 ## Issues relacionados
 Closes #
 
@@ -13,3 +19,5 @@ Closes #
 - [ ] Los commits siguen Conventional Commits
 - [ ] La documentación fue actualizada si corresponde
 - [ ] El CHANGELOG.md fue actualizado si corresponde
+- [ ] Los RF/HU/ADR referenciados existen en la documentación
+- [ ] `python3 scripts/check-traceability.py` pasa sin advertencias

@@ -17,6 +17,11 @@ assignees: ''
 ## Comportamiento esperado
 <!-- Lo que debería ocurrir -->
 
+## Trazabilidad
+<!-- ¿Qué requisito o funcionalidad está afectada? -->
+- **RF afectado:** RF-0XX
+- **HU relacionada:** HU-0XX (si aplica)
+
 ## Entorno
 - OS: 
 - Navegador: 

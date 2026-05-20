@@ -17,5 +17,9 @@ assignees: ''
 ## Notas técnicas
 <!-- Consideraciones de implementación, componentes afectados, etc. -->
 
-## Hito relacionado
-<!-- Hito 01 / 02 / 03 / ... -->
+## Trazabilidad
+<!-- Estos campos son OBLIGATORIOS para mantener la coherencia documental -->
+- **RF que implementa:** RF-0XX
+- **HU asociada:** HU-0XX
+- **ADR relevante:** ADR-0XX (si aplica)
+- **Hito:** 0X
