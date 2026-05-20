@@ -170,7 +170,7 @@ IndexedDB cumplió su rol para el MVP, pero la migración a SQLite vía `@capaci
 
 ---
 
-### Paso 9: Categorización por materia (DP-002 / DP-004) — Modelo + UI
+### ~~Paso 9: Categorización por materia (DP-002 / DP-004) — Modelo + UI~~ ✅ Completado (2026-05-20)
 
 **Módulo:** Organización / Feature nueva
 **Refs:** DP-002, DP-004, RF-014, encuesta P12 (69.2% carpetas)
@@ -182,15 +182,15 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 **Estado base:** `SqliteService.js` ya crea las tablas `subjects`, `notes` y `metadata`. El campo `notes.subjectId` y la jerarquía `subjects.parentSubjectId` ya existen en el schema, pero aún no hay servicio/UI para que el usuario los use.
 
 **Tareas:**
-- [ ] **`SubjectService.js`:** CRUD de materias/secciones (`id`, `name`, `parentSubjectId`, `archived`, `color`, `createdAt`). Validar nombre requerido, nombre único por nivel, y profundidad máxima 2 niveles (DP-004).
-- [ ] **`SqliteService.js`:** Exponer operaciones para `subjectId` en `createNote()`/`updateNote()`, queries `getNotesBySubject(id)`, `getInboxNotes()` y conteos por materia para el drawer.
-- [ ] **`NoteStore.js`:** Agregar estado `subjects`, `activeSubjectId`, filtros Entrada/Materia/Archivo, y acciones para crear/editar/archivar materias.
-- [ ] **UI — Drawer:** Sección Materias con listado, botón crear, selector activo, estado vacío, colores y conteo de notas.
-- [ ] **UI — Composer/Editor:** Selector de materia al crear/editar nota. Mantener "Entrada" como default cuando `subjectId` es `NULL`.
-- [ ] **UI — Feed:** Indicador visual de materia en cada tarjeta de nota (badge de color).
-- [ ] **Validación offline:** Ejecutar `python3 scripts/validate-subjects-hierarchy.py` contra una base mock/exportada y verificar que no hay huérfanos, ciclos ni profundidad > 2.
-- [ ] **Verificar en dispositivo:** Build + deploy en S7.
-- [ ] **Documentar:** Actualizar RF-014, HU asociada, modelo de dominio, casos de uso, DDL/DBML si cambia el schema, README, CHANGELOG y cheatsheet.
+- [x] **`SubjectService.js`:** CRUD de materias/secciones (`id`, `name`, `parentSubjectId`, `archived`, `color`, `createdAt`). Validar nombre requerido, nombre único por nivel, y profundidad máxima 2 niveles (DP-004).
+- [x] **`SqliteService.js`:** Exponer operaciones para `subjectId` en `createNote()`/`updateNote()`, queries `getNotesBySubject(id)`, `getInboxNotes()` y conteos por materia para el drawer.
+- [x] **`NoteStore.js`:** Agregar estado `subjects`, `activeSubjectId`, filtros Entrada/Materia/Archivo, y acciones para crear/editar/archivar materias.
+- [x] **UI — Drawer:** Sección Materias con listado, botón crear, selector activo, estado vacío, colores y conteo de notas.
+- [x] **UI — Composer/Editor:** Selector de materia al crear/editar nota. Mantener "Entrada" como default cuando `subjectId` es `NULL`.
+- [x] **UI — Feed:** Indicador visual de materia en cada tarjeta de nota (badge de color) y badge de Archivada.
+- [x] **Validación offline:** Ejecutar `python3 scripts/validate-subjects-hierarchy.py` contra una base mock/exportada y verificar que no hay huérfanos, ciclos ni profundidad > 2.
+- [x] **Verificar en dispositivo:** Build + deploy en S7 y testeo de UI.
+- [x] **Documentar:** Actualizar RF-014, HU asociada, modelo de dominio, casos de uso, DDL/DBML si cambia el schema, README, CHANGELOG y cheatsheet.
 
 **Criterio de cierre:** El usuario puede crear materias, asignar notas a una materia, y filtrar el feed por materia desde el drawer. La funcionalidad persiste en SQLite.
 
@@ -244,6 +244,7 @@ El proyecto ya cuenta con muchos scripts de auditoría, pero hoy solo ESLint cor
 - [ ] **Sincronizar README principal post-SQLite:** el stack debe presentar SQLite como persistencia actual y dejar IndexedDB solo como antecedente histórico/migración legacy.
 - [ ] **Actualizar seguimiento de velocidad:** `docs/gestion/seguimiento-velocidad.md` debe reflejar las HU reales actuales (14 HU, 59 SP totales según `generate-velocity-report.py`) y no solo la planificación previa del Hito 04.
 - [ ] **Revisar documentos generados:** regenerar informe completo y cheatsheet cuando se cierren nuevos cambios, para evitar que los artefactos finales queden con métricas anteriores.
+- [ ] **Manual de usuario:** Crear un breve manual de usuario explicando los flujos principales, ya que el sistema tiene atajos visuales (Paso 9).
 
 ## 💻 Deuda Técnica — Código y Arquitectura
 
@@ -252,6 +253,7 @@ El proyecto ya cuenta con muchos scripts de auditoría, pero hoy solo ESLint cor
 - [x] **Assets Manifest:** Agregar los íconos requeridos (`icon-192.png`, `icon-512.png`) en `public/icons/` para cumplir con las validaciones del `manifest.json`.
 - [ ] **Refactor controlado de `SqliteService.js`:** separar CRUD de notas, materias, migraciones y helpers web si el archivo sigue creciendo durante Paso 9. Hoy `analyze-complexity.py` lo marca como largo.
 - [ ] **Reducir complejidad de `NoteList.js`:** extraer renderizado de cards/dropdowns/empty states a funciones auxiliares o componente menor. Hoy `analyze-complexity.py` marca anidamiento alto.
+- [ ] **UI para sub-secciones de Materias (Profundidad > 0):** El modelo de datos (SQLite) y las validaciones de `SubjectService` ya soportan anidamiento (ej. "Materia" -> "TPs" / "Unidad 1"), pero falta implementar la interfaz visual (UX) para crear y navegar estas carpetas hijas dentro de una materia principal.
 
 ## ⚙️ Deuda Técnica — DevOps y Procesos
 
