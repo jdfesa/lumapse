@@ -300,3 +300,48 @@ Analizador estático simple para validar atributos SEO y metadatos de Progressiv
   ```bash
   python3 scripts/check-seo-metadata.py
   ```
+
+### 23. `generate-velocity-report.py`
+Calcula los Story Points entregados por hito a partir de la tabla de trazabilidad en `historias-de-usuario.md`.
+
+- **Problema que resuelve:** Permite obtener de forma rápida y automatizada métricas de velocidad del proyecto y avance por hito para justificaciones ágiles.
+- **Qué hace:** Parsea la tabla de trazabilidad de `docs/producto/historias-de-usuario.md`, extrae los Story Points (SP) y los hitos, y genera un reporte formateado en la terminal con la velocidad promedio (SP/hito) y los acumulados.
+- **Uso:**
+  ```bash
+  python3 scripts/generate-velocity-report.py
+  ```
+
+### 24. `validate-subjects-hierarchy.py`
+Valida la integridad de la jerarquía de materias y secciones de acuerdo a la decisión de producto DP-004.
+
+- **Problema que resuelve:** Protege la base de datos contra inconsistencias lógicas en el dominio, como relaciones recursivas infinitas (ciclos), materias huérfanas, o estructuras que excedan el límite físico de profundidad de 2 niveles.
+- **Qué hace:** Analiza una base SQLite (o una mock en memoria) y ejecuta 4 chequeos de integridad estructural en cascada.
+- **Uso:**
+  ```bash
+  python3 scripts/validate-subjects-hierarchy.py [ruta_base.db]
+  # Para ejecutar pruebas con datos que violan las reglas intencionalmente:
+  python3 scripts/validate-subjects-hierarchy.py --test-violations
+  ```
+
+### 25. `generate-dbml-from-code.py`
+Generador de diagramas DBML a partir del DDL real implementado en JavaScript.
+
+- **Problema que resuelve:** Garantiza la coherencia absoluta entre el código de base de datos (`SqliteService.js`) y el diagrama lógico de base de datos (`03-modelo-logico-relacional.dbml`), eliminando errores humanos de transcripción.
+- **Qué hace:** Parsea y extrae la estructura SQL del servicio de persistencia, inyecta las notas de tablas/columnas y las relaciones configuradas, y exporta el archivo DBML válido para renderizar en dbdiagram.io.
+- **Uso:**
+  ```bash
+  python3 scripts/generate-dbml-from-code.py
+  # Para verificar la sincronización en pipelines de integración continua:
+  python3 scripts/generate-dbml-from-code.py --check
+  ```
+
+### 26. `generate-defense-cheatsheet.py`
+Genera una hoja de trucos consolidada (Cheat Sheet) de cara a la defensa del proyecto ante el tribunal.
+
+- **Problema que resuelve:** Automatiza la recopilación de estadísticas del producto (líneas de código, requisitos, hitos, etc.) y sintetiza las justificaciones y preguntas difíciles más frecuentes del jurado en un único lugar de consulta rápida.
+- **Qué hace:** Escanea el código fuente y las carpetas de documentación, calcula estadísticas en tiempo de ejecución, y escribe el resultado en `docs/gestion/cheatsheet-defensa.md`.
+- **Uso:**
+  ```bash
+  python3 scripts/generate-defense-cheatsheet.py
+  ```
+
