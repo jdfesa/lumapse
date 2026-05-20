@@ -4,7 +4,6 @@
 // =============================================================
 
 import * as NoteStore from '../store/NoteStore.js';
-import { SUBJECT_COLORS } from '../services/SubjectService.js';
 import './NoteEditor.css';
 
 export class NoteEditor {
