@@ -1,0 +1,120 @@
+// =============================================================
+// Lumapse — Modelo Conceptual DER (Notación Chen)
+// Código fuente Graphviz DOT
+// =============================================================
+//
+// Herramienta: Graphviz (lenguaje DOT)
+// Renderizado en: https://edotor.net
+// Imagen generada: 01-modelo-conceptual-der-chen.png
+//
+// Instrucciones para regenerar:
+//   1. Copiar todo el contenido de este archivo.
+//   2. Abrir https://edotor.net en el navegador.
+//   3. Pegar el código en el editor de la izquierda.
+//   4. El diagrama se renderiza automáticamente a la derecha.
+//   5. Exportar como PNG o SVG.
+// =============================================================
+
+graph LumapseChen {
+  graph [
+    rankdir=TB
+    fontname="Helvetica Neue, Helvetica, Arial"
+    fontsize=13
+    bgcolor="white"
+    pad="0.6,0.4"
+    nodesep=0.6
+    ranksep=0.9
+    label=""
+  ]
+  node [fontname="Helvetica Neue, Helvetica, Arial" fontsize=11]
+  edge [fontname="Helvetica Neue, Helvetica, Arial" fontsize=11 color="#475569"]
+
+  // ── ENTIDADES ─────────────────────────────────────
+  node [shape=rectangle style="filled,bold" penwidth=2]
+
+  MATERIA [label="MATERIA" fillcolor="#dbeafe" color="#2563eb"]
+  NOTA    [label="NOTA"    fillcolor="#dbeafe" color="#2563eb"]
+
+  // ── RELACIONES ────────────────────────────────────
+  node [shape=diamond style="filled,bold" penwidth=1.5]
+
+  contiene    [label="contiene"      fillcolor="#fef3c7" color="#b45309"]
+  es_padre_de [label="es padre de"   fillcolor="#fef3c7" color="#b45309"]
+
+  // ── ATRIBUTOS PK (subrayados) ─────────────────────
+  node [shape=ellipse style=filled penwidth=1.5]
+
+  mat_id  [label=<<U>id</U>>  fillcolor="#dcfce7" color="#166534"]
+  nota_id [label=<<U>id</U>>  fillcolor="#dcfce7" color="#166534"]
+
+  // ── ATRIBUTOS COMUNES ─────────────────────────────
+  node [shape=ellipse style=filled fillcolor="#f1f5f9" color="#64748b" penwidth=1]
+
+  // MATERIA — izquierda
+  mat_nombre    [label="nombre"]
+  mat_archivada [label="archivada"]
+  mat_color     [label="color"]
+  // MATERIA — derecha
+  mat_parent    [label="parentSubjectId"]
+  mat_creacion  [label="fechaCreación"]
+
+  // NOTA — izquierda
+  nota_titulo    [label="título"]
+  nota_contenido [label="contenido"]
+  nota_fijada    [label="fijada"]
+  nota_archivada [label="archivada"]
+  // NOTA — derecha
+  nota_subjectId     [label="subjectId"]
+  nota_creacion      [label="fechaCreación"]
+  nota_actualizacion [label="fechaActualización"]
+
+  // ── LAYOUT — Filas ────────────────────────────────
+
+  // Fila 1: Atributos de MATERIA (izquierda)
+  { rank=same; mat_nombre; mat_archivada; mat_color }
+  // Fila 1b: Atributos de MATERIA (derecha)
+  { rank=same; mat_id; mat_parent; mat_creacion }
+
+  // Fila 2: MATERIA + auto-referencia
+  { rank=same; MATERIA; es_padre_de }
+
+  // Fila 3: Relación contiene
+  { rank=same; contiene }
+
+  // Fila 4: NOTA
+  { rank=same; NOTA }
+
+  // Fila 5: Atributos de NOTA (izquierda)
+  { rank=same; nota_titulo; nota_contenido; nota_fijada; nota_archivada }
+  // Fila 5b: Atributos de NOTA (derecha)
+  { rank=same; nota_id; nota_subjectId; nota_creacion; nota_actualizacion }
+
+  // ── CONEXIONES — Atributos ────────────────────────
+
+  MATERIA -- mat_id
+  MATERIA -- mat_nombre
+  MATERIA -- mat_parent
+  MATERIA -- mat_archivada
+  MATERIA -- mat_color
+  MATERIA -- mat_creacion
+
+  NOTA -- nota_id
+  NOTA -- nota_titulo
+  NOTA -- nota_contenido
+  NOTA -- nota_fijada
+  NOTA -- nota_archivada
+  NOTA -- nota_subjectId
+  NOTA -- nota_creacion
+  NOTA -- nota_actualizacion
+
+  // ── CONEXIONES — Relaciones ───────────────────────
+
+  // MATERIA contiene NOTA (1:N)
+  MATERIA  -- contiene [label="  1  " fontsize=13 penwidth=2]
+  contiene -- NOTA     [label="  N  " fontsize=13 penwidth=2]
+
+  // MATERIA es_padre_de MATERIA (1:N auto-referencial)
+  // Líneas SÓLIDAS — en Chen no existe el punteado
+  MATERIA     -- es_padre_de [label="  1  " fontsize=13 penwidth=2]
+  es_padre_de -- MATERIA     [label="  N  " fontsize=13 penwidth=2]
+}
