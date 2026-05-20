@@ -194,6 +194,48 @@
 
 ---
 
+### HU-012 — Usar Lumapse sin conexión
+
+| Campo | Detalle |
+|---|---|
+| **Historia** | Como **estudiante con conectividad limitada**, quiero **abrir y usar Lumapse sin conexión después de instalarla**, para **consultar y editar mis apuntes en clases, traslados o lugares sin internet**. |
+| **RF asociados** | [RF-008](./requisitos-funcionales.md) |
+| **Persona** | [Lucía](./personas.md#persona-1--lucía-la-estudiante-organizada) |
+| **Prioridad** | MUST |
+| **Story Points** | **5 SP** — Requiere empaquetado local de assets dentro del APK, fuentes auto-alojadas y verificación de funcionamiento sin red. |
+| **Hito** | 03 |
+
+**Criterios de Aceptación:**
+
+| CA | Descripción | Verificación |
+|---|---|---|
+| CA-01 | La aplicación instalada abre correctamente con la conexión de red desactivada. | Test manual en modo avión |
+| CA-02 | Los assets principales (HTML, CSS, JavaScript y fuentes) se cargan desde el paquete local de la aplicación. | Network tab / inspección del APK |
+| CA-03 | La edición y consulta de notas existentes funciona sin realizar requests externos. | Test funcional sin conexión |
+
+---
+
+### HU-013 — Alternar modos de edición y lectura
+
+| Campo | Detalle |
+|---|---|
+| **Historia** | Como **estudiante práctico**, quiero **alternar entre modo edición, vista dividida y modo lectura en una nota**, para **escribir cuando estoy tomando apuntes y leer con comodidad cuando estoy repasando**. |
+| **RF asociados** | [RF-012](./requisitos-funcionales.md) |
+| **Persona** | [Martín](./personas.md#persona-2--martín-el-estudiante-práctico) |
+| **Prioridad** | SHOULD |
+| **Story Points** | **3 SP** — Estado de UI para tres modos, clases CSS condicionales y coordinación con el componente de preview. |
+| **Hito** | 03 |
+
+**Criterios de Aceptación:**
+
+| CA | Descripción | Verificación |
+|---|---|---|
+| CA-01 | El editor permite seleccionar modo Edición, Dividido (Split) y Lectura. | Test funcional |
+| CA-02 | En modo Lectura se muestra la vista previa renderizada sin el área editable principal. | Inspección visual |
+| CA-03 | Al volver a modo Edición, el contenido de la nota se conserva sin cambios. | Test funcional |
+
+---
+
 ## Hito 04 — Organización y UX (Agosto 2026)
 
 ### HU-009 — Fijar y archivar notas
@@ -262,15 +304,36 @@
 
 ---
 
+### HU-014 — Usar la app en móvil y escritorio
+
+| Campo | Detalle |
+|---|---|
+| **Historia** | Como **estudiante**, quiero **usar Lumapse cómodamente en pantallas móviles y de escritorio**, para **tomar apuntes desde el celular y revisar mi material en pantallas más grandes sin perder legibilidad ni controles**. |
+| **RF asociados** | [RF-020](./requisitos-funcionales.md) |
+| **Persona** | [Lucía](./personas.md#persona-1--lucía-la-estudiante-organizada) |
+| **Prioridad** | MUST |
+| **Story Points** | **5 SP** — Revisión mobile-first del layout, drawer lateral, tamaños táctiles y adaptación entre 320px y 1920px. |
+| **Hito** | 04 |
+
+**Criterios de Aceptación:**
+
+| CA | Descripción | Verificación |
+|---|---|---|
+| CA-01 | La interfaz se adapta correctamente desde 320px hasta 1920px de ancho sin scroll horizontal no deseado. | Test responsive en DevTools |
+| CA-02 | En pantallas móviles, la navegación usa drawer lateral en lugar de una sidebar fija. | Inspección visual |
+| CA-03 | Los controles principales mantienen tamaño táctil y legibilidad adecuados en móvil. | Test manual en viewport móvil |
+
+---
+
 ## Resumen
 
 | Métrica | Hito 02 | Hito 03 | Hito 04 | Total |
 |---|---|---|---|---|
-| **Total HU** | 6 | 2 | 3 | **11** |
-| **Total Story Points** | 20 | 13 | 13 | **46** |
-| **Total Criterios de Aceptación** | 20 | 8 | 12 | **40** |
-| **Prioridad predominante** | MUST | MUST/SHOULD | SHOULD | — |
-| **Personas cubiertas** | Lucía (4), Martín (2) | Lucía (1), Martín (1) | Lucía (2), Martín (1) | Lucía (7), Martín (4) |
+| **Total HU** | 6 | 4 | 4 | **14** |
+| **Total Story Points** | 20 | 21 | 18 | **59** |
+| **Total Criterios de Aceptación** | 20 | 14 | 15 | **49** |
+| **Prioridad predominante** | MUST | MUST/SHOULD | SHOULD/MUST | — |
+| **Personas cubiertas** | Lucía (4), Martín (2) | Lucía (2), Martín (2) | Lucía (3), Martín (1) | Lucía (9), Martín (5) |
 
 ---
 
@@ -286,10 +349,13 @@
 | HU-006 | RF-007 | Martín | Persistencia local | 5 | 02 |
 | HU-007 | RF-010/011 | Lucía | Renderizar Markdown | 5 | 03 |
 | HU-008 | RF-016/017/018 | Martín | Exportar/Importar notas | 8 | 03 |
+| HU-012 | RF-008 | Lucía | Funcionamiento offline | 5 | 03 |
+| HU-013 | RF-012 | Martín | Modos edición/lectura | 3 | 03 |
 | HU-009 | RF-013 | Lucía | Fijar y archivar notas | 5 | 04 |
 | HU-010 | RF-015 | Martín | Buscar notas | 3 | 04 |
 | HU-011 | RF-019 | Lucía | Modo oscuro/claro | 5 | 04 |
-| | | | **Total** | **46** | |
+| HU-014 | RF-020 | Lucía | Diseño responsive | 5 | 04 |
+| | | | **Total** | **59** | |
 
 ---
 
