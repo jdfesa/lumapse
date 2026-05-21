@@ -275,3 +275,7 @@ El proyecto ya cuenta con muchos scripts de auditoría, pero hoy solo ESLint cor
   - `MarkdownService` (sanitización XSS).
   - Lógica del `Store` (filtrado, ordenamiento, pin/archivar).
   Objetivo: demostrar calidad de software profesional y prevenir regresiones en la lógica de negocio core.
+
+## 🚀 Ideas a Largo Plazo (Post-Defensa / Hitos Futuros)
+
+- [ ] **Sincronización / Backup en la Nube (Google Drive):** Para mantener la filosofía Offline-First pero evitar la pérdida de datos si el usuario pierde el celular, agregar un botón de "Exportar/Respaldar" que comprima la base SQLite o las notas en un `.zip` y lo suba a una carpeta privada en el Google Drive del usuario mediante la API de Google (requiere setup de OAuth). Es un backup unidireccional manual, no una sincronización P2P bidireccional en tiempo real.
