@@ -228,6 +228,79 @@
   flex-direction: column;
 }
 
+/* Subject row: button + section add side by side */
+.drawer__subject-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.drawer__subject-row .drawer__subject-btn {
+  flex: 1;
+  min-width: 0;
+}
+
+/* '+' button to add section (visible on hover) */
+.drawer__section-add {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+
+.drawer__subject-row:hover .drawer__section-add {
+  opacity: 1;
+}
+
+.drawer__section-add:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-accent);
+}
+
+/* Inline section form */
+.drawer__section-form {
+  padding: var(--space-2) var(--space-3);
+  padding-left: calc(var(--space-3) + var(--space-4));
+  margin-top: var(--space-1);
+}
+
+.drawer__section-form-input {
+  width: 100%;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-bright);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  outline: none;
+  margin-bottom: var(--space-2);
+  transition: border-color var(--transition);
+}
+
+.drawer__section-form-input:focus {
+  border-color: var(--color-accent);
+}
+
+.drawer__section-form-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.drawer__section-form-actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+}
+
 /* Subject creation form */
 .drawer__subject-form {
   padding: var(--space-3);

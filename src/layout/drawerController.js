@@ -146,6 +146,31 @@ export function initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS }) {
 
   // Delegación para clicks en materias del listado
   subjectsList.addEventListener('click', (e) => {
+    // Botón "+" para agregar sección
+    const btnAddSection = e.target.closest('.js-btn-add-section')
+    if (btnAddSection) {
+      e.stopPropagation()
+      toggleSectionForm(btnAddSection.dataset.parentId)
+      return
+    }
+
+    // Guardar sección
+    const btnSaveSection = e.target.closest('.js-btn-section-save')
+    if (btnSaveSection) {
+      e.stopPropagation()
+      saveSectionForm(btnSaveSection.dataset.parentId, btnSaveSection.dataset.parentColor)
+      return
+    }
+
+    // Cancelar sección
+    const btnCancelSection = e.target.closest('.js-btn-section-cancel')
+    if (btnCancelSection) {
+      e.stopPropagation()
+      closeSectionForm(btnCancelSection.dataset.parentId)
+      return
+    }
+
+    // Navegación a materia/sección
     const subjectBtn = e.target.closest('.drawer__subject-btn')
     if (!subjectBtn) return
     const subjectId = subjectBtn.dataset.subject
@@ -158,6 +183,58 @@ export function initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS }) {
     updateSubjectActiveState(subjectId)
     closeDrawer()
   })
+
+  // Enter/Escape en inputs de sección (delegación)
+  subjectsList.addEventListener('keydown', (e) => {
+    const input = e.target.closest('.js-section-name-input')
+    if (!input) return
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      saveSectionForm(input.dataset.parentId, input.dataset.parentColor)
+    } else if (e.key === 'Escape') {
+      closeSectionForm(input.dataset.parentId)
+    }
+  })
+
+  /** Muestra/oculta el formulario inline de sección para una materia */
+  function toggleSectionForm(parentId) {
+    // Cerrar cualquier otro formulario abierto
+    subjectsList.querySelectorAll('.drawer__section-form').forEach(form => {
+      form.style.display = 'none'
+    })
+    const form = subjectsList.querySelector(`#section-form-${parentId}`)
+    if (!form) return
+    const isVisible = form.style.display !== 'none'
+    form.style.display = isVisible ? 'none' : 'block'
+    if (!isVisible) {
+      const input = form.querySelector('.js-section-name-input')
+      if (input) {
+        input.value = ''
+        input.focus()
+      }
+    }
+  }
+
+  /** Guarda una nueva sección bajo la materia padre */
+  async function saveSectionForm(parentId, parentColor) {
+    const form = subjectsList.querySelector(`#section-form-${parentId}`)
+    if (!form) return
+    const input = form.querySelector('.js-section-name-input')
+    const name = input ? input.value.trim() : ''
+    if (!name) return
+    try {
+      await NoteStore.createSubject(name, parentColor, parentId)
+      form.style.display = 'none'
+    } catch (err) {
+      alert(err.message)
+    }
+  }
+
+  /** Cierra el formulario de sección */
+  function closeSectionForm(parentId) {
+    const form = subjectsList.querySelector(`#section-form-${parentId}`)
+    if (form) form.style.display = 'none'
+  }
 
   /** Actualiza qué botón de materia tiene la clase --active */
   function updateSubjectActiveState(activeId) {
@@ -194,14 +271,37 @@ export function initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS }) {
         `
       }).join('')
 
+      // Formulario inline para crear sección (oculto por defecto)
+      const sectionFormHtml = `
+        <div id="section-form-${subject.id}" class="drawer__section-form" style="display:none">
+          <input type="text" 
+                 class="drawer__section-form-input js-section-name-input" 
+                 placeholder="Nombre de sección" 
+                 maxlength="40" 
+                 autocomplete="off"
+                 data-parent-id="${subject.id}"
+                 data-parent-color="${subject.color}">
+          <div class="drawer__section-form-actions">
+            <button class="drawer__subject-form-btn js-btn-section-cancel" data-parent-id="${subject.id}">Cancelar</button>
+            <button class="drawer__subject-form-btn drawer__subject-form-btn--primary js-btn-section-save" data-parent-id="${subject.id}" data-parent-color="${subject.color}">Crear</button>
+          </div>
+        </div>
+      `
+
       return `
         <div class="drawer__subject-group">
-          <button class="drawer__subject-btn${isActive ? ' drawer__subject-btn--active' : ''}" data-subject="${subject.id}">
-            <span class="drawer__subject-color" style="background-color: ${subject.color}"></span>
-            <span class="drawer__subject-name">${escapeHtml(subject.name)}</span>
-            <span class="drawer__subject-count">${subject.noteCount || 0}</span>
-          </button>
+          <div class="drawer__subject-row">
+            <button class="drawer__subject-btn${isActive ? ' drawer__subject-btn--active' : ''}" data-subject="${subject.id}">
+              <span class="drawer__subject-color" style="background-color: ${subject.color}"></span>
+              <span class="drawer__subject-name">${escapeHtml(subject.name)}</span>
+              <span class="drawer__subject-count">${subject.noteCount || 0}</span>
+            </button>
+            <button class="drawer__section-add js-btn-add-section" data-parent-id="${subject.id}" data-parent-color="${subject.color}" title="Agregar sección">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </button>
+          </div>
           ${childrenHtml}
+          ${sectionFormHtml}
         </div>
       `
     }).join('')
