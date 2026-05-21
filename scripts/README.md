@@ -381,3 +381,110 @@ Asistente de lanzamiento para versionado, changelog, build web, sincronización 
   python3 scripts/release-helper.py --type patch --dry-run
   python3 scripts/release-helper.py --type minor --yes
   ```
+
+### 30. `check-file-size.sh`
+Guardia de tamano de archivos que escanea `src/` y reporta archivos que superan los limites saludables.
+
+- **Problema que resuelve:** Los scripts existentes detectan deuda tecnica pero no la previenen. Este guardia reporta advertencias proactivamente para que los archivos no crezcan sin control.
+- **Que hace:**
+  - Escanea archivos JS, CSS y HTML en `src/`.
+  - Cuenta lineas de codigo no vacias (LOC).
+  - Reporta como AVISO los archivos que superan 250 LOC.
+  - Reporta como PELIGRO los archivos que superan 400 LOC.
+  - NUNCA bloquea el flujo de trabajo (siempre retorna exit code 0).
+  - Soporta `--json` para integracion con otros scripts.
+- **Uso:**
+  ```bash
+  ./scripts/check-file-size.sh
+  ./scripts/check-file-size.sh --json
+  ```
+
+### 31. `check-session.sh`
+Dashboard de inicio de sesion que muestra el estado completo del proyecto en ~3 segundos.
+
+- **Problema que resuelve:** Evita perder tiempo averiguando donde estabas, que falta, y cual es el estado del proyecto cada vez que arrancas a trabajar.
+- **Que muestra:**
+  1. Hito activo (desde `CHANGELOG.md` y `BACKLOG.md`).
+  2. Ultimos 5 commits.
+  3. Estado de Git (archivos modificados, staged, sin rastrear).
+  4. Deuda tecnica (archivos que superan 250 LOC).
+  5. TODOs y FIXMEs pendientes en codigo fuente.
+  6. Estado rapido de ESLint.
+- **Uso:**
+  ```bash
+  ./scripts/check-session.sh
+  ```
+
+### 32. `split-guide.py`
+Guia de refactorizacion por analisis estatico. Analiza archivos JS grandes y sugiere como dividirlos.
+
+- **Problema que resuelve:** Cuando se detecta un archivo grande, no basta con decir "es largo" -- hace falta saber *como* dividirlo. Este script analiza la estructura del archivo y propone un plan de split.
+- **Que hace:**
+  - Detecta funciones exportadas vs internas.
+  - Agrupa funciones por responsabilidad (renderizado, eventos, datos, navegacion, utilidades, etc.).
+  - Sugiere nombres de archivo destino para cada grupo.
+  - Calcula cuantas LOC se extraerian y cuantas quedarian.
+  - Soporta `--all` para analizar todos los archivos que superan el limite.
+  - Soporta `--md` para generar salida Markdown compatible con BACKLOG.
+- **Uso:**
+  ```bash
+  python3 scripts/split-guide.py src/main.js
+  python3 scripts/split-guide.py --all
+  python3 scripts/split-guide.py --all --md
+  ```
+
+### 33. `health-dashboard.py`
+Dashboard consolidado de salud del proyecto. Ejecuta multiples checks y genera un reporte unificado.
+
+- **Problema que resuelve:** Consolida metricas de calidad en un unico lugar para monitoreo interno y para generar evidencia de buenas practicas en el informe final.
+- **Que mide:**
+  - Tabla de archivos con LOC, complejidad y estado.
+  - TODOs y FIXMEs en codigo (con sugerencia de moverlos al BACKLOG).
+  - Estado de ESLint.
+  - Estadisticas generales (archivos JS/CSS, documentos MD, LOC totales).
+  - Informacion de git (commit, branch).
+- **Que genera:** Reporte en terminal por defecto. Con `--save` guarda `docs/gestion/health-dashboard.md`.
+- **Uso:**
+  ```bash
+  python3 scripts/health-dashboard.py
+  python3 scripts/health-dashboard.py --save
+  ```
+
+### 34. `daily-workflow.sh`
+Orquestador maestro del flujo de trabajo diario. Centraliza los scripts de inicio y cierre.
+
+- **Problema que resuelve:** Fuerza un flujo disciplinado sin tener que recordar que scripts correr al empezar o terminar una sesion.
+- **Modos:**
+  - `start`: Ejecuta `check-session.sh` como dashboard de inicio.
+  - `end`: Ejecuta lint, build, guardia de tamano, TODOs, y resume los commits del dia.
+  - `health`: Ejecuta `health-dashboard.py` con dashboard completo.
+- **Uso:**
+  ```bash
+  ./scripts/daily-workflow.sh start
+  ./scripts/daily-workflow.sh end
+  ./scripts/daily-workflow.sh health
+  ./scripts/daily-workflow.sh health --save
+  ```
+
+---
+
+## Flujo de trabajo resultante
+
+```
+Al empezar a trabajar:
+  ./scripts/daily-workflow.sh start
+
+Durante el desarrollo:
+  - ESLint advierte si un archivo supera 300 LOC
+  - Pre-commit reporta archivos grandes (sin bloquear)
+
+Cuando un archivo crece demasiado:
+  python3 scripts/split-guide.py <archivo>
+  python3 scripts/split-guide.py --all --md    # Para agregar al BACKLOG
+
+Al cerrar la sesion:
+  ./scripts/daily-workflow.sh end
+
+Para un reporte completo de salud:
+  ./scripts/daily-workflow.sh health --save
+```
