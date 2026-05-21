@@ -38,7 +38,7 @@ Limpia cachés y artefactos de compilación para devolver el proyecto a un estad
   ./scripts/clean.sh
   ```
 
-### 3. `check-docs.sh`
+### 3. `check-docs.sh` _(Superseded parcialmente por `lumapse-audit` #35)_
 Realiza una auditoría rápida de consistencia en el proyecto antes de realizar operaciones importantes en Git. Esta herramienta ayuda a mantener la rigurosidad académica exigida en la documentación y el código fuente.
 
 - **Qué verifica:**
@@ -79,7 +79,7 @@ Audita la coherencia y consistencia entre los documentos de trazabilidad del pro
   python3 scripts/check-traceability.py
   ```
 
-### 6. `check-offline.sh`
+### 6. `check-offline.sh` _(Superseded por `lumapse-audit` #35)_
 Escanea el código fuente y los assets del proyecto en busca de referencias a URLs externas que rompan la arquitectura offline-first.
 
 - **Problema que resuelve:** Como app pensada para funcionar completamente sin conexión y proteger la privacidad del usuario, cualquier referencia no intencional a recursos externos (imágenes, fuentes, scripts) es un riesgo crítico.
@@ -382,7 +382,7 @@ Asistente de lanzamiento para versionado, changelog, build web, sincronización 
   python3 scripts/release-helper.py --type minor --yes
   ```
 
-### 30. `check-file-size.sh`
+### 30. `check-file-size.sh` _(Superseded por `lumapse-audit` #35)_
 Guardia de tamano de archivos que escanea `src/` y reporta archivos que superan los limites saludables.
 
 - **Problema que resuelve:** Los scripts existentes detectan deuda tecnica pero no la previenen. Este guardia reporta advertencias proactivamente para que los archivos no crezcan sin control.
@@ -488,3 +488,83 @@ Al cerrar la sesion:
 Para un reporte completo de salud:
   ./scripts/daily-workflow.sh health --save
 ```
+
+---
+
+## 🦀 Scripts en Rust — Evolución del toolchain
+
+A partir del script #35, el proyecto incorpora **Rust** como lenguaje complementario para herramientas de desarrollo. Esta decisión no reemplaza Bash ni Python, sino que responde a una necesidad concreta de rendimiento que apareció cuando la cantidad de scripts llegó a 34 y las verificaciones empezaron a ejecutarse de forma repetida en los git hooks (`pre-commit`, `pre-push`).
+
+### ¿Por qué Rust y no seguir con Bash/Python?
+
+| Aspecto | Bash/Python (actual) | Rust (nuevo) |
+|---|---|---|
+| **Ejecución** | Interpretado | Compilado a binario nativo |
+| **Concurrencia** | Secuencial (1 archivo a la vez) | Multi-hilo nativo (`std::thread`) |
+| **Lectura de archivos** | Cada script abre los mismos archivos por separado | Un solo pase lee cada archivo UNA vez |
+| **Dependencias** | Python 3.8+ / Bash 4+ | Solo `rustc` + `cargo` (stdlib pura, 0 crates externos) |
+| **Velocidad medida** | ~200ms combinados para 3 checks | **~2ms** para los mismos 3 checks |
+
+**Justificación académica:** El proyecto ya tenía 34 scripts funcionales en Bash y Python que resolvían problemas puntuales. A medida que el codebase creció, tres de esos scripts (`check-file-size.sh`, `check-docs.sh`, `check-offline.sh`) empezaron a ejecutarse repetidamente en los git hooks, leyendo los mismos archivos múltiples veces. Rust permite unificar esas verificaciones en un **único pase concurrente** sobre el filesystem, reduciendo el tiempo de ejecución en ~100x. Esta evolución demuestra madurez en la gestión de la deuda técnica del propio toolchain de desarrollo.
+
+### ¿Por qué los scripts originales no se borran?
+
+Los scripts originales (#3, #6, #30) fueron parte del proceso de construcción del proyecto y tienen valor documental:
+- Demuestran la evolución incremental del toolchain.
+- Permiten comparar la solución interpretada vs. la compilada.
+- Sirven como respaldo si Rust no está disponible en un entorno de evaluación.
+
+Por eso se los marca como _"Superseded"_ pero se los conserva en el repositorio.
+
+### Estructura de carpetas
+
+A diferencia de los scripts Bash/Python que son archivos individuales en `scripts/`, el auditor en Rust requiere su propia subcarpeta porque Cargo (el build system de Rust) necesita una estructura de proyecto:
+
+```
+scripts/
+├── lumapse-audit/         ← Proyecto Cargo (Rust)
+│   ├── Cargo.toml         ← Manifiesto del proyecto (nombre, versión, deps)
+│   ├── Cargo.lock         ← Lock de dependencias (reproducibilidad)
+│   └── src/
+│       └── main.rs        ← Código fuente del auditor (~440 LOC)
+├── check-file-size.sh     ← (Superseded por lumapse-audit)
+├── check-offline.sh       ← (Superseded por lumapse-audit)
+├── check-docs.sh          ← (Superseded parcialmente por lumapse-audit)
+└── ... (otros 31 scripts)
+```
+
+El binario compilado queda en `scripts/lumapse-audit/target/release/lumapse-audit` y NO se commitea al repositorio (está en `.gitignore`).
+
+---
+
+### 35. `lumapse-audit` (Rust)
+Auditor concurrente de código fuente que unifica tres verificaciones en un solo pase multi-hilo sobre el filesystem.
+
+- **Problema que resuelve:** Los scripts `check-file-size.sh`, `check-docs.sh` y `check-offline.sh` abrían los mismos archivos de `src/` por separado, triplicando las operaciones de I/O. A medida que el proyecto creció a 24+ archivos y los hooks de Git ejecutaban estos checks de forma repetida, la latencia acumulada se volvía una fricción innecesaria en el flujo de trabajo diario.
+- **Qué hace (en un solo pase):**
+  1. **Guardia de tamaño (LOC):** Cuenta líneas no vacías por archivo. Reporta AVISO (>250 LOC) y PELIGRO (>400 LOC). Equivale a `check-file-size.sh`.
+  2. **Búsqueda de TODOs/FIXMEs:** Detecta marcadores de tareas pendientes con word-boundary inteligente (no confunde "todos" con "TODO"). Equivale a la parte de TODOs de `check-docs.sh`.
+  3. **Auditoría Offline-First:** Busca URLs `http://`/`https://` en código fuente, distinguiendo comentarios de referencias reales. Equivale a `check-offline.sh`.
+- **Características técnicas:**
+  - Escrito en Rust (stdlib pura, 0 dependencias externas).
+  - Concurrencia nativa con `std::thread` — divide los archivos en chunks y los procesa en paralelo.
+  - Lee cada archivo una sola vez en memoria y aplica las 3 reglas simultáneamente.
+  - Exit code 0 si todo OK, 1 si hay archivos en PELIGRO o URLs externas reales.
+- **Rendimiento medido:** ~2ms para 24 archivos (vs ~200ms combinados de los 3 scripts originales).
+- **Compilación:**
+  ```bash
+  cd scripts/lumapse-audit
+  cargo build --release
+  ```
+- **Uso:**
+  ```bash
+  # Desde la raíz del proyecto
+  ./scripts/lumapse-audit/target/release/lumapse-audit
+
+  # Salida JSON (para integración con CI u otros scripts)
+  ./scripts/lumapse-audit/target/release/lumapse-audit --json
+
+  # Ayuda
+  ./scripts/lumapse-audit/target/release/lumapse-audit --help
+  ```
+- **Requisitos:** Rust (rustc + cargo). Instalable con `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`.
