@@ -258,6 +258,7 @@ El proyecto ya cuenta con muchos scripts de auditoría, pero hoy solo ESLint cor
   - `src/main.js` (AVISO: >250 LOC). Extraer templates HTML en línea.
 - [ ] **Reducir complejidad de `NoteList.js`:** extraer renderizado de cards/dropdowns/empty states a funciones auxiliares o componente menor. Hoy `check-file-size.sh` y ESLint advierten sobre anidamiento profundo.
 - [ ] **UI para sub-secciones de Materias (Profundidad > 0):** El modelo de datos (SQLite) y las validaciones de `SubjectService` ya soportan anidamiento (ej. "Materia" -> "TPs" / "Unidad 1"), pero falta implementar la interfaz visual (UX) para crear y navegar estas carpetas hijas dentro de una materia principal.
+- [ ] **Manejo de Errores y Excepciones (Resiliencia):** Revisar todo el "camino triste" de la app. Implementar bloques `try/catch` robustos en operaciones críticas (ej. fallo de escritura en SQLite por falta de espacio), asegurar que la UI muestre un mensaje amigable ("Error al guardar") sin crashear en silencio, e implementar un mecanismo de loggeo estructurado.
 
 ## ⚙️ Deuda Técnica — DevOps y Procesos
 
@@ -267,6 +268,10 @@ El proyecto ya cuenta con muchos scripts de auditoría, pero hoy solo ESLint cor
 - [ ] **CI de scripts críticos:** llevar a GitHub Actions los checks que hoy se ejecutan manualmente: trazabilidad, links, schema sync, DBML check, jerarquía de materias y lint.
 - [ ] **Versionado del paquete:** `package.json` y `package-lock.json` siguen en `0.1.0` mientras `CHANGELOG.md` documenta `0.4.0` en progreso. Resolver antes de cualquier release/APK.
 
-## 🧪 Deuda Técnica — Testing (Mediano plazo)
+## 🧪 Deuda Técnica — Testing (Crítico para Tribunal)
 
-- [ ] **Suite de tests automatizados (Vitest):** Incorporar Vitest como framework de testing unitario. Priorizar tests sobre servicios con lógica pura: `MarkdownService` (sanitización XSS), `ThemeService` (persistencia y detección de OS), `NoteStore` (filtrado, ordenamiento, pin/archivar). Objetivo: prevenir regresiones antes de que la app llegue a usuarios finales. *(Ref: Auditoría 2026-05-18)*
+- [ ] **Suite de tests automatizados (Vitest/Jest):** *Requisito ineludible para la defensa final.* Incorporar Vitest como framework de testing unitario. La cobertura no necesita ser del 100%, pero **es obligatorio** testear:
+  - `SqliteService` (operaciones CRUD y fallos).
+  - `MarkdownService` (sanitización XSS).
+  - Lógica del `Store` (filtrado, ordenamiento, pin/archivar).
+  Objetivo: demostrar calidad de software profesional y prevenir regresiones en la lógica de negocio core.
