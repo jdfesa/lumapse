@@ -53,3 +53,4 @@ __pycache__/
 lumapse_backup_*.zip
 Lumapse_Entrega_*.zip
 releases/
+scripts/lumapse-audit/target/

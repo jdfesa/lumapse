@@ -1,0 +1,8 @@
+[package]
+name = "lumapse-audit"
+version = "0.1.0"
+edition = "2021"
+description = "Auditor concurrente de código fuente para Lumapse — LOC, TODOs, offline-first"
+
+# Sin dependencias externas — solo stdlib de Rust
+[dependencies]
