@@ -251,8 +251,12 @@ El proyecto ya cuenta con muchos scripts de auditoría, pero hoy solo ESLint cor
 - [x] **🔴 ~~Eliminar `vite-plugin-pwa` y artefactos PWA:~~** ✅ Completado (2026-05-17). Se removió `vite-plugin-pwa` (289 paquetes), `public/manifest.json`, config `VitePWA()` de `vite.config.js`, `<link rel="manifest">` de `index.html`, y referencias PWA en `package.json`. Build limpio: sin `sw.js`, sin `registerSW.js`.
 - [x] ~~**Seguridad (XSS en Markdown):**~~ ✅ Resuelto (2026-05-19, Paso 7). `img` y `src` eliminados de whitelist DOMPurify. Agregados `FORBID_TAGS`, `FORBID_ATTR` y hook `afterSanitizeAttributes`.
 - [x] **Assets Manifest:** Agregar los íconos requeridos (`icon-192.png`, `icon-512.png`) en `public/icons/` para cumplir con las validaciones del `manifest.json`.
-- [ ] **Refactor controlado de `SqliteService.js`:** separar CRUD de notas, materias, migraciones y helpers web si el archivo sigue creciendo durante Paso 9. Hoy `analyze-complexity.py` lo marca como largo.
-- [ ] **Reducir complejidad de `NoteList.js`:** extraer renderizado de cards/dropdowns/empty states a funciones auxiliares o componente menor. Hoy `analyze-complexity.py` marca anidamiento alto.
+- [ ] **Refactor de archivos grandes (Deuda Técnica detectada):** Utilizar la guía de `python3 scripts/split-guide.py` para subdividir archivos con alta complejidad y LOC:
+  - `src/services/SqliteService.js` (PELIGRO: >400 LOC). Extraer operaciones CRUD a `SqliteService.data.js`.
+  - `src/styles/main.css` (PELIGRO: >400 LOC). Subdividir en módulos (variables, layout, componentes).
+  - `src/store/NoteStore.js` (AVISO: >250 LOC). Extraer UI/Navegación y lógica CRUD.
+  - `src/main.js` (AVISO: >250 LOC). Extraer templates HTML en línea.
+- [ ] **Reducir complejidad de `NoteList.js`:** extraer renderizado de cards/dropdowns/empty states a funciones auxiliares o componente menor. Hoy `check-file-size.sh` y ESLint advierten sobre anidamiento profundo.
 - [ ] **UI para sub-secciones de Materias (Profundidad > 0):** El modelo de datos (SQLite) y las validaciones de `SubjectService` ya soportan anidamiento (ej. "Materia" -> "TPs" / "Unidad 1"), pero falta implementar la interfaz visual (UX) para crear y navegar estas carpetas hijas dentro de una materia principal.
 
 ## ⚙️ Deuda Técnica — DevOps y Procesos
