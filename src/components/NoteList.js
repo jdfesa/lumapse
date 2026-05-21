@@ -125,16 +125,18 @@ export class NoteList {
 
   /**
    * Busca una materia en el árbol de subjects por ID.
+   * Retorna { subject, parent } donde parent es la materia raíz
+   * si subject es una sección hija, o null si es raíz.
    * @param {string} subjectId ID de la materia
    * @param {object} subjectsData Árbol de materias
-   * @returns {object|null} Materia encontrada o null
+   * @returns {{subject: object, parent: object|null}|null}
    */
   findSubject(subjectId, subjectsData) {
     if (!subjectId || !subjectsData || !subjectsData.tree) return null;
-    for (const subject of subjectsData.tree) {
-      if (subject.id === subjectId) return subject;
-      for (const child of (subject.children || [])) {
-        if (child.id === subjectId) return child;
+    for (const root of subjectsData.tree) {
+      if (root.id === subjectId) return { subject: root, parent: null };
+      for (const child of (root.children || [])) {
+        if (child.id === subjectId) return { subject: child, parent: root };
       }
     }
     return null;
@@ -225,11 +227,16 @@ export class NoteList {
       const pinLabel = isPinned ? 'Desfijar' : 'Fijar';
       const archiveLabel = isArchived ? 'Desarchivar' : 'Archivar';
 
-      // Badge de materia
-      const subject = this.findSubject(note.subjectId, subjectsData);
-      const subjectBadge = subject
-        ? `<span class="note-card__subject-badge" style="--subject-color: ${subject.color}">${this.escapeHtml(subject.name)}</span>`
-        : '';
+      // Badge de materia (con breadcrumb si es sección hija)
+      const found = this.findSubject(note.subjectId, subjectsData);
+      let subjectBadge = '';
+      if (found) {
+        const color = found.subject.color || (found.parent ? found.parent.color : '');
+        const label = found.parent
+          ? `${this.escapeHtml(found.parent.name)} \u203A ${this.escapeHtml(found.subject.name)}`
+          : this.escapeHtml(found.subject.name);
+        subjectBadge = `<span class="note-card__subject-badge" style="--subject-color: ${color}">${label}</span>`;
+      }
         
       // Badge de archivo
       const archivedBadge = isArchived
