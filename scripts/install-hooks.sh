@@ -29,15 +29,16 @@ set -Eeuo pipefail
 PROJECT_ROOT="$(git rev-parse --show-toplevel)"
 cd "$PROJECT_ROOT"
 
-printf '🔎 Lumapse pre-commit: ejecutando chequeos rápidos...\n'
+printf '  Lumapse pre-commit: ejecutando chequeos rapidos...\n'
 printf '==================================================\n'
 
 npm run lint
 ./scripts/check-offline.sh
 ./scripts/check-docs.sh
+./scripts/check-file-size.sh
 
 printf '==================================================\n'
-printf '✅ Pre-commit OK\n'
+printf '  Pre-commit OK\n'
 HOOK
 
 cat > "$HOOKS_DIR/pre-push" <<'HOOK'
