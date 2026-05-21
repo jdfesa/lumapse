@@ -8,8 +8,9 @@
 // sobre los cambios usando el patrón Observer.
 // =============================================================
 
-import * as NoteService from '../services/SqliteService.js'
+import * as NoteService from '../services/sqlite/notes.js'
 import * as SubjectService from '../services/SubjectService.js'
+import { getFilteredNotes as applyFilters } from './noteFilters.js'
 
 // --- Estado Interno ---
 const state = {
@@ -229,82 +230,11 @@ export function setDateFilter(dateStr) {
 
 /**
  * Retorna las notas filtradas y ordenadas.
- * Orden: pinned primero, luego por updatedAt (más reciente primero).
- *
- * viewMode controla el filtro principal:
- *   'inbox'    → notas sin materia (subjectId IS NULL), no archivadas
- *   'subject'  → notas de la materia activa (+ secciones hijas), no archivadas
- *   'archived' → solo notas archivadas (cualquier materia)
- *   'all'      → todas las no archivadas (usado por búsqueda global)
- *
+ * Delega a noteFilters.js pasando el estado actual.
  * @returns {object[]} Array de notas filtradas y ordenadas
  */
 export function getFilteredNotes() {
-  let filtered = state.notes
-
-  // 0. Filtrar por viewMode
-  switch (state.viewMode) {
-    case 'inbox':
-      filtered = filtered.filter(note => !note.archived && !note.subjectId)
-      break
-    case 'subject': {
-      // Incluir notas de la materia activa Y de sus secciones hijas
-      const childIds = getChildSubjectIds(state.activeSubjectId)
-      const validIds = [state.activeSubjectId, ...childIds]
-      filtered = filtered.filter(note => !note.archived && validIds.includes(note.subjectId))
-      break
-    }
-    case 'archived':
-      filtered = filtered.filter(note => note.archived === true)
-      break
-    case 'all':
-    default:
-      filtered = filtered.filter(note => !note.archived)
-      break
-  }
-
-  // 1. Filtrar por búsqueda de texto (global, independiente de viewMode)
-  if (state.searchQuery.trim()) {
-    const query = state.searchQuery.toLowerCase().trim()
-    filtered = filtered.filter(note => {
-      const title = (note.title || '').toLowerCase()
-      const content = (note.content || '').toLowerCase()
-      return title.includes(query) || content.includes(query)
-    })
-  }
-
-  // 2. Filtrar por fecha exacta (usando updatedAt)
-  if (state.dateFilter) {
-    filtered = filtered.filter(note => {
-      if (!note.updatedAt) return false
-      const noteDate = new Date(note.updatedAt).toISOString().split('T')[0]
-      return noteDate === state.dateFilter
-    })
-  }
-
-  // 3. Ordenar: pinned al tope, luego por updatedAt
-  filtered.sort((a, b) => {
-    // Pinned primero
-    if (a.pinned && !b.pinned) return -1
-    if (!a.pinned && b.pinned) return 1
-    // Dentro del mismo grupo, más reciente primero
-    return new Date(b.updatedAt) - new Date(a.updatedAt)
-  })
-
-  return filtered
-}
-
-/**
- * Helper: obtiene los IDs de las secciones hijas de una materia.
- * Usa el árbol cargado en state.subjects para evitar queries extra.
- * @param {string} parentId ID de la materia padre
- * @returns {string[]} IDs de las secciones hijas
- */
-function getChildSubjectIds(parentId) {
-  if (!state.subjects || !state.subjects.tree) return []
-  const parent = state.subjects.tree.find(s => s.id === parentId)
-  if (!parent || !parent.children) return []
-  return parent.children.map(c => c.id)
+  return applyFilters(state)
 }
 
 // --- Paso 9: Acciones de Materias ---
