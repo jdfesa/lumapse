@@ -46,6 +46,9 @@ export default [
 
       // === Calidad de código ===
       "no-duplicate-imports": "error", // No importar el mismo módulo dos veces
+      "max-lines": ["warn", { "max": 300, "skipBlankLines": true, "skipComments": true }],
+      "max-depth": ["warn", 4],        // Anidacion maxima de 4 niveles
+      "complexity": ["warn", 15],      // Complejidad ciclomatica maxima
     },
   },
 ];
