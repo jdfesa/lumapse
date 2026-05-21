@@ -76,7 +76,7 @@ mode_end() {
 
   # 4. TODOs
   printf "\n${BOLD}[4/4] TODOs / FIXMEs pendientes${NC}\n"
-  TODO_COUNT=$(grep -rn "TODO\|FIXME\|HACK\|XXX" "$PROJECT_ROOT/src/" --include="*.js" --include="*.css" --include="*.html" 2>/dev/null | wc -l | tr -d ' ')
+  TODO_COUNT=$( (grep -rn "TODO\|FIXME\|HACK\|XXX" "$PROJECT_ROOT/src/" --include="*.js" --include="*.css" --include="*.html" 2>/dev/null || true) | wc -l | tr -d ' ')
   if [[ "$TODO_COUNT" -eq 0 ]]; then
     printf "${GREEN}  No hay TODOs pendientes${NC}\n"
   else
