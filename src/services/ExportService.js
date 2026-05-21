@@ -8,7 +8,7 @@
 // =============================================================
 
 import JSZip from 'jszip';
-import { getAllNotes } from './SqliteService.js';
+import { getAllNotes } from './sqlite/notes.js';
 
 /**
  * RF-017: Exportar todas las notas como .zip

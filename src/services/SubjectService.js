@@ -20,7 +20,7 @@ import {
   deleteSubjectRow,
   countNotesBySubject,
   getInboxCount
-} from './SqliteService.js'
+} from './sqlite/subjects.js'
 
 // --- Paleta de colores predefinidos (estilo Notion) ---
 // 8 colores armoniosos, aptos para dark/light mode
