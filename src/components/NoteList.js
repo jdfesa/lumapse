@@ -31,6 +31,7 @@ export class NoteList {
       const btnDelete = e.target.closest('.js-btn-delete');
       const btnPin = e.target.closest('.js-btn-pin');
       const btnArchive = e.target.closest('.js-btn-archive');
+      const btnMove = e.target.closest('.js-btn-move-to');
       
       // Si el clic no fue en un botón de menú, cerramos todos
       if (!btnMenu) {
@@ -49,6 +50,11 @@ export class NoteList {
         NoteStore.togglePin(btnPin.dataset.id);
       } else if (btnArchive) {
         NoteStore.toggleArchive(btnArchive.dataset.id);
+      } else if (btnMove) {
+        const noteId = btnMove.dataset.noteId;
+        const targetSubject = btnMove.dataset.subjectId || null;
+        NoteStore.moveNote(noteId, targetSubject);
+        this.closeAllDropdowns();
       } else if (btnEdit) {
         this.handleEdit(btnEdit.dataset.id);
       } else if (btnDelete) {
@@ -134,6 +140,62 @@ export class NoteList {
     return null;
   }
 
+  /**
+   * Genera un botón individual del submenú "Mover a".
+   * @param {string} noteId ID de la nota
+   * @param {string} subjectId ID de la materia destino ('' = Entrada)
+   * @param {string} label Nombre visible
+   * @param {string} color Color de la materia ('' = sin dot)
+   * @param {boolean} isCurrent Si es la materia actual de la nota
+   * @param {boolean} isChild Si es una sección hija (indentada)
+   * @returns {string} HTML del botón
+   */
+  renderMoveItem(noteId, subjectId, label, color, isCurrent, isChild = false) {
+    const currentClass = isCurrent ? ' note-card__dropdown-btn--current' : ''
+    const childClass = isChild ? ' note-card__dropdown-btn--child' : ''
+    const colorDot = color
+      ? `<span class="note-card__move-color" style="background-color: ${color}"></span>`
+      : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>`
+    const check = isCurrent ? ' ✓' : ''
+
+    return `
+      <button class="note-card__dropdown-btn${childClass} js-btn-move-to${currentClass}" 
+              data-note-id="${noteId}" 
+              data-subject-id="${subjectId}"
+              ${isCurrent ? 'disabled' : ''}>
+        ${colorDot}
+        ${this.escapeHtml(label)}${check}
+      </button>
+    `
+  }
+
+  /**
+   * Genera el HTML del submenú "Mover a" con todas las materias disponibles.
+   * Marca como activa (y no clickeable) la materia actual de la nota.
+   * @param {string} noteId ID de la nota
+   * @param {string|null} currentSubjectId ID de la materia actual de la nota
+   * @param {object} subjectsData Árbol de materias del store
+   * @returns {string} HTML del submenú
+   */
+  buildMoveMenu(noteId, currentSubjectId, subjectsData) {
+    const items = []
+
+    // Opción "Entrada" (inbox)
+    items.push(this.renderMoveItem(noteId, '', 'Entrada', '', !currentSubjectId))
+
+    // Materias del árbol
+    if (subjectsData && subjectsData.tree) {
+      for (const subject of subjectsData.tree) {
+        items.push(this.renderMoveItem(noteId, subject.id, subject.name, subject.color, currentSubjectId === subject.id))
+        for (const child of (subject.children || [])) {
+          items.push(this.renderMoveItem(noteId, child.id, child.name, child.color || subject.color, currentSubjectId === child.id, true))
+        }
+      }
+    }
+
+    return items.join('')
+  }
+
   renderNotes(notes, searchQuery, subjectsData) {
     if (notes.length === 0) {
       if (searchQuery) {
@@ -196,6 +258,16 @@ export class NoteList {
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
                   ${archiveLabel}
                 </button>
+                <div class="note-card__move-wrapper">
+                  <button class="note-card__dropdown-btn js-btn-move-trigger">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+                    Mover a
+                    <svg class="note-card__move-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                  </button>
+                  <div class="note-card__move-submenu">
+                    ${this.buildMoveMenu(note.id, note.subjectId, subjectsData)}
+                  </div>
+                </div>
                 <button class="note-card__dropdown-btn js-btn-edit" data-id="${note.id}">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                   Editar

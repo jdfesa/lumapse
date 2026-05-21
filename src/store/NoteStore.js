@@ -144,6 +144,20 @@ export async function updateNote(id, changes) {
 }
 
 /**
+ * Mueve una nota a otra materia (o a Entrada si subjectId es null).
+ * Actualiza la DB, refresca los conteos de materias y notifica la UI.
+ * @param {string} noteId ID de la nota a mover
+ * @param {string|null} subjectId ID de la materia destino (null = Entrada)
+ */
+export async function moveNote(noteId, subjectId) {
+  const updatedNote = await NoteService.updateNote(noteId, { subjectId })
+  state.notes = state.notes.map(note => note.id === noteId ? updatedNote : note)
+  // Recargar conteos de materias (la nota cambió de lugar)
+  await loadSubjects()
+  notify()
+}
+
+/**
  * Elimina una nota por su ID de la DB y del estado en memoria.
  * @param {string} id ID de la nota a eliminar
  */
