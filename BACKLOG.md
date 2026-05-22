@@ -246,6 +246,7 @@ El proyecto ya cuenta con muchos scripts de auditoría, pero hoy solo ESLint cor
 - [ ] **Revisar documentos generados:** regenerar informe completo y cheatsheet cuando se cierren nuevos cambios, para evitar que los artefactos finales queden con métricas anteriores.
 - [ ] **Manual de usuario:** Crear un breve manual de usuario explicando los flujos principales, ya que el sistema tiene atajos visuales (Paso 9).
 - [x] ~~**Documentar Papelera de Reciclaje (Hito 04):**~~ ✅ Completado (2026-05-22). Añadido RF-026 y HU-016 (8 SP, 6 CA). Actualizado `CHANGELOG.md`, `modelo-dominio.md` (reescrito con Subject, deletedAt, statusEmoji, SQLite), DBML, DDL, normalización, y casos de uso (UC-16).
+- [ ] **Actualizar gráficos de base de datos:** Los gráficos exportados del diagrama Entidad-Relación (notación Chen) y el modelo lógico relacional han quedado desactualizados tras la adición de `deletedAt` y `statusEmoji` para la Papelera de Reciclaje. Es necesario regenerar las imágenes y actualizar los documentos correspondientes.
 
 ## 💻 Deuda Técnica — Código y Arquitectura
 
