@@ -347,15 +347,39 @@
 
 ---
 
+### HU-016 — Papelera de reciclaje con eliminación lógica
+
+| Campo | Detalle |
+|---|---|
+| **Historia** | Como **estudiante**, quiero que **las notas y materias eliminadas vayan a una papelera de reciclaje** en lugar de borrarse definitivamente, para **poder recuperar contenido eliminado por error sin perder mi trabajo**. |
+| **RF asociados** | [RF-026](./requisitos-funcionales.md) |
+| **Persona** | [Lucía](./personas.md#persona-1--lucía-la-estudiante-organizada) |
+| **Prioridad** | SHOULD |
+| **Story Points** | **8 SP** — Migración de schema SQLite (`deletedAt`), lógica de soft-delete con cascada para materias/secciones/notas, restauración individual y masiva, vista de papelera en la UI, badge de conteo en drawer, umbral de alerta (≥50 items), y vaciado permanente. |
+| **Hito** | 04 |
+
+**Criterios de Aceptación:**
+
+| CA | Descripción | Verificación |
+|---|---|---|
+| CA-01 | Al eliminar una nota desde el menú contextual, la nota desaparece del feed pero no se borra de la base de datos (campo `deletedAt` se marca con la fecha actual). | Test funcional + verificación en BD |
+| CA-02 | Al eliminar una materia, sus secciones hijas y notas asociadas también se mueven a la papelera (cascada). | Test funcional |
+| CA-03 | Existe una vista “Papelera” accesible desde el drawer que lista todas las notas y materias eliminadas, ordenadas por fecha de eliminación. | Inspección visual |
+| CA-04 | El usuario puede restaurar una nota o materia individual desde la papelera. Al restaurar una materia, sus secciones y notas asociadas también se restauran. | Test funcional |
+| CA-05 | El usuario puede vaciar la papelera completa, eliminando permanentemente todos los items (DELETE físico). | Test funcional |
+| CA-06 | Un badge numérico en el botón de Papelera del drawer muestra el conteo de items eliminados. Cuando supera 50, se muestra una advertencia visual (toast). | Inspección visual |
+
+---
+
 ## Resumen
 
 | Métrica | Hito 02 | Hito 03 | Hito 04 | Total |
 |---|---|---|---|---|
-| **Total HU** | 6 | 4 | 5 | **15** |
-| **Total Story Points** | 20 | 21 | 21 | **62** |
-| **Total Criterios de Aceptación** | 20 | 14 | 19 | **53** |
+| **Total HU** | 6 | 4 | 6 | **16** |
+| **Total Story Points** | 20 | 21 | 29 | **70** |
+| **Total Criterios de Aceptación** | 20 | 14 | 25 | **59** |
 | **Prioridad predominante** | MUST | MUST/SHOULD | SHOULD/MUST | — |
-| **Personas cubiertas** | Lucía (4), Martín (2) | Lucía (2), Martín (2) | Lucía (4), Martín (1) | Lucía (10), Martín (5) |
+| **Personas cubiertas** | Lucía (4), Martín (2) | Lucía (2), Martín (2) | Lucía (5), Martín (1) | Lucía (11), Martín (5) |
 
 ---
 
@@ -378,7 +402,8 @@
 | HU-011 | RF-019 | Lucía | Modo oscuro/claro | 5 | 04 |
 | HU-014 | RF-020 | Lucía | Diseño responsive | 5 | 04 |
 | HU-015 | RF-025 | Lucía | Marcadores de estado académico | 3 | 04 |
-| | | | **Total** | **62** | |
+| HU-016 | RF-026 | Lucía | Papelera de reciclaje | 8 | 04 |
+| | | | **Total** | **70** | |
 
 ---
 
