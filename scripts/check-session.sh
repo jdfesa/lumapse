@@ -40,6 +40,39 @@ section() {
 }
 
 # ==============================================================================
+# 0. RAMA ACTIVA
+# ==============================================================================
+section "0. Rama activa"
+
+CURRENT_BRANCH=$(git -C "$PROJECT_ROOT" branch --show-current 2>/dev/null || echo "desconocida")
+
+if [[ "$CURRENT_BRANCH" == "main" ]]; then
+  printf "   ${GREEN}▶ ${BOLD}main${NC} ${DIM}(rama principal)${NC}\n"
+else
+  printf "   ${YELLOW}▶ ${BOLD}%s${NC} ${DIM}(rama de trabajo)${NC}\n" "$CURRENT_BRANCH"
+  # Mostrar cuantos commits de ventaja tiene sobre main
+  AHEAD=$(git -C "$PROJECT_ROOT" rev-list --count main.."$CURRENT_BRANCH" 2>/dev/null || echo "?")
+  if [[ "$AHEAD" != "?" && "$AHEAD" -gt 0 ]]; then
+    printf "   ${DIM}  %s commits por delante de main${NC}\n" "$AHEAD"
+  fi
+fi
+
+# Ramas locales ya mergeadas a main que se pueden limpiar
+MERGED=$(git -C "$PROJECT_ROOT" branch --merged main 2>/dev/null | grep -v '^\*' | grep -v 'main' | sed 's/^[[:space:]]*//' || true)
+if [[ -n "$MERGED" ]]; then
+  printf "   ${YELLOW}Ramas mergeadas (limpiar):${NC}\n"
+  echo "$MERGED" | while IFS= read -r branch; do
+    printf "   ${DIM}  - %s  →  git branch -d %s${NC}\n" "$branch" "$branch"
+  done
+fi
+
+# Total de ramas locales
+BRANCH_COUNT=$(git -C "$PROJECT_ROOT" branch | wc -l | tr -d ' ')
+if [[ "$BRANCH_COUNT" -gt 1 ]]; then
+  printf "   ${DIM}Ramas locales: %s (ver con: git branch -a)${NC}\n" "$BRANCH_COUNT"
+fi
+
+# ==============================================================================
 # 1. HITO ACTIVO
 # ==============================================================================
 section "1. Hito activo"

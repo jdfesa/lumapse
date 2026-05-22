@@ -404,6 +404,7 @@ Dashboard de inicio de sesion que muestra el estado completo del proyecto en ~3 
 
 - **Problema que resuelve:** Evita perder tiempo averiguando donde estabas, que falta, y cual es el estado del proyecto cada vez que arrancas a trabajar.
 - **Que muestra:**
+  0. Rama activa (nombre, si es `main` o de trabajo, commits de ventaja, ramas mergeadas pendientes de limpiar).
   1. Hito activo (desde `CHANGELOG.md` y `BACKLOG.md`).
   2. Ultimos 5 commits.
   3. Estado de Git (archivos modificados, staged, sin rastrear).
