@@ -37,6 +37,7 @@ Del DER conceptual se identifican dos entidades de dominio y una técnica:
 | parentSubjectId | ✅ | UUID o NULL. Un solo valor. |
 | archivada | ✅ | Entero (0 o 1). |
 | color | ✅ | Cadena hexadecimal (ej. "#a3e635") o NULL. |
+| deletedAt | ✅ | Cadena ISO 8601 o NULL. Valor único (timestamp de eliminación lógica). |
 | fechaCreación | ✅ | Cadena ISO 8601, valor único. |
 
 **Resultado:** ✅ Cumple 1FN. No hay atributos multivaluados ni grupos repetidos.
@@ -51,6 +52,8 @@ Del DER conceptual se identifican dos entidades de dominio y una técnica:
 | fijada | ✅ | Entero (0 o 1). |
 | archivada | ✅ | Entero (0 o 1). |
 | subjectId | ✅ | UUID o NULL. Un solo valor. |
+| statusEmoji | ✅ | Cadena de texto (un único emoji) o NULL. Valor atómico. |
+| deletedAt | ✅ | Cadena ISO 8601 o NULL. Valor único (timestamp de eliminación lógica). |
 | fechaCreación | ✅ | Cadena ISO 8601, valor único. |
 | fechaActualización | ✅ | Cadena ISO 8601, valor único. |
 
@@ -96,6 +99,7 @@ id → nombre          (directo: el id determina el nombre)
 id → parentSubjectId (directo: el id determina quién es su padre)
 id → archivada       (directo: el id determina si está archivada)
 id → color           (directo: el id determina su color)
+id → deletedAt       (directo: el id determina si fue eliminada lógicamente)
 id → fechaCreación   (directo: el id determina cuándo se creó)
 ```
 
@@ -115,6 +119,8 @@ id → contenido           (directo)
 id → fijada              (directo)
 id → archivada           (directo)
 id → subjectId           (directo)
+id → statusEmoji         (directo)
+id → deletedAt           (directo)
 id → fechaCreación       (directo)
 id → fechaActualización  (directo)
 ```
