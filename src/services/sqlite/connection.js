@@ -137,6 +137,9 @@ async function runMigrations() {
     ['subjects.color',               'ALTER TABLE subjects ADD COLUMN color TEXT'],
     // v1.2 — Marcadores de estado académico (DP-005)
     ['notes.statusEmoji',            'ALTER TABLE notes ADD COLUMN statusEmoji TEXT'],
+    // v1.3 — Papelera de Reciclaje (Soft Delete)
+    ['notes.deletedAt',              'ALTER TABLE notes ADD COLUMN deletedAt TEXT'],
+    ['subjects.deletedAt',           'ALTER TABLE subjects ADD COLUMN deletedAt TEXT'],
   ]
 
   for (const [migrationName, sql] of migrations) {

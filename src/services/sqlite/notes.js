@@ -74,7 +74,7 @@ export async function getNoteById(id) {
 export async function getAllNotes() {
   const db = getDb()
 
-  const sql = `SELECT * FROM notes ORDER BY updatedAt DESC`
+  const sql = `SELECT * FROM notes WHERE deletedAt IS NULL ORDER BY updatedAt DESC`
   const res = await db.query(sql)
 
   return (res.values || []).map(row => ({
@@ -141,9 +141,64 @@ export async function updateNote(id, changes) {
 }
 
 /**
- * Elimina una nota por su ID.
+ * Soft-delete: marca una nota como eliminada (papelera).
  */
 export async function deleteNote(id) {
+  const db = getDb()
+
+  const sql = `UPDATE notes SET deletedAt = ? WHERE id = ?`
+  await db.run(sql, [new Date().toISOString(), id])
+  await persistWeb()
+}
+
+/**
+ * Cuenta el total de notas activas (no eliminadas).
+ */
+export async function countNotes() {
+  const db = getDb()
+
+  const sql = `SELECT COUNT(*) as count FROM notes WHERE deletedAt IS NULL`
+  const res = await db.query(sql)
+
+  if (res.values && res.values.length > 0) {
+    return res.values[0].count
+  }
+  return 0
+}
+
+// --- Operaciones de Papelera ---
+
+/**
+ * Obtiene todas las notas en la papelera, ordenadas por fecha de eliminación.
+ */
+export async function getDeletedNotes() {
+  const db = getDb()
+
+  const sql = `SELECT * FROM notes WHERE deletedAt IS NOT NULL ORDER BY deletedAt DESC`
+  const res = await db.query(sql)
+
+  return (res.values || []).map(row => ({
+    ...row,
+    pinned: row.pinned === 1,
+    archived: row.archived === 1
+  }))
+}
+
+/**
+ * Restaura una nota eliminada (quita deletedAt).
+ */
+export async function restoreNote(id) {
+  const db = getDb()
+
+  const sql = `UPDATE notes SET deletedAt = NULL WHERE id = ?`
+  await db.run(sql, [id])
+  await persistWeb()
+}
+
+/**
+ * Elimina permanentemente una nota (DELETE físico).
+ */
+export async function permanentlyDeleteNote(id) {
   const db = getDb()
 
   const sql = `DELETE FROM notes WHERE id = ?`
@@ -152,16 +207,66 @@ export async function deleteNote(id) {
 }
 
 /**
- * Cuenta el total de notas almacenadas.
+ * Vacía la papelera de notas (DELETE físico de todas las eliminadas).
  */
-export async function countNotes() {
+export async function emptyTrashNotes() {
   const db = getDb()
 
-  const sql = `SELECT COUNT(*) as count FROM notes`
+  const sql = `DELETE FROM notes WHERE deletedAt IS NOT NULL`
+  await db.run(sql)
+  await persistWeb()
+}
+
+/**
+ * Cuenta las notas en la papelera.
+ */
+export async function countDeletedNotes() {
+  const db = getDb()
+
+  const sql = `SELECT COUNT(*) as count FROM notes WHERE deletedAt IS NOT NULL`
   const res = await db.query(sql)
 
-  if (res.values && res.values.length > 0) {
-    return res.values[0].count
-  }
-  return 0
+  return (res.values && res.values.length > 0) ? res.values[0].count : 0
+}
+
+/**
+ * Purga notas eliminadas hace más de N días (auto-purgado).
+ * @param {number} days Días de retención (default: 30)
+ */
+export async function purgeOldDeletedNotes(days = 30) {
+  const db = getDb()
+
+  const cutoff = new Date()
+  cutoff.setDate(cutoff.getDate() - days)
+  const cutoffISO = cutoff.toISOString()
+
+  const sql = `DELETE FROM notes WHERE deletedAt IS NOT NULL AND deletedAt < ?`
+  await db.run(sql, [cutoffISO])
+  await persistWeb()
+}
+
+/**
+ * Soft-delete en cascada: todas las notas de un subject.
+ * @param {string} subjectId ID de la materia
+ */
+export async function softDeleteNotesBySubject(subjectId) {
+  const db = getDb()
+  const now = new Date().toISOString()
+
+  const sql = `UPDATE notes SET deletedAt = ? WHERE subjectId = ? AND deletedAt IS NULL`
+  await db.run(sql, [now, subjectId])
+  await persistWeb()
+}
+
+/**
+ * Restaurar en cascada: todas las notas eliminadas de un subject.
+ * Solo restaura notas cuyo deletedAt no sea NULL.
+ * @param {string} subjectId ID de la materia
+ */
+export async function restoreNotesBySubject(subjectId) {
+  const db = getDb()
+
+  const sql = `UPDATE notes SET deletedAt = NULL WHERE subjectId = ? AND deletedAt IS NOT NULL`
+  await db.run(sql, [subjectId])
+  await persistWeb()
 }

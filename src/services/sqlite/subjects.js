@@ -40,7 +40,7 @@ export async function createSubjectRow(subject) {
 export async function getAllSubjectRows() {
   const db = getDb()
 
-  const sql = `SELECT * FROM subjects WHERE archived = 0 ORDER BY name ASC`
+  const sql = `SELECT * FROM subjects WHERE archived = 0 AND deletedAt IS NULL ORDER BY name ASC`
   const res = await db.query(sql)
 
   return (res.values || []).map(row => ({
@@ -100,9 +100,73 @@ export async function updateSubjectRow(id, changes) {
 }
 
 /**
- * Elimina una materia por ID. Las notas quedan con subjectId = NULL (FK ON DELETE SET NULL).
+ * Soft-delete: marca una materia como eliminada (papelera).
  */
 export async function deleteSubjectRow(id) {
+  const db = getDb()
+
+  const sql = `UPDATE subjects SET deletedAt = ? WHERE id = ?`
+  await db.run(sql, [new Date().toISOString(), id])
+  await persistWeb()
+}
+
+/**
+ * Cuenta las notas activas (no archivadas, no eliminadas) de una materia.
+ * @param {string} subjectId ID de la materia
+ */
+export async function countNotesBySubject(subjectId) {
+  const db = getDb()
+
+  const sql = `SELECT COUNT(*) as count FROM notes WHERE subjectId = ? AND archived = 0 AND deletedAt IS NULL`
+  const res = await db.query(sql, [subjectId])
+
+  return (res.values && res.values.length > 0) ? res.values[0].count : 0
+}
+
+/**
+ * Cuenta las notas activas sin materia asignada (Entrada/Inbox).
+ */
+export async function getInboxCount() {
+  const db = getDb()
+
+  const sql = `SELECT COUNT(*) as count FROM notes WHERE subjectId IS NULL AND archived = 0 AND deletedAt IS NULL`
+  const res = await db.query(sql)
+
+  return (res.values && res.values.length > 0) ? res.values[0].count : 0
+}
+
+// --- Operaciones de Papelera ---
+
+/**
+ * Obtiene materias/secciones eliminadas.
+ */
+export async function getDeletedSubjectRows() {
+  const db = getDb()
+
+  const sql = `SELECT * FROM subjects WHERE deletedAt IS NOT NULL ORDER BY deletedAt DESC`
+  const res = await db.query(sql)
+
+  return (res.values || []).map(row => ({
+    ...row,
+    archived: row.archived === 1
+  }))
+}
+
+/**
+ * Restaura una materia eliminada (quita deletedAt).
+ */
+export async function restoreSubjectRow(id) {
+  const db = getDb()
+
+  const sql = `UPDATE subjects SET deletedAt = NULL WHERE id = ?`
+  await db.run(sql, [id])
+  await persistWeb()
+}
+
+/**
+ * Elimina permanentemente una materia (DELETE físico).
+ */
+export async function permanentlyDeleteSubjectRow(id) {
   const db = getDb()
 
   const sql = `DELETE FROM subjects WHERE id = ?`
@@ -111,26 +175,95 @@ export async function deleteSubjectRow(id) {
 }
 
 /**
- * Cuenta las notas no archivadas asignadas a una materia específica.
- * @param {string} subjectId ID de la materia
+ * Vacía la papelera de materias (DELETE físico).
  */
-export async function countNotesBySubject(subjectId) {
+export async function emptyTrashSubjects() {
   const db = getDb()
 
-  const sql = `SELECT COUNT(*) as count FROM notes WHERE subjectId = ? AND archived = 0`
-  const res = await db.query(sql, [subjectId])
-
-  return (res.values && res.values.length > 0) ? res.values[0].count : 0
+  const sql = `DELETE FROM subjects WHERE deletedAt IS NOT NULL`
+  await db.run(sql)
+  await persistWeb()
 }
 
 /**
- * Cuenta las notas no archivadas sin materia asignada (Entrada/Inbox).
+ * Soft-delete secciones hijas de una materia.
+ * @param {string} parentId ID de la materia padre
  */
-export async function getInboxCount() {
+export async function softDeleteChildSubjects(parentId) {
+  const db = getDb()
+  const now = new Date().toISOString()
+
+  const sql = `UPDATE subjects SET deletedAt = ? WHERE parentSubjectId = ? AND deletedAt IS NULL`
+  await db.run(sql, [now, parentId])
+  await persistWeb()
+}
+
+/**
+ * Restaura secciones hijas de una materia.
+ * @param {string} parentId ID de la materia padre
+ */
+export async function restoreChildSubjects(parentId) {
   const db = getDb()
 
-  const sql = `SELECT COUNT(*) as count FROM notes WHERE subjectId IS NULL AND archived = 0`
-  const res = await db.query(sql)
+  const sql = `UPDATE subjects SET deletedAt = NULL WHERE parentSubjectId = ? AND deletedAt IS NOT NULL`
+  await db.run(sql, [parentId])
+  await persistWeb()
+}
+
+/**
+ * Purga materias eliminadas hace más de N días.
+ * @param {number} days Días de retención (default: 30)
+ */
+export async function purgeOldDeletedSubjects(days = 30) {
+  const db = getDb()
+
+  const cutoff = new Date()
+  cutoff.setDate(cutoff.getDate() - days)
+  const cutoffISO = cutoff.toISOString()
+
+  const sql = `DELETE FROM subjects WHERE deletedAt IS NOT NULL AND deletedAt < ?`
+  await db.run(sql, [cutoffISO])
+  await persistWeb()
+}
+
+/**
+ * Cuenta el total de items en papelera (notas + materias).
+ */
+export async function countTrashItems() {
+  const db = getDb()
+
+  const notesRes = await db.query(`SELECT COUNT(*) as count FROM notes WHERE deletedAt IS NOT NULL`)
+  const subjectsRes = await db.query(`SELECT COUNT(*) as count FROM subjects WHERE deletedAt IS NOT NULL`)
+
+  const notesCount = (notesRes.values && notesRes.values.length > 0) ? notesRes.values[0].count : 0
+  const subjectsCount = (subjectsRes.values && subjectsRes.values.length > 0) ? subjectsRes.values[0].count : 0
+
+  return notesCount + subjectsCount
+}
+
+/**
+ * Obtiene los IDs de las secciones hijas de una materia (incluye eliminadas).
+ * @param {string} parentId ID de la materia padre
+ * @returns {string[]} IDs de secciones hijas
+ */
+export async function getChildSubjectIds(parentId) {
+  const db = getDb()
+
+  const sql = `SELECT id FROM subjects WHERE parentSubjectId = ?`
+  const res = await db.query(sql, [parentId])
+
+  return (res.values || []).map(row => row.id)
+}
+
+/**
+ * Cuenta notas eliminadas de un subject específico (para preview en papelera).
+ * @param {string} subjectId ID de la materia
+ */
+export async function countDeletedNotesBySubject(subjectId) {
+  const db = getDb()
+
+  const sql = `SELECT COUNT(*) as count FROM notes WHERE subjectId = ? AND deletedAt IS NOT NULL`
+  const res = await db.query(sql, [subjectId])
 
   return (res.values && res.values.length > 0) ? res.values[0].count : 0
 }
