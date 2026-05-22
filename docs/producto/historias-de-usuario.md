@@ -325,15 +325,37 @@
 
 ---
 
+### HU-015 — Marcar estado académico de una nota
+
+| Campo | Detalle |
+|---|---|
+| **Historia** | Como **estudiante**, quiero **marcar mis notas con un emoji de estado académico** (📖 ❓ 🔥 ✅), para **saber de un vistazo qué temas necesitan atención antes de un examen**. |
+| **RF asociados** | [RF-025](./requisitos-funcionales.md) |
+| **Persona** | [Lucía](./personas.md#persona-1--lucía-la-estudiante-organizada) |
+| **Prioridad** | SHOULD |
+| **Story Points** | **3 SP** — Nueva columna en BD (migración idempotente), función toggle en el store, badge visual en la tarjeta y submenú de selección. |
+| **Hito** | 04 |
+
+**Criterios de Aceptación:**
+
+| CA | Descripción | Verificación |
+|---|---|---|
+| CA-01 | Hay un botón con ícono de carita junto al menú de opciones que despliega un panel horizontal con los 4 emojis curados (sin texto). | Inspección visual |
+| CA-02 | Al seleccionar un emoji, este aparece como badge en la tarjeta de la nota. | Test funcional |
+| CA-03 | Al seleccionar el mismo emoji que ya tiene la nota, el marcador se quita (toggle). | Test funcional |
+| CA-04 | El marcador persiste al cerrar y reabrir la aplicación (almacenado en SQLite). | Test manual |
+
+---
+
 ## Resumen
 
 | Métrica | Hito 02 | Hito 03 | Hito 04 | Total |
 |---|---|---|---|---|
-| **Total HU** | 6 | 4 | 4 | **14** |
-| **Total Story Points** | 20 | 21 | 18 | **59** |
-| **Total Criterios de Aceptación** | 20 | 14 | 15 | **49** |
+| **Total HU** | 6 | 4 | 5 | **15** |
+| **Total Story Points** | 20 | 21 | 21 | **62** |
+| **Total Criterios de Aceptación** | 20 | 14 | 19 | **53** |
 | **Prioridad predominante** | MUST | MUST/SHOULD | SHOULD/MUST | — |
-| **Personas cubiertas** | Lucía (4), Martín (2) | Lucía (2), Martín (2) | Lucía (3), Martín (1) | Lucía (9), Martín (5) |
+| **Personas cubiertas** | Lucía (4), Martín (2) | Lucía (2), Martín (2) | Lucía (4), Martín (1) | Lucía (10), Martín (5) |
 
 ---
 
@@ -355,7 +377,8 @@
 | HU-010 | RF-015 | Martín | Buscar notas | 3 | 04 |
 | HU-011 | RF-019 | Lucía | Modo oscuro/claro | 5 | 04 |
 | HU-014 | RF-020 | Lucía | Diseño responsive | 5 | 04 |
-| | | | **Total** | **59** | |
+| HU-015 | RF-025 | Lucía | Marcadores de estado académico | 3 | 04 |
+| | | | **Total** | **62** | |
 
 ---
 

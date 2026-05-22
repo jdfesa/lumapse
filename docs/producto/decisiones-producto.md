@@ -146,7 +146,6 @@ Las siguientes decisiones se documentarán formalmente a medida que avance el de
 
 | ID | Tema | Disparador |
 |---|---|---|
-| DP-005 | Diseño de la experiencia de captura rápida (estilo Memos) | Post-validación de P8 y P9 |
 | DP-006 | Onboarding y ayuda contextual | Post Hito 04, cuando la estructura esté implementada |
 
 ---
@@ -210,6 +209,53 @@ Ver [docs/diagramas/database/](../diagramas/database/) para el DER completo, la 
 ### Condición de pivote
 
 Si el feedback de uso real (post-lanzamiento) muestra que los usuarios crean consistentemente más de 2 niveles de carpetas y que la restricción genera fricción significativa, se evaluará agregar un tercer nivel opcional de anidamiento. Esta decisión requiere evidencia empírica de uso, no se revisará por consideraciones teóricas.
+
+---
+
+## DP-005: Marcadores de estado académico con emojis curados
+
+**Fecha:** 2026-05-22  
+**Estado:** ✅ Implementada  
+**Refs:** RF-025, HU-015
+
+### Contexto
+
+Las aplicaciones de notas colaborativas (Google Keep, Memos) permiten "reacciones" con emojis sobre las notas. En un contexto personal y offline como Lumapse, las reacciones no tienen destinatario — el estudiante reacciona a sus propias notas sin propósito funcional claro.
+
+Sin embargo, la idea de un marcador visual rápido tiene valor si se reorienta: en lugar de reacciones sociales, un **set curado de emojis con significado académico** permite al estudiante clasificar el estado de comprensión de cada nota de un vistazo.
+
+### Decisión
+
+Implementar un sistema de **marcado rápido por estado académico** con 4 emojis curados:
+
+| Emoji | Label | Significado |
+|---|---|---|
+| 📖 | Por completar | "Tengo que ampliar esto" |
+| ❓ | Tengo dudas | "Preguntar al profe" |
+| 🔥 | Importante | "Cae en el parcial" |
+| ✅ | Repasado | "Ya lo entendí" |
+
+**Se descartó** un sistema Kanban clásico (Pendiente → En proceso → Terminado) porque:
+- Los emojis curados ya actúan como un Kanban implícito (📖 → ❓ → 🔥 → ✅) sin la rigidez de columnas.
+- Agregar ambos sistemas crearía redundancia y confusión.
+- Lumapse es una app de notas, no un gestor de tareas.
+
+### Justificación
+
+- **1 toque:** Seleccionar un emoji es más rápido que elegir un estado de un dropdown.
+- **Visualmente instantáneo:** El estudiante abre el feed y sabe qué necesita atención antes de un parcial.
+- **Minimalista:** 4 opciones curadas evitan la parálisis de un picker de emojis libre.
+- **Toggle natural:** Tocar el mismo emoji lo quita, sin necesidad de un botón "Quitar" separado.
+
+### Implementación técnica
+
+- Columna `statusEmoji TEXT` en la tabla `notes` de SQLite (migración idempotente).
+- Badge visual en la tarjeta del feed.
+- Botón dedicado (ícono de carita) junto al menú de opciones, que despliega un submenú horizontal (flyout) solo con los emojis (estilo Memos).
+
+### Condición de pivote
+
+Si el testing con usuarios reales muestra que los marcadores no se usan o generan confusión, se evaluará reemplazarlos por un sistema de etiquetas de texto. La columna de base de datos es reutilizable para cualquier variante.
 
 ---
 

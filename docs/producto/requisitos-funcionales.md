@@ -77,6 +77,7 @@
 | RF-020 | El sistema debe ser **responsive**, adaptándose a pantallas desde 320px (móvil) hasta 1920px (desktop). | MUST | Lucía | 04 | Implementado |
 | RF-021 | ~~El sistema debe ser **instalable como PWA** desde el navegador.~~ Obsoleto: la distribución será como APK nativa con Capacitor ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)). | MUST | Lucía | 03 | Obsoleto (ADR-005) |
 | RF-022 | El sistema debe mostrar una **pantalla de bienvenida** (onboarding) solo en el primer uso, explicando las funcionalidades principales. | COULD | Lucía | 04 | Pendiente |
+| RF-025 | El sistema debe permitir al usuario asignar un **marcador de estado visual** (emoji curado) a cada nota, eligiendo entre un set de 4 opciones con significado académico (📖 ❓ 🔥 ✅). *(DP-005)* | SHOULD | Lucía | 04 | Implementado |
 
 ---
 
@@ -94,9 +95,9 @@
 | Prioridad | Cantidad | Descripción |
 |---|---|---|
 | **MUST** | 13 | Funcionalidades obligatorias para el MVP |
-| **SHOULD** | 8 | Funcionalidades deseables que completan la experiencia |
+| **SHOULD** | 9 | Funcionalidades deseables que completan la experiencia |
 | **COULD** | 3 | Funcionalidades opcionales si hay tiempo disponible |
-| **Total** | **24** | |
+| **Total** | **25** | |
 
 ---
 
@@ -106,7 +107,7 @@
 |---|---|---|
 | **02** (Junio) | RF-001 a RF-007 | 7 |
 | **03** (Julio) | RF-008 a RF-012, RF-016 a RF-018, RF-021 | 8 |
-| **04** (Agosto) | RF-006, RF-013 a RF-015, RF-019, RF-020, RF-022, RF-024 | 8 |
+| **04** (Agosto) | RF-006, RF-013 a RF-015, RF-019, RF-020, RF-022, RF-024, RF-025 | 9 |
 | **05** (Septiembre) | RF-023 | 1 |
 
 ---

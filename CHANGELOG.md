@@ -26,6 +26,8 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - `docs/producto/decisiones-producto.md` — Registro de decisiones de producto con trazabilidad hacia la encuesta de validación.
 - P12 agregada a la encuesta de relevamiento: preferencia de organización (carpetas vs tags).
 - `docs/hitos/hito-00-abril.md` — Informe retroactivo del Hito 00 (Investigación y Anteproyecto).
+- **Marcadores de estado académico (DP-005, RF-025):** Set curado de 4 emojis (📖 ❓ 🔥 ✅) para marcar el estado de comprensión de cada nota. Badge visual en la tarjeta del feed y submenú "Estado" en el menú contextual. Persistencia en SQLite con migración idempotente.
+- **Refactorización de NoteStore:** `NoteStore.js` dividido en submódulos (`state`, `data`, `ui`) con barrel file para mantener retrocompatibilidad.
 
 ### Changed
 - **Capa de Persistencia:** Reemplazo de `NoteService.js` por `SqliteService.js` y actualización de `NoteStore.js` y `ExportService.js` para consumir la base de datos SQLite.
@@ -48,6 +50,9 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Exportación de notas vacías:** Validación de contenido significativo antes de exportar.
 - **Ícono nativo:** Eliminados bordes blancos del ícono de la aplicación.
 - **Caché de WebView en despliegues Android:** Detectado y resuelto el problema de assets web obsoletos al actualizar el APK in-place. La solución (desinstalación previa) fue documentada y automatizada en `scripts/deploy-android.sh`.
+
+### Deuda Técnica (Pendiente)
+- **Sección de Ayuda / Onboarding (DP-006):** Implementar una sección accesible que explique al usuario cómo usar la app, incluyendo el significado de los emojis de estado y las funcionalidades principales. Objetivo: que cualquier estudiante pueda usar la app desde el día uno sin manual externo.
 
 ---
 
