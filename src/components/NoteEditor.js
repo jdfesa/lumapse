@@ -20,6 +20,11 @@ export class NoteEditor {
     
     // Suscribirse a cambios
     this.unsubscribe = NoteStore.subscribe((state) => {
+      // Ocultar composer en modo papelera
+      const composer = this.container.querySelector('.composer');
+      if (composer) {
+        composer.style.display = state.viewMode === 'trash' ? 'none' : '';
+      }
       this.onStateChange(state);
     });
   }
