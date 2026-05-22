@@ -86,6 +86,7 @@ lumapse/
 ├── android/                # Proyecto Android nativo (generado por Capacitor)
 ├── public/                 # Assets estáticos
 │   └── icons/              # Iconos de la aplicación
+├── scripts/                # Scripts utilitarios y de automatización local
 ├── analisis-relevamiento/  # Análisis de datos del relevamiento (Python)
 │   ├── datos/              # CSV con respuestas crudas
 │   ├── scripts/            # Pipeline modular de análisis
