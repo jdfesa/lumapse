@@ -18,19 +18,22 @@ CREATE TABLE IF NOT EXISTS subjects (
     parentSubjectId  TEXT    REFERENCES subjects(id) ON DELETE CASCADE,
     archived         INTEGER DEFAULT 0,
     color            TEXT,
+    deletedAt        TEXT,
     createdAt        TEXT    NOT NULL
 );
 
 -- Notas (viven en Entrada, en una Materia, o en una Sección)
 CREATE TABLE IF NOT EXISTS notes (
-    id         TEXT    PRIMARY KEY,
-    title      TEXT,
-    content    TEXT,
-    pinned     INTEGER DEFAULT 0,
-    archived   INTEGER DEFAULT 0,
-    subjectId  TEXT    REFERENCES subjects(id) ON DELETE SET NULL,
-    createdAt  TEXT    NOT NULL,
-    updatedAt  TEXT    NOT NULL
+    id          TEXT    PRIMARY KEY,
+    title       TEXT,
+    content     TEXT,
+    pinned      INTEGER DEFAULT 0,
+    archived    INTEGER DEFAULT 0,
+    subjectId   TEXT    REFERENCES subjects(id) ON DELETE SET NULL,
+    statusEmoji TEXT,
+    deletedAt   TEXT,
+    createdAt   TEXT    NOT NULL,
+    updatedAt   TEXT    NOT NULL
 );
 
 -- Metadatos del sistema (control de migraciones y flags)
@@ -54,6 +57,13 @@ ALTER TABLE notes ADD COLUMN subjectId TEXT REFERENCES subjects(id) ON DELETE SE
 ALTER TABLE subjects ADD COLUMN parentSubjectId TEXT REFERENCES subjects(id) ON DELETE CASCADE;
 ALTER TABLE subjects ADD COLUMN archived INTEGER DEFAULT 0;
 ALTER TABLE subjects ADD COLUMN color TEXT;
+
+-- Migración v1.2: emoji de estado académico (DP-005, RF-025)
+ALTER TABLE notes ADD COLUMN statusEmoji TEXT;
+
+-- Migración v1.3: papelera de reciclaje con soft-delete (RF-026)
+ALTER TABLE notes ADD COLUMN deletedAt TEXT;
+ALTER TABLE subjects ADD COLUMN deletedAt TEXT;
 ```
 
 ---
@@ -71,6 +81,8 @@ Las siguientes restricciones **no pueden modelarse en SQL puro** y deben validar
 4. **ON DELETE — comportamiento referencial:**
    - `subjects.parentSubjectId → ON DELETE CASCADE`: Si se elimina una Materia, todas sus Secciones hijas se eliminan automáticamente.
    - `notes.subjectId → ON DELETE SET NULL`: Si se elimina una Materia o Sección, las notas asociadas no se eliminan, sino que vuelven a **Entrada** (`subjectId = NULL`).
+
+5. **Eliminación lógica (soft-delete) con cascada (RF-026):** Al eliminar una materia, la capa de servicio (`SubjectService`) marca `deletedAt` en la materia, sus secciones hijas y las notas asociadas. La restauración también aplica en cascada. El vaciado de la papelera ejecuta `DELETE` físico sobre todos los registros con `deletedAt IS NOT NULL`. Todas las queries del feed activo filtran con `WHERE deletedAt IS NULL`.
 
 ---
 
