@@ -56,6 +56,7 @@
 | RF-013 | El sistema debe permitir **fijar (pin) y archivar** notas para organizar el feed. Las notas fijadas aparecen al tope; las archivadas se ocultan del feed principal y son accesibles desde el drawer. *(Pivote de etiquetas a pin/archivar — ver DP-002)* | SHOULD | Lucía | 04 | Implementado |
 | RF-014 | El sistema debe permitir **filtrar notas por etiqueta** en el listado principal. *(Pendiente: requiere implementación de carpetas/materias — DP-002)* | SHOULD | Lucía | 04 | Pendiente |
 | RF-015 | El sistema debe ofrecer una **búsqueda por texto** que filtre notas en tiempo real por título y contenido. | MUST | Lucía, Martín | 04 | Implementado |
+| RF-026 | El sistema debe implementar una **papelera de reciclaje** con eliminación lógica (soft-delete). Al eliminar una nota o materia, esta se mueve a la papelera (campo `deletedAt`) en lugar de borrarse físicamente. El usuario puede restaurar elementos desde la papelera o vaciarla permanentemente. La eliminación de una materia aplica cascada a sus secciones hijas y notas asociadas. Un badge en el drawer muestra el conteo de items en papelera, con advertencia visual cuando supera los 50 elementos. | SHOULD | Lucía | 04 | Implementado |
 
 ---
 
@@ -95,9 +96,9 @@
 | Prioridad | Cantidad | Descripción |
 |---|---|---|
 | **MUST** | 13 | Funcionalidades obligatorias para el MVP |
-| **SHOULD** | 9 | Funcionalidades deseables que completan la experiencia |
+| **SHOULD** | 10 | Funcionalidades deseables que completan la experiencia |
 | **COULD** | 3 | Funcionalidades opcionales si hay tiempo disponible |
-| **Total** | **25** | |
+| **Total** | **26** | |
 
 ---
 
@@ -107,7 +108,7 @@
 |---|---|---|
 | **02** (Junio) | RF-001 a RF-007 | 7 |
 | **03** (Julio) | RF-008 a RF-012, RF-016 a RF-018, RF-021 | 8 |
-| **04** (Agosto) | RF-006, RF-013 a RF-015, RF-019, RF-020, RF-022, RF-024, RF-025 | 9 |
+| **04** (Agosto) | RF-006, RF-013 a RF-015, RF-019, RF-020, RF-022, RF-024, RF-025, RF-026 | 10 |
 | **05** (Septiembre) | RF-023 | 1 |
 
 ---
