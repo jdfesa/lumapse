@@ -36,6 +36,7 @@ flowchart LR
     subgraph ORG ["Organización"]
         UC06["Fijar Nota"]
         UC07["Archivar Nota"]
+        UC16["Gestionar Papelera"]
     end
 
     %% ── Casos de Uso: Markdown ──
@@ -73,6 +74,7 @@ flowchart LR
     EST --- UC12
     EST --- UC13
     EST --- UC15
+    EST --- UC16
 
     %% ── Relaciones: include ──
     UC02 -.->|"«include»"| UC14
@@ -80,6 +82,7 @@ flowchart LR
 
     %% ── Relaciones: extend ──
     UC10 -.->|"«extend»"| UC12
+    UC03 -.->|"«extend»"| UC16
 
     %% ── Relaciones: Sistema ──
     CAP --- UC13
@@ -117,6 +120,7 @@ flowchart LR
 |---|---|---|---|
 | UC-06 | Fijar Nota | El estudiante fija una nota para que aparezca siempre al tope del feed, con un indicador visual (ícono pin). La acción es reversible (desfijar). | [RF-013](../producto/requisitos-funcionales.md) |
 | UC-07 | Archivar Nota | El estudiante archiva una nota para ocultarla del feed principal. Las notas archivadas son accesibles desde la vista "Ver archivadas" en el drawer. La acción es reversible (desarchivar). | [RF-013](../producto/requisitos-funcionales.md) |
+| UC-16 | Gestionar Papelera | El estudiante accede a la papelera de reciclaje desde el drawer para ver las notas y materias eliminadas. Puede restaurar elementos individualmente o vaciar la papelera completa (eliminación permanente). Las notas eliminadas se mueven a la papelera (soft-delete) en lugar de borrarse físicamente. | [RF-026](../producto/requisitos-funcionales.md) |
 
 ### Markdown
 
@@ -150,6 +154,7 @@ flowchart LR
 | **«include»** | UC-01 (Crear Nota) | UC-14 (Auto-guardar) | Toda nota creada se persiste automáticamente. El auto-guardado es un comportamiento obligatorio que siempre ocurre. |
 | **«include»** | UC-02 (Editar Nota) | UC-14 (Auto-guardar) | Toda edición dispara el auto-guardado. Es un flujo obligatorio, no opcional. |
 | **«extend»** | UC-10 (Exportar Nota) | UC-12 (Exportar Todas) | Exportar todas las notas es una extensión opcional del caso base de exportar una nota individual. Solo se activa si el usuario elige la opción de exportación masiva. |
+| **«extend»** | UC-03 (Eliminar Nota) | UC-16 (Gestionar Papelera) | La eliminación de una nota envía el elemento a la papelera (soft-delete). El usuario puede gestionar la papelera opcionalmente después. |
 
 ### ¿Por qué `«include»` y no `«extend»` para el auto-guardado?
 
@@ -164,7 +169,7 @@ flowchart LR
 |---|---|
 | **02** (Junio) | UC-01 a UC-04, UC-14 |
 | **03** (Julio) | UC-08 a UC-12 |
-| **04** (Agosto) | UC-05, UC-06, UC-07, UC-13, UC-15 |
+| **04** (Agosto) | UC-05, UC-06, UC-07, UC-13, UC-15, UC-16 |
 
 ---
 
