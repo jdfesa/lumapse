@@ -167,18 +167,20 @@ fn analyze_file(path: &Path, base: &Path) -> io::Result<FileReport> {
         }
 
         // 3) URLs externas (offline-first)
-        for pat in URL_PATTERNS {
-            if trimmed.contains(pat) {
-                let is_comment = trimmed.starts_with("//")
-                    || trimmed.starts_with("/*")
-                    || trimmed.starts_with('*')
-                    || trimmed.starts_with("<!--");
-                external_urls.push(UrlEntry {
-                    line_num,
-                    line_content: trimmed.to_string(),
-                    is_comment,
-                });
-                break;
+        if !trimmed.contains("lumapse-ignore-offline") {
+            for pat in URL_PATTERNS {
+                if trimmed.contains(pat) {
+                    let is_comment = trimmed.starts_with("//")
+                        || trimmed.starts_with("/*")
+                        || trimmed.starts_with('*')
+                        || trimmed.starts_with("<!--");
+                    external_urls.push(UrlEntry {
+                        line_num,
+                        line_content: trimmed.to_string(),
+                        is_comment,
+                    });
+                    break;
+                }
             }
         }
     }

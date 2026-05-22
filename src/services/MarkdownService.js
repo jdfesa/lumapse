@@ -151,7 +151,7 @@ DOMPurify.addHook('afterSanitizeAttributes', (node) => {
       node.setAttribute('rel', 'noopener noreferrer')
     }
     // Forzar rel seguro en enlaces externos
-    if (href.startsWith('http://') || href.startsWith('https://')) {
+    if (href.startsWith('http://') || href.startsWith('https://')) { // lumapse-ignore-offline
       node.setAttribute('rel', 'noopener noreferrer nofollow')
       node.setAttribute('target', '_blank')
     }
