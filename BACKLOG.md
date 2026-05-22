@@ -260,7 +260,7 @@ El proyecto ya cuenta con muchos scripts de auditoría, pero hoy solo ESLint cor
 - [ ] **Reducir complejidad de `NoteList.js`:** extraer renderizado de cards/dropdowns/empty states a funciones auxiliares o componente menor. Hoy `check-file-size.sh` y ESLint advierten sobre anidamiento profundo.
 - [ ] **UI para sub-secciones de Materias (Profundidad > 0):** El modelo de datos (SQLite) y las validaciones de `SubjectService` ya soportan anidamiento (ej. "Materia" -> "TPs" / "Unidad 1"), pero falta implementar la interfaz visual (UX) para crear y navegar estas carpetas hijas dentro de una materia principal.
 - [ ] **Manejo de Errores y Excepciones (Resiliencia):** Revisar todo el "camino triste" de la app. Implementar bloques `try/catch` robustos en operaciones críticas (ej. fallo de escritura en SQLite por falta de espacio), asegurar que la UI muestre un mensaje amigable ("Error al guardar") sin crashear en silencio, e implementar un mecanismo de loggeo estructurado.
-- [ ] **Optimización del Renderizado (Virtualización / Scroll Infinito):** Implementar paginación o virtualización de la lista de notas en el `NoteList.js` para mantener la fluidez del DOM al procesar 1000+ notas (identificado durante pruebas de estrés).
+- [ ] **Optimización Extrema de Renderizado (Virtualización de DOM):** Implementar *List Virtualization* en `NoteList.js`. El DOM solo debe mantener los nodos visibles (reemplazando los ocultos por espacios en blanco) usando `IntersectionObserver` y paginación en SQLite (`LIMIT/OFFSET`). Objetivo: Soportar pruebas de estrés de 10,000+ notas sin que la app crashee o pierda fluidez, garantizando escalabilidad y robustez a nivel profesional.
 
 ## ⚙️ Deuda Técnica — DevOps y Procesos
 
