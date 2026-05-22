@@ -245,6 +245,7 @@ El proyecto ya cuenta con muchos scripts de auditoría, pero hoy solo ESLint cor
 - [ ] **Actualizar seguimiento de velocidad:** `docs/gestion/seguimiento-velocidad.md` debe reflejar las HU reales actuales (14 HU, 59 SP totales según `generate-velocity-report.py`) y no solo la planificación previa del Hito 04.
 - [ ] **Revisar documentos generados:** regenerar informe completo y cheatsheet cuando se cierren nuevos cambios, para evitar que los artefactos finales queden con métricas anteriores.
 - [ ] **Manual de usuario:** Crear un breve manual de usuario explicando los flujos principales, ya que el sistema tiene atajos visuales (Paso 9).
+- [ ] **Documentar Papelera de Reciclaje (Hito 04):** Añadir el nuevo requisito funcional (RF-026), su correspondiente Historia de Usuario, actualizar el `CHANGELOG.md` con los cambios en DB, y reflejar el soft-delete (`deletedAt`) en los diagramas de base de datos (`modelo-dominio.md` / DBML).
 
 ## 💻 Deuda Técnica — Código y Arquitectura
 
@@ -259,6 +260,7 @@ El proyecto ya cuenta con muchos scripts de auditoría, pero hoy solo ESLint cor
 - [ ] **Reducir complejidad de `NoteList.js`:** extraer renderizado de cards/dropdowns/empty states a funciones auxiliares o componente menor. Hoy `check-file-size.sh` y ESLint advierten sobre anidamiento profundo.
 - [ ] **UI para sub-secciones de Materias (Profundidad > 0):** El modelo de datos (SQLite) y las validaciones de `SubjectService` ya soportan anidamiento (ej. "Materia" -> "TPs" / "Unidad 1"), pero falta implementar la interfaz visual (UX) para crear y navegar estas carpetas hijas dentro de una materia principal.
 - [ ] **Manejo de Errores y Excepciones (Resiliencia):** Revisar todo el "camino triste" de la app. Implementar bloques `try/catch` robustos en operaciones críticas (ej. fallo de escritura en SQLite por falta de espacio), asegurar que la UI muestre un mensaje amigable ("Error al guardar") sin crashear en silencio, e implementar un mecanismo de loggeo estructurado.
+- [ ] **Optimización del Renderizado (Virtualización / Scroll Infinito):** Implementar paginación o virtualización de la lista de notas en el `NoteList.js` para mantener la fluidez del DOM al procesar 1000+ notas (identificado durante pruebas de estrés).
 
 ## ⚙️ Deuda Técnica — DevOps y Procesos
 
