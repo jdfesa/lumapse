@@ -379,7 +379,7 @@ fn print_json(reports: &[FileReport], elapsed_us: u128) {
     println!("}}");
 }
 
-// --- Main ---
+mod traceability;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -390,15 +390,24 @@ fn main() {
         println!("Uso: lumapse-audit [opciones]");
         println!();
         println!("Opciones:");
-        println!("  --json     Salida en formato JSON (para integración con otros scripts)");
-        println!("  --help     Muestra esta ayuda");
+        println!("  --json         Salida en formato JSON (para integración con otros scripts)");
+        println!("  --traceability Ejecuta la auditoría de trazabilidad (RF, HU, ADR)");
+        println!("  --code         Ejecuta la auditoría de código (LOC, TODOs, Offline)");
+        println!("  --all          Ejecuta todo (por defecto si no se especifica --traceability ni --code)");
+        println!("  --help         Muestra esta ayuda");
         println!();
-        println!("Se ejecuta desde la raíz del proyecto Lumapse.");
-        println!("Escanea src/ buscando archivos .js, .css y .html.");
         return;
     }
 
     let json_mode = args.iter().any(|a| a == "--json");
+    let mut run_trace = args.iter().any(|a| a == "--traceability");
+    let mut run_code = args.iter().any(|a| a == "--code");
+    
+    // Si no se pasa ni --traceability ni --code, o se pasa --all, corremos todo
+    if args.iter().any(|a| a == "--all") || (!run_trace && !run_code) {
+        run_trace = true;
+        run_code = true;
+    }
 
     // Detectar la raíz del proyecto buscando hacia arriba el package.json
     let cwd = env::current_dir().expect("No se pudo obtener el directorio actual");
@@ -408,24 +417,50 @@ fn main() {
         std::process::exit(1);
     });
 
-    let start = Instant::now();
-    let reports = run_audit(&src_dir);
-    let elapsed = start.elapsed().as_micros();
+    let project_root = src_dir.parent().unwrap();
+    let mut exit_code = 0;
 
-    if json_mode {
-        print_json(&reports, elapsed);
-    } else {
-        print_report(&reports, elapsed);
+    if run_code {
+        let start = Instant::now();
+        let reports = run_audit(&src_dir);
+        let elapsed = start.elapsed().as_micros();
+
+        if json_mode {
+            print_json(&reports, elapsed);
+        } else {
+            print_report(&reports, elapsed);
+        }
+
+        let has_danger = reports.iter().any(|r| matches!(r.loc_status, LocStatus::Danger));
+        let has_offline_problem = reports.iter()
+            .flat_map(|r| r.external_urls.iter())
+            .any(|u| !u.is_comment);
+
+        if has_danger || has_offline_problem {
+            exit_code = 1;
+        }
     }
 
-    // Exit code: 0 si no hay peligros ni problemas offline reales
-    let has_danger = reports.iter().any(|r| matches!(r.loc_status, LocStatus::Danger));
-    let has_offline_problem = reports.iter()
-        .flat_map(|r| r.external_urls.iter())
-        .any(|u| !u.is_comment);
+    if run_trace {
+        if run_code {
+            println!(); // Espacio entre reportes
+        }
+        match traceability::collect_context(project_root) {
+            Ok(ctx) => {
+                let warnings = traceability::run_traceability_checks(&ctx);
+                if warnings > 0 {
+                    exit_code = 1;
+                }
+            }
+            Err(e) => {
+                eprintln!("❌ Error en auditoría de trazabilidad: {}", e);
+                exit_code = 1;
+            }
+        }
+    }
 
-    if has_danger || has_offline_problem {
-        std::process::exit(1);
+    if exit_code != 0 {
+        std::process::exit(exit_code);
     }
 }
 

@@ -62,7 +62,7 @@ Ejecuta todos los chequeos de calidad del proyecto en un solo comando. Actúa co
   ./scripts/quality.sh
   ```
 
-### 5. `check-traceability.py`
+### 5. `check-traceability.py` _(Superseded por `lumapse-audit` #35)_
 Audita la coherencia y consistencia entre los documentos de trazabilidad del proyecto (RF, HU, ADR, CHANGELOG, BACKLOG) y el código fuente.
 
 - **Problema que resuelve:** El proyecto depende de una estricta coherencia documental. Este script automatiza la verificación para asegurar que ningún requisito, historia de usuario o registro de decisión (ADR) quede "huérfano" o desactualizado respecto al código implementado.
@@ -523,49 +523,57 @@ A diferencia de los scripts Bash/Python que son archivos individuales en `script
 
 ```
 scripts/
+├── lumapse-audit-bin      ← Binario compilado listo para usar
 ├── lumapse-audit/         ← Proyecto Cargo (Rust)
-│   ├── Cargo.toml         ← Manifiesto del proyecto (nombre, versión, deps)
+│   ├── Cargo.toml         ← Manifiesto del proyecto (dependencias como regex)
 │   ├── Cargo.lock         ← Lock de dependencias (reproducibilidad)
 │   └── src/
-│       └── main.rs        ← Código fuente del auditor (~440 LOC)
+│       ├── main.rs        ← Punto de entrada y escáner de archivos
+│       └── traceability.rs← Módulo de trazabilidad
 ├── check-file-size.sh     ← (Superseded por lumapse-audit)
 ├── check-offline.sh       ← (Superseded por lumapse-audit)
+├── check-traceability.py.replaced ← (Superseded por lumapse-audit)
 ├── check-docs.sh          ← (Superseded parcialmente por lumapse-audit)
 └── ... (otros 31 scripts)
 ```
 
-El binario compilado queda en `scripts/lumapse-audit/target/release/lumapse-audit` y NO se commitea al repositorio (está en `.gitignore`).
+El binario compilado queda en `scripts/lumapse-audit-bin` (generado por `install-hooks.sh`) y NO se commitea al repositorio (está en `.gitignore`).
 
 ---
 
 ### 35. `lumapse-audit` (Rust)
-Auditor concurrente de código fuente que unifica tres verificaciones en un solo pase multi-hilo sobre el filesystem.
+Auditor concurrente de código fuente que unifica verificaciones de calidad y trazabilidad en un solo ejecutable ultra-rápido.
 
-- **Problema que resuelve:** Los scripts `check-file-size.sh`, `check-docs.sh` y `check-offline.sh` abrían los mismos archivos de `src/` por separado, triplicando las operaciones de I/O. A medida que el proyecto creció a 24+ archivos y los hooks de Git ejecutaban estos checks de forma repetida, la latencia acumulada se volvía una fricción innecesaria en el flujo de trabajo diario.
-- **Qué hace (en un solo pase):**
-  1. **Guardia de tamaño (LOC):** Cuenta líneas no vacías por archivo. Reporta AVISO (>250 LOC) y PELIGRO (>400 LOC). Equivale a `check-file-size.sh`.
-  2. **Búsqueda de TODOs/FIXMEs:** Detecta marcadores de tareas pendientes con word-boundary inteligente (no confunde "todos" con "TODO"). Equivale a la parte de TODOs de `check-docs.sh`.
-  3. **Auditoría Offline-First:** Busca URLs `http://`/`https://` en código fuente, distinguiendo comentarios de referencias reales. Equivale a `check-offline.sh`.
+- **Problema que resuelve:** Scripts antiguos (Bash y Python) como `check-file-size.sh`, `check-docs.sh`, `check-offline.sh` y `check-traceability.py` tardaban demasiado procesando las mismas lecturas de disco a medida que el proyecto escalaba.
+- **Qué hace:**
+  - **Auditoría de Código (`--code`):**
+    1. **Guardia de tamaño (LOC):** Cuenta líneas no vacías. Reporta AVISO (>250 LOC) y PELIGRO (>400 LOC).
+    2. **Búsqueda de TODOs/FIXMEs:** Detecta marcadores con word-boundary.
+    3. **Auditoría Offline-First:** Busca URLs en código fuente diferenciando comentarios.
+  - **Auditoría de Trazabilidad (`--traceability`):**
+    - Verifica consistencia entre RF, HU, ADRs y código fuente (6 chequeos estrictos). Mismo comportamiento que el antiguo script en Python pero ejecutado nativamente en memoria.
 - **Características técnicas:**
-  - Escrito en Rust (stdlib pura, 0 dependencias externas).
-  - Concurrencia nativa con `std::thread` — divide los archivos en chunks y los procesa en paralelo.
-  - Lee cada archivo una sola vez en memoria y aplica las 3 reglas simultáneamente.
-  - Exit code 0 si todo OK, 1 si hay archivos en PELIGRO o URLs externas reales.
-- **Rendimiento medido:** ~2ms para 24 archivos (vs ~200ms combinados de los 3 scripts originales).
-- **Compilación:**
+  - Escrito en Rust usando la crate `regex`.
+  - Concurrencia nativa con `std::thread` para el escaneo de código.
+  - Usado directamente por `pre-commit` y `pre-push`.
+- **Compilación e Instalación:**
   ```bash
-  cd scripts/lumapse-audit
-  cargo build --release
+  ./scripts/install-hooks.sh
   ```
 - **Uso:**
   ```bash
   # Desde la raíz del proyecto
-  ./scripts/lumapse-audit/target/release/lumapse-audit
-
-  # Salida JSON (para integración con CI u otros scripts)
-  ./scripts/lumapse-audit/target/release/lumapse-audit --json
-
+  
+  # Correr auditoría de código (LOC, Offline, TODOs)
+  ./scripts/lumapse-audit-bin --code
+  
+  # Correr auditoría de trazabilidad documental
+  ./scripts/lumapse-audit-bin --traceability
+  
+  # Correr TODO a la vez (por defecto)
+  ./scripts/lumapse-audit-bin --all
+  
   # Ayuda
-  ./scripts/lumapse-audit/target/release/lumapse-audit --help
+  ./scripts/lumapse-audit-bin --help
   ```
 - **Requisitos:** Rust (rustc + cargo). Instalable con `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`.

@@ -22,6 +22,12 @@ fi
 
 mkdir -p "$HOOKS_DIR"
 
+printf "🔨 Compilando lumapse-audit (Rust) para hooks súper-rápidos...\n"
+cd "$PROJECT_ROOT/scripts/lumapse-audit"
+cargo build --release
+cp target/release/lumapse-audit "$PROJECT_ROOT/scripts/lumapse-audit-bin"
+cd "$PROJECT_ROOT"
+
 cat > "$HOOKS_DIR/pre-commit" <<'HOOK'
 #!/usr/bin/env bash
 set -Eeuo pipefail
@@ -33,9 +39,7 @@ printf '  Lumapse pre-commit: ejecutando chequeos rapidos...\n'
 printf '==================================================\n'
 
 npm run lint
-./scripts/check-offline.sh
-./scripts/check-docs.sh
-./scripts/check-file-size.sh
+./scripts/lumapse-audit-bin --code
 
 printf '==================================================\n'
 printf '  Pre-commit OK\n'
@@ -52,7 +56,7 @@ printf '🚀 Lumapse pre-push: ejecutando quality gate completo...\n'
 printf '==================================================\n'
 
 ./scripts/quality.sh
-python3 ./scripts/check-traceability.py
+./scripts/lumapse-audit-bin --traceability
 ./scripts/bundle-budget.sh
 
 printf '==================================================\n'
