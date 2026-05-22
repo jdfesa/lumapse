@@ -33,8 +33,25 @@ async function initApp() {
   
   // 4. Inicializar drawer (búsqueda, materias, tema, archivados)
   initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS })
+
+  // 5. Calendar popup toggle (DP-006)
+  const btnCalendar = document.getElementById('btn-toggle-calendar')
+  const calendarPopup = document.getElementById('calendar-popup')
+
+  btnCalendar.addEventListener('click', (e) => {
+    e.stopPropagation()
+    calendarPopup.classList.toggle('is-open')
+  })
+
+  calendarPopup.addEventListener('click', (e) => {
+    e.stopPropagation()
+  })
+
+  document.addEventListener('click', () => {
+    calendarPopup.classList.remove('is-open')
+  })
   
-  // 5. Cargar datos iniciales
+  // 6. Cargar datos iniciales
   await NoteStore.loadSubjects()
   await NoteStore.loadNotes()
 }
