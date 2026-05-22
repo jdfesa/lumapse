@@ -44,3 +44,9 @@
 
 ---
 *Fin del TODO. Este documento queda como punto de entrada exacto para el inicio de la siguiente sesión.*
+
+## 🚀 Futura Mejora (Hallazgo de Pruebas de Estrés)
+
+*Durante las pruebas de estrés para generar 1000 notas, se detectó que SQLite maneja el volumen sin problemas de datos, pero la interfaz (DOM) se resiente intentando renderizar 1000 componentes de notas simultáneamente.*
+
+- [ ] **Optimización del Renderizado (Virtualización / Scroll Infinito):** Si bien 1000 notas es un caso de uso borde para estudiantes, para mantener la percepción de velocidad absoluta de Lumapse se deberá implementar paginación (ej. mostrar de a 20 o 50) o virtualización de la lista de notas en el `NoteList.js`.

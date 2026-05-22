@@ -65,6 +65,19 @@ export function renderAppShell() {
           <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
           <span id="theme-btn-label">Cambiar tema</span>
         </button>
+
+        <!-- Herramientas de Test (Temporales - Ocultas por defecto) -->
+        <!--
+        <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--color-border);">
+          <div class="drawer__subjects-title" style="margin-bottom: 1rem;">Testing & QA</div>
+          <button id="btn-seed-tiktok" class="drawer__nav-btn" style="border-color: var(--color-accent); color: var(--color-accent);">
+            <span>🚀 Cargar Demo TikTok</span>
+          </button>
+          <button id="btn-seed-stress" class="drawer__nav-btn">
+            <span>🔥 Prueba de Estrés (1000)</span>
+          </button>
+        </div>
+        -->
         
       </div>
     </aside>
