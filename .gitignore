@@ -54,3 +54,4 @@ lumapse_backup_*.zip
 Lumapse_Entrega_*.zip
 releases/
 scripts/lumapse-audit/target/
+scripts/lumapse-audit-bin
