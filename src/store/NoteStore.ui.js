@@ -35,6 +35,24 @@ export async function toggleArchive(id) {
   notify()
 }
 
+/**
+ * Asigna o quita un marcador de estado académico (emoji) a una nota.
+ * Si el emoji es el mismo que ya tiene, lo quita (toggle).
+ * DP-005: Set curado de emojis académicos (📖 ❓ 🔥 ✅).
+ * @param {string} id ID de la nota
+ * @param {string|null} emoji Emoji a asignar o null para quitar
+ */
+export async function setNoteStatus(id, emoji) {
+  const note = state.notes.find(n => n.id === id)
+  if (!note) return
+  
+  // Toggle: si ya tiene el mismo emoji, lo quitamos
+  const newEmoji = note.statusEmoji === emoji ? null : emoji
+  const updatedNote = await NoteService.updateNote(id, { statusEmoji: newEmoji })
+  state.notes = state.notes.map(n => n.id === id ? updatedNote : n)
+  notify()
+}
+
 export function setShowArchived(show) {
   if (show) {
     state.viewMode = 'archived'

@@ -25,16 +25,17 @@ export async function createNote(title = 'Sin título', content = '', subjectId 
     content,
     pinned: 0,
     archived: 0,
+    statusEmoji: null,
     subjectId: subjectId || null,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   }
 
   const sql = `
-    INSERT INTO notes (id, title, content, pinned, archived, subjectId, createdAt, updatedAt)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO notes (id, title, content, pinned, archived, statusEmoji, subjectId, createdAt, updatedAt)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `
-  const values = [note.id, note.title, note.content, note.pinned, note.archived, note.subjectId, note.createdAt, note.updatedAt]
+  const values = [note.id, note.title, note.content, note.pinned, note.archived, note.statusEmoji, note.subjectId, note.createdAt, note.updatedAt]
   
   await db.run(sql, values)
   await persistWeb()
@@ -43,6 +44,7 @@ export async function createNote(title = 'Sin título', content = '', subjectId 
     ...note,
     pinned: false,
     archived: false,
+    statusEmoji: null,
   }
 }
 
@@ -116,6 +118,10 @@ export async function updateNote(id, changes) {
   if (changes.subjectId !== undefined) {
     fields.push('subjectId = ?')
     values.push(changes.subjectId)
+  }
+  if (changes.statusEmoji !== undefined) {
+    fields.push('statusEmoji = ?')
+    values.push(changes.statusEmoji)
   }
 
   fields.push('updatedAt = ?')

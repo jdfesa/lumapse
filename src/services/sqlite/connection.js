@@ -135,6 +135,8 @@ async function runMigrations() {
     ['subjects.parentSubjectId',     'ALTER TABLE subjects ADD COLUMN parentSubjectId TEXT REFERENCES subjects(id) ON DELETE CASCADE'],
     ['subjects.archived',            'ALTER TABLE subjects ADD COLUMN archived INTEGER DEFAULT 0'],
     ['subjects.color',               'ALTER TABLE subjects ADD COLUMN color TEXT'],
+    // v1.2 — Marcadores de estado académico (DP-005)
+    ['notes.statusEmoji',            'ALTER TABLE notes ADD COLUMN statusEmoji TEXT'],
   ]
 
   for (const [migrationName, sql] of migrations) {
