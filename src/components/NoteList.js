@@ -33,6 +33,7 @@ export class NoteList {
       const btnArchive = e.target.closest('.js-btn-archive');
       const btnMove = e.target.closest('.js-btn-move-to');
       const btnStatus = e.target.closest('.js-btn-status');
+      const btnCopy = e.target.closest('.js-btn-copy');
       
       // Si el clic no fue en un botón de menú, cerramos todos
       if (!btnMenu) {
@@ -65,6 +66,8 @@ export class NoteList {
         this.handleEdit(btnEdit.dataset.id);
       } else if (btnDelete) {
         this.handleDelete(btnDelete.dataset.id);
+      } else if (btnCopy) {
+        this.handleCopy(btnCopy);
       }
     });
 
@@ -115,6 +118,25 @@ export class NoteList {
     if (confirm('¿Eliminar esta nota?')) {
       await NoteStore.deleteNote(id);
       // Si la nota borrada estaba en edición, se resetea por el Store
+    }
+  }
+
+  async handleCopy(btnElement) {
+    const id = btnElement.dataset.id;
+    const notes = NoteStore.getFilteredNotes();
+    const note = notes.find(n => n.id === id);
+    if (!note) return;
+
+    try {
+      await navigator.clipboard.writeText(note.content);
+      const originalHtml = btnElement.innerHTML;
+      btnElement.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Copiado!`;
+      setTimeout(() => {
+        btnElement.innerHTML = originalHtml;
+        this.closeAllDropdowns();
+      }, 1500);
+    } catch (err) {
+      console.error('Failed to copy', err);
     }
   }
 
@@ -314,6 +336,10 @@ export class NoteList {
                 <button class="note-card__dropdown-btn js-btn-edit" data-id="${note.id}">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                   Editar
+                </button>
+                <button class="note-card__dropdown-btn js-btn-copy" data-id="${note.id}">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                  Copiar
                 </button>
                 <button class="note-card__dropdown-btn note-card__dropdown-btn--delete js-btn-delete" data-id="${note.id}">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
