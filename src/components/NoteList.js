@@ -32,6 +32,7 @@ export class NoteList {
       const btnPin = e.target.closest('.js-btn-pin');
       const btnArchive = e.target.closest('.js-btn-archive');
       const btnMove = e.target.closest('.js-btn-move-to');
+      const btnStatus = e.target.closest('.js-btn-status');
       
       // Si el clic no fue en un botón de menú, cerramos todos
       if (!btnMenu) {
@@ -54,6 +55,11 @@ export class NoteList {
         const noteId = btnMove.dataset.noteId;
         const targetSubject = btnMove.dataset.subjectId || null;
         NoteStore.moveNote(noteId, targetSubject);
+        this.closeAllDropdowns();
+      } else if (btnStatus) {
+        const noteId = btnStatus.dataset.noteId;
+        const emoji = btnStatus.dataset.emoji || null;
+        NoteStore.setNoteStatus(noteId, emoji);
         this.closeAllDropdowns();
       } else if (btnEdit) {
         this.handleEdit(btnEdit.dataset.id);
@@ -242,6 +248,26 @@ export class NoteList {
       const archivedBadge = isArchived
         ? `<span class="note-card__archived-badge">Archivada</span>`
         : '';
+
+      // Badge de emoji de estado (DP-005)
+      const statusBadge = note.statusEmoji
+        ? `<span class="note-card__status-badge">${note.statusEmoji}</span>`
+        : '';
+
+      // Submenú de estado académico (DP-005)
+      const statusEmojis = [
+        { emoji: '📖', label: 'Por completar' },
+        { emoji: '❓', label: 'Tengo dudas' },
+        { emoji: '🔥', label: 'Importante' },
+        { emoji: '✅', label: 'Repasado' },
+      ];
+      const statusItems = statusEmojis.map(s => {
+        const isActive = note.statusEmoji === s.emoji ? ' note-card__emoji-btn--current' : '';
+        return `<button class="note-card__emoji-btn js-btn-status${isActive}" data-note-id="${note.id}" data-emoji="${s.emoji}" title="${s.label}">${s.emoji}</button>`;
+      }).join('');
+      const clearStatus = note.statusEmoji
+        ? `<button class="note-card__emoji-btn js-btn-status" data-note-id="${note.id}" data-emoji="" title="Quitar">✕</button>`
+        : '';
       
       return `
         <article class="note-card${isPinned ? ' note-card--pinned' : ''}" data-id="${note.id}">
@@ -251,8 +277,18 @@ export class NoteList {
               ${timeStr}
               ${subjectBadge}
               ${archivedBadge}
+              ${statusBadge}
             </span>
             <div class="note-card__actions">
+              <div class="note-card__emoji-wrapper">
+                <button class="note-card__action-btn js-btn-emoji-trigger" title="Estado académico">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                </button>
+                <div class="note-card__emoji-submenu">
+                  ${statusItems}
+                  ${clearStatus}
+                </div>
+              </div>
               <button class="note-card__action-btn js-btn-menu" title="Opciones">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
               </button>
