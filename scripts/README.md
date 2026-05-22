@@ -503,14 +503,14 @@ A partir del script #35, el proyecto incorpora **Rust** como lenguaje complement
 | **Ejecución** | Interpretado | Compilado a binario nativo |
 | **Concurrencia** | Secuencial (1 archivo a la vez) | Multi-hilo nativo (`std::thread`) |
 | **Lectura de archivos** | Cada script abre los mismos archivos por separado | Un solo pase lee cada archivo UNA vez |
-| **Dependencias** | Python 3.8+ / Bash 4+ | Solo `rustc` + `cargo` (stdlib pura, 0 crates externos) |
-| **Velocidad medida** | ~200ms combinados para 3 checks | **~2ms** para los mismos 3 checks |
+| **Dependencias** | Python 3.8+ / Bash 4+ | Solo `rustc` + `cargo` (usa crate `regex`) |
+| **Velocidad medida** | ~250ms combinados para 4 checks | **~5ms** para los mismos 4 checks |
 
-**Justificación académica:** El proyecto ya tenía 34 scripts funcionales en Bash y Python que resolvían problemas puntuales. A medida que el codebase creció, tres de esos scripts (`check-file-size.sh`, `check-docs.sh`, `check-offline.sh`) empezaron a ejecutarse repetidamente en los git hooks, leyendo los mismos archivos múltiples veces. Rust permite unificar esas verificaciones en un **único pase concurrente** sobre el filesystem, reduciendo el tiempo de ejecución en ~100x. Esta evolución demuestra madurez en la gestión de la deuda técnica del propio toolchain de desarrollo.
+**Justificación académica:** El proyecto ya tenía 34 scripts funcionales en Bash y Python que resolvían problemas puntuales. A medida que el codebase creció, cuatro de esos scripts (`check-file-size.sh`, `check-docs.sh`, `check-offline.sh`, `check-traceability.py`) empezaron a ejecutarse repetidamente en los git hooks y CI, leyendo los mismos archivos múltiples veces. Rust permite unificar esas verificaciones en un **único pase concurrente** sobre el filesystem y en memoria, reduciendo drásticamente el tiempo de ejecución. Esta evolución demuestra madurez en la gestión de la deuda técnica del propio toolchain de desarrollo.
 
 ### ¿Por qué los scripts originales no se borran?
 
-Los scripts originales (#3, #6, #30) fueron parte del proceso de construcción del proyecto y tienen valor documental:
+Los scripts originales (#3, #5, #6, #30) fueron parte del proceso de construcción del proyecto y tienen valor documental:
 - Demuestran la evolución incremental del toolchain.
 - Permiten comparar la solución interpretada vs. la compilada.
 - Sirven como respaldo si Rust no está disponible en un entorno de evaluación.
