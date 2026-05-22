@@ -38,6 +38,10 @@ export function getFilteredNotes(state) {
     case 'archived':
       filtered = filtered.filter(note => note.archived === true)
       break
+    case 'trash':
+      // La vista de papelera carga sus datos por separado (getTrashItems)
+      // El filtro normal retorna vacío para no mostrar notas activas
+      return []
     case 'all':
     default:
       filtered = filtered.filter(note => !note.archived)

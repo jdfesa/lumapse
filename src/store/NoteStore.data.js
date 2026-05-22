@@ -7,6 +7,9 @@ import * as SubjectService from '../services/SubjectService.js'
 import { getFilteredNotes as applyFilters } from './noteFilters.js'
 import { state, notify } from './NoteStore.state.js'
 
+// Umbral para alerta de papelera llena
+const TRASH_WARNING_THRESHOLD = 50
+
 export async function loadNotes() {
   state.notes = await NoteService.getAllNotes()
   notify()
@@ -14,6 +17,16 @@ export async function loadNotes() {
 
 export async function loadSubjects() {
   state.subjects = await SubjectService.getSubjectTree()
+  notify()
+}
+
+/**
+ * Carga el conteo de items en la papelera y actualiza el flag de alerta.
+ */
+export async function loadTrashCount() {
+  const { countTrashItems } = await import('../services/sqlite/subjects.js')
+  state.trashCount = await countTrashItems()
+  state.showTrashWarning = state.trashCount >= TRASH_WARNING_THRESHOLD
   notify()
 }
 
@@ -63,6 +76,8 @@ export async function deleteNote(id) {
     state.activeNoteId = null
   }
   
+  await loadTrashCount()
+  await loadSubjects()
   notify()
 }
 
@@ -93,4 +108,63 @@ export async function deleteSubject(id) {
   }
   await loadNotes()
   await loadSubjects()
+  await loadTrashCount()
 }
+
+/**
+ * Elimina una sección individual (soft-delete + sus notas).
+ * @param {string} id ID de la sección
+ */
+export async function deleteSection(id) {
+  await SubjectService.deleteSection(id)
+  if (state.activeSubjectId === id) {
+    state.viewMode = 'inbox'
+    state.activeSubjectId = null
+  }
+  await loadNotes()
+  await loadSubjects()
+  await loadTrashCount()
+}
+
+/**
+ * Restaura una nota desde la papelera.
+ * Si su materia está eliminada, va a Entrada.
+ * @param {string} id ID de la nota
+ */
+export async function restoreNoteFromTrash(id) {
+  await SubjectService.restoreNoteFromTrash(id)
+  await loadNotes()
+  await loadSubjects()
+  await loadTrashCount()
+}
+
+/**
+ * Restaura una materia completa desde la papelera (cascada).
+ * @param {string} id ID de la materia
+ */
+export async function restoreSubjectFromTrash(id) {
+  await SubjectService.restoreSubject(id)
+  await loadNotes()
+  await loadSubjects()
+  await loadTrashCount()
+}
+
+/**
+ * Elimina permanentemente una nota (DELETE físico).
+ * @param {string} id ID de la nota
+ */
+export async function permanentlyDeleteNote(id) {
+  await NoteService.permanentlyDeleteNote(id)
+  await loadTrashCount()
+}
+
+/**
+ * Vacía toda la papelera (DELETE físico de todo).
+ */
+export async function emptyTrash() {
+  await SubjectService.emptyTrash()
+  await loadNotes()
+  await loadSubjects()
+  await loadTrashCount()
+}
+

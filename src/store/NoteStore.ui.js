@@ -100,3 +100,12 @@ export function toggleSidebar() {
   state.sidebarOpen = !state.sidebarOpen
   notify()
 }
+
+/**
+ * Cambia a la vista de Papelera de Reciclaje.
+ */
+export function setViewTrash() {
+  state.viewMode = 'trash'
+  state.activeSubjectId = null
+  notify()
+}
