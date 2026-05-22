@@ -17,6 +17,7 @@ import { NoteEditor as Composer } from './components/NoteEditor.js'
 import { Heatmap } from './components/Heatmap.js'
 import { renderAppShell } from './layout/appShell.js'
 import { initDrawer } from './layout/drawerController.js'
+// import { seedTiktokData, seedStressTest } from './utils/seeder.js'
 
 async function initApp() {
   // 1. Inicializar base de datos SQLite
@@ -46,6 +47,17 @@ async function initApp() {
   calendarPopup.addEventListener('click', (e) => {
     e.stopPropagation()
   })
+
+  /* 
+  // 6. Test & QA Seeders (Ocultos por defecto)
+  document.getElementById('btn-seed-tiktok')?.addEventListener('click', async () => {
+    await seedTiktokData()
+  })
+  
+  document.getElementById('btn-seed-stress')?.addEventListener('click', async () => {
+    await seedStressTest(1000)
+  })
+  */
 
   document.addEventListener('click', () => {
     calendarPopup.classList.remove('is-open')
