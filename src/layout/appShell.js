@@ -60,6 +60,13 @@ export function renderAppShell() {
           <span id="archived-btn-label">Ver archivadas</span>
         </button>
 
+        <!-- Papelera de Reciclaje (RF-026) -->
+        <button id="btn-trash" class="drawer__nav-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          <span id="trash-btn-label">Papelera</span>
+          <span id="trash-count" class="drawer__trash-count" style="display:none">0</span>
+        </button>
+
         <!-- Toggle Tema (RF-019) -->
         <button id="btn-toggle-theme" class="drawer__nav-btn">
           <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
@@ -113,6 +120,14 @@ export function renderAppShell() {
         <section id="feed-items-container"></section>
       </div>
     </main>
+
+    <!-- Toast: Alerta de papelera llena (RF-026) -->
+    <div id="trash-warning-toast" class="trash-toast" style="display:none">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+      <span>Tu papelera tiene muchos elementos. Vaciarla mantiene Lumapse rápido.</span>
+      <button id="btn-empty-trash-toast" class="trash-toast__action">Vaciar ahora</button>
+      <button id="btn-dismiss-toast" class="trash-toast__dismiss">✕</button>
+    </div>
   `
 }
 

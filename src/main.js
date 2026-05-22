@@ -11,7 +11,7 @@ import './styles/main.css'
 import { initDatabase } from './services/sqlite/connection.js'
 import * as NoteStore from './store/NoteStore.js'
 import * as ThemeService from './services/ThemeService.js'
-import { SUBJECT_COLORS } from './services/SubjectService.js'
+import { SUBJECT_COLORS, autoPurge } from './services/SubjectService.js'
 import { NoteList as Feed } from './components/NoteList.js'
 import { NoteEditor as Composer } from './components/NoteEditor.js'
 import { Heatmap } from './components/Heatmap.js'
@@ -66,6 +66,39 @@ async function initApp() {
   // 6. Cargar datos iniciales
   await NoteStore.loadSubjects()
   await NoteStore.loadNotes()
+
+  // 7. Auto-purgado de papelera (RF-026): elimina items > 30 días
+  try {
+    await autoPurge(30)
+    console.log('[Lumapse] Auto-purge completado.')
+  } catch (err) {
+    console.warn('[Lumapse] Error en auto-purge:', err)
+  }
+
+  // 8. Cargar conteo de papelera (para badge)
+  await NoteStore.loadTrashCount()
+
+  // 9. Toast de alerta de papelera (RF-026)
+  const trashToast = document.getElementById('trash-warning-toast')
+  const btnEmptyTrashToast = document.getElementById('btn-empty-trash-toast')
+  const btnDismissToast = document.getElementById('btn-dismiss-toast')
+
+  NoteStore.subscribe((state) => {
+    if (state.showTrashWarning && trashToast.style.display === 'none') {
+      trashToast.style.display = ''
+    }
+  })
+
+  btnDismissToast?.addEventListener('click', () => {
+    trashToast.style.display = 'none'
+  })
+
+  btnEmptyTrashToast?.addEventListener('click', async () => {
+    if (confirm('¿Vaciar toda la papelera? Esta acción no se puede deshacer.')) {
+      await NoteStore.emptyTrash()
+      trashToast.style.display = 'none'
+    }
+  })
 }
 
 // Iniciar aplicación

@@ -69,6 +69,19 @@ export function initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS }) {
     closeDrawer()
   })
 
+  // --- Papelera de Reciclaje (RF-026) ---
+  const btnTrash = document.getElementById('btn-trash')
+  const trashCount = document.getElementById('trash-count')
+
+  btnTrash.addEventListener('click', () => {
+    showingArchived = false
+    archivedLabel.textContent = 'Ver archivadas'
+    btnArchiveToggle.classList.remove('drawer__nav-btn--active')
+    NoteStore.setViewTrash()
+    updateSubjectActiveState(null)
+    closeDrawer()
+  })
+
   // --- Subjects Navigation (Paso 9) ---
   const subjectsList = document.getElementById('subjects-list')
   const btnInbox = document.getElementById('btn-inbox')
@@ -146,6 +159,24 @@ export function initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS }) {
 
   // Delegación para clicks en materias del listado
   subjectsList.addEventListener('click', (e) => {
+    // Botón eliminar materia/sección
+    const btnDelete = e.target.closest('.js-btn-delete-subject')
+    if (btnDelete) {
+      e.stopPropagation()
+      const subjectId = btnDelete.dataset.subjectId
+      const isSection = btnDelete.dataset.isSection === 'true'
+      const subjectName = btnDelete.dataset.subjectName || ''
+      const type = isSection ? 'sección' : 'materia'
+      if (confirm(`¿Estás seguro de enviar la ${type} "${subjectName}" y todas sus notas a la Papelera de reciclaje?`)) {
+        if (isSection) {
+          NoteStore.deleteSection(subjectId)
+        } else {
+          NoteStore.deleteSubject(subjectId)
+        }
+      }
+      return
+    }
+
     // Botón "+" para agregar sección
     const btnAddSection = e.target.closest('.js-btn-add-section')
     if (btnAddSection) {
@@ -263,11 +294,16 @@ export function initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS }) {
       const childrenHtml = (subject.children || []).map(child => {
         const isChildActive = state.activeSubjectId === child.id
         return `
-          <button class="drawer__subject-btn drawer__subject-btn--child${isChildActive ? ' drawer__subject-btn--active' : ''}" data-subject="${child.id}">
-            <span class="drawer__subject-color" style="background-color: ${child.color || subject.color}"></span>
-            <span class="drawer__subject-name">${escapeHtml(child.name)}</span>
-            <span class="drawer__subject-count">${child.noteCount || 0}</span>
-          </button>
+          <div class="drawer__subject-row drawer__subject-row--child">
+            <button class="drawer__subject-btn drawer__subject-btn--child${isChildActive ? ' drawer__subject-btn--active' : ''}" data-subject="${child.id}">
+              <span class="drawer__subject-color" style="background-color: ${child.color || subject.color}"></span>
+              <span class="drawer__subject-name">${escapeHtml(child.name)}</span>
+              <span class="drawer__subject-count">${child.noteCount || 0}</span>
+            </button>
+            <button class="drawer__section-add js-btn-delete-subject" data-subject-id="${child.id}" data-is-section="true" data-subject-name="${escapeHtml(child.name)}" title="Eliminar sección">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          </div>
         `
       }).join('')
 
@@ -296,6 +332,9 @@ export function initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS }) {
               <span class="drawer__subject-name">${escapeHtml(subject.name)}</span>
               <span class="drawer__subject-count">${subject.noteCount || 0}</span>
             </button>
+            <button class="drawer__section-add js-btn-delete-subject" data-subject-id="${subject.id}" data-is-section="false" data-subject-name="${escapeHtml(subject.name)}" title="Eliminar materia">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
             <button class="drawer__section-add js-btn-add-section" data-parent-id="${subject.id}" data-parent-color="${subject.color}" title="Agregar sección">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
@@ -307,9 +346,18 @@ export function initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS }) {
     }).join('')
   }
 
-  // Suscribirse a cambios del store para re-renderizar materias
+  // Suscribirse a cambios del store para re-renderizar materias y trash badge
   NoteStore.subscribe((state) => {
     renderSubjects(state.subjects)
+    // Actualizar badge de papelera
+    if (state.trashCount > 0) {
+      trashCount.textContent = state.trashCount
+      trashCount.style.display = ''
+    } else {
+      trashCount.style.display = 'none'
+    }
+    // Actualizar estado activo del botón papelera
+    btnTrash.classList.toggle('drawer__nav-btn--active', state.viewMode === 'trash')
   })
 
   // --- Theme Toggle (RF-019) ---
