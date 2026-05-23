@@ -4,7 +4,32 @@ Este documento funciona como una bandeja de entrada local para las tareas, mejor
 
 > **Hito activo:** 04 — Organización y UX (Agosto 2026)
 > **Último commit:** `8b3de19` — docs(scripts): documentar scripts de Tanda 3 y actualizar .gitignore
-> **Última auditoría del backlog:** 2026-05-20
+> **Última auditoría del backlog:** 2026-05-23
+
+---
+
+## 📌 Corte actual — Refactorización LOC 2026-05-23
+
+**Estado verificado:** el bloqueo técnico por archivos >400 LOC quedó resuelto mediante splits mecánicos sin cambio funcional. Los módulos públicos mantienen sus rutas/imports principales mediante barrel files o imports CSS nativos.
+
+**Archivos reorganizados:**
+
+- `src/services/SubjectService.js` → barrel + `SubjectService.validation.js`, `SubjectService.crud.js`, `SubjectService.trash.js`.
+- `src/components/NoteList.js` → clase reducida + `NoteCardRenderer.js`, `TrashView.js`.
+- `src/components/NoteList.css` → contenedor feed + `NoteCard.css`, `TrashView.css`.
+- `src/styles/drawer.css` → base drawer + `drawer-subjects.css`, `drawer-trash.css`.
+- `src/layout/drawerController.js` → orquestador + `drawerSubjects.js`, `drawerTheme.js`.
+
+**Comandos de verificación ejecutados:**
+
+```bash
+npm run build
+npm run test
+bash scripts/check-file-size.sh
+npm run lint
+```
+
+**Resultado:** build OK, 294 tests passing, 0 archivos en `[PELIGRO]` por tamaño, lint sin errores. Quedan 3 `[AVISO]` >250 LOC (`NoteCard.css`, `NoteList.js`, `drawerSubjects.js`) y 1 warning de complejidad en el delegador de clicks de `NoteList.js`.
 
 ---
 
@@ -38,9 +63,9 @@ Estos son los 3 bloques recomendados para continuar. La prioridad es mantener tr
 
 | Orden | Bloque | Objetivo | Criterio de cierre |
 |---|---|---|---|
-| 1 | **Paso 9 — Materias y secciones** | Implementar organización por materias sobre el schema SQLite ya disponible. | Crear materias/secciones, asignar notas, filtrar el feed y validar jerarquía con `validate-subjects-hierarchy.py`. |
-| 2 | **Cierre funcional/documental Hito 04** | Completar RF pequeños pendientes y sincronizar documentación viva. | RF-006/RF-024 evaluados o implementados, docs actualizados, `check-traceability.py` sin advertencias. |
-| 3 | **Preparación Hito 05 — Testing y CI** | Empezar suite Vitest y convertir scripts críticos en chequeos de CI. | Primeros tests unitarios + workflow que ejecute lint, trazabilidad, schema sync, DBML check y links. |
+| 1 | **Cierre funcional/documental Hito 04** | Completar RF pequeños pendientes y sincronizar documentación viva. | RF-006/RF-024 evaluados o implementados, README/velocidad/versionado actualizados, `check-traceability.py` sin advertencias. |
+| 2 | **Preparación CI documental** | Convertir scripts críticos en chequeos de CI. | Workflow que ejecute lint, trazabilidad, schema sync, DBML check, doc links y jerarquía de subjects. |
+| 3 | **Remate de deuda post-split** | Reducir deuda menor que quedó visible tras el split. | Delegador de clicks de `NoteList.js` por debajo de complejidad 15 y decisión sobre avisos >250 LOC. |
 
 ---
 
@@ -224,7 +249,7 @@ El Hito 04 ya tiene varias piezas implementadas (SQLite, pin/archivar, búsqueda
 
 **Módulo:** Testing / DevOps
 **Refs:** Hito 05, deuda técnica testing
-**Completado:** Suite Vitest implementada. 291 tests, 9 archivos, 90.15% cobertura statements, 93.91% funciones.
+**Completado:** Suite Vitest implementada. 294 tests, 9 archivos, 90.15% cobertura statements, 93.91% funciones.
 
 - [x] **Instalar/configurar Vitest:** `vitest.config.js` separado del config de Vite, con cobertura V8 y entorno jsdom. Scripts `test`, `test:watch`, `test:coverage`, `test:ui` en `package.json`.
 - [x] **Tests prioritarios:** Cobertura completa de `ThemeService` (100%), `MarkdownService` (96%), `noteFilters` (100%), `SubjectService` (validaciones DP-004), `sqlite/notes`, `sqlite/subjects`, `sqlite/connection`, `NoteStore.data`, `NoteStore.ui`.
@@ -249,15 +274,10 @@ El Hito 04 ya tiene varias piezas implementadas (SQLite, pin/archivar, búsqueda
 - [x] **🔴 ~~Eliminar `vite-plugin-pwa` y artefactos PWA:~~** ✅ Completado (2026-05-17). Se removió `vite-plugin-pwa` (289 paquetes), `public/manifest.json`, config `VitePWA()` de `vite.config.js`, `<link rel="manifest">` de `index.html`, y referencias PWA en `package.json`. Build limpio: sin `sw.js`, sin `registerSW.js`.
 - [x] ~~**Seguridad (XSS en Markdown):**~~ ✅ Resuelto (2026-05-19, Paso 7). `img` y `src` eliminados de whitelist DOMPurify. Agregados `FORBID_TAGS`, `FORBID_ATTR` y hook `afterSanitizeAttributes`.
 - [x] **Assets Manifest:** Agregar los íconos requeridos (`icon-192.png`, `icon-512.png`) en `public/icons/` para cumplir con las validaciones del `manifest.json`.
-- [ ] **Bloqueo técnico inmediato del Quality Gate — split de `NoteList`/drawer:** `quality.sh` ya ejecuta `lumapse-audit --all`; el subcheck `--code` permanece en fallo por archivos >400 LOC: `src/components/NoteList.js`, `src/components/NoteList.css` y `src/styles/drawer.css`, con avisos en `src/layout/drawerController.js` y `src/services/SubjectService.js`. Próxima tarea: aplicar `python3 scripts/split-guide.py` para separar renderizado/estados de `NoteList` y estilos/controlador del drawer sin cambiar comportamiento.
-- [ ] **Refactor de archivos grandes (Deuda Técnica detectada):** Utilizar la guía de `python3 scripts/split-guide.py` para subdividir archivos con alta complejidad y LOC:
-  - `src/components/NoteList.js` (PELIGRO: >400 LOC). Extraer renderizado de cards, empty states y acciones.
-  - `src/components/NoteList.css` (PELIGRO: >400 LOC). Separar estilos de lista, cards y estados vacíos.
-  - `src/styles/drawer.css` (PELIGRO: >400 LOC). Separar layout, navegación, materia activa y estados responsive.
-  - `src/layout/drawerController.js` (AVISO: >250 LOC). Extraer helpers de interacción y wiring de eventos.
-  - `src/services/SubjectService.js` (AVISO: >250 LOC). Separar validaciones DP-004 de operaciones de cascada.
-- [ ] **Reducir complejidad de `NoteList.js`:** extraer renderizado de cards/dropdowns/empty states a funciones auxiliares o componente menor. Hoy `check-file-size.sh` y ESLint advierten sobre anidamiento profundo.
-- [ ] **UI para sub-secciones de Materias (Profundidad > 0):** El modelo de datos (SQLite) y las validaciones de `SubjectService` ya soportan anidamiento (ej. "Materia" -> "TPs" / "Unidad 1"), pero falta implementar la interfaz visual (UX) para crear y navegar estas carpetas hijas dentro de una materia principal.
+- [x] ~~**Bloqueo técnico inmediato del Quality Gate — split de `NoteList`/drawer:**~~ ✅ Completado (2026-05-23). Se resolvieron los archivos en `[PELIGRO]` >400 LOC mediante splits mecánicos, preservando comportamiento e imports públicos. `check-file-size.sh` reporta 0 `[PELIGRO]`.
+- [x] ~~**Refactor de archivos grandes (Deuda Técnica detectada):**~~ ✅ Completado (2026-05-23). Se separaron `SubjectService`, `NoteList`, `NoteList.css`, `drawer.css` y `drawerController` en submódulos especializados. Verificado con `npm run build`, `npm run test`, `bash scripts/check-file-size.sh` y `npm run lint`.
+- [ ] **Reducir complejidad restante de `NoteList.js`:** tras el split, el archivo ya no supera 400 LOC, pero ESLint mantiene 1 warning de complejidad en el delegador de clicks del constructor (`complexity: 19`, máximo 15). Próxima mejora: extraer handlers de acciones de tarjeta/papelera sin cambiar comportamiento.
+- [x] ~~**UI para sub-secciones de Materias (Profundidad > 0):**~~ ✅ Completado (Paso 9). El drawer permite crear y navegar secciones hijas, con validación DP-004, herencia de color y conteos por materia/sección.
 - [ ] **Manejo de Errores y Excepciones (Resiliencia):** Revisar todo el "camino triste" de la app. Implementar bloques `try/catch` robustos en operaciones críticas (ej. fallo de escritura en SQLite por falta de espacio), asegurar que la UI muestre un mensaje amigable ("Error al guardar") sin crashear en silencio, e implementar un mecanismo de loggeo estructurado.
 - [ ] **Optimización Extrema de Renderizado (Virtualización de DOM):** Implementar *List Virtualization* en `NoteList.js`. El DOM solo debe mantener los nodos visibles (reemplazando los ocultos por espacios en blanco) usando `IntersectionObserver` y paginación en SQLite (`LIMIT/OFFSET`). Objetivo: Soportar pruebas de estrés de 10,000+ notas sin que la app crashee o pierda fluidez, garantizando escalabilidad y robustez a nivel profesional.
 
@@ -271,7 +291,7 @@ El Hito 04 ya tiene varias piezas implementadas (SQLite, pin/archivar, búsqueda
 
 ## 🧪 Deuda Técnica — Testing (Crítico para Tribunal)
 
-- [x] ~~**Suite de tests automatizados (Vitest/Jest):**~~ ✅ Completado (2026-05-22). 291 tests unitarios en 9 archivos. Cobertura 90.15% statements / 93.91% functions sobre scope crítico (servicios y store). Tests de sanitización XSS, validaciones DP-004, filtrado, store reactivo y SQL nativo.
+- [x] ~~**Suite de tests automatizados (Vitest/Jest):**~~ ✅ Completado (2026-05-22). 294 tests unitarios en 9 archivos. Cobertura 90.15% statements / 93.91% functions sobre scope crítico (servicios y store). Tests de sanitización XSS, validaciones DP-004, filtrado, store reactivo y SQL nativo.
   - `SqliteService` (operaciones CRUD y fallos): cubierto en `sqlite/notes.test.js`, `sqlite/subjects.test.js`, `sqlite/connection.test.js`.
   - `MarkdownService` (sanitización XSS): 12 tests de seguridad + 30 de sintaxis/edge cases. 
   - Lógica del `Store` (filtrado, ordenamiento, pin/archivar): `noteFilters.test.js` (100%), `NoteStore.data.test.js`, `NoteStore.ui.test.js`.
