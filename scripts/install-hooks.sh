@@ -56,7 +56,6 @@ printf '🚀 Lumapse pre-push: ejecutando quality gate completo...\n'
 printf '==================================================\n'
 
 ./scripts/quality.sh
-./scripts/lumapse-audit-bin --traceability
 ./scripts/bundle-budget.sh
 
 printf '==================================================\n'

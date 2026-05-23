@@ -17,7 +17,7 @@ FAIL=0
 
 # 1. Linting
 echo ""
-echo "[1/4] Ejecutando ESLint..."
+echo "[1/3] Ejecutando ESLint..."
 if npm run lint --silent 2>&1; then
   echo "OK Lint: OK"
 else
@@ -27,7 +27,7 @@ fi
 
 # 2. Build de produccion
 echo ""
-echo "[2/4] Ejecutando build de produccion..."
+echo "[2/3] Ejecutando build de produccion..."
 if npm run build --silent 2>&1; then
   echo "OK Build: OK"
 else
@@ -35,15 +35,15 @@ else
   FAIL=1
 fi
 
-# 3. Auditoria de documentacion
+# 3. Auditor unificado Rust
 echo ""
-echo "[3/4] Ejecutando auditoria de docs..."
-./scripts/check-docs.sh
-
-# 4. Guardia de tamano de archivos
-echo ""
-echo "[4/4] Verificando tamano de archivos..."
-./scripts/check-file-size.sh
+echo "[3/3] Ejecutando lumapse-audit --all..."
+if ./scripts/lumapse-audit-bin --all; then
+  echo "OK lumapse-audit: OK"
+else
+  echo "FALLO lumapse-audit: FALLO"
+  FAIL=1
+fi
 
 # Resumen final
 echo ""
