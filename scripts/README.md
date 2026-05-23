@@ -55,7 +55,7 @@ Ejecuta todos los chequeos de calidad del proyecto en un solo comando. Actúa co
 - **Qué ejecuta (en orden):**
   1. `npm run lint` (ESLint).
   2. `npm run build` (compilación de producción con Vite).
-  3. `./scripts/check-docs.sh` (auditoría de TODOs y estado Git).
+  3. `./scripts/lumapse-audit-bin --all` (auditor unificado Rust: código, trazabilidad, schema, links y jerarquía).
 - **Comportamiento:** Si algún paso falla, el script continúa los demás y al final reporta el resultado global. Si hay fallos, termina con código de salida 1.
 - **Uso:**
   ```bash
@@ -90,7 +90,7 @@ Escanea el código fuente y los assets del proyecto en busca de referencias a UR
   ./scripts/check-offline.sh
   ```
 
-### 7. `check-doc-links.py`
+### 7. `check-doc-links.py` _(Superseded por `lumapse-audit` #35: `--doc-links`)_
 Valida todos los enlaces internos dentro de la documentación Markdown del proyecto.
 
 - **Problema que resuelve:** Con más de 45 documentos Markdown interconectados, renombrar o mover archivos puede romper enlaces relativos silenciosamente.
@@ -101,6 +101,7 @@ Valida todos los enlaces internos dentro de la documentación Markdown del proye
 - **Uso:**
   ```bash
   python3 scripts/check-doc-links.py
+  ./scripts/lumapse-audit-bin --doc-links
   ```
 
 ### 8. `bundle-budget.sh`
@@ -121,8 +122,8 @@ Instala hooks locales de Git para ejecutar automáticamente los chequeos mínimo
 
 - **Problema que resuelve:** Evita que se suban cambios que rompan lint, documentación, trazabilidad, arquitectura offline-first o presupuesto de bundle. Es una protección local para sostener la calidad del proyecto sin depender de recordar cada comando manualmente.
 - **Qué instala:**
-  - `.git/hooks/pre-commit`: ejecuta `npm run lint`, `./scripts/check-offline.sh` y `./scripts/check-docs.sh`.
-  - `.git/hooks/pre-push`: ejecuta `./scripts/quality.sh`, `python3 ./scripts/check-traceability.py` y `./scripts/bundle-budget.sh`.
+  - `.git/hooks/pre-commit`: ejecuta `npm run lint` y `./scripts/lumapse-audit-bin --code`.
+  - `.git/hooks/pre-push`: ejecuta `./scripts/quality.sh` y `./scripts/bundle-budget.sh`.
 - **Cuándo usarlo:** Una vez por clon local del repositorio, especialmente al configurar una nueva máquina o después de clonar el proyecto nuevamente. No instala hooks globales.
 - **Uso:**
   ```bash
@@ -170,21 +171,23 @@ Audita las migraciones SQLite antes de que formen parte del flujo de persistenci
   python3 scripts/check-sql-migrations.py
   ```
 
-### 13. `check-schema-sync.py`
+### 13. `check-schema-sync.py` _(Superseded por `lumapse-audit` #35: `--schema`)_
 Compara el esquema SQLite implementado en código contra el DDL documentado.
 
-- **Problema que resuelve:** Lumapse mantiene el esquema de base de datos en dos lugares: el DDL real embebido en `src/services/SqliteService.js` y la documentación académica en `docs/diagramas/database/04-modelo-fisico-ddl.md`. Si se agrega una columna, tabla o tipo en un lado y se olvida actualizar el otro, el informe técnico queda desincronizado respecto del producto real.
+- **Problema que resuelve:** Lumapse mantiene el esquema de base de datos en dos lugares: el DDL real embebido en código y la documentación académica en `docs/diagramas/database/04-modelo-fisico-ddl.md`. Si se agrega una columna, tabla o tipo en un lado y se olvida actualizar el otro, el informe técnico queda desincronizado respecto del producto real.
+- **Estado actual:** Se conserva como respaldo documental. El check vigente es `./scripts/lumapse-audit-bin --schema`, que apunta al servicio SQLite refactorizado en `src/services/sqlite/connection.js`.
 - **Qué hace:**
-  - Extrae sentencias `CREATE TABLE IF NOT EXISTS` desde los strings SQL de `SqliteService.js`.
+  - Extrae sentencias `CREATE TABLE IF NOT EXISTS` desde strings SQL del servicio SQLite.
   - Extrae sentencias `ALTER TABLE ... ADD COLUMN` usadas por migraciones idempotentes.
   - Lee únicamente los bloques de código SQL del documento físico de base de datos.
   - Construye dos mapas `{tabla -> columna -> tipo}` y compara tablas, columnas y tipos.
   - Ignora constraints como `PRIMARY KEY`, `DEFAULT`, `REFERENCES`, `ON DELETE` o `NOT NULL`, porque el objetivo es auditar sincronización estructural básica y no reglas completas de integridad.
-- **Cuándo usarlo:** Después de modificar `SqliteService.js`, después de actualizar `04-modelo-fisico-ddl.md`, antes de cerrar un hito que toque persistencia SQLite y antes de entregar documentación técnica de base de datos.
+- **Cuándo usarlo:** Después de modificar el schema SQLite, después de actualizar `04-modelo-fisico-ddl.md`, antes de cerrar un hito que toque persistencia SQLite y antes de entregar documentación técnica de base de datos. Para el flujo actual, preferir `lumapse-audit --schema`.
 - **Salida esperada:** Termina con código `0` si no hay diferencias y con código `1` si detecta tablas, columnas o tipos desincronizados.
 - **Uso:**
   ```bash
   python3 scripts/check-schema-sync.py
+  ./scripts/lumapse-audit-bin --schema
   ```
 
 ### 14. `assemble-report.py`
@@ -311,7 +314,7 @@ Calcula los Story Points entregados por hito a partir de la tabla de trazabilida
   python3 scripts/generate-velocity-report.py
   ```
 
-### 24. `validate-subjects-hierarchy.py`
+### 24. `validate-subjects-hierarchy.py` _(Superseded por `lumapse-audit` #35: `--hierarchy`)_
 Valida la integridad de la jerarquía de materias y secciones de acuerdo a la decisión de producto DP-004.
 
 - **Problema que resuelve:** Protege la base de datos contra inconsistencias lógicas en el dominio, como relaciones recursivas infinitas (ciclos), materias huérfanas, o estructuras que excedan el límite físico de profundidad de 2 niveles.
@@ -321,6 +324,7 @@ Valida la integridad de la jerarquía de materias y secciones de acuerdo a la de
   python3 scripts/validate-subjects-hierarchy.py [ruta_base.db]
   # Para ejecutar pruebas con datos que violan las reglas intencionalmente:
   python3 scripts/validate-subjects-hierarchy.py --test-violations
+  ./scripts/lumapse-audit-bin --hierarchy
   ```
 
 ### 25. `generate-dbml-from-code.py`
@@ -477,7 +481,7 @@ Al empezar a trabajar:
 
 Durante el desarrollo:
   - ESLint advierte si un archivo supera 300 LOC
-  - Pre-commit reporta archivos grandes (sin bloquear)
+  - Pre-commit ejecuta lint y auditoria rapida de codigo con lumapse-audit
 
 Cuando un archivo crece demasiado:
   python3 scripts/split-guide.py <archivo>
@@ -492,88 +496,22 @@ Para un reporte completo de salud:
 
 ---
 
-## 🦀 Scripts en Rust — Evolución del toolchain
+## 🦀 Toolchain Rust
 
-A partir del script #35, el proyecto incorpora **Rust** como lenguaje complementario para herramientas de desarrollo. Esta decisión no reemplaza Bash ni Python, sino que responde a una necesidad concreta de rendimiento que apareció cuando la cantidad de scripts llegó a 34 y las verificaciones empezaron a ejecutarse de forma repetida en los git hooks (`pre-commit`, `pre-push`).
-
-### ¿Por qué Rust y no seguir con Bash/Python?
-
-| Aspecto | Bash/Python (actual) | Rust (nuevo) |
-|---|---|---|
-| **Ejecución** | Interpretado | Compilado a binario nativo |
-| **Concurrencia** | Secuencial (1 archivo a la vez) | Multi-hilo nativo (`std::thread`) |
-| **Lectura de archivos** | Cada script abre los mismos archivos por separado | Un solo pase lee cada archivo UNA vez |
-| **Dependencias** | Python 3.8+ / Bash 4+ | Solo `rustc` + `cargo` (usa crate `regex`) |
-| **Velocidad medida** | ~250ms combinados para 4 checks | **~5ms** para los mismos 4 checks |
-
-**Justificación académica:** El proyecto ya tenía 34 scripts funcionales en Bash y Python que resolvían problemas puntuales. A medida que el codebase creció, cuatro de esos scripts (`check-file-size.sh`, `check-docs.sh`, `check-offline.sh`, `check-traceability.py`) empezaron a ejecutarse repetidamente en los git hooks y CI, leyendo los mismos archivos múltiples veces. Rust permite unificar esas verificaciones en un **único pase concurrente** sobre el filesystem y en memoria, reduciendo drásticamente el tiempo de ejecución. Esta evolución demuestra madurez en la gestión de la deuda técnica del propio toolchain de desarrollo.
-
-### ¿Por qué los scripts originales no se borran?
-
-Los scripts originales (#3, #5, #6, #30) fueron parte del proceso de construcción del proyecto y tienen valor documental:
-- Demuestran la evolución incremental del toolchain.
-- Permiten comparar la solución interpretada vs. la compilada.
-- Sirven como respaldo si Rust no está disponible en un entorno de evaluación.
-
-Por eso se los marca como _"Superseded"_ pero se los conserva en el repositorio.
-
-### Estructura de carpetas
-
-A diferencia de los scripts Bash/Python que son archivos individuales en `scripts/`, el auditor en Rust requiere su propia subcarpeta porque Cargo (el build system de Rust) necesita una estructura de proyecto:
-
-```
-scripts/
-├── lumapse-audit-bin      ← Binario compilado listo para usar
-├── lumapse-audit/         ← Proyecto Cargo (Rust)
-│   ├── Cargo.toml         ← Manifiesto del proyecto (dependencias como regex)
-│   ├── Cargo.lock         ← Lock de dependencias (reproducibilidad)
-│   └── src/
-│       ├── main.rs        ← Punto de entrada y escáner de archivos
-│       └── traceability.rs← Módulo de trazabilidad
-├── check-file-size.sh     ← (Superseded por lumapse-audit)
-├── check-offline.sh       ← (Superseded por lumapse-audit)
-├── check-traceability.py.replaced ← (Superseded por lumapse-audit)
-├── check-docs.sh          ← (Superseded parcialmente por lumapse-audit)
-└── ... (otros 31 scripts)
-```
-
-El binario compilado queda en `scripts/lumapse-audit-bin` (generado por `install-hooks.sh`) y NO se commitea al repositorio (está en `.gitignore`).
-
----
+La evolución completa del auditor Rust y la política de preservación de scripts reemplazados vive en [`scripts/docs/evolucion-toolchain-rust.md`](docs/evolucion-toolchain-rust.md).
 
 ### 35. `lumapse-audit` (Rust)
-Auditor concurrente de código fuente que unifica verificaciones de calidad y trazabilidad en un solo ejecutable ultra-rápido.
+Auditor concurrente unificado para chequeos críticos del proyecto.
 
-- **Problema que resuelve:** Scripts antiguos (Bash y Python) como `check-file-size.sh`, `check-docs.sh`, `check-offline.sh` y `check-traceability.py` tardaban demasiado procesando las mismas lecturas de disco a medida que el proyecto escalaba.
-- **Qué hace:**
-  - **Auditoría de Código (`--code`):**
-    1. **Guardia de tamaño (LOC):** Cuenta líneas no vacías. Reporta AVISO (>250 LOC) y PELIGRO (>400 LOC).
-    2. **Búsqueda de TODOs/FIXMEs:** Detecta marcadores con word-boundary.
-    3. **Auditoría Offline-First:** Busca URLs en código fuente diferenciando comentarios.
-  - **Auditoría de Trazabilidad (`--traceability`):**
-    - Verifica consistencia entre RF, HU, ADRs y código fuente (6 chequeos estrictos). Mismo comportamiento que el antiguo script en Python pero ejecutado nativamente en memoria.
-- **Características técnicas:**
-  - Escrito en Rust usando la crate `regex`.
-  - Concurrencia nativa con `std::thread` para el escaneo de código.
-  - Usado directamente por `pre-commit` y `pre-push`.
-- **Compilación e Instalación:**
-  ```bash
-  ./scripts/install-hooks.sh
-  ```
+- **Qué unifica:**
+  - `--code`: LOC guard, TODO/FIXME y offline-first.
+  - `--traceability`: RF, HU, ADR, CHANGELOG y BACKLOG.
+  - `--schema`: sincronización schema SQLite ↔ documentación DDL.
+  - `--doc-links`: links internos, imágenes y anclas Markdown.
+  - `--hierarchy`: jerarquía de materias en memoria.
 - **Uso:**
   ```bash
-  # Desde la raíz del proyecto
-  
-  # Correr auditoría de código (LOC, Offline, TODOs)
-  ./scripts/lumapse-audit-bin --code
-  
-  # Correr auditoría de trazabilidad documental
-  ./scripts/lumapse-audit-bin --traceability
-  
-  # Correr TODO a la vez (por defecto)
   ./scripts/lumapse-audit-bin --all
-  
-  # Ayuda
   ./scripts/lumapse-audit-bin --help
   ```
-- **Requisitos:** Rust (rustc + cargo). Instalable con `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`.
+- **Detalle técnico:** Ver [`scripts/docs/evolucion-toolchain-rust.md`](docs/evolucion-toolchain-rust.md).
