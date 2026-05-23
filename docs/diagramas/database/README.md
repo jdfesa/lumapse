@@ -30,10 +30,10 @@ Normalización (1FN → 2FN → 3FN)
         ↓
 Modelo Lógico (Tablas relacionales — DBML → dbdiagram.io)
         ↓
-Modelo Físico (DDL SQL — en SqliteService.js)
+Modelo Físico (DDL SQL — en connection.js)
 ```
 
-El modelo físico (sentencias `CREATE TABLE` y `ALTER TABLE`) se encuentra implementado en [`src/services/SqliteService.js`](../../../src/services/SqliteService.js) y documentado en [`04-modelo-fisico-ddl.md`](04-modelo-fisico-ddl.md).
+El modelo físico (sentencias `CREATE TABLE` y `ALTER TABLE`) se encuentra implementado en [`src/services/sqlite/connection.js`](../../../src/services/sqlite/connection.js) y documentado en [`04-modelo-fisico-ddl.md`](04-modelo-fisico-ddl.md).
 
 ---
 

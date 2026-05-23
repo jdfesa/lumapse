@@ -8,9 +8,9 @@
 
 ## Objetivo del diagrama
 
-Modelar las **entidades principales** del dominio de Lumapse y sus relaciones. Este diagrama representa la estructura conceptual de los datos que el sistema maneja, independientemente de cómo se implementan internamente. Es el punto de partida para el diseño de la capa de persistencia (SQLite vía `@capacitor-community/sqlite`, [ADR-006](../adr/ADR-006-migracion-sqlite.md)) y del estado de la aplicación (Store).
+Modelar las **entidades principales** del dominio de Lumapse y sus relaciones. Este diagrama representa la estructura conceptual de los datos que el sistema maneja, independientemente de cómo se implementan internamente. Es el punto de partida para el diseño de la capa de persistencia (SQLite vía `@capacitor-community/sqlite`, [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md)) y del estado de la aplicación (Store).
 
-> **Nota de evolución:** En versiones anteriores (Hito 00), el modelo incluía una entidad `Tag` para clasificar notas con etiquetas. Esta entidad fue descartada a favor de una organización por carpetas/materias ([DP-002](../producto/decisiones-producto.md)). La persistencia migró de IndexedDB ([ADR-002](../adr/ADR-002-persistencia-indexeddb.md)) a SQLite ([ADR-006](../adr/ADR-006-migracion-sqlite.md)) en el Hito 04. El modelo actual refleja el código en producción.
+> **Nota de evolución:** En versiones anteriores (Hito 00), el modelo incluía una entidad `Tag` para clasificar notas con etiquetas. Esta entidad fue descartada a favor de una organización por carpetas/materias ([DP-002](../producto/decisiones-producto.md)). La persistencia migró de IndexedDB ([ADR-002](../adr/ADR-002-persistencia-indexeddb.md)) a SQLite ([ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md)) en el Hito 04. El modelo actual refleja el código en producción.
 
 ---
 
@@ -237,7 +237,7 @@ Abstracción sobre SQLite vía `@capacitor-community/sqlite` (nativo en Android)
 | `query(sql, params)` | `Object[]` | Ejecuta una consulta SQL de lectura (SELECT) y retorna los resultados. |
 | `runMigrations()` | `void` | Ejecuta `ALTER TABLE` idempotentes para agregar columnas nuevas (`subjectId`, `statusEmoji`, `deletedAt`, etc.) sin romper instalaciones existentes. |
 
-> Esta capa reemplaza al antiguo `StorageService` basado en IndexedDB (`idb`), que fue desinstalado tras la migración a SQLite ([ADR-006](../adr/ADR-006-migracion-sqlite.md)). La migración one-time de datos legacy de IndexedDB a SQLite se ejecuta automáticamente al primer arranque post-actualización.
+> Esta capa reemplaza al antiguo `StorageService` basado en IndexedDB (`idb`), que fue desinstalado tras la migración a SQLite ([ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md)). La migración one-time de datos legacy de IndexedDB a SQLite se ejecuta automáticamente al primer arranque post-actualización.
 
 ---
 

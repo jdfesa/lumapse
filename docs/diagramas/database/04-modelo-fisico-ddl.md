@@ -1,7 +1,7 @@
 # Modelo Físico — DDL SQL y Reglas de Negocio
 
 **Motor:** SQLite (vía `@capacitor-community/sqlite`)  
-**Implementación:** [`src/services/SqliteService.js`](../../../src/services/SqliteService.js)  
+**Implementación:** [`src/services/sqlite/connection.js`](../../../src/services/sqlite/connection.js)  
 **Última actualización:** Mayo 2026  
 
 ---
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS metadata (
 
 ## 2. Migraciones (instalaciones existentes — idempotentes)
 
-Para usuarios que ya tienen la app instalada con el schema anterior (sin `subjectId`, sin `parentSubjectId`, etc.), las siguientes sentencias `ALTER TABLE` se ejecutan en cada arranque. La función `runMigrations()` en `SqliteService.js` las envuelve en un `try/catch` que ignora el error `duplicate column name` si la columna ya existe.
+Para usuarios que ya tienen la app instalada con el schema anterior (sin `subjectId`, sin `parentSubjectId`, etc.), las siguientes sentencias `ALTER TABLE` se ejecutan en cada arranque. La función `runMigrations()` en `connection.js` las envuelve en un `try/catch` que ignora el error `duplicate column name` si la columna ya existe.
 
 ```sql
 -- Migración v1.1: notas con referencia a materia/sección
@@ -70,7 +70,7 @@ ALTER TABLE subjects ADD COLUMN deletedAt TEXT;
 
 ## 3. Reglas de Negocio (validadas en código)
 
-Las siguientes restricciones **no pueden modelarse en SQL puro** y deben validarse en la capa de lógica de negocio (`SqliteService.js`):
+Las siguientes restricciones **no pueden modelarse en SQL puro** y deben validarse en la capa de lógica de negocio (`SubjectService.js` y servicios SQLite):
 
 1. **Profundidad máxima de 2 niveles:** Al crear una Sección (`parentSubjectId NOT NULL`), verificar que el padre no sea ya una Sección (es decir, que `parent.parentSubjectId IS NULL`). Si el padre ya tiene padre, rechazar la operación con un error descriptivo.
 
