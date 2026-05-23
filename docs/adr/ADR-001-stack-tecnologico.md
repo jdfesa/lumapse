@@ -2,7 +2,7 @@
 
 **Fecha:** 2026-05-01  
 **Estado:** Aceptado  
-**Autores:** Jose David Sandoval
+**Autor:** Jose David Sandoval
 
 ---
 

@@ -2,7 +2,7 @@
 
 **Fecha:** 2026-05-01  
 **Estado:** Superseded por [ADR-005](ADR-005-pivote-app-nativa.md)  
-**Autores:** Jose David Sandoval
+**Autor:** Jose David Sandoval
 
 > ⚠️ **Esta decisión fue reemplazada** tras el análisis del relevamiento de datos (Mayo 2026). IndexedDB se reemplaza por SQLite en una app nativa empaquetada con Capacitor. Ver [ADR-005](ADR-005-pivote-app-nativa.md) para la decisión vigente.
 

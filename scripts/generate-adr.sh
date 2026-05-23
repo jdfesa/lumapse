@@ -68,7 +68,7 @@ cat > "$ADR_PATH" <<EOF
 # ADR-$ADR_NUMBER: $TITLE
 **Fecha:** $DATE_STAMP
 **Estado:** Propuesto / Aceptado / Rechazado
-**Autores:** Jose David Sandoval
+**Autor:** Jose David Sandoval
 ## Contexto
 [Describe aquí el problema o situación actual que requiere tomar esta decisión]
 ## Decisión

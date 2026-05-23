@@ -2,7 +2,7 @@
 
 **Fecha:** 2026-05-14  
 **Estado:** Aceptado  
-**Autores:** Jose David Sandoval  
+**Autor:** Jose David Sandoval  
 **Supersede:** ADR-002 (Persistencia IndexedDB → migrar a SQLite)
 
 ---
