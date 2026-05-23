@@ -14,7 +14,10 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Submenú "Mover a":** Menú contextual (flyout) en cada tarjeta de nota para mover notas rápidamente entre diferentes materias y secciones.
 - **Breadcrumbs en badges:** Las notas pertenecientes a subsecciones muestran un badge de materia completo con el formato `Padre › Hijo` (ej. "Programación I › Unidad I").
 - **Papelera de Reciclaje (RF-026, HU-016):** Eliminación lógica (soft-delete) mediante campo `deletedAt` en `notes` y `subjects`. Al eliminar una nota o materia, se marca con timestamp en lugar de borrarla físicamente. La eliminación de una materia aplica cascada a secciones hijas y notas asociadas. Vista dedicada en el drawer con listado de items eliminados (notas y materias), botones de restaurar individual y vaciar papelera. Badge de conteo en el drawer y advertencia visual (toast) cuando la papelera supera 50 items. Migración de schema SQLite idempotente.
-- **Auditor Concurrente en Rust (Script #35):** `lumapse-audit` unifica verificaciones de tamaño (LOC), tareas pendientes (TODO/FIXME) y arquitectura offline-first en un único pase multi-hilo, acelerando el Quality Gate de ~200ms a ~2ms.
+- **Auditor Concurrente en Rust v0.1.0 (Script #35):** `lumapse-audit` unifica verificaciones de tamaño (LOC), tareas pendientes (TODO/FIXME) y arquitectura offline-first en un único pase multi-hilo, acelerando el Quality Gate de ~200ms a ~2ms.
+- **Auditor Rust v0.2.0 — 3 módulos nuevos:** Absorción de tres scripts Python críticos al binario Rust nativo: `schema_sync` (sincronización schema SQLite ↔ DDL documentado), `doc_links` (auditoría de 297 links internos en Markdown) y `subjects_hierarchy` (validación de jerarquía de materias en memoria). Flag `--all` ejecuta los 5 módulos en un único comando. Tiempo de ejecución total: < 5ms.
+- **`scripts/docs/evolucion-toolchain-rust.md`:** Documento dedicado que registra la evolución del toolchain de scripts hacia Rust nativo, con política de preservación de scripts originales y comparativa de rendimiento. Extrae el contenido que habría hinchado `scripts/README.md`.
+- **Suite de tests unitarios Vitest (Hito 05 — Preparación):** 291 tests unitarios en 9 archivos dentro de `tests/unit/`. Cobertura 90.15% statements / 93.91% functions sobre el scope crítico (servicios y store). Incluye `vitest.config.js` separado del config de Vite y configuración de cobertura V8. Scripts agregados: `test`, `test:watch`, `test:coverage`, `test:ui`.
 - **Persistencia en SQLite (ADR-006):** Migración de la capa de datos de IndexedDB a SQLite utilizando `@capacitor-community/sqlite`. Incluye soporte de simulación en web con `sql.js` (WebAssembly) y `jeep-sqlite` para el desarrollo local, y un script de migración automático (one-time) de IndexedDB legacy a SQLite.
 - **Funcionalidad Pin y Archivar (RF-013):** Las notas pueden fijarse (aparecen al tope del feed con indicador visual) o archivarse (ocultas del feed, accesibles desde "Ver archivadas" en el drawer). IndexedDB upgrade a v2 con backfill automático.
 - **Búsqueda en tiempo real (RF-015):** Input de búsqueda en el drawer que filtra notas por título y contenido con debounce de 200ms.
@@ -38,6 +41,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Layout mobile-first (RF-020):** Arquitectura responsive con drawer lateral, sin sidebar fija.
 - **Migración de colores hardcodeados a tokens CSS:** Todos los valores `rgba()` en `NoteList.css`, `NoteEditor.css` y `Heatmap.css` reemplazados por variables semánticas (`var(--color-*)`) para compatibilidad con el sistema de temas.
 - **Flujo de despliegue Android actualizado:** El ciclo de testing ahora incluye desinstalación obligatoria (`adb uninstall`) antes de instalar, para evitar caché persistente del WebView. Documentado en `docs/flujo-desarrollo-android.md`.
+- **Quality gate unificado (`quality.sh`):** Reemplaza las llamadas a `check-docs.sh` y `check-file-size.sh` por un único `./scripts/lumapse-audit-bin --all`, reduciendo el tiempo del quality gate en pre-push a < 10ms totales. El auditor Rust ejecuta los 5 módulos en un solo pase.
 
 ### Removed
 - **Biblioteca IndexedDB:** Desinstalación de la dependencia `idb` y remoción del antiguo `NoteService.js`.
@@ -46,6 +50,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ### Security
 - **Hardening XSS en MarkdownService (Paso 7):** Eliminada la etiqueta `<img>` y atributos `src`/`alt` de la whitelist de DOMPurify para prevenir peticiones HTTP externas (tracking por pixel espía, privacy leaks). Agregados `FORBID_TAGS` y `FORBID_ATTR` como defensa en profundidad. Hook `afterSanitizeAttributes` bloquea `javascript:` y `data:` en hrefs y fuerza `rel="noopener noreferrer nofollow"` en enlaces externos. Verificado: cero peticiones externas al renderizar Markdown con payloads maliciosos.
+- **Suite Vitest con tests de sanitización:** 12 tests de seguridad en `MarkdownService.test.js` verifican de forma automatizada las decisiones XSS: eliminación de `<img>`, `<script>`, `javascript:`, `data:`, `onclick`, `src` y `srcset`. Integrados al ciclo de testing reproducible.
 
 ### Fixed
 - **Exportación de notas vacías:** Validación de contenido significativo antes de exportar.
@@ -54,6 +59,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ### Deuda Técnica (Pendiente)
 - **Sección de Ayuda / Onboarding (DP-006):** Implementar una sección accesible que explique al usuario cómo usar la app, incluyendo el significado de los emojis de estado y las funcionalidades principales. Objetivo: que cualquier estudiante pueda usar la app desde el día uno sin manual externo.
+- **Gráficos ER y modelo lógico desactualizados:** Los diagramas exportados (notación Chen y modelo lógico relacional) deben regenerarse para reflejar los campos `deletedAt` y `statusEmoji` de la Papelera de Reciclaje.
 
 ---
 

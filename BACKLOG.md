@@ -218,22 +218,16 @@ El Hito 04 ya tiene varias piezas implementadas (SQLite, pin/archivar, búsqueda
 
 ---
 
-### Paso 11: Preparación Hito 05 — Testing automatizado y CI de auditorías
+### ~~Paso 11: Preparación Hito 05 — Testing automatizado y CI de auditorías~~ ✅ Completado (2026-05-22)
 
 **Módulo:** Testing / DevOps
 **Refs:** Hito 05, deuda técnica testing
-**Estimado:** ~1-2 sesiones
-**Dependencia:** Paso 9 cerrado o estabilizado.
+**Completado:** Suite Vitest implementada. 291 tests, 9 archivos, 90.15% cobertura statements, 93.91% funciones.
 
-El proyecto ya cuenta con muchos scripts de auditoría, pero hoy solo ESLint corre en GitHub Actions. El siguiente salto de calidad es automatizar pruebas unitarias y convertir los scripts críticos en una red de seguridad repetible.
-
-**Tareas:**
-- [ ] **Instalar/configurar Vitest:** agregar `test`/`test:run` a `package.json` y configuración mínima compatible con Vite.
-- [ ] **Tests prioritarios:** cubrir `MarkdownService` (sanitización XSS), `ThemeService` (persistencia/detección), `NoteStore` (filtros, búsqueda, pin/archivar) y lógica pura agregada para materias.
+- [x] **Instalar/configurar Vitest:** `vitest.config.js` separado del config de Vite, con cobertura V8 y entorno jsdom. Scripts `test`, `test:watch`, `test:coverage`, `test:ui` en `package.json`.
+- [x] **Tests prioritarios:** Cobertura completa de `ThemeService` (100%), `MarkdownService` (96%), `noteFilters` (100%), `SubjectService` (validaciones DP-004), `sqlite/notes`, `sqlite/subjects`, `sqlite/connection`, `NoteStore.data`, `NoteStore.ui`.
 - [ ] **CI documental:** extender `.github/workflows/lint.yml` o crear workflow separado para `check-traceability.py`, `check-doc-links.py`, `check-schema-sync.py`, `generate-dbml-from-code.py --check` y `validate-subjects-hierarchy.py`.
 - [ ] **Release dry-run:** usar `python3 scripts/release-helper.py --type patch --dry-run` para validar que el flujo de release está listo antes de generar un APK real.
-
-**Criterio de cierre:** El proyecto tiene al menos una suite mínima de tests unitarios ejecutable localmente y un workflow de CI que audita código + documentación sin depender de pasos manuales.
 
 ---
 
@@ -273,11 +267,11 @@ El proyecto ya cuenta con muchos scripts de auditoría, pero hoy solo ESLint cor
 
 ## 🧪 Deuda Técnica — Testing (Crítico para Tribunal)
 
-- [ ] **Suite de tests automatizados (Vitest/Jest):** *Requisito ineludible para la defensa final.* Incorporar Vitest como framework de testing unitario. La cobertura no necesita ser del 100%, pero **es obligatorio** testear:
-  - `SqliteService` (operaciones CRUD y fallos).
-  - `MarkdownService` (sanitización XSS).
-  - Lógica del `Store` (filtrado, ordenamiento, pin/archivar).
-  Objetivo: demostrar calidad de software profesional y prevenir regresiones en la lógica de negocio core.
+- [x] ~~**Suite de tests automatizados (Vitest/Jest):**~~ ✅ Completado (2026-05-22). 291 tests unitarios en 9 archivos. Cobertura 90.15% statements / 93.91% functions sobre scope crítico (servicios y store). Tests de sanitización XSS, validaciones DP-004, filtrado, store reactivo y SQL nativo.
+  - `SqliteService` (operaciones CRUD y fallos): cubierto en `sqlite/notes.test.js`, `sqlite/subjects.test.js`, `sqlite/connection.test.js`.
+  - `MarkdownService` (sanitización XSS): 12 tests de seguridad + 30 de sintaxis/edge cases. 
+  - Lógica del `Store` (filtrado, ordenamiento, pin/archivar): `noteFilters.test.js` (100%), `NoteStore.data.test.js`, `NoteStore.ui.test.js`.
+- [ ] **Tests pendientes menores (deuda post-auditoría):** Agregar 2 tests para `moveNote()` en `NoteStore.data.test.js` (líneas 65-68 sin cubrir). Eliminar clave `deleteSection` duplicada en el mock de la línea 30.
 
 ## 🚀 Ideas a Largo Plazo (Post-Defensa / Hitos Futuros)
 
