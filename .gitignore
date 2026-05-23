@@ -5,6 +5,7 @@ npm-debug.log*
 # Vite
 dist/
 .vite/
+coverage/
 
 # macOS
 .DS_Store
