@@ -12,7 +12,7 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-SQLITE_SERVICE_PATH = PROJECT_ROOT / "src" / "services" / "SqliteService.js"
+SQLITE_SERVICE_PATH = PROJECT_ROOT / "src" / "services" / "sqlite" / "connection.js"
 DDL_DOC_PATH = PROJECT_ROOT / "docs" / "diagramas" / "database" / "04-modelo-fisico-ddl.md"
 
 JS_STRING_RE = re.compile(

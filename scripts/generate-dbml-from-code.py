@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Lumapse — Generador DBML desde Código
-Genera 03-modelo-logico-relacional.dbml parseando el DDL real de SqliteService.js.
+Genera 03-modelo-logico-relacional.dbml parseando el DDL real de sqlite/connection.js.
 Uso: python3 scripts/generate-dbml-from-code.py [--check]
 """
 
@@ -13,7 +13,7 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-SQLITE_SERVICE_PATH = PROJECT_ROOT / "src" / "services" / "SqliteService.js"
+SQLITE_SERVICE_PATH = PROJECT_ROOT / "src" / "services" / "sqlite" / "connection.js"
 DBML_PATH = PROJECT_ROOT / "docs" / "diagramas" / "database" / "03-modelo-logico-relacional.dbml"
 
 JS_STRING_RE = re.compile(
@@ -429,7 +429,7 @@ def generate_header(generated_date):
     return "\n".join([
         "// ═══════════════════════════════════════════════════",
         "// Lumapse — Modelo Lógico Relacional",
-        "// Generado automáticamente desde src/services/SqliteService.js",
+        "// Generado automáticamente desde src/services/sqlite/connection.js",
         '// PP3 · IES 6023 "Dr. Alfredo Loutaif" · 2026',
         "// Motor: SQLite · Herramienta: dbdiagram.io",
         "// Fecha de generación: {0}".format(generated_date),
@@ -518,7 +518,7 @@ def main(argv):
     print_header()
 
     try:
-        print("📥 Parseando SqliteService.js...")
+        print("📥 Parseando sqlite/connection.js...")
         tables = parse_code_schema()
         for table in tables:
             print("   ✓ {0}: {1} columnas".format(table["name"], len(table["columns"])))
