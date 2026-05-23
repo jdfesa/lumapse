@@ -54,9 +54,17 @@ Ejecuta todos los chequeos de calidad del proyecto en un solo comando. Actúa co
 
 - **Qué ejecuta (en orden):**
   1. `npm run lint` (ESLint).
-  2. `npm run build` (compilación de producción con Vite).
-  3. `./scripts/lumapse-audit-bin --all` (auditor unificado Rust: código, trazabilidad, schema, links y jerarquía).
+  2. `npm run test` (suite Vitest — 294 tests unitarios).
+  3. `npm run build` (compilación de producción con Vite).
+  4. Auditoría de código (con fallback cross-platform — ver abajo).
+- **Estrategia de compatibilidad (Paso 4):** Intenta ejecutar `./scripts/lumapse-audit-bin --all` (Rust, ~2ms). Si el binario no existe o es incompatible con el OS actual (ej. profesor en Windows/Linux), **cae automáticamente** a los scripts Python/Shell originales:
+  - `check-file-size.sh` (reemplaza `--code`)
+  - `check-traceability.py` (reemplaza `--traceability`)
+  - `check-schema-sync.py` (reemplaza `--schema`)
+  - `check-doc-links.py` (reemplaza `--doc-links`)
+  - `validate-subjects-hierarchy.py` (reemplaza `--hierarchy`)
 - **Comportamiento:** Si algún paso falla, el script continúa los demás y al final reporta el resultado global. Si hay fallos, termina con código de salida 1.
+- **Requisitos:** Node.js + Python 3.8+. Rust/cargo es **opcional** (optimización de rendimiento).
 - **Uso:**
   ```bash
   ./scripts/quality.sh
@@ -121,9 +129,11 @@ Mide y controla el peso final de los archivos estáticos de producción contra l
 Instala hooks locales de Git para ejecutar automáticamente los chequeos mínimos antes de hacer commit o push.
 
 - **Problema que resuelve:** Evita que se suban cambios que rompan lint, documentación, trazabilidad, arquitectura offline-first o presupuesto de bundle. Es una protección local para sostener la calidad del proyecto sin depender de recordar cada comando manualmente.
+- **Compilación Rust opcional:** Si `cargo` está disponible en el sistema, compila el auditor Rust para hooks ultra-rápidos (~2ms). Si no está instalado (ej. profesor en Windows/Linux), muestra un mensaje informativo y los hooks usarán automáticamente los scripts Python/Shell como fallback.
 - **Qué instala:**
-  - `.git/hooks/pre-commit`: ejecuta `npm run lint` y `./scripts/lumapse-audit-bin --code`.
+  - `.git/hooks/pre-commit`: ejecuta `npm run lint` y auditoría de código (Rust → fallback a `check-file-size.sh`).
   - `.git/hooks/pre-push`: ejecuta `./scripts/quality.sh` y `./scripts/bundle-budget.sh`.
+- **Requisitos:** Git + Node.js. Rust/cargo es **opcional**.
 - **Cuándo usarlo:** Una vez por clon local del repositorio, especialmente al configurar una nueva máquina o después de clonar el proyecto nuevamente. No instala hooks globales.
 - **Uso:**
   ```bash
@@ -500,18 +510,24 @@ Para un reporte completo de salud:
 
 La evolución completa del auditor Rust y la política de preservación de scripts reemplazados vive en [`scripts/docs/evolucion-toolchain-rust.md`](docs/evolucion-toolchain-rust.md).
 
-### 35. `lumapse-audit` (Rust)
+### 35. `lumapse-audit` (Rust) — Opcional, con fallback automático a Python/Shell
 Auditor concurrente unificado para chequeos críticos del proyecto.
 
+- **Importante — Compatibilidad cross-platform:** El binario compilado (`lumapse-audit-bin`) funciona en el OS donde fue compilado (ej. macOS ARM64). Si el proyecto se clona en otro OS (Windows, Linux), **no se necesita Rust instalado**: tanto `quality.sh` como los hooks de Git detectan automáticamente la ausencia del binario y caen a los scripts Python/Shell originales que cubren la misma funcionalidad. Los scripts Python originales están preservados en el repositorio con este propósito.
 - **Qué unifica:**
-  - `--code`: LOC guard, TODO/FIXME y offline-first.
-  - `--traceability`: RF, HU, ADR, CHANGELOG y BACKLOG.
-  - `--schema`: sincronización schema SQLite ↔ documentación DDL.
-  - `--doc-links`: links internos, imágenes y anclas Markdown.
-  - `--hierarchy`: jerarquía de materias en memoria.
+  - `--code`: LOC guard, TODO/FIXME y offline-first → fallback: `check-file-size.sh`
+  - `--traceability`: RF, HU, ADR, CHANGELOG y BACKLOG → fallback: `check-traceability.py`
+  - `--schema`: sincronización schema SQLite ↔ documentación DDL → fallback: `check-schema-sync.py`
+  - `--doc-links`: links internos, imágenes y anclas Markdown → fallback: `check-doc-links.py`
+  - `--hierarchy`: jerarquía de materias en memoria → fallback: `validate-subjects-hierarchy.py`
 - **Uso:**
   ```bash
   ./scripts/lumapse-audit-bin --all
   ./scripts/lumapse-audit-bin --help
+  ```
+- **Compilación (requiere cargo):**
+  ```bash
+  cd scripts/lumapse-audit && cargo build --release
+  cp target/release/lumapse-audit ../lumapse-audit-bin
   ```
 - **Detalle técnico:** Ver [`scripts/docs/evolucion-toolchain-rust.md`](docs/evolucion-toolchain-rust.md).
