@@ -34,6 +34,8 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Refactorización de NoteStore:** `NoteStore.js` dividido en submódulos (`state`, `data`, `ui`) con barrel file para mantener retrocompatibilidad.
 
 ### Changed
+- **Plantilla de ADRs:** Modificada la plantilla de `generate-adr.sh` para establecer como autor a Jose David Sandoval de forma predeterminada.
+- **Modelo Lógico:** Regenerado el archivo `03-modelo-logico-relacional.dbml` para apuntar a la ruta correcta de persistencia en la cabecera del archivo.
 - **Capa de Persistencia:** Reemplazo de `NoteService.js` por `SqliteService.js` y actualización de `NoteStore.js` y `ExportService.js` para consumir la base de datos SQLite.
 - **DP-001: Título unificado (estilo Typora).** Se eliminó el campo de título separado del editor. El título se extrae automáticamente de la primera línea `# ` del contenido Markdown.
 - **Rediseño UI a estética Notion/Obsidian:** Interfaz minimalista con paleta oscura suave, tipografía monospace y micro-animaciones.
@@ -54,6 +56,8 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Suite Vitest con tests de sanitización:** 15 tests de seguridad en `MarkdownService.test.js` verifican de forma automatizada la política de dos capas: `<img>` con src externo se limpia, `<img>` con `data:` URI y ruta relativa sobrevive, `<script>`, `javascript:`, `onclick`, `srcset` y `poster` son eliminados. 294 tests totales, todos pasando.
 
 ### Fixed
+- **Modo Compatibilidad (Scripts Python):** Corregido fallo de ejecución en `check-schema-sync.py` y `generate-dbml-from-code.py` al apuntar a la antigua ruta de persistencia (`SqliteService.js` → `sqlite/connection.js`).
+- **Autoría de ADR-006:** Corregido el campo de autor en el documento de persistencia SQLite para establecer a Jose David Sandoval en lugar de Equipo de Lumapse.
 - **Exportación de notas vacías:** Validación de contenido significativo antes de exportar.
 - **Ícono nativo:** Eliminados bordes blancos del ícono de la aplicación.
 - **Caché de WebView en despliegues Android:** Detectado y resuelto el problema de assets web obsoletos al actualizar el APK in-place. La solución (desinstalación previa) fue documentada y automatizada en `scripts/deploy-android.sh`.
