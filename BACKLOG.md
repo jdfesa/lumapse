@@ -131,20 +131,22 @@ Estos son los 3 bloques recomendados para continuar. La prioridad es mantener tr
 
 ---
 
-### ~~Paso 7: Hardening de seguridad XSS en MarkdownService~~ ✅ Completado (2026-05-19)
+### ~~Paso 7: Hardening de seguridad XSS en MarkdownService~~ ✅ Completado (2026-05-19, rev. 2: 2026-05-23)
 
 **Módulo:** Core / Seguridad
 **Refs:** Deuda técnica (Auditoría 2026-05-14), MarkdownService.js
 **Estimado:** ~30 min
 
-**Resumen:** Se eliminó `<img>` de `ALLOWED_TAGS` y `src`/`alt` de `ALLOWED_ATTR` en DOMPurify para prevenir peticiones HTTP externas (pixel tracking, IP leaks). Se agregaron `FORBID_TAGS` y `FORBID_ATTR` como defensa en profundidad, y un hook `afterSanitizeAttributes` que bloquea `javascript:`/`data:` en hrefs y fuerza `rel="noopener noreferrer nofollow"` en enlaces externos. Verificado visualmente con payloads XSS: cero peticiones externas, cero ejecución de scripts, Markdown seguro renderiza correctamente.
+**Resumen (rev. 2):** Política quirúrgica de `<img>`: se permiten imágenes con `src` local (`data:`, `blob:`, rutas relativas) y se bloquean URLs externas (`http://`, `https://`) para prevenir tracking por pixel espía sin quitarle funcionalidad al usuario. Defensa en profundidad de dos capas: (1) DOMPurify con hook `afterSanitizeAttributes` que filtra selectivamente `src` en `<img>`, y (2) CSP meta tag en `index.html` que restringe `img-src` a `'self' data: blob: capacitor://localhost http://localhost` a nivel de WebView. 15 tests de seguridad automatizados verifican la política.
 
 **Tareas:**
-- [x] **`MarkdownService.js`:** Revisar `ALLOWED_TAGS` y `ALLOWED_ATTR`. Evaluar si `img` debe mantenerse o eliminarse. Si se mantiene, agregar un hook de DOMPurify que fuerce `src` a solo data URIs o que elimine `img` por completo.
+- [x] **`MarkdownService.js`:** Revisar `ALLOWED_TAGS` y `ALLOWED_ATTR`. ~~Evaluar si `img` debe mantenerse o eliminarse.~~ → Rev. 2: `<img>` permitido con src local, bloqueado con src externo.
+- [x] **`index.html`:** Agregar meta tag `Content-Security-Policy` como segunda capa de defensa (CSP).
 - [x] **Test manual:** Crear una nota con payload `![test](https://externo.com/pixel.png)` y verificar que la imagen NO se carga (Network tab vacío).
-- [x] **Documentar:** Agregar comentario en el código justificando la decisión de seguridad.
+- [x] **Tests automatizados:** 15 tests de seguridad en `MarkdownService.test.js` verifican la política de dos capas.
+- [x] **Documentar:** Agregar comentario en el código justificando la decisión de seguridad (rev. 2 actualizado).
 
-**Criterio de cierre:** No se realizan peticiones HTTP externas al renderizar Markdown. La sanitización está documentada en el código.
+**Criterio de cierre:** No se realizan peticiones HTTP externas al renderizar Markdown. Imágenes locales (data:, blob:, relativas) funcionan correctamente. La sanitización está documentada en el código y reforzada por CSP a nivel de infraestructura.
 
 ---
 
