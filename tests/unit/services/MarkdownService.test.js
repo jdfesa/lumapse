@@ -88,10 +88,25 @@ describe('renderMarkdown()', () => {
   })
 
   describe('Sanitización XSS', () => {
-    it('elimina etiquetas <img> del HTML generado', () => {
+    it('permite <img> pero elimina src externo (https://)', () => {
       const html = MarkdownService.renderMarkdown('![alt](https://example.com/x.png)')
 
-      expect(html).not.toContain('<img')
+      expect(html).toContain('<img')
+      expect(html).toContain('alt="alt"')
+      expect(html).not.toContain('https://example.com')
+    })
+
+    it('permite <img> con src data: URI (imagen local embebida)', () => {
+      const html = MarkdownService.renderMarkdown('<img src="data:image/png;base64,abc" alt="local">')
+
+      expect(html).toContain('<img')
+      expect(html).toContain('src="data:image/png;base64,abc"')
+    })
+
+    it('permite <img> con src relativo (./imagen.png)', () => {
+      const html = MarkdownService.renderMarkdown('<img src="./imagen.png" alt="local">')
+
+      expect(html).toContain('src="./imagen.png"')
     })
 
     it('elimina <script>alert("xss")</script>', () => {
@@ -112,7 +127,7 @@ describe('renderMarkdown()', () => {
       expect(MarkdownService.renderMarkdown('<iframe src="x"></iframe>')).not.toContain('<iframe')
     })
 
-    it('elimina atributo src de cualquier tag', () => {
+    it('elimina atributo src de tags que no sean img', () => {
       expect(MarkdownService.renderMarkdown('<a href="./x" src="https://tracker.test">x</a>')).not.toContain('src=')
     })
 
@@ -157,7 +172,7 @@ describe('renderMarkdown()', () => {
   })
 
   describe('Defensa en profundidad', () => {
-    it('elimina src que haya sobrevivido en un tag permitido', () => {
+    it('elimina src externo que haya sobrevivido en un tag no-img', () => {
       const html = MarkdownService.renderMarkdown('<a href="./x" src="https://example.com/pixel">x</a>')
 
       expect(html).not.toContain('src=')
@@ -173,6 +188,14 @@ describe('renderMarkdown()', () => {
       const html = MarkdownService.renderMarkdown('<a href="./x" poster="https://example.com/p">x</a>')
 
       expect(html).not.toContain('poster=')
+    })
+
+    it('bloquea http:// en img src pero permite data: en img src', () => {
+      const external = MarkdownService.renderMarkdown('<img src="http://tracker.com/pixel.png">')
+      const local = MarkdownService.renderMarkdown('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==">')
+
+      expect(external).not.toContain('http://tracker.com')
+      expect(local).toContain('data:image/gif')
     })
   })
 })
