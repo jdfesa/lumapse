@@ -381,7 +381,11 @@ fn print_json(reports: &[FileReport], elapsed_us: u128) {
     println!("}}");
 }
 
+#[allow(dead_code, unused_variables)]
 mod traceability;
+mod schema_sync;
+mod doc_links;
+mod subjects_hierarchy;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -395,7 +399,10 @@ fn main() {
         println!("  --json         Salida en formato JSON (para integración con otros scripts)");
         println!("  --traceability Ejecuta la auditoría de trazabilidad (RF, HU, ADR)");
         println!("  --code         Ejecuta la auditoría de código (LOC, TODOs, Offline)");
-        println!("  --all          Ejecuta todo (por defecto si no se especifica --traceability ni --code)");
+        println!("  --schema       Ejecuta la auditoría de sincronización schema ↔ documentación");
+        println!("  --doc-links    Ejecuta la auditoría de links en documentación");
+        println!("  --hierarchy    Ejecuta la validación de jerarquía de materias (en memoria)");
+        println!("  --all          Ejecuta todo (por defecto si no se especifica ningún módulo)");
         println!("  --help         Muestra esta ayuda");
         println!();
         return;
@@ -404,11 +411,19 @@ fn main() {
     let json_mode = args.iter().any(|a| a == "--json");
     let mut run_trace = args.iter().any(|a| a == "--traceability");
     let mut run_code = args.iter().any(|a| a == "--code");
+    let mut run_schema = args.iter().any(|a| a == "--schema");
+    let mut run_doc_links = args.iter().any(|a| a == "--doc-links");
+    let mut run_hierarchy = args.iter().any(|a| a == "--hierarchy");
     
-    // Si no se pasa ni --traceability ni --code, o se pasa --all, corremos todo
-    if args.iter().any(|a| a == "--all") || (!run_trace && !run_code) {
+    // Si no se pasa ningún módulo específico, o se pasa --all, corremos todo
+    if args.iter().any(|a| a == "--all")
+        || (!run_trace && !run_code && !run_schema && !run_doc_links && !run_hierarchy)
+    {
         run_trace = true;
         run_code = true;
+        run_schema = true;
+        run_doc_links = true;
+        run_hierarchy = true;
     }
 
     // Detectar la raíz del proyecto buscando hacia arriba el package.json
@@ -456,6 +471,57 @@ fn main() {
             }
             Err(e) => {
                 eprintln!("❌ Error en auditoría de trazabilidad: {}", e);
+                exit_code = 1;
+            }
+        }
+    }
+
+    if run_schema {
+        if run_code || run_trace {
+            println!(); // Espacio entre reportes
+        }
+        match schema_sync::run_schema_check(project_root) {
+            Ok(diffs) => {
+                if diffs > 0 {
+                    exit_code = 1;
+                }
+            }
+            Err(e) => {
+                eprintln!("❌ Error en schema sync: {}", e);
+                exit_code = 1;
+            }
+        }
+    }
+
+    if run_doc_links {
+        if run_code || run_trace || run_schema {
+            println!(); // Espacio entre reportes
+        }
+        match doc_links::run_doc_links_check(project_root) {
+            Ok(broken) => {
+                if broken > 0 {
+                    exit_code = 1;
+                }
+            }
+            Err(e) => {
+                eprintln!("❌ Error en doc links: {}", e);
+                exit_code = 1;
+            }
+        }
+    }
+
+    if run_hierarchy {
+        if run_code || run_trace || run_schema || run_doc_links {
+            println!(); // Espacio entre reportes
+        }
+        match subjects_hierarchy::run_hierarchy_check() {
+            Ok(violations) => {
+                if violations > 0 {
+                    exit_code = 1;
+                }
+            }
+            Err(e) => {
+                eprintln!("❌ Error en jerarquía: {}", e);
                 exit_code = 1;
             }
         }

@@ -1,8 +1,8 @@
 [package]
 name = "lumapse-audit"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "Auditor concurrente de código fuente para Lumapse — LOC, TODOs, offline-first"
+description = "Auditor concurrente unificado para Lumapse — código, trazabilidad, schema, docs, jerarquía"
 
 # Dependencias
 [dependencies]
