@@ -1,0 +1,279 @@
+// =============================================================
+// layout/drawerSubjects — Lógica de materias del drawer
+// Extraído de drawerController.js para reducir LOC.
+// =============================================================
+
+import { escapeHtml } from './appShell.js'
+
+/**
+ * Inicializa la lógica de materias en el drawer.
+ * @param {object} deps Dependencias
+ * @param {object} deps.NoteStore Store de notas
+ * @param {string[]} deps.SUBJECT_COLORS Paleta de colores
+ * @param {function} deps.closeDrawer Función para cerrar el drawer
+ * @param {function} deps.getShowingArchived Getter del estado archived
+ * @param {function} deps.resetArchived Función para resetear el toggle de archivados
+ * @returns {{ updateSubjectActiveState: function, renderSubjects: function }}
+ */
+export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowingArchived, resetArchived }) {
+  const subjectsList = document.getElementById('subjects-list')
+  const btnInbox = document.getElementById('btn-inbox')
+  const inboxCount = document.getElementById('inbox-count')
+  const btnAddSubject = document.getElementById('btn-add-subject')
+  const subjectFormContainer = document.getElementById('subject-form-container')
+  const subjectNameInput = document.getElementById('subject-name-input')
+  const colorPickerContainer = document.getElementById('subject-color-picker')
+  const btnSubjectCancel = document.getElementById('btn-subject-cancel')
+  const btnSubjectSave = document.getElementById('btn-subject-save')
+  let selectedColor = SUBJECT_COLORS[0]
+
+  // Renderizar paleta de colores
+  colorPickerContainer.innerHTML = SUBJECT_COLORS.map((color, i) => `
+    <button class="drawer__color-dot${i === 0 ? ' drawer__color-dot--active' : ''}" 
+            data-color="${color}" 
+            style="background-color: ${color}" 
+            title="${color}"></button>
+  `).join('')
+
+  colorPickerContainer.addEventListener('click', (e) => {
+    const dot = e.target.closest('.drawer__color-dot')
+    if (!dot) return
+    selectedColor = dot.dataset.color
+    colorPickerContainer.querySelectorAll('.drawer__color-dot').forEach(d => d.classList.remove('drawer__color-dot--active'))
+    dot.classList.add('drawer__color-dot--active')
+  })
+
+  // Mostrar/ocultar formulario
+  btnAddSubject.addEventListener('click', () => {
+    const isVisible = subjectFormContainer.style.display !== 'none'
+    subjectFormContainer.style.display = isVisible ? 'none' : 'block'
+    if (!isVisible) {
+      subjectNameInput.value = ''
+      subjectNameInput.focus()
+    }
+  })
+
+  btnSubjectCancel.addEventListener('click', () => {
+    subjectFormContainer.style.display = 'none'
+    subjectNameInput.value = ''
+  })
+
+  btnSubjectSave.addEventListener('click', async () => {
+    const name = subjectNameInput.value.trim()
+    if (!name) return
+    try {
+      await NoteStore.createSubject(name, selectedColor)
+      subjectFormContainer.style.display = 'none'
+      subjectNameInput.value = ''
+    } catch (err) {
+      alert(err.message)
+    }
+  })
+
+  // Enter para guardar, Escape para cancelar
+  subjectNameInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      btnSubjectSave.click()
+    } else if (e.key === 'Escape') {
+      btnSubjectCancel.click()
+    }
+  })
+
+  // Click en Entrada
+  btnInbox.addEventListener('click', () => {
+    NoteStore.setActiveSubject(null)
+    resetArchived()
+    updateSubjectActiveState(null)
+    closeDrawer()
+  })
+
+  // Delegación para clicks en materias del listado
+  subjectsList.addEventListener('click', (e) => {
+    // Botón eliminar materia/sección
+    const btnDelete = e.target.closest('.js-btn-delete-subject')
+    if (btnDelete) {
+      e.stopPropagation()
+      const subjectId = btnDelete.dataset.subjectId
+      const isSection = btnDelete.dataset.isSection === 'true'
+      const subjectName = btnDelete.dataset.subjectName || ''
+      const type = isSection ? 'sección' : 'materia'
+      if (confirm(`¿Estás seguro de enviar la ${type} "${subjectName}" y todas sus notas a la Papelera de reciclaje?`)) {
+        if (isSection) {
+          NoteStore.deleteSection(subjectId)
+        } else {
+          NoteStore.deleteSubject(subjectId)
+        }
+      }
+      return
+    }
+
+    // Botón "+" para agregar sección
+    const btnAddSection = e.target.closest('.js-btn-add-section')
+    if (btnAddSection) {
+      e.stopPropagation()
+      toggleSectionForm(btnAddSection.dataset.parentId)
+      return
+    }
+
+    // Guardar sección
+    const btnSaveSection = e.target.closest('.js-btn-section-save')
+    if (btnSaveSection) {
+      e.stopPropagation()
+      saveSectionForm(btnSaveSection.dataset.parentId, btnSaveSection.dataset.parentColor)
+      return
+    }
+
+    // Cancelar sección
+    const btnCancelSection = e.target.closest('.js-btn-section-cancel')
+    if (btnCancelSection) {
+      e.stopPropagation()
+      closeSectionForm(btnCancelSection.dataset.parentId)
+      return
+    }
+
+    // Navegación a materia/sección
+    const subjectBtn = e.target.closest('.drawer__subject-btn')
+    if (!subjectBtn) return
+    const subjectId = subjectBtn.dataset.subject
+    if (!subjectId) return
+
+    NoteStore.setActiveSubject(subjectId)
+    resetArchived()
+    updateSubjectActiveState(subjectId)
+    closeDrawer()
+  })
+
+  // Enter/Escape en inputs de sección (delegación)
+  subjectsList.addEventListener('keydown', (e) => {
+    const input = e.target.closest('.js-section-name-input')
+    if (!input) return
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      saveSectionForm(input.dataset.parentId, input.dataset.parentColor)
+    } else if (e.key === 'Escape') {
+      closeSectionForm(input.dataset.parentId)
+    }
+  })
+
+  /** Muestra/oculta el formulario inline de sección para una materia */
+  function toggleSectionForm(parentId) {
+    // Cerrar cualquier otro formulario abierto
+    subjectsList.querySelectorAll('.drawer__section-form').forEach(form => {
+      form.style.display = 'none'
+    })
+    const form = subjectsList.querySelector(`#section-form-${parentId}`)
+    if (!form) return
+    const isVisible = form.style.display !== 'none'
+    form.style.display = isVisible ? 'none' : 'block'
+    if (!isVisible) {
+      const input = form.querySelector('.js-section-name-input')
+      if (input) {
+        input.value = ''
+        input.focus()
+      }
+    }
+  }
+
+  /** Guarda una nueva sección bajo la materia padre */
+  async function saveSectionForm(parentId, parentColor) {
+    const form = subjectsList.querySelector(`#section-form-${parentId}`)
+    if (!form) return
+    const input = form.querySelector('.js-section-name-input')
+    const name = input ? input.value.trim() : ''
+    if (!name) return
+    try {
+      await NoteStore.createSubject(name, parentColor, parentId)
+      form.style.display = 'none'
+    } catch (err) {
+      alert(err.message)
+    }
+  }
+
+  /** Cierra el formulario de sección */
+  function closeSectionForm(parentId) {
+    const form = subjectsList.querySelector(`#section-form-${parentId}`)
+    if (form) form.style.display = 'none'
+  }
+
+  /** Actualiza qué botón de materia tiene la clase --active */
+  function updateSubjectActiveState(activeId) {
+    // Inbox
+    btnInbox.classList.toggle('drawer__subject-btn--active', activeId === null && !getShowingArchived())
+    // Materias
+    subjectsList.querySelectorAll('.drawer__subject-btn').forEach(btn => {
+      btn.classList.toggle('drawer__subject-btn--active', btn.dataset.subject === activeId)
+    })
+  }
+
+  /** Renderiza la lista de materias desde el árbol del store */
+  function renderSubjects(subjectsData) {
+    if (!subjectsData) return
+
+    inboxCount.textContent = subjectsData.inboxCount || 0
+
+    if (!subjectsData.tree || subjectsData.tree.length === 0) {
+      subjectsList.innerHTML = ''
+      return
+    }
+
+    const state = NoteStore.getState()
+    subjectsList.innerHTML = subjectsData.tree.map(subject => {
+      const isActive = state.activeSubjectId === subject.id
+      const childrenHtml = (subject.children || []).map(child => {
+        const isChildActive = state.activeSubjectId === child.id
+        return `
+          <div class="drawer__subject-row drawer__subject-row--child">
+            <button class="drawer__subject-btn drawer__subject-btn--child${isChildActive ? ' drawer__subject-btn--active' : ''}" data-subject="${child.id}">
+              <span class="drawer__subject-color" style="background-color: ${child.color || subject.color}"></span>
+              <span class="drawer__subject-name">${escapeHtml(child.name)}</span>
+              <span class="drawer__subject-count">${child.noteCount || 0}</span>
+            </button>
+            <button class="drawer__section-add js-btn-delete-subject" data-subject-id="${child.id}" data-is-section="true" data-subject-name="${escapeHtml(child.name)}" title="Eliminar sección">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          </div>
+        `
+      }).join('')
+
+      // Formulario inline para crear sección (oculto por defecto)
+      const sectionFormHtml = `
+        <div id="section-form-${subject.id}" class="drawer__section-form" style="display:none">
+          <input type="text" 
+                 class="drawer__section-form-input js-section-name-input" 
+                 placeholder="Nombre de sección" 
+                 maxlength="40" 
+                 autocomplete="off"
+                 data-parent-id="${subject.id}"
+                 data-parent-color="${subject.color}">
+          <div class="drawer__section-form-actions">
+            <button class="drawer__subject-form-btn js-btn-section-cancel" data-parent-id="${subject.id}">Cancelar</button>
+            <button class="drawer__subject-form-btn drawer__subject-form-btn--primary js-btn-section-save" data-parent-id="${subject.id}" data-parent-color="${subject.color}">Crear</button>
+          </div>
+        </div>
+      `
+
+      return `
+        <div class="drawer__subject-group">
+          <div class="drawer__subject-row">
+            <button class="drawer__subject-btn${isActive ? ' drawer__subject-btn--active' : ''}" data-subject="${subject.id}">
+              <span class="drawer__subject-color" style="background-color: ${subject.color}"></span>
+              <span class="drawer__subject-name">${escapeHtml(subject.name)}</span>
+              <span class="drawer__subject-count">${subject.noteCount || 0}</span>
+            </button>
+            <button class="drawer__section-add js-btn-delete-subject" data-subject-id="${subject.id}" data-is-section="false" data-subject-name="${escapeHtml(subject.name)}" title="Eliminar materia">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+            <button class="drawer__section-add js-btn-add-section" data-parent-id="${subject.id}" data-parent-color="${subject.color}" title="Agregar sección">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </button>
+          </div>
+          ${childrenHtml}
+          ${sectionFormHtml}
+        </div>
+      `
+    }).join('')
+  }
+
+  return { updateSubjectActiveState, renderSubjects }
+}
