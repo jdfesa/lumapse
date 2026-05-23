@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════
 // Lumapse — Modelo Lógico Relacional
-// Generado automáticamente desde src/services/SqliteService.js
+// Generado automáticamente desde src/services/sqlite/connection.js
 // PP3 · IES 6023 "Dr. Alfredo Loutaif" · 2026
 // Motor: SQLite · Herramienta: dbdiagram.io
 // Fecha de generación: 2026-05-22
@@ -24,8 +24,8 @@ Table subjects {
   parentSubjectId TEXT    [note: "NULL = Materia raíz | UUID = Sección hija"]
   archived        INTEGER [default: 0, note: "0 = activa | 1 = archivada"]
   color           TEXT    [note: "Hex opcional (ej: #a3e635)"]
-  deletedAt       TEXT    [note: "NULL = activa | ISO 8601 = en papelera (soft-delete, RF-026)"]
   createdAt       TEXT    [not null, note: "ISO 8601 UTC"]
+  deletedAt       TEXT
 
   note: "Modela Materias (parentSubjectId = NULL) y Secciones (parentSubjectId = UUID). Profundidad máx: 2 niveles (DP-004)."
 }
@@ -37,10 +37,10 @@ Table notes {
   pinned      INTEGER [default: 0, note: "0 = normal | 1 = fijada al tope"]
   archived    INTEGER [default: 0, note: "0 = activa | 1 = archivada"]
   subjectId   TEXT    [note: "NULL = Entrada | UUID = en Materia o Sección"]
-  statusEmoji TEXT    [note: "NULL = sin marcador | Emoji curado (📖 ❓ 🔥 ✅) — DP-005, RF-025"]
-  deletedAt   TEXT    [note: "NULL = activa | ISO 8601 = en papelera (soft-delete, RF-026)"]
   createdAt   TEXT    [not null, note: "ISO 8601 UTC · Inmutable"]
   updatedAt   TEXT    [not null, note: "ISO 8601 UTC · Auto-actualizado en cada guardado"]
+  statusEmoji TEXT
+  deletedAt   TEXT
 }
 
 Table metadata {
