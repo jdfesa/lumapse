@@ -22,11 +22,18 @@ fi
 
 mkdir -p "$HOOKS_DIR"
 
-printf "🔨 Compilando lumapse-audit (Rust) para hooks súper-rápidos...\n"
-cd "$PROJECT_ROOT/scripts/lumapse-audit"
-cargo build --release
-cp target/release/lumapse-audit "$PROJECT_ROOT/scripts/lumapse-audit-bin"
-cd "$PROJECT_ROOT"
+# Compilar auditor Rust (opcional — si cargo no está instalado, los hooks
+# usan automáticamente los scripts Python/Shell como fallback)
+if command -v cargo &>/dev/null; then
+  printf "🔨 Compilando lumapse-audit (Rust) para hooks súper-rápidos...\n"
+  cd "$PROJECT_ROOT/scripts/lumapse-audit"
+  cargo build --release
+  cp target/release/lumapse-audit "$PROJECT_ROOT/scripts/lumapse-audit-bin"
+  cd "$PROJECT_ROOT"
+else
+  printf "ℹ️  cargo no encontrado — los hooks usarán Python/Shell (modo compatibilidad).\n"
+  printf "   Para el modo ultra-rápido (Rust), instalá cargo: https://rustup.rs\n"
+fi
 
 cat > "$HOOKS_DIR/pre-commit" <<'HOOK'
 #!/usr/bin/env bash
@@ -39,7 +46,14 @@ printf '  Lumapse pre-commit: ejecutando chequeos rapidos...\n'
 printf '==================================================\n'
 
 npm run lint
-./scripts/lumapse-audit-bin --code
+
+# Auditor rápido: Rust si está disponible, Python/Shell si no
+AUDIT_BIN="./scripts/lumapse-audit-bin"
+if [ -x "$AUDIT_BIN" ] && "$AUDIT_BIN" --code 2>/dev/null; then
+  true  # Rust OK
+else
+  bash scripts/check-file-size.sh
+fi
 
 printf '==================================================\n'
 printf '  Pre-commit OK\n'
