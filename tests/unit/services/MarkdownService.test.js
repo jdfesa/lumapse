@@ -1,0 +1,228 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+let MarkdownService
+
+beforeEach(async () => {
+  vi.resetModules()
+  MarkdownService = await import('../../../src/services/MarkdownService.js')
+})
+
+describe('renderMarkdown()', () => {
+  describe('Casos límite de input', () => {
+    it('retorna "" para null', () => {
+      expect(MarkdownService.renderMarkdown(null)).toBe('')
+    })
+
+    it('retorna "" para undefined', () => {
+      expect(MarkdownService.renderMarkdown(undefined)).toBe('')
+    })
+
+    it('retorna "" para string vacío', () => {
+      expect(MarkdownService.renderMarkdown('')).toBe('')
+    })
+
+    it('retorna "" para número', () => {
+      expect(MarkdownService.renderMarkdown(42)).toBe('')
+    })
+
+    it('retorna "" para objeto', () => {
+      expect(MarkdownService.renderMarkdown({})).toBe('')
+    })
+  })
+
+  describe('Sintaxis Markdown básica', () => {
+    it('convierte # Título en <h1>', () => {
+      expect(MarkdownService.renderMarkdown('# Título')).toContain('<h1>Título</h1>')
+    })
+
+    it('convierte ## SubTítulo en <h2>', () => {
+      expect(MarkdownService.renderMarkdown('## SubTítulo')).toContain('<h2>SubTítulo</h2>')
+    })
+
+    it('convierte **negrita** en <strong>', () => {
+      expect(MarkdownService.renderMarkdown('**negrita**')).toContain('<strong>negrita</strong>')
+    })
+
+    it('convierte *cursiva* en <em>', () => {
+      expect(MarkdownService.renderMarkdown('*cursiva*')).toContain('<em>cursiva</em>')
+    })
+
+    it('convierte `código` en <code>', () => {
+      expect(MarkdownService.renderMarkdown('`código`')).toContain('<code>código</code>')
+    })
+
+    it('convierte ~~tachado~~ en <del>', () => {
+      expect(MarkdownService.renderMarkdown('~~tachado~~')).toContain('<del>tachado</del>')
+    })
+
+    it('convierte lista desordenada en <ul>', () => {
+      const html = MarkdownService.renderMarkdown('- item')
+
+      expect(html).toContain('<ul>')
+      expect(html).toContain('<li>item</li>')
+    })
+
+    it('convierte lista ordenada en <ol>', () => {
+      const html = MarkdownService.renderMarkdown('1. item')
+
+      expect(html).toContain('<ol>')
+      expect(html).toContain('<li>item</li>')
+    })
+
+    it('convierte bloque de código en <pre><code>', () => {
+      const html = MarkdownService.renderMarkdown('```\nbloque\n```')
+
+      expect(html).toContain('<pre><code>bloque')
+    })
+
+    it('convierte [texto](url) en enlace', () => {
+      const html = MarkdownService.renderMarkdown('[texto](./nota.md)')
+
+      expect(html).toContain('<a href="./nota.md"')
+      expect(html).toContain('>texto</a>')
+    })
+
+    it('convierte salto de línea simple en <br>', () => {
+      expect(MarkdownService.renderMarkdown('a\nb')).toContain('a<br>')
+    })
+  })
+
+  describe('Sanitización XSS', () => {
+    it('elimina etiquetas <img> del HTML generado', () => {
+      const html = MarkdownService.renderMarkdown('![alt](https://example.com/x.png)')
+
+      expect(html).not.toContain('<img')
+    })
+
+    it('elimina <script>alert("xss")</script>', () => {
+      const html = MarkdownService.renderMarkdown('<script>alert("xss")</script><p>ok</p>')
+
+      expect(html).not.toContain('<script')
+      expect(html).toContain('<p>ok</p>')
+    })
+
+    it('elimina atributos onclick del HTML', () => {
+      const html = MarkdownService.renderMarkdown('<a href="./x" onclick="alert(1)">x</a>')
+
+      expect(html).toContain('<a href="./x"')
+      expect(html).not.toContain('onclick')
+    })
+
+    it('elimina <iframe> del contenido', () => {
+      expect(MarkdownService.renderMarkdown('<iframe src="x"></iframe>')).not.toContain('<iframe')
+    })
+
+    it('elimina atributo src de cualquier tag', () => {
+      expect(MarkdownService.renderMarkdown('<a href="./x" src="https://tracker.test">x</a>')).not.toContain('src=')
+    })
+
+    it('elimina href con "javascript:"', () => {
+      const html = MarkdownService.renderMarkdown('<a href="javascript:alert(1)">x</a>')
+
+      expect(html).not.toContain('javascript:')
+    })
+
+    it('elimina href con "data:text/html"', () => {
+      const html = MarkdownService.renderMarkdown('<a href="data:text/html,boom">x</a>')
+
+      expect(html).not.toContain('data:text/html')
+    })
+
+    it('los enlaces http:// sobreviven sanitización', () => {
+      const html = MarkdownService.renderMarkdown('[web](http://example.com)')
+
+      expect(html).toContain('href="http://example.com"')
+    })
+
+    it('fuerza rel seguro en enlaces externos', () => {
+      const html = MarkdownService.renderMarkdown('[web](https://example.com)')
+
+      expect(html).toContain('rel="noopener noreferrer nofollow"')
+    })
+
+    it('fuerza target="_blank" en enlaces externos', () => {
+      const html = MarkdownService.renderMarkdown('[web](https://example.com)')
+
+      expect(html).toContain('target="_blank"')
+    })
+
+    it('las tablas GFM pasan sanitización', () => {
+      const html = MarkdownService.renderMarkdown('| A | B |\n|---|---|\n| 1 | 2 |')
+
+      expect(html).toContain('<table>')
+      expect(html).toContain('<thead>')
+      expect(html).toContain('<tbody>')
+      expect(html).toContain('<td>1</td>')
+    })
+  })
+
+  describe('Defensa en profundidad', () => {
+    it('elimina src que haya sobrevivido en un tag permitido', () => {
+      const html = MarkdownService.renderMarkdown('<a href="./x" src="https://example.com/pixel">x</a>')
+
+      expect(html).not.toContain('src=')
+    })
+
+    it('elimina srcset de cualquier elemento', () => {
+      const html = MarkdownService.renderMarkdown('<a href="./x" srcset="https://example.com/a 1x">x</a>')
+
+      expect(html).not.toContain('srcset=')
+    })
+
+    it('elimina poster de cualquier elemento', () => {
+      const html = MarkdownService.renderMarkdown('<a href="./x" poster="https://example.com/p">x</a>')
+
+      expect(html).not.toContain('poster=')
+    })
+  })
+})
+
+describe('hasMarkdownSyntax()', () => {
+  it('retorna false para null', () => {
+    expect(MarkdownService.hasMarkdownSyntax(null)).toBe(false)
+  })
+
+  it('retorna false para string vacío', () => {
+    expect(MarkdownService.hasMarkdownSyntax('')).toBe(false)
+  })
+
+  it('retorna false para texto plano sin sintaxis Markdown', () => {
+    expect(MarkdownService.hasMarkdownSyntax('solo texto plano')).toBe(false)
+  })
+
+  it('retorna true para texto con encabezado', () => {
+    expect(MarkdownService.hasMarkdownSyntax('# Título')).toBe(true)
+  })
+
+  it('retorna true para texto con negrita', () => {
+    expect(MarkdownService.hasMarkdownSyntax('**negrita**')).toBe(true)
+  })
+
+  it('retorna true para texto con cursiva', () => {
+    expect(MarkdownService.hasMarkdownSyntax('*cursiva*')).toBe(true)
+  })
+
+  it('retorna true para texto con lista', () => {
+    expect(MarkdownService.hasMarkdownSyntax('- item')).toBe(true)
+  })
+
+  it('retorna true para texto con lista numerada', () => {
+    expect(MarkdownService.hasMarkdownSyntax('1. item')).toBe(true)
+  })
+
+  it('retorna true para texto con código inline', () => {
+    expect(MarkdownService.hasMarkdownSyntax('`código`')).toBe(true)
+  })
+
+  it('retorna true para texto con bloque de código', () => {
+    expect(MarkdownService.hasMarkdownSyntax('```\nbloque\n```')).toBe(true)
+  })
+
+  it('retorna true para texto con enlace', () => {
+    expect(MarkdownService.hasMarkdownSyntax('[enlace](url)')).toBe(true)
+  })
+
+  it('retorna true para texto con tachado', () => {
+    expect(MarkdownService.hasMarkdownSyntax('~~tachado~~')).toBe(true)
+  })
+})
