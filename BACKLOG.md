@@ -247,11 +247,13 @@ El Hito 04 ya tiene varias piezas implementadas (SQLite, pin/archivar, búsqueda
 - [x] **🔴 ~~Eliminar `vite-plugin-pwa` y artefactos PWA:~~** ✅ Completado (2026-05-17). Se removió `vite-plugin-pwa` (289 paquetes), `public/manifest.json`, config `VitePWA()` de `vite.config.js`, `<link rel="manifest">` de `index.html`, y referencias PWA en `package.json`. Build limpio: sin `sw.js`, sin `registerSW.js`.
 - [x] ~~**Seguridad (XSS en Markdown):**~~ ✅ Resuelto (2026-05-19, Paso 7). `img` y `src` eliminados de whitelist DOMPurify. Agregados `FORBID_TAGS`, `FORBID_ATTR` y hook `afterSanitizeAttributes`.
 - [x] **Assets Manifest:** Agregar los íconos requeridos (`icon-192.png`, `icon-512.png`) en `public/icons/` para cumplir con las validaciones del `manifest.json`.
+- [ ] **Bloqueo técnico inmediato del Quality Gate — split de `NoteList`/drawer:** `quality.sh` ya ejecuta `lumapse-audit --all`; el subcheck `--code` permanece en fallo por archivos >400 LOC: `src/components/NoteList.js`, `src/components/NoteList.css` y `src/styles/drawer.css`, con avisos en `src/layout/drawerController.js` y `src/services/SubjectService.js`. Próxima tarea: aplicar `python3 scripts/split-guide.py` para separar renderizado/estados de `NoteList` y estilos/controlador del drawer sin cambiar comportamiento.
 - [ ] **Refactor de archivos grandes (Deuda Técnica detectada):** Utilizar la guía de `python3 scripts/split-guide.py` para subdividir archivos con alta complejidad y LOC:
-  - `src/services/SqliteService.js` (PELIGRO: >400 LOC). Extraer operaciones CRUD a `SqliteService.data.js`.
-  - `src/styles/main.css` (PELIGRO: >400 LOC). Subdividir en módulos (variables, layout, componentes).
-  - `src/store/NoteStore.js` (AVISO: >250 LOC). Extraer UI/Navegación y lógica CRUD.
-  - `src/main.js` (AVISO: >250 LOC). Extraer templates HTML en línea.
+  - `src/components/NoteList.js` (PELIGRO: >400 LOC). Extraer renderizado de cards, empty states y acciones.
+  - `src/components/NoteList.css` (PELIGRO: >400 LOC). Separar estilos de lista, cards y estados vacíos.
+  - `src/styles/drawer.css` (PELIGRO: >400 LOC). Separar layout, navegación, materia activa y estados responsive.
+  - `src/layout/drawerController.js` (AVISO: >250 LOC). Extraer helpers de interacción y wiring de eventos.
+  - `src/services/SubjectService.js` (AVISO: >250 LOC). Separar validaciones DP-004 de operaciones de cascada.
 - [ ] **Reducir complejidad de `NoteList.js`:** extraer renderizado de cards/dropdowns/empty states a funciones auxiliares o componente menor. Hoy `check-file-size.sh` y ESLint advierten sobre anidamiento profundo.
 - [ ] **UI para sub-secciones de Materias (Profundidad > 0):** El modelo de datos (SQLite) y las validaciones de `SubjectService` ya soportan anidamiento (ej. "Materia" -> "TPs" / "Unidad 1"), pero falta implementar la interfaz visual (UX) para crear y navegar estas carpetas hijas dentro de una materia principal.
 - [ ] **Manejo de Errores y Excepciones (Resiliencia):** Revisar todo el "camino triste" de la app. Implementar bloques `try/catch` robustos en operaciones críticas (ej. fallo de escritura en SQLite por falta de espacio), asegurar que la UI muestre un mensaje amigable ("Error al guardar") sin crashear en silencio, e implementar un mecanismo de loggeo estructurado.
