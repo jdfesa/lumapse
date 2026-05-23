@@ -340,7 +340,7 @@ Valida la integridad de la jerarquía de materias y secciones de acuerdo a la de
 ### 25. `generate-dbml-from-code.py`
 Generador de diagramas DBML a partir del DDL real implementado en JavaScript.
 
-- **Problema que resuelve:** Garantiza la coherencia absoluta entre el código de base de datos (`SqliteService.js`) y el diagrama lógico de base de datos (`03-modelo-logico-relacional.dbml`), eliminando errores humanos de transcripción.
+- **Problema que resuelve:** Garantiza la coherencia absoluta entre el código de base de datos (`src/services/sqlite/connection.js`) y el diagrama lógico de base de datos (`03-modelo-logico-relacional.dbml`), eliminando errores humanos de transcripción.
 - **Qué hace:** Parsea y extrae la estructura SQL del servicio de persistencia, inyecta las notas de tablas/columnas y las relaciones configuradas, y exporta el archivo DBML válido para renderizar en dbdiagram.io.
 - **Uso:**
   ```bash
