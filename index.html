@@ -6,6 +6,22 @@
     <meta name="description" content="Lumapse — App de captura de notas y gestión del conocimiento personal, offline-first." />
     <meta name="theme-color" content="#191919" />
 
+    <!-- ── Content Security Policy (defensa en profundidad) ──
+         Bloquea a nivel de WebView/browser cualquier recurso externo.
+         Complementa la sanitización de DOMPurify en MarkdownService.js.
+         - default-src: solo orígenes locales (self + Capacitor schemes)
+         - img-src: permite data: y blob: para imágenes locales embebidas
+         - script-src: solo módulos ES locales (no inline)
+         - style-src: permite inline por CSS-in-JS y estilos dinámicos
+         Refs: Paso 7 (Hardening XSS), ADR-005 (offline-first)
+    -->
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self' capacitor://localhost http://localhost;
+      img-src 'self' data: blob: capacitor://localhost http://localhost;
+      script-src 'self';
+      style-src 'self' 'unsafe-inline';
+    " />
+
     <link rel="icon" type="image/png" href="/icons/icon-144x144.png" />
     <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
 
