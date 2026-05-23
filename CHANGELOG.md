@@ -56,7 +56,8 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Suite Vitest con tests de sanitización:** 15 tests de seguridad en `MarkdownService.test.js` verifican de forma automatizada la política de dos capas: `<img>` con src externo se limpia, `<img>` con `data:` URI y ruta relativa sobrevive, `<script>`, `javascript:`, `onclick`, `srcset` y `poster` son eliminados. 294 tests totales, todos pasando.
 
 ### Fixed
-- **Modo Compatibilidad (Scripts Python):** Corregido fallo de ejecución en `check-schema-sync.py` y `generate-dbml-from-code.py` al apuntar a la antigua ruta de persistencia (`SqliteService.js` → `sqlite/connection.js`).
+- **Encabezados de ADRs:** Cambiada la etiqueta de plural a singular (`**Autores:**` → `**Autor:**`) en todos los archivos de arquitectura (ADR-001 a ADR-006) y en la plantilla de `generate-adr.sh`, dado que el desarrollo es individual.
+- **Modo Compatibilidad (Scripts Python):** Corregido fallo de ejecución en `check-schema-sync.py` and `generate-dbml-from-code.py` al apuntar a la antigua ruta de persistencia (`SqliteService.js` → `sqlite/connection.js`).
 - **Autoría de ADR-006:** Corregido el campo de autor en el documento de persistencia SQLite para establecer a Jose David Sandoval en lugar de Equipo de Lumapse.
 - **Exportación de notas vacías:** Validación de contenido significativo antes de exportar.
 - **Ícono nativo:** Eliminados bordes blancos del ícono de la aplicación.
