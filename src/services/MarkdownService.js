@@ -70,25 +70,20 @@ export function renderMarkdown(markdown) {
   //    DOMPurify elimina scripts, event handlers y cualquier
   //    contenido potencialmente peligroso.
   //
-  //    ── Decisión de seguridad (Paso 7, Hito 04) ──
-  //    Se ELIMINA la etiqueta <img> y los atributos src/alt de la
-  //    whitelist. Motivos:
+  //    ── Decisión de seguridad (Paso 7, Hito 04 — rev. 2) ──
+  //    Se PERMITE la etiqueta <img> con src local (data:, blob:,
+  //    rutas relativas) pero se BLOQUEAN URLs externas (http/https).
   //
-  //    a) Lumapse es offline-first. Permitir <img src="https://...">
-  //       genera peticiones HTTP no deseadas que:
-  //       - Revelan la IP del usuario (privacy leak).
-  //       - Permiten tracking vía pixel espía (1x1 invisible).
-  //    b) La app no soporta imágenes embebidas en esta fase del
-  //       proyecto, por lo que no hay pérdida de funcionalidad.
-  //    c) Si en el futuro se necesitan imágenes, se deberá
-  //       implementar soporte explícito con data URIs o almacenamiento
-  //       local, nunca carga remota directa.
+  //    Política de dos capas (defensa en profundidad):
+  //    Capa 1 — DOMPurify (este archivo): el hook afterSanitizeAttributes
+  //      elimina src con http:// o https:// en <img>.
+  //    Capa 2 — CSP (index.html): el meta tag Content-Security-Policy
+  //      restringe img-src a 'self' data: blob: capacitor://localhost,
+  //      bloqueando a nivel de WebView cualquier request externo.
   //
-  //    Además se aplica defensa en profundidad:
-  //    - FORBID_TAGS: lista explícita de tags peligrosos como respaldo.
-  //    - Hook afterSanitizeAttributes: elimina cualquier atributo que
-  //      contenga URLs externas (http/https) en caso de que un tag
-  //      permitido intente cargar recursos remotos.
+  //    Esto permite al usuario insertar imágenes locales en sus
+  //    apuntes (data URI, blob, ruta relativa) sin exponer su IP
+  //    ante un pixel espía remoto.
   //    ─────────────────────────────────────────────
 
   const cleanHtml = DOMPurify.sanitize(rawHtml, {
@@ -101,19 +96,20 @@ export function renderMarkdown(markdown) {
       'blockquote',
       'code', 'pre',
       'a',
+      'img',
       'table', 'thead', 'tbody', 'tr', 'th', 'td',
-      // img REMOVIDO — ver decisión de seguridad arriba
     ],
     // Atributos permitidos: solo los necesarios para enlaces
     ALLOWED_ATTR: [
       'href', 'target', 'rel',   // enlaces
-      'class',                   // estilos de bloques de código
-      // src, alt REMOVIDOS — no hay tags que los necesiten
+      'src', 'alt',               // imágenes locales (data:, blob:, relativas)
+      'class',                    // estilos de bloques de código
     ],
     // Blacklist explícita como defensa en profundidad
     // (redundante con ALLOWED_TAGS, pero protege ante errores de config)
     FORBID_TAGS: [
-      'img', 'script', 'iframe', 'object', 'embed',
+      // img PERMITIDO con src local — ver decisión de seguridad arriba
+      'script', 'iframe', 'object', 'embed',
       'form', 'input', 'textarea', 'select', 'button',
       'style', 'link', 'meta', 'base', 'svg', 'math',
     ],
@@ -121,7 +117,8 @@ export function renderMarkdown(markdown) {
     FORBID_ATTR: [
       'onerror', 'onload', 'onclick', 'onmouseover',
       'onfocus', 'onblur', 'onsubmit', 'onchange',
-      'src', 'srcset', 'data', 'action', 'formaction',
+      // src PERMITIDO en img — filtrado por hook afterSanitizeAttributes
+      'srcset', 'data', 'action', 'formaction',
       'xlink:href', 'poster', 'background',
     ],
     // Los enlaces se abren en nueva pestaña por seguridad
@@ -157,12 +154,22 @@ DOMPurify.addHook('afterSanitizeAttributes', (node) => {
     }
   }
 
-  // Defensa general: eliminar cualquier src/srcset/data que haya
-  // sobrevivido (no debería ocurrir con la config actual, pero
-  // protege ante cambios futuros)
-  for (const attr of ['src', 'srcset', 'data', 'poster', 'background']) {
-    if (node.hasAttribute(attr)) {
-      node.removeAttribute(attr)
+  // Defensa para <img>: permitir solo src local (data:, blob:, relativo)
+  // Bloquear cualquier src externo (http/https) para prevenir tracking
+  if (node.tagName === 'IMG' && node.hasAttribute('src')) {
+    const src = node.getAttribute('src')
+    if (src.startsWith('http://') || src.startsWith('https://')) {
+      node.removeAttribute('src')
+    }
+  }
+
+  // Defensa general: eliminar src/srcset/data en tags que NO sean img
+  // (no debería ocurrir con la config actual, pero protege ante cambios)
+  if (node.tagName !== 'IMG') {
+    for (const attr of ['src', 'srcset', 'data', 'poster', 'background']) {
+      if (node.hasAttribute(attr)) {
+        node.removeAttribute(attr)
+      }
     }
   }
 })
