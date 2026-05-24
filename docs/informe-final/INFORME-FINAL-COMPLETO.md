@@ -20,9 +20,14 @@
 - [2.2. Análisis de Personas de Usuario](#22-análisis-de-personas-de-usuario)
 - [2.3. Análisis Competitivo](#23-análisis-competitivo)
 - [2.4. Lean Canvas](#24-lean-canvas)
-- [2.5. Requisitos del Sistema](#25-requisitos-del-sistema)
-  - [2.5.1. Requisitos Funcionales](#251-requisitos-funcionales)
-  - [2.5.2. Requisitos No Funcionales](#252-requisitos-no-funcionales)
+- [2.5. Historias de Usuario como Hipótesis de Valor (Lean UX)](#25-historias-de-usuario-como-hipótesis-de-valor-lean-ux)
+  - [2.5.1. Fase 1 — La Historia de Usuario como supuesto de diseño](#251-fase-1--la-historia-de-usuario-como-supuesto-de-diseño)
+  - [2.5.2. Fase 2 — La encuesta como instrumento de validación](#252-fase-2--la-encuesta-como-instrumento-de-validación)
+  - [2.5.3. Fase 3 — El pivote fundamentado en datos](#253-fase-3--el-pivote-fundamentado-en-datos)
+  - [2.5.4. Fase 4 — Materialización en requisitos y código](#254-fase-4--materialización-en-requisitos-y-código)
+- [2.6. Requisitos del Sistema](#26-requisitos-del-sistema)
+  - [2.6.1. Requisitos Funcionales](#261-requisitos-funcionales)
+  - [2.6.2. Requisitos No Funcionales](#262-requisitos-no-funcionales)
 - [3.1. Metodología de Recolección (Población y Muestra)](#31-metodología-de-recolección-población-y-muestra)
 - [3.2. Análisis Demográfico](#32-análisis-demográfico)
 - [3.3. Resultados sobre Hábitos de Estudio y Toma de Notas](#33-resultados-sobre-hábitos-de-estudio-y-toma-de-notas)
@@ -93,9 +98,82 @@
 
 ## 2.4. Lean Canvas
 
-## 2.5. Requisitos del Sistema
-### 2.5.1. Requisitos Funcionales
-### 2.5.2. Requisitos No Funcionales
+## 2.5. Historias de Usuario como Hipótesis de Valor (Lean UX)
+
+El proyecto Lumapse adoptó el marco de **Lean UX** (Gothelf & Seiden, 2013) para el diseño centrado en el usuario. Bajo este enfoque, las Historias de Usuario no se conciben como especificaciones definitivas escritas al final del proceso de análisis, sino como **hipótesis de valor** que se formulan tempranamente y se someten a validación empírica. Este ciclo de hipótesis → validación → iteración es el eje metodológico que conecta la fase de ideación con la implementación técnica.
+
+El historial de commits del repositorio refleja fielmente este proceso: las primeras Historias de Usuario fueron redactadas **antes** del relevamiento de campo. Esto no constituye una anomalía metodológica, sino la aplicación deliberada del ciclo Lean UX descrito a continuación.
+
+### 2.5.1. Fase 1 — La Historia de Usuario como supuesto de diseño
+
+Una Historia de Usuario es una descripción breve de una funcionalidad del software, escrita desde la perspectiva del usuario final con el formato canónico:
+
+> *Como [ROL], quiero [FUNCIONALIDAD], para [BENEFICIO].*
+
+Su propósito no es detallar la implementación técnica (eso corresponde a los Requisitos Funcionales y al código), sino capturar **qué problema quiere resolver el usuario y por qué le interesa**. En la terminología de Lean UX, cada Historia de Usuario es una **hipótesis de valor**: una apuesta informada sobre lo que el usuario necesita, basada en la empatía del diseñador pero aún sin validar con datos reales.
+
+En las etapas iniciales del proyecto (Hitos 00 y 01), las Historias de Usuario se formularon a partir de:
+
+- **Empatía con el contexto:** La experiencia propia del alumno-desarrollador como estudiante del IES 6023.
+- **Análisis de Personas:** Los arquetipos de Lucía y Martín, construidos a partir de observaciones informales del entorno académico.
+- **Benchmarking competitivo:** El análisis de aplicaciones existentes (Notion, Obsidian, Google Keep) y sus carencias en contextos offline y académicos.
+
+En esta fase, las historias eran supuestos educados pero no verificados. Por ejemplo, se supuso que los estudiantes organizarían sus notas mediante *etiquetas (tags)* — un patrón común en herramientas de productividad general.
+
+### 2.5.2. Fase 2 — La encuesta como instrumento de validación
+
+Para transformar los supuestos en decisiones fundamentadas, se diseñó y ejecutó una encuesta de relevamiento sobre 121 estudiantes (120 respuestas válidas) del IES 6023. La encuesta no se diseñó a ciegas: **sus preguntas se formularon específicamente para validar o refutar las hipótesis contenidas en las Historias de Usuario iniciales**.
+
+| Hipótesis (Historia de Usuario) | Pregunta de validación | Resultado | Decisión |
+|---|---|---|---|
+| Los estudiantes necesitan una app que funcione sin internet en el aula. | P6: Calidad de conectividad en el instituto. | **81.7%** reporta conectividad deficiente. | ✅ Hipótesis validada → Se mantiene HU-012 (Offline-first). |
+| Los estudiantes prefieren usar el celular para tomar notas. | P9: Dispositivo preferido para tomar notas digitales. | **72.5%** elige el celular. | ✅ Hipótesis validada → Se prioriza diseño mobile-first (HU-014). |
+| Los estudiantes organizarían sus notas con etiquetas. | P11/P12: Preferencia de organización. | **69.2%** prefiere carpetas por materia. | ❌ Hipótesis refutada → Pivote de etiquetas a materias. |
+| Los estudiantes valoran la funcionalidad offline por sobre la sincronización. | P8: Prioridad entre offline y sincronización. | **74.2%** prioriza offline. | ✅ Hipótesis validada → Arquitectura Capacitor/SQLite (ADR-005). |
+
+### 2.5.3. Fase 3 — El pivote fundamentado en datos
+
+Cuando la encuesta refutó una hipótesis inicial, se ejecutó un **pivote de producto** documentado y trazable:
+
+- **Supuesto original:** Los estudiantes organizarían notas con etiquetas (*tags*), un patrón habitual en herramientas como Notion o Bear.
+- **Evidencia empírica:** El 69.2% de los 120 encuestados respondió que prefiere organizar por *carpetas por materia* (P11/P12 del relevamiento).
+- **Pivote ejecutado:** Se descartó el sistema de etiquetas y se diseñó una jerarquía de Materias y Secciones con profundidad máxima de 2 niveles. Esta decisión quedó formalizada en [DP-002](../producto/decisiones-producto.md) y [DP-004](../producto/decisiones-producto.md), y se materializó en el modelo de datos SQLite con la tabla `subjects` y la auto-referencia `parentSubjectId`.
+
+Este pivote demuestra que las Historias de Usuario no son compromisos irrevocables, sino instrumentos de aprendizaje: su valor no radica en acertar desde el inicio, sino en crear un marco que permita detectar y corregir los errores antes de invertir esfuerzo de desarrollo en la dirección equivocada.
+
+### 2.5.4. Fase 4 — Materialización en requisitos y código
+
+Una vez que las historias fueron validadas (o ajustadas tras el pivote), se ejecutó la siguiente cadena de trazabilidad:
+
+```
+Historia de Usuario (hipótesis validada)
+        │
+        ▼
+Requisito Funcional (especificación técnica)
+        │
+        ▼
+Criterios de Aceptación (contrato de verificación)
+        │
+        ▼
+Código (implementación en JS/CSS/SQL)
+        │
+        ▼
+Tests unitarios (verificación automatizada)
+```
+
+Cada eslabón de esta cadena es verificable en el repositorio Git. Por ejemplo, la necesidad de organizar por materias (detectada en la encuesta P12) se trazó así:
+
+- **HU-017** → *"Como estudiante, quiero crear materias y secciones y asignar mis notas a ellas..."*
+- **RF-014** → *"El sistema debe permitir filtrar notas por materia y sección en el listado principal."*
+- **Criterios de Aceptación** → 5 CA verificables (creación, renombrado, filtrado, asignación, persistencia).
+- **Código** → `SubjectService.js`, `drawerSubjects.js`, `NoteStore.data.js`, tabla `subjects` en SQLite.
+- **Tests** → 52 tests unitarios en `SubjectService.test.js` + validación en dispositivo real.
+
+> **Referencia:** [`docs/producto/historias-de-usuario.md`](../producto/historias-de-usuario.md) · [`docs/producto/requisitos-funcionales.md`](../producto/requisitos-funcionales.md) · [`docs/producto/decisiones-producto.md`](../producto/decisiones-producto.md) · Gothelf, J. & Seiden, J. (2013). *Lean UX: Applying Lean Principles to Improve User Experience*. O'Reilly Media.
+
+## 2.6. Requisitos del Sistema
+### 2.6.1. Requisitos Funcionales
+### 2.6.2. Requisitos No Funcionales
 
 ---
 
