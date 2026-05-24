@@ -91,6 +91,11 @@ export async function createSubject(name, color = null, parentSubjectId = null) 
   return subject
 }
 
+export async function updateSubject(id, changes) {
+  await SubjectService.updateSubject(id, changes)
+  await loadSubjects()
+}
+
 export async function archiveSubject(id) {
   await SubjectService.archiveSubject(id)
   if (state.activeSubjectId === id) {
