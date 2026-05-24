@@ -17,6 +17,13 @@
 
 
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
-        <item name="android:background">@drawable/splash</item>
+        <!-- Fondo oscuro del splash, consistente con el tema de la app -->
+        <item name="windowSplashScreenBackground">@color/ic_launcher_background</item>
+        <!-- Ícono del logo — Android lo recorta con máscara circular/adaptativa -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
+        <!-- Color de fondo del ícono animado (detrás del foreground) -->
+        <item name="windowSplashScreenIconBackgroundColor">@color/ic_launcher_background</item>
+        <!-- Transición rápida para no demorar el arranque -->
+        <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
     </style>
 </resources>
