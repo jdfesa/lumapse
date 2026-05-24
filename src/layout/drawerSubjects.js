@@ -108,6 +108,14 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
       return
     }
 
+    // Botón editar nombre de materia/sección
+    const btnEdit = e.target.closest('.js-btn-edit-subject')
+    if (btnEdit) {
+      e.stopPropagation()
+      startRenameSubject(btnEdit.dataset.subjectId)
+      return
+    }
+
     // Botón "+" para agregar sección
     const btnAddSection = e.target.closest('.js-btn-add-section')
     if (btnAddSection) {
@@ -132,20 +140,38 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
       return
     }
 
-    // Navegación a materia/sección
-    const subjectBtn = e.target.closest('.drawer__subject-btn')
-    if (!subjectBtn) return
-    const subjectId = subjectBtn.dataset.subject
-    if (!subjectId) return
+    // Evitar que el click dentro del input de renombrar dispare la navegación
+    if (e.target.closest('.js-rename-input')) {
+      return
+    }
 
-    NoteStore.setActiveSubject(subjectId)
-    resetArchived()
-    updateSubjectActiveState(subjectId)
-    closeDrawer()
+    // Navegación a materia/sección
+    const subjectBtn = e.target.closest('.js-subject-nav')
+    if (!subjectBtn) return
+    navigateToSubject(subjectBtn.dataset.subject)
   })
 
   // Enter/Escape en inputs de sección (delegación)
   subjectsList.addEventListener('keydown', (e) => {
+    // Input de renombrar materia/sección
+    const renameInput = e.target.closest('.js-rename-input')
+    if (renameInput) {
+      if (e.key === 'Enter') {
+        e.preventDefault()
+        saveRenameSubject(renameInput.dataset.subjectId, renameInput.value)
+      } else if (e.key === 'Escape') {
+        cancelRenameSubject(renameInput.dataset.subjectId, renameInput.dataset.originalName)
+      }
+      return
+    }
+
+    const subjectBtn = e.target.closest('.js-subject-nav')
+    if (subjectBtn && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault()
+      navigateToSubject(subjectBtn.dataset.subject)
+      return
+    }
+
     const input = e.target.closest('.js-section-name-input')
     if (!input) return
     if (e.key === 'Enter') {
@@ -155,6 +181,16 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
       closeSectionForm(input.dataset.parentId)
     }
   })
+
+  /** Navega a una materia/sección desde el drawer */
+  function navigateToSubject(subjectId) {
+    if (!subjectId) return
+
+    NoteStore.setActiveSubject(subjectId)
+    resetArchived()
+    updateSubjectActiveState(subjectId)
+    closeDrawer()
+  }
 
   /** Muestra/oculta el formulario inline de sección para una materia */
   function toggleSectionForm(parentId) {
@@ -196,12 +232,70 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
     if (form) form.style.display = 'none'
   }
 
+  /** Activa el modo edición inline para renombrar una materia/sección */
+  function startRenameSubject(subjectId) {
+    const nameSpan = subjectsList.querySelector(`.drawer__subject-name[data-name-id="${subjectId}"]`)
+    if (!nameSpan) return
+    const currentName = nameSpan.textContent
+
+    const input = document.createElement('input')
+    input.type = 'text'
+    input.className = 'drawer__rename-input js-rename-input'
+    input.value = currentName
+    input.dataset.subjectId = subjectId
+    input.dataset.originalName = currentName
+    input.maxLength = 40
+    input.autocomplete = 'off'
+
+    nameSpan.replaceWith(input)
+    input.focus()
+    input.select()
+
+    // Guardar al perder foco (si no se canceló con Escape)
+    input.addEventListener('blur', () => {
+      // Pequeño delay para permitir que Escape cancele antes del blur
+      setTimeout(() => {
+        if (input.isConnected) {
+          saveRenameSubject(subjectId, input.value)
+        }
+      }, 100)
+    })
+  }
+
+  /** Guarda el nuevo nombre de una materia/sección */
+  async function saveRenameSubject(subjectId, newName) {
+    const trimmed = newName.trim()
+    if (!trimmed) {
+      // Si está vacío, cancelar y restaurar
+      const input = subjectsList.querySelector(`.js-rename-input[data-subject-id="${subjectId}"]`)
+      if (input) cancelRenameSubject(subjectId, input.dataset.originalName)
+      return
+    }
+    try {
+      await NoteStore.updateSubject(subjectId, { name: trimmed })
+    } catch (err) {
+      alert(err.message)
+    }
+  }
+
+  /** Cancela el renombrado y restaura el nombre original */
+  function cancelRenameSubject(subjectId, originalName) {
+    const input = subjectsList.querySelector(`.js-rename-input[data-subject-id="${subjectId}"]`)
+    if (!input) return
+
+    const span = document.createElement('span')
+    span.className = 'drawer__subject-name'
+    span.dataset.nameId = subjectId
+    span.textContent = originalName
+    input.replaceWith(span)
+  }
+
   /** Actualiza qué botón de materia tiene la clase --active */
   function updateSubjectActiveState(activeId) {
     // Inbox
     btnInbox.classList.toggle('drawer__subject-btn--active', activeId === null && !getShowingArchived())
     // Materias
-    subjectsList.querySelectorAll('.drawer__subject-btn').forEach(btn => {
+    subjectsList.querySelectorAll('.js-subject-nav').forEach(btn => {
       btn.classList.toggle('drawer__subject-btn--active', btn.dataset.subject === activeId)
     })
   }
@@ -224,10 +318,13 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
         const isChildActive = state.activeSubjectId === child.id
         return `
           <div class="drawer__subject-row drawer__subject-row--child">
-            <button class="drawer__subject-btn drawer__subject-btn--child${isChildActive ? ' drawer__subject-btn--active' : ''}" data-subject="${child.id}">
+            <div class="drawer__subject-btn drawer__subject-btn--child js-subject-nav${isChildActive ? ' drawer__subject-btn--active' : ''}" role="button" tabindex="0" data-subject="${child.id}">
               <span class="drawer__subject-color" style="background-color: ${child.color || subject.color}"></span>
-              <span class="drawer__subject-name">${escapeHtml(child.name)}</span>
+              <span class="drawer__subject-name" data-name-id="${child.id}">${escapeHtml(child.name)}</span>
               <span class="drawer__subject-count">${child.noteCount || 0}</span>
+            </div>
+            <button class="drawer__section-add js-btn-edit-subject" data-subject-id="${child.id}" data-subject-name="${escapeHtml(child.name)}" title="Editar nombre">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
             </button>
             <button class="drawer__section-add js-btn-delete-subject" data-subject-id="${child.id}" data-is-section="true" data-subject-name="${escapeHtml(child.name)}" title="Eliminar sección">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
@@ -256,10 +353,13 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
       return `
         <div class="drawer__subject-group">
           <div class="drawer__subject-row">
-            <button class="drawer__subject-btn${isActive ? ' drawer__subject-btn--active' : ''}" data-subject="${subject.id}">
+            <div class="drawer__subject-btn js-subject-nav${isActive ? ' drawer__subject-btn--active' : ''}" role="button" tabindex="0" data-subject="${subject.id}">
               <span class="drawer__subject-color" style="background-color: ${subject.color}"></span>
-              <span class="drawer__subject-name">${escapeHtml(subject.name)}</span>
+              <span class="drawer__subject-name" data-name-id="${subject.id}">${escapeHtml(subject.name)}</span>
               <span class="drawer__subject-count">${subject.noteCount || 0}</span>
+            </div>
+            <button class="drawer__section-add js-btn-edit-subject" data-subject-id="${subject.id}" data-subject-name="${escapeHtml(subject.name)}" title="Editar nombre">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
             </button>
             <button class="drawer__section-add js-btn-delete-subject" data-subject-id="${subject.id}" data-is-section="false" data-subject-name="${escapeHtml(subject.name)}" title="Eliminar materia">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
