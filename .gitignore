@@ -56,3 +56,4 @@ Lumapse_Entrega_*.zip
 releases/
 scripts/lumapse-audit/target/
 scripts/lumapse-audit-bin
+.venv-icons
