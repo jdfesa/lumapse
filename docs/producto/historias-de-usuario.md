@@ -371,15 +371,38 @@
 
 ---
 
+### HU-017 — Filtrar y organizar notas por materia y sección
+
+| Campo | Detalle |
+|---|---|
+| **Historia** | Como **estudiante**, quiero **crear materias y secciones y asignar mis notas a ellas**, para **mantener mis apuntes clasificados académicamente y filtrarlos en el listado principal**. |
+| **RF asociados** | [RF-014](./requisitos-funcionales.md) |
+| **Persona** | [Lucía](./personas.md#persona-1--lucía-la-estudiante-organizada) |
+| **Prioridad** | MUST |
+| **Story Points** | **8 SP** — Estructura jerárquica en base de datos SQLite con validación de profundidad máxima (DP-004), UI en el drawer para crear y renombrar, selector de materia en el editor de notas y filtrado reactivo del listado principal. |
+| **Hito** | 04 |
+
+**Criterios de Aceptación:**
+
+| CA | Descripción | Verificación |
+|---|---|---|
+| CA-01 | El usuario puede crear materias raíces y subsecciones de hasta 2 niveles de profundidad (DP-004) desde el drawer. | Test funcional |
+| CA-02 | El usuario puede renombrar y eliminar materias/secciones de forma inline desde el drawer. | Test funcional |
+| CA-03 | Al seleccionar una materia o sección en el drawer, el feed principal se filtra mostrando solo las notas pertenecientes a esa categoría. | Test funcional |
+| CA-04 | En el editor de notas, se puede asociar la nota activa a cualquier materia o sección mediante un selector dropdown. | Test funcional |
+| CA-05 | La jerarquía y nombres de las materias persisten en SQLite. | Test manual |
+
+---
+
 ## Resumen
 
 | Métrica | Hito 02 | Hito 03 | Hito 04 | Total |
 |---|---|---|---|---|
-| **Total HU** | 6 | 4 | 6 | **16** |
-| **Total Story Points** | 20 | 21 | 29 | **70** |
-| **Total Criterios de Aceptación** | 20 | 14 | 25 | **59** |
+| **Total HU** | 6 | 4 | 7 | **17** |
+| **Total Story Points** | 20 | 21 | 37 | **78** |
+| **Total Criterios de Aceptación** | 20 | 14 | 30 | **64** |
 | **Prioridad predominante** | MUST | MUST/SHOULD | SHOULD/MUST | — |
-| **Personas cubiertas** | Lucía (4), Martín (2) | Lucía (2), Martín (2) | Lucía (5), Martín (1) | Lucía (11), Martín (5) |
+| **Personas cubiertas** | Lucía (4), Martín (2) | Lucía (2), Martín (2) | Lucía (6), Martín (1) | Lucía (12), Martín (5) |
 
 ---
 
@@ -403,7 +426,8 @@
 | HU-014 | RF-020 | Lucía | Diseño responsive | 5 | 04 |
 | HU-015 | RF-025 | Lucía | Marcadores de estado académico | 3 | 04 |
 | HU-016 | RF-026 | Lucía | Papelera de reciclaje | 8 | 04 |
-| | | | **Total** | **70** | |
+| HU-017 | RF-014 | Lucía | Categorización y filtrado por materias | 8 | 04 |
+| | | | **Total** | **78** | |
 
 ---
 
