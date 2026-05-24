@@ -204,7 +204,7 @@ IndexedDB cumplió su rol para el MVP, pero la migración a SQLite vía `@capaci
 **Estimado:** ~1-2 sesiones
 **Dependencia:** Paso 8 (SQLite debe estar implementado)
 
-La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere organizar por carpeta/materia. Este paso implementa la estructura de carpetas como sistema de organización principal, aprovechando las capacidades relacionales de SQLite.
+La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere organizar por carpeta/materia. Este paso implementa la estructura de carpetas como sistema de organización principal, aprovechando las capacidades relacionales de SQLite. Adicionalmente, se añade el renombrado inline directo desde el drawer para materias y secciones.
 
 **Estado base:** `SqliteService.js` ya crea las tablas `subjects`, `notes` y `metadata`. El campo `notes.subjectId` y la jerarquía `subjects.parentSubjectId` ya existen en el schema, pero aún no hay servicio/UI para que el usuario los use.
 
@@ -215,11 +215,12 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 - [x] **UI — Drawer:** Sección Materias con listado, botón crear, selector activo, estado vacío, colores y conteo de notas.
 - [x] **UI — Composer/Editor:** Selector de materia al crear/editar nota. Mantener "Entrada" como default cuando `subjectId` es `NULL`.
 - [x] **UI — Feed:** Indicador visual de materia en cada tarjeta de nota (badge de color) y badge de Archivada.
+- [x] **Edición inline (Refinamiento):** Agregar funcionalidad para renombrar materias y secciones (RF-014) desde el drawer, con edición inline, auto-guardado en blur/Enter y cancelación con Escape.
 - [x] **Validación offline:** Ejecutar `python3 scripts/validate-subjects-hierarchy.py` contra una base mock/exportada y verificar que no hay huérfanos, ciclos ni profundidad > 2.
 - [x] **Verificar en dispositivo:** Build + deploy en S7 y testeo de UI.
 - [x] **Documentar:** Actualizar RF-014, HU asociada, modelo de dominio, casos de uso, DDL/DBML si cambia el schema, README, CHANGELOG y cheatsheet.
 
-**Criterio de cierre:** El usuario puede crear materias, asignar notas a una materia, y filtrar el feed por materia desde el drawer. La funcionalidad persiste en SQLite.
+**Criterio de cierre:** El usuario puede crear materias, asignar notas a una materia, filtrar el feed por materia y renombrarlas inline desde el drawer. La funcionalidad persiste en SQLite y está verificada en el dispositivo.
 
 ---
 
