@@ -531,3 +531,39 @@ Auditor concurrente unificado para chequeos críticos del proyecto.
   cp target/release/lumapse-audit ../lumapse-audit-bin
   ```
 - **Detalle técnico:** Ver [`scripts/docs/evolucion-toolchain-rust.md`](docs/evolucion-toolchain-rust.md).
+
+---
+
+### 36. `generate-icons.py`
+Procesa el imagotipo original de Lumapse para generar todos los íconos de launcher adaptativos para Android de forma automatizada.
+
+- **Problema que resuelve:** Android requiere hasta 15 combinaciones de íconos adaptativos distribuidos en 5 densidades de pantalla (`mdpi`, `hdpi`, `xhdpi`, `xxhdpi`, `xxxhdpi`) en variantes normal, redonda y de primer plano (`foreground`). Generar y recortar cada uno a mano en herramientas de edición externa es un proceso extremadamente tedioso y propenso a errores de escalado o centrado dentro de la zona segura.
+- **Funcionamiento:**
+  1. Lee el logotipo maestro `public/icons/icon-512x512.png`.
+  2. Redimensiona el logotipo al 61% de la lona para cumplir estrictamente con la "zona segura" (safe zone) de los íconos adaptativos de Android.
+  3. Genera las 15 variaciones redimensionadas con interpolación de alta calidad (Lanczos/Pillow) y las guarda en sus correspondientes carpetas en `android/app/src/main/res/mipmap-*/`.
+- **Entorno virtual `.venv-icons`:** Debido a que el procesamiento de imágenes requiere la biblioteca externa `Pillow` (que compila componentes binarios nativos de C) y con el fin de mantener el `.venv` de desarrollo principal libre de dependencias pesadas que ralenticen las auditorías, se optó por aislar estas herramientas de generación gráfica en un entorno virtual dedicado llamado `.venv-icons`.
+- **Uso:**
+  ```bash
+  source .venv-icons/bin/activate
+  python3 scripts/generate-icons.py
+  deactivate
+  ```
+
+### 37. `generate-splash.py`
+Genera las pantallas de bienvenida (splash screens) adaptativas de la aplicación móvil de forma consistente.
+
+- **Problema que resuelve:** Las pantallas de inicio nativas requieren adaptarse dinámicamente a orientaciones vertical y horizontal, centrando el logotipo sin estiramiento ni distorsiones en 11 dimensiones distintas de assets en Android.
+- **Funcionamiento:**
+  1. Toma la imagen base del imagotipo y la escala proporcionalmente en relación a la dimensión más pequeña de cada lienzo de destino (~25%).
+  2. Crea un fondo de color `#1a1d23` consistente con el tema oscuro de la UI de la app.
+  3. Dibuja el imagotipo en el centro geométrico del lienzo.
+  4. Escribe el texto de marca "Lumapse" alineado debajo en color blanco semitransparente (`rgba(255, 255, 255, 200)`).
+  5. Exporta las 11 variaciones redimensionadas a `android/app/src/main/res/drawable-*/splash.png`.
+- **Uso:**
+  ```bash
+  source .venv-icons/bin/activate
+  python3 scripts/generate-splash.py
+  deactivate
+  ```
+
