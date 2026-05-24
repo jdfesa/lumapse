@@ -231,9 +231,8 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 **Estimado:** ~1 sesión
 **Dependencia:** Paso 9 idealmente cerrado o en revisión.
 
-El Hito 04 ya tiene varias piezas implementadas (SQLite, pin/archivar, búsqueda, dark mode, responsive), pero quedan requisitos menores y documentos de gestión que deben alinearse antes de pasar fuerte a Hito 05.
-
 **Tareas:**
+- [x] **Branding visual de Lumapse:** Integrar logotipos reales e íconos en Android (launcher icons y splash screens) y en la UI web (header/drawer) eliminando la marca genérica de Capacitor.
 - [ ] **RF-006 — Conteo de palabras/caracteres:** decidir si se implementa en `NoteEditor` como contador visible y actualizar HU/RF según corresponda.
 - [ ] **RF-024 — Indicador offline/online:** decidir si se implementa como chip de estado en drawer/header usando eventos `online`/`offline`.
 - [ ] **RF-022 — Onboarding:** mantener como COULD; implementar solo si no desplaza materias/testing.

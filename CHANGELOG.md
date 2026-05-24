@@ -10,6 +10,9 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 ## [0.4.0] — 2026-08 — Hito 04: Organización y UX (En progreso)
 
 ### Added
+- **Branding de Lumapse nativo (Android):** Reemplazo completo de la identidad genérica de Capacitor en el APK por la identidad visual real de Lumapse. Incluye 15 íconos de launcher adaptativos multiplataforma generados con `scripts/generate-icons.py` y 11 splash screens (en modo vertical y horizontal) con logo y nombre generados con `scripts/generate-splash.py`. Se ajustaron los colores de fondo de los íconos adaptativos y splash screens a `#1a1d23` para coherencia con la UI.
+- **Logotipo en UI (Header y Drawer):** Sustitución del ícono de cubo genérico en SVG por la imagen de marca de la bombilla neuronal de Lumapse (`icon-144x144.png`) con dimensiones y alineaciones pulidas en el App Shell.
+- **Scripts de automatización de branding:** `scripts/generate-icons.py` y `scripts/generate-splash.py` añadidos al repositorio para mantener el flujo de recreación de assets documentado, limpio y repetible.
 - **Secciones anidadas (Profundidad Nivel 2):** Botón "+" en el drawer para crear subsecciones (ej. "Unidad I") dentro de una materia raíz ("Programación I"), aplicando automáticamente herencia de color.
 - **Edición inline de materias y secciones (RF-014):** Botón de edición (✏️) al lado de cada materia o sección en el drawer que activa un modo de renombrado inline, con foco automático, guardado al presionar `Enter` o perder foco (blur), y cancelación al presionar `Escape`.
 - **Submenú "Mover a":** Menú contextual (flyout) en cada tarjeta de nota para mover notas rápidamente entre diferentes materias y secciones.
