@@ -18,9 +18,9 @@ El primer concepto explorado fue resolver la fricción inicial: el "síndrome de
 
 A continuación se buscó incorporar la idea de las **asociaciones entre notas**: la capacidad de que un apunte no quede aislado en una carpeta, sino que se vincule con otros para formar una red de conocimiento (inspirado en el *graph view* de herramientas como Obsidian). Se exploraron metáforas biológicas y geométricas como *Rizoma*, *Micelio* o *Vertex*, pero todas resultaron ser conceptos trillados o nombres ya utilizados por otros productos.
 
-### 3. El método de la amalgama — El neologismo
+### 3. El "método alemán" — La amalgama
 
-La estrategia cambió: en lugar de buscar palabras existentes, se decidió **construir un neologismo** fusionando los dos conceptos ganadores. De esa lluvia de ideas quedaron dos finalistas:
+La estrategia cambió radicalmente. En lugar de buscar palabras que ya existieran, se aplicó el principio de la *Wortzusammensetzung* (composición de palabras) del idioma alemán: fusionar dos sustantivos independientes para crear uno nuevo con significado propio — como *Kindergarten* (niños + jardín) o *Handschuh* (mano + zapato = guante). La idea era **construir un neologismo** que no existiera en ningún idioma, pero que cualquiera pudiera descomponer intuitivamente. De esa lluvia de ideas quedaron dos finalistas:
 
 | Candidato | Composición | Concepto |
 |---|---|---|
