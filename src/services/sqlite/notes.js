@@ -7,8 +7,24 @@
 // =============================================================
 
 import { getDb, persistWeb, generateUUID } from './connection.js'
+import { DatabaseError } from './errors.js'
 
 // --- Operaciones CRUD ---
+
+async function runWriteOperation(operation, action) {
+  try {
+    return await action()
+  } catch (error) {
+    console.error(`[SQLite] Error en ${operation}:`, error)
+    throw new DatabaseError(operation, error)
+  }
+}
+
+async function runSql(db, sql, values) {
+  const args = values === undefined ? [sql] : [sql, values]
+  await db.run(...args)
+  await persistWeb()
+}
 
 /**
  * Crea una nueva nota en la base de datos.
@@ -17,35 +33,36 @@ import { getDb, persistWeb, generateUUID } from './connection.js'
  * @param {string|null} subjectId ID de materia asociada (null = Entrada)
  */
 export async function createNote(title = 'Sin título', content = '', subjectId = null) {
-  const db = getDb()
+  return runWriteOperation('createNote', async () => {
+    const db = getDb()
 
-  const note = {
-    id: generateUUID(),
-    title,
-    content,
-    pinned: 0,
-    archived: 0,
-    statusEmoji: null,
-    subjectId: subjectId || null,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  }
+    const note = {
+      id: generateUUID(),
+      title,
+      content,
+      pinned: 0,
+      archived: 0,
+      statusEmoji: null,
+      subjectId: subjectId || null,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
 
-  const sql = `
-    INSERT INTO notes (id, title, content, pinned, archived, statusEmoji, subjectId, createdAt, updatedAt)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `
-  const values = [note.id, note.title, note.content, note.pinned, note.archived, note.statusEmoji, note.subjectId, note.createdAt, note.updatedAt]
-  
-  await db.run(sql, values)
-  await persistWeb()
+    const sql = `
+      INSERT INTO notes (id, title, content, pinned, archived, statusEmoji, subjectId, createdAt, updatedAt)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `
+    const values = [note.id, note.title, note.content, note.pinned, note.archived, note.statusEmoji, note.subjectId, note.createdAt, note.updatedAt]
 
-  return {
-    ...note,
-    pinned: false,
-    archived: false,
-    statusEmoji: null,
-  }
+    await runSql(db, sql, values)
+
+    return {
+      ...note,
+      pinned: false,
+      archived: false,
+      statusEmoji: null,
+    }
+  })
 }
 
 /**
@@ -88,67 +105,69 @@ export async function getAllNotes() {
  * Actualiza campos de una nota existente.
  */
 export async function updateNote(id, changes) {
-  const db = getDb()
+  return runWriteOperation('updateNote', async () => {
+    const db = getDb()
 
-  const existing = await getNoteById(id)
-  if (!existing) {
-    throw new Error(`Nota con id "${id}" no encontrada.`)
-  }
+    const existing = await getNoteById(id)
+    if (!existing) {
+      throw new Error(`Nota con id "${id}" no encontrada.`)
+    }
 
-  const fields = []
-  const values = []
-  const updatedAt = new Date().toISOString()
+    const fields = []
+    const values = []
+    const updatedAt = new Date().toISOString()
 
-  if (changes.title !== undefined) {
-    fields.push('title = ?')
-    values.push(changes.title)
-  }
-  if (changes.content !== undefined) {
-    fields.push('content = ?')
-    values.push(changes.content)
-  }
-  if (changes.pinned !== undefined) {
-    fields.push('pinned = ?')
-    values.push(changes.pinned ? 1 : 0)
-  }
-  if (changes.archived !== undefined) {
-    fields.push('archived = ?')
-    values.push(changes.archived ? 1 : 0)
-  }
-  if (changes.subjectId !== undefined) {
-    fields.push('subjectId = ?')
-    values.push(changes.subjectId)
-  }
-  if (changes.statusEmoji !== undefined) {
-    fields.push('statusEmoji = ?')
-    values.push(changes.statusEmoji)
-  }
+    if (changes.title !== undefined) {
+      fields.push('title = ?')
+      values.push(changes.title)
+    }
+    if (changes.content !== undefined) {
+      fields.push('content = ?')
+      values.push(changes.content)
+    }
+    if (changes.pinned !== undefined) {
+      fields.push('pinned = ?')
+      values.push(changes.pinned ? 1 : 0)
+    }
+    if (changes.archived !== undefined) {
+      fields.push('archived = ?')
+      values.push(changes.archived ? 1 : 0)
+    }
+    if (changes.subjectId !== undefined) {
+      fields.push('subjectId = ?')
+      values.push(changes.subjectId)
+    }
+    if (changes.statusEmoji !== undefined) {
+      fields.push('statusEmoji = ?')
+      values.push(changes.statusEmoji)
+    }
 
-  fields.push('updatedAt = ?')
-  values.push(updatedAt)
+    fields.push('updatedAt = ?')
+    values.push(updatedAt)
 
-  values.push(id)
+    values.push(id)
 
-  const sql = `UPDATE notes SET ${fields.join(', ')} WHERE id = ?`
-  await db.run(sql, values)
-  await persistWeb()
+    const sql = `UPDATE notes SET ${fields.join(', ')} WHERE id = ?`
+    await runSql(db, sql, values)
 
-  return {
-    ...existing,
-    ...changes,
-    updatedAt
-  }
+    return {
+      ...existing,
+      ...changes,
+      updatedAt
+    }
+  })
 }
 
 /**
  * Soft-delete: marca una nota como eliminada (papelera).
  */
 export async function deleteNote(id) {
-  const db = getDb()
+  return runWriteOperation('deleteNote', async () => {
+    const db = getDb()
 
-  const sql = `UPDATE notes SET deletedAt = ? WHERE id = ?`
-  await db.run(sql, [new Date().toISOString(), id])
-  await persistWeb()
+    const sql = `UPDATE notes SET deletedAt = ? WHERE id = ?`
+    await runSql(db, sql, [new Date().toISOString(), id])
+  })
 }
 
 /**
@@ -188,33 +207,36 @@ export async function getDeletedNotes() {
  * Restaura una nota eliminada (quita deletedAt).
  */
 export async function restoreNote(id) {
-  const db = getDb()
+  return runWriteOperation('restoreNote', async () => {
+    const db = getDb()
 
-  const sql = `UPDATE notes SET deletedAt = NULL WHERE id = ?`
-  await db.run(sql, [id])
-  await persistWeb()
+    const sql = `UPDATE notes SET deletedAt = NULL WHERE id = ?`
+    await runSql(db, sql, [id])
+  })
 }
 
 /**
  * Elimina permanentemente una nota (DELETE físico).
  */
 export async function permanentlyDeleteNote(id) {
-  const db = getDb()
+  return runWriteOperation('permanentlyDeleteNote', async () => {
+    const db = getDb()
 
-  const sql = `DELETE FROM notes WHERE id = ?`
-  await db.run(sql, [id])
-  await persistWeb()
+    const sql = `DELETE FROM notes WHERE id = ?`
+    await runSql(db, sql, [id])
+  })
 }
 
 /**
  * Vacía la papelera de notas (DELETE físico de todas las eliminadas).
  */
 export async function emptyTrashNotes() {
-  const db = getDb()
+  return runWriteOperation('emptyTrashNotes', async () => {
+    const db = getDb()
 
-  const sql = `DELETE FROM notes WHERE deletedAt IS NOT NULL`
-  await db.run(sql)
-  await persistWeb()
+    const sql = `DELETE FROM notes WHERE deletedAt IS NOT NULL`
+    await runSql(db, sql)
+  })
 }
 
 /**
@@ -234,15 +256,16 @@ export async function countDeletedNotes() {
  * @param {number} days Días de retención (default: 30)
  */
 export async function purgeOldDeletedNotes(days = 30) {
-  const db = getDb()
+  return runWriteOperation('purgeOldDeletedNotes', async () => {
+    const db = getDb()
 
-  const cutoff = new Date()
-  cutoff.setDate(cutoff.getDate() - days)
-  const cutoffISO = cutoff.toISOString()
+    const cutoff = new Date()
+    cutoff.setDate(cutoff.getDate() - days)
+    const cutoffISO = cutoff.toISOString()
 
-  const sql = `DELETE FROM notes WHERE deletedAt IS NOT NULL AND deletedAt < ?`
-  await db.run(sql, [cutoffISO])
-  await persistWeb()
+    const sql = `DELETE FROM notes WHERE deletedAt IS NOT NULL AND deletedAt < ?`
+    await runSql(db, sql, [cutoffISO])
+  })
 }
 
 /**
@@ -250,12 +273,13 @@ export async function purgeOldDeletedNotes(days = 30) {
  * @param {string} subjectId ID de la materia
  */
 export async function softDeleteNotesBySubject(subjectId) {
-  const db = getDb()
-  const now = new Date().toISOString()
+  return runWriteOperation('softDeleteNotesBySubject', async () => {
+    const db = getDb()
+    const now = new Date().toISOString()
 
-  const sql = `UPDATE notes SET deletedAt = ? WHERE subjectId = ? AND deletedAt IS NULL`
-  await db.run(sql, [now, subjectId])
-  await persistWeb()
+    const sql = `UPDATE notes SET deletedAt = ? WHERE subjectId = ? AND deletedAt IS NULL`
+    await runSql(db, sql, [now, subjectId])
+  })
 }
 
 /**
@@ -264,9 +288,10 @@ export async function softDeleteNotesBySubject(subjectId) {
  * @param {string} subjectId ID de la materia
  */
 export async function restoreNotesBySubject(subjectId) {
-  const db = getDb()
+  return runWriteOperation('restoreNotesBySubject', async () => {
+    const db = getDb()
 
-  const sql = `UPDATE notes SET deletedAt = NULL WHERE subjectId = ? AND deletedAt IS NOT NULL`
-  await db.run(sql, [subjectId])
-  await persistWeb()
+    const sql = `UPDATE notes SET deletedAt = NULL WHERE subjectId = ? AND deletedAt IS NOT NULL`
+    await runSql(db, sql, [subjectId])
+  })
 }

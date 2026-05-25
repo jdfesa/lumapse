@@ -4,11 +4,26 @@
 
 import * as NoteService from '../services/sqlite/notes.js'
 import * as SubjectService from '../services/SubjectService.js'
+import { DatabaseError } from '../services/sqlite/errors.js'
+import { showErrorToast } from '../components/Toast.js'
 import { getFilteredNotes as applyFilters } from './noteFilters.js'
 import { state, notify } from './NoteStore.state.js'
 
 // Umbral para alerta de papelera llena
 const TRASH_WARNING_THRESHOLD = 50
+
+async function runStoreAction(operation, errorMessage, action) {
+  try {
+    return await action()
+  } catch (error) {
+    console.error(`[NoteStore] ${operation} failed:`, error)
+    if (error instanceof DatabaseError) {
+      showErrorToast(errorMessage)
+      return undefined
+    }
+    throw error
+  }
+}
 
 export async function loadNotes() {
   state.notes = await NoteService.getAllNotes()
@@ -31,54 +46,62 @@ export async function loadTrashCount() {
 }
 
 export async function createNote(title = 'Sin título', content = '', subjectId = undefined) {
-  if (!content && title === 'Sin título') {
-    content = '# '
-  }
+  return runStoreAction('createNote', 'No se pudo crear la nota. Intenta de nuevo.', async () => {
+    if (!content && title === 'Sin título') {
+      content = '# '
+    }
 
-  const resolvedSubjectId = subjectId !== undefined
-    ? subjectId
-    : (state.viewMode === 'subject' ? state.activeSubjectId : null)
-  
-  const newNote = await NoteService.createNote(title, content, resolvedSubjectId)
-  state.notes = [newNote, ...state.notes]
-  state.searchQuery = ''
-  state.dateFilter = null
-  await loadSubjects()
-  notify()
+    const resolvedSubjectId = subjectId !== undefined
+      ? subjectId
+      : (state.viewMode === 'subject' ? state.activeSubjectId : null)
+
+    const newNote = await NoteService.createNote(title, content, resolvedSubjectId)
+    state.notes = [newNote, ...state.notes]
+    state.searchQuery = ''
+    state.dateFilter = null
+    await loadSubjects()
+    notify()
+  })
 }
 
 export async function updateNote(id, changes) {
-  const updatedNote = await NoteService.updateNote(id, changes)
-  
-  state.notes = state.notes.map(note => note.id === id ? updatedNote : note)
-  
-  const noteIndex = state.notes.findIndex(note => note.id === id)
-  if (noteIndex > -1) {
-    const [noteToMove] = state.notes.splice(noteIndex, 1)
-    state.notes.unshift(noteToMove)
-  }
-  
-  notify()
+  return runStoreAction('updateNote', 'No se pudo actualizar la nota. Intenta de nuevo.', async () => {
+    const updatedNote = await NoteService.updateNote(id, changes)
+
+    state.notes = state.notes.map(note => note.id === id ? updatedNote : note)
+
+    const noteIndex = state.notes.findIndex(note => note.id === id)
+    if (noteIndex > -1) {
+      const [noteToMove] = state.notes.splice(noteIndex, 1)
+      state.notes.unshift(noteToMove)
+    }
+
+    notify()
+  })
 }
 
 export async function moveNote(noteId, subjectId) {
-  const updatedNote = await NoteService.updateNote(noteId, { subjectId })
-  state.notes = state.notes.map(note => note.id === noteId ? updatedNote : note)
-  await loadSubjects()
-  notify()
+  return runStoreAction('moveNote', 'No se pudo mover la nota. Intenta de nuevo.', async () => {
+    const updatedNote = await NoteService.updateNote(noteId, { subjectId })
+    state.notes = state.notes.map(note => note.id === noteId ? updatedNote : note)
+    await loadSubjects()
+    notify()
+  })
 }
 
 export async function deleteNote(id) {
-  await NoteService.deleteNote(id)
-  state.notes = state.notes.filter(note => note.id !== id)
-  
-  if (state.activeNoteId === id) {
-    state.activeNoteId = null
-  }
-  
-  await loadTrashCount()
-  await loadSubjects()
-  notify()
+  return runStoreAction('deleteNote', 'No se pudo enviar la nota a la papelera. Intenta de nuevo.', async () => {
+    await NoteService.deleteNote(id)
+    state.notes = state.notes.filter(note => note.id !== id)
+
+    if (state.activeNoteId === id) {
+      state.activeNoteId = null
+    }
+
+    await loadTrashCount()
+    await loadSubjects()
+    notify()
+  })
 }
 
 export function getFilteredNotes() {
@@ -86,34 +109,42 @@ export function getFilteredNotes() {
 }
 
 export async function createSubject(name, color = null, parentSubjectId = null) {
-  const subject = await SubjectService.createSubject(name, color, parentSubjectId)
-  await loadSubjects()
-  return subject
+  return runStoreAction('createSubject', 'No se pudo crear la materia. Intenta de nuevo.', async () => {
+    const subject = await SubjectService.createSubject(name, color, parentSubjectId)
+    await loadSubjects()
+    return subject
+  })
 }
 
 export async function updateSubject(id, changes) {
-  await SubjectService.updateSubject(id, changes)
-  await loadSubjects()
+  return runStoreAction('updateSubject', 'No se pudo actualizar la materia. Intenta de nuevo.', async () => {
+    await SubjectService.updateSubject(id, changes)
+    await loadSubjects()
+  })
 }
 
 export async function archiveSubject(id) {
-  await SubjectService.archiveSubject(id)
-  if (state.activeSubjectId === id) {
-    state.viewMode = 'inbox'
-    state.activeSubjectId = null
-  }
-  await loadSubjects()
+  return runStoreAction('archiveSubject', 'No se pudo archivar la materia. Intenta de nuevo.', async () => {
+    await SubjectService.archiveSubject(id)
+    if (state.activeSubjectId === id) {
+      state.viewMode = 'inbox'
+      state.activeSubjectId = null
+    }
+    await loadSubjects()
+  })
 }
 
 export async function deleteSubject(id) {
-  await SubjectService.deleteSubject(id)
-  if (state.activeSubjectId === id) {
-    state.viewMode = 'inbox'
-    state.activeSubjectId = null
-  }
-  await loadNotes()
-  await loadSubjects()
-  await loadTrashCount()
+  return runStoreAction('deleteSubject', 'No se pudo enviar la materia a la papelera. Intenta de nuevo.', async () => {
+    await SubjectService.deleteSubject(id)
+    if (state.activeSubjectId === id) {
+      state.viewMode = 'inbox'
+      state.activeSubjectId = null
+    }
+    await loadNotes()
+    await loadSubjects()
+    await loadTrashCount()
+  })
 }
 
 /**
@@ -121,14 +152,16 @@ export async function deleteSubject(id) {
  * @param {string} id ID de la sección
  */
 export async function deleteSection(id) {
-  await SubjectService.deleteSection(id)
-  if (state.activeSubjectId === id) {
-    state.viewMode = 'inbox'
-    state.activeSubjectId = null
-  }
-  await loadNotes()
-  await loadSubjects()
-  await loadTrashCount()
+  return runStoreAction('deleteSection', 'No se pudo eliminar la sección. Intenta de nuevo.', async () => {
+    await SubjectService.deleteSection(id)
+    if (state.activeSubjectId === id) {
+      state.viewMode = 'inbox'
+      state.activeSubjectId = null
+    }
+    await loadNotes()
+    await loadSubjects()
+    await loadTrashCount()
+  })
 }
 
 /**
@@ -137,10 +170,12 @@ export async function deleteSection(id) {
  * @param {string} id ID de la nota
  */
 export async function restoreNoteFromTrash(id) {
-  await SubjectService.restoreNoteFromTrash(id)
-  await loadNotes()
-  await loadSubjects()
-  await loadTrashCount()
+  return runStoreAction('restoreNoteFromTrash', 'No se pudo restaurar la nota. Intenta de nuevo.', async () => {
+    await SubjectService.restoreNoteFromTrash(id)
+    await loadNotes()
+    await loadSubjects()
+    await loadTrashCount()
+  })
 }
 
 /**
@@ -148,10 +183,12 @@ export async function restoreNoteFromTrash(id) {
  * @param {string} id ID de la materia
  */
 export async function restoreSubjectFromTrash(id) {
-  await SubjectService.restoreSubject(id)
-  await loadNotes()
-  await loadSubjects()
-  await loadTrashCount()
+  return runStoreAction('restoreSubjectFromTrash', 'No se pudo restaurar la materia. Intenta de nuevo.', async () => {
+    await SubjectService.restoreSubject(id)
+    await loadNotes()
+    await loadSubjects()
+    await loadTrashCount()
+  })
 }
 
 /**
@@ -159,17 +196,20 @@ export async function restoreSubjectFromTrash(id) {
  * @param {string} id ID de la nota
  */
 export async function permanentlyDeleteNote(id) {
-  await NoteService.permanentlyDeleteNote(id)
-  await loadTrashCount()
+  return runStoreAction('permanentlyDeleteNote', 'No se pudo eliminar la nota permanentemente. Intenta de nuevo.', async () => {
+    await NoteService.permanentlyDeleteNote(id)
+    await loadTrashCount()
+  })
 }
 
 /**
  * Vacía toda la papelera (DELETE físico de todo).
  */
 export async function emptyTrash() {
-  await SubjectService.emptyTrash()
-  await loadNotes()
-  await loadSubjects()
-  await loadTrashCount()
+  return runStoreAction('emptyTrash', 'No se pudo vaciar la papelera. Intenta de nuevo.', async () => {
+    await SubjectService.emptyTrash()
+    await loadNotes()
+    await loadSubjects()
+    await loadTrashCount()
+  })
 }
-

@@ -8,6 +8,16 @@
 // =============================================================
 
 import { getDb, persistWeb } from './connection.js'
+import { DatabaseError } from './errors.js'
+
+async function runWriteOperation(operation, action) {
+  try {
+    return await action()
+  } catch (error) {
+    console.error(`[SQLite] Error en ${operation}:`, error)
+    throw new DatabaseError(operation, error)
+  }
+}
 
 /**
  * Inserta una materia en la base de datos.
@@ -15,23 +25,25 @@ import { getDb, persistWeb } from './connection.js'
  * @param {object} subject Objeto con id, name, color, parentSubjectId, createdAt
  */
 export async function createSubjectRow(subject) {
-  const db = getDb()
+  return runWriteOperation('createSubjectRow', async () => {
+    const db = getDb()
 
-  const sql = `
-    INSERT INTO subjects (id, name, parentSubjectId, archived, color, createdAt)
-    VALUES (?, ?, ?, ?, ?, ?)
-  `
-  const values = [
-    subject.id,
-    subject.name,
-    subject.parentSubjectId || null,
-    subject.archived ? 1 : 0,
-    subject.color || null,
-    subject.createdAt
-  ]
+    const sql = `
+      INSERT INTO subjects (id, name, parentSubjectId, archived, color, createdAt)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `
+    const values = [
+      subject.id,
+      subject.name,
+      subject.parentSubjectId || null,
+      subject.archived ? 1 : 0,
+      subject.color || null,
+      subject.createdAt
+    ]
 
-  await db.run(sql, values)
-  await persistWeb()
+    await db.run(sql, values)
+    await persistWeb()
+  })
 }
 
 /**
@@ -69,45 +81,49 @@ export async function getSubjectRowById(id) {
  * Actualiza campos de una materia existente.
  */
 export async function updateSubjectRow(id, changes) {
-  const db = getDb()
+  return runWriteOperation('updateSubjectRow', async () => {
+    const db = getDb()
 
-  const fields = []
-  const values = []
+    const fields = []
+    const values = []
 
-  if (changes.name !== undefined) {
-    fields.push('name = ?')
-    values.push(changes.name)
-  }
-  if (changes.color !== undefined) {
-    fields.push('color = ?')
-    values.push(changes.color)
-  }
-  if (changes.parentSubjectId !== undefined) {
-    fields.push('parentSubjectId = ?')
-    values.push(changes.parentSubjectId)
-  }
-  if (changes.archived !== undefined) {
-    fields.push('archived = ?')
-    values.push(changes.archived ? 1 : 0)
-  }
+    if (changes.name !== undefined) {
+      fields.push('name = ?')
+      values.push(changes.name)
+    }
+    if (changes.color !== undefined) {
+      fields.push('color = ?')
+      values.push(changes.color)
+    }
+    if (changes.parentSubjectId !== undefined) {
+      fields.push('parentSubjectId = ?')
+      values.push(changes.parentSubjectId)
+    }
+    if (changes.archived !== undefined) {
+      fields.push('archived = ?')
+      values.push(changes.archived ? 1 : 0)
+    }
 
-  if (fields.length === 0) return
+    if (fields.length === 0) return
 
-  values.push(id)
-  const sql = `UPDATE subjects SET ${fields.join(', ')} WHERE id = ?`
-  await db.run(sql, values)
-  await persistWeb()
+    values.push(id)
+    const sql = `UPDATE subjects SET ${fields.join(', ')} WHERE id = ?`
+    await db.run(sql, values)
+    await persistWeb()
+  })
 }
 
 /**
  * Soft-delete: marca una materia como eliminada (papelera).
  */
 export async function deleteSubjectRow(id) {
-  const db = getDb()
+  return runWriteOperation('deleteSubjectRow', async () => {
+    const db = getDb()
 
-  const sql = `UPDATE subjects SET deletedAt = ? WHERE id = ?`
-  await db.run(sql, [new Date().toISOString(), id])
-  await persistWeb()
+    const sql = `UPDATE subjects SET deletedAt = ? WHERE id = ?`
+    await db.run(sql, [new Date().toISOString(), id])
+    await persistWeb()
+  })
 }
 
 /**
@@ -156,33 +172,39 @@ export async function getDeletedSubjectRows() {
  * Restaura una materia eliminada (quita deletedAt).
  */
 export async function restoreSubjectRow(id) {
-  const db = getDb()
+  return runWriteOperation('restoreSubjectRow', async () => {
+    const db = getDb()
 
-  const sql = `UPDATE subjects SET deletedAt = NULL WHERE id = ?`
-  await db.run(sql, [id])
-  await persistWeb()
+    const sql = `UPDATE subjects SET deletedAt = NULL WHERE id = ?`
+    await db.run(sql, [id])
+    await persistWeb()
+  })
 }
 
 /**
  * Elimina permanentemente una materia (DELETE físico).
  */
 export async function permanentlyDeleteSubjectRow(id) {
-  const db = getDb()
+  return runWriteOperation('permanentlyDeleteSubjectRow', async () => {
+    const db = getDb()
 
-  const sql = `DELETE FROM subjects WHERE id = ?`
-  await db.run(sql, [id])
-  await persistWeb()
+    const sql = `DELETE FROM subjects WHERE id = ?`
+    await db.run(sql, [id])
+    await persistWeb()
+  })
 }
 
 /**
  * Vacía la papelera de materias (DELETE físico).
  */
 export async function emptyTrashSubjects() {
-  const db = getDb()
+  return runWriteOperation('emptyTrashSubjects', async () => {
+    const db = getDb()
 
-  const sql = `DELETE FROM subjects WHERE deletedAt IS NOT NULL`
-  await db.run(sql)
-  await persistWeb()
+    const sql = `DELETE FROM subjects WHERE deletedAt IS NOT NULL`
+    await db.run(sql)
+    await persistWeb()
+  })
 }
 
 /**
@@ -190,12 +212,14 @@ export async function emptyTrashSubjects() {
  * @param {string} parentId ID de la materia padre
  */
 export async function softDeleteChildSubjects(parentId) {
-  const db = getDb()
-  const now = new Date().toISOString()
+  return runWriteOperation('softDeleteChildSubjects', async () => {
+    const db = getDb()
+    const now = new Date().toISOString()
 
-  const sql = `UPDATE subjects SET deletedAt = ? WHERE parentSubjectId = ? AND deletedAt IS NULL`
-  await db.run(sql, [now, parentId])
-  await persistWeb()
+    const sql = `UPDATE subjects SET deletedAt = ? WHERE parentSubjectId = ? AND deletedAt IS NULL`
+    await db.run(sql, [now, parentId])
+    await persistWeb()
+  })
 }
 
 /**
@@ -203,11 +227,13 @@ export async function softDeleteChildSubjects(parentId) {
  * @param {string} parentId ID de la materia padre
  */
 export async function restoreChildSubjects(parentId) {
-  const db = getDb()
+  return runWriteOperation('restoreChildSubjects', async () => {
+    const db = getDb()
 
-  const sql = `UPDATE subjects SET deletedAt = NULL WHERE parentSubjectId = ? AND deletedAt IS NOT NULL`
-  await db.run(sql, [parentId])
-  await persistWeb()
+    const sql = `UPDATE subjects SET deletedAt = NULL WHERE parentSubjectId = ? AND deletedAt IS NOT NULL`
+    await db.run(sql, [parentId])
+    await persistWeb()
+  })
 }
 
 /**
@@ -215,15 +241,17 @@ export async function restoreChildSubjects(parentId) {
  * @param {number} days Días de retención (default: 30)
  */
 export async function purgeOldDeletedSubjects(days = 30) {
-  const db = getDb()
+  return runWriteOperation('purgeOldDeletedSubjects', async () => {
+    const db = getDb()
 
-  const cutoff = new Date()
-  cutoff.setDate(cutoff.getDate() - days)
-  const cutoffISO = cutoff.toISOString()
+    const cutoff = new Date()
+    cutoff.setDate(cutoff.getDate() - days)
+    const cutoffISO = cutoff.toISOString()
 
-  const sql = `DELETE FROM subjects WHERE deletedAt IS NOT NULL AND deletedAt < ?`
-  await db.run(sql, [cutoffISO])
-  await persistWeb()
+    const sql = `DELETE FROM subjects WHERE deletedAt IS NOT NULL AND deletedAt < ?`
+    await db.run(sql, [cutoffISO])
+    await persistWeb()
+  })
 }
 
 /**

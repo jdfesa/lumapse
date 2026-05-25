@@ -114,3 +114,57 @@
     transform: translateY(0);
   }
 }
+
+/* --- Toasts --- */
+#toast-container {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  width: min(420px, 90vw);
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.toast {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text-bright);
+  background-color: var(--color-surface);
+  background-image: linear-gradient(var(--color-danger-dim), var(--color-danger-dim));
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 12px 32px var(--color-shadow);
+  pointer-events: auto;
+  animation: toastSlideUp 0.2s ease-out;
+}
+
+.toast--error {
+  border-color: #f87171;
+}
+
+.toast--leaving {
+  animation: toastFadeOut 0.2s ease-in forwards;
+}
+
+@keyframes toastSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes toastFadeOut {
+  to {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
