@@ -235,7 +235,11 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 - [x] **Branding visual de Lumapse:** Integrar logotipos reales e íconos en Android (launcher icons y splash screens) y en la UI web (header/drawer) eliminando la marca genérica de Capacitor.
 - [ ] **RF-006 — Conteo de palabras/caracteres:** decidir si se implementa en `NoteEditor` como contador visible y actualizar HU/RF según corresponda.
 - [ ] **RF-024 — Indicador offline/online:** decidir si se implementa como chip de estado en drawer/header usando eventos `online`/`offline`.
-- [ ] **RF-022 — Onboarding:** mantener como COULD; implementar solo si no desplaza materias/testing.
+- [ ] **RF-022 — Onboarding carousel (3 pantallas + saltar):** Flujo de bienvenida al primer inicio con 3 pantallas deslizables minimalistas que presenten las propuestas de valor: captura rápida, organización por materias y funcionamiento offline. Botón "Saltar" siempre visible. No forzar acciones, solo informar. Referencia: DP-006.
+- [ ] **Empty states amigables:** Mensajes visuales y cálidos para pantallas vacías (feed sin notas, papelera vacía, materia sin notas, resultados de búsqueda vacíos). Reemplaza la idea de notas precargadas — evita que el usuario nuevo piense que necesita saber Markdown para usar la app.
+- [ ] **Coach marks contextuales (tooltips de primera vez):** Burbujitas no intrusivas que aparecen *una sola vez* al llegar a una pantalla nueva (ej: primera vez que abre el drawer → tooltip sobre el botón "+" de materias). Se descartan al tocar y no vuelven a aparecer. Persistencia en `localStorage`.
+- [ ] **Archivar materia/sección completa con cascada:** Permitir archivar una materia o sección entera de un solo toque, aplicando cascada a todas las notas contenidas (y secciones hijas en caso de materia raíz). Caso de uso real: estudiante termina un cuatrimestre y quiere archivar "Programación I" con sus 3 unidades y 40 notas sin hacerlo una por una. Requiere actualización de `SubjectService`, `NoteStore`, UI del drawer y tests.
+- [ ] **Guía de Markdown accesible desde Ayuda (DP-006):** En lugar de notas precargadas, ofrecer una guía opcional de sintaxis Markdown dentro de la sección de Ayuda/Onboarding. El usuario la consulta solo si quiere; no se impone. Refuerza que Lumapse funciona con texto plano sin necesidad de aprender Markdown.
 - [ ] **README principal:** sincronizar stack y roadmap con el estado real post-SQLite, evitando hablar de IndexedDB como persistencia actual.
 - [ ] **Seguimiento de velocidad:** actualizar `docs/gestion/seguimiento-velocidad.md` usando `python3 scripts/generate-velocity-report.py`.
 - [ ] **Versionado:** alinear `package.json`/`package-lock.json` con la versión documentada en `CHANGELOG.md` antes de preparar release.
@@ -296,6 +300,24 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
   - `MarkdownService` (sanitización XSS): 12 tests de seguridad + 30 de sintaxis/edge cases. 
   - Lógica del `Store` (filtrado, ordenamiento, pin/archivar): `noteFilters.test.js` (100%), `NoteStore.data.test.js`, `NoteStore.ui.test.js`.
 - [ ] **Tests pendientes menores (deuda post-auditoría):** Agregar 2 tests para `moveNote()` en `NoteStore.data.test.js` (líneas 65-68 sin cubrir). Eliminar clave `deleteSection` duplicada en el mock de la línea 30.
+
+## 💡 Feedback de Producto — Sesión 2026-05-25
+
+> **Origen:** Revisión crítica externa, que señaló el riesgo de sobreingeniería y falta de usabilidad percibida ante el tribunal. Las siguientes ideas surgieron de esa discusión y apuntan a cerrar la brecha entre la solidez técnica del proyecto y la experiencia del usuario final.
+
+| Idea | Tipo | Prioridad | Estado | Ubicación en Backlog |
+|---|---|---|---|---|
+| Empty states amigables (feed, papelera, materia vacía) | UX | Alta | Pendiente | Paso 10 |
+| Onboarding carousel — 3 pantallas + saltar (RF-022) | UX | Alta | Pendiente | Paso 10 |
+| Coach marks contextuales (tooltips de primera vez) | UX | Media | Pendiente | Paso 10 |
+| Archivar materia/sección completa con cascada | Funcionalidad | Alta | Pendiente | Paso 10 |
+| Guía de Markdown opcional en Ayuda (DP-006) | UX | Media | Pendiente | Paso 10 |
+
+**Decisión de diseño — Notas precargadas descartadas:** Se evaluó y descartó la idea de precargar 2-3 notas de ejemplo en Markdown al primer inicio. Motivo: el usuario podría interpretar erróneamente que necesita aprender sintaxis Markdown para usar la app, cuando en realidad Lumapse funciona perfectamente con texto plano. Los empty states amigables cumplen la misma función de orientación sin generar esa fricción cognitiva.
+
+**Decisión de diseño — Onboarding no forzado:** Se descartó la modalidad de tutorial interactivo obligatorio ("creá una nota, creá una carpeta") por generar fricción innecesaria. Se optó por un enfoque pasivo (carousel informativo + coach marks contextuales) que respeta el ritmo del usuario.
+
+---
 
 ## 🚀 Ideas a Largo Plazo (Post-Defensa / Hitos Futuros)
 
