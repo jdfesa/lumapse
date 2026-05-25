@@ -16,6 +16,8 @@ Lumapse es una aplicación móvil nativa diseñada para que los estudiantes de n
 
 El problema que resuelve: las aplicaciones de notas existentes requieren cuenta, conexión a internet, o son demasiado complejas para el uso diario en el aula. Lumapse se instala como cualquier otra app, guarda todo localmente con SQLite y funciona sin conexión.
 
+> **¿Por qué "Lumapse"?** El nombre es un neologismo que fusiona *Lumen* (claridad, captura sin fricción) y *Synapse* (conexión, conocimiento interconectado). [Leer la historia completa →](./docs/producto/origen-del-nombre.md)
+
 > **Nota sobre la arquitectura:** Lumapse fue concebida inicialmente como una PWA. Tras un [relevamiento de datos con 120 estudiantes](./docs/producto/resultados-relevamiento.md), la evidencia empírica mostró que el 72.5% usaría la app desde el celular y el 81.7% tiene conectividad deficiente. Esto fundamentó el [pivote a app nativa](./docs/adr/ADR-005-pivote-app-nativa.md) empaquetada con Capacitor.
 
 ---

@@ -25,6 +25,7 @@ Esta carpeta contiene la documentación centrada en el **usuario y el producto**
 | [`lean-canvas.md`](./lean-canvas.md) | Idear | Modelo de negocio y propuesta de valor |
 | [`resultados-relevamiento.md`](./resultados-relevamiento.md) | Empatizar / Definir | Resultados del análisis de 120 respuestas — hallazgos, cruces estadísticos, validación de artefactos y recomendaciones |
 | [`decisiones-producto.md`](./decisiones-producto.md) | Transversal | Decisiones de diseño de producto documentadas |
+| [`origen-del-nombre.md`](./origen-del-nombre.md) | Definir / Idear | Proceso creativo y justificación del nombre *Lumapse* |
 
 ### Materiales de distribución
 
