@@ -6,6 +6,7 @@
 import * as NoteStore from '../store/NoteStore.js';
 import * as MarkdownService from '../services/MarkdownService.js';
 import { formatRelativeDate, escapeHtml, findSubject, buildMoveMenu } from './NoteCardRenderer.js';
+import { createFeedActionRouter } from './FeedActionRouter.js';
 import { renderTrashView } from './TrashView.js';
 import './NoteList.css';
 
@@ -27,68 +28,14 @@ export class NoteList {
     this.feedContainer = this.container.querySelector('#feed-items');
 
     // Delegación de eventos para botones de la card
-    this.feedContainer.addEventListener('click', (e) => {
-      const btnMenu = e.target.closest('.js-btn-menu');
-      const btnEdit = e.target.closest('.js-btn-edit');
-      const btnDelete = e.target.closest('.js-btn-delete');
-      const btnPin = e.target.closest('.js-btn-pin');
-      const btnArchive = e.target.closest('.js-btn-archive');
-      const btnMove = e.target.closest('.js-btn-move-to');
-      const btnStatus = e.target.closest('.js-btn-status');
-      const btnCopy = e.target.closest('.js-btn-copy');
-      // Trash actions
-      const btnRestore = e.target.closest('.js-btn-restore');
-      const btnPermanentDelete = e.target.closest('.js-btn-permanent-delete');
-      const btnRestoreSubject = e.target.closest('.js-btn-restore-subject');
-      const btnEmptyTrash = e.target.closest('.js-btn-empty-trash');
-      
-      // Si el clic no fue en un botón de menú, cerramos todos
-      if (!btnMenu) {
-        this.closeAllDropdowns();
-      }
-
-      if (btnEmptyTrash) {
-        if (confirm('¿Vaciar la papelera? Esto eliminará permanentemente todas las notas y materias. Esta acción no se puede deshacer.')) {
-          NoteStore.emptyTrash().then(() => renderTrashView(this.feedContainer));
-        }
-      } else if (btnRestore) {
-        NoteStore.restoreNoteFromTrash(btnRestore.dataset.id).then(() => renderTrashView(this.feedContainer));
-      } else if (btnPermanentDelete) {
-        if (confirm('¿Eliminar permanentemente esta nota? Esta acción no se puede deshacer.')) {
-          NoteStore.permanentlyDeleteNote(btnPermanentDelete.dataset.id).then(() => renderTrashView(this.feedContainer));
-        }
-      } else if (btnRestoreSubject) {
-        NoteStore.restoreSubjectFromTrash(btnRestoreSubject.dataset.id).then(() => renderTrashView(this.feedContainer));
-      } else if (btnMenu) {
-        e.stopPropagation();
-        const dropdown = btnMenu.nextElementSibling;
-        const isOpen = dropdown.classList.contains('is-open');
-        this.closeAllDropdowns();
-        if (!isOpen) {
-          dropdown.classList.add('is-open');
-        }
-      } else if (btnPin) {
-        NoteStore.togglePin(btnPin.dataset.id);
-      } else if (btnArchive) {
-        NoteStore.toggleArchive(btnArchive.dataset.id);
-      } else if (btnMove) {
-        const noteId = btnMove.dataset.noteId;
-        const targetSubject = btnMove.dataset.subjectId || null;
-        NoteStore.moveNote(noteId, targetSubject);
-        this.closeAllDropdowns();
-      } else if (btnStatus) {
-        const noteId = btnStatus.dataset.noteId;
-        const emoji = btnStatus.dataset.emoji || null;
-        NoteStore.setNoteStatus(noteId, emoji);
-        this.closeAllDropdowns();
-      } else if (btnEdit) {
-        this.handleEdit(btnEdit.dataset.id);
-      } else if (btnDelete) {
-        this.handleDelete(btnDelete.dataset.id);
-      } else if (btnCopy) {
-        this.handleCopy(btnCopy);
-      }
+    const router = createFeedActionRouter({
+      onEdit: this.handleEdit,
+      onDelete: this.handleDelete,
+      onCopy: (button) => this.handleCopy(button),
+      closeAllDropdowns: () => this.closeAllDropdowns(),
+      refreshTrash: () => renderTrashView(this.feedContainer)
     });
+    this.feedContainer.addEventListener('click', router);
 
     // Suscribirse al store
     this.unsubscribe = NoteStore.subscribe((state) => {
