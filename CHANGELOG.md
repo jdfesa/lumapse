@@ -9,7 +9,9 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ## [0.4.0] — 2026-08 — Hito 04: Organización y UX (En progreso)
 
-### Added
+- **Componente Toast y Notificaciones en UI:** Implementado `Toast.js` (`src/components/Toast.js`) y sus estilos en `main.css` para proveer notificaciones no intrusivas en la UI ante acciones del usuario y errores del sistema.
+- **Manejo de Errores SQLite y Resiliencia:** Estructura de excepciones `DatabaseError` (`src/services/sqlite/errors.js`) con capturadores `try/catch` robustos en la persistencia SQLite, previniendo fallos silenciosos y mostrando alertas amigables al usuario mediante Toasts.
+- **Virtualización del Feed de Notas (`VirtualFeed.js`):** Nuevo componente que implementa *List Virtualization* basándose en `IntersectionObserver`, caching dinámico de alturas con búsqueda binaria y posicionamiento absoluto para soportar miles de notas sin degradación de rendimiento.
 - **Branding de Lumapse nativo (Android):** Reemplazo completo de la identidad genérica de Capacitor en el APK por la identidad visual real de Lumapse. Incluye 15 íconos de launcher adaptativos multiplataforma generados con `scripts/generate-icons.py` y 11 splash screens (en modo vertical y horizontal) con logo y nombre generados con `scripts/generate-splash.py`. Se ajustaron los colores de fondo de los íconos adaptativos y splash screens a `#1a1d23` para coherencia con la UI.
 - **Logotipo en UI (Header y Drawer):** Sustitución del ícono de cubo genérico en SVG por la imagen de marca de la bombilla neuronal de Lumapse (`icon-144x144.png`) con dimensiones y alineaciones pulidas en el App Shell.
 - **Scripts de automatización de branding:** `scripts/generate-icons.py` y `scripts/generate-splash.py` añadidos al repositorio para mantener el flujo de recreación de assets documentado, limpio y repetible.
@@ -38,6 +40,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Refactorización de NoteStore:** `NoteStore.js` dividido en submódulos (`state`, `data`, `ui`) con barrel file para mantener retrocompatibilidad.
 
 ### Changed
+- **Control de Acciones del Feed (`FeedActionRouter.js`):** Extracción de la lógica del delegador de clicks de `NoteList.js` hacia una clase dedicada de ruteo de acciones, reduciendo la complejidad ciclomática de 19 a < 10.
 - **Plantilla de ADRs:** Modificada la plantilla de `generate-adr.sh` para establecer como autor a Jose David Sandoval de forma predeterminada.
 - **Modelo Lógico:** Regenerado el archivo `03-modelo-logico-relacional.dbml` para apuntar a la ruta correcta de persistencia en la cabecera del archivo.
 - **Capa de Persistencia:** Reemplazo de `NoteService.js` por `SqliteService.js` y actualización de `NoteStore.js` y `ExportService.js` para consumir la base de datos SQLite.
