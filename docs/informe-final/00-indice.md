@@ -3,6 +3,8 @@
 Este directorio contiene el esqueleto del informe final para la materia Prácticas Profesionalizantes III.
 Los archivos se irán ensamblando iterativamente utilizando la documentación viva del proyecto. Las secciones técnicas se mantendrán vacías hasta las etapas finales del desarrollo.
 
+> Ver [`README.md`](./README.md) para el flujo de trabajo: las secciones son la fuente de verdad y el informe completo se ensambla solo en puntos de control o al cierre.
+
 - [Capítulo 1: Introducción y Planteo del Problema](01-introduccion.md)
 - [Capítulo 2: Marco Metodológico y Modelo de Negocio](02-marco-metodologico.md)
 - [Capítulo 3: Relevamiento y Análisis de Datos](03-relevamiento-datos.md)
