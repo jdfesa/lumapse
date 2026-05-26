@@ -9,8 +9,22 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ## Hito 04: Organización y UX (En progreso)
 
-> Las versiones 0.4.0 a 0.4.7 componen el Hito 04. Cada sub-versión agrupa un lote
+> Las versiones 0.4.0 a 0.4.8 componen el Hito 04. Cada sub-versión agrupa un lote
 > lógico de trabajo entregado de forma incremental siguiendo la metodología Kanban (ADR-003).
+
+---
+
+## [0.4.8] — 2026-05-26 — Automatización de Quality Gate y CI
+
+### Added
+- **Scripts npm operativos:** Se expusieron `quality`, `verify`, `check:session`, `check:health`, `check:size`, `check:a11y`, `check:native-dialogs`, `check:traceability`, `check:docs`, `check:schema`, `check:dbml`, `check:subjects` y `deploy:android` para unificar el flujo local y CI.
+- **Check contra diálogos nativos:** Nuevo `scripts/check-native-dialogs.js`, que bloquea `alert()`, `confirm()` y `prompt()` en `src/`, con excepción explícita para `src/utils/seeder.js`.
+- **Entrypoint estable de trazabilidad:** Nuevo `scripts/check-traceability.py` como wrapper compatible para el checker preservado en `check-traceability.py.replaced`.
+
+### Changed
+- **GitHub Actions ampliado:** El workflow existente pasó a ser `CI — Quality Gate` y ahora ejecuta lint, tests, build, bundle budget, check de diálogos nativos, trazabilidad, links internos, schema sync, DBML, jerarquía de materias y auditoría a11y estática.
+- **Tests nativos Android corregidos:** Se reemplazaron los tests generados por template que referenciaban paquetes de Capacitor por tests bajo `com.lumapse.app`.
+- **Backlog/TODO actualizados:** El `TODO` raíz y `BACKLOG.md` registran como completada la capa de automatización y dejan como siguiente prioridad el cierre funcional/documental del Hito 04, postergando gráficos DB para el final.
 
 ---
 

@@ -18,14 +18,18 @@ Pendientes urgentes que no entran en el tramo actual.
 
 ## Siguiente capa de automatización
 
-- [ ] Exponer scripts internos en `package.json`.
+- [x] Exponer scripts internos en `package.json`. Completado: 2026-05-26.
   - `quality`, `verify`, `check:session`, `check:health`, `check:size`, `check:a11y`, `deploy:android`.
+  - También se expusieron checks documentales y de schema para CI: `check:traceability`, `check:docs`, `check:schema`, `check:dbml`, `check:subjects` y `check:native-dialogs`.
 
-- [ ] Ampliar GitHub Actions.
+- [x] Ampliar GitHub Actions. Completado: 2026-05-26.
   - Además de lint, correr tests, build y guardias de tamaño.
+  - El workflow `CI — Quality Gate` ahora corre lint, tests, build, bundle budget, check de diálogos nativos, trazabilidad, links, schema, DBML, jerarquía de materias y a11y estática.
 
-- [ ] Agregar check contra diálogos nativos.
+- [x] Agregar check contra diálogos nativos. Completado: 2026-05-26.
   - Fallar si aparece `alert(`, `confirm(` o `prompt(` en `src/`, excluyendo `src/utils/seeder.js`.
+  - Implementado en `scripts/check-native-dialogs.js` y expuesto como `npm run check:native-dialogs`.
 
-- [ ] Reemplazar o corregir los tests nativos Android generados por template.
+- [x] Reemplazar o corregir los tests nativos Android generados por template. Completado: 2026-05-26.
   - El smoke test actual todavía referencia el paquete original de Capacitor.
+  - Reemplazado por tests bajo `com.lumapse.app`; `./gradlew testDebugUnitTest` pasa.

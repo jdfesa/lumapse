@@ -3,8 +3,35 @@
 Este documento funciona como una bandeja de entrada local para las tareas, mejoras y deuda técnica identificadas durante el desarrollo o en auditorías. Una vez que se inicia un Hito, las tareas relevantes de aquí se planifican y ejecutan.
 
 > **Hito activo:** 04 — Organización y UX (Agosto 2026)
-> **Última actualización local:** 2026-05-26 — Integridad transaccional de cascadas SQLite
+> **Última actualización local:** 2026-05-26 — Automatización de quality gate y CI
 > **Última auditoría del backlog:** 2026-05-26
+
+---
+
+## 📌 Corte actual — Automatización de Quality Gate y CI 2026-05-26
+
+**Estado:** ✅ Completado. Se cerró la capa pendiente del `TODO` raíz orientada a automatización: los scripts internos quedaron expuestos como comandos npm, GitHub Actions dejó de correr solo lint y se agregó una guardia específica contra diálogos nativos no permitidos.
+
+**Cambios aplicados:**
+
+- `package.json`: nuevos scripts `quality`, `verify`, `check:session`, `check:health`, `check:size`, `check:a11y`, `check:native-dialogs`, `check:traceability`, `check:docs`, `check:schema`, `check:dbml`, `check:subjects` y `deploy:android`.
+- `.github/workflows/lint.yml`: renombrado a `CI — Quality Gate`; ahora corre lint, tests, build, bundle budget, check de diálogos nativos, trazabilidad, links, schema, DBML, jerarquía de materias y a11y estática.
+- `scripts/check-native-dialogs.js`: nuevo check que falla si aparece `alert(`, `confirm(` o `prompt(` en `src/`, excluyendo `src/utils/seeder.js`.
+- `scripts/check-traceability.py`: entrypoint estable para el checker preservado en `check-traceability.py.replaced`, manteniendo compatibilidad con documentación y CI.
+- `android/app/src/test/java/com/lumapse/app/LumapseUnitTest.java` y `android/app/src/androidTest/java/com/lumapse/app/LumapseInstrumentedTest.java`: reemplazo de los tests generados por template que referenciaban `com.getcapacitor.myapp`/`com.getcapacitor.app`.
+
+**Comandos de verificación ejecutados:**
+
+```bash
+npm run check:native-dialogs
+npm run check:traceability
+npm run check:dbml
+./gradlew testDebugUnitTest
+```
+
+**Resultado:** check de diálogos OK, trazabilidad OK, DBML sincronizado y test unitario Android OK. La tarea de actualizar gráficos de base de datos queda explícitamente postergada para el cierre final, tal como fue definido.
+
+**Siguiente prioridad recomendada:** atacar el **Cierre funcional/documental Hito 04** sin tocar gráficos DB todavía. Orden sugerido: empty states amigables, onboarding RF-022, indicador offline/online RF-024, contador RF-006, guía Markdown opcional y sincronización documental/versionado.
 
 ---
 
@@ -115,7 +142,7 @@ Estos son los 3 bloques recomendados para continuar. La prioridad es mantener tr
 | 3 | ~~**Integridad de datos en cascadas**~~ | ✅ Completado (2026-05-26) | Invariantes de visibilidad agregadas y cascadas de materias/secciones protegidas por transacciones SQLite. |
 | 4 | ~~**Deploy Android seguro**~~ | ✅ Completado (2026-05-26) | `deploy-android.sh --target <deviceId>` y `--clean` documentados; el script falla si hay múltiples dispositivos sin target. |
 | 5 | **Cierre funcional/documental Hito 04** | Completar RF pequeños pendientes y sincronizar documentación viva. | RF-006/RF-024/RF-022/DP-006 evaluados o implementados, README/velocidad/versionado actualizados, `check-traceability.py` sin advertencias. |
-| 6 | **Preparación CI documental** | Convertir scripts críticos en chequeos de CI. | Workflow que ejecute lint, trazabilidad, schema sync, DBML check, doc links y jerarquía de subjects. |
+| 6 | ~~**Preparación CI documental**~~ | ✅ Completado (2026-05-26) | Workflow `CI — Quality Gate` ejecuta lint, tests, build, bundle budget, trazabilidad, doc links, schema sync, DBML check, jerarquía de subjects, a11y y check de diálogos nativos. |
 
 ---
 
@@ -307,7 +334,7 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 
 - [x] **Instalar/configurar Vitest:** `vitest.config.js` separado del config de Vite, con cobertura V8 y entorno jsdom. Scripts `test`, `test:watch`, `test:coverage`, `test:ui` en `package.json`.
 - [x] **Tests prioritarios:** Cobertura completa de `ThemeService` (100%), `MarkdownService` (96%), `noteFilters` (100%), `SubjectService` (validaciones DP-004), `sqlite/notes`, `sqlite/subjects`, `sqlite/connection`, `NoteStore.data`, `NoteStore.ui`.
-- [ ] **CI documental:** extender `.github/workflows/lint.yml` o crear workflow separado para `check-traceability.py`, `check-doc-links.py`, `check-schema-sync.py`, `generate-dbml-from-code.py --check` y `validate-subjects-hierarchy.py`.
+- [x] **CI documental:** ✅ Completado (2026-05-26). `.github/workflows/lint.yml` fue ampliado como `CI — Quality Gate` y ejecuta `check:traceability`, `check:docs`, `check:schema`, `check:dbml` y `check:subjects`, además de lint, tests, build, bundle budget, a11y y diálogos nativos.
 - [ ] **Release dry-run:** usar `python3 scripts/release-helper.py --type patch --dry-run` para validar que el flujo de release está listo antes de generar un APK real.
 
 ---
@@ -343,7 +370,7 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 - [x] ~~**Script de trazabilidad (`check-traceability.py`):**~~ ✅ Completado (2026-05-19). Audita coherencia entre RF, HU, ADR, CHANGELOG y código fuente con 6 chequeos automáticos. Python 3.8+, sin dependencias externas.
 - [x] ~~**Templates de GitHub con trazabilidad:**~~ ✅ Completado (2026-05-20). Issues y PRs piden RF/HU/ADR/Hito y checklist de trazabilidad.
 - [x] ~~**Scripts académicos y operativos Tanda 2/3:**~~ ✅ Completado (2026-05-20). Quedaron documentados `check-schema-sync.py`, `assemble-report.py`, `generate-velocity-report.py`, `validate-subjects-hierarchy.py`, `generate-dbml-from-code.py`, `generate-defense-cheatsheet.py`, `export-database-bundle.py`, `run-load-tests.py` y `release-helper.py`.
-- [ ] **CI de scripts críticos:** llevar a GitHub Actions los checks que hoy se ejecutan manualmente: trazabilidad, links, schema sync, DBML check, jerarquía de materias y lint.
+- [x] **CI de scripts críticos:** ✅ Completado (2026-05-26). GitHub Actions ejecuta trazabilidad, links, schema sync, DBML check, jerarquía de materias, lint, tests, build, bundle budget, a11y y guardia contra diálogos nativos.
 - [ ] **Versionado del paquete:** `package.json` y `package-lock.json` siguen en `0.1.0` mientras `CHANGELOG.md` documenta `0.4.0` en progreso. Resolver antes de cualquier release/APK.
 
 ## 🧪 Deuda Técnica — Testing (Crítico para Tribunal)
@@ -363,7 +390,7 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 | Empty states amigables (feed, papelera, materia vacía) | UX | Alta | Pendiente | Paso 10 |
 | Onboarding carousel — 3 pantallas + saltar (RF-022) | UX | Alta | Pendiente | Paso 10 |
 | Coach marks contextuales (tooltips de primera vez) | UX | Media | Pendiente | Paso 10 |
-| Archivar materia/sección completa con cascada | Funcionalidad | Alta | Pendiente | Paso 10 |
+| Archivar materia/sección completa con cascada | Funcionalidad | Alta | Completado | Paso 10 |
 | Guía de Markdown opcional en Ayuda (DP-006) | UX | Media | Pendiente | Paso 10 |
 
 **Decisión de diseño — Notas precargadas descartadas:** Se evaluó y descartó la idea de precargar 2-3 notas de ejemplo en Markdown al primer inicio. Motivo: el usuario podría interpretar erróneamente que necesita aprender sintaxis Markdown para usar la app, cuando en realidad Lumapse funciona perfectamente con texto plano. Los empty states amigables cumplen la misma función de orientación sin generar esa fricción cognitiva.

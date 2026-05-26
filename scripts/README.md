@@ -8,6 +8,23 @@ Dado que la arquitectura de Lumapse combina tecnologías web (Vite) con framewor
 
 ---
 
+## Comandos npm recomendados
+
+Los scripts internos más usados también están expuestos desde `package.json` para que el flujo local y CI usen los mismos entrypoints:
+
+| Comando | Equivalente | Uso principal |
+|---|---|---|
+| `npm run quality` | `bash scripts/quality.sh` | Puerta de calidad local completa. |
+| `npm run verify` | `quality` + bundle budget + diálogos nativos + a11y | Validación final antes de cerrar una sesión. |
+| `npm run check:session` | `bash scripts/check-session.sh` | Dashboard rápido de inicio. |
+| `npm run check:health` | `python3 scripts/health-dashboard.py` | Dashboard detallado de salud. |
+| `npm run check:size` | `bash scripts/bundle-budget.sh` | Guardia de tamaño de bundle. |
+| `npm run check:a11y` | `python3 scripts/check-a11y.py` | Auditoría estática de accesibilidad. |
+| `npm run check:native-dialogs` | `node scripts/check-native-dialogs.js` | Bloqueo de `alert`, `confirm` y `prompt` nativos fuera del seeder. |
+| `npm run deploy:android` | `bash scripts/deploy-android.sh` | Build, sync e instalación Android segura. |
+
+---
+
 ## Catálogo de scripts
 
 ### 1. `deploy-android.sh`
