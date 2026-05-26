@@ -4,7 +4,7 @@
 > Offline-first · Markdown · SQLite · Sin fricción.
 
 [![Estado del proyecto](https://img.shields.io/badge/estado-en%20desarrollo-a3e635?style=flat-square)](https://github.com/jdfesa/lumapse)
-[![Hito actual](https://img.shields.io/badge/hito-04%20Organizaci%C3%B3n%20y%20UX-3b82f6?style=flat-square)](./docs/hitos/hito-04-agosto.md)
+[![Hito actual](https://img.shields.io/badge/hito-04%20en%20cierre%20%7C%2005%20preparaci%C3%B3n-3b82f6?style=flat-square)](./BACKLOG.md)
 [![Licencia](https://img.shields.io/badge/licencia-GPLv3-737373?style=flat-square)](./LICENSE)
 [![Conventional Commits](https://img.shields.io/badge/commits-conventional-a3e635?style=flat-square)](https://www.conventionalcommits.org)
 
@@ -28,12 +28,13 @@ El problema que resuelve: las aplicaciones de notas existentes requieren cuenta,
 |---|---|---|
 | Build | [Vite 6](https://vite.dev) | Estándar de la industria, HMR, configuración mínima |
 | Lenguaje | JavaScript (ES2022+) | Sin transpilación adicional, módulos nativos |
-| Persistencia actual | IndexedDB (vía `idb`) | Implementación inicial; migración a SQLite aprobada en [ADR-005](./docs/adr/ADR-005-pivote-app-nativa.md) |
-| Persistencia objetivo | SQLite (vía `@capacitor-community/sqlite`) | Robusta, sin riesgo de purga, estándar móvil |
-| Empaquetado nativo (objetivo) | [Capacitor](https://capacitorjs.com/) | Envuelve la web app en contenedor Android nativo |
+| Persistencia actual | SQLite (vía `@capacitor-community/sqlite`) | Robusta, relacional, offline-first y alineada con [ADR-006](./docs/adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md) |
+| Simulación web SQLite | `sql.js` + `jeep-sqlite` | Permite desarrollo y tests locales manteniendo el mismo modelo de datos |
+| Empaquetado nativo | [Capacitor](https://capacitorjs.com/) + Android | Envuelve la web app en contenedor Android nativo |
 | Markdown | `marked` + `DOMPurify` | Renderizado de texto enriquecido con sanitización XSS |
 | Estilos | CSS nativo / Custom Properties | Sin dependencias externas, máximo control |
-| Tests (planificado) | Vitest | Integrado con Vite, misma configuración (Hito 05) |
+| Tests | Vitest | Suite unitaria implementada para servicios, store y componentes críticos |
+| CI / Quality Gate | GitHub Actions + scripts locales | Lint, tests, build, bundle budget, trazabilidad, schema, DBML, links, jerarquía, a11y y guardia contra diálogos nativos |
 | Control de versiones | Git + GitHub | Seguimiento del proyecto, GitHub Projects |
 | Commits | [Conventional Commits](https://www.conventionalcommits.org) | Historial legible y estandarizado |
 
@@ -61,7 +62,7 @@ npm install
 npm run dev
 
 # 4. (Opcional) Verificar calidad del código
-npm run lint
+npm run verify
 ```
 
 El servidor corre en `http://localhost:5173` con Hot Module Replacement activo.
@@ -94,7 +95,7 @@ lumapse/
 │   ├── scripts/            # Pipeline modular de análisis
 │   └── graficos/           # Gráficos generados (12 archivos)
 ├── docs/                   # Documentación del proyecto
-│   ├── adr/                # Architecture Decision Records (5 ADRs)
+│   ├── adr/                # Architecture Decision Records (6 ADRs)
 │   ├── diagramas/          # Diagramas UML (Mermaid)
 │   ├── gestion/            # Estimación, planificación y control de avance
 │   ├── hitos/              # Informes de avance mensuales
@@ -103,7 +104,7 @@ lumapse/
 │   ├── producto/           # Design Thinking, requisitos, HU y encuesta
 │   └── flujo-desarrollo-android.md  # Guía operativa: build, deploy, scrcpy
 ├── .github/                # Automatización y templates de GitHub
-│   ├── workflows/          # CI: lint automático en cada push (ESLint)
+│   ├── workflows/          # CI: Quality Gate en cada push/PR
 │   ├── ISSUE_TEMPLATE/     # Templates para issues (features y bugs)
 │   └── PULL_REQUEST_TEMPLATE.md
 ├── index.html              # Punto de entrada HTML de la aplicación
@@ -161,39 +162,40 @@ Construir el corazón funcional de la aplicación: editor de notas con persisten
 - Auto-guardado automático con debounce (800ms)
 - Eliminación de notas con confirmación de seguridad
 
-> **Nota:** Este hito se implementó con IndexedDB como capa de persistencia inicial. La migración a SQLite se realiza como parte del Hito 03 tras la decisión documentada en [ADR-005](./docs/adr/ADR-005-pivote-app-nativa.md).
+> **Nota:** Este hito se implementó con IndexedDB como capa de persistencia inicial. La migración a SQLite se ejecuta posteriormente durante el Hito 04, tras el pivote documentado en [ADR-005](./docs/adr/ADR-005-pivote-app-nativa.md) y formalizado técnicamente en [ADR-006](./docs/adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md).
 
-### ✅ Hito 03 — Pivote a App Nativa y MVP (Julio 2026) → [Informe](./docs/hitos/hito-03-julio.md)
+### ✅ Hito 03 — Markdown, Offline y MVP Inicial (Julio 2026) → [Informe](./docs/hitos/hito-03-julio.md)
 
-Migrar la arquitectura a app nativa y completar el producto mínimo viable.
+Completar el producto mínimo viable de captura y lectura de notas con Markdown y funcionamiento offline.
 
-- Integración de Capacitor: generación del proyecto Android
-- Migración de persistencia: IndexedDB → SQLite (`@capacitor-community/sqlite`)
-- Renderizado de Markdown en tiempo real (`markdown-it`)
+- Renderizado de Markdown en tiempo real (`marked` + `DOMPurify`)
 - Soporte de sintaxis: encabezados, negritas, listas, código, enlaces
-- Soporte opcional de fórmulas LaTeX (`KaTeX`)
 - Toolbar de edición (negrita, cursiva, encabezado, lista) para usuarios no técnicos
 - Modo edición / modo lectura (toggle)
-- Generación del primer `.apk` funcional
+- Exportación/importación de notas Markdown
+- Funcionamiento offline bajo la arquitectura original PWA/IndexedDB
 
-### 🔄 Hito 04 — Organización y UX Móvil (Agosto 2026)
+### 🔄 Hito 04 — Organización y UX Móvil (Agosto 2026, en cierre) → [Informe](./docs/hitos/hito-04-agosto.md)
 
 Implementar el modelo de organización validado por el relevamiento y optimizar la experiencia móvil.
 
-- Estructura de navegación: Entrada / Materias / Archivo
-- Creación de carpetas por materia
-- Mover notas entre Entrada y Materias
-- Archivar materias aprobadas
-- Búsqueda por texto en tiempo real (título y contenido)
-- Modo oscuro / modo claro con toggle
-- Diseño mobile-first optimizado (gestos, tamaños táctiles)
-- Pantalla de bienvenida (onboarding) en primer uso
+- Integración Capacitor y generación del proyecto Android
+- Migración de persistencia: IndexedDB → SQLite (`@capacitor-community/sqlite`)
+- Estructura de navegación: Entrada / Materias / Archivo / Papelera
+- Creación y edición de materias y secciones
+- Asignación y movimiento de notas entre Entrada y Materias
+- Archivado/restauración de materias y secciones con cascadas transaccionales
+- Búsqueda por texto, modo claro/oscuro, focus mode y diálogos personalizados
+- Pendientes de cierre formal: empty states, onboarding RF-022, indicador offline/online RF-024, contador RF-006, guía Markdown opcional y sincronización documental/versionado
+- Tarea diferida para el final: actualización de gráficos de base de datos
 
-### ⏳ Hito 05 — Testing y Distribución (Septiembre 2026)
+### 🟡 Hito 05 — Testing, Calidad y Distribución (Septiembre 2026, preparación iniciada) → [Informe inicial](./docs/hitos/hito-05-septiembre.md)
 
 Garantizar la calidad del código y preparar la distribución del producto.
 
-- Suite de tests unitarios con Vitest
+- Suite de tests unitarios con Vitest (implementada)
+- GitHub Actions `CI — Quality Gate` (implementado)
+- Smoke tests nativos Android bajo `com.lumapse.app` (implementados)
 - Testing en dispositivos Android reales
 - Generación del APK firmado para distribución
 - Publicación del APK en GitHub Releases

@@ -3,7 +3,7 @@
 **Período:** Julio 2026  
 **Hito:** 03 — MVP Completo  
 **Proyecto:** Lumapse  
-**Estado:** En curso
+**Estado:** Completado
 
 ---
 

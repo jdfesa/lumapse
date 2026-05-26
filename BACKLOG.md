@@ -2,15 +2,26 @@
 
 Este documento funciona como una bandeja de entrada local para las tareas, mejoras y deuda técnica identificadas durante el desarrollo o en auditorías. Una vez que se inicia un Hito, las tareas relevantes de aquí se planifican y ejecutan.
 
-> **Hito activo:** 04 — Organización y UX (Agosto 2026)
-> **Última actualización local:** 2026-05-26 — Automatización de quality gate y CI
+> **Hito activo:** 04 — Organización y UX (en cierre formal)
+> **Hito 05:** Preparación técnica iniciada (testing, CI y quality gates)
+> **Última actualización local:** 2026-05-26 — Ajuste formal de estado Hito 04/05
 > **Última auditoría del backlog:** 2026-05-26
 
 ---
 
-## 📌 Corte actual — Automatización de Quality Gate y CI 2026-05-26
+## 📌 Decisión de estado — Hitos 04/05 2026-05-26
 
-**Estado:** ✅ Completado. Se cerró la capa pendiente del `TODO` raíz orientada a automatización: los scripts internos quedaron expuestos como comandos npm, GitHub Actions dejó de correr solo lint y se agregó una guardia específica contra diálogos nativos no permitidos.
+**Estado formal:** Hito 04 sigue siendo el hito activo, pero queda en **cierre formal**, no en desarrollo abierto. No se declara completado hasta resolver o descartar explícitamente los pendientes de cierre: RF-006, RF-022, RF-024, DP-006, empty states, sincronización documental/versionado y actualización de gráficos DB al final.
+
+**Clasificación de la automatización reciente:** GitHub Actions, quality gate, comandos npm de auditoría y smoke tests Android pertenecen a **preparación técnica del Hito 05**, aunque se hayan implementado antes del cierre formal del Hito 04. Esto evita mezclar alcance UX/producto con alcance de testing/distribución.
+
+**Regla operativa:** antes de abrir nuevas features de Hito 05, cerrar el bloque funcional/documental pendiente del Hito 04 o moverlo formalmente con justificación.
+
+---
+
+## 📌 Corte actual — Preparación Hito 05: Quality Gate y CI 2026-05-26
+
+**Estado:** ✅ Completado. Se cerró la capa pendiente del `TODO` raíz orientada a automatización y se reclasifica como preparación del Hito 05: los scripts internos quedaron expuestos como comandos npm, GitHub Actions dejó de correr solo lint y se agregó una guardia específica contra diálogos nativos no permitidos.
 
 **Cambios aplicados:**
 
@@ -29,9 +40,9 @@ npm run check:dbml
 ./gradlew testDebugUnitTest
 ```
 
-**Resultado:** check de diálogos OK, trazabilidad OK, DBML sincronizado y test unitario Android OK. La tarea de actualizar gráficos de base de datos queda explícitamente postergada para el cierre final, tal como fue definido.
+**Resultado:** check de diálogos OK, trazabilidad OK, DBML sincronizado y test unitario Android OK. La tarea de actualizar gráficos de base de datos queda explícitamente postergada para el cierre final del Hito 04, tal como fue definido.
 
-**Siguiente prioridad recomendada:** atacar el **Cierre funcional/documental Hito 04** sin tocar gráficos DB todavía. Orden sugerido: empty states amigables, onboarding RF-022, indicador offline/online RF-024, contador RF-006, guía Markdown opcional y sincronización documental/versionado.
+**Siguiente prioridad recomendada:** cerrar formalmente el **Hito 04** sin tocar gráficos DB todavía. Orden sugerido: empty states amigables, onboarding RF-022, indicador offline/online RF-024, contador RF-006, guía Markdown opcional y sincronización documental/versionado.
 
 ---
 
@@ -107,9 +118,9 @@ npm run lint
 
 ---
 
-## 📌 Corte actual — Auditoría 2026-05-20
+## 📌 Corte histórico — Auditoría 2026-05-20
 
-**Estado verificado:** la base técnica para avanzar con materias ya está lista. SQLite está implementado, el schema real y la documentación DDL están sincronizados, el DBML generado desde código coincide con el archivo documentado, la trazabilidad RF/HU/ADR no presenta advertencias, y el README de scripts ya documenta 29 herramientas.
+**Estado verificado en ese corte:** la base técnica para avanzar con materias ya estaba lista. SQLite estaba implementado, el schema real y la documentación DDL estaban sincronizados, el DBML generado desde código coincidía con el archivo documentado, la trazabilidad RF/HU/ADR no presentaba advertencias, y el README de scripts ya documentaba las herramientas principales.
 
 **Comandos de verificación ejecutados:**
 
@@ -123,17 +134,17 @@ python3 scripts/analyze-complexity.py
 python3 scripts/project-metrics.py
 ```
 
-**Hallazgos relevantes para planificar:**
+**Hallazgos relevantes para planificar en ese momento:**
 
 - El schema ya incluye `subjects`, `subjects.parentSubjectId`, `subjects.archived`, `subjects.color` y `notes.subjectId`, pero todavía falta exponer CRUD de materias y la UI de asignación/filtro.
-- `analyze-complexity.py` marca `src/services/SqliteService.js` como archivo largo y `src/components/NoteList.js` con anidamiento alto. No bloquea el avance, pero conviene abordarlo antes de que Paso 9 agrande esos módulos.
-- La documentación principal todavía tiene zonas a sincronizar post-SQLite/post-scripts: `README.md`, `docs/gestion/seguimiento-velocidad.md`, versiones en `package.json`/`package-lock.json` vs `CHANGELOG.md`, y documentos que aún hablan de IndexedDB como persistencia actual.
+- `analyze-complexity.py` marcaba el servicio SQLite monolítico y `src/components/NoteList.js` como puntos de complejidad. Ese riesgo fue mitigado parcialmente con la refactorización posterior en módulos bajo `src/services/sqlite/`, `SubjectService.*`, `NoteStore.*`, `NoteCardRenderer` y `TrashView`.
+- La documentación principal ya fue sincronizada en `README.md`, `CHANGELOG.md`, `BACKLOG.md` e informe final. Quedan pendientes específicos de cierre: seguimiento de velocidad, versionado `package.json`/`package-lock.json` y actualización final de gráficos de base de datos.
 
 ---
 
 ## 🎯 Próximos 3 Pasos (siguiente sesión)
 
-Estos son los 3 bloques recomendados para continuar. La prioridad es mantener trazabilidad, cerrar Hito 04 con evidencia y dejar Hito 05 listo para testing.
+Estos son los bloques recomendados para continuar. La prioridad es mantener trazabilidad, cerrar Hito 04 con evidencia y dejar Hito 05 listo para testing/distribución.
 
 | Orden | Bloque | Objetivo | Criterio de cierre |
 |---|---|---|---|
@@ -262,7 +273,7 @@ IndexedDB cumplió su rol para el MVP, pero la migración a SQLite vía `@capaci
 
 **Tareas:**
 - [x] **Instalar dependencia:** `@capacitor-community/sqlite` + `npx cap sync`.
-- [x] **Crear `SqliteService.js`:** Abstracción sobre el plugin con métodos equivalentes a los actuales de `NoteService` (CRUD, getAll, search).
+- [x] **Crear servicio SQLite:** Abstracción sobre el plugin con métodos equivalentes a los actuales de `NoteService` (CRUD, getAll, search). Actualmente refactorizado en módulos bajo `src/services/sqlite/`.
 - [x] **Definir schema SQL:** Tabla `notes` con columnas `id`, `title`, `content`, `pinned`, `archived`, `created_at`, `updated_at`. Tabla `subjects` (preparación para Paso 9).
 - [x] **Migrar datos:** Script de migración one-time que lee las notas de IndexedDB y las inserta en SQLite al primer arranque post-actualización.
 - [x] **Actualizar `NoteStore.js`:** Reemplazar las llamadas a `NoteService` (IndexedDB) por el nuevo `SqliteService`.
@@ -283,11 +294,11 @@ IndexedDB cumplió su rol para el MVP, pero la migración a SQLite vía `@capaci
 
 La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere organizar por carpeta/materia. Este paso implementa la estructura de carpetas como sistema de organización principal, aprovechando las capacidades relacionales de SQLite. Adicionalmente, se añade el renombrado inline directo desde el drawer para materias y secciones.
 
-**Estado base:** `SqliteService.js` ya crea las tablas `subjects`, `notes` y `metadata`. El campo `notes.subjectId` y la jerarquía `subjects.parentSubjectId` ya existen en el schema, pero aún no hay servicio/UI para que el usuario los use.
+**Estado base:** el servicio SQLite ya crea las tablas `subjects`, `notes` y `metadata`. El campo `notes.subjectId` y la jerarquía `subjects.parentSubjectId` ya existen en el schema, pero aún no hay servicio/UI para que el usuario los use.
 
 **Tareas:**
 - [x] **`SubjectService.js`:** CRUD de materias/secciones (`id`, `name`, `parentSubjectId`, `archived`, `color`, `createdAt`). Validar nombre requerido, nombre único por nivel, y profundidad máxima 2 niveles (DP-004).
-- [x] **`SqliteService.js`:** Exponer operaciones para `subjectId` en `createNote()`/`updateNote()`, queries `getNotesBySubject(id)`, `getInboxNotes()` y conteos por materia para el drawer.
+- [x] **Servicio SQLite:** Exponer operaciones para `subjectId` en `createNote()`/`updateNote()`, queries `getNotesBySubject(id)`, `getInboxNotes()` y conteos por materia para el drawer.
 - [x] **`NoteStore.js`:** Agregar estado `subjects`, `activeSubjectId`, filtros Entrada/Materia/Archivo, y acciones para crear/editar/archivar materias.
 - [x] **UI — Drawer:** Sección Materias con listado, botón crear, selector activo, estado vacío, colores y conteo de notas.
 - [x] **UI — Composer/Editor:** Selector de materia al crear/editar nota. Mantener "Entrada" como default cuando `subjectId` es `NULL`.
@@ -317,10 +328,11 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 - [ ] **Coach marks contextuales (tooltips de primera vez):** Burbujitas no intrusivas que aparecen *una sola vez* al llegar a una pantalla nueva (ej: primera vez que abre el drawer → tooltip sobre el botón "+" de materias). Se descartan al tocar y no vuelven a aparecer. Persistencia en `localStorage`.
 - [x] **Archivar materia/sección completa con cascada:** Permitir archivar una materia o sección entera de un solo toque, heredando dinámicamente visibilidad sin modificar el estado individual de notas y previniendo su pérdida (cascada pura sobre subjects). Drawer migrado a menú contextual y optimizaciones en store.
 - [ ] **Guía de Markdown accesible desde Ayuda (DP-006):** En lugar de notas precargadas, ofrecer una guía opcional de sintaxis Markdown dentro de la sección de Ayuda/Onboarding. El usuario la consulta solo si quiere; no se impone. Refuerza que Lumapse funciona con texto plano sin necesidad de aprender Markdown.
-- [ ] **README principal:** sincronizar stack y roadmap con el estado real post-SQLite, evitando hablar de IndexedDB como persistencia actual.
+- [x] **README principal:** sincronizar stack y roadmap con el estado real post-SQLite, reemplazando referencias obsoletas a IndexedDB. Completado 2026-05-26.
 - [ ] **Seguimiento de velocidad:** actualizar `docs/gestion/seguimiento-velocidad.md` usando `python3 scripts/generate-velocity-report.py`.
 - [ ] **Versionado:** alinear `package.json`/`package-lock.json` con la versión documentada en `CHANGELOG.md` antes de preparar release.
-- [ ] **Informe final/cheatsheet:** regenerar `INFORME-FINAL-COMPLETO.md` y `docs/gestion/cheatsheet-defensa.md` si hubo cambios documentales relevantes.
+- [x] **Informe final:** crear README de flujo por secciones, completar capítulos fuente iniciales y regenerar `INFORME-FINAL-COMPLETO.md`. Completado 2026-05-26.
+- [ ] **Cheatsheet de defensa:** actualizar `docs/gestion/cheatsheet-defensa.md` si los cambios del informe modifican el guion de defensa.
 
 **Criterio de cierre:** Documentación, backlog, requisitos y métricas reflejan el estado real del Hito 04; `check-traceability.py`, `check-doc-links.py`, `check-schema-sync.py` y `generate-dbml-from-code.py --check` pasan sin advertencias.
 
