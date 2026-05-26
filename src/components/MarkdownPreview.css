@@ -147,3 +147,18 @@
   accent-color: var(--color-accent);
   margin-right: var(--space-2);
 }
+
+/* Link Lumapse: enlaces internos entre notas (módulo removible) */
+a.note-link {
+  color: var(--color-accent);
+  text-decoration: none;
+  background-color: var(--color-accent-dim);
+  padding: 0.1em 0.3em;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition);
+}
+
+a.note-link:hover {
+  background-color: rgba(129, 140, 248, 0.25);
+  text-decoration: underline;
+}
