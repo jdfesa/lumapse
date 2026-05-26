@@ -1,0 +1,118 @@
+/* --- ConfirmDialog --- */
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: var(--color-backdrop);
+  animation: dialogFadeIn 0.15s ease-out;
+}
+
+.dialog {
+  width: min(360px, 90vw);
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 48px var(--color-shadow);
+  animation: dialogScaleIn 0.15s ease-out;
+}
+
+.dialog__title {
+  margin: 0 0 var(--space-2);
+  color: var(--color-text-bright);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.dialog__message {
+  margin: 0 0 var(--space-6);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.dialog__actions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+}
+
+.dialog__btn {
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.dialog__btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.dialog__btn--cancel {
+  color: var(--color-text-muted);
+  background: transparent;
+  border-color: var(--color-border);
+}
+
+.dialog__btn--cancel:hover {
+  color: var(--color-text);
+  background: var(--color-surface-hover);
+}
+
+.dialog__btn--confirm {
+  color: var(--color-accent);
+  background: var(--color-accent-dim);
+  border-color: var(--color-accent);
+}
+
+.dialog__btn--confirm:hover {
+  color: var(--color-text-bright);
+  background: var(--color-accent);
+}
+
+.dialog__btn--danger {
+  color: var(--color-danger);
+  background: var(--color-danger-dim);
+  border-color: var(--color-danger);
+}
+
+.dialog__btn--danger:hover {
+  color: var(--color-text-bright);
+  background: var(--color-danger);
+}
+
+.dialog-backdrop--leaving {
+  animation: dialogFadeOut 0.12s ease-in forwards;
+}
+
+.dialog-backdrop--leaving .dialog {
+  animation: dialogScaleOut 0.12s ease-in forwards;
+}
+
+@keyframes dialogFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dialogScaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes dialogFadeOut {
+  to { opacity: 0; }
+}
+
+@keyframes dialogScaleOut {
+  to { opacity: 0; transform: scale(0.97); }
+}
