@@ -330,7 +330,7 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 - [ ] **Guía de Markdown accesible desde Ayuda (DP-006):** En lugar de notas precargadas, ofrecer una guía opcional de sintaxis Markdown dentro de la sección de Ayuda/Onboarding. El usuario la consulta solo si quiere; no se impone. Refuerza que Lumapse funciona con texto plano sin necesidad de aprender Markdown.
 - [x] **README principal:** sincronizar stack y roadmap con el estado real post-SQLite, reemplazando referencias obsoletas a IndexedDB. Completado 2026-05-26.
 - [x] **Seguimiento de velocidad:** ✅ Completado (2026-05-26). `docs/gestion/seguimiento-velocidad.md` quedó sincronizado con `python3 scripts/generate-velocity-report.py` (17 HU, 78 SP, 26.0 SP/hito).
-- [ ] **Versionado:** alinear `package.json`/`package-lock.json` con la versión documentada en `CHANGELOG.md` antes de preparar release.
+- [x] **Versionado:** ✅ Completado (2026-05-26). `package.json` y `package-lock.json` alineados a `0.4.7`, la última versión cerrada documentada en `CHANGELOG.md`.
 - [x] **Informe final:** crear README de flujo por secciones, completar capítulos fuente iniciales y regenerar `INFORME-FINAL-COMPLETO.md`. Completado 2026-05-26.
 - [ ] **Cheatsheet de defensa:** actualizar `docs/gestion/cheatsheet-defensa.md` si los cambios del informe modifican el guion de defensa.
 
