@@ -6,6 +6,7 @@ import * as SubjectService from '../../src/services/SubjectService.js'
 vi.mock('../../src/services/sqlite/subjects.js', () => ({
   createSubjectRow: vi.fn().mockResolvedValue(undefined),
   getAllSubjectRows: vi.fn().mockResolvedValue([]),
+  getAllSubjectRowsIncludingArchived: vi.fn().mockResolvedValue([]),
   getSubjectRowById: vi.fn().mockResolvedValue(undefined),
   updateSubjectRow: vi.fn().mockResolvedValue(undefined),
   deleteSubjectRow: vi.fn().mockResolvedValue(undefined),
@@ -15,6 +16,8 @@ vi.mock('../../src/services/sqlite/subjects.js', () => ({
   restoreSubjectRow: vi.fn().mockResolvedValue(undefined),
   softDeleteChildSubjects: vi.fn().mockResolvedValue(undefined),
   restoreChildSubjects: vi.fn().mockResolvedValue(undefined),
+  archiveChildSubjects: vi.fn().mockResolvedValue(undefined),
+  unarchiveChildSubjects: vi.fn().mockResolvedValue(undefined),
   purgeOldDeletedSubjects: vi.fn().mockResolvedValue(undefined),
   emptyTrashSubjects: vi.fn().mockResolvedValue(undefined),
   countTrashItems: vi.fn().mockResolvedValue(0),
@@ -27,6 +30,8 @@ vi.mock('../../src/services/sqlite/notes.js', () => ({
   updateNote: vi.fn().mockResolvedValue(undefined),
   softDeleteNotesBySubject: vi.fn().mockResolvedValue(undefined),
   restoreNotesBySubject: vi.fn().mockResolvedValue(undefined),
+  archiveNotesBySubject: vi.fn().mockResolvedValue(undefined),
+  unarchiveNotesBySubject: vi.fn().mockResolvedValue(undefined),
   getDeletedNotes: vi.fn().mockResolvedValue([]),
   purgeOldDeletedNotes: vi.fn().mockResolvedValue(undefined),
   emptyTrashNotes: vi.fn().mockResolvedValue(undefined),
@@ -52,6 +57,7 @@ beforeEach(() => {
   vi.stubGlobal('crypto', { randomUUID: vi.fn(() => 'subject-uuid') })
 
   SubjectRows.getAllSubjectRows.mockResolvedValue([])
+  SubjectRows.getAllSubjectRowsIncludingArchived.mockResolvedValue([])
   SubjectRows.getSubjectRowById.mockResolvedValue(undefined)
   SubjectRows.getChildSubjectIds.mockResolvedValue([])
   SubjectRows.getInboxCount.mockResolvedValue(0)
@@ -73,13 +79,13 @@ describe('SubjectService', () => {
     })
 
     it('lanza Error si ya existe una materia raíz con el mismo nombre', async () => {
-      SubjectRows.getAllSubjectRows.mockResolvedValue([subject({ id: 'existing', name: 'Matemática' })])
+      SubjectRows.getAllSubjectRowsIncludingArchived.mockResolvedValue([subject({ id: 'existing', name: 'Matemática' })])
 
       await expect(SubjectService.createSubject('matemática')).rejects.toThrow('Ya existe una materia')
     })
 
     it('lanza Error si ya existe una sección con el mismo nombre en el mismo padre', async () => {
-      SubjectRows.getAllSubjectRows.mockResolvedValue([
+      SubjectRows.getAllSubjectRowsIncludingArchived.mockResolvedValue([
         subject({ id: 'parent', name: 'Programación' }),
         subject({ id: 'sec-1', name: 'TP', parentSubjectId: 'parent' }),
       ])
@@ -88,7 +94,7 @@ describe('SubjectService', () => {
     })
 
     it('NO lanza Error si mismo nombre pero diferente padre', async () => {
-      SubjectRows.getAllSubjectRows.mockResolvedValue([
+      SubjectRows.getAllSubjectRowsIncludingArchived.mockResolvedValue([
         subject({ id: 'parent-a', name: 'Programación' }),
         subject({ id: 'parent-b', name: 'Base de Datos' }),
         subject({ id: 'sec-a', name: 'TP', parentSubjectId: 'parent-a' }),
@@ -101,7 +107,7 @@ describe('SubjectService', () => {
     })
 
     it('lanza Error si se intenta crear una sección de sección', async () => {
-      SubjectRows.getAllSubjectRows.mockResolvedValue([
+      SubjectRows.getAllSubjectRowsIncludingArchived.mockResolvedValue([
         subject({ id: 'parent', name: 'Programación' }),
         subject({ id: 'section', name: 'TP', parentSubjectId: 'parent' }),
       ])
@@ -110,9 +116,18 @@ describe('SubjectService', () => {
     })
 
     it('lanza Error si parentSubjectId referencia un padre que no existe', async () => {
-      SubjectRows.getAllSubjectRows.mockResolvedValue([])
+      SubjectRows.getAllSubjectRowsIncludingArchived.mockResolvedValue([])
 
       await expect(SubjectService.createSubject('TP', null, 'missing')).rejects.toThrow('padre no existe')
+    })
+
+    it('lanza Error si ya existe una sección archivada con el mismo nombre', async () => {
+      SubjectRows.getAllSubjectRowsIncludingArchived.mockResolvedValue([
+        subject({ id: 'parent', name: 'Programación' }),
+        subject({ id: 'archived-sec', name: 'Unidad I', parentSubjectId: 'parent', archived: true }),
+      ])
+
+      await expect(SubjectService.createSubject('unidad i', null, 'parent')).rejects.toThrow('Ya existe una sección')
     })
   })
 
@@ -188,7 +203,7 @@ describe('SubjectService', () => {
 
     it('lanza Error si el nuevo nombre colisiona con otro en el mismo nivel', async () => {
       SubjectRows.getSubjectRowById.mockResolvedValue(subject({ id: 'subj-1', parentSubjectId: null }))
-      SubjectRows.getAllSubjectRows.mockResolvedValue([
+      SubjectRows.getAllSubjectRowsIncludingArchived.mockResolvedValue([
         subject({ id: 'subj-1', name: 'Vieja' }),
         subject({ id: 'subj-2', name: 'Nueva' }),
       ])
@@ -198,7 +213,7 @@ describe('SubjectService', () => {
 
     it('lanza Error si se cambia parentSubjectId a un subject que ya es sección', async () => {
       SubjectRows.getSubjectRowById.mockResolvedValue(subject({ id: 'subj-1' }))
-      SubjectRows.getAllSubjectRows.mockResolvedValue([
+      SubjectRows.getAllSubjectRowsIncludingArchived.mockResolvedValue([
         subject({ id: 'root', name: 'Root' }),
         subject({ id: 'section', name: 'Section', parentSubjectId: 'root' }),
       ])
@@ -208,7 +223,7 @@ describe('SubjectService', () => {
 
     it('permite cambiar el nombre si no hay colisión', async () => {
       SubjectRows.getSubjectRowById.mockResolvedValue(subject({ id: 'subj-1' }))
-      SubjectRows.getAllSubjectRows.mockResolvedValue([subject({ id: 'subj-1', name: 'Vieja' })])
+      SubjectRows.getAllSubjectRowsIncludingArchived.mockResolvedValue([subject({ id: 'subj-1', name: 'Vieja' })])
 
       await SubjectService.updateSubject('subj-1', { name: ' Nueva ' })
 
@@ -303,6 +318,165 @@ describe('SubjectService', () => {
     })
   })
 
+  describe('archiveSubject() — Cascada (solo subjects)', () => {
+    it('archiva secciones hijas', async () => {
+      await SubjectService.archiveSubject('subj-1')
+
+      expect(SubjectRows.archiveChildSubjects).toHaveBeenCalledWith('subj-1')
+    })
+
+    it('archiva el subject padre', async () => {
+      await SubjectService.archiveSubject('subj-1')
+
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('subj-1', { archived: true })
+    })
+
+    it('NO archiva las notas', async () => {
+      await SubjectService.archiveSubject('subj-1')
+
+      expect(NoteRows.archiveNotesBySubject).not.toHaveBeenCalled()
+    })
+
+    it('el orden es correcto: hijos primero, padre después', async () => {
+      await SubjectService.archiveSubject('subj-1')
+
+      const children = SubjectRows.archiveChildSubjects.mock.invocationCallOrder[0]
+      const parent = SubjectRows.updateSubjectRow.mock.invocationCallOrder[0]
+      expect(children).toBeLessThan(parent)
+    })
+  })
+
+  describe('unarchiveSubject() — Cascada inversa', () => {
+    it('desarchiva el subject padre primero', async () => {
+      SubjectRows.getSubjectRowById.mockResolvedValue(subject({ id: 'subj-1', archived: true }))
+      SubjectRows.getAllSubjectRowsIncludingArchived.mockResolvedValue([
+        subject({ id: 'subj-1', archived: true }),
+        subject({ id: 'sec-1', parentSubjectId: 'subj-1', archived: true }),
+      ])
+
+      await SubjectService.unarchiveSubject('subj-1')
+
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('subj-1', { archived: false })
+    })
+
+    it('desarchiva secciones hijas una por una', async () => {
+      SubjectRows.getSubjectRowById.mockResolvedValue(subject({ id: 'subj-1', archived: true }))
+      SubjectRows.getAllSubjectRowsIncludingArchived.mockResolvedValue([
+        subject({ id: 'subj-1', archived: true }),
+        subject({ id: 'sec-1', parentSubjectId: 'subj-1', archived: true }),
+      ])
+
+      await SubjectService.unarchiveSubject('subj-1')
+
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('sec-1', { archived: false })
+    })
+
+    it('NO desarchiva las notas', async () => {
+      SubjectRows.getSubjectRowById.mockResolvedValue(subject({ id: 'subj-1', archived: true }))
+      SubjectRows.getAllSubjectRowsIncludingArchived.mockResolvedValue([subject({ id: 'subj-1', archived: true })])
+
+      await SubjectService.unarchiveSubject('subj-1')
+
+      expect(NoteRows.unarchiveNotesBySubject).not.toHaveBeenCalled()
+    })
+
+    it('renombra al restaurar si ya existe una materia activa con el mismo nombre', async () => {
+      SubjectRows.getSubjectRowById.mockResolvedValue(subject({ id: 'archived-root', name: 'Programación II', archived: true }))
+      SubjectRows.getAllSubjectRowsIncludingArchived.mockResolvedValue([
+        subject({ id: 'active-root', name: 'Programación II', archived: false }),
+        subject({ id: 'archived-root', name: 'Programación II', archived: true }),
+      ])
+
+      await SubjectService.unarchiveSubject('archived-root')
+
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('archived-root', {
+        archived: false,
+        name: 'Programación II (restaurada)',
+      })
+    })
+  })
+
+  describe('archiveSection()', () => {
+    it('archiva solo la sección, sin tocar notas', async () => {
+      await SubjectService.archiveSection('sec-1')
+
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('sec-1', { archived: true })
+      expect(NoteRows.archiveNotesBySubject).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('unarchiveSection()', () => {
+    it('no hace nada si la sección no existe', async () => {
+      SubjectRows.getSubjectRowById.mockResolvedValue(undefined)
+
+      await SubjectService.unarchiveSection('missing')
+
+      expect(SubjectRows.updateSubjectRow).not.toHaveBeenCalled()
+    })
+
+    it('desarchiva solo la sección, sin tocar notas', async () => {
+      SubjectRows.getSubjectRowById.mockResolvedValue(subject({ id: 'sec-1', parentSubjectId: null }))
+      SubjectRows.getAllSubjectRowsIncludingArchived.mockResolvedValue([
+        subject({ id: 'sec-1', parentSubjectId: null, archived: true }),
+      ])
+
+      await SubjectService.unarchiveSection('sec-1')
+
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('sec-1', { archived: false })
+      expect(NoteRows.unarchiveNotesBySubject).not.toHaveBeenCalled()
+    })
+
+    it('si el padre está archivado, desarchiva el padre antes que la sección', async () => {
+      SubjectRows.getSubjectRowById
+        .mockResolvedValueOnce(subject({ id: 'sec-1', parentSubjectId: 'subj-1', archived: true }))
+        .mockResolvedValueOnce(subject({ id: 'subj-1', archived: true }))
+      SubjectRows.getAllSubjectRowsIncludingArchived.mockResolvedValue([
+        subject({ id: 'subj-1', archived: true }),
+        subject({ id: 'sec-1', parentSubjectId: 'subj-1', archived: true }),
+      ])
+
+      await SubjectService.unarchiveSection('sec-1')
+
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('subj-1', { archived: false })
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('sec-1', { archived: false })
+      expect(SubjectRows.updateSubjectRow.mock.invocationCallOrder[0])
+        .toBeLessThan(SubjectRows.updateSubjectRow.mock.invocationCallOrder[1])
+    })
+
+    it('si el padre está activo, no lo toca', async () => {
+      SubjectRows.getSubjectRowById
+        .mockResolvedValueOnce(subject({ id: 'sec-1', parentSubjectId: 'subj-1', archived: true }))
+        .mockResolvedValueOnce(subject({ id: 'subj-1', archived: false }))
+      SubjectRows.getAllSubjectRowsIncludingArchived.mockResolvedValue([
+        subject({ id: 'subj-1', archived: false }),
+        subject({ id: 'sec-1', parentSubjectId: 'subj-1', archived: true }),
+      ])
+
+      await SubjectService.unarchiveSection('sec-1')
+
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledTimes(1)
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('sec-1', { archived: false })
+    })
+
+    it('renombra al restaurar si ya existe una sección hermana con el mismo nombre', async () => {
+      SubjectRows.getSubjectRowById
+        .mockResolvedValueOnce(subject({ id: 'archived-sec', name: 'Unidad I', parentSubjectId: 'subj-1', archived: true }))
+        .mockResolvedValueOnce(subject({ id: 'subj-1', archived: false }))
+      SubjectRows.getAllSubjectRowsIncludingArchived.mockResolvedValue([
+        subject({ id: 'subj-1', archived: false }),
+        subject({ id: 'active-sec', name: 'Unidad I', parentSubjectId: 'subj-1', archived: false }),
+        subject({ id: 'archived-sec', name: 'Unidad I', parentSubjectId: 'subj-1', archived: true }),
+      ])
+
+      await SubjectService.unarchiveSection('archived-sec')
+
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('archived-sec', {
+        archived: false,
+        name: 'Unidad I (restaurada)',
+      })
+    })
+  })
+
   describe('operaciones simples', () => {
     it('getAllSubjects() delega en getAllSubjectRows()', async () => {
       const rows = [subject({ id: 'subj-1' })]
@@ -316,18 +490,6 @@ describe('SubjectService', () => {
       SubjectRows.getSubjectRowById.mockResolvedValue(row)
 
       await expect(SubjectService.getSubjectById('subj-1')).resolves.toBe(row)
-    })
-
-    it('archiveSubject() marca archived true', async () => {
-      await SubjectService.archiveSubject('subj-1')
-
-      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('subj-1', { archived: true })
-    })
-
-    it('unarchiveSubject() marca archived false', async () => {
-      await SubjectService.unarchiveSubject('subj-1')
-
-      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('subj-1', { archived: false })
     })
   })
 
