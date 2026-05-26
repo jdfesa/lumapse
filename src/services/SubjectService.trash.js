@@ -5,12 +5,12 @@
 
 import {
   getSubjectRowById,
+  getAllSubjectRowsIncludingArchived,
   updateSubjectRow,
   deleteSubjectRow,
   getDeletedSubjectRows,
   restoreSubjectRow,
   softDeleteChildSubjects,
-  restoreChildSubjects,
   purgeOldDeletedSubjects,
   emptyTrashSubjects,
   countTrashItems,
@@ -25,6 +25,61 @@ import {
   emptyTrashNotes,
   restoreNote as restoreNoteRow
 } from './sqlite/notes.js'
+
+function getUniqueNameForLevel(name, parentSubjectId, excludeId, allSubjects) {
+  const baseName = name.trim()
+  const parentId = parentSubjectId || null
+  const usedNames = new Set(
+    allSubjects
+      .filter(s => s.id !== excludeId && (s.parentSubjectId || null) === parentId)
+      .map(s => s.name.trim().toLowerCase())
+  )
+
+  if (!usedNames.has(baseName.toLowerCase())) return baseName
+
+  let suffix = 1
+  let candidate = `${baseName} (restaurada)`
+  while (usedNames.has(candidate.toLowerCase())) {
+    suffix += 1
+    candidate = `${baseName} (restaurada ${suffix})`
+  }
+  return candidate
+}
+
+async function restoreSubjectRowWithUniqueName(subject, parentSubjectId, allSubjects) {
+  const targetParentId = parentSubjectId || null
+  const uniqueName = getUniqueNameForLevel(subject.name, targetParentId, subject.id, allSubjects)
+  const changes = {}
+
+  if (uniqueName !== subject.name.trim()) {
+    changes.name = uniqueName
+  }
+  if ((subject.parentSubjectId || null) !== targetParentId) {
+    changes.parentSubjectId = targetParentId
+  }
+  if (subject.archived) {
+    changes.archived = false
+  }
+
+  if (Object.keys(changes).length > 0) {
+    await updateSubjectRow(subject.id, changes)
+  }
+  await restoreSubjectRow(subject.id)
+
+  const restoredSubject = {
+    ...subject,
+    ...changes,
+    parentSubjectId: targetParentId,
+    name: uniqueName,
+    archived: changes.archived ?? subject.archived,
+    deletedAt: null
+  }
+
+  return [
+    ...allSubjects.filter(s => s.id !== subject.id),
+    restoredSubject
+  ]
+}
 
 /**
  * Elimina una materia (soft-delete en cascada).
@@ -69,44 +124,57 @@ export async function deleteSection(id) {
  * @param {string} id ID de la materia
  */
 export async function restoreSubject(id) {
-  // 1. Restaurar la materia
-  await restoreSubjectRow(id)
+  const subject = await getSubjectRowById(id)
+  if (!subject) return
 
-  // 2. Obtener secciones hijas (están eliminadas)
-  const childIds = await getChildSubjectIds(id)
+  let allSubjects = await getAllSubjectRowsIncludingArchived()
+  const deletedSubjects = await getDeletedSubjectRows()
+  const childSubjects = deletedSubjects.filter(child => child.parentSubjectId === id)
 
-  // 3. Restaurar secciones hijas
-  await restoreChildSubjects(id)
+  // 1. Restaurar la materia con un nombre navegable único.
+  allSubjects = await restoreSubjectRowWithUniqueName(subject, null, allSubjects)
 
-  // 4. Restaurar notas del subject padre
+  // 2. Restaurar secciones hijas una por una para resolver duplicados previos.
+  for (const child of childSubjects) {
+    allSubjects = await restoreSubjectRowWithUniqueName(child, id, allSubjects)
+  }
+
+  // 3. Restaurar notas del subject padre
   await restoreNotesBySubject(id)
 
-  // 5. Restaurar notas de cada sección hija
-  for (const childId of childIds) {
-    await restoreNotesBySubject(childId)
+  // 4. Restaurar notas de cada sección hija
+  for (const child of childSubjects) {
+    await restoreNotesBySubject(child.id)
   }
 }
 
 /**
  * Restaura una sección individual (+ sus notas).
- * Si la materia padre sigue eliminada, la sección va a Entrada (pierde parentSubjectId).
+ * Si la materia padre sigue eliminada o archivada, restaura ese contenedor
+ * para que la sección tenga una ruta navegable.
  * @param {string} id ID de la sección
  */
 export async function restoreSection(id) {
   const section = await getSubjectRowById(id)
   if (!section) return
 
-  // Verificar si el padre sigue existiendo (no eliminado)
+  let allSubjects = await getAllSubjectRowsIncludingArchived()
+  let targetParentId = section.parentSubjectId || null
+
+  // Verificar si el padre sigue existiendo como contenedor navegable.
   if (section.parentSubjectId) {
     const parent = await getSubjectRowById(section.parentSubjectId)
-    if (!parent || parent.deletedAt) {
-      // Padre eliminado: la sección se restaura como materia raíz
-      await updateSubjectRow(id, { parentSubjectId: null })
+    if (!parent) {
+      targetParentId = null
+    } else if (parent.deletedAt) {
+      allSubjects = await restoreSubjectRowWithUniqueName(parent, null, allSubjects)
+    } else if (parent.archived) {
+      allSubjects = await restoreSubjectRowWithUniqueName(parent, parent.parentSubjectId, allSubjects)
     }
   }
 
-  // Restaurar la sección
-  await restoreSubjectRow(id)
+  // Restaurar la sección con nombre único en su nivel.
+  await restoreSubjectRowWithUniqueName(section, targetParentId, allSubjects)
 
   // Restaurar sus notas
   await restoreNotesBySubject(id)
@@ -143,10 +211,13 @@ export async function restoreNoteFromTrash(noteId) {
 export async function getTrashItems() {
   const deletedNotes = await getDeletedNotes()
   const deletedSubjects = await getDeletedSubjectRows()
+  const activeSubjects = await getAllSubjectRowsIncludingArchived()
 
   // Separar raíces y secciones eliminadas
   const roots = deletedSubjects.filter(s => !s.parentSubjectId)
   const sections = deletedSubjects.filter(s => s.parentSubjectId)
+  const deletedSubjectIds = new Set(deletedSubjects.map(s => s.id))
+  const activeSubjectsById = new Map(activeSubjects.map(subject => [subject.id, subject]))
 
   // Construir árbol con conteos
   const subjectTree = []
@@ -167,15 +238,22 @@ export async function getTrashItems() {
   }
 
   // Notas sueltas: eliminadas cuyo subject NO está eliminado (o sin subject)
-  const deletedSubjectIds = new Set(deletedSubjects.map(s => s.id))
   const looseNotes = deletedNotes.filter(n =>
     !n.subjectId || !deletedSubjectIds.has(n.subjectId)
   )
 
   // Secciones huérfanas (su padre no está eliminado)
-  const orphanSections = sections.filter(s =>
-    !roots.some(r => r.id === s.parentSubjectId)
-  )
+  const orphanSections = []
+  for (const section of sections.filter(s => !deletedSubjectIds.has(s.parentSubjectId))) {
+    const parent = activeSubjectsById.get(section.parentSubjectId)
+    const noteCount = await countDeletedNotesBySubject(section.id)
+    orphanSections.push({
+      ...section,
+      parentName: parent?.name || 'Materia original no disponible',
+      parentColor: parent?.color || section.color,
+      noteCount
+    })
+  }
 
   const totalCount = await countTrashItems()
 

@@ -290,31 +290,68 @@ describe('SubjectService', () => {
   })
 
   describe('restoreSubject() — Cascada', () => {
+    it('no hace nada si la materia no existe', async () => {
+      SubjectRows.getSubjectRowById.mockResolvedValue(undefined)
+
+      await SubjectService.restoreSubject('missing')
+
+      expect(SubjectRows.restoreSubjectRow).not.toHaveBeenCalled()
+    })
+
     it('llama restoreSubjectRow para el subject', async () => {
+      SubjectRows.getSubjectRowById.mockResolvedValue(subject({ id: 'subj-1', deletedAt: '2024-01-01T00:00:00.000Z' }))
+
       await SubjectService.restoreSubject('subj-1')
 
       expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('subj-1')
     })
 
-    it('llama restoreChildSubjects para restaurar secciones', async () => {
+    it('restaura secciones hijas una por una', async () => {
+      SubjectRows.getSubjectRowById.mockResolvedValue(subject({ id: 'subj-1', deletedAt: '2024-01-01T00:00:00.000Z' }))
+      SubjectRows.getDeletedSubjectRows.mockResolvedValue([
+        subject({ id: 'subj-1', deletedAt: '2024-01-01T00:00:00.000Z' }),
+        subject({ id: 'sec-1', parentSubjectId: 'subj-1', deletedAt: '2024-01-01T00:00:00.000Z' }),
+      ])
+
       await SubjectService.restoreSubject('subj-1')
 
-      expect(SubjectRows.restoreChildSubjects).toHaveBeenCalledWith('subj-1')
+      expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('sec-1')
     })
 
     it('llama restoreNotesBySubject para el subject padre', async () => {
+      SubjectRows.getSubjectRowById.mockResolvedValue(subject({ id: 'subj-1', deletedAt: '2024-01-01T00:00:00.000Z' }))
+
       await SubjectService.restoreSubject('subj-1')
 
       expect(NoteRows.restoreNotesBySubject).toHaveBeenCalledWith('subj-1')
     })
 
     it('llama restoreNotesBySubject para cada sección hija', async () => {
-      SubjectRows.getChildSubjectIds.mockResolvedValue(['sec-1', 'sec-2'])
+      SubjectRows.getSubjectRowById.mockResolvedValue(subject({ id: 'subj-1', deletedAt: '2024-01-01T00:00:00.000Z' }))
+      SubjectRows.getDeletedSubjectRows.mockResolvedValue([
+        subject({ id: 'subj-1', deletedAt: '2024-01-01T00:00:00.000Z' }),
+        subject({ id: 'sec-1', parentSubjectId: 'subj-1', deletedAt: '2024-01-01T00:00:00.000Z' }),
+        subject({ id: 'sec-2', parentSubjectId: 'subj-1', deletedAt: '2024-01-01T00:00:00.000Z' }),
+      ])
 
       await SubjectService.restoreSubject('subj-1')
 
       expect(NoteRows.restoreNotesBySubject).toHaveBeenCalledWith('sec-1')
       expect(NoteRows.restoreNotesBySubject).toHaveBeenCalledWith('sec-2')
+    })
+
+    it('renombra al restaurar si ya existe una materia activa con el mismo nombre', async () => {
+      SubjectRows.getSubjectRowById.mockResolvedValue(subject({ id: 'deleted-root', name: 'Programación II', deletedAt: '2024-01-01T00:00:00.000Z' }))
+      SubjectRows.getAllSubjectRowsIncludingArchived.mockResolvedValue([
+        subject({ id: 'active-root', name: 'Programación II', deletedAt: null }),
+      ])
+
+      await SubjectService.restoreSubject('deleted-root')
+
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('deleted-root', {
+        name: 'Programación II (restaurada)',
+      })
+      expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('deleted-root')
     })
   })
 
@@ -513,16 +550,18 @@ describe('SubjectService', () => {
       expect(SubjectRows.restoreSubjectRow).not.toHaveBeenCalled()
     })
 
-    it('si el padre sigue eliminado, restaura la sección como raíz', async () => {
+    it('si el padre sigue eliminado, restaura el contenedor antes que la sección', async () => {
       SubjectRows.getSubjectRowById
         .mockResolvedValueOnce(subject({ id: 'sec-1', parentSubjectId: 'subj-1' }))
         .mockResolvedValueOnce(subject({ id: 'subj-1', deletedAt: '2024-01-01T00:00:00.000Z' }))
 
       await SubjectService.restoreSection('sec-1')
 
-      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('sec-1', { parentSubjectId: null })
+      expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('subj-1')
       expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('sec-1')
       expect(NoteRows.restoreNotesBySubject).toHaveBeenCalledWith('sec-1')
+      expect(SubjectRows.restoreSubjectRow.mock.invocationCallOrder[0])
+        .toBeLessThan(SubjectRows.restoreSubjectRow.mock.invocationCallOrder[1])
     })
 
     it('si el padre está activo, conserva parentSubjectId', async () => {
@@ -534,6 +573,37 @@ describe('SubjectService', () => {
 
       expect(SubjectRows.updateSubjectRow).not.toHaveBeenCalledWith('sec-1', { parentSubjectId: null })
       expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('sec-1')
+    })
+
+    it('si el padre está archivado, lo desarchiva para que la sección sea navegable', async () => {
+      SubjectRows.getSubjectRowById
+        .mockResolvedValueOnce(subject({ id: 'sec-1', parentSubjectId: 'subj-1' }))
+        .mockResolvedValueOnce(subject({ id: 'subj-1', archived: true, deletedAt: null }))
+      SubjectRows.getAllSubjectRowsIncludingArchived.mockResolvedValue([
+        subject({ id: 'subj-1', archived: true, deletedAt: null }),
+      ])
+
+      await SubjectService.restoreSection('sec-1')
+
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('subj-1', { archived: false })
+      expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('sec-1')
+    })
+
+    it('renombra al restaurar si ya existe una sección hermana con el mismo nombre', async () => {
+      SubjectRows.getSubjectRowById
+        .mockResolvedValueOnce(subject({ id: 'deleted-sec', name: 'Unidad I', parentSubjectId: 'subj-1' }))
+        .mockResolvedValueOnce(subject({ id: 'subj-1', deletedAt: null }))
+      SubjectRows.getAllSubjectRowsIncludingArchived.mockResolvedValue([
+        subject({ id: 'subj-1', deletedAt: null }),
+        subject({ id: 'active-sec', name: 'Unidad I', parentSubjectId: 'subj-1', deletedAt: null }),
+      ])
+
+      await SubjectService.restoreSection('deleted-sec')
+
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('deleted-sec', {
+        name: 'Unidad I (restaurada)',
+      })
+      expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('deleted-sec')
     })
   })
 
