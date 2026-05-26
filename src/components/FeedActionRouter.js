@@ -165,34 +165,6 @@ export function createFeedActionRouter(deps) {
       return
     }
 
-    // ─── Link Lumapse: DESACTIVADO ───────────────────────────────
-    // Funcionalidad de enlaces internos [[Título]] comentada.
-    // Se reactivará o eliminará en una futura iteración.
-    // const noteLink = event.target.closest('a.note-link')
-    // if (noteLink) {
-    //   event.preventDefault()
-    //   event.stopPropagation()
-    //   const href = noteLink.getAttribute('href') || ''
-    //   if (href.startsWith('lumapse://note/')) {
-    //     const title = decodeURIComponent(href.replace('lumapse://note/', ''))
-    //     const state = NoteStore.getState()
-    //     const targetNote = state.notes.find(n => n.title === title && !n.deletedAt)
-    //     if (targetNote) {
-    //       NoteStore.selectNote(targetNote.id)
-    //     } else {
-    //       const fallback = state.notes.find(n =>
-    //         !n.deletedAt && n.content && n.content.includes(title)
-    //       )
-    //       if (fallback) {
-    //         NoteStore.selectNote(fallback.id)
-    //       } else if (deps.showToast) {
-    //         deps.showToast('Nota no encontrada: ' + title)
-    //       }
-    //     }
-    //   }
-    //   return
-    // }
-
     const menuButton = event.target.closest('.js-btn-menu')
 
     if (!menuButton) {

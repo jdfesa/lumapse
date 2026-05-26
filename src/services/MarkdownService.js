@@ -63,11 +63,7 @@ export function renderMarkdown(markdown) {
     return ''
   }
 
-  // 1. Pre-procesar links internos [[Título]] — DESACTIVADO
-  //    (Link Lumapse — módulo removible: ver NoteLinkHandler.js)
-  // const preprocessed = preprocessNoteLinks(markdown)
-
-  // 2. Parsear Markdown → HTML crudo
+  // 1. Parsear Markdown → HTML crudo
   const rawHtml = marked.parse(markdown)
 
   // 2. Sanitizar HTML para prevenir XSS
@@ -131,9 +127,6 @@ export function renderMarkdown(markdown) {
     ],
     // Los enlaces se abren en nueva pestaña por seguridad
     ADD_ATTR: ['target'],
-    // Link Lumapse: permitir protocolo interno lumapse:// en href
-    // (por defecto DOMPurify solo permite http, https, ftp, mailto)
-    ALLOWED_URI_REGEXP: /^(?:(?:https?|ftp|mailto|lumapse):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i,
   })
 
   // Post-proceso: habilitar checkboxes interactivos con índice de línea.
@@ -152,27 +145,6 @@ export function renderMarkdown(markdown) {
   return processedHtml
 }
 
-// -------------------------------------------------------------
-// Pre-procesador: Links internos [[Título]] (Link Lumapse)
-// -------------------------------------------------------------
-// Convierte la sintaxis [[Título de nota]] en un enlace Markdown
-// estándar con el protocolo interno lumapse://note/.
-// Este bloque es removible sin efecto colateral si la feature
-// de vinculación interna se deshabilita en el futuro.
-// -------------------------------------------------------------
-
-/**
- * Convierte [[Título]] → [🔗 Título](lumapse://note/Título)
- * @param {string} markdown — Texto Markdown con posibles [[links]]
- * @returns {string} — Markdown con links convertidos
- */
-export function preprocessNoteLinks(markdown) {
-  if (!markdown) return markdown
-  return markdown.replace(
-    /\[\[([^\]]+)\]\]/g,
-    (_, title) => `[🔗 ${title}](lumapse://note/${encodeURIComponent(title)})`
-  )
-}
 
 // -------------------------------------------------------------
 // Hook de defensa en profundidad: URLs externas
@@ -197,12 +169,6 @@ DOMPurify.addHook('afterSanitizeAttributes', (node) => {
     if (href.startsWith('http://') || href.startsWith('https://')) { // lumapse-ignore-offline
       node.setAttribute('rel', 'noopener noreferrer nofollow')
       node.setAttribute('target', '_blank')
-    }
-    // Link Lumapse: enlaces internos entre notas (módulo removible)
-    if (href.startsWith('lumapse://note/')) {
-      node.removeAttribute('target')
-      node.setAttribute('rel', '')
-      node.classList.add('note-link')
     }
   }
 

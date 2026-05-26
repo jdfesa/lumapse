@@ -5,7 +5,6 @@
 
 import * as NoteStore from '../store/NoteStore.js';
 import { SlashCommandHandler } from './SlashCommandHandler.js';
-// import { NoteLinkHandler } from './NoteLinkHandler.js'; // DESACTIVADO
 import { EditorPopup } from './EditorPopup.js';
 import './NoteEditor.css';
 
@@ -67,11 +66,7 @@ export class NoteEditor {
     // Slash commands: instanciar handler con el popup dentro del composer
     this.slashHandler = new SlashCommandHandler(input, composer);
 
-    // Link Lumapse: DESACTIVADO
-    // this.linkHandler = new NoteLinkHandler(input, composer);
-    this.linkHandler = null;
-
-    // Botón +: menú de inserción (imagen, link lumapse)
+    // Botón +: menú de inserción
     this.setupPlusButton(input, composer);
   }
 
@@ -83,17 +78,8 @@ export class NoteEditor {
 
     this.plusPopup = new EditorPopup({
       container: composer,
-      onSelect: (item) => {
-        if (item.id === 'link-lumapse') {
-          // Simular escritura de [[ para activar el NoteLinkHandler
-          const pos = textarea.selectionStart;
-          const before = textarea.value.substring(0, pos);
-          const after = textarea.value.substring(pos);
-          textarea.value = before + '[[' + after;
-          textarea.setSelectionRange(pos + 2, pos + 2);
-          textarea.dispatchEvent(new window.Event('input', { bubbles: true }));
-          textarea.focus();
-        }
+      onSelect: (_item) => {
+        // Reservado para futuras opciones de inserción
       },
       onDismiss: () => {},
     });
@@ -103,9 +89,7 @@ export class NoteEditor {
       if (this.plusPopup.isVisible()) {
         this.plusPopup.hide();
       } else {
-        this.plusPopup.show([
-          { id: 'link-lumapse', label: 'Link Lumapse', description: '' },
-        ], "Escribe / para comandos");
+        this.plusPopup.show([], "Escribe / para comandos");
       }
     });
   }
@@ -131,8 +115,7 @@ export class NoteEditor {
     if (e.key !== 'Enter') return;
 
     // No interceptar si hay un popup activo
-    if ((this.slashHandler && this.slashHandler.isActive()) ||
-        (this.linkHandler && this.linkHandler.isActive())) {
+    if (this.slashHandler && this.slashHandler.isActive()) {
       return;
     }
 
@@ -240,8 +223,6 @@ export class NoteEditor {
       const noteToEdit = notes.find(n => n.id === activeNoteId);
       if (noteToEdit) {
         this.currentEditId = activeNoteId;
-        // Sincronizar con el link handler
-        if (this.linkHandler) this.linkHandler.setCurrentEditId(activeNoteId);
         const input = this.container.querySelector('#composer-input');
         input.value = noteToEdit.content;
         
@@ -264,7 +245,6 @@ export class NoteEditor {
     } else if (!activeNoteId && this.currentEditId) {
       // Se canceló la edición (o se borró la nota editada)
       this.currentEditId = null;
-      if (this.linkHandler) this.linkHandler.setCurrentEditId(null);
       const input = this.container.querySelector('#composer-input');
       input.value = '';
       input.style.height = 'auto';
@@ -314,7 +294,6 @@ export class NoteEditor {
   destroy() {
     if (this.unsubscribe) this.unsubscribe();
     if (this.slashHandler) this.slashHandler.destroy();
-    if (this.linkHandler) this.linkHandler.destroy();
     if (this.plusPopup) this.plusPopup.destroy();
     this.container.innerHTML = '';
   }
