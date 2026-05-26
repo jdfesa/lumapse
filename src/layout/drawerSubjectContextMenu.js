@@ -2,6 +2,8 @@
 // layout/drawerSubjectContextMenu — Menú contextual de materias
 // =============================================================
 
+import { confirmDialog } from '../components/ConfirmDialog.js'
+
 /**
  * Configura un único menú contextual reutilizable para materias/secciones.
  * @param {object} deps Dependencias
@@ -134,7 +136,12 @@ export function setupSubjectContextMenu({ subjectsList, NoteStore, startRenameSu
     const { subjectId, isSection, subjectName } = ctxTarget
     const type = isSection ? 'sección' : 'materia'
     closeCtxMenu()
-    if (confirm(`¿Archivar la ${type} "${subjectName}" y todas sus notas?`)) {
+    const confirmed = await confirmDialog({
+      title: `Archivar ${type}`,
+      message: `¿Archivar la ${type} "${subjectName}" y todas sus notas?`,
+      confirmText: 'Archivar',
+    })
+    if (confirmed) {
       if (isSection) {
         await NoteStore.archiveSection(subjectId)
       } else {
@@ -148,7 +155,12 @@ export function setupSubjectContextMenu({ subjectsList, NoteStore, startRenameSu
     const { subjectId, isSection, subjectName } = ctxTarget
     const type = isSection ? 'sección' : 'materia'
     closeCtxMenu()
-    if (confirm(`¿Enviar la ${type} "${subjectName}" y todas sus notas a la Papelera de reciclaje?`)) {
+    const confirmed = await confirmDialog({
+      title: `Enviar ${type} a papelera`,
+      message: `¿Enviar la ${type} "${subjectName}" y todas sus notas a la Papelera de reciclaje?`,
+      confirmText: 'Enviar',
+    })
+    if (confirmed) {
       if (isSection) {
         await NoteStore.deleteSection(subjectId)
       } else {

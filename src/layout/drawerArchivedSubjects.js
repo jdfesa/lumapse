@@ -2,6 +2,7 @@
 // layout/drawerArchivedSubjects — Render de materias archivadas
 // =============================================================
 
+import { confirmDialog } from '../components/ConfirmDialog.js'
 import { escapeHtml } from './appShell.js'
 
 /**
@@ -75,17 +76,22 @@ export function renderArchivedSubjects(archivedData) {
  * @param {HTMLButtonElement} button Botón de desarchivar
  * @param {object} NoteStore Store de notas
  */
-export function handleUnarchiveSubjectButton(button, NoteStore) {
+export async function handleUnarchiveSubjectButton(button, NoteStore) {
   const subjectId = button.dataset.subjectId
   const isSection = button.dataset.isSection === 'true'
   const subjectName = button.dataset.subjectName || ''
   const type = isSection ? 'sección' : 'materia'
 
-  if (!confirm(`¿Desarchivar la ${type} "${subjectName}"?`)) return
+  const confirmed = await confirmDialog({
+    title: `Desarchivar ${type}`,
+    message: `¿Desarchivar la ${type} "${subjectName}"?`,
+    confirmText: 'Desarchivar',
+  })
+  if (!confirmed) return
 
   if (isSection) {
-    NoteStore.unarchiveSection(subjectId)
+    await NoteStore.unarchiveSection(subjectId)
   } else {
-    NoteStore.unarchiveSubject(subjectId)
+    await NoteStore.unarchiveSubject(subjectId)
   }
 }
