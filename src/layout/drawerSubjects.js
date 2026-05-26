@@ -4,6 +4,8 @@
 // =============================================================
 
 import { escapeHtml } from './appShell.js'
+import { handleUnarchiveSubjectButton, renderArchivedSubjects } from './drawerArchivedSubjects.js'
+import { setupSubjectContextMenu } from './drawerSubjectContextMenu.js'
 
 /**
  * Inicializa la lógica de materias en el drawer.
@@ -26,6 +28,11 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
   const btnSubjectCancel = document.getElementById('btn-subject-cancel')
   const btnSubjectSave = document.getElementById('btn-subject-save')
   let selectedColor = SUBJECT_COLORS[0]
+  const subjectContextMenu = setupSubjectContextMenu({
+    subjectsList,
+    NoteStore,
+    startRenameSubject,
+  })
 
   // Renderizar paleta de colores
   colorPickerContainer.innerHTML = SUBJECT_COLORS.map((color, i) => `
@@ -90,29 +97,9 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
 
   // Delegación para clicks en materias del listado
   subjectsList.addEventListener('click', (e) => {
-    // Botón eliminar materia/sección
-    const btnDelete = e.target.closest('.js-btn-delete-subject')
-    if (btnDelete) {
+    if (subjectContextMenu.consumeSuppressedClick()) {
+      e.preventDefault()
       e.stopPropagation()
-      const subjectId = btnDelete.dataset.subjectId
-      const isSection = btnDelete.dataset.isSection === 'true'
-      const subjectName = btnDelete.dataset.subjectName || ''
-      const type = isSection ? 'sección' : 'materia'
-      if (confirm(`¿Estás seguro de enviar la ${type} "${subjectName}" y todas sus notas a la Papelera de reciclaje?`)) {
-        if (isSection) {
-          NoteStore.deleteSection(subjectId)
-        } else {
-          NoteStore.deleteSubject(subjectId)
-        }
-      }
-      return
-    }
-
-    // Botón editar nombre de materia/sección
-    const btnEdit = e.target.closest('.js-btn-edit-subject')
-    if (btnEdit) {
-      e.stopPropagation()
-      startRenameSubject(btnEdit.dataset.subjectId)
       return
     }
 
@@ -121,6 +108,14 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
     if (btnAddSection) {
       e.stopPropagation()
       toggleSectionForm(btnAddSection.dataset.parentId)
+      return
+    }
+
+    // Botón desarchivar materia/sección
+    const btnUnarchive = e.target.closest('.js-btn-unarchive-subject')
+    if (btnUnarchive) {
+      e.stopPropagation()
+      handleUnarchiveSubjectButton(btnUnarchive, NoteStore)
       return
     }
 
@@ -304,6 +299,13 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
   function renderSubjects(subjectsData) {
     if (!subjectsData) return
 
+    const state = NoteStore.getState()
+    if (state.viewMode === 'archived') {
+      inboxCount.textContent = ''
+      subjectsList.innerHTML = renderArchivedSubjects(state.archivedSubjects)
+      return
+    }
+
     inboxCount.textContent = subjectsData.inboxCount || 0
 
     if (!subjectsData.tree || subjectsData.tree.length === 0) {
@@ -311,24 +313,21 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
       return
     }
 
-    const state = NoteStore.getState()
     subjectsList.innerHTML = subjectsData.tree.map(subject => {
       const isActive = state.activeSubjectId === subject.id
       const childrenHtml = (subject.children || []).map(child => {
         const isChildActive = state.activeSubjectId === child.id
         return `
           <div class="drawer__subject-row drawer__subject-row--child">
-            <div class="drawer__subject-btn drawer__subject-btn--child js-subject-nav${isChildActive ? ' drawer__subject-btn--active' : ''}" role="button" tabindex="0" data-subject="${child.id}">
+            <div class="drawer__subject-btn drawer__subject-btn--child js-subject-nav${isChildActive ? ' drawer__subject-btn--active' : ''}" 
+                 role="button" tabindex="0" 
+                 data-subject="${child.id}"
+                 data-subject-name="${escapeHtml(child.name)}"
+                 data-is-section="true">
               <span class="drawer__subject-color" style="background-color: ${child.color || subject.color}"></span>
               <span class="drawer__subject-name" data-name-id="${child.id}">${escapeHtml(child.name)}</span>
               <span class="drawer__subject-count">${child.noteCount || 0}</span>
             </div>
-            <button class="drawer__section-add js-btn-edit-subject" data-subject-id="${child.id}" data-subject-name="${escapeHtml(child.name)}" title="Editar nombre">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-            </button>
-            <button class="drawer__section-add js-btn-delete-subject" data-subject-id="${child.id}" data-is-section="true" data-subject-name="${escapeHtml(child.name)}" title="Eliminar sección">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-            </button>
           </div>
         `
       }).join('')
@@ -353,17 +352,15 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
       return `
         <div class="drawer__subject-group">
           <div class="drawer__subject-row">
-            <div class="drawer__subject-btn js-subject-nav${isActive ? ' drawer__subject-btn--active' : ''}" role="button" tabindex="0" data-subject="${subject.id}">
+            <div class="drawer__subject-btn js-subject-nav${isActive ? ' drawer__subject-btn--active' : ''}" 
+                 role="button" tabindex="0" 
+                 data-subject="${subject.id}"
+                 data-subject-name="${escapeHtml(subject.name)}"
+                 data-is-section="false">
               <span class="drawer__subject-color" style="background-color: ${subject.color}"></span>
               <span class="drawer__subject-name" data-name-id="${subject.id}">${escapeHtml(subject.name)}</span>
               <span class="drawer__subject-count">${subject.noteCount || 0}</span>
             </div>
-            <button class="drawer__section-add js-btn-edit-subject" data-subject-id="${subject.id}" data-subject-name="${escapeHtml(subject.name)}" title="Editar nombre">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-            </button>
-            <button class="drawer__section-add js-btn-delete-subject" data-subject-id="${subject.id}" data-is-section="false" data-subject-name="${escapeHtml(subject.name)}" title="Eliminar materia">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-            </button>
             <button class="drawer__section-add js-btn-add-section" data-parent-id="${subject.id}" data-parent-color="${subject.color}" title="Agregar sección">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>

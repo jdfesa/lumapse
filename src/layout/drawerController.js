@@ -58,9 +58,9 @@ export function initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS }) {
   const archivedLabel = document.getElementById('archived-btn-label')
   let showingArchived = false
 
-  btnArchiveToggle.addEventListener('click', () => {
+  btnArchiveToggle.addEventListener('click', async () => {
     showingArchived = !showingArchived
-    NoteStore.setShowArchived(showingArchived)
+    await NoteStore.setShowArchived(showingArchived)
     archivedLabel.textContent = showingArchived ? 'Ver notas activas' : 'Ver archivadas'
     btnArchiveToggle.classList.toggle('drawer__nav-btn--active', showingArchived)
     // Desactivar materia seleccionada cuando se muestran archivadas
