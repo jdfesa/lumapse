@@ -8,6 +8,7 @@ import * as MarkdownService from '../services/MarkdownService.js';
 import { formatRelativeDate, escapeHtml, findSubject, buildMoveMenu } from './NoteCardRenderer.js';
 import { createFeedActionRouter } from './FeedActionRouter.js';
 import { renderTrashView } from './TrashView.js';
+import { confirmDialog } from './ConfirmDialog.js';
 import { VirtualFeed } from './VirtualFeed.js';
 import './NoteList.css';
 
@@ -70,7 +71,10 @@ export class NoteList {
   }
 
   async handleDelete(id) {
-    if (confirm('¿Enviar esta nota a la Papelera de reciclaje?')) {
+    const confirmed = await confirmDialog({
+      message: '¿Enviar esta nota a la Papelera de reciclaje?',
+    })
+    if (confirmed) {
       await NoteStore.deleteNote(id);
     }
   }

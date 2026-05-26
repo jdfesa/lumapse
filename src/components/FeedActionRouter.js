@@ -8,6 +8,7 @@
 
 import * as NoteStore from '../store/NoteStore.js'
 import { renderTrashView } from './TrashView.js'
+import { confirmDialog } from './ConfirmDialog.js'
 
 const TASK_LINE_REGEX = /^(\s*[-*+]\s+\[)([ xX])(\]\s+)/
 const pendingCheckboxToggles = new Set()
@@ -94,9 +95,16 @@ async function handleTaskCheckbox(event) {
 const ACTION_MAP = [
   {
     selector: '.js-btn-empty-trash',
-    handler: (_event, _button, deps) => {
-      if (confirm('¿Vaciar la papelera? Esto eliminará permanentemente todas las notas y materias. Esta acción no se puede deshacer.')) {
-        NoteStore.emptyTrash().then(() => refreshTrash(deps))
+    handler: async (_event, _button, deps) => {
+      const confirmed = await confirmDialog({
+        title: 'Vaciar papelera',
+        message: 'Esto eliminará permanentemente todas las notas y materias. Esta acción no se puede deshacer.',
+        confirmText: 'Vaciar',
+        danger: true,
+      })
+      if (confirmed) {
+        await NoteStore.emptyTrash()
+        refreshTrash(deps)
       }
     }
   },
@@ -108,9 +116,16 @@ const ACTION_MAP = [
   },
   {
     selector: '.js-btn-permanent-delete',
-    handler: (_event, button, deps) => {
-      if (confirm('¿Eliminar permanentemente esta nota? Esta acción no se puede deshacer.')) {
-        NoteStore.permanentlyDeleteNote(button.dataset.id).then(() => refreshTrash(deps))
+    handler: async (_event, button, deps) => {
+      const confirmed = await confirmDialog({
+        title: 'Eliminar nota',
+        message: '¿Eliminar permanentemente esta nota? Esta acción no se puede deshacer.',
+        confirmText: 'Eliminar',
+        danger: true,
+      })
+      if (confirmed) {
+        await NoteStore.permanentlyDeleteNote(button.dataset.id)
+        refreshTrash(deps)
       }
     }
   },

@@ -15,6 +15,7 @@ import { SUBJECT_COLORS, autoPurge } from './services/SubjectService.js'
 import { NoteList as Feed } from './components/NoteList.js'
 import { NoteEditor as Composer } from './components/NoteEditor.js'
 import { Heatmap } from './components/Heatmap.js'
+import { confirmDialog } from './components/ConfirmDialog.js'
 import { renderAppShell } from './layout/appShell.js'
 import { initDrawer } from './layout/drawerController.js'
 // import { seedTiktokData, seedStressTest } from './utils/seeder.js'
@@ -94,7 +95,13 @@ async function initApp() {
   })
 
   btnEmptyTrashToast?.addEventListener('click', async () => {
-    if (confirm('¿Vaciar toda la papelera? Esta acción no se puede deshacer.')) {
+    const confirmed = await confirmDialog({
+      title: 'Vaciar papelera',
+      message: '¿Vaciar toda la papelera? Esta acción no se puede deshacer.',
+      confirmText: 'Vaciar',
+      danger: true,
+    })
+    if (confirmed) {
       await NoteStore.emptyTrash()
       trashToast.style.display = 'none'
     }
