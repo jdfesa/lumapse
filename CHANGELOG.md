@@ -9,8 +9,21 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ## Hito 04: Organización y UX (En progreso)
 
-> Las versiones 0.4.0 a 0.4.6 componen el Hito 04. Cada sub-versión agrupa un lote
+> Las versiones 0.4.0 a 0.4.7 componen el Hito 04. Cada sub-versión agrupa un lote
 > lógico de trabajo entregado de forma incremental siguiendo la metodología Kanban (ADR-003).
+
+---
+
+## [0.4.7] — 2026-05-26 — Integridad Transaccional de Cascadas
+
+### Added
+- **Suite de invariantes de visibilidad de notas (`noteVisibilityInvariants.test.js`):** Tests puros que validan que una nota activa siempre tenga al menos una vista primaria navegable, cubriendo Entrada, materia, sección, archivo individual y archivo heredado por materia/sección.
+- **Helper transaccional SQLite (`runTransaction`):** Nueva utilidad compartida en `sqlite/connection.js` para ejecutar operaciones críticas dentro de una transacción explícita con `beginTransaction`, `commitTransaction` y `rollbackTransaction`.
+
+### Changed
+- **Cascadas de materias/secciones ahora son atómicas:** `archiveSubject`, `unarchiveSubject`, `archiveSection`, `unarchiveSection`, `deleteSubject`, `deleteSection`, `restoreSubject` y `restoreSection` se ejecutan dentro de una transacción para evitar estados parciales si falla una escritura intermedia.
+- **Escrituras SQL compatibles con transacciones explícitas:** `sqlite/notes.js` y `sqlite/subjects.js` desactivan la transacción implícita de `db.run()` cuando ya existe una transacción explícita activa, evitando transacciones anidadas en Capacitor SQLite.
+- **Deploy Android seguro por defecto:** `scripts/deploy-android.sh` ahora conserva los datos locales de la app al instalar, agrega `--clean` para desinstalar/borrar SQLite de forma explícita y soporta `--target <deviceId>` para evitar selectores interactivos cuando hay más de un dispositivo conectado.
 
 ---
 

@@ -3,8 +3,37 @@
 Este documento funciona como una bandeja de entrada local para las tareas, mejoras y deuda técnica identificadas durante el desarrollo o en auditorías. Una vez que se inicia un Hito, las tareas relevantes de aquí se planifican y ejecutan.
 
 > **Hito activo:** 04 — Organización y UX (Agosto 2026)
-> **Último commit:** `0bcb1bf` — refactor: replace native confirm with ConfirmDialog for subject archiving, deletion, and unarchiving
+> **Última actualización local:** 2026-05-26 — Integridad transaccional de cascadas SQLite
 > **Última auditoría del backlog:** 2026-05-26
+
+---
+
+## 📌 Corte actual — Integridad de Datos en Cascadas 2026-05-26
+
+**Estado:** ✅ Completado. Se agregó una suite de invariantes para proteger que las notas activas no queden invisibles en los flujos de archivo/restauración, y se envolvieron las operaciones críticas de materias/secciones en transacciones SQLite explícitas.
+
+**Cambios aplicados:**
+
+- `src/services/sqlite/connection.js`: nuevo helper `runTransaction()` con `beginTransaction`, `commitTransaction` y `rollbackTransaction`.
+- `src/services/sqlite/notes.js` y `src/services/sqlite/subjects.js`: las escrituras internas desactivan la transacción implícita de `db.run()` cuando ya hay una transacción explícita activa.
+- `SubjectService.crud.js` y `SubjectService.trash.js`: cascadas de archivar, desarchivar, eliminar y restaurar materias/secciones ahora son atómicas.
+- `tests/unit/store/noteVisibilityInvariants.test.js`: invariantes de visibilidad para evitar pérdida aparente de notas.
+- `scripts/deploy-android.sh`: deploy Android ahora preserva SQLite por defecto; `--clean` borra datos de forma explícita y `--target <deviceId>` evita el selector interactivo de Capacitor.
+- `scripts/README.md`: documentado el nuevo flujo operativo del deploy, cuándo usar `--clean` y cuándo evitarlo.
+
+**Comandos de verificación ejecutados:**
+
+```bash
+npm run test -- tests/unit/store/noteVisibilityInvariants.test.js
+npm run test -- tests/unit/services/sqlite/connection.test.js tests/unit/services/sqlite/notes.test.js tests/unit/services/sqlite/subjects.test.js tests/unit/SubjectService.test.js
+npm test
+npm run lint
+npm run build
+bash scripts/check-file-size.sh
+bash scripts/deploy-android.sh --help
+```
+
+**Resultado:** tests focalizados OK, suite completa OK (371 tests), lint OK, build OK, guardia de tamaño sin archivos en `[PELIGRO]` y ayuda del script de deploy verificada.
 
 ---
 
@@ -83,8 +112,10 @@ Estos son los 3 bloques recomendados para continuar. La prioridad es mantener tr
 |---|---|---|---|
 | 1 | ~~**Resolución de Checkboxes Interactivos**~~ | ✅ Completado (2026-05-26) | Solucionado de raíz usando preventDefault, lock map y mapeo a líneas reales en lugar de índices secuenciales. |
 | 2 | ~~**Diálogos de Confirmación y Modo Enfoque**~~ | ✅ Completado (2026-05-26) | Modal `ConfirmDialog` accesible, reemplazo de confirm/alert nativos y Modo Enfoque fullscreen con botón de encoger. |
-| 3 | **Cierre funcional/documental Hito 04** | Completar RF pequeños pendientes y sincronizar documentación viva. | RF-006/RF-024/RF-022/DP-006 evaluados o implementados, README/velocidad/versionado actualizados, `check-traceability.py` sin advertencias. |
-| 4 | **Preparación CI documental** | Convertir scripts críticos en chequeos de CI. | Workflow que ejecute lint, trazabilidad, schema sync, DBML check, doc links y jerarquía de subjects. |
+| 3 | ~~**Integridad de datos en cascadas**~~ | ✅ Completado (2026-05-26) | Invariantes de visibilidad agregadas y cascadas de materias/secciones protegidas por transacciones SQLite. |
+| 4 | ~~**Deploy Android seguro**~~ | ✅ Completado (2026-05-26) | `deploy-android.sh --target <deviceId>` y `--clean` documentados; el script falla si hay múltiples dispositivos sin target. |
+| 5 | **Cierre funcional/documental Hito 04** | Completar RF pequeños pendientes y sincronizar documentación viva. | RF-006/RF-024/RF-022/DP-006 evaluados o implementados, README/velocidad/versionado actualizados, `check-traceability.py` sin advertencias. |
+| 6 | **Preparación CI documental** | Convertir scripts críticos en chequeos de CI. | Workflow que ejecute lint, trazabilidad, schema sync, DBML check, doc links y jerarquía de subjects. |
 
 ---
 

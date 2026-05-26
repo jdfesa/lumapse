@@ -1,0 +1,31 @@
+# TODO — Lumapse
+
+Pendientes urgentes que no entran en el tramo actual.
+
+## Urgente
+
+- [x] Agregar transacciones SQLite para operaciones en cascada. Completado: 2026-05-26.
+  - Cubrir `deleteSubject`, `restoreSubject`, `archiveSubject`, `unarchiveSubject`, `deleteSection`, `restoreSection`, `archiveSection` y `unarchiveSection`.
+  - Objetivo: evitar estados parciales si una escritura falla a mitad de una operación crítica.
+  - Implementado en `src/services/sqlite/connection.js` con el helper `runTransaction()`.
+
+- [x] Hacer el deploy Android más seguro. Completado: 2026-05-26.
+  - `scripts/deploy-android.sh` no debería desinstalar por defecto.
+  - Agregar `--clean` para borrar datos/caché de forma explícita.
+  - Agregar `--target <deviceId>` para instalar sin selector interactivo.
+  - Si hay más de un dispositivo conectado y no se pasa `--target`, el script debe fallar con instrucciones claras.
+  - Documentado en `scripts/README.md`.
+
+## Siguiente capa de automatización
+
+- [ ] Exponer scripts internos en `package.json`.
+  - `quality`, `verify`, `check:session`, `check:health`, `check:size`, `check:a11y`, `deploy:android`.
+
+- [ ] Ampliar GitHub Actions.
+  - Además de lint, correr tests, build y guardias de tamaño.
+
+- [ ] Agregar check contra diálogos nativos.
+  - Fallar si aparece `alert(`, `confirm(` o `prompt(` en `src/`, excluyendo `src/utils/seeder.js`.
+
+- [ ] Reemplazar o corregir los tests nativos Android generados por template.
+  - El smoke test actual todavía referencia el paquete original de Capacitor.
