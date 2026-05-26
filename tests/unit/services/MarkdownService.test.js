@@ -85,6 +85,13 @@ describe('renderMarkdown()', () => {
     it('convierte salto de línea simple en <br>', () => {
       expect(MarkdownService.renderMarkdown('a\nb')).toContain('a<br>')
     })
+
+    it('agrega data-line con el número real de línea del task item', () => {
+      const html = MarkdownService.renderMarkdown('intro\n- [ ] uno\ntexto\n  - [x] dos')
+
+      expect(html).toContain('data-line="1"')
+      expect(html).toContain('data-line="3"')
+    })
   })
 
   describe('Sanitización XSS', () => {

@@ -9,6 +9,9 @@
 import * as NoteStore from '../store/NoteStore.js'
 import { renderTrashView } from './TrashView.js'
 
+const TASK_LINE_REGEX = /^(\s*[-*+]\s+\[)([ xX])(\]\s+)/
+const pendingCheckboxToggles = new Set()
+
 function refreshTrash(deps) {
   if (deps.refreshTrash) {
     deps.refreshTrash()
@@ -24,6 +27,67 @@ function handleMenuToggle(event, button, deps) {
   deps.closeAllDropdowns()
   if (!isOpen) {
     dropdown.classList.add('is-open')
+  }
+}
+
+function getTaskToggle(content, lineIndex) {
+  const lines = content.split('\n')
+  const line = lines[lineIndex]
+  const match = line?.match(TASK_LINE_REGEX)
+  if (!match) return null
+
+  const nextChecked = match[2].toLowerCase() !== 'x'
+  lines[lineIndex] = line.replace(TASK_LINE_REGEX, `$1${nextChecked ? 'x' : ' '}$3`)
+
+  return {
+    content: lines.join('\n'),
+    checked: nextChecked
+  }
+}
+
+function setCheckboxChecked(checkbox, checked) {
+  checkbox.checked = checked
+  window.setTimeout(() => {
+    if (checkbox.isConnected) {
+      checkbox.checked = checked
+    }
+  }, 0)
+}
+
+async function handleTaskCheckbox(event) {
+  event.preventDefault()
+  event.stopPropagation()
+
+  const checkbox = event.target
+  if (checkbox.disabled) return
+
+  const card = checkbox.closest('.note-card')
+  const lineIndex = Number.parseInt(checkbox.dataset.line, 10)
+  if (!card || Number.isNaN(lineIndex)) return
+
+  const noteId = card.dataset.id
+  const note = NoteStore.getState().notes.find(n => n.id === noteId)
+  const toggle = note ? getTaskToggle(note.content, lineIndex) : null
+  if (!note || !toggle) return
+
+  const lockKey = `${noteId}:${lineIndex}`
+  if (pendingCheckboxToggles.has(lockKey)) return
+
+  const previousChecked = !toggle.checked
+  pendingCheckboxToggles.add(lockKey)
+  checkbox.disabled = true
+  setCheckboxChecked(checkbox, toggle.checked)
+
+  try {
+    await NoteStore.updateNoteSilent(noteId, { content: toggle.content })
+  } catch (error) {
+    setCheckboxChecked(checkbox, previousChecked)
+    console.error('[FeedActionRouter] No se pudo actualizar checkbox:', error)
+  } finally {
+    pendingCheckboxToggles.delete(lockKey)
+    if (checkbox.isConnected) {
+      checkbox.disabled = false
+    }
   }
 }
 
@@ -118,50 +182,9 @@ const ACTION_MAP = [
  */
 export function createFeedActionRouter(deps) {
   return (event) => {
-    // Checkbox interactivo: toggle de task list (- [ ] ↔ - [x])
+    // Checkbox interactivo: toggle de task list (- [ ] <-> - [x])
     if (event.target.type === 'checkbox' && event.target.hasAttribute('data-line')) {
-      event.preventDefault() // Prevenir toggle nativo del browser
-      event.stopPropagation()
-      
-      const checkbox = event.target
-      if (checkbox.disabled) return // Prevenir double-tap rápido
-      checkbox.disabled = true // Bloquear el checkbox hasta el re-render
-      
-      // Toggle visual inmediato para mejor UX
-      checkbox.checked = !checkbox.checked
-
-      const checkboxIdx = parseInt(checkbox.dataset.line, 10)
-      const card = checkbox.closest('.note-card')
-      if (!card) return
-      const noteId = card.dataset.id
-      const state = NoteStore.getState()
-      const note = state.notes.find(n => n.id === noteId)
-      if (!note) return
-
-      // Encontrar la línea del checkbox en el contenido original
-      const lines = note.content.split('\n')
-      let currentIdx = 0
-      for (let i = 0; i < lines.length; i++) {
-        if (/^- \[[ x]\] /.test(lines[i])) {
-          if (currentIdx === checkboxIdx) {
-            // Toggle
-            if (lines[i].startsWith('- [ ] ')) {
-              lines[i] = lines[i].replace('- [ ] ', '- [x] ')
-            } else {
-              lines[i] = lines[i].replace('- [x] ', '- [ ] ')
-            }
-            break
-          }
-          currentIdx++
-        }
-      }
-
-      const newContent = lines.join('\n')
-      // Usar updateNoteSilent: guarda en DB y state pero NO re-renderiza el feed.
-      // El DOM ya refleja el cambio (checkbox.checked se toggleó arriba).
-      NoteStore.updateNoteSilent(noteId, { content: newContent }).then(() => {
-        checkbox.disabled = false // Re-habilitar después de guardar
-      })
+      handleTaskCheckbox(event)
       return
     }
 

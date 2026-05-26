@@ -3,6 +3,7 @@ import * as NoteService from '../../../src/services/sqlite/notes.js'
 import * as SubjectRows from '../../../src/services/sqlite/subjects.js'
 import * as SubjectService from '../../../src/services/SubjectService.js'
 import * as noteFilters from '../../../src/store/noteFilters.js'
+import { DatabaseError } from '../../../src/services/sqlite/errors.js'
 import { state, subscribe } from '../../../src/store/NoteStore.state.js'
 import * as NoteStoreData from '../../../src/store/NoteStore.data.js'
 
@@ -213,6 +214,31 @@ describe('NoteStore.data', () => {
 
       expect(listener).toHaveBeenCalledWith(state)
       unsubscribe()
+    })
+  })
+
+  describe('updateNoteSilent()', () => {
+    it('actualiza la nota en state.notes sin notificar subscribers', async () => {
+      state.notes = [makeNote({ id: 'note-1', title: 'Vieja' })]
+      NoteService.updateNote.mockResolvedValue(makeNote({ id: 'note-1', title: 'Nueva' }))
+      const { listener, unsubscribe } = listenForNotify()
+
+      await NoteStoreData.updateNoteSilent('note-1', { title: 'Nueva' })
+
+      expect(NoteService.updateNote).toHaveBeenCalledWith('note-1', { title: 'Nueva' })
+      expect(state.notes[0].title).toBe('Nueva')
+      expect(listener).not.toHaveBeenCalled()
+      unsubscribe()
+    })
+
+    it('rechaza la promesa si falla la persistencia para permitir rollback visual', async () => {
+      const error = new DatabaseError('updateNote', new Error('boom'))
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      NoteService.updateNote.mockRejectedValueOnce(error)
+
+      await expect(NoteStoreData.updateNoteSilent('note-1', { title: 'Nueva' })).rejects.toBe(error)
+
+      errorSpy.mockRestore()
     })
   })
 

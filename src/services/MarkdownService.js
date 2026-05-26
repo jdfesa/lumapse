@@ -32,6 +32,19 @@ marked.setOptions({
   gfm: true,          // GitHub Flavored Markdown (tablas, tachado, etc.)
 })
 
+const TASK_LINE_REGEX = /^\s*[-*+]\s+\[[ xX]\]\s+/
+
+function getTaskLineNumbers(markdown) {
+  return markdown
+    .split('\n')
+    .reduce((lineNumbers, line, index) => {
+      if (TASK_LINE_REGEX.test(line)) {
+        lineNumbers.push(index)
+      }
+      return lineNumbers
+    }, [])
+}
+
 // -------------------------------------------------------------
 // Sintaxis soportada (RF-011):
 //   ✅ Encabezados (# ## ### etc.)
@@ -129,16 +142,17 @@ export function renderMarkdown(markdown) {
     ADD_ATTR: ['target'],
   })
 
-  // Post-proceso: habilitar checkboxes interactivos con índice de línea.
-  // Cada checkbox de task list (- [ ] / - [x]) recibe un data-line para
-  // que el handler de clicks pueda togglear la línea correcta del markdown.
+  // Post-proceso: habilitar checkboxes interactivos con número de línea real.
+  // El handler usa data-line para togglear la línea exacta del markdown.
+  const taskLineNumbers = getTaskLineNumbers(markdown)
   let checkboxIndex = 0
   const processedHtml = cleanHtml.replace(
-    /<input\s+type="checkbox"([^>]*)>/gi,
-    (match, attrs) => {
-      const idx = checkboxIndex++
+    /<input\b([^>]*\btype=["']?checkbox["']?[^>]*)>/gi,
+    (_match, attrs) => {
+      const lineNumber = taskLineNumbers[checkboxIndex] ?? checkboxIndex
+      checkboxIndex++
       const isChecked = attrs.includes('checked')
-      return `<input type="checkbox" data-line="${idx}"${isChecked ? ' checked' : ''}>`
+      return `<input type="checkbox" data-line="${lineNumber}"${isChecked ? ' checked' : ''}>`
     }
   )
 

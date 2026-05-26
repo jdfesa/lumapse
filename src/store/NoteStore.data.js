@@ -97,11 +97,18 @@ export async function updateNote(id, changes) {
  * ya fue actualizado manualmente y un re-render causaría ghost clicks.
  */
 export async function updateNoteSilent(id, changes) {
-  return runStoreAction('updateNoteSilent', 'No se pudo actualizar la nota.', async () => {
+  try {
     const updatedNote = await NoteService.updateNote(id, changes)
     state.notes = state.notes.map(note => note.id === id ? updatedNote : note)
     // NO notify() — el DOM ya refleja el cambio
-  })
+    return updatedNote
+  } catch (error) {
+    console.error('[NoteStore] updateNoteSilent failed:', error)
+    if (error instanceof DatabaseError) {
+      showErrorToast('No se pudo actualizar la nota.')
+    }
+    throw error
+  }
 }
 
 export async function moveNote(noteId, subjectId) {
