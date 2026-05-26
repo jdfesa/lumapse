@@ -77,6 +77,20 @@ describe('sqlite/subjects', () => {
     })
   })
 
+  describe('getAllSubjectRowsIncludingArchived()', () => {
+    it('consulta materias no eliminadas incluyendo archivadas', async () => {
+      await Subjects.getAllSubjectRowsIncludingArchived()
+
+      expect(mockDb.query).toHaveBeenCalledWith('SELECT * FROM subjects WHERE deletedAt IS NULL ORDER BY name ASC')
+    })
+
+    it('convierte archived a booleano', async () => {
+      mockDb.query.mockResolvedValue({ values: [row({ archived: 1 })] })
+
+      expect((await Subjects.getAllSubjectRowsIncludingArchived())[0].archived).toBe(true)
+    })
+  })
+
   describe('getSubjectRowById()', () => {
     it('retorna undefined si no hay fila', async () => {
       mockDb.query.mockResolvedValue({ values: [] })
@@ -174,6 +188,95 @@ describe('sqlite/subjects', () => {
         .mockResolvedValueOnce({ values: [{ count: 2 }] })
 
       expect(await Subjects.countTrashItems()).toBe(5)
+    })
+
+    it('countNotesBySubjectIncludingArchived cuenta notas no eliminadas sin filtrar archived', async () => {
+      mockDb.query.mockResolvedValue({ values: [{ count: 8 }] })
+
+      expect(await Subjects.countNotesBySubjectIncludingArchived('subj-1')).toBe(8)
+      expect(mockDb.query).toHaveBeenCalledWith(
+        'SELECT COUNT(*) as count FROM notes WHERE subjectId = ? AND deletedAt IS NULL',
+        ['subj-1'],
+      )
+    })
+  })
+
+  describe('archivadas', () => {
+    it('getArchivedSubjectIds retorna IDs archivados no eliminados', async () => {
+      mockDb.query.mockResolvedValue({ values: [{ id: 'subj-1' }, { id: 'sec-1' }] })
+
+      expect(await Subjects.getArchivedSubjectIds()).toEqual(['subj-1', 'sec-1'])
+      expect(mockDb.query).toHaveBeenCalledWith('SELECT id FROM subjects WHERE archived = 1 AND deletedAt IS NULL')
+    })
+
+    it('getArchivedSubjectTree arma árbol archivado con conteos incluyendo archived', async () => {
+      mockDb.query
+        .mockResolvedValueOnce({
+          values: [
+            row({ id: 'subj-1', archived: 1 }),
+            row({ id: 'sec-1', parentSubjectId: 'subj-1', archived: 1 }),
+          ],
+        })
+        .mockResolvedValueOnce({ values: [{ count: 3 }] })
+        .mockResolvedValueOnce({ values: [{ count: 2 }] })
+
+      await expect(Subjects.getArchivedSubjectTree()).resolves.toEqual({
+        tree: [
+          expect.objectContaining({
+            id: 'subj-1',
+            archived: true,
+            noteCount: 3,
+            children: [expect.objectContaining({ id: 'sec-1', noteCount: 2 })],
+          }),
+        ],
+      })
+    })
+
+    it('getArchivedSubjectTree incluye materias activas como contenedor de secciones archivadas', async () => {
+      mockDb.query
+        .mockResolvedValueOnce({
+          values: [
+            row({ id: 'subj-1', archived: 0 }),
+            row({ id: 'sec-1', parentSubjectId: 'subj-1', archived: 1 }),
+          ],
+        })
+        .mockResolvedValueOnce({ values: [{ count: 5 }] })
+        .mockResolvedValueOnce({ values: [{ count: 2 }] })
+
+      await expect(Subjects.getArchivedSubjectTree()).resolves.toEqual({
+        tree: [
+          expect.objectContaining({
+            id: 'subj-1',
+            archived: false,
+            noteCount: 5,
+            children: [expect.objectContaining({ id: 'sec-1', archived: true, noteCount: 2 })],
+          }),
+        ],
+      })
+    })
+
+    it('getArchivedSubjectTree omite materias activas sin secciones archivadas', async () => {
+      mockDb.query.mockResolvedValueOnce({ values: [row({ id: 'subj-1', archived: 0 })] })
+
+      await expect(Subjects.getArchivedSubjectTree()).resolves.toEqual({ tree: [] })
+    })
+
+    it('archiveChildSubjects archiva secciones hijas activas', async () => {
+      await Subjects.archiveChildSubjects('subj-1')
+
+      expect(mockDb.run).toHaveBeenCalledWith(
+        'UPDATE subjects SET archived = 1 WHERE parentSubjectId = ? AND archived = 0 AND deletedAt IS NULL',
+        ['subj-1'],
+      )
+    })
+
+    it('unarchiveChildSubjects desarchiva secciones hijas archivadas', async () => {
+      await Subjects.unarchiveChildSubjects('subj-1')
+
+      expect(mockDb.run).toHaveBeenCalledWith(
+        'UPDATE subjects SET archived = 0 WHERE parentSubjectId = ? AND archived = 1 AND deletedAt IS NULL',
+        ['subj-1'],
+      )
     })
   })
 

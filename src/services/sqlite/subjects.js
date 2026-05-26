@@ -62,6 +62,22 @@ export async function getAllSubjectRows() {
 }
 
 /**
+ * Obtiene todas las materias no eliminadas, incluyendo archivadas.
+ * Usado por validaciones para evitar duplicados invisibles.
+ */
+export async function getAllSubjectRowsIncludingArchived() {
+  const db = getDb()
+
+  const sql = `SELECT * FROM subjects WHERE deletedAt IS NULL ORDER BY name ASC`
+  const res = await db.query(sql)
+
+  return (res.values || []).map(row => ({
+    ...row,
+    archived: row.archived === 1
+  }))
+}
+
+/**
  * Obtiene una materia por su ID.
  */
 export async function getSubjectRowById(id) {
@@ -151,6 +167,75 @@ export async function getInboxCount() {
   return (res.values && res.values.length > 0) ? res.values[0].count : 0
 }
 
+/**
+ * Obtiene los IDs de todos los subjects archivados (no eliminados).
+ * Usado por noteFilters para saber qué notas ocultar/mostrar por herencia.
+ * @returns {string[]} IDs de subjects archivados
+ */
+export async function getArchivedSubjectIds() {
+  const db = getDb()
+
+  const sql = `SELECT id FROM subjects WHERE archived = 1 AND deletedAt IS NULL`
+  const res = await db.query(sql)
+
+  return (res.values || []).map(row => row.id)
+}
+
+/**
+ * Cuenta notas de un subject (incluyendo notas archivadas, excluyendo eliminadas).
+ * Se usa para el conteo en la vista de materias archivadas.
+ * @param {string} subjectId ID de la materia/sección
+ */
+export async function countNotesBySubjectIncludingArchived(subjectId) {
+  const db = getDb()
+
+  const sql = `SELECT COUNT(*) as count FROM notes WHERE subjectId = ? AND deletedAt IS NULL`
+  const res = await db.query(sql, [subjectId])
+
+  return (res.values && res.values.length > 0) ? res.values[0].count : 0
+}
+
+/**
+ * Obtiene materias archivadas como árbol (para mostrar en drawer/vista archivadas).
+ * Incluye materias activas como contenedor cuando tienen secciones archivadas.
+ * @returns {{ tree: object[] }}
+ */
+export async function getArchivedSubjectTree() {
+  const db = getDb()
+
+  const sql = `SELECT * FROM subjects WHERE deletedAt IS NULL ORDER BY name ASC`
+  const res = await db.query(sql)
+
+  const all = (res.values || []).map(row => ({
+    ...row,
+    archived: row.archived === 1
+  }))
+  const roots = all.filter(s => !s.parentSubjectId)
+  const archivedChildren = all.filter(s => s.parentSubjectId && s.archived)
+
+  const tree = []
+  for (const root of roots) {
+    const rootChildren = archivedChildren.filter(c => c.parentSubjectId === root.id)
+    if (!root.archived && rootChildren.length === 0) continue
+
+    const rootCount = await countNotesBySubjectIncludingArchived(root.id)
+    const childrenWithCounts = []
+
+    for (const child of rootChildren) {
+      const childCount = await countNotesBySubjectIncludingArchived(child.id)
+      childrenWithCounts.push({ ...child, noteCount: childCount })
+    }
+
+    tree.push({
+      ...root,
+      noteCount: rootCount,
+      children: childrenWithCounts
+    })
+  }
+
+  return { tree }
+}
+
 // --- Operaciones de Papelera ---
 
 /**
@@ -231,6 +316,34 @@ export async function restoreChildSubjects(parentId) {
     const db = getDb()
 
     const sql = `UPDATE subjects SET deletedAt = NULL WHERE parentSubjectId = ? AND deletedAt IS NOT NULL`
+    await db.run(sql, [parentId])
+    await persistWeb()
+  })
+}
+
+/**
+ * Archiva secciones hijas de una materia (cascada).
+ * Solo archiva las que NO están archivadas y NO están eliminadas.
+ * @param {string} parentId ID de la materia padre
+ */
+export async function archiveChildSubjects(parentId) {
+  return runWriteOperation('archiveChildSubjects', async () => {
+    const db = getDb()
+    const sql = `UPDATE subjects SET archived = 1 WHERE parentSubjectId = ? AND archived = 0 AND deletedAt IS NULL`
+    await db.run(sql, [parentId])
+    await persistWeb()
+  })
+}
+
+/**
+ * Desarchiva secciones hijas de una materia (cascada).
+ * Solo desarchiva las que están archivadas y NO están eliminadas.
+ * @param {string} parentId ID de la materia padre
+ */
+export async function unarchiveChildSubjects(parentId) {
+  return runWriteOperation('unarchiveChildSubjects', async () => {
+    const db = getDb()
+    const sql = `UPDATE subjects SET archived = 0 WHERE parentSubjectId = ? AND archived = 1 AND deletedAt IS NULL`
     await db.run(sql, [parentId])
     await persistWeb()
   })
