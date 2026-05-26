@@ -63,7 +63,11 @@ export function renderMarkdown(markdown) {
     return ''
   }
 
-  // 1. Parsear Markdown → HTML crudo
+  // 1. Pre-procesar links internos [[Título]] — DESACTIVADO
+  //    (Link Lumapse — módulo removible: ver NoteLinkHandler.js)
+  // const preprocessed = preprocessNoteLinks(markdown)
+
+  // 2. Parsear Markdown → HTML crudo
   const rawHtml = marked.parse(markdown)
 
   // 2. Sanitizar HTML para prevenir XSS
@@ -97,20 +101,24 @@ export function renderMarkdown(markdown) {
       'code', 'pre',
       'a',
       'img',
+      'input',  // checkboxes de task lists
       'table', 'thead', 'tbody', 'tr', 'th', 'td',
     ],
     // Atributos permitidos: solo los necesarios para enlaces
     ALLOWED_ATTR: [
-      'href', 'target', 'rel',   // enlaces
-      'src', 'alt',               // imágenes locales (data:, blob:, relativas)
-      'class',                    // estilos de bloques de código
+      'href', 'target', 'rel',     // enlaces
+      'src', 'alt',                 // imágenes locales (data:, blob:, relativas)
+      'class',                      // estilos de bloques de código
+      'type', 'checked',            // checkboxes de task lists
+      'data-line',                   // índice de línea para toggle de checkbox
     ],
     // Blacklist explícita como defensa en profundidad
     // (redundante con ALLOWED_TAGS, pero protege ante errores de config)
     FORBID_TAGS: [
       // img PERMITIDO con src local — ver decisión de seguridad arriba
+      // input PERMITIDO solo type=checkbox — ver ALLOWED_TAGS arriba
       'script', 'iframe', 'object', 'embed',
-      'form', 'input', 'textarea', 'select', 'button',
+      'form', 'textarea', 'select', 'button',
       'style', 'link', 'meta', 'base', 'svg', 'math',
     ],
     // Blacklist de atributos peligrosos
@@ -123,9 +131,47 @@ export function renderMarkdown(markdown) {
     ],
     // Los enlaces se abren en nueva pestaña por seguridad
     ADD_ATTR: ['target'],
+    // Link Lumapse: permitir protocolo interno lumapse:// en href
+    // (por defecto DOMPurify solo permite http, https, ftp, mailto)
+    ALLOWED_URI_REGEXP: /^(?:(?:https?|ftp|mailto|lumapse):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i,
   })
 
-  return cleanHtml
+  // Post-proceso: habilitar checkboxes interactivos con índice de línea.
+  // Cada checkbox de task list (- [ ] / - [x]) recibe un data-line para
+  // que el handler de clicks pueda togglear la línea correcta del markdown.
+  let checkboxIndex = 0
+  const processedHtml = cleanHtml.replace(
+    /<input\s+type="checkbox"([^>]*)>/gi,
+    (match, attrs) => {
+      const idx = checkboxIndex++
+      const isChecked = attrs.includes('checked')
+      return `<input type="checkbox" data-line="${idx}"${isChecked ? ' checked' : ''}>`
+    }
+  )
+
+  return processedHtml
+}
+
+// -------------------------------------------------------------
+// Pre-procesador: Links internos [[Título]] (Link Lumapse)
+// -------------------------------------------------------------
+// Convierte la sintaxis [[Título de nota]] en un enlace Markdown
+// estándar con el protocolo interno lumapse://note/.
+// Este bloque es removible sin efecto colateral si la feature
+// de vinculación interna se deshabilita en el futuro.
+// -------------------------------------------------------------
+
+/**
+ * Convierte [[Título]] → [🔗 Título](lumapse://note/Título)
+ * @param {string} markdown — Texto Markdown con posibles [[links]]
+ * @returns {string} — Markdown con links convertidos
+ */
+export function preprocessNoteLinks(markdown) {
+  if (!markdown) return markdown
+  return markdown.replace(
+    /\[\[([^\]]+)\]\]/g,
+    (_, title) => `[🔗 ${title}](lumapse://note/${encodeURIComponent(title)})`
+  )
 }
 
 // -------------------------------------------------------------
@@ -151,6 +197,12 @@ DOMPurify.addHook('afterSanitizeAttributes', (node) => {
     if (href.startsWith('http://') || href.startsWith('https://')) { // lumapse-ignore-offline
       node.setAttribute('rel', 'noopener noreferrer nofollow')
       node.setAttribute('target', '_blank')
+    }
+    // Link Lumapse: enlaces internos entre notas (módulo removible)
+    if (href.startsWith('lumapse://note/')) {
+      node.removeAttribute('target')
+      node.setAttribute('rel', '')
+      node.classList.add('note-link')
     }
   }
 

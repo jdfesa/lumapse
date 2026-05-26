@@ -91,6 +91,19 @@ export async function updateNote(id, changes) {
   })
 }
 
+/**
+ * Actualiza el contenido de una nota sin disparar re-render del feed.
+ * Uso exclusivo para toggles de checkbox interactivos, donde el DOM
+ * ya fue actualizado manualmente y un re-render causaría ghost clicks.
+ */
+export async function updateNoteSilent(id, changes) {
+  return runStoreAction('updateNoteSilent', 'No se pudo actualizar la nota.', async () => {
+    const updatedNote = await NoteService.updateNote(id, changes)
+    state.notes = state.notes.map(note => note.id === id ? updatedNote : note)
+    // NO notify() — el DOM ya refleja el cambio
+  })
+}
+
 export async function moveNote(noteId, subjectId) {
   return runStoreAction('moveNote', 'No se pudo mover la nota. Intenta de nuevo.', async () => {
     const updatedNote = await NoteService.updateNote(noteId, { subjectId })

@@ -118,6 +118,81 @@ const ACTION_MAP = [
  */
 export function createFeedActionRouter(deps) {
   return (event) => {
+    // Checkbox interactivo: toggle de task list (- [ ] ↔ - [x])
+    if (event.target.type === 'checkbox' && event.target.hasAttribute('data-line')) {
+      event.preventDefault() // Prevenir toggle nativo del browser
+      event.stopPropagation()
+      
+      const checkbox = event.target
+      if (checkbox.disabled) return // Prevenir double-tap rápido
+      checkbox.disabled = true // Bloquear el checkbox hasta el re-render
+      
+      // Toggle visual inmediato para mejor UX
+      checkbox.checked = !checkbox.checked
+
+      const checkboxIdx = parseInt(checkbox.dataset.line, 10)
+      const card = checkbox.closest('.note-card')
+      if (!card) return
+      const noteId = card.dataset.id
+      const state = NoteStore.getState()
+      const note = state.notes.find(n => n.id === noteId)
+      if (!note) return
+
+      // Encontrar la línea del checkbox en el contenido original
+      const lines = note.content.split('\n')
+      let currentIdx = 0
+      for (let i = 0; i < lines.length; i++) {
+        if (/^- \[[ x]\] /.test(lines[i])) {
+          if (currentIdx === checkboxIdx) {
+            // Toggle
+            if (lines[i].startsWith('- [ ] ')) {
+              lines[i] = lines[i].replace('- [ ] ', '- [x] ')
+            } else {
+              lines[i] = lines[i].replace('- [x] ', '- [ ] ')
+            }
+            break
+          }
+          currentIdx++
+        }
+      }
+
+      const newContent = lines.join('\n')
+      // Usar updateNoteSilent: guarda en DB y state pero NO re-renderiza el feed.
+      // El DOM ya refleja el cambio (checkbox.checked se toggleó arriba).
+      NoteStore.updateNoteSilent(noteId, { content: newContent }).then(() => {
+        checkbox.disabled = false // Re-habilitar después de guardar
+      })
+      return
+    }
+
+    // ─── Link Lumapse: DESACTIVADO ───────────────────────────────
+    // Funcionalidad de enlaces internos [[Título]] comentada.
+    // Se reactivará o eliminará en una futura iteración.
+    // const noteLink = event.target.closest('a.note-link')
+    // if (noteLink) {
+    //   event.preventDefault()
+    //   event.stopPropagation()
+    //   const href = noteLink.getAttribute('href') || ''
+    //   if (href.startsWith('lumapse://note/')) {
+    //     const title = decodeURIComponent(href.replace('lumapse://note/', ''))
+    //     const state = NoteStore.getState()
+    //     const targetNote = state.notes.find(n => n.title === title && !n.deletedAt)
+    //     if (targetNote) {
+    //       NoteStore.selectNote(targetNote.id)
+    //     } else {
+    //       const fallback = state.notes.find(n =>
+    //         !n.deletedAt && n.content && n.content.includes(title)
+    //       )
+    //       if (fallback) {
+    //         NoteStore.selectNote(fallback.id)
+    //       } else if (deps.showToast) {
+    //         deps.showToast('Nota no encontrada: ' + title)
+    //       }
+    //     }
+    //   }
+    //   return
+    // }
+
     const menuButton = event.target.closest('.js-btn-menu')
 
     if (!menuButton) {

@@ -342,3 +342,60 @@
   padding: 0.1em 0.3em;
   border-radius: 4px;
 }
+
+/* Tablas en tarjetas */
+.note-card__content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-3) 0;
+  font-size: 0.9rem;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.note-card__content th {
+  background-color: var(--color-surface);
+  color: var(--color-text-bright);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.note-card__content td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+.note-card__content tr:last-child td {
+  border-bottom: none;
+}
+
+/* Checkboxes interactivos */
+.note-card__content input[type="checkbox"] {
+  accent-color: var(--color-accent);
+  width: 18px;
+  height: 18px;
+  margin-right: var(--space-2);
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.note-card__content li {
+  margin-bottom: 0.25rem;
+  list-style: none;
+}
+
+/* Blockquotes */
+.note-card__content blockquote {
+  border-left: 3px solid var(--color-accent);
+  margin: 0 0 var(--space-2) 0;
+  padding: var(--space-1) var(--space-3);
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
