@@ -35,6 +35,12 @@ export class NoteEditor {
   render() {
     this.container.innerHTML = `
       <div class="composer">
+        <div class="composer__focus-header" style="display:none">
+          <span class="composer__focus-title">Modo Enfoque</span>
+          <button class="composer__focus-exit" id="btn-exit-focus" title="Salir del modo enfoque">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 14 10 20"></polyline><polyline points="20 10 14 10 14 4"></polyline><line x1="14" y1="10" x2="21" y2="3"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+          </button>
+        </div>
         <textarea 
           id="composer-input" 
           class="composer__textarea" 
@@ -66,6 +72,11 @@ export class NoteEditor {
     // Slash commands: instanciar handler con el popup dentro del composer
     this.slashHandler = new SlashCommandHandler(input, composer);
 
+    // Botón salir de modo enfoque
+    this.container.querySelector('#btn-exit-focus').addEventListener('click', () => {
+      this.exitFocusMode();
+    });
+
     // Botón +: menú de inserción
     this.setupPlusButton(input, composer);
   }
@@ -78,8 +89,10 @@ export class NoteEditor {
 
     this.plusPopup = new EditorPopup({
       container: composer,
-      onSelect: (_item) => {
-        // Reservado para futuras opciones de inserción
+      onSelect: (item) => {
+        if (item.id === 'focus-mode') {
+          this.enterFocusMode();
+        }
       },
       onDismiss: () => {},
     });
@@ -89,9 +102,47 @@ export class NoteEditor {
       if (this.plusPopup.isVisible()) {
         this.plusPopup.hide();
       } else {
-        this.plusPopup.show([], "Escribe / para comandos");
+        this.plusPopup.show([
+          { id: 'focus-mode', label: 'Modo Enfoque', description: 'Sin distracciones' },
+        ], "Tipea / para comandos");
       }
     });
+  }
+
+  /**
+   * Activa el modo enfoque: compositor fullscreen, sin distracciones.
+   */
+  enterFocusMode() {
+    const composer = this.container.querySelector('.composer');
+    const focusHeader = this.container.querySelector('.composer__focus-header');
+    if (!composer) return;
+
+    composer.classList.add('composer--focus');
+    document.body.classList.add('focus-mode-active');
+    focusHeader.style.display = '';
+
+    const input = this.container.querySelector('#composer-input');
+    if (input) input.focus();
+  }
+
+  /**
+   * Desactiva el modo enfoque: vuelve al layout normal.
+   */
+  exitFocusMode() {
+    const composer = this.container.querySelector('.composer');
+    const focusHeader = this.container.querySelector('.composer__focus-header');
+    if (!composer) return;
+
+    composer.classList.remove('composer--focus');
+    document.body.classList.remove('focus-mode-active');
+    focusHeader.style.display = 'none';
+
+    // Re-ajustar altura del textarea
+    const input = this.container.querySelector('#composer-input');
+    if (input) {
+      input.style.height = 'auto';
+      input.style.height = (input.scrollHeight) + 'px';
+    }
   }
 
   handleInput(e) {
@@ -184,6 +235,9 @@ export class NoteEditor {
     const btnSave = this.container.querySelector('#btn-save-note');
     btnSave.textContent = 'Guardar';
     btnSave.disabled = true;
+
+    // Salir del modo enfoque si estaba activo
+    this.exitFocusMode();
   }
 
   extractTitle(content) {

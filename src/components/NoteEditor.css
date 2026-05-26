@@ -114,3 +114,88 @@
   background: var(--color-surface);
   color: var(--color-text);
 }
+
+/* ============================================================
+   Focus Mode — Modo sin distracciones
+   ============================================================ */
+
+/* Header del focus mode (oculto por defecto, visible solo en focus) */
+.composer__focus-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.composer__focus-title {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.composer__focus-exit {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.composer__focus-exit:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text-bright);
+}
+
+/* Composer en modo enfoque: fullscreen */
+.composer--focus {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg) !important;
+}
+
+.composer--focus .composer__textarea {
+  flex: 1;
+  min-height: 0;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.composer--focus .composer__footer {
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-3);
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+/* Ocultar el resto de la app cuando focus está activo */
+body.focus-mode-active .app-header,
+body.focus-mode-active .calendar-popup,
+body.focus-mode-active #feed-items-container,
+body.focus-mode-active .drawer,
+body.focus-mode-active .drawer-backdrop,
+body.focus-mode-active .trash-toast {
+  display: none !important;
+}
+
+body.focus-mode-active {
+  overflow: hidden;
+}
