@@ -13,16 +13,34 @@ Dado que la arquitectura de Lumapse combina tecnologías web (Vite) con framewor
 ### 1. `deploy-android.sh`
 Automatiza el ciclo de compilación y despliegue de la aplicación en un dispositivo Android físico.
 
-- **Problema que resuelve:** El WebView de Android cachea agresivamente los assets web (HTML/JS/CSS). Si solo se compila encima de una instalación existente, a menudo la interfaz no se actualiza, generando falsos positivos durante el testing.
+- **Problema que resuelve:** Permite instalar builds de Lumapse en Android sin repetir manualmente build, sync y ejecución de Capacitor. Desde el 2026-05-26 el modo normal preserva los datos locales de la app para no borrar accidentalmente la base SQLite durante pruebas de archivado, papelera o restauración.
+- **Cambio importante:** Antes este script desinstalaba siempre la app para limpiar caché del WebView. Eso era útil para forzar assets frescos, pero también borraba SQLite y podía destruir exactamente el estado de prueba que se quería investigar. Ahora la desinstalación es explícita con `--clean`.
 - **Funcionamiento:** 
   1. Verifica conexión ADB.
-  2. Fuerza la desinstalación de la app (limpiando el caché del WebView).
+  2. Elige el dispositivo destino: si hay uno solo, lo usa automáticamente; si hay varios, exige `--target <deviceId>`.
   3. Ejecuta el build web (`npm run build`).
   4. Sincroniza el proyecto nativo (`npx cap sync`).
-  5. Construye el APK y lo lanza en el teléfono (`npx cap run`).
+  5. Construye el APK y lo instala/lanza en el teléfono (`npx cap run android --target <deviceId>`).
 - **Uso:**
   ```bash
+  # Deploy normal: conserva SQLite, preferencias y estado local
   ./scripts/deploy-android.sh
+
+  # Deploy a un dispositivo específico, sin selector interactivo
+  ./scripts/deploy-android.sh --target ad071603088c2172aa
+
+  # Deploy limpio: desinstala primero y borra datos/caché local
+  ./scripts/deploy-android.sh --target ad071603088c2172aa --clean
+  ```
+- **Cuándo usar `--clean`:**
+  - Cuando el WebView muestre assets viejos después de un cambio de UI.
+  - Cuando se necesite simular una instalación completamente fresca.
+  - Cuando la base local esté corrupta o se quiera reiniciar el estado manualmente.
+- **Cuándo NO usar `--clean`:**
+  - Cuando estás probando persistencia, archivado, papelera, restauraciones, migraciones o bugs que dependen del estado real de SQLite.
+- **Ayuda integrada:**
+  ```bash
+  ./scripts/deploy-android.sh --help
   ```
 
 ### 2. `clean.sh`
@@ -566,4 +584,3 @@ Genera las pantallas de bienvenida (splash screens) adaptativas de la aplicació
   python3 scripts/generate-splash.py
   deactivate
   ```
-
