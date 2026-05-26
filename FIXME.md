@@ -146,6 +146,14 @@ Sin `preventDefault()`, el browser puede procesar el tap dos veces, o el estado 
 
 El `data-line` se calcula en `MarkdownService` contando `<input>` tags en el HTML. El handler cuenta `- [ ]`/`- [x]` patterns en el markdown source. Si `marked` genera HTML con checkboxes en orden diferente al source (ej: por nesting), los índices no coinciden.
 
+### Bug 4: Promesa sin control de errores (checkbox "congelado")
+
+En `FeedActionRouter.js`, el checkbox se deshabilita con `checkbox.disabled = true` y solo se vuelve a habilitar dentro del `.then(...)` de `updateNoteSilent`. Si ocurre algún error en la persistencia o en la actualización del store, la promesa se rechaza, y como no hay un `.catch()` ni un bloque `.finally()`, el checkbox queda permanentemente deshabilitado e ininteractuable ("unresponsive").
+
+### Consideración 5: Ausencia de Tests de Regresión
+
+La suite de pruebas actual (Vitest) no contiene tests unitarios ni de integración que verifiquen el comportamiento interactivo de los checkboxes, ni simulen eventos sobre elementos `data-line`, ni validen el funcionamiento de `updateNoteSilent`. Esto dificulta la detección de regresiones al intentar solucionar el problema de manera quirúrgica.
+
 ---
 
 ## Solución Propuesta
