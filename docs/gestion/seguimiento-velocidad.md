@@ -4,7 +4,7 @@
 > **Referencia:** Gómez, J. (2014), Secciones 5 y 7. Guía de Estudio PP3 (Ing. Mauricio Parada, 2026).  
 > **Fecha de creación:** 2026-05-15  
 > **Autor:** José David Sandoval  
-> **Actualización:** Al cierre de cada hito.
+> **Actualización:** 2026-05-26 — sincronizado con `scripts/generate-velocity-report.py`.
 
 ---
 
@@ -30,7 +30,7 @@ Medir la velocidad real permite:
 
 ---
 
-## 3. Estimación de Story Points por hito
+## 3. Story Points por hito
 
 ### Hito 01 — Fundación (Mayo 2026)
 
@@ -56,36 +56,34 @@ Story Points asignados en [`historias-de-usuario.md`](../producto/historias-de-u
 
 ### Hito 03 — MVP Completo (Julio 2026)
 
-Story Points estimados retroactivamente (las HU formales no se crearon para este hito;
-la estimación se basa en los RF completados y la complejidad observada durante el desarrollo):
+Story Points normalizados contra las HU formales actuales:
 
-| RF | Funcionalidad | SP | Justificación |
-|---|---|---|---|
-| RF-010 | Renderizado Markdown en tiempo real | 5 | Nueva librería (marked), integración con DOMPurify, componente MarkdownPreview |
-| RF-011 | Sintaxis Markdown básica (GFM) | 3 | Configuración de marked + estilos CSS para HTML renderizado |
-| RF-012 | Toggle edición / lectura | 3 | Tres modos de vista con estado dinámico y CSS condicional |
-| RF-016 | Exportar nota individual como .md | 3 | Blob + download, sanitización del nombre de archivo |
-| RF-017 | Exportar todas las notas como .zip | 5 | Integración JSZip, prevención de colisión de nombres |
-| RF-018 | Importar archivos .md | 3 | FileReader API, creación de nota con parámetros iniciales |
-| RF-008/009 | Offline + Service Worker | 5 | vite-plugin-pwa, configuración de Workbox, caché de assets |
-| RF-021 | PWA instalable | 2 | Manifest + configuración del plugin |
-| | **Total Hito 03** | **29** |
+| HU | Funcionalidad | SP |
+|---|---|---|
+| HU-007 | Renderizar Markdown | 5 |
+| HU-008 | Exportar/importar notas | 8 |
+| HU-012 | Funcionamiento offline | 5 |
+| HU-013 | Modos edición/lectura | 3 |
+| | **Total Hito 03** | **21** |
 
-### Hito 04 — Organización y UX (Agosto 2026) — Planificado
+> **Nota metodológica:** La versión anterior de este documento incluía una estimación retroactiva por RF para el Hito 03. Desde esta actualización, el seguimiento toma como fuente única la tabla formal de trazabilidad de HU para evitar doble conteo y sostener consistencia con el script `generate-velocity-report.py`.
 
-Story Points estimados prospectivamente:
+### Hito 04 — Organización y UX (Agosto 2026, en cierre formal)
 
-| RF | Funcionalidad | SP | Justificación |
-|---|---|---|---|
-| RF-013 | Estructura de carpetas por materia | 8 | Modelo de datos nuevo, UI de gestión, lógica de asignación de notas |
-| RF-014 | Filtrar notas por materia | 3 | Query filtrada + chips de selección |
-| RF-015 | Búsqueda por texto (título y contenido) | 5 | Índice de búsqueda, input con debounce, resultados en tiempo real |
-| RF-019 | Modo oscuro / claro | 3 | CSS Custom Properties + media query + toggle |
-| RF-020 | Diseño mobile-first responsive | 5 | Revisión completa de CSS, gestos, tamaños táctiles |
-| RF-022 | Pantalla de onboarding | 3 | Componente modal, detección de primer uso, contenido guiado |
-| RF-006 | Conteo de palabras y caracteres | 1 | Cálculo simple sobre el contenido actual |
-| RF-024 | Indicador offline/online | 2 | Listener de eventos `online`/`offline` + indicador visual |
-| | **Total Hito 04** | **30** |
+Story Points entregados según las HU formalizadas:
+
+| HU | Funcionalidad | SP |
+|---|---|---|
+| HU-009 | Fijar y archivar notas | 5 |
+| HU-010 | Buscar notas | 3 |
+| HU-011 | Modo oscuro/claro | 5 |
+| HU-014 | Diseño responsive | 5 |
+| HU-015 | Marcadores de estado académico | 3 |
+| HU-016 | Papelera de reciclaje | 8 |
+| HU-017 | Categorización y filtrado por materias | 8 |
+| | **Total Hito 04 entregado** | **37** |
+
+El Hito 04 registra 37 SP entregados, pero continúa en **cierre formal** porque quedan pendientes menores de UX/documentación aún no resueltos o descartados explícitamente: RF-006, RF-022, RF-024, empty states, ayuda Markdown y actualización final de gráficos de base de datos.
 
 ---
 
@@ -95,21 +93,20 @@ Story Points estimados prospectivamente:
 |---|---|---|---|---|---|---|---|
 | 01 | Mayo 2026 | — | — | — | — | ✅ Completado | Fundación, sin HU medibles en SP |
 | 02 | Junio 2026 | 20 | 20 | 20 SP/mes | 0 | ✅ Completado | Todas las HU completadas. Baseline: `LB-PROD-v0.1.0` |
-| 03 | Julio 2026 | 29 | 29 | 29 SP/mes | 0 | ✅ Completado | MVP completo. Baseline: `LB-PROD-v0.2.0` |
-| 04 | Agosto 2026 | 30 | — | — | — | 🔄 En curso | Organización por materias + UX mobile |
+| 03 | Julio 2026 | 21 | 21 | 21 SP/mes | 0 | ✅ Completado | MVP completo normalizado contra HU formales. Baseline: `LB-PROD-v0.2.0` |
+| 04 | Agosto 2026 | 37 | 37 | 37 SP/mes | 0 | 🔄 En cierre | Organización por materias + UX mobile, con pendientes menores de cierre |
 | 05 | Septiembre 2026 | *por definir* | — | — | — | ⏳ Futuro | Testing + APK firmado |
 | 06 | Octubre 2026 | *por definir* | — | — | — | ⏳ Futuro | Informe final + entrega |
 
 ### Velocidad promedio (datos disponibles)
 
 ```
-Velocidad promedio = (20 + 29) / 2 = 24.5 SP/mes
+Velocidad promedio = (20 + 21 + 37) / 3 = 26.0 SP/hito
 ```
 
-> Esta velocidad es la referencia para estimar si el Hito 04 (30 SP planificados) es
-> viable en el período asignado. Con una velocidad promedio de 24.5 SP/mes, 30 SP
-> representa un **incremento del 22%** respecto del promedio, lo cual es ambicioso
-> pero manejable si se priorizan los RF MUST sobre los COULD.
+> Esta velocidad se calcula automáticamente desde la tabla de trazabilidad de HU con
+> `python3 scripts/generate-velocity-report.py`. Al 2026-05-26, el proyecto registra
+> **17 HU formalizadas** y **78 SP entregados/acumulados** en los Hitos 02 a 04.
 
 ---
 
@@ -127,35 +124,38 @@ El Hito 02 se completó según lo planificado. Las 6 HU fueron implementadas y v
 Esto indica que la estimación inicial fue precisa para funcionalidades de complejidad
 baja-moderada (CRUD, auto-guardado, listado).
 
-### Hito 03 — Sin desvío pero con observación
+### Hito 03 — Sin desvío, con normalización de fuente
 
 | Métrica | Valor |
 |---|---|
-| SP planificados | 29 |
-| SP entregados | 29 |
+| SP planificados | 21 |
+| SP entregados | 21 |
 | Desvío | 0 (100% de cumplimiento) |
 
-El Hito 03 se completó con éxito, pero debe notarse que:
+El Hito 03 se completó con éxito. La observación metodológica principal es que la primera versión de este seguimiento usaba una estimación retroactiva por RF. Esa lectura fue reemplazada por la fuente formal de HU, que reduce el riesgo de doble conteo y permite que el script de velocidad actúe como fuente reproducible.
 
-1. Los SP se estimaron **retroactivamente** (no hubo HU formales previas al desarrollo).
-2. La estimación retroactiva puede sufrir de **sesgo de confirmación** (se tiende a
-   estimar exactamente lo que se logró). Para mayor rigor, los Hitos 04+ deben
-   estimarse **antes** del desarrollo.
+### Hito 04 — Entregado por encima del plan inicial, pendiente de cierre formal
 
-> **Lección aprendida:** A partir del Hito 04, la estimación de SP debe hacerse
-> ANTES de comenzar el desarrollo, no después. Esto permite medir la precisión
-> real de la estimación y detectar desviaciones.
+| Métrica | Valor |
+|---|---|
+| SP planificados | 37 |
+| SP entregados | 37 |
+| Desvío | 0 respecto de las HU formalizadas |
+
+El Hito 04 concentra el mayor volumen de SP del proyecto porque absorbió tanto la organización por materias como mejoras de UX, papelera, marcadores de estado y refuerzos de persistencia. Aunque la entrega funcional registrada en HU alcanza 37 SP, el hito no se declara cerrado hasta resolver o descartar explícitamente sus pendientes menores de cierre.
+
+> **Lección aprendida:** La velocidad no debe usarse como excusa para cerrar hitos por intuición. Un hito puede tener sus HU principales entregadas y, aun así, requerir cierre formal documental o de UX antes de pasar a la siguiente fase.
 
 ---
 
-## 6. Factores que podrían generar desvíos en el Hito 04
+## 6. Factores que podrían generar desvíos en el cierre del Hito 04
 
 | Factor de riesgo | Probabilidad | Impacto | Mitigación |
 |---|---|---|---|
-| Integración de Capacitor retrasa el inicio | Media | Alto | Iniciar la integración las primeras 2 semanas de agosto |
-| El modelo de carpetas requiere migración del esquema SQLite | Media | Medio | Diseñar el esquema con extensibilidad desde el inicio |
-| Dark mode con inconsistencias visuales | Baja | Bajo | Usar CSS Custom Properties desde el principio (ya implementado) |
-| Carga académica de otras materias | Alta | Medio | Priorizar RF MUST sobre RF COULD si el tiempo se acota |
+| Mezclar cierre de Hito 04 con preparación de Hito 05 | Media | Medio | Mantener BACKLOG/CHANGELOG separados por estado formal de hito |
+| Pendientes UX pequeños crecen de alcance | Media | Medio | Implementar o descartar explícitamente RF-006, RF-022 y RF-024 |
+| Documentación generada queda desfasada | Media | Alto | Regenerar informe/cheatsheet solo en puntos de control |
+| Gráficos de base de datos requieren herramientas externas | Media | Bajo | Dejarlos para el cierre final, como ya se acordó |
 
 ---
 

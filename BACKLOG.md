@@ -329,7 +329,7 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 - [x] **Archivar materia/sección completa con cascada:** Permitir archivar una materia o sección entera de un solo toque, heredando dinámicamente visibilidad sin modificar el estado individual de notas y previniendo su pérdida (cascada pura sobre subjects). Drawer migrado a menú contextual y optimizaciones en store.
 - [ ] **Guía de Markdown accesible desde Ayuda (DP-006):** En lugar de notas precargadas, ofrecer una guía opcional de sintaxis Markdown dentro de la sección de Ayuda/Onboarding. El usuario la consulta solo si quiere; no se impone. Refuerza que Lumapse funciona con texto plano sin necesidad de aprender Markdown.
 - [x] **README principal:** sincronizar stack y roadmap con el estado real post-SQLite, reemplazando referencias obsoletas a IndexedDB. Completado 2026-05-26.
-- [ ] **Seguimiento de velocidad:** actualizar `docs/gestion/seguimiento-velocidad.md` usando `python3 scripts/generate-velocity-report.py`.
+- [x] **Seguimiento de velocidad:** ✅ Completado (2026-05-26). `docs/gestion/seguimiento-velocidad.md` quedó sincronizado con `python3 scripts/generate-velocity-report.py` (17 HU, 78 SP, 26.0 SP/hito).
 - [ ] **Versionado:** alinear `package.json`/`package-lock.json` con la versión documentada en `CHANGELOG.md` antes de preparar release.
 - [x] **Informe final:** crear README de flujo por secciones, completar capítulos fuente iniciales y regenerar `INFORME-FINAL-COMPLETO.md`. Completado 2026-05-26.
 - [ ] **Cheatsheet de defensa:** actualizar `docs/gestion/cheatsheet-defensa.md` si los cambios del informe modifican el guion de defensa.
@@ -356,7 +356,7 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 - [x] ~~**Historias de Usuario (Hitos 03 y 04):**~~ ✅ Completado (2026-05-18). HU-007 a HU-011 redactadas con criterios de aceptación, SP y trazabilidad.
 - [x] ~~**Actualizar Modelo de Dominio y Casos de Uso:**~~ ✅ Completado (2026-05-18). Entidad Tag eliminada, campos pinned/archived agregados, casos de uso corregidos (PWA→APK, Tags→Pin/Archivar).
 - [x] **Sincronizar README principal post-SQLite:** ✅ Completado (2026-05-26). El stack presenta SQLite como persistencia actual e IndexedDB queda como antecedente histórico/migración legacy.
-- [ ] **Actualizar seguimiento de velocidad:** `docs/gestion/seguimiento-velocidad.md` debe reflejar las HU reales actuales (14 HU, 59 SP totales según `generate-velocity-report.py`) y no solo la planificación previa del Hito 04.
+- [x] **Actualizar seguimiento de velocidad:** ✅ Completado (2026-05-26). El documento refleja las HU reales actuales (17 HU, 78 SP totales según `generate-velocity-report.py`) y deja Hito 04 en cierre formal.
 - [ ] **Revisar documentos generados:** regenerar informe completo y cheatsheet cuando se cierren nuevos cambios, para evitar que los artefactos finales queden con métricas anteriores.
 - [ ] **Manual de usuario:** Crear un breve manual de usuario explicando los flujos principales, ya que el sistema tiene atajos visuales (Paso 9).
 - [x] ~~**Documentar Papelera de Reciclaje (Hito 04):**~~ ✅ Completado (2026-05-22). Añadido RF-026 y HU-016 (8 SP, 6 CA). Actualizado `CHANGELOG.md`, `modelo-dominio.md` (reescrito con Subject, deletedAt, statusEmoji, SQLite), DBML, DDL, normalización, y casos de uso (UC-16).
