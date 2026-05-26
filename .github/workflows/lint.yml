@@ -1,18 +1,18 @@
 # ──────────────────────────────────────────────────────────────
-# Workflow: CI — Lint
-# Propósito: Verificar la calidad del código JavaScript en cada
+# Workflow: CI — Quality Gate
+# Propósito: Verificar código, documentación y guardias operativas en cada
 #            push o pull request a la rama main.
 #
 # ¿Qué hace?
 #   1. Instala Node.js y las dependencias del proyecto.
-#   2. Corre ESLint sobre la carpeta src/.
+#   2. Corre lint, tests, build, bundle budget y auditorías documentales.
 #   3. Reporta advertencias y errores en la pestaña Actions de GitHub.
 #
 # ¿Bloquea el push? NO. Solo informa.
 # ¿Modifica el código?  NO. Solo lee y reporta.
 # ──────────────────────────────────────────────────────────────
 
-name: CI — Lint
+name: CI — Quality Gate
 
 on:
   push:
@@ -21,8 +21,8 @@ on:
     branches: [main]
 
 jobs:
-  lint:
-    name: Verificar calidad del código (ESLint)
+  quality:
+    name: Verificar calidad integral
     runs-on: ubuntu-latest
 
     steps:
@@ -37,10 +37,47 @@ jobs:
           node-version: "22"
           cache: "npm"
 
-      # 3. Instalar dependencias (usa el package-lock.json para reproducibilidad)
+      # 3. Configurar Python para scripts documentales
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # 4. Instalar dependencias (usa el package-lock.json para reproducibilidad)
       - name: Instalar dependencias
         run: npm ci
 
-      # 4. Correr el linter
+      # 5. Correr chequeos de código y producto
       - name: Correr ESLint
         run: npm run lint
+
+      - name: Correr tests unitarios
+        run: npm run test
+
+      - name: Compilar build web
+        run: npm run build
+
+      - name: Verificar presupuesto de bundle
+        run: npm run check:size
+
+      - name: Bloquear diálogos nativos no permitidos
+        run: npm run check:native-dialogs
+
+      # 6. Correr auditorías documentales y de schema
+      - name: Auditar trazabilidad RF/HU/ADR
+        run: npm run check:traceability
+
+      - name: Auditar links internos de documentación
+        run: npm run check:docs
+
+      - name: Verificar schema SQLite documentado
+        run: npm run check:schema
+
+      - name: Verificar DBML generado desde código
+        run: npm run check:dbml
+
+      - name: Validar jerarquía de materias
+        run: npm run check:subjects
+
+      - name: Ejecutar auditoría a11y estática
+        run: npm run check:a11y
