@@ -4,6 +4,9 @@
 // =============================================================
 
 import * as NoteStore from '../store/NoteStore.js';
+import { SlashCommandHandler } from './SlashCommandHandler.js';
+// import { NoteLinkHandler } from './NoteLinkHandler.js'; // DESACTIVADO
+import { EditorPopup } from './EditorPopup.js';
 import './NoteEditor.css';
 
 export class NoteEditor {
@@ -14,6 +17,7 @@ export class NoteEditor {
     // Bind para mantener 'this'
     this.handleInput = this.handleInput.bind(this);
     this.handleSave = this.handleSave.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
     
     // Render inicial
     this.render();
@@ -43,8 +47,8 @@ export class NoteEditor {
             <select id="composer-subject-select" class="composer__subject-select" title="Materia">
               <option value="">Entrada</option>
             </select>
-            <button class="composer__tool-btn" title="Adjuntos" disabled>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+            <button class="composer__tool-btn composer__plus-btn" title="Insertar" id="composer-plus-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>
           <button id="btn-save-note" class="composer__save-btn" disabled>Guardar</button>
@@ -54,9 +58,56 @@ export class NoteEditor {
 
     const input = this.container.querySelector('#composer-input');
     const saveBtn = this.container.querySelector('#btn-save-note');
+    const composer = this.container.querySelector('.composer');
 
     input.addEventListener('input', this.handleInput);
+    input.addEventListener('keydown', this.handleKeyDown);
     saveBtn.addEventListener('click', this.handleSave);
+
+    // Slash commands: instanciar handler con el popup dentro del composer
+    this.slashHandler = new SlashCommandHandler(input, composer);
+
+    // Link Lumapse: DESACTIVADO
+    // this.linkHandler = new NoteLinkHandler(input, composer);
+    this.linkHandler = null;
+
+    // Botón +: menú de inserción (imagen, link lumapse)
+    this.setupPlusButton(input, composer);
+  }
+
+  /**
+   * Configura el botón + con popup de opciones.
+   */
+  setupPlusButton(textarea, composer) {
+    const plusBtn = this.container.querySelector('#composer-plus-btn');
+
+    this.plusPopup = new EditorPopup({
+      container: composer,
+      onSelect: (item) => {
+        if (item.id === 'link-lumapse') {
+          // Simular escritura de [[ para activar el NoteLinkHandler
+          const pos = textarea.selectionStart;
+          const before = textarea.value.substring(0, pos);
+          const after = textarea.value.substring(pos);
+          textarea.value = before + '[[' + after;
+          textarea.setSelectionRange(pos + 2, pos + 2);
+          textarea.dispatchEvent(new window.Event('input', { bubbles: true }));
+          textarea.focus();
+        }
+      },
+      onDismiss: () => {},
+    });
+
+    plusBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (this.plusPopup.isVisible()) {
+        this.plusPopup.hide();
+      } else {
+        this.plusPopup.show([
+          { id: 'link-lumapse', label: 'Link Lumapse', description: '' },
+        ], "Escribe / para comandos");
+      }
+    });
   }
 
   handleInput(e) {
@@ -69,6 +120,54 @@ export class NoteEditor {
     
     // Habilitar/deshabilitar botón Guardar
     saveBtn.disabled = input.value.trim().length === 0;
+  }
+
+  /**
+   * Auto-continue para listas de tareas (todo).
+   * Enter después de '- [ ] texto' → nueva línea con '- [ ] '
+   * Enter en '- [ ] ' vacío → elimina el prefijo (salir del modo lista)
+   */
+  handleKeyDown(e) {
+    if (e.key !== 'Enter') return;
+
+    // No interceptar si hay un popup activo
+    if ((this.slashHandler && this.slashHandler.isActive()) ||
+        (this.linkHandler && this.linkHandler.isActive())) {
+      return;
+    }
+
+    const textarea = e.target;
+    const { value, selectionStart } = textarea;
+
+    // Encontrar la línea actual
+    const beforeCursor = value.substring(0, selectionStart);
+    const lastNewline = beforeCursor.lastIndexOf('\n');
+    const currentLine = beforeCursor.substring(lastNewline + 1);
+
+    // Verificar si la línea actual es un item de todo
+    const todoMatch = currentLine.match(/^(- \[[ x]\] )(.*)/); 
+    if (!todoMatch) return;
+
+    const text = todoMatch[2];
+
+    e.preventDefault();
+
+    if (!text.trim()) {
+      // Item vacío: eliminar el prefijo (salir del modo lista)
+      const lineStart = lastNewline + 1;
+      textarea.value = value.substring(0, lineStart) + value.substring(selectionStart);
+      textarea.setSelectionRange(lineStart, lineStart);
+    } else {
+      // Insertar nueva línea con prefijo de todo
+      const newPrefix = '\n- [ ] ';
+      const after = value.substring(selectionStart);
+      textarea.value = beforeCursor + newPrefix + after;
+      const newPos = selectionStart + newPrefix.length;
+      textarea.setSelectionRange(newPos, newPos);
+    }
+
+    // Trigger input para resize y estado del botón
+    textarea.dispatchEvent(new window.Event('input', { bubbles: true }));
   }
 
   async handleSave() {
@@ -108,8 +207,23 @@ export class NoteEditor {
     const lines = content.split('\n');
     for (const line of lines) {
       const trimmed = line.trim();
+      // Si tiene encabezado Markdown, usarlo como título
       if (trimmed.startsWith('# ')) {
         return trimmed.slice(2).trim() || 'Sin título';
+      }
+    }
+    // Fallback: usar la primera línea no vacía como título
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (trimmed) {
+        // Limpiar sintaxis Markdown para mostrar texto limpio
+        const clean = trimmed
+          .replace(/^[#*\->\d.]+\s*/, '')  // quitar prefijos (#, *, -, >, 1.)
+          .replace(/[*_~`[\]()]/g, '')       // quitar formato inline
+          .trim();
+        if (clean) {
+          return clean.length > 60 ? clean.substring(0, 57) + '...' : clean;
+        }
       }
     }
     return 'Sin título';
@@ -126,6 +240,8 @@ export class NoteEditor {
       const noteToEdit = notes.find(n => n.id === activeNoteId);
       if (noteToEdit) {
         this.currentEditId = activeNoteId;
+        // Sincronizar con el link handler
+        if (this.linkHandler) this.linkHandler.setCurrentEditId(activeNoteId);
         const input = this.container.querySelector('#composer-input');
         input.value = noteToEdit.content;
         
@@ -148,6 +264,7 @@ export class NoteEditor {
     } else if (!activeNoteId && this.currentEditId) {
       // Se canceló la edición (o se borró la nota editada)
       this.currentEditId = null;
+      if (this.linkHandler) this.linkHandler.setCurrentEditId(null);
       const input = this.container.querySelector('#composer-input');
       input.value = '';
       input.style.height = 'auto';
@@ -196,6 +313,9 @@ export class NoteEditor {
 
   destroy() {
     if (this.unsubscribe) this.unsubscribe();
+    if (this.slashHandler) this.slashHandler.destroy();
+    if (this.linkHandler) this.linkHandler.destroy();
+    if (this.plusPopup) this.plusPopup.destroy();
     this.container.innerHTML = '';
   }
 }
