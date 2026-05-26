@@ -33,9 +33,9 @@ npm run lint
 
 ---
 
-## 📌 Corte actual — Bug de Checkboxes Interactivos 2026-05-26
+## 📌 Corte anterior — Bug de Checkboxes Interactivos (Resuelto 2026-05-26)
 
-**Estado verificado:** Se detectó un comportamiento errático (toques fantasma, desincronización de estado) al interactuar con los checkboxes de las listas de tareas (`- [ ]` y `- [x]`) directamente desde las tarjetas de notas (NoteCard). Por petición del usuario, se decidió suspender la corrección de este bug y dejar el código en estado de WIP (desactivado/comentado o bajo revisión técnica) para documentarlo formalmente como deuda técnica crítica para resolver en el próximo hito.
+**Estado:** ✅ Resuelto (2026-05-26). Se solucionó implementando un mapa de promesas pendientes para bloquear toques múltiples rápidos, previniendo el comportamiento nativo del browser, realizando el toggle visual directo y usando `NoteStore.updateNoteSilent` con un bloque catch/finally para rollback y desbloqueo. Adicionalmente se migró el identificador `data-line` para que mapee el número de línea real del Markdown en lugar de un índice secuencial del HTML.
 
 **Detalle del problema:**
 - Al tocar un checkbox, el evento de click es interceptado por un manejador delegado en `FeedActionRouter.js` que modifica de forma asíncrona la nota en SQLite.
@@ -81,7 +81,7 @@ Estos son los 3 bloques recomendados para continuar. La prioridad es mantener tr
 
 | Orden | Bloque | Objetivo | Criterio de cierre |
 |---|---|---|---|
-| 1 | **Resolución de Checkboxes Interactivos** | Solucionar de raíz los toques fantasma/falta de respuesta al marcar tareas. | Checkboxes interactivos funcionando de forma fluida en mobile/WebView sin re-renderizado global destructivo. |
+| 1 | ~~**Resolución de Checkboxes Interactivos**~~ | ✅ Completado (2026-05-26) | Solucionado de raíz usando preventDefault, lock map y mapeo a líneas reales en lugar de índices secuenciales. |
 | 2 | **Cierre funcional/documental Hito 04** | Completar RF pequeños pendientes y sincronizar documentación viva. | RF-006/RF-024 evaluados o implementados, README/velocidad/versionado actualizados, `check-traceability.py` sin advertencias. |
 | 3 | **Preparación CI documental** | Convertir scripts críticos en chequeos de CI. | Workflow que ejecute lint, trazabilidad, schema sync, DBML check, doc links y jerarquía de subjects. |
 
@@ -302,7 +302,7 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 - [x] ~~**UI para sub-secciones de Materias (Profundidad > 0):**~~ ✅ Completado (Paso 9). El drawer permite crear y navegar secciones hijas, con validación DP-004, herencia de color y conteos por materia/sección.
 - [x] **Manejo de Errores y Excepciones (Resiliencia):** ✅ Completado (2026-05-25). Implementados `DatabaseError` en la capa SQLite para fallos nativos y try/catch robustos en el store. Errores y notificaciones se presentan con el nuevo componente `Toast.js` sin crashear la UI.
 - [x] **Optimización Extrema de Renderizado (Virtualización de DOM):** ✅ Completado (2026-05-25). Componente `VirtualFeed.js` con list virtualization, IntersectionObserver y prefix sum height cache. Resuelve el renderizado para más de 10,000 notas con 60FPS fluidos en dispositivos antiguos de testeo.
-- [ ] **Bug de Checkboxes Interactivos (Ghost Clicks):** Corregir la pérdida de interactividad y clicks fantasma en mobile (Android WebView / Capacitor) al interactuar con checklists (`- [ ]`) en NoteCards (detalles en `checkbox-ghost-clicks-handoff.md` e informe de corte 2026-05-26).
+- [x] **Bug de Checkboxes Interactivos (Ghost Clicks):** ✅ Completado (2026-05-26). Corregido el problema de toques fantasma/falta de respuesta al usar un lock map para taps duplicados, preventDefault, y mapeo a línea real del markdown en vez de data-line secuencial.
 
 ## ⚙️ Deuda Técnica — DevOps y Procesos
 
