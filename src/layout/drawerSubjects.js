@@ -4,6 +4,7 @@
 // =============================================================
 
 import { escapeHtml } from './appShell.js'
+import { showErrorToast } from '../components/Toast.js'
 import { handleUnarchiveSubjectButton, renderArchivedSubjects } from './drawerArchivedSubjects.js'
 import { setupSubjectContextMenu } from './drawerSubjectContextMenu.js'
 
@@ -73,7 +74,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
       subjectFormContainer.style.display = 'none'
       subjectNameInput.value = ''
     } catch (err) {
-      alert(err.message)
+      showErrorToast(err.message)
     }
   })
 
@@ -217,7 +218,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
       await NoteStore.createSubject(name, parentColor, parentId)
       form.style.display = 'none'
     } catch (err) {
-      alert(err.message)
+      showErrorToast(err.message)
     }
   }
 
@@ -269,7 +270,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
     try {
       await NoteStore.updateSubject(subjectId, { name: trimmed })
     } catch (err) {
-      alert(err.message)
+      showErrorToast(err.message)
     }
   }
 
