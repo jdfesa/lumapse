@@ -15,6 +15,7 @@ import { defineCustomElements } from 'jeep-sqlite/loader'
 const DB_NAME = 'lumapse-db'
 let sqliteConnection = null
 let db = null
+let transactionDepth = 0
 
 /**
  * Retorna la instancia activa de la base de datos.
@@ -29,16 +30,59 @@ export function getDb() {
 }
 
 /**
+ * Indica si hay una transacción explícita abierta desde la capa de negocio.
+ * Los módulos CRUD lo usan para evitar transacciones implícitas anidadas.
+ * @returns {boolean}
+ */
+export function isWriteTransactionActive() {
+  return transactionDepth > 0
+}
+
+/**
  * Helper para persistir cambios en la versión Web (WASM).
  * En la web, los cambios en memoria deben guardarse a IndexedDB explícitamente.
  */
 export async function persistWeb() {
+  if (transactionDepth > 0) return
   if (Capacitor.getPlatform() === 'web' && sqliteConnection) {
     try {
       await sqliteConnection.saveToStore(DB_NAME)
     } catch (e) {
       console.error('Error al guardar datos SQLite en el almacenamiento Web:', e)
     }
+  }
+}
+
+/**
+ * Ejecuta una operación crítica dentro de una transacción SQLite explícita.
+ * Si falla cualquier escritura, revierte todos los cambios de la cascada.
+ * @param {Function} action Operación async a ejecutar dentro de la transacción
+ * @returns {Promise<*>} Resultado retornado por action
+ */
+export async function runTransaction(action) {
+  const activeDb = getDb()
+
+  if (transactionDepth > 0) {
+    return action()
+  }
+
+  await activeDb.beginTransaction()
+  transactionDepth = 1
+
+  try {
+    const result = await action()
+    await activeDb.commitTransaction()
+    transactionDepth = 0
+    await persistWeb()
+    return result
+  } catch (error) {
+    try {
+      await activeDb.rollbackTransaction()
+    } catch (rollbackError) {
+      console.error('Error al revertir transacción SQLite:', rollbackError)
+    }
+    transactionDepth = 0
+    throw error
   }
 }
 

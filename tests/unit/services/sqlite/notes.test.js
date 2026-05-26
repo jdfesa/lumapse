@@ -11,6 +11,7 @@ vi.mock('../../../../src/services/sqlite/connection.js', () => ({
   getDb: vi.fn(() => mockDb),
   persistWeb: vi.fn().mockResolvedValue(undefined),
   generateUUID: vi.fn(() => 'test-uuid-1234'),
+  isWriteTransactionActive: vi.fn(() => false),
 }))
 
 function dbRow(overrides = {}) {
@@ -34,6 +35,7 @@ beforeEach(() => {
   vi.setSystemTime(new Date('2024-01-15T10:00:00.000Z'))
   mockDb.run.mockResolvedValue(undefined)
   mockDb.query.mockResolvedValue({ values: [] })
+  connection.isWriteTransactionActive.mockReturnValue(false)
 })
 
 describe('sqlite/notes', () => {
@@ -226,6 +228,18 @@ describe('sqlite/notes', () => {
       await Notes.deleteNote('note-1')
 
       expect(connection.persistWeb).toHaveBeenCalled()
+    })
+
+    it('desactiva la transacción implícita si ya hay una transacción explícita', async () => {
+      connection.isWriteTransactionActive.mockReturnValue(true)
+
+      await Notes.deleteNote('note-1')
+
+      expect(mockDb.run).toHaveBeenCalledWith(
+        'UPDATE notes SET deletedAt = ? WHERE id = ?',
+        ['2024-01-15T10:00:00.000Z', 'note-1'],
+        false,
+      )
     })
   })
 

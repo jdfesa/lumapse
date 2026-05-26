@@ -6,7 +6,7 @@
 // notas en la tabla `notes` de SQLite.
 // =============================================================
 
-import { getDb, persistWeb, generateUUID } from './connection.js'
+import { getDb, persistWeb, generateUUID, isWriteTransactionActive } from './connection.js'
 import { DatabaseError } from './errors.js'
 
 // --- Operaciones CRUD ---
@@ -21,8 +21,13 @@ async function runWriteOperation(operation, action) {
 }
 
 async function runSql(db, sql, values) {
-  const args = values === undefined ? [sql] : [sql, values]
-  await db.run(...args)
+  if (isWriteTransactionActive()) {
+    await db.run(sql, values || [], false)
+  } else if (values === undefined) {
+    await db.run(sql)
+  } else {
+    await db.run(sql, values)
+  }
   await persistWeb()
 }
 

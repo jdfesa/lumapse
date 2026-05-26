@@ -7,7 +7,7 @@
 // La validación de negocio la hace SubjectService.
 // =============================================================
 
-import { getDb, persistWeb } from './connection.js'
+import { getDb, persistWeb, isWriteTransactionActive } from './connection.js'
 import { DatabaseError } from './errors.js'
 
 async function runWriteOperation(operation, action) {
@@ -17,6 +17,17 @@ async function runWriteOperation(operation, action) {
     console.error(`[SQLite] Error en ${operation}:`, error)
     throw new DatabaseError(operation, error)
   }
+}
+
+async function runSql(db, sql, values) {
+  if (isWriteTransactionActive()) {
+    await db.run(sql, values || [], false)
+  } else if (values === undefined) {
+    await db.run(sql)
+  } else {
+    await db.run(sql, values)
+  }
+  await persistWeb()
 }
 
 /**
@@ -41,8 +52,7 @@ export async function createSubjectRow(subject) {
       subject.createdAt
     ]
 
-    await db.run(sql, values)
-    await persistWeb()
+    await runSql(db, sql, values)
   })
 }
 
@@ -124,8 +134,7 @@ export async function updateSubjectRow(id, changes) {
 
     values.push(id)
     const sql = `UPDATE subjects SET ${fields.join(', ')} WHERE id = ?`
-    await db.run(sql, values)
-    await persistWeb()
+    await runSql(db, sql, values)
   })
 }
 
@@ -137,8 +146,7 @@ export async function deleteSubjectRow(id) {
     const db = getDb()
 
     const sql = `UPDATE subjects SET deletedAt = ? WHERE id = ?`
-    await db.run(sql, [new Date().toISOString(), id])
-    await persistWeb()
+    await runSql(db, sql, [new Date().toISOString(), id])
   })
 }
 
@@ -261,8 +269,7 @@ export async function restoreSubjectRow(id) {
     const db = getDb()
 
     const sql = `UPDATE subjects SET deletedAt = NULL WHERE id = ?`
-    await db.run(sql, [id])
-    await persistWeb()
+    await runSql(db, sql, [id])
   })
 }
 
@@ -274,8 +281,7 @@ export async function permanentlyDeleteSubjectRow(id) {
     const db = getDb()
 
     const sql = `DELETE FROM subjects WHERE id = ?`
-    await db.run(sql, [id])
-    await persistWeb()
+    await runSql(db, sql, [id])
   })
 }
 
@@ -287,8 +293,7 @@ export async function emptyTrashSubjects() {
     const db = getDb()
 
     const sql = `DELETE FROM subjects WHERE deletedAt IS NOT NULL`
-    await db.run(sql)
-    await persistWeb()
+    await runSql(db, sql)
   })
 }
 
@@ -302,8 +307,7 @@ export async function softDeleteChildSubjects(parentId) {
     const now = new Date().toISOString()
 
     const sql = `UPDATE subjects SET deletedAt = ? WHERE parentSubjectId = ? AND deletedAt IS NULL`
-    await db.run(sql, [now, parentId])
-    await persistWeb()
+    await runSql(db, sql, [now, parentId])
   })
 }
 
@@ -316,8 +320,7 @@ export async function restoreChildSubjects(parentId) {
     const db = getDb()
 
     const sql = `UPDATE subjects SET deletedAt = NULL WHERE parentSubjectId = ? AND deletedAt IS NOT NULL`
-    await db.run(sql, [parentId])
-    await persistWeb()
+    await runSql(db, sql, [parentId])
   })
 }
 
@@ -330,8 +333,7 @@ export async function archiveChildSubjects(parentId) {
   return runWriteOperation('archiveChildSubjects', async () => {
     const db = getDb()
     const sql = `UPDATE subjects SET archived = 1 WHERE parentSubjectId = ? AND archived = 0 AND deletedAt IS NULL`
-    await db.run(sql, [parentId])
-    await persistWeb()
+    await runSql(db, sql, [parentId])
   })
 }
 
@@ -344,8 +346,7 @@ export async function unarchiveChildSubjects(parentId) {
   return runWriteOperation('unarchiveChildSubjects', async () => {
     const db = getDb()
     const sql = `UPDATE subjects SET archived = 0 WHERE parentSubjectId = ? AND archived = 1 AND deletedAt IS NULL`
-    await db.run(sql, [parentId])
-    await persistWeb()
+    await runSql(db, sql, [parentId])
   })
 }
 
@@ -362,8 +363,7 @@ export async function purgeOldDeletedSubjects(days = 30) {
     const cutoffISO = cutoff.toISOString()
 
     const sql = `DELETE FROM subjects WHERE deletedAt IS NOT NULL AND deletedAt < ?`
-    await db.run(sql, [cutoffISO])
-    await persistWeb()
+    await runSql(db, sql, [cutoffISO])
   })
 }
 

@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import * as SubjectRows from '../../src/services/sqlite/subjects.js'
 import * as NoteRows from '../../src/services/sqlite/notes.js'
+import * as DbConnection from '../../src/services/sqlite/connection.js'
 import * as SubjectService from '../../src/services/SubjectService.js'
 
 vi.mock('../../src/services/sqlite/subjects.js', () => ({
@@ -36,6 +37,10 @@ vi.mock('../../src/services/sqlite/notes.js', () => ({
   purgeOldDeletedNotes: vi.fn().mockResolvedValue(undefined),
   emptyTrashNotes: vi.fn().mockResolvedValue(undefined),
   restoreNote: vi.fn().mockResolvedValue(undefined),
+}))
+
+vi.mock('../../src/services/sqlite/connection.js', () => ({
+  runTransaction: vi.fn(async action => action()),
 }))
 
 function subject(overrides = {}) {
@@ -748,6 +753,56 @@ describe('SubjectService', () => {
 
     it('el primer color es "#818cf8"', () => {
       expect(SubjectService.SUBJECT_COLORS[0]).toBe('#818cf8')
+    })
+  })
+
+  describe('transacciones en cascada', () => {
+    it('envuelve archiveSubject() en una transacción', async () => {
+      await SubjectService.archiveSubject('subj-1')
+
+      expect(DbConnection.runTransaction).toHaveBeenCalledTimes(1)
+    })
+
+    it('envuelve unarchiveSubject() en una transacción', async () => {
+      await SubjectService.unarchiveSubject('subj-1')
+
+      expect(DbConnection.runTransaction).toHaveBeenCalledTimes(1)
+    })
+
+    it('envuelve archiveSection() en una transacción', async () => {
+      await SubjectService.archiveSection('sec-1')
+
+      expect(DbConnection.runTransaction).toHaveBeenCalledTimes(1)
+    })
+
+    it('envuelve unarchiveSection() en una transacción', async () => {
+      await SubjectService.unarchiveSection('sec-1')
+
+      expect(DbConnection.runTransaction).toHaveBeenCalledTimes(1)
+    })
+
+    it('envuelve deleteSubject() en una transacción', async () => {
+      await SubjectService.deleteSubject('subj-1')
+
+      expect(DbConnection.runTransaction).toHaveBeenCalledTimes(1)
+    })
+
+    it('envuelve deleteSection() en una transacción', async () => {
+      await SubjectService.deleteSection('sec-1')
+
+      expect(DbConnection.runTransaction).toHaveBeenCalledTimes(1)
+    })
+
+    it('envuelve restoreSubject() en una transacción', async () => {
+      await SubjectService.restoreSubject('subj-1')
+
+      expect(DbConnection.runTransaction).toHaveBeenCalledTimes(1)
+    })
+
+    it('envuelve restoreSection() en una transacción', async () => {
+      await SubjectService.restoreSection('sec-1')
+
+      expect(DbConnection.runTransaction).toHaveBeenCalledTimes(1)
     })
   })
 })

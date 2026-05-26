@@ -8,6 +8,9 @@ async function importConnection({ platform = 'web', existingConnection = false }
     execute: vi.fn().mockResolvedValue(undefined),
     run: vi.fn().mockResolvedValue(undefined),
     query: vi.fn().mockResolvedValue({ values: [{ value: 'true' }] }),
+    beginTransaction: vi.fn().mockResolvedValue(undefined),
+    commitTransaction: vi.fn().mockResolvedValue(undefined),
+    rollbackTransaction: vi.fn().mockResolvedValue(undefined),
   }
 
   const mockSqliteConnection = {
@@ -112,5 +115,62 @@ describe('persistWeb()', () => {
     await module.persistWeb()
 
     expect(mockSqliteConnection.saveToStore).not.toHaveBeenCalled()
+  })
+})
+
+describe('runTransaction()', () => {
+  it('confirma la transacción y persiste una sola vez al finalizar', async () => {
+    const { module, mockDb, mockSqliteConnection } = await importConnection({ platform: 'web' })
+    await module.initDatabase()
+    mockSqliteConnection.saveToStore.mockClear()
+
+    const result = await module.runTransaction(async () => {
+      await module.persistWeb()
+      return 'ok'
+    })
+
+    expect(result).toBe('ok')
+    expect(mockDb.beginTransaction).toHaveBeenCalledTimes(1)
+    expect(mockDb.commitTransaction).toHaveBeenCalledTimes(1)
+    expect(mockDb.rollbackTransaction).not.toHaveBeenCalled()
+    expect(mockSqliteConnection.saveToStore).toHaveBeenCalledTimes(1)
+  })
+
+  it('revierte la transacción si la operación falla', async () => {
+    const { module, mockDb, mockSqliteConnection } = await importConnection({ platform: 'web' })
+    await module.initDatabase()
+    mockSqliteConnection.saveToStore.mockClear()
+
+    await expect(module.runTransaction(async () => {
+      throw new Error('fallo de cascada')
+    })).rejects.toThrow('fallo de cascada')
+
+    expect(mockDb.beginTransaction).toHaveBeenCalledTimes(1)
+    expect(mockDb.commitTransaction).not.toHaveBeenCalled()
+    expect(mockDb.rollbackTransaction).toHaveBeenCalledTimes(1)
+    expect(mockSqliteConnection.saveToStore).not.toHaveBeenCalled()
+  })
+
+  it('reutiliza la transacción activa en llamadas anidadas', async () => {
+    const { module, mockDb } = await importConnection()
+    await module.initDatabase()
+
+    await module.runTransaction(async () => {
+      await module.runTransaction(async () => 'inner')
+    })
+
+    expect(mockDb.beginTransaction).toHaveBeenCalledTimes(1)
+    expect(mockDb.commitTransaction).toHaveBeenCalledTimes(1)
+  })
+
+  it('expone isWriteTransactionActive durante la operación', async () => {
+    const { module } = await importConnection()
+    await module.initDatabase()
+
+    expect(module.isWriteTransactionActive()).toBe(false)
+    await module.runTransaction(async () => {
+      expect(module.isWriteTransactionActive()).toBe(true)
+    })
+    expect(module.isWriteTransactionActive()).toBe(false)
   })
 })

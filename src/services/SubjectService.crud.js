@@ -13,6 +13,7 @@ import {
   getInboxCount,
   archiveChildSubjects
 } from './sqlite/subjects.js'
+import { runTransaction } from './sqlite/connection.js'
 import { generateUUID, validateNameRequired, validateNameUnique, validateMaxDepth } from './SubjectService.validation.js'
 
 // --- Paleta de colores predefinidos (estilo Notion) ---
@@ -146,11 +147,13 @@ export async function updateSubject(id, changes) {
  * @param {string} id ID de la materia raíz
  */
 export async function archiveSubject(id) {
-  // 1. Archivar secciones hijas
-  await archiveChildSubjects(id)
+  return runTransaction(async () => {
+    // 1. Archivar secciones hijas
+    await archiveChildSubjects(id)
 
-  // 2. Archivar el subject padre
-  await updateSubjectRow(id, { archived: true })
+    // 2. Archivar el subject padre
+    await updateSubjectRow(id, { archived: true })
+  })
 }
 
 /**
@@ -160,19 +163,21 @@ export async function archiveSubject(id) {
  * @param {string} id ID de la materia raíz
  */
 export async function unarchiveSubject(id) {
-  const subject = await getSubjectRowById(id)
-  if (!subject) return
+  return runTransaction(async () => {
+    const subject = await getSubjectRowById(id)
+    if (!subject) return
 
-  let allSubjects = await getAllSubjectRowsIncludingArchived()
+    let allSubjects = await getAllSubjectRowsIncludingArchived()
 
-  // 1. Desarchivar el subject padre con nombre navegable único
-  allSubjects = await updateArchiveStateWithUniqueName(subject, false, allSubjects)
+    // 1. Desarchivar el subject padre con nombre navegable único
+    allSubjects = await updateArchiveStateWithUniqueName(subject, false, allSubjects)
 
-  // 2. Desarchivar secciones hijas una por una para resolver duplicados previos
-  const childSubjects = allSubjects.filter(s => s.parentSubjectId === id && s.archived)
-  for (const child of childSubjects) {
-    allSubjects = await updateArchiveStateWithUniqueName(child, false, allSubjects)
-  }
+    // 2. Desarchivar secciones hijas una por una para resolver duplicados previos
+    const childSubjects = allSubjects.filter(s => s.parentSubjectId === id && s.archived)
+    for (const child of childSubjects) {
+      allSubjects = await updateArchiveStateWithUniqueName(child, false, allSubjects)
+    }
+  })
 }
 
 /**
@@ -182,7 +187,9 @@ export async function unarchiveSubject(id) {
  * @param {string} id ID de la sección
  */
 export async function archiveSection(id) {
-  await updateSubjectRow(id, { archived: true })
+  return runTransaction(async () => {
+    await updateSubjectRow(id, { archived: true })
+  })
 }
 
 /**
@@ -192,19 +199,21 @@ export async function archiveSection(id) {
  * @param {string} id ID de la sección
  */
 export async function unarchiveSection(id) {
-  const section = await getSubjectRowById(id)
-  if (!section) return
+  return runTransaction(async () => {
+    const section = await getSubjectRowById(id)
+    if (!section) return
 
-  let allSubjects = await getAllSubjectRowsIncludingArchived()
+    let allSubjects = await getAllSubjectRowsIncludingArchived()
 
-  if (section.parentSubjectId) {
-    const parent = await getSubjectRowById(section.parentSubjectId)
-    if (parent?.archived && !parent.deletedAt) {
-      allSubjects = await updateArchiveStateWithUniqueName(parent, false, allSubjects)
+    if (section.parentSubjectId) {
+      const parent = await getSubjectRowById(section.parentSubjectId)
+      if (parent?.archived && !parent.deletedAt) {
+        allSubjects = await updateArchiveStateWithUniqueName(parent, false, allSubjects)
+      }
     }
-  }
 
-  await updateArchiveStateWithUniqueName(section, false, allSubjects)
+    await updateArchiveStateWithUniqueName(section, false, allSubjects)
+  })
 }
 
 /**

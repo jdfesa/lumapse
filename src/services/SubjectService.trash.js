@@ -25,6 +25,7 @@ import {
   emptyTrashNotes,
   restoreNote as restoreNoteRow
 } from './sqlite/notes.js'
+import { runTransaction } from './sqlite/connection.js'
 
 function getUniqueNameForLevel(name, parentSubjectId, excludeId, allSubjects) {
   const baseName = name.trim()
@@ -87,22 +88,24 @@ async function restoreSubjectRowWithUniqueName(subject, parentSubjectId, allSubj
  * @param {string} id ID de la materia
  */
 export async function deleteSubject(id) {
-  // 1. Obtener secciones hijas para eliminar sus notas también
-  const childIds = await getChildSubjectIds(id)
+  return runTransaction(async () => {
+    // 1. Obtener secciones hijas para eliminar sus notas también
+    const childIds = await getChildSubjectIds(id)
 
-  // 2. Soft-delete de notas del subject padre
-  await softDeleteNotesBySubject(id)
+    // 2. Soft-delete de notas del subject padre
+    await softDeleteNotesBySubject(id)
 
-  // 3. Soft-delete de notas de cada sección hija
-  for (const childId of childIds) {
-    await softDeleteNotesBySubject(childId)
-  }
+    // 3. Soft-delete de notas de cada sección hija
+    for (const childId of childIds) {
+      await softDeleteNotesBySubject(childId)
+    }
 
-  // 4. Soft-delete de secciones hijas
-  await softDeleteChildSubjects(id)
+    // 4. Soft-delete de secciones hijas
+    await softDeleteChildSubjects(id)
 
-  // 5. Soft-delete del subject padre
-  await deleteSubjectRow(id)
+    // 5. Soft-delete del subject padre
+    await deleteSubjectRow(id)
+  })
 }
 
 /**
@@ -111,11 +114,13 @@ export async function deleteSubject(id) {
  * @param {string} id ID de la sección
  */
 export async function deleteSection(id) {
-  // 1. Soft-delete de notas de esta sección
-  await softDeleteNotesBySubject(id)
+  return runTransaction(async () => {
+    // 1. Soft-delete de notas de esta sección
+    await softDeleteNotesBySubject(id)
 
-  // 2. Soft-delete de la sección
-  await deleteSubjectRow(id)
+    // 2. Soft-delete de la sección
+    await deleteSubjectRow(id)
+  })
 }
 
 /**
@@ -124,28 +129,30 @@ export async function deleteSection(id) {
  * @param {string} id ID de la materia
  */
 export async function restoreSubject(id) {
-  const subject = await getSubjectRowById(id)
-  if (!subject) return
+  return runTransaction(async () => {
+    const subject = await getSubjectRowById(id)
+    if (!subject) return
 
-  let allSubjects = await getAllSubjectRowsIncludingArchived()
-  const deletedSubjects = await getDeletedSubjectRows()
-  const childSubjects = deletedSubjects.filter(child => child.parentSubjectId === id)
+    let allSubjects = await getAllSubjectRowsIncludingArchived()
+    const deletedSubjects = await getDeletedSubjectRows()
+    const childSubjects = deletedSubjects.filter(child => child.parentSubjectId === id)
 
-  // 1. Restaurar la materia con un nombre navegable único.
-  allSubjects = await restoreSubjectRowWithUniqueName(subject, null, allSubjects)
+    // 1. Restaurar la materia con un nombre navegable único.
+    allSubjects = await restoreSubjectRowWithUniqueName(subject, null, allSubjects)
 
-  // 2. Restaurar secciones hijas una por una para resolver duplicados previos.
-  for (const child of childSubjects) {
-    allSubjects = await restoreSubjectRowWithUniqueName(child, id, allSubjects)
-  }
+    // 2. Restaurar secciones hijas una por una para resolver duplicados previos.
+    for (const child of childSubjects) {
+      allSubjects = await restoreSubjectRowWithUniqueName(child, id, allSubjects)
+    }
 
-  // 3. Restaurar notas del subject padre
-  await restoreNotesBySubject(id)
+    // 3. Restaurar notas del subject padre
+    await restoreNotesBySubject(id)
 
-  // 4. Restaurar notas de cada sección hija
-  for (const child of childSubjects) {
-    await restoreNotesBySubject(child.id)
-  }
+    // 4. Restaurar notas de cada sección hija
+    for (const child of childSubjects) {
+      await restoreNotesBySubject(child.id)
+    }
+  })
 }
 
 /**
@@ -155,29 +162,31 @@ export async function restoreSubject(id) {
  * @param {string} id ID de la sección
  */
 export async function restoreSection(id) {
-  const section = await getSubjectRowById(id)
-  if (!section) return
+  return runTransaction(async () => {
+    const section = await getSubjectRowById(id)
+    if (!section) return
 
-  let allSubjects = await getAllSubjectRowsIncludingArchived()
-  let targetParentId = section.parentSubjectId || null
+    let allSubjects = await getAllSubjectRowsIncludingArchived()
+    let targetParentId = section.parentSubjectId || null
 
-  // Verificar si el padre sigue existiendo como contenedor navegable.
-  if (section.parentSubjectId) {
-    const parent = await getSubjectRowById(section.parentSubjectId)
-    if (!parent) {
-      targetParentId = null
-    } else if (parent.deletedAt) {
-      allSubjects = await restoreSubjectRowWithUniqueName(parent, null, allSubjects)
-    } else if (parent.archived) {
-      allSubjects = await restoreSubjectRowWithUniqueName(parent, parent.parentSubjectId, allSubjects)
+    // Verificar si el padre sigue existiendo como contenedor navegable.
+    if (section.parentSubjectId) {
+      const parent = await getSubjectRowById(section.parentSubjectId)
+      if (!parent) {
+        targetParentId = null
+      } else if (parent.deletedAt) {
+        allSubjects = await restoreSubjectRowWithUniqueName(parent, null, allSubjects)
+      } else if (parent.archived) {
+        allSubjects = await restoreSubjectRowWithUniqueName(parent, parent.parentSubjectId, allSubjects)
+      }
     }
-  }
 
-  // Restaurar la sección con nombre único en su nivel.
-  await restoreSubjectRowWithUniqueName(section, targetParentId, allSubjects)
+    // Restaurar la sección con nombre único en su nivel.
+    await restoreSubjectRowWithUniqueName(section, targetParentId, allSubjects)
 
-  // Restaurar sus notas
-  await restoreNotesBySubject(id)
+    // Restaurar sus notas
+    await restoreNotesBySubject(id)
+  })
 }
 
 /**

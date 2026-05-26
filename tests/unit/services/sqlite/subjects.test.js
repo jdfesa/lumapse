@@ -10,6 +10,7 @@ const mockDb = vi.hoisted(() => ({
 vi.mock('../../../../src/services/sqlite/connection.js', () => ({
   getDb: vi.fn(() => mockDb),
   persistWeb: vi.fn().mockResolvedValue(undefined),
+  isWriteTransactionActive: vi.fn(() => false),
 }))
 
 function row(overrides = {}) {
@@ -30,6 +31,7 @@ beforeEach(() => {
   vi.setSystemTime(new Date('2024-01-15T10:00:00.000Z'))
   mockDb.run.mockResolvedValue(undefined)
   mockDb.query.mockResolvedValue({ values: [] })
+  connection.isWriteTransactionActive.mockReturnValue(false)
 })
 
 describe('sqlite/subjects', () => {
@@ -267,6 +269,18 @@ describe('sqlite/subjects', () => {
       expect(mockDb.run).toHaveBeenCalledWith(
         'UPDATE subjects SET archived = 1 WHERE parentSubjectId = ? AND archived = 0 AND deletedAt IS NULL',
         ['subj-1'],
+      )
+    })
+
+    it('desactiva la transacción implícita si ya hay una transacción explícita', async () => {
+      connection.isWriteTransactionActive.mockReturnValue(true)
+
+      await Subjects.archiveChildSubjects('subj-1')
+
+      expect(mockDb.run).toHaveBeenCalledWith(
+        'UPDATE subjects SET archived = 1 WHERE parentSubjectId = ? AND archived = 0 AND deletedAt IS NULL',
+        ['subj-1'],
+        false,
       )
     })
 
