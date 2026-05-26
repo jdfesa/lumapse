@@ -14,11 +14,13 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ---
 
-## [0.4.6] — 2026-05-26 — Diálogos de Confirmación Personalizados
+## [0.4.6] — 2026-05-26 — Diálogos de Confirmación Personalizados y Modo Enfoque
 
 ### Added
 - **Componente de Diálogo de Confirmación Personalizado (`ConfirmDialog.js` / `ConfirmDialog.css`):** Implementación de una modal accesible (`role="alertdialog"`, `aria-modal="true"`) para la confirmación de acciones destructivas o importantes. Cuenta con soporte completo para navegación por teclado (trampa de foco con Tab y Shift+Tab, cierre con Escape y restauración del foco al elemento previamente activo).
 - **Suite de tests para ConfirmDialog (`ConfirmDialog.test.js`):** 5 tests de Vitest que validan el comportamiento de navegación, confirmación, cancelación y renderizado accesible del componente.
+- **Modo Enfoque (Focus Mode):** Implementación de una vista libre de distracciones accesible desde el menú del botón "+" (`NoteEditor.js`). Al activarse (`composer--focus`, `focus-mode-active`), expande el editor a pantalla completa, oculta el resto de los componentes de la interfaz (cabecera, listado de notas, drawer, toasts) y presenta un botón de encoger para salir del modo. Se sale automáticamente al guardar la nota.
+- **Leyenda del Botón "+" (`EditorPopup.js`):** Se añadió la leyenda informativa "Tipea / para comandos" en el pie de la popup del botón de inserción rápida.
 
 ### Changed
 - **Reemplazo de diálogos nativos `confirm()`:** Se migraron todas las llamadas a `confirm()` en el ruteador de acciones del feed, listado de notas, vaciado de papelera por toast, archivado de materias/secciones y menú contextual por el nuevo componente asíncrono `confirmDialog`.
