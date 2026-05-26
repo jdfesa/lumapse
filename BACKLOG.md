@@ -3,8 +3,8 @@
 Este documento funciona como una bandeja de entrada local para las tareas, mejoras y deuda técnica identificadas durante el desarrollo o en auditorías. Una vez que se inicia un Hito, las tareas relevantes de aquí se planifican y ejecutan.
 
 > **Hito activo:** 04 — Organización y UX (Agosto 2026)
-> **Último commit:** `8b3de19` — docs(scripts): documentar scripts de Tanda 3 y actualizar .gitignore
-> **Última auditoría del backlog:** 2026-05-23
+> **Último commit:** `26867ca` — feat(ui): display sections grouped or isolated in trash view with suffixes
+> **Última auditoría del backlog:** 2026-05-26
 
 ---
 
@@ -238,7 +238,7 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 - [ ] **RF-022 — Onboarding carousel (3 pantallas + saltar):** Flujo de bienvenida al primer inicio con 3 pantallas deslizables minimalistas que presenten las propuestas de valor: captura rápida, organización por materias y funcionamiento offline. Botón "Saltar" siempre visible. No forzar acciones, solo informar. Referencia: DP-006.
 - [ ] **Empty states amigables:** Mensajes visuales y cálidos para pantallas vacías (feed sin notas, papelera vacía, materia sin notas, resultados de búsqueda vacíos). Reemplaza la idea de notas precargadas — evita que el usuario nuevo piense que necesita saber Markdown para usar la app.
 - [ ] **Coach marks contextuales (tooltips de primera vez):** Burbujitas no intrusivas que aparecen *una sola vez* al llegar a una pantalla nueva (ej: primera vez que abre el drawer → tooltip sobre el botón "+" de materias). Se descartan al tocar y no vuelven a aparecer. Persistencia en `localStorage`.
-- [ ] **Archivar materia/sección completa con cascada:** Permitir archivar una materia o sección entera de un solo toque, aplicando cascada a todas las notas contenidas (y secciones hijas en caso de materia raíz). Caso de uso real: estudiante termina un cuatrimestre y quiere archivar "Programación I" con sus 3 unidades y 40 notas sin hacerlo una por una. Requiere actualización de `SubjectService`, `NoteStore`, UI del drawer y tests.
+- [x] **Archivar materia/sección completa con cascada:** Permitir archivar una materia o sección entera de un solo toque, heredando dinámicamente visibilidad sin modificar el estado individual de notas y previniendo su pérdida (cascada pura sobre subjects). Drawer migrado a menú contextual y optimizaciones en store.
 - [ ] **Guía de Markdown accesible desde Ayuda (DP-006):** En lugar de notas precargadas, ofrecer una guía opcional de sintaxis Markdown dentro de la sección de Ayuda/Onboarding. El usuario la consulta solo si quiere; no se impone. Refuerza que Lumapse funciona con texto plano sin necesidad de aprender Markdown.
 - [ ] **README principal:** sincronizar stack y roadmap con el estado real post-SQLite, evitando hablar de IndexedDB como persistencia actual.
 - [ ] **Seguimiento de velocidad:** actualizar `docs/gestion/seguimiento-velocidad.md` usando `python3 scripts/generate-velocity-report.py`.
