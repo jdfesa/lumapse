@@ -28,6 +28,7 @@ vi.mock('../../../src/services/SubjectService.js', () => ({
   emptyTrash: vi.fn().mockResolvedValue(undefined),
   restoreNoteFromTrash: vi.fn().mockResolvedValue(undefined),
   restoreSubject: vi.fn().mockResolvedValue(undefined),
+  restoreSection: vi.fn().mockResolvedValue(undefined),
   archiveSubject: vi.fn().mockResolvedValue(undefined),
   archiveSection: vi.fn().mockResolvedValue(undefined),
   unarchiveSubject: vi.fn().mockResolvedValue(undefined),
@@ -435,6 +436,15 @@ describe('NoteStore.data', () => {
       await NoteStoreData.restoreSubjectFromTrash('subj-1')
 
       expect(SubjectService.restoreSubject).toHaveBeenCalledWith('subj-1')
+      expect(NoteService.getAllNotes).toHaveBeenCalled()
+      expect(SubjectService.getSubjectTree).toHaveBeenCalled()
+      expect(SubjectRows.countTrashItems).toHaveBeenCalled()
+    })
+
+    it('restoreSectionFromTrash() recarga notas, materias y contador', async () => {
+      await NoteStoreData.restoreSectionFromTrash('sec-1')
+
+      expect(SubjectService.restoreSection).toHaveBeenCalledWith('sec-1')
       expect(NoteService.getAllNotes).toHaveBeenCalled()
       expect(SubjectService.getSubjectTree).toHaveBeenCalled()
       expect(SubjectRows.countTrashItems).toHaveBeenCalled()

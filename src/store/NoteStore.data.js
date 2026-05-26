@@ -254,6 +254,19 @@ export async function restoreSubjectFromTrash(id) {
 }
 
 /**
+ * Restaura una sección desde la papelera (+ sus notas).
+ * @param {string} id ID de la sección
+ */
+export async function restoreSectionFromTrash(id) {
+  return runStoreAction('restoreSectionFromTrash', 'No se pudo restaurar la sección. Intenta de nuevo.', async () => {
+    await SubjectService.restoreSection(id)
+    await loadNotes()
+    await loadSubjects()
+    await loadTrashCount()
+  })
+}
+
+/**
  * Elimina permanentemente una nota (DELETE físico).
  * @param {string} id ID de la nota
  */
