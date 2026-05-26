@@ -23,6 +23,7 @@ function makeState(overrides = {}) {
     searchQuery: '',
     dateFilter: null,
     subjects: { tree: [] },
+    archivedSubjectIds: [],
     ...overrides,
   }
 }
@@ -38,6 +39,15 @@ describe('getFilteredNotes()', () => {
 
     it('excluye notas con subjectId aunque no estén archivadas', () => {
       const state = makeState({ notes: [makeNote({ subjectId: 'subj-1' })] })
+
+      expect(getFilteredNotes(state)).toEqual([])
+    })
+
+    it('notas de subjects archivados NO aparecen en inbox', () => {
+      const state = makeState({
+        notes: [makeNote({ subjectId: 'archived-subj', archived: false })],
+        archivedSubjectIds: ['archived-subj'],
+      })
 
       expect(getFilteredNotes(state)).toEqual([])
     })
@@ -99,6 +109,18 @@ describe('getFilteredNotes()', () => {
       expect(getFilteredNotes(state)).toEqual([])
     })
 
+    it('excluye notas de subjects archivados aunque archived=false', () => {
+      const state = makeState({
+        notes: [makeNote({ subjectId: 'subj-1', archived: false })],
+        viewMode: 'subject',
+        activeSubjectId: 'subj-1',
+        subjects,
+        archivedSubjectIds: ['subj-1'],
+      })
+
+      expect(getFilteredNotes(state)).toEqual([])
+    })
+
     it('retorna [] si la materia activa no tiene notas', () => {
       const state = makeState({
         notes: [makeNote({ subjectId: 'subj-2' })],
@@ -131,6 +153,36 @@ describe('getFilteredNotes()', () => {
     it('excluye notas no archivadas', () => {
       expect(getFilteredNotes(makeState({ notes: [makeNote()], viewMode: 'archived' }))).toEqual([])
     })
+
+    it('notas de subjects archivados aparecen aunque archived=false', () => {
+      const inherited = makeNote({
+        id: 'inherited',
+        archived: false,
+        subjectId: 'archived-subj',
+      })
+
+      const result = getFilteredNotes(makeState({
+        notes: [inherited],
+        archivedSubjectIds: ['archived-subj'],
+        viewMode: 'archived',
+      }))
+
+      expect(result).toEqual([inherited])
+    })
+
+    it('incluye notas archivadas individualmente dentro de subjects archivados', () => {
+      const note = makeNote({
+        id: 'both',
+        archived: true,
+        subjectId: 'archived-subj',
+      })
+
+      expect(getFilteredNotes(makeState({
+        notes: [note],
+        archivedSubjectIds: ['archived-subj'],
+        viewMode: 'archived',
+      }))).toEqual([note])
+    })
   })
 
   describe('viewMode: "trash"', () => {
@@ -155,6 +207,16 @@ describe('getFilteredNotes()', () => {
 
     it('excluye notas archivadas', () => {
       expect(getFilteredNotes(makeState({ notes: [makeNote({ archived: true })], viewMode: 'unknown' }))).toEqual([])
+    })
+
+    it('excluye notas de subjects archivados', () => {
+      const state = makeState({
+        notes: [makeNote({ id: 'hidden', subjectId: 'archived-subj', archived: false })],
+        archivedSubjectIds: ['archived-subj'],
+        viewMode: 'all',
+      })
+
+      expect(getFilteredNotes(state)).toEqual([])
     })
   })
 

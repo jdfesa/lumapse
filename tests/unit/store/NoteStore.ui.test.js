@@ -1,10 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import * as NoteService from '../../../src/services/sqlite/notes.js'
 import { state, subscribe } from '../../../src/store/NoteStore.state.js'
+import * as NoteStoreData from '../../../src/store/NoteStore.data.js'
 import * as NoteStoreUi from '../../../src/store/NoteStore.ui.js'
 
 vi.mock('../../../src/services/sqlite/notes.js', () => ({
   updateNote: vi.fn(),
+}))
+
+vi.mock('../../../src/store/NoteStore.data.js', () => ({
+  loadArchivedSubjects: vi.fn().mockResolvedValue(undefined),
 }))
 
 function makeNote(overrides = {}) {
@@ -41,6 +46,8 @@ beforeEach(() => {
   state.viewMode = 'inbox'
   state.trashCount = 0
   state.showTrashWarning = false
+  state.archivedSubjectIds = []
+  state.archivedSubjects = null
   vi.clearAllMocks()
 })
 
@@ -243,24 +250,30 @@ describe('NoteStore.ui', () => {
   })
 
   describe('setShowArchived()', () => {
-    it('con true cambia a viewMode archived', () => {
-      NoteStoreUi.setShowArchived(true)
+    it('con true cambia a viewMode archived', async () => {
+      await NoteStoreUi.setShowArchived(true)
 
       expect(state.viewMode).toBe('archived')
     })
 
-    it('con false vuelve a subject si hay activeSubjectId', () => {
+    it('con true carga materias archivadas', async () => {
+      await NoteStoreUi.setShowArchived(true)
+
+      expect(NoteStoreData.loadArchivedSubjects).toHaveBeenCalled()
+    })
+
+    it('con false vuelve a subject si hay activeSubjectId', async () => {
       state.activeSubjectId = 'subj-1'
 
-      NoteStoreUi.setShowArchived(false)
+      await NoteStoreUi.setShowArchived(false)
 
       expect(state.viewMode).toBe('subject')
     })
 
-    it('con false vuelve a inbox si no hay activeSubjectId', () => {
+    it('con false vuelve a inbox si no hay activeSubjectId', async () => {
       state.activeSubjectId = null
 
-      NoteStoreUi.setShowArchived(false)
+      await NoteStoreUi.setShowArchived(false)
 
       expect(state.viewMode).toBe('inbox')
     })

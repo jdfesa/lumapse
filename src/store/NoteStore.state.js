@@ -13,6 +13,8 @@ export const state = {
   viewMode: 'inbox',      // 'inbox' | 'subject' | 'archived' | 'trash' | 'all'
   trashCount: 0,          // Cantidad total de items en papelera (para badge)
   showTrashWarning: false, // Flag: papelera tiene >50 items
+  archivedSubjectIds: [], // IDs de subjects archivados (para filtros)
+  archivedSubjects: null, // Árbol de subjects archivados (para drawer)
 }
 
 const subscribers = new Set()

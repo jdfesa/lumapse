@@ -16,6 +16,8 @@ vi.mock('../../../src/services/sqlite/notes.js', () => ({
 
 vi.mock('../../../src/services/sqlite/subjects.js', () => ({
   countTrashItems: vi.fn().mockResolvedValue(0),
+  getArchivedSubjectIds: vi.fn().mockResolvedValue([]),
+  getArchivedSubjectTree: vi.fn().mockResolvedValue({ tree: [] }),
 }))
 
 vi.mock('../../../src/services/SubjectService.js', () => ({
@@ -27,7 +29,9 @@ vi.mock('../../../src/services/SubjectService.js', () => ({
   restoreNoteFromTrash: vi.fn().mockResolvedValue(undefined),
   restoreSubject: vi.fn().mockResolvedValue(undefined),
   archiveSubject: vi.fn().mockResolvedValue(undefined),
-  deleteSection: vi.fn().mockResolvedValue(undefined),
+  archiveSection: vi.fn().mockResolvedValue(undefined),
+  unarchiveSubject: vi.fn().mockResolvedValue(undefined),
+  unarchiveSection: vi.fn().mockResolvedValue(undefined),
 }))
 
 vi.mock('../../../src/store/noteFilters.js', () => ({
@@ -64,6 +68,8 @@ beforeEach(() => {
   state.activeSubjectId = null
   state.trashCount = 0
   state.showTrashWarning = false
+  state.archivedSubjectIds = []
+  state.archivedSubjects = null
   state.sidebarOpen = true
   vi.clearAllMocks()
 
@@ -73,6 +79,8 @@ beforeEach(() => {
   SubjectService.getSubjectTree.mockResolvedValue({ inboxCount: 0, tree: [] })
   SubjectService.createSubject.mockResolvedValue({ id: 'subj-1', name: 'Materia' })
   SubjectRows.countTrashItems.mockResolvedValue(0)
+  SubjectRows.getArchivedSubjectIds.mockResolvedValue([])
+  SubjectRows.getArchivedSubjectTree.mockResolvedValue({ tree: [] })
 })
 
 describe('NoteStore.data', () => {
@@ -314,6 +322,84 @@ describe('NoteStore.data', () => {
 
       expect(state.viewMode).toBe('inbox')
       expect(state.activeSubjectId).toBeNull()
+    })
+
+    it('si una sección hija era activa, vuelve a inbox', async () => {
+      state.subjects = {
+        inboxCount: 0,
+        tree: [{ id: 'subj-1', children: [{ id: 'sec-1' }] }],
+      }
+      state.viewMode = 'subject'
+      state.activeSubjectId = 'sec-1'
+
+      await NoteStoreData.archiveSubject('subj-1')
+
+      expect(state.viewMode).toBe('inbox')
+      expect(state.activeSubjectId).toBeNull()
+    })
+
+    it('recarga materias activas y archivadas sin recargar notas', async () => {
+      await NoteStoreData.archiveSubject('subj-1')
+
+      expect(NoteService.getAllNotes).not.toHaveBeenCalled()
+      expect(SubjectService.getSubjectTree).toHaveBeenCalled()
+      expect(SubjectRows.getArchivedSubjectTree).toHaveBeenCalled()
+    })
+  })
+
+  describe('archiveSection()', () => {
+    it('llama SubjectService.archiveSection con el id', async () => {
+      await NoteStoreData.archiveSection('sec-1')
+
+      expect(SubjectService.archiveSection).toHaveBeenCalledWith('sec-1')
+    })
+
+    it('si la sección era activa, vuelve a inbox', async () => {
+      state.viewMode = 'subject'
+      state.activeSubjectId = 'sec-1'
+
+      await NoteStoreData.archiveSection('sec-1')
+
+      expect(state.viewMode).toBe('inbox')
+      expect(state.activeSubjectId).toBeNull()
+    })
+
+    it('recarga materias activas y archivadas sin recargar notas', async () => {
+      await NoteStoreData.archiveSection('sec-1')
+
+      expect(NoteService.getAllNotes).not.toHaveBeenCalled()
+      expect(SubjectService.getSubjectTree).toHaveBeenCalled()
+      expect(SubjectRows.getArchivedSubjectTree).toHaveBeenCalled()
+    })
+  })
+
+  describe('unarchiveSubject()', () => {
+    it('llama SubjectService.unarchiveSubject con el id', async () => {
+      await NoteStoreData.unarchiveSubject('subj-1')
+
+      expect(SubjectService.unarchiveSubject).toHaveBeenCalledWith('subj-1')
+    })
+
+    it('recarga materias activas y archivadas', async () => {
+      await NoteStoreData.unarchiveSubject('subj-1')
+
+      expect(SubjectService.getSubjectTree).toHaveBeenCalled()
+      expect(SubjectRows.getArchivedSubjectTree).toHaveBeenCalled()
+    })
+  })
+
+  describe('unarchiveSection()', () => {
+    it('llama SubjectService.unarchiveSection con el id', async () => {
+      await NoteStoreData.unarchiveSection('sec-1')
+
+      expect(SubjectService.unarchiveSection).toHaveBeenCalledWith('sec-1')
+    })
+
+    it('recarga materias activas y archivadas', async () => {
+      await NoteStoreData.unarchiveSection('sec-1')
+
+      expect(SubjectService.getSubjectTree).toHaveBeenCalled()
+      expect(SubjectRows.getArchivedSubjectTree).toHaveBeenCalled()
     })
   })
 

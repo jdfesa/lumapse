@@ -32,6 +32,17 @@ export async function loadNotes() {
 
 export async function loadSubjects() {
   state.subjects = await SubjectService.getSubjectTree()
+  const { getArchivedSubjectIds } = await import('../services/sqlite/subjects.js')
+  state.archivedSubjectIds = await getArchivedSubjectIds()
+  notify()
+}
+
+/**
+ * Carga el árbol de materias archivadas para mostrar en el drawer.
+ */
+export async function loadArchivedSubjects() {
+  const { getArchivedSubjectTree } = await import('../services/sqlite/subjects.js')
+  state.archivedSubjects = await getArchivedSubjectTree()
   notify()
 }
 
@@ -123,14 +134,65 @@ export async function updateSubject(id, changes) {
   })
 }
 
+/**
+ * Archiva una materia completa en cascada (materia + secciones).
+ * @param {string} id ID de la materia
+ */
 export async function archiveSubject(id) {
   return runStoreAction('archiveSubject', 'No se pudo archivar la materia. Intenta de nuevo.', async () => {
     await SubjectService.archiveSubject(id)
+
+    // Si la materia activa (o una de sus secciones) era la archivada, volver a Entrada
+    const childIds = state.subjects?.tree
+      ?.find(s => s.id === id)?.children?.map(c => c.id) || []
+    const affectedIds = [id, ...childIds]
+    if (affectedIds.includes(state.activeSubjectId)) {
+      state.viewMode = 'inbox'
+      state.activeSubjectId = null
+    }
+
+    await loadSubjects()
+    await loadArchivedSubjects()
+  })
+}
+
+/**
+ * Archiva una sección individual.
+ * @param {string} id ID de la sección
+ */
+export async function archiveSection(id) {
+  return runStoreAction('archiveSection', 'No se pudo archivar la sección. Intenta de nuevo.', async () => {
+    await SubjectService.archiveSection(id)
     if (state.activeSubjectId === id) {
       state.viewMode = 'inbox'
       state.activeSubjectId = null
     }
     await loadSubjects()
+    await loadArchivedSubjects()
+  })
+}
+
+/**
+ * Desarchiva una materia completa (cascada a secciones).
+ * @param {string} id ID de la materia
+ */
+export async function unarchiveSubject(id) {
+  return runStoreAction('unarchiveSubject', 'No se pudo desarchivar la materia. Intenta de nuevo.', async () => {
+    await SubjectService.unarchiveSubject(id)
+    await loadSubjects()
+    await loadArchivedSubjects()
+  })
+}
+
+/**
+ * Desarchiva una sección individual.
+ * @param {string} id ID de la sección
+ */
+export async function unarchiveSection(id) {
+  return runStoreAction('unarchiveSection', 'No se pudo desarchivar la sección. Intenta de nuevo.', async () => {
+    await SubjectService.unarchiveSection(id)
+    await loadSubjects()
+    await loadArchivedSubjects()
   })
 }
 

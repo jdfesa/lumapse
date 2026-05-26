@@ -12,31 +12,38 @@
  * Orden: pinned primero, luego por updatedAt (más reciente primero).
  *
  * viewMode controla el filtro principal:
- *   'inbox'    → notas sin materia (subjectId IS NULL), no archivadas
+ *   'inbox'    → notas sin materia, no archivadas individualmente
  *   'subject'  → notas de la materia activa (+ secciones hijas), no archivadas
- *   'archived' → solo notas archivadas (cualquier materia)
- *   'all'      → todas las no archivadas (usado por búsqueda global)
+ *   'archived' → notas archivadas individualmente o por subject archivado
+ *   'all'      → todas las no archivadas y fuera de subjects archivados
  *
  * @param {object} state Estado completo del store
  * @returns {object[]} Array de notas filtradas y ordenadas
  */
 export function getFilteredNotes(state) {
   let filtered = state.notes
+  const archivedIds = new Set(state.archivedSubjectIds || [])
 
   // 0. Filtrar por viewMode
   switch (state.viewMode) {
     case 'inbox':
-      filtered = filtered.filter(note => !note.archived && !note.subjectId)
+      filtered = filtered.filter(note =>
+        !note.archived && !note.subjectId && !archivedIds.has(note.subjectId)
+      )
       break
     case 'subject': {
       // Incluir notas de la materia activa Y de sus secciones hijas
       const childIds = getChildSubjectIds(state.subjects, state.activeSubjectId)
       const validIds = [state.activeSubjectId, ...childIds]
-      filtered = filtered.filter(note => !note.archived && validIds.includes(note.subjectId))
+      filtered = filtered.filter(note =>
+        !note.archived && validIds.includes(note.subjectId) && !archivedIds.has(note.subjectId)
+      )
       break
     }
     case 'archived':
-      filtered = filtered.filter(note => note.archived === true)
+      filtered = filtered.filter(note =>
+        note.archived === true || archivedIds.has(note.subjectId)
+      )
       break
     case 'trash':
       // La vista de papelera carga sus datos por separado (getTrashItems)
@@ -44,7 +51,9 @@ export function getFilteredNotes(state) {
       return []
     case 'all':
     default:
-      filtered = filtered.filter(note => !note.archived)
+      filtered = filtered.filter(note =>
+        !note.archived && !archivedIds.has(note.subjectId)
+      )
       break
   }
 

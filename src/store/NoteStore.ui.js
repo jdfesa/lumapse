@@ -53,9 +53,11 @@ export async function setNoteStatus(id, emoji) {
   notify()
 }
 
-export function setShowArchived(show) {
+export async function setShowArchived(show) {
   if (show) {
     state.viewMode = 'archived'
+    const { loadArchivedSubjects } = await import('./NoteStore.data.js')
+    await loadArchivedSubjects()
   } else {
     state.viewMode = state.activeSubjectId ? 'subject' : 'inbox'
   }
