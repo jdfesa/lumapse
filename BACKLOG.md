@@ -3,7 +3,7 @@
 Este documento funciona como una bandeja de entrada local para las tareas, mejoras y deuda técnica identificadas durante el desarrollo o en auditorías. Una vez que se inicia un Hito, las tareas relevantes de aquí se planifican y ejecutan.
 
 > **Hito activo:** 04 — Organización y UX (Agosto 2026)
-> **Último commit:** `26867ca` — feat(ui): display sections grouped or isolated in trash view with suffixes
+> **Último commit:** `0bcb1bf` — refactor: replace native confirm with ConfirmDialog for subject archiving, deletion, and unarchiving
 > **Última auditoría del backlog:** 2026-05-26
 
 ---
@@ -82,8 +82,9 @@ Estos son los 3 bloques recomendados para continuar. La prioridad es mantener tr
 | Orden | Bloque | Objetivo | Criterio de cierre |
 |---|---|---|---|
 | 1 | ~~**Resolución de Checkboxes Interactivos**~~ | ✅ Completado (2026-05-26) | Solucionado de raíz usando preventDefault, lock map y mapeo a líneas reales en lugar de índices secuenciales. |
-| 2 | **Cierre funcional/documental Hito 04** | Completar RF pequeños pendientes y sincronizar documentación viva. | RF-006/RF-024 evaluados o implementados, README/velocidad/versionado actualizados, `check-traceability.py` sin advertencias. |
-| 3 | **Preparación CI documental** | Convertir scripts críticos en chequeos de CI. | Workflow que ejecute lint, trazabilidad, schema sync, DBML check, doc links y jerarquía de subjects. |
+| 2 | ~~**Diálogos de Confirmación Personalizados**~~ | ✅ Completado (2026-05-26) | Implementación de `ConfirmDialog` accesible y reemplazo de `confirm()` y `alert()` nativos por confirmaciones custom y showErrorToast. |
+| 3 | **Cierre funcional/documental Hito 04** | Completar RF pequeños pendientes y sincronizar documentación viva. | RF-006/RF-024/RF-022 evaluados o implementados, README/velocidad/versionado actualizados, `check-traceability.py` sin advertencias. |
+| 4 | **Preparación CI documental** | Convertir scripts críticos en chequeos de CI. | Workflow que ejecute lint, trazabilidad, schema sync, DBML check, doc links y jerarquía de subjects. |
 
 ---
 
@@ -303,6 +304,7 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 - [x] **Manejo de Errores y Excepciones (Resiliencia):** ✅ Completado (2026-05-25). Implementados `DatabaseError` en la capa SQLite para fallos nativos y try/catch robustos en el store. Errores y notificaciones se presentan con el nuevo componente `Toast.js` sin crashear la UI.
 - [x] **Optimización Extrema de Renderizado (Virtualización de DOM):** ✅ Completado (2026-05-25). Componente `VirtualFeed.js` con list virtualization, IntersectionObserver y prefix sum height cache. Resuelve el renderizado para más de 10,000 notas con 60FPS fluidos en dispositivos antiguos de testeo.
 - [x] **Bug de Checkboxes Interactivos (Ghost Clicks):** ✅ Completado (2026-05-26). Corregido el problema de toques fantasma/falta de respuesta al usar un lock map para taps duplicados, preventDefault, y mapeo a línea real del markdown en vez de data-line secuencial.
+- [x] **Diálogos de Confirmación Personalizados (UX consistente):** ✅ Completado (2026-05-26). Implementado ConfirmDialog.js/css y reemplazado confirm() y alert() nativos en toda la aplicación por confirmDialog() y showErrorToast(). Tests unitarios en vitest agregados y pasando.
 
 ## ⚙️ Deuda Técnica — DevOps y Procesos
 

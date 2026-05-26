@@ -9,8 +9,20 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ## Hito 04: Organización y UX (En progreso)
 
-> Las versiones 0.4.0 a 0.4.5 componen el Hito 04. Cada sub-versión agrupa un lote
+> Las versiones 0.4.0 a 0.4.6 componen el Hito 04. Cada sub-versión agrupa un lote
 > lógico de trabajo entregado de forma incremental siguiendo la metodología Kanban (ADR-003).
+
+---
+
+## [0.4.6] — 2026-05-26 — Diálogos de Confirmación Personalizados
+
+### Added
+- **Componente de Diálogo de Confirmación Personalizado (`ConfirmDialog.js` / `ConfirmDialog.css`):** Implementación de una modal accesible (`role="alertdialog"`, `aria-modal="true"`) para la confirmación de acciones destructivas o importantes. Cuenta con soporte completo para navegación por teclado (trampa de foco con Tab y Shift+Tab, cierre con Escape y restauración del foco al elemento previamente activo).
+- **Suite de tests para ConfirmDialog (`ConfirmDialog.test.js`):** 5 tests de Vitest que validan el comportamiento de navegación, confirmación, cancelación y renderizado accesible del componente.
+
+### Changed
+- **Reemplazo de diálogos nativos `confirm()`:** Se migraron todas las llamadas a `confirm()` en el ruteador de acciones del feed, listado de notas, vaciado de papelera por toast, archivado de materias/secciones y menú contextual por el nuevo componente asíncrono `confirmDialog`.
+- **Reemplazo de diálogos nativos `alert()`:** Se sustituyeron las alertas de error de base de datos por `showErrorToast` en el drawer de administración de materias/secciones.
 
 ---
 
