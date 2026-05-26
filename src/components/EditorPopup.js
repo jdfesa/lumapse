@@ -98,7 +98,7 @@ export class EditorPopup {
   }
 
   /**
-   * Reemplaza los items (útil para Link Lumapse con búsqueda dinámica).
+   * Reemplaza los items (útil para búsquedas dinámicas o cambios de estado).
    * @param {Array} newItems
    */
   updateItems(newItems) {
