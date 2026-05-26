@@ -78,6 +78,15 @@
   border-left: 3px solid var(--color-accent);
 }
 
+.trash-item--section {
+  border-left: 3px solid var(--color-border);
+}
+
+.trash-item--nested {
+  padding-left: calc(var(--space-4) + var(--space-4));
+  background: var(--color-surface);
+}
+
 .trash-item__info {
   display: flex;
   flex-direction: column;

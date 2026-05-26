@@ -57,6 +57,12 @@ const ACTION_MAP = [
     }
   },
   {
+    selector: '.js-btn-restore-section',
+    handler: (_event, button, deps) => {
+      NoteStore.restoreSectionFromTrash(button.dataset.id).then(() => refreshTrash(deps))
+    }
+  },
+  {
     selector: '.js-btn-menu',
     handler: handleMenuToggle
   },
