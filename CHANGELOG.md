@@ -24,6 +24,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **GitHub Actions ampliado:** El workflow existente pasó a ser `CI — Quality Gate` y ahora ejecuta lint, tests, build, bundle budget, check de diálogos nativos, trazabilidad, links internos, schema sync, DBML, jerarquía de materias y auditoría a11y estática.
 - **Tests nativos Android corregidos:** Se reemplazaron los tests generados por template que referenciaban paquetes de Capacitor por tests bajo `com.lumapse.app`.
 - **Backlog/TODO actualizados:** El `TODO` raíz y `BACKLOG.md` registran como completada la capa de automatización, mantienen Hito 04 en cierre formal y clasifican esta tanda como preparación de Hito 05.
+- **Versionado de paquete alineado:** `package.json` y `package-lock.json` pasan de `0.1.0` a `0.4.7`, manteniendo el paquete sincronizado con la última versión cerrada documentada antes de preparar un release/APK.
 
 ---
 

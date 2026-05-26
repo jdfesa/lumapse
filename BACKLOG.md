@@ -355,7 +355,7 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 
 - [x] ~~**Historias de Usuario (Hitos 03 y 04):**~~ ✅ Completado (2026-05-18). HU-007 a HU-011 redactadas con criterios de aceptación, SP y trazabilidad.
 - [x] ~~**Actualizar Modelo de Dominio y Casos de Uso:**~~ ✅ Completado (2026-05-18). Entidad Tag eliminada, campos pinned/archived agregados, casos de uso corregidos (PWA→APK, Tags→Pin/Archivar).
-- [ ] **Sincronizar README principal post-SQLite:** el stack debe presentar SQLite como persistencia actual y dejar IndexedDB solo como antecedente histórico/migración legacy.
+- [x] **Sincronizar README principal post-SQLite:** ✅ Completado (2026-05-26). El stack presenta SQLite como persistencia actual e IndexedDB queda como antecedente histórico/migración legacy.
 - [ ] **Actualizar seguimiento de velocidad:** `docs/gestion/seguimiento-velocidad.md` debe reflejar las HU reales actuales (14 HU, 59 SP totales según `generate-velocity-report.py`) y no solo la planificación previa del Hito 04.
 - [ ] **Revisar documentos generados:** regenerar informe completo y cheatsheet cuando se cierren nuevos cambios, para evitar que los artefactos finales queden con métricas anteriores.
 - [ ] **Manual de usuario:** Crear un breve manual de usuario explicando los flujos principales, ya que el sistema tiene atajos visuales (Paso 9).
@@ -383,7 +383,7 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 - [x] ~~**Templates de GitHub con trazabilidad:**~~ ✅ Completado (2026-05-20). Issues y PRs piden RF/HU/ADR/Hito y checklist de trazabilidad.
 - [x] ~~**Scripts académicos y operativos Tanda 2/3:**~~ ✅ Completado (2026-05-20). Quedaron documentados `check-schema-sync.py`, `assemble-report.py`, `generate-velocity-report.py`, `validate-subjects-hierarchy.py`, `generate-dbml-from-code.py`, `generate-defense-cheatsheet.py`, `export-database-bundle.py`, `run-load-tests.py` y `release-helper.py`.
 - [x] **CI de scripts críticos:** ✅ Completado (2026-05-26). GitHub Actions ejecuta trazabilidad, links, schema sync, DBML check, jerarquía de materias, lint, tests, build, bundle budget, a11y y guardia contra diálogos nativos.
-- [ ] **Versionado del paquete:** `package.json` y `package-lock.json` siguen en `0.1.0` mientras `CHANGELOG.md` documenta `0.4.0` en progreso. Resolver antes de cualquier release/APK.
+- [x] **Versionado del paquete:** ✅ Completado (2026-05-26). `package.json` y `package-lock.json` quedaron alineados en `0.4.7`, la última versión cerrada documentada en `CHANGELOG.md`.
 
 ## 🧪 Deuda Técnica — Testing (Crítico para Tribunal)
 

@@ -1,6 +1,6 @@
 {
   "name": "lumapse",
-  "version": "0.1.0",
+  "version": "0.4.7",
   "description": "App móvil offline-first de captura de notas y gestión del conocimiento personal",
   "private": true,
   "type": "module",
