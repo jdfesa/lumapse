@@ -33,6 +33,24 @@ npm run lint
 
 ---
 
+## 📌 Corte actual — Bug de Checkboxes Interactivos 2026-05-26
+
+**Estado verificado:** Se detectó un comportamiento errático (toques fantasma, desincronización de estado) al interactuar con los checkboxes de las listas de tareas (`- [ ]` y `- [x]`) directamente desde las tarjetas de notas (NoteCard). Por petición del usuario, se decidió suspender la corrección de este bug y dejar el código en estado de WIP (desactivado/comentado o bajo revisión técnica) para documentarlo formalmente como deuda técnica crítica para resolver en el próximo hito.
+
+**Detalle del problema:**
+- Al tocar un checkbox, el evento de click es interceptado por un manejador delegado en `FeedActionRouter.js` que modifica de forma asíncrona la nota en SQLite.
+- Al actualizarse el store, se dispara una notificación que fuerza un re-renderizado completo de la lista de tarjetas (`NoteList.js` usando `innerHTML`).
+- Este re-renderizado destruye y recrea todo el DOM de las tarjetas a mitad de la interacción táctil en WebViews de Capacitor (Android), causando "ghost clicks", duplicación de eventos y toques fantasmas.
+- Intentos de resolverlo interceptando el click y aplicando actualizaciones silenciosas o bloqueando la propagación resultaron en la pérdida completa de interactividad (checkboxes que ya no responden).
+
+**Tareas de resolución pendientes (Hito 05 / Próxima sesión):**
+- Rediseñar el flujo de actualización de la UI para que los cambios en checkboxes actualicen quirúrgicamente el DOM de la tarjeta específica sin forzar un re-renderizado completo de toda la lista.
+- Agregar soporte para `event.preventDefault()` y control manual del estado visual en mobile para evitar que la acción por defecto del navegador WebView interfiera.
+- Implementar un mecanismo de bloqueo temporal de interacción (locks/debounce) durante la persistencia asíncrona en SQLite.
+- (Opcional) Reemplazar la asignación secuencial `data-line` (calculada en HTML sanitizado) por una referencia directa a la línea real del Markdown en `MarkdownService.js`.
+
+---
+
 ## 📌 Corte actual — Auditoría 2026-05-20
 
 **Estado verificado:** la base técnica para avanzar con materias ya está lista. SQLite está implementado, el schema real y la documentación DDL están sincronizados, el DBML generado desde código coincide con el archivo documentado, la trazabilidad RF/HU/ADR no presenta advertencias, y el README de scripts ya documenta 29 herramientas.
@@ -63,9 +81,9 @@ Estos son los 3 bloques recomendados para continuar. La prioridad es mantener tr
 
 | Orden | Bloque | Objetivo | Criterio de cierre |
 |---|---|---|---|
-| 1 | **Cierre funcional/documental Hito 04** | Completar RF pequeños pendientes y sincronizar documentación viva. | RF-006/RF-024 evaluados o implementados, README/velocidad/versionado actualizados, `check-traceability.py` sin advertencias. |
-| 2 | **Preparación CI documental** | Convertir scripts críticos en chequeos de CI. | Workflow que ejecute lint, trazabilidad, schema sync, DBML check, doc links y jerarquía de subjects. |
-| 3 | **Remate de deuda post-split** | Reducir deuda menor que quedó visible tras el split. | Delegador de clicks de `NoteList.js` por debajo de complejidad 15 y decisión sobre avisos >250 LOC. |
+| 1 | **Resolución de Checkboxes Interactivos** | Solucionar de raíz los toques fantasma/falta de respuesta al marcar tareas. | Checkboxes interactivos funcionando de forma fluida en mobile/WebView sin re-renderizado global destructivo. |
+| 2 | **Cierre funcional/documental Hito 04** | Completar RF pequeños pendientes y sincronizar documentación viva. | RF-006/RF-024 evaluados o implementados, README/velocidad/versionado actualizados, `check-traceability.py` sin advertencias. |
+| 3 | **Preparación CI documental** | Convertir scripts críticos en chequeos de CI. | Workflow que ejecute lint, trazabilidad, schema sync, DBML check, doc links y jerarquía de subjects. |
 
 ---
 
@@ -284,6 +302,7 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 - [x] ~~**UI para sub-secciones de Materias (Profundidad > 0):**~~ ✅ Completado (Paso 9). El drawer permite crear y navegar secciones hijas, con validación DP-004, herencia de color y conteos por materia/sección.
 - [x] **Manejo de Errores y Excepciones (Resiliencia):** ✅ Completado (2026-05-25). Implementados `DatabaseError` en la capa SQLite para fallos nativos y try/catch robustos en el store. Errores y notificaciones se presentan con el nuevo componente `Toast.js` sin crashear la UI.
 - [x] **Optimización Extrema de Renderizado (Virtualización de DOM):** ✅ Completado (2026-05-25). Componente `VirtualFeed.js` con list virtualization, IntersectionObserver y prefix sum height cache. Resuelve el renderizado para más de 10,000 notas con 60FPS fluidos en dispositivos antiguos de testeo.
+- [ ] **Bug de Checkboxes Interactivos (Ghost Clicks):** Corregir la pérdida de interactividad y clicks fantasma en mobile (Android WebView / Capacitor) al interactuar con checklists (`- [ ]`) en NoteCards (detalles en `checkbox-ghost-clicks-handoff.md` e informe de corte 2026-05-26).
 
 ## ⚙️ Deuda Técnica — DevOps y Procesos
 
