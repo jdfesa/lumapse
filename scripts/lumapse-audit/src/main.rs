@@ -76,7 +76,14 @@ struct TodoEntry {
 struct UrlEntry {
     line_num: usize,
     line_content: String,
-    is_comment: bool,
+    status: UrlStatus,
+}
+
+#[derive(Debug, Clone)]
+enum UrlStatus {
+    Problem,
+    Comment,
+    LogicalException,
 }
 
 // --- Escaneo del filesystem ---
@@ -170,14 +177,21 @@ fn analyze_file(path: &Path, base: &Path) -> io::Result<FileReport> {
         if !trimmed.contains("lumapse-ignore-offline") {
             for pat in URL_PATTERNS {
                 if trimmed.contains(pat) {
-                    let is_comment = trimmed.starts_with("//")
+                    let status = if trimmed.starts_with("//")
                         || trimmed.starts_with("/*")
                         || trimmed.starts_with('*')
-                        || trimmed.starts_with("<!--");
+                        || trimmed.starts_with("<!--")
+                    {
+                        UrlStatus::Comment
+                    } else if trimmed.contains(".startsWith(") || trimmed.contains(".includes(") {
+                        UrlStatus::LogicalException
+                    } else {
+                        UrlStatus::Problem
+                    };
                     external_urls.push(UrlEntry {
                         line_num,
                         line_content: trimmed.to_string(),
-                        is_comment,
+                        status,
                     });
                     break;
                 }
@@ -318,14 +332,23 @@ fn print_report(reports: &[FileReport], elapsed_us: u128) {
     } else {
         let mut real_problems = 0usize;
         let mut comments = 0usize;
+        let mut logical_exceptions = 0usize;
 
         for (path, url) in &all_urls {
-            let tag = if url.is_comment { "(comentario?)" } else { "⚠️  POSIBLE PROBLEMA" };
-            if url.is_comment {
-                comments += 1;
-            } else {
-                real_problems += 1;
-            }
+            let tag = match url.status {
+                UrlStatus::Comment => {
+                    comments += 1;
+                    "(comentario?)"
+                }
+                UrlStatus::LogicalException => {
+                    logical_exceptions += 1;
+                    "(excepción lógica)"
+                }
+                UrlStatus::Problem => {
+                    real_problems += 1;
+                    "⚠️  POSIBLE PROBLEMA"
+                }
+            };
             println!("  {}:{}: {} {}", path, url.line_num, tag, url.line_content);
         }
 
@@ -333,6 +356,7 @@ fn print_report(reports: &[FileReport], elapsed_us: u128) {
         println!("  Total: {} referencia(s) externa(s)", all_urls.len());
         println!("   ⚠️  {} posible(s) problema(s) real(es)", real_problems);
         println!("   💬 {} probable(s) comentario(s)", comments);
+        println!("   🧭 {} excepción(es) lógica(s)", logical_exceptions);
     }
 
     println!();
@@ -375,7 +399,9 @@ fn print_json(reports: &[FileReport], elapsed_us: u128) {
     let all_urls: Vec<_> = reports.iter()
         .flat_map(|r| r.external_urls.iter().map(move |u| (&r.path, u)))
         .collect();
-    let real_problems = all_urls.iter().filter(|(_, u)| !u.is_comment).count();
+    let real_problems = all_urls.iter()
+        .filter(|(_, u)| matches!(u.status, UrlStatus::Problem))
+        .count();
     println!("  \"external_urls\": {{ \"total\": {}, \"problems\": {} }}", all_urls.len(), real_problems);
 
     println!("}}");
@@ -451,7 +477,7 @@ fn main() {
         let has_danger = reports.iter().any(|r| matches!(r.loc_status, LocStatus::Danger));
         let has_offline_problem = reports.iter()
             .flat_map(|r| r.external_urls.iter())
-            .any(|u| !u.is_comment);
+            .any(|u| matches!(u.status, UrlStatus::Problem));
 
         if has_danger || has_offline_problem {
             exit_code = 1;
