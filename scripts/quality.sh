@@ -46,21 +46,28 @@ else
 fi
 
 # 4. Auditoría de código y documentación
-#    Estrategia: intenta el binario Rust (ultra-rápido, ~2ms) y si no está
-#    disponible (otro OS, sin cargo), cae a los scripts Python/Shell originales.
+#    Estrategia: usa el binario Rust cuando esta disponible y ejecutable.
+#    Si el binario falta o es incompatible con el OS actual, cae a los scripts
+#    Python/Shell preservados. Si Rust corre y encuentra problemas reales, no
+#    se enmascara el resultado con fallback.
 echo ""
 echo "[4/4] Ejecutando auditorías de código..."
 
 AUDIT_BIN="./scripts/lumapse-audit-bin"
 
-if [ -x "$AUDIT_BIN" ] && "$AUDIT_BIN" --all 2>/dev/null; then
-  echo "✅ lumapse-audit (Rust): OK"
+if [ -x "$AUDIT_BIN" ] && "$AUDIT_BIN" --help >/dev/null 2>&1; then
+  if "$AUDIT_BIN" --all; then
+    echo "✅ lumapse-audit (Rust): OK"
+  else
+    echo "❌ lumapse-audit (Rust): encontró problemas reales"
+    FAIL=1
+  fi
 else
   echo "⚠️  Binario Rust no disponible o incompatible con este OS."
   echo "    Usando modo de compatibilidad (Python/Shell)..."
   echo ""
 
-  # 4a. Guardia de tamaño de archivos (reemplaza --code)
+  # 4a. Guardia de tamaño de archivos (parte de --code)
   echo "  [4a] check-file-size.sh..."
   if bash scripts/check-file-size.sh; then
     echo "  ✅ File size: OK"
@@ -68,8 +75,25 @@ else
     echo "  ⚠️  File size: AVISOS (no bloqueante)"
   fi
 
-  # 4b. Trazabilidad RF/HU/ADR (reemplaza --traceability)
-  echo "  [4b] check-traceability.py..."
+  # 4b. Auditoria offline-first (parte de --code)
+  echo "  [4b] check-offline.sh..."
+  if bash scripts/check-offline.sh; then
+    echo "  ✅ Offline-first: OK"
+  else
+    echo "  ⚠️  Offline-first: REFERENCIAS EXTERNAS"
+    FAIL=1
+  fi
+
+  # 4c. Auditoria historica de TODOs y estado Git (parte documental de --code)
+  echo "  [4c] check-docs.sh..."
+  if bash scripts/check-docs.sh; then
+    echo "  ✅ Quick docs/code audit: OK"
+  else
+    echo "  ⚠️  Quick docs/code audit: AVISOS"
+  fi
+
+  # 4d. Trazabilidad RF/HU/ADR (reemplaza --traceability)
+  echo "  [4d] check-traceability.py..."
   if python3 scripts/check-traceability.py.replaced 2>/dev/null || python3 scripts/check-traceability.py 2>/dev/null; then
     echo "  ✅ Traceability: OK"
   else
@@ -77,8 +101,8 @@ else
     FAIL=1
   fi
 
-  # 4c. Sincronización schema SQLite (reemplaza --schema)
-  echo "  [4c] check-schema-sync.py..."
+  # 4e. Sincronización schema SQLite (reemplaza --schema)
+  echo "  [4e] check-schema-sync.py..."
   if python3 scripts/check-schema-sync.py; then
     echo "  ✅ Schema sync: OK"
   else
@@ -86,8 +110,8 @@ else
     FAIL=1
   fi
 
-  # 4d. Links internos en documentación (reemplaza --doc-links)
-  echo "  [4d] check-doc-links.py..."
+  # 4f. Links internos en documentación (reemplaza --doc-links)
+  echo "  [4f] check-doc-links.py..."
   if python3 scripts/check-doc-links.py; then
     echo "  ✅ Doc links: OK"
   else
@@ -95,8 +119,8 @@ else
     FAIL=1
   fi
 
-  # 4e. Jerarquía de materias (reemplaza --hierarchy)
-  echo "  [4e] validate-subjects-hierarchy.py..."
+  # 4g. Jerarquía de materias (reemplaza --hierarchy)
+  echo "  [4g] validate-subjects-hierarchy.py..."
   if python3 scripts/validate-subjects-hierarchy.py; then
     echo "  ✅ Hierarchy: OK"
   else
