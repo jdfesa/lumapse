@@ -44,6 +44,9 @@ La primera version de `lumapse-audit` absorbio cuatro checks que se ejecutaban c
 ### Aporte tecnico
 
 - Unifica LOC guard, TODO/FIXME scan y offline-first en un solo recorrido concurrente.
+- Mantiene paridad con el script Bash preservado para excepciones logicas del
+  auditor offline-first, por ejemplo validaciones defensivas con
+  `.startsWith("https://")` o `.includes("http://")`.
 - Reduce el costo de hooks locales.
 - Mantiene salida legible en espanol y codigos de salida utiles para automatizacion.
 
@@ -113,6 +116,15 @@ cp target/release/lumapse-audit ../lumapse-audit-bin
 ## Integracion con el toolchain
 
 `quality.sh` usa `./scripts/lumapse-audit-bin --all` como auditor unificado dentro del quality gate.
+
+Desde la mejora de diagnostico del toolchain, `quality.sh` distingue dos casos:
+
+- si el binario no existe o no responde a `--help`, usa el fallback Python/Shell;
+- si el binario corre y `--all` falla, el fallo se considera un hallazgo real y no se enmascara con fallback.
+
+El fallback preservado cubre `check-file-size.sh`, `check-offline.sh`,
+`check-docs.sh`, `check-traceability.py`, `check-schema-sync.py`,
+`check-doc-links.py` y `validate-subjects-hierarchy.py`.
 
 `pre-commit` mantiene el camino rapido:
 

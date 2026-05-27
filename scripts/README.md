@@ -15,9 +15,13 @@ Los scripts internos más usados también están expuestos desde `package.json` 
 | Comando | Equivalente | Uso principal |
 |---|---|---|
 | `npm run quality` | `bash scripts/quality.sh` | Puerta de calidad local completa. |
-| `npm run verify` | `quality` + bundle budget + diálogos nativos + a11y | Validación final antes de cerrar una sesión. |
+| `npm run verify` | `quality` + toolchain + DB smoke + bundle budget + diálogos nativos + a11y | Validación final antes de cerrar una sesión. |
+| `npm run doctor` | `python3 scripts/dev-doctor.py` | Diagnóstico general del entorno local. |
+| `npm run doctor:android` | `bash scripts/android-doctor.sh` | Diagnóstico Android/Capacitor/ADB sin tocar datos. |
 | `npm run check:session` | `bash scripts/check-session.sh` | Dashboard rápido de inicio. |
 | `npm run check:health` | `python3 scripts/health-dashboard.py` | Dashboard detallado de salud. |
+| `npm run check:toolchain` | `python3 scripts/check-toolchain.py` | Auditoría de scripts, README, entrypoints npm y artefactos generados. |
+| `npm run check:db-smoke` | `python3 scripts/db-smoke-test.py` | Smoke test temporal del schema SQLite real. |
 | `npm run check:size` | `bash scripts/bundle-budget.sh` | Guardia de tamaño de bundle. |
 | `npm run check:a11y` | `python3 scripts/check-a11y.py` | Auditoría estática de accesibilidad. |
 | `npm run check:native-dialogs` | `node scripts/check-native-dialogs.js` | Bloqueo de `alert`, `confirm` y `prompt` nativos fuera del seeder. |
@@ -522,6 +526,7 @@ Orquestador maestro del flujo de trabajo diario. Centraliza los scripts de inici
 
 ```
 Al empezar a trabajar:
+  npm run doctor
   ./scripts/daily-workflow.sh start
 
 Durante el desarrollo:
@@ -537,6 +542,9 @@ Al cerrar la sesion:
 
 Para un reporte completo de salud:
   ./scripts/daily-workflow.sh health --save
+
+Antes de tocar Android:
+  npm run doctor:android
 ```
 
 ---
@@ -549,8 +557,10 @@ La evolución completa del auditor Rust y la política de preservación de scrip
 Auditor concurrente unificado para chequeos críticos del proyecto.
 
 - **Importante — Compatibilidad cross-platform:** El binario compilado (`lumapse-audit-bin`) funciona en el OS donde fue compilado (ej. macOS ARM64). Si el proyecto se clona en otro OS (Windows, Linux), **no se necesita Rust instalado**: tanto `quality.sh` como los hooks de Git detectan automáticamente la ausencia del binario y caen a los scripts Python/Shell originales que cubren la misma funcionalidad. Los scripts Python originales están preservados en el repositorio con este propósito.
+- **Importante — Fallos reales vs fallback:** `quality.sh` primero verifica que el binario responda a `--help`. Si el binario existe y corre, un fallo de `--all` se trata como problema real y no se enmascara con fallback. El modo Python/Shell queda reservado para ausencia o incompatibilidad del binario.
+- **Paridad offline-first:** El auditor Rust reconoce como no bloqueantes las validaciones defensivas de código que contienen `.startsWith("http://")`, `.startsWith("https://")` o `.includes(...)`, igual que `check-offline.sh`.
 - **Qué unifica:**
-  - `--code`: LOC guard, TODO/FIXME y offline-first → fallback: `check-file-size.sh`
+  - `--code`: LOC guard, TODO/FIXME y offline-first → fallback: `check-file-size.sh`, `check-offline.sh`, `check-docs.sh`
   - `--traceability`: RF, HU, ADR, CHANGELOG y BACKLOG → fallback: `check-traceability.py`
   - `--schema`: sincronización schema SQLite ↔ documentación DDL → fallback: `check-schema-sync.py`
   - `--doc-links`: links internos, imágenes y anclas Markdown → fallback: `check-doc-links.py`
@@ -600,4 +610,60 @@ Genera las pantallas de bienvenida (splash screens) adaptativas de la aplicació
   source .venv-icons/bin/activate
   python3 scripts/generate-splash.py
   deactivate
+  ```
+
+---
+
+## Diagnóstico y mantenimiento del toolchain
+
+La decisión de agregar doctores y auditoría del toolchain está documentada en [`scripts/docs/diagnostico-toolchain-y-doctores.md`](docs/diagnostico-toolchain-y-doctores.md).
+
+### 38. `dev-doctor.py`
+Diagnóstico general del entorno local de desarrollo.
+
+- **Problema que resuelve:** Permite saber rápidamente si una máquina tiene las piezas necesarias para trabajar en Lumapse: Git, Node, npm, Python, dependencias instaladas, asset WASM, Android SDK, ADB, Java y auditor Rust. Esto evita perder tiempo confundiendo errores de entorno con errores de código.
+- **Por qué existe:** El proyecto combina web, Capacitor, Android, SQLite WASM, Python y Rust opcional. Un doctor explícito documenta esas expectativas y deja una salida reproducible para futuras sesiones o futuras IAs.
+- **Qué verifica:** Archivos base (`package.json`, `package-lock.json`, `src/`, `scripts/`), comandos requeridos, dependencias locales, `sql-wasm.wasm`, estado del auditor Rust, posible binario Rust desactualizado, SDK Android, ADB y `.venv-icons`.
+- **No modifica archivos:** Es una herramienta de lectura y diagnóstico.
+- **Uso:**
+  ```bash
+  npm run doctor
+  python3 scripts/dev-doctor.py --strict
+  python3 scripts/dev-doctor.py --json
+  ```
+
+### 39. `android-doctor.sh`
+Diagnóstico específico del entorno Android/Capacitor.
+
+- **Problema que resuelve:** Antes de ejecutar `deploy-android.sh`, conviene saber si el entorno móvil está listo: proyecto Android presente, Capacitor configurado, SDK detectable, Java, `npx`, Gradle wrapper, ADB y dispositivos conectados.
+- **Por qué existe:** `deploy-android.sh` instala builds y puede interactuar con dispositivos reales. Este doctor separa la fase de diagnóstico de la fase de deploy para reducir riesgo operativo.
+- **No modifica datos:** No instala, no compila, no borra caché y no toca SQLite.
+- **Uso:**
+  ```bash
+  npm run doctor:android
+  ./scripts/android-doctor.sh
+  ```
+
+### 40. `check-toolchain.py`
+Auditoría del propio sistema de scripts.
+
+- **Problema que resuelve:** A medida que el toolchain crece, también crece el riesgo de que un script quede sin documentar, un entrypoint npm apunte a un archivo inexistente, un `.sh` no tenga bit ejecutable o se olvide una regla de `.gitignore` para artefactos generados.
+- **Por qué existe:** El proyecto ya audita producto, documentación y base de datos; faltaba auditar la infraestructura que ejecuta esas auditorías.
+- **Qué verifica:** Shebangs esperados, permisos ejecutables en shell scripts, presencia en `scripts/README.md`, referencias desde `package.json`, reglas de `.gitignore` para artefactos generados y preservación del wrapper histórico de trazabilidad.
+- **Uso:**
+  ```bash
+  npm run check:toolchain
+  python3 scripts/check-toolchain.py
+  ```
+
+### 41. `db-smoke-test.py`
+Smoke test temporal del schema SQLite real.
+
+- **Problema que resuelve:** `check-schema-sync.py` compara código contra documentación, pero no ejecuta el DDL real en SQLite. Este script crea una base temporal, ejecuta el schema de `src/services/sqlite/connection.js`, aplica migraciones idempotentes y valida relaciones principales.
+- **Por qué existe:** Aporta una prueba rápida y reproducible para detectar errores de DDL, columnas faltantes o relaciones rotas antes de probar en Android.
+- **No usa datos reales:** La base se crea dentro de un directorio temporal y se elimina al terminar.
+- **Uso:**
+  ```bash
+  npm run check:db-smoke
+  python3 scripts/db-smoke-test.py
   ```
