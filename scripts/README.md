@@ -635,9 +635,12 @@ Diagnóstico general del entorno local de desarrollo.
 ### 39. `android-doctor.sh`
 Diagnóstico específico del entorno Android/Capacitor.
 
-- **Problema que resuelve:** Antes de ejecutar `deploy-android.sh`, conviene saber si el entorno móvil está listo: proyecto Android presente, Capacitor configurado, SDK detectable, Java, `npx`, Gradle wrapper, ADB y dispositivos conectados.
+- **Problema que resuelve:** Antes de ejecutar `deploy-android.sh`, conviene saber si el entorno móvil está listo: proyecto Android presente, Capacitor configurado, SDK detectable, Java, `npx`, Gradle wrapper, ADB, dispositivos conectados, si la APK de Lumapse ya está instalada y si hay datos SQLite previos en el dispositivo.
 - **Por qué existe:** `deploy-android.sh` instala builds y puede interactuar con dispositivos reales. Este doctor separa la fase de diagnóstico de la fase de deploy para reducir riesgo operativo.
-- **No modifica datos:** No instala, no compila, no borra caché y no toca SQLite.
+- **No modifica datos:** No instala, no compila, no borra caché y no modifica SQLite. La inspección de datos usa `adb shell run-as com.lumapse.app ls /data/data/com.lumapse.app/databases`, por lo que solo funciona en builds debuggables; si Android bloquea el acceso, el doctor emite una advertencia no bloqueante.
+- **Visibilidad previa al deploy:** Si la APK no está instalada, avisa que el próximo deploy será un install limpio. Si está instalada, intenta distinguir entre dispositivo con base SQLite existente y dispositivo sin base previa.
+- **Qué reporta con dispositivo conectado:** cantidad de dispositivos autorizados, estado de instalación de `com.lumapse.app` y presencia de archivos SQLite como `lumapse-dbSQLite.db` en el sandbox privado de la app.
+- **Validación física:** El flujo fue verificado en un Samsung `SM_G965F` conectado por USB: detectó la APK instalada y una base SQLite existente sin modificar datos.
 - **Uso:**
   ```bash
   npm run doctor:android
@@ -649,7 +652,8 @@ Auditoría del propio sistema de scripts.
 
 - **Problema que resuelve:** A medida que el toolchain crece, también crece el riesgo de que un script quede sin documentar, un entrypoint npm apunte a un archivo inexistente, un `.sh` no tenga bit ejecutable o se olvide una regla de `.gitignore` para artefactos generados.
 - **Por qué existe:** El proyecto ya audita producto, documentación y base de datos; faltaba auditar la infraestructura que ejecuta esas auditorías.
-- **Qué verifica:** Shebangs esperados, permisos ejecutables en shell scripts, presencia en `scripts/README.md`, referencias desde `package.json`, reglas de `.gitignore` para artefactos generados y preservación del wrapper histórico de trazabilidad.
+- **Qué verifica:** Shebangs esperados, permisos ejecutables en shell scripts, presencia en `scripts/README.md`, referencias desde `package.json`, scripts sin invocación ni documentación, reglas de `.gitignore` para artefactos generados, preservación del wrapper histórico de trazabilidad y consistencia de marcas `superseded`/`deprecated`/`.replaced`.
+- **Scripts manuales:** Un script documentado en este README no se considera huérfano aunque no esté invocado por npm, CI o hooks; esa convención permite conservar herramientas manuales sin ruido falso.
 - **Uso:**
   ```bash
   npm run check:toolchain

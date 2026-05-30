@@ -36,38 +36,38 @@ Pendientes urgentes que no entran en el tramo actual.
 
 ## Scripts y Toolchain
 
-> Origen: Auditoría de la decisión de mejora del toolchain (2026-05-27). Se implementaron 8 de 12 mejoras planificadas. Los 4 gaps restantes quedan documentados aquí. Referencia: `scripts/docs/diagnostico-toolchain-y-doctores.md`.
+> Origen: Auditoría de la decisión de mejora del toolchain (2026-05-27). Se implementaron 12 de 12 mejoras planificadas. Este bloque queda cerrado. Referencia: `scripts/docs/diagnostico-toolchain-y-doctores.md`.
 
-- [ ] **G1 — `check-toolchain.py`: Detección de scripts huérfanos** ⚠️ Prioridad Media
+- [x] **G1 — `check-toolchain.py`: Detección de scripts huérfanos** ✅ Completado: 2026-05-30.
   - **Problema:** A medida que el toolchain crece, scripts pueden quedar en `scripts/` sin que ningún archivo los invoque ni los documente. Hoy `check-toolchain.py` verifica que los archivos *referenciados* desde `package.json` existan (dirección: npm → disco), pero no verifica la dirección inversa (disco → ¿alguien me invoca?). Un script podría quedar abandonado sin que nadie lo note.
   - **Contexto técnico:**
     - `check-toolchain.py` ya tiene `audit_readme_coverage()` que verifica si el *nombre* del script aparece en `scripts/README.md`. Esto cubre documentación pero no invocación real.
     - Los puntos de invocación posibles son: `package.json` (scripts npm), `quality.sh` (quality gate), `daily-workflow.sh` (workflow diario), `.github/workflows/*.yml` (CI), y `pre-commit`/`pre-push` hooks.
-    - Un script "huérfano" sería uno que existe en `scripts/`, tiene extensión `.py`/`.sh`/`.js`, pero no aparece referenciado en ninguno de esos puntos de invocación.
+    - Un script "huérfano" sería uno que existe en `scripts/`, tiene extensión `.py`/`.sh`/`.js`, pero no aparece referenciado en ningún punto de invocación ni documentado como herramienta manual en `scripts/README.md`.
   - **Tareas:**
-    - [ ] Agregar función `audit_orphan_scripts()` en `check-toolchain.py`.
-    - [ ] Construir el set de "scripts referenciados" parseando: `package.json` campo `scripts` (ya existe `extract_script_references()`), `scripts/quality.sh`, `scripts/daily-workflow.sh`, `.github/workflows/*.yml` y hooks de Git.
-    - [ ] Comparar contra `list_scripts()` (scripts en disco). La diferencia son los huérfanos.
-    - [ ] Excluir del reporte: archivos `.replaced` (scripts preservados históricos), `__pycache__`, y el propio `check-toolchain.py`.
-    - [ ] Emitir como `warn`, no `fail` — un script huérfano no rompe nada, solo indica desorden.
-    - [ ] Verificar con `python3 scripts/check-toolchain.py` y confirmar que no hay falsos positivos.
-  - **Criterio de cierre:** `check-toolchain.py` reporta `[WARN]` para cualquier script en `scripts/` que no esté referenciado desde ningún punto de invocación conocido. Sin falsos positivos con los scripts actuales.
+    - [x] Agregar función `audit_orphan_scripts()` en `check-toolchain.py`.
+    - [x] Construir el set de "scripts referenciados" parseando: `package.json` campo `scripts` (ya existe `extract_script_references()`), `scripts/quality.sh`, `scripts/daily-workflow.sh`, `.github/workflows/*.yml` y hooks de Git.
+    - [x] Comparar contra `list_scripts()` (scripts en disco). La diferencia son los huérfanos.
+    - [x] Excluir del reporte: archivos `.replaced` (scripts preservados históricos), `__pycache__`, y el propio `check-toolchain.py`.
+    - [x] Emitir como `warn`, no `fail` — un script huérfano no rompe nada, solo indica desorden.
+    - [x] Verificar con `python3 scripts/check-toolchain.py` y confirmar que no hay falsos positivos.
+  - **Criterio de cierre:** `check-toolchain.py` reporta `[WARN]` para cualquier script en `scripts/` que no esté referenciado desde ningún punto de invocación conocido ni documentado como herramienta manual. Sin falsos positivos con los scripts actuales.
 
-- [ ] **G2 — `check-toolchain.py`: Detección de marcas de superseded/deprecated** ⚠️ Prioridad Baja
+- [x] **G2 — `check-toolchain.py`: Detección de marcas de superseded/deprecated** ✅ Completado: 2026-05-30.
   - **Problema:** La política de no borrado del repo dice que los scripts superseded deben marcarse explícitamente. Si alguien agrega un script que reemplaza otro pero olvida marcar el original, el toolchain acumula ambigüedad. No hay check automático que valide esta convención.
   - **Contexto técnico:**
     - El único script actualmente marcado como superseded es `check-traceability.py.replaced` (por convención de nombre).
     - Los posibles marcadores: extensión `.replaced`, palabra `superseded`/`deprecated`/`replaced` en el docstring o cabecera, o sección dedicada en `scripts/README.md`.
     - El check debería buscar en dos direcciones: (a) scripts con marca de superseded que no tengan un reemplazo documentado, y (b) scripts reemplazados que no tengan marca.
   - **Tareas:**
-    - [ ] Agregar función `audit_superseded_markers()` en `check-toolchain.py`.
-    - [ ] Buscar archivos con extensión `.replaced` y verificar que exista un wrapper o reemplazo activo con el mismo nombre base (ej: `check-traceability.py.replaced` → `check-traceability.py`).
-    - [ ] Buscar en el docstring/cabecera las palabras clave `superseded`, `deprecated`, `replaced by` y verificar que el reemplazo mencionado exista.
-    - [ ] Emitir como `warn` si un script tiene marca de superseded pero el reemplazo no existe, o si un `.replaced` no tiene wrapper activo.
-    - [ ] Verificar con `python3 scripts/check-toolchain.py`.
+    - [x] Agregar función `audit_superseded_markers()` en `check-toolchain.py`.
+    - [x] Buscar archivos con extensión `.replaced` y verificar que exista un wrapper o reemplazo activo con el mismo nombre base (ej: `check-traceability.py.replaced` → `check-traceability.py`).
+    - [x] Buscar en el docstring/cabecera las palabras clave `superseded`, `deprecated`, `replaced by` y verificar que el reemplazo mencionado exista.
+    - [x] Emitir como `warn` si un script tiene marca de superseded pero el reemplazo no existe, o si un `.replaced` no tiene wrapper activo.
+    - [x] Verificar con `python3 scripts/check-toolchain.py`.
   - **Criterio de cierre:** `check-toolchain.py` detecta marcas de superseded inconsistentes y emite `[WARN]` con detalle suficiente para corregir.
 
-- [ ] **G3 — `android-doctor.sh`: Detección de APK instalada en dispositivo** ⚠️ Prioridad Baja
+- [x] **G3 — `android-doctor.sh`: Detección de APK instalada en dispositivo** ✅ Completado: 2026-05-30.
   - **Problema:** Antes de un deploy, es útil saber si la APK de Lumapse ya está instalada en el dispositivo conectado. Esto permite distinguir entre un install limpio (primera vez) y un update (upgrade), lo cual impacta en si los datos SQLite existentes se van a preservar o no.
   - **Contexto técnico:**
     - El package de Lumapse es `com.lumapse.app` (ver `android/app/build.gradle` → `applicationId`).
@@ -75,29 +75,28 @@ Pendientes urgentes que no entran en el tramo actual.
     - Si hay múltiples dispositivos, se necesita `adb -s <deviceId> shell pm list packages`.
     - Solo ejecutar si hay al menos un dispositivo conectado y autorizado (la detección ya existe en el script).
   - **Tareas:**
-    - [ ] Agregar un bloque después del check de dispositivos conectados en `android-doctor.sh`.
-    - [ ] Si `DEVICE_COUNT > 0`, ejecutar `adb shell pm list packages 2>/dev/null | grep -q "com.lumapse.app"`.
-    - [ ] Si el package existe: `ok "Lumapse APK instalada en dispositivo"`.
-    - [ ] Si no existe: `warn "Lumapse APK no instalada; el próximo deploy será un install limpio"`.
-    - [ ] Si hay múltiples dispositivos, iterar sobre cada uno o usar el primero autorizado.
-    - [ ] Verificar con `bash scripts/android-doctor.sh` con y sin la APK instalada.
+    - [x] Agregar un bloque después del check de dispositivos conectados en `android-doctor.sh`.
+    - [x] Si `DEVICE_COUNT > 0`, ejecutar `adb shell pm list packages 2>/dev/null | grep -q "com.lumapse.app"`.
+    - [x] Si el package existe: `ok "Lumapse APK instalada en dispositivo"`.
+    - [x] Si no existe: `warn "Lumapse APK no instalada; el próximo deploy será un install limpio"`.
+    - [x] Si hay múltiples dispositivos, iterar sobre cada uno o usar el primero autorizado.
+    - [x] Verificar con `bash scripts/android-doctor.sh` en entorno sin dispositivos y con dispositivo físico con APK instalada.
   - **Criterio de cierre:** `android-doctor.sh` reporta si la APK está instalada, distinguiendo install limpio vs update.
 
-- [ ] **G4 — `android-doctor.sh`: Inspección de estado de datos SQLite en dispositivo** ⚠️ Prioridad Baja
+- [x] **G4 — `android-doctor.sh`: Inspección de estado de datos SQLite en dispositivo** ✅ Completado: 2026-05-30.
   - **Problema:** Un deploy puede afectar la base SQLite del usuario en el dispositivo. Saber si existe una base antes del deploy reduce el riesgo de pérdida accidental de datos, especialmente con `deploy-android.sh --clean`. Complementa el flag `--clean` dando visibilidad previa.
   - **Contexto técnico:**
     - La base SQLite vive en `/data/data/com.lumapse.app/databases/` (almacenamiento privado de Capacitor).
-    - Acceder requiere `adb shell run-as com.lumapse.app ls databases/` — solo funciona en builds debuggables (no release firmados).
+    - Acceder requiere `adb shell run-as com.lumapse.app ls /data/data/com.lumapse.app/databases/` — solo funciona en builds debuggables (no release firmados).
     - Es más invasivo que otros checks porque usa `run-as`, que puede fallar por permisos o por build no debuggable.
     - El check debe ser informativo (`warn`/`ok`), nunca bloqueante.
   - **Tareas:**
-    - [ ] Agregar un bloque condicional después del check de APK instalada (G3) en `android-doctor.sh`.
-    - [ ] Solo ejecutar si la APK está instalada (depende de G3).
-    - [ ] Ejecutar `adb shell run-as com.lumapse.app ls databases/ 2>/dev/null`.
-    - [ ] Si lista archivos `.db`/`.sqlite`: `ok "Base de datos SQLite encontrada en dispositivo"`.
-    - [ ] Si falla (permisos, build release): `warn "No se pudo inspeccionar datos (build no debuggable o permisos insuficientes)"`.
-    - [ ] Si no hay archivos de base de datos: `ok "Dispositivo sin base de datos previa (install limpio)"`.
-    - [ ] Documentar en `scripts/README.md` que este check requiere build debuggable.
-    - [ ] Verificar con `bash scripts/android-doctor.sh` en ambos escenarios.
+    - [x] Agregar un bloque condicional después del check de APK instalada (G3) en `android-doctor.sh`.
+    - [x] Solo ejecutar si la APK está instalada (depende de G3).
+    - [x] Ejecutar `adb shell run-as com.lumapse.app ls /data/data/com.lumapse.app/databases/ 2>/dev/null`.
+    - [x] Si lista archivos `.db`/`.sqlite`: `ok "Base de datos SQLite encontrada en dispositivo"`.
+    - [x] Si falla (permisos, build release): `warn "No se pudo inspeccionar datos (build no debuggable o permisos insuficientes)"`.
+    - [x] Si no hay archivos de base de datos: `ok "Dispositivo sin base de datos previa (install limpio)"`.
+    - [x] Documentar en `scripts/README.md` que este check requiere build debuggable.
+    - [x] Verificar con `bash scripts/android-doctor.sh` en entorno sin dispositivos y con dispositivo físico con APK instalada.
   - **Criterio de cierre:** `android-doctor.sh` informa si hay datos SQLite existentes en el dispositivo antes de un deploy, con manejo graceful de permisos insuficientes.
-
