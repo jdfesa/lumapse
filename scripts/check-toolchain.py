@@ -27,6 +27,12 @@ EXPECTED_SHEBANGS = {
     ".py": "#!/usr/bin/env python3",
     ".sh": "#!/usr/bin/env bash",
 }
+REFERENCE_FILES = [
+    SCRIPTS_DIR / "quality.sh",
+    SCRIPTS_DIR / "daily-workflow.sh",
+    SCRIPTS_DIR / "install-hooks.sh",
+]
+SUPERSEDED_KEYWORDS = ("superseded", "deprecated", "replaced by")
 
 
 @dataclass
@@ -56,6 +62,14 @@ def list_scripts():
         if path.is_file() and path.suffix in SCRIPT_EXTENSIONS:
             scripts.append(path)
     return scripts
+
+
+def list_superseded_scripts():
+    return sorted(
+        path
+        for path in SCRIPTS_DIR.iterdir()
+        if path.is_file() and path.name.endswith(".replaced")
+    )
 
 
 def is_executable(path):
@@ -101,7 +115,145 @@ def audit_readme_coverage(scripts):
 
 
 def extract_script_references(command):
-    return sorted(set(re.findall(r"scripts/[A-Za-z0-9_.\-/]+", command)))
+    matches = re.findall(
+        r"(?:\./|\$PROJECT_ROOT/|\$\{PROJECT_ROOT\}/)?scripts/[A-Za-z0-9_.\-/]+",
+        command,
+    )
+    references = []
+    for match in matches:
+        normalized = re.sub(r"^\./", "", match)
+        normalized = re.sub(r"^\$PROJECT_ROOT/", "", normalized)
+        normalized = re.sub(r"^\$\{PROJECT_ROOT\}/", "", normalized)
+        references.append(normalized.rstrip("/"))
+    return sorted(set(references))
+
+
+def collect_referenced_scripts():
+    referenced = set()
+
+    try:
+        package_data = json.loads(read_text(PACKAGE_JSON_PATH))
+    except json.JSONDecodeError:
+        package_data = {}
+
+    for command in package_data.get("scripts", {}).values():
+        for reference in extract_script_references(command):
+            referenced.add(PROJECT_ROOT / reference)
+
+    files_to_scan = list(REFERENCE_FILES)
+    workflows_dir = PROJECT_ROOT / ".github" / "workflows"
+    if workflows_dir.is_dir():
+        files_to_scan.extend(sorted(workflows_dir.glob("*.yml")))
+        files_to_scan.extend(sorted(workflows_dir.glob("*.yaml")))
+
+    hooks_dir = PROJECT_ROOT / ".git" / "hooks"
+    if hooks_dir.is_dir():
+        files_to_scan.extend(
+            sorted(
+                path
+                for path in hooks_dir.iterdir()
+                if path.is_file() and not path.name.endswith(".sample")
+            )
+        )
+
+    for source in files_to_scan:
+        for reference in extract_script_references(read_text(source)):
+            referenced.add(PROJECT_ROOT / reference)
+
+    return {path.resolve() for path in referenced}
+
+
+def audit_orphan_scripts(scripts):
+    readme = read_text(README_PATH)
+    referenced = collect_referenced_scripts()
+    findings = []
+
+    for script in scripts:
+        if script.name == "check-toolchain.py":
+            continue
+        if script.resolve() in referenced:
+            continue
+        if script.name in readme:
+            continue
+        findings.append(
+            Finding(
+                "warn",
+                relative(script),
+                "No aparece invocado desde npm, quality/daily workflow, CI, hooks ni documentado en scripts/README.md",
+            )
+        )
+    return findings
+
+
+def replacement_candidates_from_header(text):
+    header = "\n".join(text.splitlines()[:30])
+    patterns = [
+        r"(?:superseded|deprecated)\s+by\s+`?([A-Za-z0-9_.\-/]+)`?",
+        r"replaced\s+by\s+`?([A-Za-z0-9_.\-/]+)`?",
+        r"use\s+`?([A-Za-z0-9_.\-/]+)`?\s+instead",
+    ]
+    candidates = []
+    for pattern in patterns:
+        candidates.extend(re.findall(pattern, header, flags=re.IGNORECASE))
+    return candidates
+
+
+def replacement_exists(reference, current_script):
+    normalized = reference.strip("`'\" ")
+    if normalized.startswith("scripts/"):
+        candidate = PROJECT_ROOT / normalized
+    else:
+        candidate = current_script.with_name(Path(normalized).name)
+    return candidate.is_file()
+
+
+def has_superseded_marker(text):
+    header = "\n".join(text.splitlines()[:30]).lower()
+    return any(keyword in header for keyword in SUPERSEDED_KEYWORDS)
+
+
+def audit_superseded_markers():
+    findings = []
+
+    for script in list_superseded_scripts():
+        active_name = script.name[: -len(".replaced")]
+        active_path = script.with_name(active_name)
+        if not active_path.is_file():
+            findings.append(
+                Finding(
+                    "warn",
+                    relative(script),
+                    f"Marcado como reemplazado, pero falta el wrapper activo {active_name}",
+                )
+            )
+
+    for script in list_scripts():
+        text = read_text(script)
+        if not has_superseded_marker(text):
+            continue
+
+        candidates = replacement_candidates_from_header(text)
+        if not candidates:
+            findings.append(
+                Finding(
+                    "warn",
+                    relative(script),
+                    "Tiene marca superseded/deprecated, pero no declara reemplazo en la cabecera",
+                )
+            )
+            continue
+
+        missing = [candidate for candidate in candidates if not replacement_exists(candidate, script)]
+        for candidate in missing:
+            findings.append(
+                Finding(
+                    "warn",
+                    relative(script),
+                    f"Declara reemplazo inexistente: {candidate}",
+                )
+            )
+
+    return findings
 
 
 def audit_package_scripts():
@@ -159,9 +311,11 @@ def collect_findings():
     findings.extend(audit_shebangs(scripts))
     findings.extend(audit_executable_bits(scripts))
     findings.extend(audit_readme_coverage(scripts))
+    findings.extend(audit_orphan_scripts(scripts))
     findings.extend(audit_package_scripts())
     findings.extend(audit_generated_artifacts_policy())
     findings.extend(audit_traceability_wrapper())
+    findings.extend(audit_superseded_markers())
     return findings
 
 
