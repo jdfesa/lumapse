@@ -32,21 +32,22 @@ Cada decisión sigue esta estructura:
 ## DP-001: Título unificado al estilo Typora
 
 **Fecha:** 2026-05-05  
-**Actualización:** 2026-05-14  
+**Actualización:** 2026-05-30
 **Estado:** ✅ Implementada
 
 ### Contexto
 
-Lumapse tenía un campo de título separado (un `<input>` en la cabecera del editor) y el contenido Markdown en un `<textarea>` debajo. Esto generaba una experiencia donde el usuario debía mantener dos cosas: el "nombre" de la nota y su contenido, sin relación directa entre ambos. En Markdown puro, el título de un documento es la primera línea con `# Título`.
+Lumapse tenía un campo de título separado (un `<input>` en la cabecera del editor) y el contenido Markdown en un `<textarea>` debajo. Esto generaba una experiencia donde el usuario debía mantener dos cosas: el "nombre" de la nota y su contenido, sin relación directa entre ambos. En Markdown puro, el título de un documento puede expresarse con `# Título`, pero exigir esa sintaxis desde el primer uso contradice el objetivo de captura rápida.
 
 ### Decisión
 
-Eliminar el campo de título separado. La primera línea del contenido que comience con `# ` se extrae automáticamente como el título de la nota y se muestra en la barra lateral. Si la nota no tiene una línea con `#`, se muestra un título por defecto ("Sin título").
+Eliminar el campo de título separado. Si la nota contiene una línea `# Título`, se usa como título explícito. Si no contiene encabezado Markdown, Lumapse toma la primera línea no vacía como título implícito, la muestra con jerarquía visual en la tarjeta y conserva el resto como cuerpo. Si no hay contenido útil, se usa el título por defecto ("Sin título").
 
 ### Justificación
 
 - **Reduce la fricción:** El usuario escribe en un solo lugar, no tiene que decidir qué va en el título y qué va en el contenido.
-- **Consistencia con Markdown:** El estándar Markdown ya define `# ` como encabezado principal. Respetar esta convención reduce la curva de aprendizaje para usuarios que conozcan la sintaxis.
+- **Consistencia progresiva con Markdown:** El estándar Markdown ya define `# ` como encabezado principal. Lumapse respeta esa convención para quien la conozca, pero no la exige para empezar.
+- **Señal visual sin fricción:** La primera línea se diferencia en la tarjeta como título implícito, evitando un segundo campo y evitando instrucciones obligatorias.
 - **Precedente:** Aplicaciones exitosas como Typora, Bear y iA Writer siguen este patrón.
 - **Público objetivo:** Estudiantes universitarios que buscan velocidad y mínima fricción al tomar notas. Un campo extra es un paso extra.
 
@@ -260,4 +261,3 @@ Si el testing con usuarios reales muestra que los marcadores no se usan o genera
 ---
 
 *Este documento se actualiza con cada decisión de producto relevante. Los resultados de la encuesta se incorporarán en `docs/producto/resultados-relevamiento.md` y se referenciarán desde aquí para mantener la trazabilidad.*
-
