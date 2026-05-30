@@ -62,6 +62,8 @@ function getTaskLineNumbers(markdown) {
  * Renderiza texto Markdown a HTML sanitizado.
  *
  * @param {string} markdown — Texto en formato Markdown
+ * @param {object} [options] — Opciones de renderizado
+ * @param {number} [options.lineOffset] — Offset para mantener data-line real al renderizar fragmentos
  * @returns {string} — HTML seguro listo para innerHTML
  *
  * @example
@@ -71,10 +73,11 @@ function getTaskLineNumbers(markdown) {
  *   renderMarkdown('**negrita** y *cursiva*')
  *   // → '<p><strong>negrita</strong> y <em>cursiva</em></p>'
  */
-export function renderMarkdown(markdown) {
+export function renderMarkdown(markdown, options = {}) {
   if (!markdown || typeof markdown !== 'string') {
     return ''
   }
+  const lineOffset = Number.isInteger(options.lineOffset) ? options.lineOffset : 0
 
   // 1. Parsear Markdown → HTML crudo
   const rawHtml = marked.parse(markdown)
@@ -149,7 +152,7 @@ export function renderMarkdown(markdown) {
   const processedHtml = cleanHtml.replace(
     /<input\b([^>]*\btype=["']?checkbox["']?[^>]*)>/gi,
     (_match, attrs) => {
-      const lineNumber = taskLineNumbers[checkboxIndex] ?? checkboxIndex
+      const lineNumber = (taskLineNumbers[checkboxIndex] ?? checkboxIndex) + lineOffset
       checkboxIndex++
       const isChecked = attrs.includes('checked')
       return `<input type="checkbox" data-line="${lineNumber}"${isChecked ? ' checked' : ''}>`

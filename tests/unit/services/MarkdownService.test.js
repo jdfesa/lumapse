@@ -92,6 +92,12 @@ describe('renderMarkdown()', () => {
       expect(html).toContain('data-line="1"')
       expect(html).toContain('data-line="3"')
     })
+
+    it('respeta lineOffset al renderizar fragmentos de una nota', () => {
+      const html = MarkdownService.renderMarkdown('- [ ] uno', { lineOffset: 2 })
+
+      expect(html).toContain('data-line="2"')
+    })
   })
 
   describe('Sanitización XSS', () => {

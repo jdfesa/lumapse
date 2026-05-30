@@ -52,7 +52,7 @@ function renderTrashHeader(totalCount) {
         Papelera de reciclaje
         <span class="trash-header__count">${totalCount}</span>
       </h2>
-      <button class="trash-header__empty js-btn-empty-trash">Vaciar papelera</button>
+      <button class="trash-header__empty js-btn-empty-trash" title="Vaciar papelera">Vaciar papelera</button>
     </div>
   `;
 }

@@ -126,7 +126,7 @@ export class Heatmap {
     html += `</div>` // close grid
 
     if (this.selectedDate) {
-      html += `<button class="heatmap-clear" id="hm-clear">Limpiar filtro: ${this.selectedDate}</button>`
+      html += `<button class="heatmap-clear" id="hm-clear" title="Limpiar filtro de fecha">Limpiar filtro: ${this.selectedDate}</button>`
     }
 
     html += `</div>` // close container
