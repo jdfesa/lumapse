@@ -12,6 +12,82 @@ import { confirmDialog } from './ConfirmDialog.js';
 import { VirtualFeed } from './VirtualFeed.js';
 import './NoteList.css';
 
+const MARKDOWN_HEADING_REGEX = /^\s{0,3}#{1,6}\s+/
+const STRUCTURAL_MARKDOWN_REGEX = /^\s*(?:[-*+]\s+|\d+\.\s+|>\s+|```|\|)/
+
+function cleanImplicitTitle(line) {
+  return line
+    .trim()
+    .replace(/^\s{0,3}#{1,6}\s+/, '')
+    .replace(/^\s*(?:[-*+>]\s+|\d+\.\s+)/, '')
+    .replace(/[*_~`[\]()]/g, '')
+    .trim()
+}
+
+function getImplicitTitlePresentation(note) {
+  const content = note.content || ''
+  const lines = content.split('\n')
+  const titleLineIndex = lines.findIndex(line => line.trim())
+  if (titleLineIndex === -1) return null
+
+  const titleLine = lines[titleLineIndex]
+  const trimmed = titleLine.trim()
+  if (
+    MARKDOWN_HEADING_REGEX.test(trimmed) ||
+    STRUCTURAL_MARKDOWN_REGEX.test(trimmed)
+  ) {
+    return null
+  }
+
+  const title = cleanImplicitTitle(titleLine)
+  if (!title) return null
+
+  return {
+    title,
+    body: lines.slice(titleLineIndex + 1).join('\n'),
+    lineOffset: titleLineIndex + 1,
+  }
+}
+
+function renderImplicitTitleBlock(note) {
+  const titlePresentation = getImplicitTitlePresentation(note);
+  const bodyMarkdown = titlePresentation ? titlePresentation.body : (note.content || '');
+  const renderedContent = bodyMarkdown.trim()
+    ? MarkdownService.renderMarkdown(bodyMarkdown, { lineOffset: titlePresentation?.lineOffset || 0 })
+    : '';
+  const titleHtml = titlePresentation
+    ? `<h2 class="note-card__implicit-title">${escapeHtml(titlePresentation.title)}</h2>`
+    : '';
+
+  return `${titleHtml}${renderedContent}`;
+}
+
+function renderSubjectBadge(note, subjectsData) {
+  const found = findSubject(note.subjectId, subjectsData);
+  if (!found) return '';
+
+  const color = found.subject.color || (found.parent ? found.parent.color : '');
+  const label = found.parent
+    ? `${escapeHtml(found.parent.name)} \u203A ${escapeHtml(found.subject.name)}`
+    : escapeHtml(found.subject.name);
+
+  return `<span class="note-card__subject-badge" style="--subject-color: ${color}">${label}</span>`;
+}
+
+function renderStatusItems(note) {
+  const statusEmojis = [
+    { emoji: '📖', label: 'Por completar' },
+    { emoji: '❓', label: 'Tengo dudas' },
+    { emoji: '🔥', label: 'Importante' },
+    { emoji: '✅', label: 'Repasado' },
+  ];
+
+  return statusEmojis.map(s => {
+    const isActive = note.statusEmoji === s.emoji ? ' note-card__emoji-btn--current' : '';
+    return `<button class="note-card__emoji-btn js-btn-status${isActive}" data-note-id="${note.id}" data-emoji="${s.emoji}" title="${s.label}">${s.emoji}</button>`;
+  }).join('');
+}
+
 export class NoteList {
   constructor(containerElement) {
     this.container = containerElement;
@@ -141,23 +217,12 @@ export class NoteList {
 
   renderCard(note, subjectsData) {
     // Usar MarkdownService para renderizar el contenido completo de forma segura
-    const renderedContent = MarkdownService.renderMarkdown(note.content);
+    const renderedContent = renderImplicitTitleBlock(note);
     const timeStr = formatRelativeDate(note.updatedAt);
     const isPinned = note.pinned;
     const isArchived = note.archived;
     const pinLabel = isPinned ? 'Desfijar' : 'Fijar';
     const archiveLabel = isArchived ? 'Desarchivar' : 'Archivar';
-
-    // Badge de materia (con breadcrumb si es sección hija)
-    const found = findSubject(note.subjectId, subjectsData);
-    let subjectBadge = '';
-    if (found) {
-      const color = found.subject.color || (found.parent ? found.parent.color : '');
-      const label = found.parent
-        ? `${escapeHtml(found.parent.name)} \u203A ${escapeHtml(found.subject.name)}`
-        : escapeHtml(found.subject.name);
-      subjectBadge = `<span class="note-card__subject-badge" style="--subject-color: ${color}">${label}</span>`;
-    }
 
     // Badge de archivo
     const archivedBadge = isArchived
@@ -169,17 +234,7 @@ export class NoteList {
       ? `<span class="note-card__status-badge">${note.statusEmoji}</span>`
       : '';
 
-    // Submenú de estado académico (DP-005)
-    const statusEmojis = [
-      { emoji: '📖', label: 'Por completar' },
-      { emoji: '❓', label: 'Tengo dudas' },
-      { emoji: '🔥', label: 'Importante' },
-      { emoji: '✅', label: 'Repasado' },
-    ];
-    const statusItems = statusEmojis.map(s => {
-      const isActive = note.statusEmoji === s.emoji ? ' note-card__emoji-btn--current' : '';
-      return `<button class="note-card__emoji-btn js-btn-status${isActive}" data-note-id="${note.id}" data-emoji="${s.emoji}" title="${s.label}">${s.emoji}</button>`;
-    }).join('');
+    const statusItems = renderStatusItems(note);
     const clearStatus = note.statusEmoji
       ? `<button class="note-card__emoji-btn js-btn-status" data-note-id="${note.id}" data-emoji="" title="Quitar">✕</button>`
       : '';
@@ -190,7 +245,7 @@ export class NoteList {
           <span class="note-card__time">
             ${isPinned ? '<svg class="note-card__pin-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M16 2l-4 4-6-2-2 2 5 5-5 7 2 2 7-5 5 5 2-2-2-6 4-4z"/></svg>' : ''}
             ${timeStr}
-            ${subjectBadge}
+            ${renderSubjectBadge(note, subjectsData)}
             ${archivedBadge}
             ${statusBadge}
           </span>
@@ -208,16 +263,16 @@ export class NoteList {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
             </button>
             <div class="note-card__dropdown">
-              <button class="note-card__dropdown-btn js-btn-pin" data-id="${note.id}">
+              <button class="note-card__dropdown-btn js-btn-pin" data-id="${note.id}" title="${pinLabel} nota">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 2l-4 4-6-2-2 2 5 5-5 7 2 2 7-5 5 5 2-2-2-6 4-4z"/></svg>
                 ${pinLabel}
               </button>
-              <button class="note-card__dropdown-btn js-btn-archive" data-id="${note.id}">
+              <button class="note-card__dropdown-btn js-btn-archive" data-id="${note.id}" title="${archiveLabel} nota">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
                 ${archiveLabel}
               </button>
               <div class="note-card__move-wrapper">
-                <button class="note-card__dropdown-btn js-btn-move-trigger">
+                <button class="note-card__dropdown-btn js-btn-move-trigger" title="Mover nota">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
                   Mover a
                   <svg class="note-card__move-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
@@ -226,15 +281,15 @@ export class NoteList {
                   ${buildMoveMenu(note.id, note.subjectId, subjectsData)}
                 </div>
               </div>
-              <button class="note-card__dropdown-btn js-btn-edit" data-id="${note.id}">
+              <button class="note-card__dropdown-btn js-btn-edit" data-id="${note.id}" title="Editar nota">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                 Editar
               </button>
-              <button class="note-card__dropdown-btn js-btn-copy" data-id="${note.id}">
+              <button class="note-card__dropdown-btn js-btn-copy" data-id="${note.id}" title="Copiar nota">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                 Copiar
               </button>
-              <button class="note-card__dropdown-btn note-card__dropdown-btn--delete js-btn-delete" data-id="${note.id}">
+              <button class="note-card__dropdown-btn note-card__dropdown-btn--delete js-btn-delete" data-id="${note.id}" title="Eliminar nota">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                 Eliminar
               </button>

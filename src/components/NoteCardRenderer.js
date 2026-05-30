@@ -71,8 +71,8 @@ export function renderMoveItem(noteId, subjectId, label, color, isCurrent, isChi
   const check = isCurrent ? ' ✓' : ''
 
   return `
-    <button class="note-card__dropdown-btn${childClass} js-btn-move-to${currentClass}" 
-            data-note-id="${noteId}" 
+    <button class="note-card__dropdown-btn${childClass} js-btn-move-to${currentClass}" title="Mover a ${escapeHtml(label)}"
+            data-note-id="${noteId}"
             data-subject-id="${subjectId}"
             ${isCurrent ? 'disabled' : ''}>
       ${colorDot}
