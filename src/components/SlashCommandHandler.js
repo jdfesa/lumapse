@@ -19,6 +19,13 @@ import './EditorPopup.css';
  */
 const SLASH_COMMANDS = [
   {
+    id: 'title',
+    label: '/titulo',
+    description: '',
+    snippet: '# ',
+    cursorOffset: 2,
+  },
+  {
     id: 'todo',
     label: '/todo',
     description: '',

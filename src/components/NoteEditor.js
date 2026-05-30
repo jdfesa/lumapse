@@ -44,7 +44,7 @@ export class NoteEditor {
         <textarea 
           id="composer-input" 
           class="composer__textarea" 
-          placeholder="Alguna idea..."
+          placeholder="Título o idea principal..."
           rows="1"
         ></textarea>
         <div class="composer__footer">
@@ -56,7 +56,7 @@ export class NoteEditor {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>
-          <button id="btn-save-note" class="composer__save-btn" disabled>Guardar</button>
+          <button id="btn-save-note" class="composer__save-btn" title="Guardar nota" disabled>Guardar</button>
         </div>
       </div>
     `;
@@ -92,6 +92,8 @@ export class NoteEditor {
       onSelect: (item) => {
         if (item.id === 'focus-mode') {
           this.enterFocusMode();
+        } else if (item.id === 'heading') {
+          this.insertAtCursor(textarea, '# ');
         }
       },
       onDismiss: () => {},
@@ -103,10 +105,24 @@ export class NoteEditor {
         this.plusPopup.hide();
       } else {
         this.plusPopup.show([
+          { id: 'heading', label: 'Título', description: '' },
           { id: 'focus-mode', label: 'Modo Enfoque', description: 'Sin distracciones' },
         ], "Tipea / para comandos");
       }
     });
+  }
+
+  insertAtCursor(textarea, snippet) {
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const before = textarea.value.substring(0, start);
+    const after = textarea.value.substring(end);
+
+    textarea.value = before + snippet + after;
+    const cursor = start + snippet.length;
+    textarea.setSelectionRange(cursor, cursor);
+    textarea.dispatchEvent(new window.Event('input', { bubbles: true }));
+    textarea.focus();
   }
 
   /**
@@ -217,7 +233,7 @@ export class NoteEditor {
       // Estamos editando
       await NoteStore.updateNote(this.currentEditId, {
         content: content,
-        // DP-001: Intentamos extraer título, o dejamos sin título si no hay #
+        // DP-001: título explícito con # o primera línea útil como título implícito.
         title: this.extractTitle(content),
         subjectId: subjectId
       });
@@ -255,7 +271,8 @@ export class NoteEditor {
       if (trimmed) {
         // Limpiar sintaxis Markdown para mostrar texto limpio
         const clean = trimmed
-          .replace(/^[#*\->\d.]+\s*/, '')  // quitar prefijos (#, *, -, >, 1.)
+          .replace(/^\s{0,3}#{1,6}\s+/, '')
+          .replace(/^\s*(?:[-*+>]\s+|\d+\.\s+)/, '')
           .replace(/[*_~`[\]()]/g, '')       // quitar formato inline
           .trim();
         if (clean) {
