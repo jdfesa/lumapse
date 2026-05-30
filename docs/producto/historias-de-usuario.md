@@ -276,9 +276,11 @@
 | CA | Descripción | Verificación |
 |---|---|---|
 | CA-01 | Existe un campo de búsqueda accesible desde el drawer. | Inspección visual |
-| CA-02 | Al escribir, el listado se filtra en tiempo real mostrando solo las notas cuyo título o contenido coinciden con el texto ingresado. | Test funcional |
+| CA-02 | Al escribir, el listado se filtra en tiempo real mostrando solo las notas activas cuyo título o contenido coinciden con el texto ingresado. | Test funcional |
 | CA-03 | La búsqueda aplica debounce (≥200ms) para evitar re-renders innecesarios. | Verificación en código |
 | CA-04 | Al borrar el texto de búsqueda, se restaura el listado completo. | Test funcional |
+| CA-05 | La búsqueda es global entre notas activas aunque el usuario esté ubicado en Entrada o en una materia específica. | Test unitario |
+| CA-06 | La búsqueda no depende de tildes ni mayúsculas/minúsculas (`algebra` encuentra `Álgebra`). | Test unitario |
 
 ---
 

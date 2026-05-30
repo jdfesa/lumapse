@@ -16,6 +16,8 @@
  *   'subject'  → notas de la materia activa (+ secciones hijas), no archivadas
  *   'archived' → notas archivadas individualmente o por subject archivado
  *   'all'      → todas las no archivadas y fuera de subjects archivados
+ *   Con búsqueda activa, 'inbox'/'subject'/'all' buscan globalmente
+ *   entre notas activas para que la lupa no dependa de la ubicación actual.
  *
  * @param {object} state Estado completo del store
  * @returns {object[]} Array de notas filtradas y ordenadas
@@ -23,46 +25,53 @@
 export function getFilteredNotes(state) {
   let filtered = state.notes
   const archivedIds = new Set(state.archivedSubjectIds || [])
+  const query = normalizeSearchText(state.searchQuery)
+  const searchGlobally = query && ['inbox', 'subject', 'all'].includes(state.viewMode)
 
   // 0. Filtrar por viewMode
-  switch (state.viewMode) {
-    case 'inbox':
-      filtered = filtered.filter(note =>
-        !note.archived && !note.subjectId && !archivedIds.has(note.subjectId)
-      )
-      break
-    case 'subject': {
-      // Incluir notas de la materia activa Y de sus secciones hijas
-      const childIds = getChildSubjectIds(state.subjects, state.activeSubjectId)
-      const validIds = [state.activeSubjectId, ...childIds]
-      filtered = filtered.filter(note =>
-        !note.archived && validIds.includes(note.subjectId) && !archivedIds.has(note.subjectId)
-      )
-      break
+  if (searchGlobally) {
+    filtered = filtered.filter(note =>
+      !note.archived && !archivedIds.has(note.subjectId)
+    )
+  } else {
+    switch (state.viewMode) {
+      case 'inbox':
+        filtered = filtered.filter(note =>
+          !note.archived && !note.subjectId && !archivedIds.has(note.subjectId)
+        )
+        break
+      case 'subject': {
+        // Incluir notas de la materia activa Y de sus secciones hijas
+        const childIds = getChildSubjectIds(state.subjects, state.activeSubjectId)
+        const validIds = [state.activeSubjectId, ...childIds]
+        filtered = filtered.filter(note =>
+          !note.archived && validIds.includes(note.subjectId) && !archivedIds.has(note.subjectId)
+        )
+        break
+      }
+      case 'archived':
+        filtered = filtered.filter(note =>
+          note.archived === true || archivedIds.has(note.subjectId)
+        )
+        break
+      case 'trash':
+        // La vista de papelera carga sus datos por separado (getTrashItems)
+        // El filtro normal retorna vacío para no mostrar notas activas
+        return []
+      case 'all':
+      default:
+        filtered = filtered.filter(note =>
+          !note.archived && !archivedIds.has(note.subjectId)
+        )
+        break
     }
-    case 'archived':
-      filtered = filtered.filter(note =>
-        note.archived === true || archivedIds.has(note.subjectId)
-      )
-      break
-    case 'trash':
-      // La vista de papelera carga sus datos por separado (getTrashItems)
-      // El filtro normal retorna vacío para no mostrar notas activas
-      return []
-    case 'all':
-    default:
-      filtered = filtered.filter(note =>
-        !note.archived && !archivedIds.has(note.subjectId)
-      )
-      break
   }
 
-  // 1. Filtrar por búsqueda de texto (global, independiente de viewMode)
-  if (state.searchQuery.trim()) {
-    const query = state.searchQuery.toLowerCase().trim()
+  // 1. Filtrar por búsqueda de texto
+  if (query) {
     filtered = filtered.filter(note => {
-      const title = (note.title || '').toLowerCase()
-      const content = (note.content || '').toLowerCase()
+      const title = normalizeSearchText(note.title)
+      const content = normalizeSearchText(note.content)
       return title.includes(query) || content.includes(query)
     })
   }
@@ -86,6 +95,15 @@ export function getFilteredNotes(state) {
   })
 
   return filtered
+}
+
+export function normalizeSearchText(value) {
+  return (value || '')
+    .toString()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
 }
 
 /**

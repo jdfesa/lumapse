@@ -227,10 +227,22 @@ describe('getFilteredNotes()', () => {
       expect(getFilteredNotes(makeState({ notes: [note], viewMode: 'all', searchQuery: 'álgebra' }))).toEqual([note])
     })
 
+    it('filtra por título ignorando tildes', () => {
+      const note = makeNote({ title: 'Álgebra Lineal' })
+
+      expect(getFilteredNotes(makeState({ notes: [note], viewMode: 'all', searchQuery: 'algebra' }))).toEqual([note])
+    })
+
     it('filtra por contenido case-insensitive', () => {
       const note = makeNote({ content: 'Contenido de Programación' })
 
       expect(getFilteredNotes(makeState({ notes: [note], viewMode: 'all', searchQuery: 'programación' }))).toEqual([note])
+    })
+
+    it('filtra por contenido ignorando tildes', () => {
+      const note = makeNote({ content: 'Contenido de Programación' })
+
+      expect(getFilteredNotes(makeState({ notes: [note], viewMode: 'all', searchQuery: 'programacion' }))).toEqual([note])
     })
 
     it('búsqueda vacía no filtra nada', () => {
@@ -249,16 +261,16 @@ describe('getFilteredNotes()', () => {
       expect(getFilteredNotes(makeState({ notes: [makeNote()], viewMode: 'all', searchQuery: 'nope' }))).toEqual([])
     })
 
-    it('funciona combinado con viewMode "inbox"', () => {
+    it('busca globalmente desde viewMode "inbox"', () => {
       const inbox = makeNote({ id: 'inbox', title: 'TP' })
-      const subject = makeNote({ id: 'subject', title: 'TP', subjectId: 'subj-1' })
+      const subject = makeNote({ id: 'subject', title: 'TP', subjectId: 'subj-1', updatedAt: '2024-01-16T10:00:00.000Z' })
 
-      expect(getFilteredNotes(makeState({ notes: [inbox, subject], searchQuery: 'tp' }))).toEqual([inbox])
+      expect(getFilteredNotes(makeState({ notes: [inbox, subject], searchQuery: 'tp' }))).toEqual([subject, inbox])
     })
 
-    it('funciona combinado con viewMode "subject"', () => {
+    it('busca globalmente desde viewMode "subject"', () => {
       const subjects = { tree: [{ id: 'subj-1', children: [] }] }
-      const wanted = makeNote({ id: 'wanted', title: 'TP', subjectId: 'subj-1' })
+      const wanted = makeNote({ id: 'wanted', title: 'TP', subjectId: 'subj-1', updatedAt: '2024-01-16T10:00:00.000Z' })
       const inbox = makeNote({ id: 'inbox', title: 'TP', subjectId: null })
 
       expect(getFilteredNotes(makeState({
@@ -267,7 +279,18 @@ describe('getFilteredNotes()', () => {
         activeSubjectId: 'subj-1',
         subjects,
         searchQuery: 'tp',
-      }))).toEqual([wanted])
+      }))).toEqual([wanted, inbox])
+    })
+
+    it('mantiene la búsqueda archivada dentro de viewMode "archived"', () => {
+      const archived = makeNote({ id: 'archived', title: 'TP', archived: true })
+      const active = makeNote({ id: 'active', title: 'TP', archived: false })
+
+      expect(getFilteredNotes(makeState({
+        notes: [archived, active],
+        viewMode: 'archived',
+        searchQuery: 'tp',
+      }))).toEqual([archived])
     })
   })
 
