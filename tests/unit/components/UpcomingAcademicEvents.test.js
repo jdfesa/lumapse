@@ -70,6 +70,8 @@ function defaultState(overrides = {}) {
         },
       ],
     },
+    archivedSubjects: { tree: [] },
+    archivedSubjectIds: [],
     ...overrides,
   }
 }
@@ -148,6 +150,54 @@ describe('UpcomingAcademicEvents', () => {
     expect(document.querySelector('svg.academic-event-icon')).not.toBeNull()
     expect(document.querySelector('[data-event-action="edit"]')).not.toBeNull()
     expect(document.querySelector('[data-event-action="delete"]')).not.toBeNull()
+
+    component.destroy()
+  })
+
+  it('atenúa materia archivada y omite materia eliminada', () => {
+    storeMock.state = defaultState({
+      subjects: { tree: [] },
+      archivedSubjectIds: ['arch-subj'],
+      archivedSubjects: {
+        tree: [
+          { id: 'arch-subj', name: 'Fisica archivada', color: '#22d3ee', children: [] },
+        ],
+      },
+      upcomingAcademicEvents: [
+        event({ id: 'archived', title: 'Final archivo', date: '2026-06-10', subjectId: 'arch-subj' }),
+        event({ id: 'deleted', title: 'Evento huerfano', date: '2026-06-12', subjectId: 'deleted-subj' }),
+      ],
+    })
+
+    const component = createUpcoming()
+    const archivedSubject = document
+      .querySelector('[data-event-id="archived"]')
+      ?.querySelector('.academic-event-item__subject')
+    const deletedSubject = document
+      .querySelector('[data-event-id="deleted"]')
+      ?.querySelector('.academic-event-item__subject')
+
+    expect(archivedSubject?.textContent).toBe('Fisica archivada')
+    expect(archivedSubject?.classList.contains('academic-event-item__subject--archived')).toBe(true)
+    expect(deletedSubject).toBeNull()
+
+    component.destroy()
+  })
+
+  it('renderiza en tema oscuro sin emojis nativos y sin perder acciones', () => {
+    document.documentElement.removeAttribute('data-theme')
+    storeMock.state = defaultState({
+      upcomingAcademicEvents: [
+        event({ id: 'dark-event', type: 'exposicion', title: 'Defensa oral', date: '2026-06-14' }),
+      ],
+    })
+
+    const component = createUpcoming()
+    const container = document.querySelector('.upcoming-academic-events')
+
+    expect(document.documentElement.getAttribute('data-theme')).toBeNull()
+    expect(container?.textContent).not.toMatch(/[📖❓🔥✅📅🚀]/u)
+    expect(container?.querySelector('.academic-event-item--with-actions')).not.toBeNull()
 
     component.destroy()
   })

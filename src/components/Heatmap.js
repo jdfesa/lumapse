@@ -10,8 +10,10 @@ import {
   renderAcademicEventListItem,
 } from './AcademicEventTypes.js'
 import {
+  createAcademicEventSubjectCatalog,
   getAcademicEventSubjectColor,
   getAcademicEventSubjectLabel,
+  isAcademicEventSubjectArchived,
 } from './AcademicEventSubjects.js'
 import { openAcademicEventDialog } from './AcademicEventDialog.js'
 
@@ -41,7 +43,7 @@ export class Heatmap {
     // Suscribirse a cambios en el NoteStore
     this.unsubscribe = NoteStore.subscribe((state) => {
       this.selectedDate = state.dateFilter
-      this.subjects = state.subjects || { tree: [] }
+      this.subjects = createAcademicEventSubjectCatalog(state)
       this.calculateActivity(state.notes)
       this.calculateEventMap(state.academicEventsForMonth || [])
       this.render()
@@ -118,6 +120,10 @@ export class Heatmap {
     return getAcademicEventSubjectLabel(event, this.subjects)
   }
 
+  getEventSubjectArchived(event) {
+    return isAcademicEventSubjectArchived(event, this.subjects)
+  }
+
   getEventById(eventId) {
     for (const events of Object.values(this.eventMap)) {
       const event = events.find(item => item.id === eventId)
@@ -152,6 +158,7 @@ export class Heatmap {
           ${events.map(event => renderAcademicEventListItem(event, {
             color: this.getEventColor(event),
             subjectLabel: this.getEventSubjectLabel(event),
+            subjectArchived: this.getEventSubjectArchived(event),
             actions: true,
           })).join('')}
         </div>

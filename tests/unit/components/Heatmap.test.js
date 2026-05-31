@@ -80,6 +80,8 @@ function defaultState(overrides = {}) {
         },
       ],
     },
+    archivedSubjects: { tree: [] },
+    archivedSubjectIds: [],
     ...overrides,
   }
 }
@@ -106,6 +108,38 @@ afterEach(() => {
 })
 
 describe('Heatmap eventos academicos read-only', () => {
+  it('mantiene legible un dia con notas pero sin eventos', () => {
+    storeMock.state = defaultState({
+      notes: [note()],
+      academicEventsForMonth: [],
+    })
+
+    const heatmap = createHeatmap()
+    const day = document.querySelector('.heatmap-day[data-date="2026-06-14"]')
+
+    expect(day?.dataset.level).toBe('1')
+    expect(day?.dataset.eventCount).toBe('0')
+    expect(day?.querySelector('.academic-event-dot')).toBeNull()
+
+    heatmap.destroy()
+  })
+
+  it('mantiene legible un dia con eventos pero sin notas', () => {
+    storeMock.state = defaultState({
+      notes: [],
+      academicEventsForMonth: [event({ type: 'parcial' })],
+    })
+
+    const heatmap = createHeatmap()
+    const day = document.querySelector('.heatmap-day[data-date="2026-06-14"]')
+
+    expect(day?.dataset.level).toBe('0')
+    expect(day?.dataset.eventCount).toBe('1')
+    expect(day?.querySelector('.academic-event-dot--parcial')).not.toBeNull()
+
+    heatmap.destroy()
+  })
+
   it('renderiza notas y eventos academicos en el mismo dia sin perder data-level', () => {
     storeMock.state = defaultState({
       notes: [note()],
@@ -118,6 +152,27 @@ describe('Heatmap eventos academicos read-only', () => {
     expect(day?.dataset.level).toBe('1')
     expect(day?.dataset.eventCount).toBe('1')
     expect(day?.querySelector('.academic-event-dot--final')).not.toBeNull()
+
+    heatmap.destroy()
+  })
+
+  it('limita dots cuando hay muchos eventos el mismo dia sin ocultar el detalle', () => {
+    storeMock.state = defaultState({
+      dateFilter: '2026-06-14',
+      academicEventsForMonth: [
+        event({ id: 'a', type: 'parcial' }),
+        event({ id: 'b', type: 'final' }),
+        event({ id: 'c', type: 'tp' }),
+        event({ id: 'd', type: 'exposicion' }),
+      ],
+    })
+
+    const heatmap = createHeatmap()
+    const day = document.querySelector('.heatmap-day[data-date="2026-06-14"]')
+
+    expect(day?.dataset.eventCount).toBe('4')
+    expect(day?.querySelectorAll('.academic-event-dot')).toHaveLength(3)
+    expect(document.querySelectorAll('.heatmap-events-card .academic-event-item')).toHaveLength(4)
 
     heatmap.destroy()
   })
@@ -230,6 +285,49 @@ describe('Heatmap eventos academicos read-only', () => {
     heatmap.destroy()
   })
 
+  it('atenúa la materia archivada si el store conserva su label', () => {
+    storeMock.state = defaultState({
+      dateFilter: '2026-06-14',
+      subjects: { tree: [] },
+      archivedSubjectIds: ['arch-child'],
+      archivedSubjects: {
+        tree: [
+          {
+            id: 'arch-root',
+            name: 'Historia',
+            color: '#f87171',
+            children: [{ id: 'arch-child', name: 'Unidad II', color: '#fb923c' }],
+          },
+        ],
+      },
+      academicEventsForMonth: [
+        event({ id: 'archived-event', subjectId: 'arch-child' }),
+      ],
+    })
+
+    const heatmap = createHeatmap()
+    const subject = document.querySelector('.academic-event-item__subject')
+
+    expect(subject?.textContent).toBe('Historia > Unidad II')
+    expect(subject?.classList.contains('academic-event-item__subject--archived')).toBe(true)
+
+    heatmap.destroy()
+  })
+
+  it('deja el evento sin materia visible si la materia fue eliminada', () => {
+    storeMock.state = defaultState({
+      dateFilter: '2026-06-14',
+      academicEventsForMonth: [
+        event({ id: 'orphan-event', subjectId: 'deleted-subject' }),
+      ],
+    })
+
+    const heatmap = createHeatmap()
+
+    expect(document.querySelector('.academic-event-item__subject')).toBeNull()
+    heatmap.destroy()
+  })
+
   it('abre el dialogo de nueva fecha con la fecha seleccionada', () => {
     storeMock.state = defaultState({
       dateFilter: '2026-06-14',
@@ -244,6 +342,25 @@ describe('Heatmap eventos academicos read-only', () => {
       date: '2026-06-14',
     })
 
+    heatmap.destroy()
+  })
+
+  it('renderiza en ancho mobile y tema claro sin emojis nativos en fechas academicas', () => {
+    Object.defineProperty(window, 'innerWidth', { value: 360, configurable: true })
+    document.documentElement.setAttribute('data-theme', 'light')
+    storeMock.state = defaultState({
+      dateFilter: '2026-06-14',
+      academicEventsForMonth: [event({ id: 'mobile-event', type: 'tp', title: 'Entrega mobile' })],
+    })
+
+    const heatmap = createHeatmap()
+    const container = document.querySelector('.heatmap-container')
+
+    expect(document.documentElement.getAttribute('data-theme')).toBe('light')
+    expect(container?.textContent).not.toMatch(/[📖❓🔥✅📅🚀]/u)
+    expect(container?.querySelector('.academic-event-item--with-actions')).not.toBeNull()
+
+    document.documentElement.removeAttribute('data-theme')
     heatmap.destroy()
   })
 

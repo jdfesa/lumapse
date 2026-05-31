@@ -8,8 +8,10 @@ import './UpcomingAcademicEvents.css'
 import * as NoteStore from '../store/NoteStore.js'
 import { bindAcademicEventActions } from './AcademicEventActions.js'
 import {
+  createAcademicEventSubjectCatalog,
   getAcademicEventSubjectColor,
   getAcademicEventSubjectLabel,
+  isAcademicEventSubjectArchived,
 } from './AcademicEventSubjects.js'
 import { renderAcademicEventListItem } from './AcademicEventTypes.js'
 
@@ -53,7 +55,7 @@ export class UpcomingAcademicEvents {
 
     this.unsubscribe = NoteStore.subscribe((state) => {
       this.events = getUpcomingEvents(state.upcomingAcademicEvents)
-      this.subjects = state.subjects || { tree: [] }
+      this.subjects = createAcademicEventSubjectCatalog(state)
       this.render()
     })
   }
@@ -64,6 +66,10 @@ export class UpcomingAcademicEvents {
 
   getEventSubjectLabel(event) {
     return getAcademicEventSubjectLabel(event, this.subjects)
+  }
+
+  getEventSubjectArchived(event) {
+    return isAcademicEventSubjectArchived(event, this.subjects)
   }
 
   getEventById(eventId) {
@@ -87,6 +93,7 @@ export class UpcomingAcademicEvents {
         ${this.events.map(event => renderAcademicEventListItem(event, {
           color: this.getEventColor(event),
           subjectLabel: this.getEventSubjectLabel(event),
+          subjectArchived: this.getEventSubjectArchived(event),
           actions: true,
         })).join('')}
       </div>
