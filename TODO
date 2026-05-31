@@ -1,102 +1,824 @@
 # TODO — Lumapse
 
-Pendientes urgentes que no entran en el tramo actual.
+## Proximo paso logico: Fechas academicas discretas
 
-## Urgente
+**Estado:** planificacion previa a implementacion.
+**Objetivo:** agregar un apartado discreto de fechas academicas ligado al calendario existente, sin convertir Lumapse en una agenda.
+**Idea central:** el usuario sigue viniendo a tomar notas; las fechas solo agregan contexto academico util, visible y local.
 
-- [x] Agregar transacciones SQLite para operaciones en cascada. Completado: 2026-05-26.
-  - Cubrir `deleteSubject`, `restoreSubject`, `archiveSubject`, `unarchiveSubject`, `deleteSection`, `restoreSection`, `archiveSection` y `unarchiveSection`.
-  - Objetivo: evitar estados parciales si una escritura falla a mitad de una operación crítica.
-  - Implementado en `src/services/sqlite/connection.js` con el helper `runTransaction()`.
+Lumapse debe mantener su foco: captura rapida, notas por materia y organizacion liviana. Las fechas academicas existen para recordar parciales, finales, trabajos practicos y exposiciones dentro del mismo contexto donde el estudiante ya toma apuntes. No deben competir con las notas ni introducir una experiencia de calendario completa.
 
-- [x] Hacer el deploy Android más seguro. Completado: 2026-05-26.
-  - `scripts/deploy-android.sh` no debería desinstalar por defecto.
-  - Agregar `--clean` para borrar datos/caché de forma explícita.
-  - Agregar `--target <deviceId>` para instalar sin selector interactivo.
-  - Si hay más de un dispositivo conectado y no se pasa `--target`, el script debe fallar con instrucciones claras.
-  - Documentado en `scripts/README.md`.
+---
 
-## Siguiente capa de automatización
+## 1. Principio de producto
 
-- [x] Exponer scripts internos en `package.json`. Completado: 2026-05-26.
-  - `quality`, `verify`, `check:session`, `check:health`, `check:size`, `check:a11y`, `deploy:android`.
-  - También se expusieron checks documentales y de schema para CI: `check:traceability`, `check:docs`, `check:schema`, `check:dbml`, `check:subjects` y `check:native-dialogs`.
+### 1.1. Lo que estamos construyendo
 
-- [x] Ampliar GitHub Actions. Completado: 2026-05-26.
-  - Además de lint, correr tests, build y guardias de tamaño.
-  - El workflow `CI — Quality Gate` ahora corre lint, tests, build, bundle budget, check de diálogos nativos, trazabilidad, links, schema, DBML, jerarquía de materias y a11y estática.
+Una funcionalidad de **recordatorio visual pasivo** para fechas academicas importantes.
 
-- [x] Agregar check contra diálogos nativos. Completado: 2026-05-26.
-  - Fallar si aparece `alert(`, `confirm(` o `prompt(` en `src/`, excluyendo `src/utils/seeder.js`.
-  - Implementado en `scripts/check-native-dialogs.js` y expuesto como `npm run check:native-dialogs`.
+Debe permitir:
 
-- [x] Reemplazar o corregir los tests nativos Android generados por template. Completado: 2026-05-26.
-  - El smoke test actual todavía referencia el paquete original de Capacitor.
-  - Reemplazado por tests bajo `com.lumapse.app`; `./gradlew testDebugUnitTest` pasa.
+- Marcar una fecha puntual.
+- Elegir un tipo academico: parcial, final, trabajo practico o exposicion.
+- Asociarla opcionalmente a una materia/seccion existente.
+- Mostrar un indicador compacto en el Heatmap.
+- Mostrar una lista corta de proximas fechas.
+- Ver que eventos hay en el dia seleccionado.
+- Guardar todo localmente en SQLite.
 
-## Scripts y Toolchain
+### 1.2. Lo que NO estamos construyendo
 
-> Origen: Auditoría de la decisión de mejora del toolchain (2026-05-27). Se implementaron 12 de 12 mejoras planificadas. Este bloque queda cerrado. Referencia: `scripts/docs/diagnostico-toolchain-y-doctores.md`.
+Esto no es un calendario general ni una agenda semanal.
 
-- [x] **G1 — `check-toolchain.py`: Detección de scripts huérfanos** ✅ Completado: 2026-05-30.
-  - **Problema:** A medida que el toolchain crece, scripts pueden quedar en `scripts/` sin que ningún archivo los invoque ni los documente. Hoy `check-toolchain.py` verifica que los archivos *referenciados* desde `package.json` existan (dirección: npm → disco), pero no verifica la dirección inversa (disco → ¿alguien me invoca?). Un script podría quedar abandonado sin que nadie lo note.
-  - **Contexto técnico:**
-    - `check-toolchain.py` ya tiene `audit_readme_coverage()` que verifica si el *nombre* del script aparece en `scripts/README.md`. Esto cubre documentación pero no invocación real.
-    - Los puntos de invocación posibles son: `package.json` (scripts npm), `quality.sh` (quality gate), `daily-workflow.sh` (workflow diario), `.github/workflows/*.yml` (CI), y `pre-commit`/`pre-push` hooks.
-    - Un script "huérfano" sería uno que existe en `scripts/`, tiene extensión `.py`/`.sh`/`.js`, pero no aparece referenciado en ningún punto de invocación ni documentado como herramienta manual en `scripts/README.md`.
-  - **Tareas:**
-    - [x] Agregar función `audit_orphan_scripts()` en `check-toolchain.py`.
-    - [x] Construir el set de "scripts referenciados" parseando: `package.json` campo `scripts` (ya existe `extract_script_references()`), `scripts/quality.sh`, `scripts/daily-workflow.sh`, `.github/workflows/*.yml` y hooks de Git.
-    - [x] Comparar contra `list_scripts()` (scripts en disco). La diferencia son los huérfanos.
-    - [x] Excluir del reporte: archivos `.replaced` (scripts preservados históricos), `__pycache__`, y el propio `check-toolchain.py`.
-    - [x] Emitir como `warn`, no `fail` — un script huérfano no rompe nada, solo indica desorden.
-    - [x] Verificar con `python3 scripts/check-toolchain.py` y confirmar que no hay falsos positivos.
-  - **Criterio de cierre:** `check-toolchain.py` reporta `[WARN]` para cualquier script en `scripts/` que no esté referenciado desde ningún punto de invocación conocido ni documentado como herramienta manual. Sin falsos positivos con los scripts actuales.
+No incluir en v1:
 
-- [x] **G2 — `check-toolchain.py`: Detección de marcas de superseded/deprecated** ✅ Completado: 2026-05-30.
-  - **Problema:** La política de no borrado del repo dice que los scripts superseded deben marcarse explícitamente. Si alguien agrega un script que reemplaza otro pero olvida marcar el original, el toolchain acumula ambigüedad. No hay check automático que valide esta convención.
-  - **Contexto técnico:**
-    - El único script actualmente marcado como superseded es `check-traceability.py.replaced` (por convención de nombre).
-    - Los posibles marcadores: extensión `.replaced`, palabra `superseded`/`deprecated`/`replaced` en el docstring o cabecera, o sección dedicada en `scripts/README.md`.
-    - El check debería buscar en dos direcciones: (a) scripts con marca de superseded que no tengan un reemplazo documentado, y (b) scripts reemplazados que no tengan marca.
-  - **Tareas:**
-    - [x] Agregar función `audit_superseded_markers()` en `check-toolchain.py`.
-    - [x] Buscar archivos con extensión `.replaced` y verificar que exista un wrapper o reemplazo activo con el mismo nombre base (ej: `check-traceability.py.replaced` → `check-traceability.py`).
-    - [x] Buscar en el docstring/cabecera las palabras clave `superseded`, `deprecated`, `replaced by` y verificar que el reemplazo mencionado exista.
-    - [x] Emitir como `warn` si un script tiene marca de superseded pero el reemplazo no existe, o si un `.replaced` no tiene wrapper activo.
-    - [x] Verificar con `python3 scripts/check-toolchain.py`.
-  - **Criterio de cierre:** `check-toolchain.py` detecta marcas de superseded inconsistentes y emite `[WARN]` con detalle suficiente para corregir.
+- Notificaciones push.
+- Alarmas.
+- Horas de inicio o fin.
+- Eventos recurrentes.
+- Horarios de cursado.
+- Sincronizacion con Google Calendar, iCal u otros servicios.
+- Invitaciones o eventos compartidos.
+- Vistas semanales/diarias complejas.
+- Arrastrar y soltar eventos.
+- Recordatorios temporales tipo "avisame 15 minutos antes".
 
-- [x] **G3 — `android-doctor.sh`: Detección de APK instalada en dispositivo** ✅ Completado: 2026-05-30.
-  - **Problema:** Antes de un deploy, es útil saber si la APK de Lumapse ya está instalada en el dispositivo conectado. Esto permite distinguir entre un install limpio (primera vez) y un update (upgrade), lo cual impacta en si los datos SQLite existentes se van a preservar o no.
-  - **Contexto técnico:**
-    - El package de Lumapse es `com.lumapse.app` (ver `android/app/build.gradle` → `applicationId`).
-    - El comando `adb shell pm list packages | grep lumapse` devuelve el package si está instalado.
-    - Si hay múltiples dispositivos, se necesita `adb -s <deviceId> shell pm list packages`.
-    - Solo ejecutar si hay al menos un dispositivo conectado y autorizado (la detección ya existe en el script).
-  - **Tareas:**
-    - [x] Agregar un bloque después del check de dispositivos conectados en `android-doctor.sh`.
-    - [x] Si `DEVICE_COUNT > 0`, ejecutar `adb shell pm list packages 2>/dev/null | grep -q "com.lumapse.app"`.
-    - [x] Si el package existe: `ok "Lumapse APK instalada en dispositivo"`.
-    - [x] Si no existe: `warn "Lumapse APK no instalada; el próximo deploy será un install limpio"`.
-    - [x] Si hay múltiples dispositivos, iterar sobre cada uno o usar el primero autorizado.
-    - [x] Verificar con `bash scripts/android-doctor.sh` en entorno sin dispositivos y con dispositivo físico con APK instalada.
-  - **Criterio de cierre:** `android-doctor.sh` reporta si la APK está instalada, distinguiendo install limpio vs update.
+### 1.3. Regla de oro
 
-- [x] **G4 — `android-doctor.sh`: Inspección de estado de datos SQLite en dispositivo** ✅ Completado: 2026-05-30.
-  - **Problema:** Un deploy puede afectar la base SQLite del usuario en el dispositivo. Saber si existe una base antes del deploy reduce el riesgo de pérdida accidental de datos, especialmente con `deploy-android.sh --clean`. Complementa el flag `--clean` dando visibilidad previa.
-  - **Contexto técnico:**
-    - La base SQLite vive en `/data/data/com.lumapse.app/databases/` (almacenamiento privado de Capacitor).
-    - Acceder requiere `adb shell run-as com.lumapse.app ls /data/data/com.lumapse.app/databases/` — solo funciona en builds debuggables (no release firmados).
-    - Es más invasivo que otros checks porque usa `run-as`, que puede fallar por permisos o por build no debuggable.
-    - El check debe ser informativo (`warn`/`ok`), nunca bloqueante.
-  - **Tareas:**
-    - [x] Agregar un bloque condicional después del check de APK instalada (G3) en `android-doctor.sh`.
-    - [x] Solo ejecutar si la APK está instalada (depende de G3).
-    - [x] Ejecutar `adb shell run-as com.lumapse.app ls /data/data/com.lumapse.app/databases/ 2>/dev/null`.
-    - [x] Si lista archivos `.db`/`.sqlite`: `ok "Base de datos SQLite encontrada en dispositivo"`.
-    - [x] Si falla (permisos, build release): `warn "No se pudo inspeccionar datos (build no debuggable o permisos insuficientes)"`.
-    - [x] Si no hay archivos de base de datos: `ok "Dispositivo sin base de datos previa (install limpio)"`.
-    - [x] Documentar en `scripts/README.md` que este check requiere build debuggable.
-    - [x] Verificar con `bash scripts/android-doctor.sh` en entorno sin dispositivos y con dispositivo físico con APK instalada.
-  - **Criterio de cierre:** `android-doctor.sh` informa si hay datos SQLite existentes en el dispositivo antes de un deploy, con manejo graceful de permisos insuficientes.
+Si una decision hace que Lumapse se parezca mas a Google Calendar que a una app de notas academicas, queda fuera del alcance.
+
+---
+
+## 2. Alcance funcional v1
+
+### 2.1. Tipos de fecha academica
+
+Usar un set cerrado y estable:
+
+| Valor interno | Label UI | Uso |
+|---|---|---|
+| `parcial` | Parcial | Examen durante la cursada. |
+| `final` | Final | Examen final o mesa final. |
+| `tp` | Trabajo practico | Entrega de TP, informe, proyecto o actividad escrita. |
+| `exposicion` | Exposicion | Presentacion oral, defensa, coloquio o muestra. |
+
+### 2.2. Campos visibles para el usuario
+
+Formulario minimo:
+
+- Tipo: obligatorio.
+- Fecha: obligatoria, formato de UI local.
+- Materia: opcional, con selector de materias/secciones.
+- Nota breve: opcional, una linea.
+
+No pedir hora.
+No pedir duracion.
+No pedir prioridad.
+No pedir repeticion.
+
+### 2.3. Comportamiento esperado
+
+- Si el evento tiene materia asociada, puede usar el color de la materia como apoyo visual.
+- Si no tiene materia, usa el color semantico del tipo.
+- El Heatmap sigue mostrando actividad de notas por fondo/intensidad.
+- Las fechas academicas se muestran como dots o marcas pequenas encima del dia.
+- Al seleccionar un dia, Lumapse mantiene el filtro actual de notas por fecha y ademas muestra los eventos de ese dia.
+- Las proximas fechas aparecen en un bloque compacto debajo del Heatmap.
+- Si no hay proximas fechas, la seccion no se renderiza.
+
+---
+
+## 3. Modelo de datos
+
+### 3.1. Nueva tabla
+
+Tabla propuesta: `academic_events`.
+
+```sql
+CREATE TABLE IF NOT EXISTS academic_events (
+  id        TEXT PRIMARY KEY,
+  type      TEXT NOT NULL CHECK(type IN ('parcial', 'final', 'tp', 'exposicion')),
+  title     TEXT,
+  date      TEXT NOT NULL,
+  subjectId TEXT REFERENCES subjects(id) ON DELETE SET NULL,
+  createdAt TEXT NOT NULL,
+  updatedAt TEXT NOT NULL
+);
+```
+
+### 3.2. Indices recomendados
+
+```sql
+CREATE INDEX IF NOT EXISTS idx_academic_events_date
+ON academic_events(date);
+
+CREATE INDEX IF NOT EXISTS idx_academic_events_subject
+ON academic_events(subjectId);
+```
+
+### 3.3. Decisiones de datos
+
+- `date` usa formato `YYYY-MM-DD`.
+- `subjectId` es nullable.
+- `ON DELETE SET NULL`: si una materia se elimina, la fecha sobrevive sin materia.
+- No hay `deletedAt` en v1. Borrar una fecha academica la elimina definitivamente.
+- Incluir `updatedAt` aunque se edite poco, por consistencia y auditoria local.
+- No guardar iconos ni colores en la tabla. Eso pertenece a la capa de presentacion.
+
+### 3.4. Validaciones de dominio
+
+- `type` debe estar dentro del set permitido.
+- `date` debe ser fecha ISO simple valida (`YYYY-MM-DD`).
+- `title` debe trimmease y limitarse a una linea.
+- `title` vacio se guarda como `null`.
+- `subjectId` vacio se guarda como `null`.
+- Si `subjectId` existe, debe apuntar a una materia/seccion no eliminada.
+
+---
+
+## 4. Arquitectura propuesta
+
+### 4.1. Capa SQLite
+
+Crear:
+
+- `src/services/sqlite/academicEvents.js`
+
+Responsabilidades:
+
+- CRUD crudo contra SQLite.
+- Mapear filas a objetos JS.
+- No conocer detalles de UI.
+- No decidir labels, iconos ni colores.
+- Usar `getDb()`, `persistWeb()` y `isWriteTransactionActive()` igual que `notes.js` y `subjects.js`.
+- Envolver errores en `DatabaseError`.
+
+Funciones sugeridas:
+
+- `createAcademicEventRow(event)`
+- `getAcademicEventRows()`
+- `getAcademicEventRowsByMonth(year, month)`
+- `getAcademicEventRowsByDate(date)`
+- `getUpcomingAcademicEventRows(today, limit)`
+- `updateAcademicEventRow(id, changes)`
+- `deleteAcademicEventRow(id)`
+
+### 4.2. Capa de servicio de dominio
+
+Crear:
+
+- `src/services/AcademicEventService.js`
+
+Responsabilidades:
+
+- Validar inputs.
+- Generar `id`, `createdAt`, `updatedAt`.
+- Normalizar `title`, `date`, `subjectId`.
+- Resolver si una materia existe cuando venga `subjectId`.
+- Exponer una API estable para el store.
+
+Funciones sugeridas:
+
+- `createAcademicEvent({ type, title, date, subjectId })`
+- `getAcademicEvents()`
+- `getAcademicEventsByMonth(year, month)`
+- `getAcademicEventsByDate(date)`
+- `getUpcomingAcademicEvents(today, limit)`
+- `updateAcademicEvent(id, changes)`
+- `deleteAcademicEvent(id)`
+
+### 4.3. Store
+
+Mantener el patron actual de `NoteStore` como fachada, pero separar el codigo nuevo para no inflar archivos grandes.
+
+Crear:
+
+- `src/store/NoteStore.academicEvents.js`
+
+Extender `src/store/NoteStore.state.js` con:
+
+```js
+academicEvents: [],
+selectedAcademicDate: null,
+upcomingAcademicEvents: [],
+```
+
+Acciones sugeridas:
+
+- `loadAcademicEvents()`
+- `loadAcademicEventsForMonth(year, month)`
+- `loadUpcomingAcademicEvents()`
+- `createAcademicEvent(input)`
+- `updateAcademicEvent(id, changes)`
+- `deleteAcademicEvent(id)`
+- `setSelectedAcademicDate(dateOrNull)`
+- `getAcademicEventsByDate(date)`
+
+Regla:
+
+- `dateFilter` sigue siendo el filtro de notas.
+- `selectedAcademicDate` puede compartir el mismo valor cuando el usuario toca un dia, pero no debe reemplazar semanticamente a `dateFilter`.
+
+### 4.4. Presentacion de tipos
+
+Crear:
+
+- `src/components/AcademicEventTypes.js`
+
+Responsabilidades:
+
+- Definir tipos, labels, colores e iconos SVG inline.
+- Mantener iconos minimalistas, `currentColor`, stroke lineal.
+- Evitar emojis nativos.
+
+API sugerida:
+
+- `ACADEMIC_EVENT_TYPES`
+- `getAcademicEventType(type)`
+- `renderAcademicEventIcon(type)`
+- `renderAcademicEventDot(event, subjectsData)`
+- `getAcademicEventColor(event, subjectsData)`
+
+Colores sugeridos:
+
+- Parcial: ambar suave.
+- Final: rojo suave.
+- Trabajo practico: azul.
+- Exposicion: verde.
+
+Si hay materia asociada:
+
+- El dot puede usar el color de materia.
+- El icono/lista puede conservar color por tipo o usar materia segun legibilidad.
+- Decidir en implementacion con prueba visual.
+
+---
+
+## 5. Integracion con Heatmap
+
+### 5.1. Objetivo
+
+Extender `src/components/Heatmap.js` sin perder su funcion actual: mostrar actividad de notas y filtrar por fecha.
+
+### 5.2. Cambios internos
+
+Agregar al componente:
+
+- `eventMap`: `{ 'YYYY-MM-DD': AcademicEvent[] }`
+- Carga o recepcion desde store.
+- Render de dot(s) por dia.
+- Render de mini-card para el dia seleccionado.
+
+### 5.3. Render del dia
+
+Cada dia puede tener:
+
+- Nivel de actividad de notas (`data-level` actual).
+- Estado today.
+- Estado active.
+- Uno o mas eventos academicos.
+
+Reglas visuales:
+
+- No cambiar el numero del dia por iconos.
+- No usar emoji.
+- Usar un punto pequeno debajo del numero.
+- Si hay varios eventos el mismo dia:
+  - v1: mostrar un unico dot compuesto o un dot neutral.
+  - En mini-card se listan todos.
+- Evitar que el dot tape el numero.
+- Mantener tamanos estables para no mover la grilla.
+
+### 5.4. Click en dia
+
+El click actual:
+
+- Alterna `NoteStore.setDateFilter(dateStr)`.
+
+Nuevo comportamiento:
+
+- Mantener ese comportamiento.
+- Ademas setear/usar fecha seleccionada para mostrar eventos del dia.
+- Si se deselecciona el dia, ocultar mini-card de eventos.
+
+### 5.5. Mini-card debajo del Heatmap
+
+Mostrar solo si:
+
+- Hay una fecha seleccionada, y
+- Esa fecha tiene eventos academicos.
+
+Contenido por evento:
+
+- Icono SVG.
+- Tipo.
+- Materia si existe.
+- Nota breve si existe.
+- Botones discretos: editar y eliminar.
+
+No mostrar una tarjeta grande ni contenido editorial.
+
+---
+
+## 6. Creacion de fecha academica
+
+### 6.1. Punto de entrada v1 recomendado
+
+Implementar primero:
+
+- Boton pequeno debajo del Heatmap: "Agregar fecha".
+- Si hay un dia seleccionado, prellenar esa fecha.
+- Si no hay dia seleccionado, usar fecha de hoy.
+
+Luego evaluar:
+
+- Entrada desde una materia activa en el drawer.
+- Long press en un dia del Heatmap.
+
+Motivo:
+
+- Long press es mas delicado en mobile/web.
+- Un boton explicito reduce riesgo y facilita test.
+
+### 6.2. Modal
+
+Crear:
+
+- `src/components/AcademicEventDialog.js`
+- `src/components/AcademicEventDialog.css`
+
+Reusar patrones de `ConfirmDialog.js`:
+
+- Modal accesible.
+- Cierre con Escape.
+- Trap de foco.
+- Boton cancelar.
+- Boton guardar.
+- Sin `alert`, `confirm` ni `prompt` nativos.
+
+Campos:
+
+- Tipo: control segmentado o select compacto.
+- Fecha: input `type="date"`.
+- Materia: select con Entrada/Sin materia + materias/secciones.
+- Nota breve: input text.
+
+Validaciones UI:
+
+- Guardar disabled si no hay tipo o fecha valida.
+- Mensaje inline breve si la fecha no es valida.
+- Trim de titulo al guardar.
+
+### 6.3. Edicion
+
+Para v1 se puede incluir si el CRUD ya esta listo:
+
+- Desde mini-card de evento: boton editar.
+- El mismo modal se abre con valores existentes.
+- Guardar llama `updateAcademicEvent`.
+
+Si complica demasiado:
+
+- Implementar borrar en v1.
+- Dejar editar para v1.1.
+
+Recomendacion:
+
+- Incluir editar si no aumenta mucho el scope, porque corregir una fecha mal cargada es una necesidad natural.
+
+---
+
+## 7. Proximas fechas
+
+### 7.1. Ubicacion
+
+Debajo del Heatmap en el drawer.
+
+Crear:
+
+- `src/components/UpcomingAcademicEvents.js`
+- `src/components/UpcomingAcademicEvents.css`
+
+### 7.2. Reglas
+
+- Mostrar los proximos 5 eventos desde hoy.
+- Si no hay eventos futuros, no renderizar.
+- Orden cronologico ascendente.
+- Mostrar fecha abreviada, tipo, materia y nota breve.
+- Colapsable si la lista crece o si ocupa demasiado espacio.
+
+### 7.3. Estados visuales
+
+- Evento futuro: color normal.
+- Evento de hoy: acento sutil.
+- Evento pasado del mes actual: opcional, gris/tachado solo si decidimos mostrar eventos del mes; no incluir en primera pasada si ensucia.
+
+Recomendacion v1:
+
+- Mostrar solo futuros y hoy.
+- No mostrar pasados en la lista de proximas fechas.
+- El historial queda visible en el Heatmap al navegar meses.
+
+---
+
+## 8. Documentacion y trazabilidad
+
+### 8.1. Requisitos funcionales
+
+Agregar en `docs/producto/requisitos-funcionales.md`:
+
+- `RF-027`: El sistema debe permitir marcar fechas academicas puntuales en el calendario, con tipo de evento, fecha, descripcion breve opcional y asociacion opcional a una materia.
+
+Estado inicial:
+
+- Si solo se documenta antes de implementar: `Pendiente`.
+- Al completar v1: `Implementado`.
+
+### 8.2. Historia de usuario
+
+Agregar en `docs/producto/historias-de-usuario.md`:
+
+- `HU-027`: Como estudiante, quiero marcar fechas de parciales, finales, trabajos practicos y exposiciones en Lumapse para tener recordatorios academicos junto a mis notas sin usar una agenda aparte.
+
+Criterios de aceptacion sugeridos:
+
+- CA-01: El usuario puede crear una fecha academica con tipo y fecha obligatorios.
+- CA-02: El usuario puede asociar opcionalmente la fecha a una materia o seccion.
+- CA-03: El Heatmap muestra un indicador visual en los dias con fechas academicas.
+- CA-04: Al seleccionar un dia con eventos, se muestra una lista compacta de eventos de ese dia.
+- CA-05: La app muestra una lista de proximas fechas si existen eventos futuros.
+- CA-06: La funcionalidad persiste offline en SQLite.
+- CA-07: No se solicitan permisos de notificaciones ni se depende de servicios externos.
+
+### 8.3. Decision de producto
+
+Agregar en `docs/producto/decisiones-producto.md`:
+
+- `DP-007`: Fechas academicas como recordatorio visual pasivo, no como agenda.
+
+Debe dejar explicitado:
+
+- Por que se incluye.
+- Por que no hay notificaciones.
+- Por que no hay recurrencia.
+- Por que se integra con Heatmap.
+- Por que se mantiene offline-first.
+
+### 8.4. Schema y diagramas
+
+Actualizar:
+
+- `docs/diagramas/database/04-modelo-fisico-ddl.md`
+- DBML generado/documentado si corresponde.
+- Checks de schema: `npm run check:schema`, `npm run check:dbml`.
+
+### 8.5. Changelog
+
+Agregar en `CHANGELOG.md`, seccion `[Unreleased]`:
+
+- `Added`: Fechas academicas discretas en calendario.
+- `Changed`: Heatmap muestra indicadores de eventos academicos sin reemplazar actividad de notas.
+
+---
+
+## 9. Plan de implementacion modular
+
+### Fase 0 — Preparacion documental minima
+
+Objetivo:
+
+- Dejar trazabilidad antes de tocar codigo funcional.
+
+Tareas:
+
+- [ ] Crear RF-027.
+- [ ] Crear HU-027 con criterios de aceptacion.
+- [ ] Crear DP-007.
+- [ ] Agregar entrada inicial en CHANGELOG.
+- [ ] Confirmar que `npm run check:traceability` sigue limpio o documentar el estado pendiente si aun no hay codigo.
+
+Criterio de cierre:
+
+- Documentacion viva describe el alcance y los limites.
+- No hay ambiguedad entre "fechas academicas" y "agenda/calendario completo".
+
+### Fase 1 — Schema SQLite y CRUD bajo nivel
+
+Objetivo:
+
+- Persistir eventos academicos localmente.
+
+Tareas:
+
+- [ ] Agregar `academic_events` al schema de nuevas instalaciones en `connection.js`.
+- [ ] Agregar migracion idempotente para instalaciones existentes.
+- [ ] Agregar indices por `date` y `subjectId`.
+- [ ] Crear `src/services/sqlite/academicEvents.js`.
+- [ ] Implementar create/read/update/delete.
+- [ ] Implementar queries por fecha, mes y proximos eventos.
+- [ ] Agregar tests unitarios en `tests/unit/services/sqlite/academicEvents.test.js`.
+
+Criterio de cierre:
+
+- CRUD completo probado.
+- Queries ordenan correctamente por fecha.
+- `subjectId` nullable funciona.
+- `ON DELETE SET NULL` queda documentado y, si el entorno de test lo permite, cubierto.
+
+### Fase 2 — Servicio de dominio
+
+Objetivo:
+
+- Evitar que la UI y el store conozcan detalles de validacion SQL.
+
+Tareas:
+
+- [ ] Crear `src/services/AcademicEventService.js`.
+- [ ] Centralizar tipos permitidos.
+- [ ] Normalizar `title`, `date` y `subjectId`.
+- [ ] Validar formato `YYYY-MM-DD`.
+- [ ] Validar existencia de materia si viene `subjectId`.
+- [ ] Generar timestamps.
+- [ ] Agregar tests unitarios.
+
+Criterio de cierre:
+
+- Inputs invalidos no llegan a SQLite.
+- El servicio devuelve objetos consistentes.
+- Los errores se comportan como el resto de servicios.
+
+### Fase 3 — Store y selectores
+
+Objetivo:
+
+- Exponer eventos academicos al resto de la app sin acoplar componentes a servicios.
+
+Tareas:
+
+- [ ] Extender `NoteStore.state.js` con estado de eventos.
+- [ ] Crear `NoteStore.academicEvents.js`.
+- [ ] Exportar acciones desde el barrel `NoteStore.js`.
+- [ ] Implementar carga inicial de eventos.
+- [ ] Implementar carga por mes para Heatmap.
+- [ ] Implementar proximos eventos.
+- [ ] Implementar selector por fecha seleccionada.
+- [ ] Agregar tests unitarios del store.
+
+Criterio de cierre:
+
+- Heatmap y lista de proximas fechas pueden consumir datos del store.
+- Crear/editar/borrar eventos actualiza estado y notifica.
+- No se rompen filtros de notas existentes.
+
+### Fase 4 — Tipos visuales e iconografia
+
+Objetivo:
+
+- Mantener consistencia visual minimalista.
+
+Tareas:
+
+- [ ] Crear `src/components/AcademicEventTypes.js`.
+- [ ] Definir labels, colores y SVGs inline.
+- [ ] Evitar emojis Unicode nativos.
+- [ ] Crear helper para dot de Heatmap.
+- [ ] Crear helper para item de lista.
+- [ ] Agregar tests de render basico.
+
+Criterio de cierre:
+
+- Los cuatro tipos se renderizan con SVG.
+- La UI no depende de estilos de emoji del sistema operativo.
+- Los colores tienen contraste suficiente en tema oscuro y claro.
+
+### Fase 5 — Heatmap read-only con dots
+
+Objetivo:
+
+- Mostrar eventos existentes sin permitir todavia crearlos desde UI.
+
+Tareas:
+
+- [ ] Extender `Heatmap.js` con `eventMap`.
+- [ ] Renderizar dot en dias con eventos.
+- [ ] Mantener `data-level` de actividad de notas.
+- [ ] Asegurar que el dot no mueve la grilla.
+- [ ] Mostrar mini-card de eventos al seleccionar dia.
+- [ ] Agregar tests de render del Heatmap si ya existe patron o crear uno focalizado.
+
+Criterio de cierre:
+
+- Un dia con notas y eventos comunica ambas cosas.
+- Click en dia sigue filtrando notas por fecha.
+- Dia con evento muestra detalle compacto.
+
+### Fase 6 — Modal de creacion/edicion
+
+Objetivo:
+
+- Permitir crear y corregir fechas academicas.
+
+Tareas:
+
+- [ ] Crear `AcademicEventDialog.js`.
+- [ ] Crear CSS del dialog.
+- [ ] Reusar patrones accesibles de `ConfirmDialog`.
+- [ ] Implementar modo create.
+- [ ] Implementar modo edit si no expande demasiado el scope.
+- [ ] Validar campos antes de guardar.
+- [ ] Prellenar fecha seleccionada desde Heatmap.
+- [ ] Prellenar materia si se invoca desde contexto de materia.
+- [ ] Agregar tests de dialog.
+
+Criterio de cierre:
+
+- Se puede crear una fecha desde la UI.
+- Se puede cancelar sin efectos.
+- Se puede guardar y ver reflejado en Heatmap/proximas fechas.
+- No hay dialogos nativos.
+
+### Fase 7 — Proximas fechas
+
+Objetivo:
+
+- Dar recordatorio pasivo sin invadir la pantalla.
+
+Tareas:
+
+- [ ] Crear `UpcomingAcademicEvents.js`.
+- [ ] Crear CSS compacto.
+- [ ] Renderizar solo si hay eventos futuros.
+- [ ] Mostrar maximo 5 eventos.
+- [ ] Ordenar cronologicamente.
+- [ ] Permitir colapsar/expandir.
+- [ ] Agregar tests de render y orden.
+
+Criterio de cierre:
+
+- Si no hay eventos, no ocupa espacio.
+- Si hay eventos, el usuario los ve sin abrir otra vista.
+- El bloque no compite con materias ni notas.
+
+### Fase 8 — Acciones de borrar y editar desde mini-card/lista
+
+Objetivo:
+
+- Cerrar el ciclo CRUD de forma minima.
+
+Tareas:
+
+- [ ] Boton editar en cada evento.
+- [ ] Boton eliminar con confirmacion accesible.
+- [ ] Actualizar store tras borrar.
+- [ ] Recalcular eventos del mes y proximos.
+- [ ] Tests de acciones.
+
+Criterio de cierre:
+
+- El usuario no queda atrapado con eventos mal cargados.
+- Borrar no afecta notas ni materias.
+
+### Fase 9 — QA visual y mobile
+
+Objetivo:
+
+- Asegurar que la feature suma valor sin romper la interfaz minimalista.
+
+Tareas:
+
+- [ ] Probar tema oscuro.
+- [ ] Probar tema claro.
+- [ ] Probar ancho mobile.
+- [ ] Probar muchos eventos en un mismo dia.
+- [ ] Probar dia con notas pero sin eventos.
+- [ ] Probar dia con eventos pero sin notas.
+- [ ] Probar materia eliminada: evento queda sin materia.
+- [ ] Probar materia archivada: definir si se muestra label o solo evento.
+- [ ] Revisar que no haya overlap en Heatmap.
+
+Criterio de cierre:
+
+- La feature se percibe discreta.
+- No hay saltos de layout.
+- No aparecen emojis nativos.
+- El Heatmap sigue siendo legible.
+
+### Fase 10 — Verificacion final
+
+Comandos minimos:
+
+```bash
+npm test
+npm run lint
+npm run build
+npm run check:schema
+npm run check:dbml
+npm run check:traceability
+npm run quality
+```
+
+Criterio de cierre:
+
+- Quality gate completo OK.
+- Docs sincronizados.
+- Schema sincronizado.
+- Tests nuevos cubren datos, store y render.
+
+---
+
+## 10. Criterios de aceptacion globales
+
+La feature puede considerarse lista cuando:
+
+- El usuario puede crear una fecha academica puntual.
+- El usuario puede asociarla o no a una materia.
+- El Heatmap indica dias con fechas academicas sin ocultar actividad de notas.
+- El usuario puede ver los eventos del dia seleccionado.
+- El usuario puede ver una lista corta de proximas fechas.
+- Todo persiste offline en SQLite.
+- No hay notificaciones, recurrencias ni integraciones externas.
+- La UI mantiene el lenguaje minimalista de Lumapse.
+- La feature no desplaza ni complica la toma de notas.
+
+---
+
+## 11. Preguntas abiertas antes de implementar
+
+Resolver durante Fase 0 o al inicio de Fase 1:
+
+- Si una materia esta archivada pero tiene eventos futuros, ¿se muestra la materia en proximas fechas o se muestra solo el evento?
+- Si hay varios eventos el mismo dia, ¿el Heatmap muestra un dot unico o hasta tres dots pequenos?
+- ¿El color principal del dot debe ser por tipo o por materia?
+- ¿La lista de proximas fechas debe vivir siempre debajo del Heatmap o moverse si el drawer queda muy largo?
+- ¿La edicion entra en v1 o v1.1?
+
+Recomendaciones iniciales:
+
+- Materia archivada: mostrar label si existe, con estilo atenuado.
+- Multiples eventos: dot unico en v1.
+- Color del dot: materia si existe; tipo si no existe.
+- Proximas fechas: debajo del Heatmap.
+- Edicion: incluir si el modal reutilizable queda simple.
+
+---
+
+## 12. Riesgos y mitigaciones
+
+### Riesgo: feature creep hacia agenda
+
+Mitigacion:
+
+- No agregar hora, repeticion ni notificaciones en v1.
+- Nombrar la feature "Fechas academicas", no "Calendario".
+- Mantenerla dentro del Heatmap y drawer.
+
+### Riesgo: saturar el Heatmap
+
+Mitigacion:
+
+- Dot pequeno y estable.
+- Mini-card solo al seleccionar dia.
+- Proximas fechas colapsable.
+
+### Riesgo: acoplar UI a SQLite
+
+Mitigacion:
+
+- Mantener capas: SQLite row CRUD, servicio de dominio, store, componentes.
+
+### Riesgo: romper filtros por fecha de notas
+
+Mitigacion:
+
+- `dateFilter` sigue siendo para notas.
+- Eventos usan selectores separados.
+- Tests de regresion para Heatmap y `noteFilters`.
+
+### Riesgo: archivos grandes
+
+Mitigacion:
+
+- Crear componentes nuevos en archivos propios.
+- No inflar `Heatmap.js` con formulario/lista.
+- Extraer helpers visuales a `AcademicEventTypes.js`.
+
+---
+
+## 13. Orden recomendado de trabajo
+
+Orden estricto para implementar sin deuda:
+
+1. Documentacion y trazabilidad.
+2. Schema y CRUD SQLite.
+3. Servicio de dominio.
+4. Store y selectores.
+5. Tipos visuales SVG.
+6. Heatmap read-only con dots.
+7. Mini-card del dia seleccionado.
+8. Modal de creacion/edicion.
+9. Proximas fechas.
+10. Acciones editar/eliminar.
+11. QA visual mobile/desktop.
+12. Quality gate final.
+
+No saltar directo a UI sin tener CRUD y store probados.
