@@ -139,10 +139,17 @@
   font-size: 0.72rem;
 }
 
+.upcoming-academic-events .academic-event-item__subject--archived {
+  opacity: 0.72;
+  font-style: italic;
+}
+
 .upcoming-academic-events .academic-event-item__actions {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  align-self: start;
+  flex: 0 0 auto;
 }
 
 .upcoming-academic-events .academic-event-item__action {

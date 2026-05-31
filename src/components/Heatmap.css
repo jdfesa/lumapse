@@ -230,10 +230,17 @@
   color: var(--color-text-muted);
 }
 
+.academic-event-item__subject--archived {
+  opacity: 0.72;
+  font-style: italic;
+}
+
 .academic-event-item__actions {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  align-self: start;
+  flex: 0 0 auto;
 }
 
 .academic-event-item__action {

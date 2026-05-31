@@ -171,8 +171,11 @@ export function renderAcademicEventListItem(event, options = {}) {
   const subjectLabel = options.subjectLabel ?? event.subjectName ?? ''
   const title = event.title || type.label
   const date = dateLabel(event.date)
+  const subjectClass = options.subjectArchived
+    ? 'academic-event-item__subject academic-event-item__subject--archived'
+    : 'academic-event-item__subject'
   const subject = subjectLabel
-    ? `<span class="academic-event-item__subject">${escapeHtml(subjectLabel)}</span>`
+    ? `<span class="${subjectClass}">${escapeHtml(subjectLabel)}</span>`
     : ''
   const actions = options.actions ? renderEventActions(event, title) : ''
   const actionsClass = options.actions ? ' academic-event-item--with-actions' : ''
