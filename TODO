@@ -744,21 +744,21 @@ Criterio de cierre:
 Comandos minimos:
 
 ```bash
-npm test
-npm run lint
-npm run build
-npm run check:schema
-npm run check:dbml
-npm run check:traceability
-npm run quality
+npm test                         # OK: 24 archivos, 490 tests
+npm run lint                      # OK
+npm run build                     # OK
+npm run check:schema              # OK
+npm run check:dbml                # OK
+npm run check:traceability        # OK
+npm run quality                   # OK
 ```
 
 Criterio de cierre:
 
-- Quality gate completo OK.
-- Docs sincronizados.
-- Schema sincronizado.
-- Tests nuevos cubren datos, store y render.
+- [x] Quality gate completo OK.
+- [x] Docs sincronizados.
+- [x] Schema sincronizado.
+- [x] Tests nuevos cubren datos, store y render.
 
 ---
 
