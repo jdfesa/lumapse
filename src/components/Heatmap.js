@@ -4,6 +4,7 @@
 // =============================================================
 
 import * as NoteStore from '../store/NoteStore.js'
+import { bindAcademicEventActions } from './AcademicEventActions.js'
 import {
   renderAcademicEventDot,
   renderAcademicEventListItem,
@@ -117,6 +118,15 @@ export class Heatmap {
     return getAcademicEventSubjectLabel(event, this.subjects)
   }
 
+  getEventById(eventId) {
+    for (const events of Object.values(this.eventMap)) {
+      const event = events.find(item => item.id === eventId)
+      if (event) return event
+    }
+
+    return null
+  }
+
   renderEventDots(events) {
     if (!events.length) return ''
 
@@ -142,6 +152,7 @@ export class Heatmap {
           ${events.map(event => renderAcademicEventListItem(event, {
             color: this.getEventColor(event),
             subjectLabel: this.getEventSubjectLabel(event),
+            actions: true,
           })).join('')}
         </div>
       </section>
@@ -261,6 +272,8 @@ export class Heatmap {
         }).catch(error => console.warn('[Heatmap] No se pudo abrir el dialogo de fecha academica:', error))
       })
     }
+
+    bindAcademicEventActions(this.container, eventId => this.getEventById(eventId))
 
     const dayEls = this.container.querySelectorAll('.heatmap-day:not(.heatmap-day--empty)')
     dayEls.forEach(el => {

@@ -6,6 +6,7 @@ const storeMock = vi.hoisted(() => {
     subscriber: null,
     unsubscribe: vi.fn(),
     subscribe: vi.fn(),
+    deleteAcademicEvent: vi.fn().mockResolvedValue(undefined),
   }
 
   mock.subscribe.mockImplementation(callback => {
@@ -19,6 +20,23 @@ const storeMock = vi.hoisted(() => {
 
 vi.mock('../../../src/store/NoteStore.js', () => ({
   subscribe: storeMock.subscribe,
+  deleteAcademicEvent: storeMock.deleteAcademicEvent,
+}))
+
+const dialogMock = vi.hoisted(() => ({
+  openAcademicEventDialog: vi.fn().mockResolvedValue(null),
+}))
+
+const confirmMock = vi.hoisted(() => ({
+  confirmDialog: vi.fn().mockResolvedValue(true),
+}))
+
+vi.mock('../../../src/components/AcademicEventDialog.js', () => ({
+  openAcademicEventDialog: dialogMock.openAcademicEventDialog,
+}))
+
+vi.mock('../../../src/components/ConfirmDialog.js', () => ({
+  confirmDialog: confirmMock.confirmDialog,
 }))
 
 import {
@@ -67,6 +85,8 @@ beforeEach(() => {
   vi.clearAllMocks()
   storeMock.state = defaultState()
   storeMock.subscriber = null
+  storeMock.deleteAcademicEvent.mockResolvedValue(undefined)
+  confirmMock.confirmDialog.mockResolvedValue(true)
 })
 
 afterEach(() => {
@@ -126,6 +146,49 @@ describe('UpcomingAcademicEvents', () => {
     expect(document.querySelector('.academic-event-item__title')?.textContent).toBe('Entrega informe')
     expect(document.querySelector('.academic-event-item__subject')?.textContent).toBe('Algebra > Unidad I')
     expect(document.querySelector('svg.academic-event-icon')).not.toBeNull()
+    expect(document.querySelector('[data-event-action="edit"]')).not.toBeNull()
+    expect(document.querySelector('[data-event-action="delete"]')).not.toBeNull()
+
+    component.destroy()
+  })
+
+  it('abre edicion desde proximas fechas', () => {
+    const upcomingEvent = event({ id: 'edit-upcoming', title: 'Final oral', date: '2026-06-20' })
+    storeMock.state = defaultState({
+      upcomingAcademicEvents: [upcomingEvent],
+    })
+
+    const component = createUpcoming()
+
+    document.querySelector('[data-event-action="edit"]').click()
+
+    expect(dialogMock.openAcademicEventDialog).toHaveBeenCalledWith({
+      mode: 'edit',
+      event: upcomingEvent,
+    })
+
+    component.destroy()
+  })
+
+  it('elimina desde proximas fechas y actualiza via store', async () => {
+    storeMock.state = defaultState({
+      upcomingAcademicEvents: [
+        event({ id: 'delete-upcoming', title: 'Entrega informe', date: '2026-06-14' }),
+      ],
+    })
+
+    const component = createUpcoming()
+
+    document.querySelector('[data-event-action="delete"]').click()
+    await Promise.resolve()
+    await Promise.resolve()
+
+    expect(confirmMock.confirmDialog).toHaveBeenCalledWith(expect.objectContaining({
+      title: 'Eliminar fecha academica',
+      confirmText: 'Eliminar',
+      danger: true,
+    }))
+    expect(storeMock.deleteAcademicEvent).toHaveBeenCalledWith('delete-upcoming')
 
     component.destroy()
   })

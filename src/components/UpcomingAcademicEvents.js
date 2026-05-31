@@ -6,6 +6,7 @@
 import './UpcomingAcademicEvents.css'
 
 import * as NoteStore from '../store/NoteStore.js'
+import { bindAcademicEventActions } from './AcademicEventActions.js'
 import {
   getAcademicEventSubjectColor,
   getAcademicEventSubjectLabel,
@@ -65,6 +66,10 @@ export class UpcomingAcademicEvents {
     return getAcademicEventSubjectLabel(event, this.subjects)
   }
 
+  getEventById(eventId) {
+    return this.events.find(event => event.id === eventId) || null
+  }
+
   renderToggleIcon() {
     return `
       <svg class="upcoming-academic-events__chevron" width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -82,6 +87,7 @@ export class UpcomingAcademicEvents {
         ${this.events.map(event => renderAcademicEventListItem(event, {
           color: this.getEventColor(event),
           subjectLabel: this.getEventSubjectLabel(event),
+          actions: true,
         })).join('')}
       </div>
     `
@@ -114,6 +120,8 @@ export class UpcomingAcademicEvents {
         this.collapsed = !this.collapsed
         this.render()
       })
+
+    bindAcademicEventActions(this.container, eventId => this.getEventById(eventId))
   }
 
   destroy() {

@@ -8,6 +8,7 @@ const storeMock = vi.hoisted(() => {
     subscribe: vi.fn(),
     setDateFilter: vi.fn(),
     loadAcademicEventsByMonth: vi.fn().mockResolvedValue(undefined),
+    deleteAcademicEvent: vi.fn().mockResolvedValue(undefined),
   }
 
   mock.subscribe.mockImplementation(callback => {
@@ -23,14 +24,23 @@ const dialogMock = vi.hoisted(() => ({
   openAcademicEventDialog: vi.fn().mockResolvedValue(null),
 }))
 
+const confirmMock = vi.hoisted(() => ({
+  confirmDialog: vi.fn().mockResolvedValue(true),
+}))
+
 vi.mock('../../../src/store/NoteStore.js', () => ({
   subscribe: storeMock.subscribe,
   setDateFilter: storeMock.setDateFilter,
   loadAcademicEventsByMonth: storeMock.loadAcademicEventsByMonth,
+  deleteAcademicEvent: storeMock.deleteAcademicEvent,
 }))
 
 vi.mock('../../../src/components/AcademicEventDialog.js', () => ({
   openAcademicEventDialog: dialogMock.openAcademicEventDialog,
+}))
+
+vi.mock('../../../src/components/ConfirmDialog.js', () => ({
+  confirmDialog: confirmMock.confirmDialog,
 }))
 
 import { Heatmap } from '../../../src/components/Heatmap.js'
@@ -86,6 +96,8 @@ beforeEach(() => {
   storeMock.state = defaultState()
   storeMock.subscriber = null
   storeMock.loadAcademicEventsByMonth.mockResolvedValue(undefined)
+  storeMock.deleteAcademicEvent.mockResolvedValue(undefined)
+  confirmMock.confirmDialog.mockResolvedValue(true)
 })
 
 afterEach(() => {
@@ -153,6 +165,67 @@ describe('Heatmap eventos academicos read-only', () => {
     expect(card?.querySelector('.academic-event-item__title')?.textContent).toBe('Entrega informe')
     expect(card?.querySelector('.academic-event-item__subject')?.textContent).toBe('Algebra > Unidad I')
     expect(card?.querySelector('svg.academic-event-icon')).not.toBeNull()
+    expect(card?.querySelector('[data-event-action="edit"]')).not.toBeNull()
+    expect(card?.querySelector('[data-event-action="delete"]')).not.toBeNull()
+
+    heatmap.destroy()
+  })
+
+  it('abre edicion desde el mini-card del dia seleccionado', () => {
+    const selectedEvent = event({ id: 'edit-me', type: 'final', title: 'Mesa regular' })
+    storeMock.state = defaultState({
+      dateFilter: '2026-06-14',
+      academicEventsForMonth: [selectedEvent],
+    })
+
+    const heatmap = createHeatmap()
+
+    document.querySelector('[data-event-action="edit"]').click()
+
+    expect(dialogMock.openAcademicEventDialog).toHaveBeenCalledWith({
+      mode: 'edit',
+      event: selectedEvent,
+    })
+
+    heatmap.destroy()
+  })
+
+  it('elimina desde el mini-card con confirmacion accesible', async () => {
+    storeMock.state = defaultState({
+      dateFilter: '2026-06-14',
+      academicEventsForMonth: [event({ id: 'delete-me', title: 'Mesa regular' })],
+    })
+
+    const heatmap = createHeatmap()
+
+    document.querySelector('[data-event-action="delete"]').click()
+    await Promise.resolve()
+    await Promise.resolve()
+
+    expect(confirmMock.confirmDialog).toHaveBeenCalledWith(expect.objectContaining({
+      title: 'Eliminar fecha academica',
+      confirmText: 'Eliminar',
+      danger: true,
+    }))
+    expect(storeMock.deleteAcademicEvent).toHaveBeenCalledWith('delete-me')
+
+    heatmap.destroy()
+  })
+
+  it('no elimina si el usuario cancela la confirmacion', async () => {
+    confirmMock.confirmDialog.mockResolvedValue(false)
+    storeMock.state = defaultState({
+      dateFilter: '2026-06-14',
+      academicEventsForMonth: [event({ id: 'keep-me' })],
+    })
+
+    const heatmap = createHeatmap()
+
+    document.querySelector('[data-event-action="delete"]').click()
+    await Promise.resolve()
+    await Promise.resolve()
+
+    expect(storeMock.deleteAcademicEvent).not.toHaveBeenCalled()
 
     heatmap.destroy()
   })
