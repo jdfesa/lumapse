@@ -4,6 +4,19 @@
 // =============================================================
 
 import * as NoteStore from '../store/NoteStore.js'
+import {
+  renderAcademicEventDot,
+  renderAcademicEventListItem,
+} from './AcademicEventTypes.js'
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+}
 
 export class Heatmap {
   constructor(containerId) {
@@ -15,12 +28,16 @@ export class Heatmap {
     this.currentYear = this.currentDate.getFullYear()
     
     this.activityMap = {} // { 'YYYY-MM-DD': count }
+    this.eventMap = {} // { 'YYYY-MM-DD': academicEvent[] }
     this.selectedDate = null
+    this.subjects = { tree: [] }
 
     // Suscribirse a cambios en el NoteStore
     this.unsubscribe = NoteStore.subscribe((state) => {
       this.selectedDate = state.dateFilter
+      this.subjects = state.subjects || { tree: [] }
       this.calculateActivity(state.notes)
+      this.calculateEventMap(state.academicEventsForMonth || [])
       this.render()
     })
 
@@ -40,6 +57,25 @@ export class Heatmap {
   }
 
   /**
+   * Agrupa eventos academicos por dia para renderizar indicadores.
+   */
+  calculateEventMap(events) {
+    this.eventMap = {}
+    events.forEach(event => {
+      if (!event.date) return
+      this.eventMap[event.date] = [...(this.eventMap[event.date] || []), event]
+    })
+
+    Object.keys(this.eventMap).forEach(date => {
+      this.eventMap[date].sort((a, b) => {
+        const byCreatedAt = new Date(a.createdAt || 0) - new Date(b.createdAt || 0)
+        if (byCreatedAt !== 0) return byCreatedAt
+        return String(a.id).localeCompare(String(b.id))
+      })
+    })
+  }
+
+  /**
    * Cambia el mes actual a mostrar
    */
   changeMonth(offset) {
@@ -51,7 +87,10 @@ export class Heatmap {
       this.currentMonth = 0
       this.currentYear++
     }
+    this.eventMap = {}
     this.render()
+    NoteStore.loadAcademicEventsByMonth(this.currentYear, this.currentMonth + 1)
+      .catch(error => console.warn('[Heatmap] No se pudieron cargar fechas academicas del mes:', error))
   }
 
   /**
@@ -63,6 +102,92 @@ export class Heatmap {
     } else {
       NoteStore.setDateFilter(dateStr)
     }
+  }
+
+  findSubjectMeta(subjectId) {
+    if (!subjectId || !this.subjects?.tree) return null
+
+    for (const root of this.subjects.tree) {
+      if (root.id === subjectId) {
+        return {
+          label: root.name,
+          color: root.color,
+        }
+      }
+
+      for (const child of (root.children || [])) {
+        if (child.id === subjectId) {
+          return {
+            label: `${root.name} > ${child.name}`,
+            color: child.color || root.color,
+          }
+        }
+      }
+    }
+
+    return null
+  }
+
+  getEventColor(event) {
+    return this.findSubjectMeta(event.subjectId)?.color || null
+  }
+
+  getEventSubjectLabel(event) {
+    return this.findSubjectMeta(event.subjectId)?.label || ''
+  }
+
+  renderEventDots(events) {
+    if (!events.length) return ''
+
+    return `
+      <span class="heatmap-event-dots">
+        ${events.slice(0, 3).map(event => renderAcademicEventDot(event, {
+          color: this.getEventColor(event),
+        })).join('')}
+      </span>
+    `
+  }
+
+  renderSelectedDateEvents() {
+    if (!this.selectedDate) return ''
+
+    const events = this.eventMap[this.selectedDate] || []
+    if (events.length === 0) return ''
+
+    return `
+      <section class="heatmap-events-card" aria-label="Fechas academicas del dia">
+        <h4 class="heatmap-events-card__title">Fechas academicas</h4>
+        <div class="heatmap-events-card__list">
+          ${events.map(event => renderAcademicEventListItem(event, {
+            color: this.getEventColor(event),
+            subjectLabel: this.getEventSubjectLabel(event),
+          })).join('')}
+        </div>
+      </section>
+    `
+  }
+
+  getActivityLevel(count) {
+    if (count === 1) return 1
+    if (count >= 2 && count <= 3) return 2
+    if (count > 3) return 3
+    return 0
+  }
+
+  renderDayCell(day, todayStr) {
+    const dateStr = `${this.currentYear}-${String(this.currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+    const count = this.activityMap[dateStr] || 0
+    const events = this.eventMap[dateStr] || []
+    const level = this.getActivityLevel(count)
+    const isToday = dateStr === todayStr ? 'heatmap-day--today' : ''
+    const isActive = dateStr === this.selectedDate ? 'heatmap-day--active' : ''
+
+    return `
+      <div class="heatmap-day ${isToday} ${isActive}" data-date="${dateStr}" data-level="${level}" data-event-count="${events.length}">
+        <span class="heatmap-day__number">${day}</span>
+        ${this.renderEventDots(events)}
+      </div>
+    `
   }
 
   render() {
@@ -105,28 +230,15 @@ export class Heatmap {
 
     // Días del mes
     for (let i = 1; i <= daysInMonth; i++) {
-      const dateStr = `${this.currentYear}-${String(this.currentMonth + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`
-      const count = this.activityMap[dateStr] || 0
-      
-      let level = 0
-      if (count === 1) level = 1
-      else if (count >= 2 && count <= 3) level = 2
-      else if (count > 3) level = 3
-
-      const isToday = dateStr === todayStr ? 'heatmap-day--today' : ''
-      const isActive = dateStr === this.selectedDate ? 'heatmap-day--active' : ''
-
-      html += `
-        <div class="heatmap-day ${isToday} ${isActive}" data-date="${dateStr}" data-level="${level}">
-          ${i}
-        </div>
-      `
+      html += this.renderDayCell(i, todayStr)
     }
 
     html += `</div>` // close grid
 
+    html += this.renderSelectedDateEvents()
+
     if (this.selectedDate) {
-      html += `<button class="heatmap-clear" id="hm-clear" title="Limpiar filtro de fecha">Limpiar filtro: ${this.selectedDate}</button>`
+      html += `<button class="heatmap-clear" id="hm-clear" title="Limpiar filtro de fecha">Limpiar filtro: ${escapeHtml(this.selectedDate)}</button>`
     }
 
     html += `</div>` // close container
@@ -145,7 +257,7 @@ export class Heatmap {
     const dayEls = this.container.querySelectorAll('.heatmap-day:not(.heatmap-day--empty)')
     dayEls.forEach(el => {
       el.addEventListener('click', (e) => {
-        const date = e.target.dataset.date
+        const date = e.currentTarget.dataset.date
         if (date) this.handleDayClick(date)
       })
     })
