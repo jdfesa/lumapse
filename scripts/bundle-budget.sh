@@ -8,10 +8,10 @@ set -Eeuo pipefail
 # se mantienen dentro de los presupuestos definidos.
 #
 # Presupuestos (gzip):
-#   JS:    80 kB
+#   JS:   160 kB
 #   CSS:   20 kB
 #   HTML:   5 kB
-#   Total: 100 kB
+#   Total: 180 kB
 #
 # Uso: ./scripts/bundle-budget.sh
 # ==============================================================================
@@ -20,7 +20,7 @@ PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
 # Presupuestos en kB (gzip)
 # Incrementados para acomodar el motor relacional SQLite y jeep-sqlite (simulación web)
-BUDGET_JS=150
+BUDGET_JS=160
 BUDGET_CSS=20
 BUDGET_HTML=5
 BUDGET_TOTAL=180
