@@ -4,8 +4,41 @@ Este documento funciona como una bandeja de entrada local para las tareas, mejor
 
 > **Hito activo:** 04 — Organización y UX (en cierre formal)
 > **Hito 05:** Preparación técnica iniciada (testing, CI y quality gates)
-> **Última actualización local:** 2026-05-26 — Ajuste formal de estado Hito 04/05
-> **Última auditoría del backlog:** 2026-05-26
+> **Última actualización local:** 2026-05-31 — Cierre de Fechas Académicas discretas
+> **Última auditoría del backlog:** 2026-05-31
+
+---
+
+## 📌 Corte actual — Fechas Académicas Discretas 2026-05-31
+
+**Estado:** ✅ Completado. Se implementó RF-027 / HU-027 / DP-007 como funcionalidad discreta integrada al Heatmap, manteniendo a Lumapse como app de toma de notas y evitando convertirla en agenda general.
+
+**Cambios aplicados:**
+
+- Nueva tabla SQLite `academic_events`, migraciones idempotentes, CRUD bajo nivel y servicio de dominio.
+- Store reactivo para cargar, crear, editar, eliminar, consultar por mes y consultar próximas fechas.
+- Iconografía SVG minimalista para tipos académicos (`parcial`, `final`, `tp`, `exposicion`) sin emojis nativos en la UI de fechas.
+- Dots discretos en Heatmap, mini-card de eventos del día seleccionado y botón "Agregar fecha".
+- Modal accesible para crear/editar fechas académicas, con validación inline, Escape, foco controlado y sin diálogos nativos.
+- Bloque colapsable de próximas fechas, visible solo si hay eventos futuros.
+- Acciones de editar/eliminar desde mini-card y próximas fechas, con confirmación accesible para eliminar.
+- QA de casos límite: tema claro/oscuro, ancho mobile, muchos eventos el mismo día, días con notas sin eventos, días con eventos sin notas, materia eliminada y materia archivada atenuada.
+
+**Comandos de verificación ejecutados:**
+
+```bash
+npm test
+npm run lint
+npm run build
+npm run check:schema
+npm run check:dbml
+npm run check:traceability
+npm run quality
+```
+
+**Resultado:** 490 tests OK, lint OK, build OK, schema/DBML/trazabilidad sincronizados y quality gate completo OK. Quedan como deuda general no bloqueante los avisos históricos del auditor sobre archivos >250 LOC y TODO técnicos existentes del editor/slash commands.
+
+**Siguiente prioridad recomendada:** decidir si se cierra formalmente este bloque como incremento de Hito 06 anticipado o si se lo agrupa dentro del cierre final del producto antes de distribución.
 
 ---
 

@@ -20,7 +20,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Check contra diálogos nativos:** Nuevo `scripts/check-native-dialogs.js`, que bloquea `alert()`, `confirm()` y `prompt()` en `src/`, con excepción explícita para `src/utils/seeder.js`.
 - **Entrypoint estable de trazabilidad:** Nuevo `scripts/check-traceability.py` como wrapper compatible para el checker preservado en `check-traceability.py.replaced`.
 - **Inserción rápida de título:** El botón `+` y el comando `/titulo` permiten insertar un encabezado Markdown sin obligar al usuario a conocer la sintaxis de antemano.
-- **Plan de Fechas Académicas:** Se documentó el alcance de una funcionalidad discreta para marcar parciales, finales, trabajos prácticos y exposiciones dentro del calendario existente, como recordatorio visual pasivo y sin transformar Lumapse en una agenda.
+- **Fechas Académicas discretas (RF-027 / HU-027 / DP-007):** Implementación completa de marcadores académicos puntuales para parciales, finales, trabajos prácticos y exposiciones dentro del calendario existente. Incluye tabla SQLite `academic_events`, CRUD bajo nivel, servicio de dominio, store reactivo, dots en Heatmap, mini-card por día, modal accesible de creación/edición, lista colapsable de próximas fechas, acciones de editar/eliminar con confirmación accesible y tests unitarios de datos, store y UI.
 
 ### Changed
 - **Búsqueda RF-015 más útil:** La lupa ahora busca globalmente entre notas activas aunque el usuario esté ubicado en Entrada o en una materia, y normaliza tildes para que `algebra` encuentre `Álgebra`.
@@ -30,6 +30,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Backlog/TODO actualizados:** El `TODO` raíz y `BACKLOG.md` registran como completada la capa de automatización, mantienen Hito 04 en cierre formal y clasifican esta tanda como preparación de Hito 05.
 - **Versionado de paquete alineado:** `package.json` y `package-lock.json` pasan de `0.1.0` a `0.4.7`, manteniendo el paquete sincronizado con la última versión cerrada documentada antes de preparar un release/APK.
 - **Seguimiento de velocidad actualizado:** `docs/gestion/seguimiento-velocidad.md` queda sincronizado con `scripts/generate-velocity-report.py`: 17 HU formalizadas, 78 SP acumulados y velocidad promedio de 26.0 SP/hito.
+- **CSP web ajustada para SQLite WASM:** `index.html` permite el runtime WASM local necesario para `jeep-sqlite`/`sql.js`, manteniendo los recursos restringidos a orígenes locales.
 
 ---
 
