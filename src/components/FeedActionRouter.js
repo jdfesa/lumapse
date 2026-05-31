@@ -166,8 +166,8 @@ const ACTION_MAP = [
     selector: '.js-btn-status',
     handler: (_event, button, deps) => {
       const noteId = button.dataset.noteId
-      const emoji = button.dataset.emoji || null
-      NoteStore.setNoteStatus(noteId, emoji)
+      const statusValue = button.dataset.emoji || null
+      NoteStore.setNoteStatus(noteId, statusValue)
       deps.closeAllDropdowns()
     }
   },

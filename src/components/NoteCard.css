@@ -68,11 +68,26 @@
   line-height: 1.5;
 }
 
-/* Status emoji badge (DP-005) */
+/* Status badge (DP-005) */
 .note-card__status-badge {
-  font-size: 0.9rem;
-  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: var(--color-accent);
+  background: var(--color-accent-dim);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 38%, transparent);
+  border-radius: 50%;
   flex-shrink: 0;
+}
+
+.note-status-icon {
+  display: block;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .note-card__actions {
@@ -223,12 +238,12 @@
   font-size: 0.8rem;
 }
 
-/* Emoji Status Picker (DP-005) */
-.note-card__emoji-wrapper {
+/* Status Picker (DP-005) */
+.note-card__status-wrapper {
   position: relative;
 }
 
-.note-card__emoji-submenu {
+.note-card__status-menu {
   position: absolute;
   right: 0;
   top: 100%;
@@ -247,17 +262,17 @@
   z-index: 20;
 }
 
-.note-card__emoji-wrapper:hover .note-card__emoji-submenu,
-.note-card__emoji-wrapper:focus-within .note-card__emoji-submenu {
+.note-card__status-wrapper:hover .note-card__status-menu,
+.note-card__status-wrapper:focus-within .note-card__status-menu {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
 }
 
-.note-card__emoji-btn {
+.note-card__status-btn {
   background: transparent;
-  border: none;
-  font-size: 1.1rem;
+  border: 1px solid transparent;
+  color: var(--color-text-muted);
   width: 28px;
   height: 28px;
   border-radius: var(--radius-sm);
@@ -268,13 +283,16 @@
   transition: all var(--transition);
 }
 
-.note-card__emoji-btn:hover {
+.note-card__status-btn:hover {
   background: var(--color-surface-hover);
-  transform: scale(1.1);
+  color: var(--color-text-bright);
+  border-color: var(--color-border-hover);
 }
 
-.note-card__emoji-btn--current {
-  background: var(--color-surface-hover);
+.note-card__status-btn--current {
+  background: var(--color-accent-dim);
+  color: var(--color-accent);
+  border-color: color-mix(in srgb, var(--color-accent) 40%, transparent);
 }
 
 .note-card__content {

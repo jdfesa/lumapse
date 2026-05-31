@@ -10,6 +10,7 @@ import { createFeedActionRouter } from './FeedActionRouter.js';
 import { renderTrashView } from './TrashView.js';
 import { confirmDialog } from './ConfirmDialog.js';
 import { VirtualFeed } from './VirtualFeed.js';
+import { renderClearNoteStatusButton, renderNoteStatusBadge, renderNoteStatusMenuItems } from './NoteStatus.js';
 import './NoteList.css';
 
 const MARKDOWN_HEADING_REGEX = /^\s{0,3}#{1,6}\s+/
@@ -72,20 +73,6 @@ function renderSubjectBadge(note, subjectsData) {
     : escapeHtml(found.subject.name);
 
   return `<span class="note-card__subject-badge" style="--subject-color: ${color}">${label}</span>`;
-}
-
-function renderStatusItems(note) {
-  const statusEmojis = [
-    { emoji: '📖', label: 'Por completar' },
-    { emoji: '❓', label: 'Tengo dudas' },
-    { emoji: '🔥', label: 'Importante' },
-    { emoji: '✅', label: 'Repasado' },
-  ];
-
-  return statusEmojis.map(s => {
-    const isActive = note.statusEmoji === s.emoji ? ' note-card__emoji-btn--current' : '';
-    return `<button class="note-card__emoji-btn js-btn-status${isActive}" data-note-id="${note.id}" data-emoji="${s.emoji}" title="${s.label}">${s.emoji}</button>`;
-  }).join('');
 }
 
 export class NoteList {
@@ -229,14 +216,10 @@ export class NoteList {
       ? `<span class="note-card__archived-badge">Archivada</span>`
       : '';
 
-    // Badge de emoji de estado (DP-005)
-    const statusBadge = note.statusEmoji
-      ? `<span class="note-card__status-badge">${note.statusEmoji}</span>`
-      : '';
-
-    const statusItems = renderStatusItems(note);
+    const statusBadge = renderNoteStatusBadge(note.statusEmoji);
+    const statusItems = renderNoteStatusMenuItems(note.id, note.statusEmoji);
     const clearStatus = note.statusEmoji
-      ? `<button class="note-card__emoji-btn js-btn-status" data-note-id="${note.id}" data-emoji="" title="Quitar">✕</button>`
+      ? renderClearNoteStatusButton(note.id)
       : '';
 
     return `
@@ -250,11 +233,11 @@ export class NoteList {
             ${statusBadge}
           </span>
           <div class="note-card__actions">
-            <div class="note-card__emoji-wrapper">
-              <button class="note-card__action-btn js-btn-emoji-trigger" title="Estado académico">
+            <div class="note-card__status-wrapper">
+              <button class="note-card__action-btn js-btn-status-trigger" title="Estado académico" aria-label="Estado académico">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
               </button>
-              <div class="note-card__emoji-submenu">
+              <div class="note-card__status-menu">
                 ${statusItems}
                 ${clearStatus}
               </div>
