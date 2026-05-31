@@ -618,18 +618,20 @@ Objetivo:
 
 Tareas:
 
-- [ ] Extender `Heatmap.js` con `eventMap`.
-- [ ] Renderizar dot en dias con eventos.
-- [ ] Mantener `data-level` de actividad de notas.
-- [ ] Asegurar que el dot no mueve la grilla.
-- [ ] Mostrar mini-card de eventos al seleccionar dia.
-- [ ] Agregar tests de render del Heatmap si ya existe patron o crear uno focalizado.
+- [x] Extender `Heatmap.js` con `eventMap`.
+- [x] Renderizar dot en dias con eventos.
+- [x] Mantener `data-level` de actividad de notas.
+- [x] Asegurar que el dot no mueve la grilla.
+- [x] Mostrar mini-card de eventos al seleccionar dia.
+- [x] Agregar tests de render del Heatmap si ya existe patron o crear uno focalizado.
 
 Criterio de cierre:
 
-- Un dia con notas y eventos comunica ambas cosas.
-- Click en dia sigue filtrando notas por fecha.
-- Dia con evento muestra detalle compacto.
+- [x] Un dia con notas y eventos comunica ambas cosas.
+- [x] Click en dia sigue filtrando notas por fecha.
+- [x] Dia con evento muestra detalle compacto.
+- [x] Verificado con `npm test -- tests/unit/components/Heatmap.test.js tests/unit/components/AcademicEventTypes.test.js`.
+- [x] Verificado con `npm run lint`.
 
 ### Fase 6 — Modal de creacion/edicion
 
