@@ -15,6 +15,10 @@ export const state = {
   showTrashWarning: false, // Flag: papelera tiene >50 items
   archivedSubjectIds: [], // IDs de subjects archivados (para filtros)
   archivedSubjects: null, // Árbol de subjects archivados (para drawer)
+  academicEvents: [],     // Fechas academicas cargadas en memoria
+  academicEventsForMonth: [], // Fechas academicas del mes visible en Heatmap
+  academicEventsMonth: null, // { year, month } del cache mensual (month base 1)
+  upcomingAcademicEvents: [], // Proximas fechas academicas
 }
 
 const subscribers = new Set()

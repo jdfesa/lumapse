@@ -67,6 +67,10 @@ async function initApp() {
   // 6. Cargar datos iniciales
   await NoteStore.loadSubjects()
   await NoteStore.loadNotes()
+  await NoteStore.loadAcademicEvents()
+  const today = new Date()
+  await NoteStore.loadAcademicEventsByMonth(today.getFullYear(), today.getMonth() + 1)
+  await NoteStore.loadUpcomingAcademicEvents()
 
   // 7. Auto-purgado de papelera (RF-026): elimina items > 30 días
   try {

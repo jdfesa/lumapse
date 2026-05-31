@@ -48,6 +48,10 @@ beforeEach(() => {
   state.showTrashWarning = false
   state.archivedSubjectIds = []
   state.archivedSubjects = null
+  state.academicEvents = []
+  state.academicEventsForMonth = []
+  state.academicEventsMonth = null
+  state.upcomingAcademicEvents = []
   vi.clearAllMocks()
 })
 
