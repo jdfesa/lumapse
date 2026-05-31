@@ -54,6 +54,7 @@ TABLE_CONSTRAINTS = {
 
 TABLE_NOTES = {
     "subjects": "Modela Materias (parentSubjectId = NULL) y Secciones (parentSubjectId = UUID). Profundidad máx: 2 niveles (DP-004).",
+    "academic_events": "Fechas académicas puntuales como recordatorio visual pasivo integrado al Heatmap (DP-007).",
     "metadata": "Tabla técnica clave-valor para control de migraciones y flags de sistema.",
 }
 
@@ -72,6 +73,13 @@ COLUMN_NOTES = {
     ("notes", "subjectId"): "NULL = Entrada | UUID = en Materia o Sección",
     ("notes", "createdAt"): "ISO 8601 UTC · Inmutable",
     ("notes", "updatedAt"): "ISO 8601 UTC · Auto-actualizado en cada guardado",
+    ("academic_events", "id"): "UUID v4 generado en cliente",
+    ("academic_events", "type"): "parcial | final | tp | exposicion",
+    ("academic_events", "title"): "Descripción breve opcional",
+    ("academic_events", "date"): "Fecha ISO local YYYY-MM-DD",
+    ("academic_events", "subjectId"): "NULL = sin materia | UUID = Materia o Sección asociada",
+    ("academic_events", "createdAt"): "ISO 8601 UTC · Inmutable",
+    ("academic_events", "updatedAt"): "ISO 8601 UTC · Auto-actualizado al editar",
     ("metadata", "key"): "Identificador de propiedad (ej: indexeddb_migrated)",
     ("metadata", "value"): "Valor de la propiedad",
 }
@@ -84,6 +92,10 @@ RELATION_NOTES = {
     ("subjects", "parentSubjectId"): {
         "description": "SECCIÓN es hija de una MATERIA (N:1, auto-referencial)",
         "delete": "ON DELETE CASCADE → si se elimina la materia, sus secciones se eliminan",
+    },
+    ("academic_events", "subjectId"): {
+        "description": "FECHA ACADÉMICA puede asociarse a una MATERIA o SECCIÓN (N:1)",
+        "delete": "ON DELETE SET NULL → si se elimina la materia, la fecha sobrevive sin materia",
     },
 }
 

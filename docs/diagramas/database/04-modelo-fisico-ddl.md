@@ -8,7 +8,7 @@
 
 ## 1. Creación de tablas (nuevas instalaciones)
 
-Las siguientes sentencias DDL se ejecutan en la inicialización de la base de datos. El orden es importante: `subjects` se crea antes que `notes` porque `notes.subjectId` tiene una clave foránea que referencia a `subjects(id)`.
+Las siguientes sentencias DDL se ejecutan en la inicialización de la base de datos. El orden es importante: `subjects` se crea antes que `notes` y `academic_events` porque ambas tablas tienen claves foráneas que referencian a `subjects(id)`.
 
 ```sql
 -- Materias y Secciones (estructura jerárquica auto-referencial, máx. 2 niveles)
@@ -35,6 +35,23 @@ CREATE TABLE IF NOT EXISTS notes (
     createdAt   TEXT    NOT NULL,
     updatedAt   TEXT    NOT NULL
 );
+
+-- Fechas académicas puntuales (recordatorios visuales pasivos, DP-007)
+CREATE TABLE IF NOT EXISTS academic_events (
+    id        TEXT    PRIMARY KEY,
+    type      TEXT    NOT NULL CHECK(type IN ('parcial', 'final', 'tp', 'exposicion')),
+    title     TEXT,
+    date      TEXT    NOT NULL,
+    subjectId TEXT    REFERENCES subjects(id) ON DELETE SET NULL,
+    createdAt TEXT    NOT NULL,
+    updatedAt TEXT    NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_academic_events_date
+    ON academic_events(date);
+
+CREATE INDEX IF NOT EXISTS idx_academic_events_subject
+    ON academic_events(subjectId);
 
 -- Metadatos del sistema (control de migraciones y flags)
 CREATE TABLE IF NOT EXISTS metadata (
@@ -64,6 +81,23 @@ ALTER TABLE notes ADD COLUMN statusEmoji TEXT;
 -- Migración v1.3: papelera de reciclaje con soft-delete (RF-026)
 ALTER TABLE notes ADD COLUMN deletedAt TEXT;
 ALTER TABLE subjects ADD COLUMN deletedAt TEXT;
+
+-- Migración v1.4: fechas académicas discretas (DP-007, RF-027)
+CREATE TABLE IF NOT EXISTS academic_events (
+    id        TEXT    PRIMARY KEY,
+    type      TEXT    NOT NULL CHECK(type IN ('parcial', 'final', 'tp', 'exposicion')),
+    title     TEXT,
+    date      TEXT    NOT NULL,
+    subjectId TEXT    REFERENCES subjects(id) ON DELETE SET NULL,
+    createdAt TEXT    NOT NULL,
+    updatedAt TEXT    NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_academic_events_date
+    ON academic_events(date);
+
+CREATE INDEX IF NOT EXISTS idx_academic_events_subject
+    ON academic_events(subjectId);
 ```
 
 ---
@@ -81,8 +115,11 @@ Las siguientes restricciones **no pueden modelarse en SQL puro** y deben validar
 4. **ON DELETE — comportamiento referencial:**
    - `subjects.parentSubjectId → ON DELETE CASCADE`: Si se elimina una Materia, todas sus Secciones hijas se eliminan automáticamente.
    - `notes.subjectId → ON DELETE SET NULL`: Si se elimina una Materia o Sección, las notas asociadas no se eliminan, sino que vuelven a **Entrada** (`subjectId = NULL`).
+   - `academic_events.subjectId → ON DELETE SET NULL`: Si se elimina una Materia o Sección, las fechas académicas asociadas sobreviven como eventos sin materia (`subjectId = NULL`).
 
 5. **Eliminación lógica (soft-delete) con cascada (RF-026):** Al eliminar una materia, la capa de servicio (`SubjectService`) marca `deletedAt` en la materia, sus secciones hijas y las notas asociadas. La restauración también aplica en cascada. El vaciado de la papelera ejecuta `DELETE` físico sobre todos los registros con `deletedAt IS NOT NULL`. Todas las queries del feed activo filtran con `WHERE deletedAt IS NULL`.
+
+6. **Fechas académicas sin soft-delete (RF-027):** Los eventos de `academic_events` se eliminan físicamente cuando el usuario borra una fecha. No participan de la papelera porque son registros puntuales y livianos; los eventos pasados permanecen visibles en el calendario histórico mientras no se borren.
 
 ---
 

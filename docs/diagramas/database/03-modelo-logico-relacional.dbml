@@ -43,6 +43,18 @@ Table notes {
   deletedAt   TEXT
 }
 
+Table academic_events {
+  id        TEXT [pk, note: "UUID v4 generado en cliente"]
+  type      TEXT [not null, note: "parcial | final | tp | exposicion"]
+  title     TEXT [note: "Descripción breve opcional"]
+  date      TEXT [not null, note: "Fecha ISO local YYYY-MM-DD"]
+  subjectId TEXT [note: "NULL = sin materia | UUID = Materia o Sección asociada"]
+  createdAt TEXT [not null, note: "ISO 8601 UTC · Inmutable"]
+  updatedAt TEXT [not null, note: "ISO 8601 UTC · Auto-actualizado al editar"]
+
+  note: "Fechas académicas puntuales como recordatorio visual pasivo integrado al Heatmap (DP-007)."
+}
+
 Table metadata {
   key   TEXT [pk, note: "Identificador de propiedad (ej: indexeddb_migrated)"]
   value TEXT [note: "Valor de la propiedad"]
@@ -53,6 +65,10 @@ Table metadata {
 // ═══════════════════════════════════════════════════
 // RELACIONES
 // ═══════════════════════════════════════════════════
+// FECHA ACADÉMICA puede asociarse a una MATERIA o SECCIÓN (N:1)
+// ON DELETE SET NULL → si se elimina la materia, la fecha sobrevive sin materia
+Ref: academic_events.subjectId > subjects.id
+
 // NOTA pertenece a una MATERIA o SECCIÓN (N:1)
 // ON DELETE SET NULL → si se elimina la materia, la nota vuelve a Entrada
 Ref: notes.subjectId > subjects.id
