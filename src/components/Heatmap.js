@@ -8,6 +8,10 @@ import {
   renderAcademicEventDot,
   renderAcademicEventListItem,
 } from './AcademicEventTypes.js'
+import {
+  getAcademicEventSubjectColor,
+  getAcademicEventSubjectLabel,
+} from './AcademicEventSubjects.js'
 import { openAcademicEventDialog } from './AcademicEventDialog.js'
 
 function escapeHtml(value) {
@@ -105,36 +109,12 @@ export class Heatmap {
     }
   }
 
-  findSubjectMeta(subjectId) {
-    if (!subjectId || !this.subjects?.tree) return null
-
-    for (const root of this.subjects.tree) {
-      if (root.id === subjectId) {
-        return {
-          label: root.name,
-          color: root.color,
-        }
-      }
-
-      for (const child of (root.children || [])) {
-        if (child.id === subjectId) {
-          return {
-            label: `${root.name} > ${child.name}`,
-            color: child.color || root.color,
-          }
-        }
-      }
-    }
-
-    return null
-  }
-
   getEventColor(event) {
-    return this.findSubjectMeta(event.subjectId)?.color || null
+    return getAcademicEventSubjectColor(event, this.subjects)
   }
 
   getEventSubjectLabel(event) {
-    return this.findSubjectMeta(event.subjectId)?.label || ''
+    return getAcademicEventSubjectLabel(event, this.subjects)
   }
 
   renderEventDots(events) {
