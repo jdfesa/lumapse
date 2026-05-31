@@ -1,7 +1,7 @@
 # Decisiones de Producto — Lumapse
 
 > **Documento vivo** — Se actualiza a medida que se toman decisiones de producto y se incorporan datos del relevamiento.  
-> **Última actualización:** 2026-05-14
+> **Última actualización:** 2026-05-31
 
 ---
 
@@ -257,6 +257,72 @@ Implementar un sistema de **marcado rápido por estado académico** con 4 emojis
 ### Condición de pivote
 
 Si el testing con usuarios reales muestra que los marcadores no se usan o generan confusión, se evaluará reemplazarlos por un sistema de etiquetas de texto. La columna de base de datos es reutilizable para cualquier variante.
+
+---
+
+## DP-007: Fechas académicas como recordatorio visual pasivo
+
+**Fecha:** 2026-05-31
+**Estado:** 🟡 Pendiente de implementación
+**Refs:** RF-027, HU-027
+
+### Contexto
+
+El relevamiento con 120 estudiantes registró una necesidad emergente vinculada a agenda/calendario en los comentarios abiertos: fechas de parciales, horarios de materias y recordatorios académicos. No fue una categoría masiva, pero apareció de forma espontánea en una pregunta abierta; eso la vuelve una señal cualitativa útil para una evolución posterior del producto.
+
+Lumapse ya cuenta con un calendario mensual (`Heatmap`) que muestra actividad de notas y permite filtrar por fecha. También cuenta con materias/secciones como entidades del modelo. En ese contexto, permitir marcar fechas académicas puntuales no exige convertir la aplicación en una agenda completa: puede funcionar como una capa visual discreta sobre una infraestructura ya existente.
+
+### Decisión
+
+Implementar una funcionalidad de **fechas académicas puntuales** integrada al Heatmap, limitada a cuatro tipos:
+
+| Tipo | Uso |
+|---|---|
+| Parcial | Exámenes durante la cursada. |
+| Final | Mesas finales o instancias de examen final. |
+| Trabajo práctico | Entregas de TP, informes o proyectos escritos. |
+| Exposición | Presentaciones orales, defensas o coloquios. |
+
+Cada fecha podrá tener:
+
+- tipo obligatorio;
+- fecha obligatoria;
+- descripción breve opcional;
+- materia/sección opcional.
+
+La interfaz deberá mostrar indicadores mínimos en el Heatmap y una lista compacta de próximas fechas. La funcionalidad será 100% local en SQLite y no requerirá cuentas, internet ni servicios externos.
+
+### Límites explícitos
+
+Lumapse **no** se convierte en Google Calendar ni en una agenda semanal. Para preservar el foco en la toma de notas, quedan fuera de la v1:
+
+- notificaciones push;
+- alarmas;
+- horarios de inicio/fin;
+- recurrencia;
+- horarios de cursado;
+- sincronización con Google Calendar, iCal u otros servicios;
+- invitaciones o eventos compartidos;
+- vistas semanales/diarias complejas.
+
+### Justificación
+
+- **Contexto natural:** El estudiante que toma notas de una materia también necesita recordar cuándo rinde, entrega o expone en esa materia.
+- **Bajo cambio de contexto:** La fecha vive junto a las notas académicas, no en una app separada.
+- **Infraestructura existente:** El Heatmap ya ofrece una base visual mensual; agregar dots o indicadores es evolución, no reescritura.
+- **Asociación con materias:** Las fechas académicas se vinculan naturalmente con `subjects`, entidad ya implementada.
+- **Offline-first:** La funcionalidad se puede persistir en SQLite local, sin APIs externas.
+- **Diferenciación:** Aporta valor académico específico sin caer en la complejidad de Notion ni en el alcance de Google Calendar.
+
+### Datos de soporte
+
+- [Resultados del relevamiento](resultados-relevamiento.md): la categoría cualitativa "Agenda / calendario" aparece con menciones espontáneas sobre fechas de parciales y horarios de materias.
+- [Informe final / relevamiento](../informe-final/03-relevamiento-datos.md): se registran necesidades emergentes por carrera, incluyendo fechas de parciales en perfiles más orientados a herramientas.
+- Observación de producto: Lumapse ya tiene Heatmap, materias y SQLite local; la funcionalidad se apoya en capacidades existentes.
+
+### Condición de pivote
+
+Si durante testing con usuarios reales la funcionalidad desplaza la atención de la toma de notas, genera expectativa de agenda completa o dispara pedidos reiterados de notificaciones/recurrencia/horarios, se mantendrá como recordatorio visual básico o se postergará. La señal de éxito no es que reemplace un calendario, sino que ayude a recordar fechas académicas sin agregar fricción.
 
 ---
 
