@@ -671,19 +671,23 @@ Objetivo:
 
 Tareas:
 
-- [ ] Crear `UpcomingAcademicEvents.js`.
-- [ ] Crear CSS compacto.
-- [ ] Renderizar solo si hay eventos futuros.
-- [ ] Mostrar maximo 5 eventos.
-- [ ] Ordenar cronologicamente.
-- [ ] Permitir colapsar/expandir.
-- [ ] Agregar tests de render y orden.
+- [x] Crear `UpcomingAcademicEvents.js`.
+- [x] Crear CSS compacto.
+- [x] Crear helper compartido `AcademicEventSubjects.js` para label/color de materia.
+- [x] Renderizar solo si hay eventos futuros.
+- [x] Mostrar maximo 5 eventos.
+- [x] Ordenar cronologicamente.
+- [x] Permitir colapsar/expandir.
+- [x] Agregar tests de render y orden.
+- [x] Integrar el bloque debajo de `Heatmap` en `calendar-popup`.
 
 Criterio de cierre:
 
-- Si no hay eventos, no ocupa espacio.
-- Si hay eventos, el usuario los ve sin abrir otra vista.
-- El bloque no compite con materias ni notas.
+- [x] Si no hay eventos, no ocupa espacio.
+- [x] Si hay eventos, el usuario los ve sin abrir otra vista.
+- [x] El bloque no compite con materias ni notas.
+- [x] Verificado con `npm test -- tests/unit/components/UpcomingAcademicEvents.test.js tests/unit/components/Heatmap.test.js`.
+- [x] Verificado con `npm run lint`.
 
 ### Fase 8 — Acciones de borrar y editar desde mini-card/lista
 
