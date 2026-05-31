@@ -20,6 +20,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Check contra diálogos nativos:** Nuevo `scripts/check-native-dialogs.js`, que bloquea `alert()`, `confirm()` y `prompt()` en `src/`, con excepción explícita para `src/utils/seeder.js`.
 - **Entrypoint estable de trazabilidad:** Nuevo `scripts/check-traceability.py` como wrapper compatible para el checker preservado en `check-traceability.py.replaced`.
 - **Inserción rápida de título:** El botón `+` y el comando `/titulo` permiten insertar un encabezado Markdown sin obligar al usuario a conocer la sintaxis de antemano.
+- **Plan de Fechas Académicas:** Se documentó el alcance de una funcionalidad discreta para marcar parciales, finales, trabajos prácticos y exposiciones dentro del calendario existente, como recordatorio visual pasivo y sin transformar Lumapse en una agenda.
 
 ### Changed
 - **Búsqueda RF-015 más útil:** La lupa ahora busca globalmente entre notas activas aunque el usuario esté ubicado en Entrada o en una materia, y normaliza tildes para que `algebra` encuentre `Álgebra`.

@@ -491,16 +491,18 @@ Objetivo:
 
 Tareas:
 
-- [ ] Crear RF-027.
-- [ ] Crear HU-027 con criterios de aceptacion.
-- [ ] Crear DP-007.
-- [ ] Agregar entrada inicial en CHANGELOG.
-- [ ] Confirmar que `npm run check:traceability` sigue limpio o documentar el estado pendiente si aun no hay codigo.
+- [x] Crear RF-027.
+- [x] Crear HU-027 con criterios de aceptacion.
+- [x] Crear DP-007.
+- [x] Agregar entrada inicial en CHANGELOG.
+- [x] Confirmar que `npm run check:traceability` sigue limpio o documentar el estado pendiente si aun no hay codigo.
 
 Criterio de cierre:
 
-- Documentacion viva describe el alcance y los limites.
-- No hay ambiguedad entre "fechas academicas" y "agenda/calendario completo".
+- [x] Documentacion viva describe el alcance y los limites.
+- [x] No hay ambiguedad entre "fechas academicas" y "agenda/calendario completo".
+- [x] Verificado con `npm run check:traceability`.
+- [x] Verificado con `npm run check:docs`.
 
 ### Fase 1 — Schema SQLite y CRUD bajo nivel
 
