@@ -103,6 +103,23 @@ describe('sqlite/academicEvents', () => {
     })
   })
 
+  describe('getAcademicEventRowById()', () => {
+    it('consulta una fecha academica por id', async () => {
+      mockDb.query.mockResolvedValue({ values: [eventRow()] })
+
+      await expect(AcademicEvents.getAcademicEventRowById('event-1')).resolves.toMatchObject({
+        id: 'event-1',
+      })
+      expect(mockDb.query).toHaveBeenCalledWith('SELECT * FROM academic_events WHERE id = ?', ['event-1'])
+    })
+
+    it('retorna undefined si no existe', async () => {
+      mockDb.query.mockResolvedValue({ values: [] })
+
+      await expect(AcademicEvents.getAcademicEventRowById('missing')).resolves.toBeUndefined()
+    })
+  })
+
   describe('getAcademicEventRowsByMonth()', () => {
     it('consulta por rango de mes base 1', async () => {
       await AcademicEvents.getAcademicEventRowsByMonth(2026, 6)

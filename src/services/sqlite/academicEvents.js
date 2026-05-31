@@ -85,6 +85,17 @@ export async function getAcademicEventRows() {
 }
 
 /**
+ * Obtiene una fecha academica por su ID.
+ */
+export async function getAcademicEventRowById(id) {
+  const db = getDb()
+  const sql = `SELECT * FROM academic_events WHERE id = ?`
+  const res = await db.query(sql, [id])
+
+  return rowsFrom(res)[0]
+}
+
+/**
  * Obtiene las fechas academicas de un mes. El mes usa base 1: enero = 1.
  * @param {number} year Año completo, por ejemplo 2026
  * @param {number} month Mes base 1, por ejemplo 6 para junio
