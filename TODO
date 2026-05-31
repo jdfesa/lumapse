@@ -543,19 +543,24 @@ Objetivo:
 
 Tareas:
 
-- [ ] Crear `src/services/AcademicEventService.js`.
-- [ ] Centralizar tipos permitidos.
-- [ ] Normalizar `title`, `date` y `subjectId`.
-- [ ] Validar formato `YYYY-MM-DD`.
-- [ ] Validar existencia de materia si viene `subjectId`.
-- [ ] Generar timestamps.
-- [ ] Agregar tests unitarios.
+- [x] Crear `src/services/AcademicEventService.js`.
+- [x] Centralizar tipos permitidos.
+- [x] Normalizar `title`, `date` y `subjectId`.
+- [x] Validar formato `YYYY-MM-DD`.
+- [x] Validar existencia de materia si viene `subjectId`.
+- [x] Generar timestamps.
+- [x] Agregar tests unitarios.
+- [x] Agregar lectura por `id` en `src/services/sqlite/academicEvents.js` para soportar edicion segura.
 
 Criterio de cierre:
 
-- Inputs invalidos no llegan a SQLite.
-- El servicio devuelve objetos consistentes.
-- Los errores se comportan como el resto de servicios.
+- [x] Inputs invalidos no llegan a SQLite.
+- [x] El servicio devuelve objetos consistentes.
+- [x] Los errores se comportan como el resto de servicios.
+- [x] Verificado con `npm test -- tests/unit/AcademicEventService.test.js tests/unit/services/sqlite/academicEvents.test.js`.
+- [x] Verificado con `npm test -- tests/unit/AcademicEventService.test.js tests/unit/services/sqlite`.
+- [x] Verificado con `npm run lint`.
+- [x] Verificado con `npm run check:traceability`.
 
 ### Fase 3 — Store y selectores
 
