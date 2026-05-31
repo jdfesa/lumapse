@@ -19,10 +19,18 @@ const storeMock = vi.hoisted(() => {
   return mock
 })
 
+const dialogMock = vi.hoisted(() => ({
+  openAcademicEventDialog: vi.fn().mockResolvedValue(null),
+}))
+
 vi.mock('../../../src/store/NoteStore.js', () => ({
   subscribe: storeMock.subscribe,
   setDateFilter: storeMock.setDateFilter,
   loadAcademicEventsByMonth: storeMock.loadAcademicEventsByMonth,
+}))
+
+vi.mock('../../../src/components/AcademicEventDialog.js', () => ({
+  openAcademicEventDialog: dialogMock.openAcademicEventDialog,
 }))
 
 import { Heatmap } from '../../../src/components/Heatmap.js'
@@ -145,6 +153,23 @@ describe('Heatmap eventos academicos read-only', () => {
     expect(card?.querySelector('.academic-event-item__title')?.textContent).toBe('Entrega informe')
     expect(card?.querySelector('.academic-event-item__subject')?.textContent).toBe('Algebra > Unidad I')
     expect(card?.querySelector('svg.academic-event-icon')).not.toBeNull()
+
+    heatmap.destroy()
+  })
+
+  it('abre el dialogo de nueva fecha con la fecha seleccionada', () => {
+    storeMock.state = defaultState({
+      dateFilter: '2026-06-14',
+    })
+
+    const heatmap = createHeatmap()
+
+    document.querySelector('#hm-add-event').click()
+
+    expect(dialogMock.openAcademicEventDialog).toHaveBeenCalledWith({
+      mode: 'create',
+      date: '2026-06-14',
+    })
 
     heatmap.destroy()
   })

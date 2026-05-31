@@ -11,14 +11,14 @@
          Complementa la sanitización de DOMPurify en MarkdownService.js.
          - default-src: solo orígenes locales (self + Capacitor schemes)
          - img-src: permite data: y blob: para imágenes locales embebidas
-         - script-src: solo módulos ES locales (no inline)
+         - script-src: modulos ES locales y runtime WASM local de SQLite
          - style-src: permite inline por CSS-in-JS y estilos dinámicos
          Refs: Paso 7 (Hardening XSS), ADR-005 (offline-first)
     -->
     <meta http-equiv="Content-Security-Policy" content="
       default-src 'self' capacitor://localhost http://localhost;
       img-src 'self' data: blob: capacitor://localhost http://localhost;
-      script-src 'self';
+      script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval';
       style-src 'self' 'unsafe-inline';
     " />
 

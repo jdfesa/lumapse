@@ -8,6 +8,7 @@ import {
   renderAcademicEventDot,
   renderAcademicEventListItem,
 } from './AcademicEventTypes.js'
+import { openAcademicEventDialog } from './AcademicEventDialog.js'
 
 function escapeHtml(value) {
   return String(value ?? '')
@@ -167,6 +168,22 @@ export class Heatmap {
     `
   }
 
+  renderSelectedDateActions() {
+    if (!this.selectedDate) return ''
+
+    return `
+      <div class="heatmap-events-actions">
+        <button class="heatmap-add-event" id="hm-add-event" type="button" title="Agregar fecha academica">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M12 5v14"></path>
+            <path d="M5 12h14"></path>
+          </svg>
+          <span>Agregar fecha</span>
+        </button>
+      </div>
+    `
+  }
+
   getActivityLevel(count) {
     if (count === 1) return 1
     if (count >= 2 && count <= 3) return 2
@@ -236,6 +253,7 @@ export class Heatmap {
     html += `</div>` // close grid
 
     html += this.renderSelectedDateEvents()
+    html += this.renderSelectedDateActions()
 
     if (this.selectedDate) {
       html += `<button class="heatmap-clear" id="hm-clear" title="Limpiar filtro de fecha">Limpiar filtro: ${escapeHtml(this.selectedDate)}</button>`
@@ -252,6 +270,16 @@ export class Heatmap {
     const clearBtn = this.container.querySelector('#hm-clear')
     if (clearBtn) {
       clearBtn.addEventListener('click', () => NoteStore.setDateFilter(null))
+    }
+
+    const addEventBtn = this.container.querySelector('#hm-add-event')
+    if (addEventBtn) {
+      addEventBtn.addEventListener('click', () => {
+        openAcademicEventDialog({
+          mode: 'create',
+          date: this.selectedDate,
+        }).catch(error => console.warn('[Heatmap] No se pudo abrir el dialogo de fecha academica:', error))
+      })
     }
 
     const dayEls = this.container.querySelectorAll('.heatmap-day:not(.heatmap-day--empty)')
