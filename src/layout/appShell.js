@@ -111,6 +111,7 @@ export function renderAppShell() {
         <!-- Calendar Popup (DP-006) -->
         <div id="calendar-popup" class="calendar-popup">
           <div id="heatmap-container"></div>
+          <div id="upcoming-academic-events-container"></div>
         </div>
         
         <!-- Composer (crear/editar nota) -->

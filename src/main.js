@@ -15,6 +15,7 @@ import { SUBJECT_COLORS, autoPurge } from './services/SubjectService.js'
 import { NoteList as Feed } from './components/NoteList.js'
 import { NoteEditor as Composer } from './components/NoteEditor.js'
 import { Heatmap } from './components/Heatmap.js'
+import { UpcomingAcademicEvents } from './components/UpcomingAcademicEvents.js'
 import { confirmDialog } from './components/ConfirmDialog.js'
 import { renderAppShell } from './layout/appShell.js'
 import { initDrawer } from './layout/drawerController.js'
@@ -32,6 +33,7 @@ async function initApp() {
   new Composer(document.getElementById('composer-container'))
   new Feed(document.getElementById('feed-items-container'))
   new Heatmap('heatmap-container')
+  new UpcomingAcademicEvents('upcoming-academic-events-container')
   
   // 4. Inicializar drawer (búsqueda, materias, tema, archivados)
   initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS })
