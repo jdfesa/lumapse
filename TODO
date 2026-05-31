@@ -345,6 +345,7 @@ Motivo:
 Crear:
 
 - `src/components/AcademicEventDialog.js`
+- `src/components/AcademicEventDialog.helpers.js`
 - `src/components/AcademicEventDialog.css`
 
 Reusar patrones de `ConfirmDialog.js`:
@@ -641,22 +642,26 @@ Objetivo:
 
 Tareas:
 
-- [ ] Crear `AcademicEventDialog.js`.
-- [ ] Crear CSS del dialog.
-- [ ] Reusar patrones accesibles de `ConfirmDialog`.
-- [ ] Implementar modo create.
-- [ ] Implementar modo edit si no expande demasiado el scope.
-- [ ] Validar campos antes de guardar.
-- [ ] Prellenar fecha seleccionada desde Heatmap.
-- [ ] Prellenar materia si se invoca desde contexto de materia.
-- [ ] Agregar tests de dialog.
+- [x] Crear `AcademicEventDialog.js`.
+- [x] Crear CSS del dialog.
+- [x] Extraer helpers de dialog en `AcademicEventDialog.helpers.js` para mantener el componente por debajo del limite de complejidad/lineas.
+- [x] Reusar patrones accesibles de `ConfirmDialog`.
+- [x] Implementar modo create.
+- [x] Implementar modo edit sin expandir el scope de acciones del Heatmap.
+- [x] Validar campos antes de guardar.
+- [x] Prellenar fecha seleccionada desde Heatmap.
+- [x] Prellenar materia si se invoca desde contexto de materia.
+- [x] Agregar tests de dialog.
+- [x] Agregar test de apertura desde Heatmap.
 
 Criterio de cierre:
 
-- Se puede crear una fecha desde la UI.
-- Se puede cancelar sin efectos.
-- Se puede guardar y ver reflejado en Heatmap/proximas fechas.
-- No hay dialogos nativos.
+- [x] Se puede crear una fecha desde la UI.
+- [x] Se puede cancelar sin efectos.
+- [x] Se puede guardar y ver reflejado en Heatmap/proximas fechas por actualizacion reactiva del store.
+- [x] No hay dialogos nativos.
+- [x] Verificado con `npm test -- tests/unit/components/AcademicEventDialog.test.js tests/unit/components/Heatmap.test.js`.
+- [x] Verificado con `npm run lint`.
 
 ### Fase 7 — Proximas fechas
 
