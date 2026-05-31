@@ -512,20 +512,28 @@ Objetivo:
 
 Tareas:
 
-- [ ] Agregar `academic_events` al schema de nuevas instalaciones en `connection.js`.
-- [ ] Agregar migracion idempotente para instalaciones existentes.
-- [ ] Agregar indices por `date` y `subjectId`.
-- [ ] Crear `src/services/sqlite/academicEvents.js`.
-- [ ] Implementar create/read/update/delete.
-- [ ] Implementar queries por fecha, mes y proximos eventos.
-- [ ] Agregar tests unitarios en `tests/unit/services/sqlite/academicEvents.test.js`.
+- [x] Agregar `academic_events` al schema de nuevas instalaciones en `connection.js`.
+- [x] Agregar migracion idempotente para instalaciones existentes.
+- [x] Agregar indices por `date` y `subjectId`.
+- [x] Crear `src/services/sqlite/academicEvents.js`.
+- [x] Implementar create/read/update/delete.
+- [x] Implementar queries por fecha, mes y proximos eventos.
+- [x] Agregar tests unitarios en `tests/unit/services/sqlite/academicEvents.test.js`.
+- [x] Sincronizar `docs/diagramas/database/04-modelo-fisico-ddl.md`.
+- [x] Regenerar `docs/diagramas/database/03-modelo-logico-relacional.dbml`.
 
 Criterio de cierre:
 
-- CRUD completo probado.
-- Queries ordenan correctamente por fecha.
-- `subjectId` nullable funciona.
-- `ON DELETE SET NULL` queda documentado y, si el entorno de test lo permite, cubierto.
+- [x] CRUD completo probado.
+- [x] Queries ordenan correctamente por fecha.
+- [x] `subjectId` nullable funciona.
+- [x] `ON DELETE SET NULL` queda documentado.
+- [x] Verificado con `npm test -- tests/unit/services/sqlite/academicEvents.test.js tests/unit/services/sqlite/connection.test.js`.
+- [x] Verificado con `npm test -- tests/unit/services/sqlite`.
+- [x] Verificado con `npm run check:schema`.
+- [x] Verificado con `npm run check:dbml`.
+- [x] Verificado con `npm run lint`.
+- [x] Verificado con `npm run check:docs`.
 
 ### Fase 2 — Servicio de dominio
 
