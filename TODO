@@ -719,22 +719,25 @@ Objetivo:
 
 Tareas:
 
-- [ ] Probar tema oscuro.
-- [ ] Probar tema claro.
-- [ ] Probar ancho mobile.
-- [ ] Probar muchos eventos en un mismo dia.
-- [ ] Probar dia con notas pero sin eventos.
-- [ ] Probar dia con eventos pero sin notas.
-- [ ] Probar materia eliminada: evento queda sin materia.
-- [ ] Probar materia archivada: definir si se muestra label o solo evento.
-- [ ] Revisar que no haya overlap en Heatmap.
+- [x] Probar tema oscuro.
+- [x] Probar tema claro.
+- [x] Probar ancho mobile.
+- [x] Probar muchos eventos en un mismo dia.
+- [x] Probar dia con notas pero sin eventos.
+- [x] Probar dia con eventos pero sin notas.
+- [x] Probar materia eliminada: evento queda sin materia.
+- [x] Probar materia archivada: mostrar label si existe, con estilo atenuado.
+- [x] Revisar que no haya overlap en Heatmap.
+- [x] Agregar tests de QA visual/casos limite.
 
 Criterio de cierre:
 
-- La feature se percibe discreta.
-- No hay saltos de layout.
-- No aparecen emojis nativos.
-- El Heatmap sigue siendo legible.
+- [x] La feature se percibe discreta.
+- [x] No hay saltos de layout.
+- [x] No aparecen emojis nativos en la UI de fechas academicas.
+- [x] El Heatmap sigue siendo legible.
+- [x] Verificado con `npm test -- tests/unit/components/Heatmap.test.js tests/unit/components/UpcomingAcademicEvents.test.js`.
+- [x] Verificado con `npm run lint`.
 
 ### Fase 10 — Verificacion final
 
