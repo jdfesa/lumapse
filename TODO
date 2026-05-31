@@ -595,18 +595,20 @@ Objetivo:
 
 Tareas:
 
-- [ ] Crear `src/components/AcademicEventTypes.js`.
-- [ ] Definir labels, colores y SVGs inline.
-- [ ] Evitar emojis Unicode nativos.
-- [ ] Crear helper para dot de Heatmap.
-- [ ] Crear helper para item de lista.
-- [ ] Agregar tests de render basico.
+- [x] Crear `src/components/AcademicEventTypes.js`.
+- [x] Definir labels, colores y SVGs inline.
+- [x] Evitar emojis Unicode nativos.
+- [x] Crear helper para dot de Heatmap.
+- [x] Crear helper para item de lista.
+- [x] Agregar tests de render basico.
 
 Criterio de cierre:
 
-- Los cuatro tipos se renderizan con SVG.
-- La UI no depende de estilos de emoji del sistema operativo.
-- Los colores tienen contraste suficiente en tema oscuro y claro.
+- [x] Los cuatro tipos se renderizan con SVG.
+- [x] La UI no depende de estilos de emoji del sistema operativo.
+- [x] Los colores tienen contraste suficiente en tema oscuro y claro.
+- [x] Verificado con `npm test -- tests/unit/components/AcademicEventTypes.test.js tests/unit/components`.
+- [x] Verificado con `npm run lint`.
 
 ### Fase 5 — Heatmap read-only con dots
 
