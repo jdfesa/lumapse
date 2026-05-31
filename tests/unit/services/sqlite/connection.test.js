@@ -90,6 +90,40 @@ describe('getDb()', () => {
   })
 })
 
+describe('initDatabase() schema', () => {
+  it('crea academic_events e indices en instalaciones nuevas', async () => {
+    const { module, mockDb } = await importConnection()
+
+    await module.initDatabase()
+
+    const schema = mockDb.execute.mock.calls[0][0]
+    expect(schema).toContain('CREATE TABLE IF NOT EXISTS academic_events')
+    expect(schema).toContain("CHECK(type IN ('parcial', 'final', 'tp', 'exposicion'))")
+    expect(schema).toContain('REFERENCES subjects(id) ON DELETE SET NULL')
+    expect(schema).toContain('CREATE INDEX IF NOT EXISTS idx_academic_events_date')
+    expect(schema).toContain('CREATE INDEX IF NOT EXISTS idx_academic_events_subject')
+  })
+
+  it('ejecuta migraciones idempotentes para academic_events en instalaciones existentes', async () => {
+    const { module, mockDb } = await importConnection()
+
+    await module.initDatabase()
+
+    const migrationSql = mockDb.run.mock.calls.map(([sql]) => sql).join('\n')
+    expect(migrationSql).toContain('CREATE TABLE IF NOT EXISTS academic_events')
+    expect(migrationSql).toContain('CREATE INDEX IF NOT EXISTS idx_academic_events_date')
+    expect(migrationSql).toContain('CREATE INDEX IF NOT EXISTS idx_academic_events_subject')
+  })
+
+  it('persiste en web despues de ejecutar migraciones', async () => {
+    const { module, mockSqliteConnection } = await importConnection({ platform: 'web' })
+
+    await module.initDatabase()
+
+    expect(mockSqliteConnection.saveToStore).toHaveBeenCalledTimes(2)
+  })
+})
+
 describe('persistWeb()', () => {
   it('no lanza error si sqliteConnection es null', async () => {
     const { module } = await importConnection()

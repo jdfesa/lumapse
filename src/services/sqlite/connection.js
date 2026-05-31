@@ -142,6 +142,19 @@ export async function initDatabase() {
         createdAt TEXT    NOT NULL,
         updatedAt TEXT    NOT NULL
       );
+      CREATE TABLE IF NOT EXISTS academic_events (
+        id        TEXT    PRIMARY KEY,
+        type      TEXT    NOT NULL CHECK(type IN ('parcial', 'final', 'tp', 'exposicion')),
+        title     TEXT,
+        date      TEXT    NOT NULL,
+        subjectId TEXT    REFERENCES subjects(id) ON DELETE SET NULL,
+        createdAt TEXT    NOT NULL,
+        updatedAt TEXT    NOT NULL
+      );
+      CREATE INDEX IF NOT EXISTS idx_academic_events_date
+        ON academic_events(date);
+      CREATE INDEX IF NOT EXISTS idx_academic_events_subject
+        ON academic_events(subjectId);
       CREATE TABLE IF NOT EXISTS metadata (
         key   TEXT PRIMARY KEY,
         value TEXT
@@ -152,6 +165,7 @@ export async function initDatabase() {
 
     // Migraciones idempotentes para instalaciones existentes
     await runMigrations()
+    await persistWeb()
 
     // Realizar migración de IndexedDB a SQLite si corresponde
     await migrateFromIndexedDB()
@@ -172,7 +186,7 @@ export async function initDatabase() {
 async function runMigrations() {
   if (!db) return
 
-  // Cada entrada: [nombre descriptivo, SQL de ALTER TABLE]
+  // Cada entrada: [nombre descriptivo, SQL idempotente de schema]
   const migrations = [
     // v1.1 — Estructura Materia > Sección (DP-004)
     ['notes.subjectId',              'ALTER TABLE notes ADD COLUMN subjectId TEXT REFERENCES subjects(id) ON DELETE SET NULL'],
@@ -184,6 +198,18 @@ async function runMigrations() {
     // v1.3 — Papelera de Reciclaje (Soft Delete)
     ['notes.deletedAt',              'ALTER TABLE notes ADD COLUMN deletedAt TEXT'],
     ['subjects.deletedAt',           'ALTER TABLE subjects ADD COLUMN deletedAt TEXT'],
+    // v1.4 — Fechas académicas discretas (DP-007)
+    ['academic_events.table',         `CREATE TABLE IF NOT EXISTS academic_events (
+      id        TEXT    PRIMARY KEY,
+      type      TEXT    NOT NULL CHECK(type IN ('parcial', 'final', 'tp', 'exposicion')),
+      title     TEXT,
+      date      TEXT    NOT NULL,
+      subjectId TEXT    REFERENCES subjects(id) ON DELETE SET NULL,
+      createdAt TEXT    NOT NULL,
+      updatedAt TEXT    NOT NULL
+    )`],
+    ['academic_events.date_index',    'CREATE INDEX IF NOT EXISTS idx_academic_events_date ON academic_events(date)'],
+    ['academic_events.subject_index', 'CREATE INDEX IF NOT EXISTS idx_academic_events_subject ON academic_events(subjectId)'],
   ]
 
   for (const [migrationName, sql] of migrations) {
