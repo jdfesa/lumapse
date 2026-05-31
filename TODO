@@ -697,16 +697,19 @@ Objetivo:
 
 Tareas:
 
-- [ ] Boton editar en cada evento.
-- [ ] Boton eliminar con confirmacion accesible.
-- [ ] Actualizar store tras borrar.
-- [ ] Recalcular eventos del mes y proximos.
-- [ ] Tests de acciones.
+- [x] Boton editar en cada evento.
+- [x] Boton eliminar con confirmacion accesible.
+- [x] Crear helper `AcademicEventActions.js` para compartir comportamiento entre mini-card y lista.
+- [x] Actualizar store tras borrar.
+- [x] Recalcular eventos del mes y proximos desde `NoteStore.deleteAcademicEvent`.
+- [x] Tests de acciones.
 
 Criterio de cierre:
 
-- El usuario no queda atrapado con eventos mal cargados.
-- Borrar no afecta notas ni materias.
+- [x] El usuario no queda atrapado con eventos mal cargados.
+- [x] Borrar no afecta notas ni materias.
+- [x] Verificado con `npm test -- tests/unit/components/Heatmap.test.js tests/unit/components/UpcomingAcademicEvents.test.js`.
+- [x] Verificado con `npm run lint`.
 
 ### Fase 9 — QA visual y mobile
 
