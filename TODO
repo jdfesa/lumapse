@@ -570,20 +570,22 @@ Objetivo:
 
 Tareas:
 
-- [ ] Extender `NoteStore.state.js` con estado de eventos.
-- [ ] Crear `NoteStore.academicEvents.js`.
-- [ ] Exportar acciones desde el barrel `NoteStore.js`.
-- [ ] Implementar carga inicial de eventos.
-- [ ] Implementar carga por mes para Heatmap.
-- [ ] Implementar proximos eventos.
-- [ ] Implementar selector por fecha seleccionada.
-- [ ] Agregar tests unitarios del store.
+- [x] Extender `NoteStore.state.js` con estado de eventos.
+- [x] Crear `NoteStore.academicEvents.js`.
+- [x] Exportar acciones desde el barrel `NoteStore.js`.
+- [x] Implementar carga inicial de eventos.
+- [x] Implementar carga por mes para Heatmap.
+- [x] Implementar proximos eventos.
+- [x] Implementar selector por fecha seleccionada.
+- [x] Agregar tests unitarios del store.
 
 Criterio de cierre:
 
-- Heatmap y lista de proximas fechas pueden consumir datos del store.
-- Crear/editar/borrar eventos actualiza estado y notifica.
-- No se rompen filtros de notas existentes.
+- [x] Heatmap y lista de proximas fechas pueden consumir datos del store.
+- [x] Crear/editar/borrar eventos actualiza estado y notifica.
+- [x] No se rompen filtros de notas existentes.
+- [x] Verificado con `npm test -- tests/unit/store/NoteStore.academicEvents.test.js tests/unit/store`.
+- [x] Verificado con `npm run lint`.
 
 ### Fase 4 — Tipos visuales e iconografia
 
