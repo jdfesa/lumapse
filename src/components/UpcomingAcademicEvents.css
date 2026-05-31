@@ -83,6 +83,10 @@
   align-items: start;
 }
 
+.upcoming-academic-events .academic-event-item--with-actions {
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+}
+
 .upcoming-academic-events .academic-event-item__icon {
   width: 20px;
   height: 20px;
@@ -133,4 +137,39 @@
 .upcoming-academic-events .academic-event-item__subject {
   color: var(--color-text-muted);
   font-size: 0.72rem;
+}
+
+.upcoming-academic-events .academic-event-item__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.upcoming-academic-events .academic-event-item__action {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.upcoming-academic-events .academic-event-item__action:hover,
+.upcoming-academic-events .academic-event-item__action:focus-visible {
+  color: var(--color-accent);
+  background: var(--color-surface-hover);
+  border-color: var(--color-border);
+  outline: none;
+}
+
+.upcoming-academic-events .academic-event-item__action--danger:hover,
+.upcoming-academic-events .academic-event-item__action--danger:focus-visible {
+  color: var(--color-danger);
+  background: var(--color-danger-dim);
+  border-color: var(--color-danger);
 }

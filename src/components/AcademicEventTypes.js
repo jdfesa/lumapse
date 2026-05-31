@@ -99,6 +99,41 @@ function dateLabel(date) {
   return `${String(day).padStart(2, '0')} ${monthLabels[month - 1]}`
 }
 
+function renderEventActions(event, title) {
+  const eventId = escapeAttribute(event.id || '')
+  const safeTitle = escapeAttribute(title)
+
+  return `
+    <span class="academic-event-item__actions" aria-label="Acciones de fecha academica">
+      <button class="academic-event-item__action js-academic-event-action"
+              type="button"
+              data-event-action="edit"
+              data-event-id="${eventId}"
+              title="Editar ${safeTitle}"
+              aria-label="Editar ${safeTitle}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 20h9"></path>
+          <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+        </svg>
+      </button>
+      <button class="academic-event-item__action academic-event-item__action--danger js-academic-event-action"
+              type="button"
+              data-event-action="delete"
+              data-event-id="${eventId}"
+              title="Eliminar ${safeTitle}"
+              aria-label="Eliminar ${safeTitle}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+          <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        </svg>
+      </button>
+    </span>
+  `
+}
+
 export function getAcademicEventType(type) {
   return ACADEMIC_EVENT_TYPES[type] || null
 }
@@ -139,9 +174,11 @@ export function renderAcademicEventListItem(event, options = {}) {
   const subject = subjectLabel
     ? `<span class="academic-event-item__subject">${escapeHtml(subjectLabel)}</span>`
     : ''
+  const actions = options.actions ? renderEventActions(event, title) : ''
+  const actionsClass = options.actions ? ' academic-event-item--with-actions' : ''
 
   return `
-    <article class="academic-event-item academic-event-item--${type.id}"
+    <article class="academic-event-item academic-event-item--${type.id}${actionsClass}"
              data-event-id="${escapeAttribute(event.id || '')}"
              data-event-type="${escapeAttribute(type.id)}"
              style="--academic-event-color: ${escapeAttribute(color)}">
@@ -154,6 +191,7 @@ export function renderAcademicEventListItem(event, options = {}) {
         <span class="academic-event-item__title">${escapeHtml(title)}</span>
         ${subject}
       </span>
+      ${actions}
     </article>
   `
 }
