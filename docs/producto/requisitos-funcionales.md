@@ -1,7 +1,7 @@
 # Requisitos Funcionales — Lumapse
 
 **Fase Design Thinking:** Idear / Prototipar  
-**Última actualización:** Mayo 2026 (post Hito 04, sesión 2026-05-17)  
+**Última actualización:** 2026-05-31 (planificación de Fechas Académicas)
 **Autor:** José David Sandoval
 
 ---
@@ -60,6 +60,14 @@
 
 ---
 
+## Módulo 4.1 — Fechas Académicas
+
+| ID | Requisito | Prioridad | Persona | Hito | Estado |
+|---|---|---|---|---|---|
+| RF-027 | El sistema debe permitir marcar **fechas académicas puntuales** en el calendario existente, con tipo de evento (parcial, final, trabajo práctico o exposición), fecha obligatoria, descripción breve opcional y asociación opcional a una materia o sección. La funcionalidad debe actuar como recordatorio visual pasivo integrado al Heatmap, sin notificaciones, recurrencia, horarios ni sincronización externa. | SHOULD | Lucía | 06 | Pendiente |
+
+---
+
 ## Módulo 5 — Exportación e Importación
 
 | ID | Requisito | Prioridad | Persona | Hito | Estado |
@@ -96,9 +104,9 @@
 | Prioridad | Cantidad | Descripción |
 |---|---|---|
 | **MUST** | 13 | Funcionalidades obligatorias para el MVP |
-| **SHOULD** | 10 | Funcionalidades deseables que completan la experiencia |
+| **SHOULD** | 11 | Funcionalidades deseables que completan la experiencia |
 | **COULD** | 3 | Funcionalidades opcionales si hay tiempo disponible |
-| **Total** | **26** | |
+| **Total** | **27** | |
 
 ---
 
@@ -110,6 +118,7 @@
 | **03** (Julio) | RF-008 a RF-012, RF-016 a RF-018, RF-021 | 8 |
 | **04** (Agosto) | RF-006, RF-013 a RF-015, RF-019, RF-020, RF-022, RF-024, RF-025, RF-026 | 10 |
 | **05** (Septiembre) | RF-023 | 1 |
+| **06** (Octubre) | RF-027 | 1 |
 
 ---
 

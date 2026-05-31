@@ -1,7 +1,7 @@
 # Historias de Usuario — Lumapse
 
 **Fase Design Thinking:** Idear / Prototipar  
-**Última actualización:** Mayo 2026  
+**Última actualización:** 2026-05-31
 **Autor:** José David Sandoval
 
 ---
@@ -13,7 +13,7 @@
 - **CA:** Criterio de Aceptación — condición verificable que define cuándo la historia está completa.
 - **SP:** Story Points — complejidad relativa en escala Fibonacci (1, 2, 3, 5, 8, 13). Ver [metodología de estimación](#metodología-de-estimación).
 - **Trazabilidad:** Cada HU referencia el RF que implementa y la Persona que la motiva.
-- **Alcance:** Este documento cubre las HU de los **Hitos 02, 03 y 04**. Se ampliará en hitos posteriores.
+- **Alcance:** Este documento cubre las HU de los **Hitos 02, 03, 04 y funcionalidades planificadas para Hito 06**. Se ampliará en hitos posteriores.
 
 ---
 
@@ -396,15 +396,42 @@
 
 ---
 
+## Hito 06 — Fechas Académicas Discretas (Octubre 2026)
+
+### HU-027 — Marcar fechas académicas importantes
+
+| Campo | Detalle |
+|---|---|
+| **Historia** | Como **estudiante**, quiero **marcar fechas de parciales, finales, trabajos prácticos y exposiciones en Lumapse**, para **tener recordatorios académicos junto a mis notas sin usar una agenda aparte**. |
+| **RF asociados** | [RF-027](./requisitos-funcionales.md) |
+| **Persona** | [Lucía](./personas.md#persona-1--lucía-la-estudiante-organizada) |
+| **Prioridad** | SHOULD |
+| **Story Points** | **8 SP** — Integra nueva tabla SQLite, servicio de dominio, estado global, render en Heatmap, diálogo accesible y lista de próximas fechas, manteniendo el alcance deliberadamente acotado. |
+| **Hito** | 06 |
+
+**Criterios de Aceptación:**
+
+| CA | Descripción | Verificación |
+|---|---|---|
+| CA-01 | El usuario puede crear una fecha académica con tipo y fecha obligatorios. | Test funcional + unitario de servicio |
+| CA-02 | El usuario puede asociar opcionalmente la fecha a una materia o sección existente. | Test funcional + verificación en SQLite |
+| CA-03 | El Heatmap muestra un indicador visual discreto en los días con fechas académicas sin ocultar la actividad de notas. | Test de componente + inspección visual |
+| CA-04 | Al seleccionar un día con eventos, se muestra una lista compacta de eventos de ese día. | Test de componente |
+| CA-05 | La app muestra una lista breve de próximas fechas si existen eventos futuros. | Test de componente |
+| CA-06 | Las fechas académicas persisten offline en SQLite y no dependen de servicios externos. | Test unitario SQLite + prueba sin red |
+| CA-07 | La funcionalidad no solicita permisos de notificaciones ni incorpora recurrencia, horarios o sincronización externa. | Revisión de alcance + inspección de permisos |
+
+---
+
 ## Resumen
 
-| Métrica | Hito 02 | Hito 03 | Hito 04 | Total |
-|---|---|---|---|---|
-| **Total HU** | 6 | 4 | 7 | **17** |
-| **Total Story Points** | 20 | 21 | 37 | **78** |
-| **Total Criterios de Aceptación** | 20 | 14 | 30 | **64** |
-| **Prioridad predominante** | MUST | MUST/SHOULD | SHOULD/MUST | — |
-| **Personas cubiertas** | Lucía (4), Martín (2) | Lucía (2), Martín (2) | Lucía (6), Martín (1) | Lucía (12), Martín (5) |
+| Métrica | Hito 02 | Hito 03 | Hito 04 | Hito 06 | Total |
+|---|---|---|---|---|---|
+| **Total HU** | 6 | 4 | 7 | 1 | **18** |
+| **Total Story Points** | 20 | 21 | 37 | 8 | **86** |
+| **Total Criterios de Aceptación** | 20 | 14 | 30 | 7 | **71** |
+| **Prioridad predominante** | MUST | MUST/SHOULD | SHOULD/MUST | SHOULD | — |
+| **Personas cubiertas** | Lucía (4), Martín (2) | Lucía (2), Martín (2) | Lucía (6), Martín (1) | Lucía (1) | Lucía (13), Martín (5) |
 
 ---
 
@@ -429,7 +456,8 @@
 | HU-015 | RF-025 | Lucía | Marcadores de estado académico | 3 | 04 |
 | HU-016 | RF-026 | Lucía | Papelera de reciclaje | 8 | 04 |
 | HU-017 | RF-014 | Lucía | Categorización y filtrado por materias | 8 | 04 |
-| | | | **Total** | **78** | |
+| HU-027 | RF-027 | Lucía | Fechas académicas discretas | 8 | 06 |
+| | | | **Total** | **86** | |
 
 ---
 
@@ -452,7 +480,7 @@ Lumapse es un proyecto **individual** (José David Sandoval), lo cual impide apl
 
 ---
 
-> **Nota:** Las HU de los Hitos 05 y 06 (categorización por materias, SQLite) se agregarán al inicio de cada hito, siguiendo el mismo formato y convenciones. Este documento es un artefacto vivo que crece con el proyecto.
+> **Nota:** Las HU de próximos hitos se agregan cuando el alcance está definido y trazado contra requisitos funcionales. Este documento es un artefacto vivo que crece con el proyecto.
 
 ---
 
