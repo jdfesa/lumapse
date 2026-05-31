@@ -64,7 +64,7 @@
 
 | ID | Requisito | Prioridad | Persona | Hito | Estado |
 |---|---|---|---|---|---|
-| RF-027 | El sistema debe permitir marcar **fechas académicas puntuales** en el calendario existente, con tipo de evento (parcial, final, trabajo práctico o exposición), fecha obligatoria, descripción breve opcional y asociación opcional a una materia o sección. La funcionalidad debe actuar como recordatorio visual pasivo integrado al Heatmap, sin notificaciones, recurrencia, horarios ni sincronización externa. | SHOULD | Lucía | 06 | Pendiente |
+| RF-027 | El sistema debe permitir marcar **fechas académicas puntuales** en el calendario existente, con tipo de evento (parcial, final, trabajo práctico o exposición), fecha obligatoria, descripción breve opcional y asociación opcional a una materia o sección. La funcionalidad debe actuar como recordatorio visual pasivo integrado al Heatmap, sin notificaciones, recurrencia, horarios ni sincronización externa. | SHOULD | Lucía | 06 | Implementado |
 
 ---
 

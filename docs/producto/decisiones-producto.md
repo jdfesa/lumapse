@@ -263,7 +263,7 @@ Si el testing con usuarios reales muestra que los marcadores no se usan o genera
 ## DP-007: Fechas académicas como recordatorio visual pasivo
 
 **Fecha:** 2026-05-31
-**Estado:** 🟡 Pendiente de implementación
+**Estado:** ✅ Implementada
 **Refs:** RF-027, HU-027
 
 ### Contexto
@@ -323,6 +323,10 @@ Lumapse **no** se convierte en Google Calendar ni en una agenda semanal. Para pr
 ### Condición de pivote
 
 Si durante testing con usuarios reales la funcionalidad desplaza la atención de la toma de notas, genera expectativa de agenda completa o dispara pedidos reiterados de notificaciones/recurrencia/horarios, se mantendrá como recordatorio visual básico o se postergará. La señal de éxito no es que reemplace un calendario, sino que ayude a recordar fechas académicas sin agregar fricción.
+
+### Resultado de implementación
+
+La v1 se implementó como una capa discreta sobre el Heatmap existente: dots por día, detalle compacto al seleccionar fecha, modal accesible para crear/editar, lista colapsable de próximas fechas y eliminación con confirmación accesible. Las fechas se persisten en SQLite local (`academic_events`) y se integran al store sin agregar notificaciones, recurrencias, horarios ni dependencias externas.
 
 ---
 
