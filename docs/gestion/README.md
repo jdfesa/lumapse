@@ -13,6 +13,7 @@ de Gómez (2014).
 | [`estimacion-pert.md`](./estimacion-pert.md) | Estimación de 3 puntos (PERT) para los módulos de mayor riesgo | ✅ Completado |
 | [`lineas-base.md`](./lineas-base.md) | Registro de líneas base (tags Git) y releases formales | ✅ Completado |
 | [`seguimiento-velocidad.md`](./seguimiento-velocidad.md) | Tabla de velocidad: SP planificados vs. entregados por hito | ✅ Completado |
+| [`historico/`](./historico/) | Snapshots operativos cerrados preservados como evidencia de proceso | 📦 Archivo |
 
 ---
 
