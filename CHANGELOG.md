@@ -27,18 +27,27 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Título implícito más claro:** Las tarjetas destacan suavemente la primera línea no vacía como título cuando la nota no usa `#`, manteniendo el editor de un solo campo y reduciendo fricción para usuarios nuevos.
 - **GitHub Actions ampliado:** El workflow existente pasó a ser `CI — Quality Gate` y ahora ejecuta lint, tests, build, bundle budget, check de diálogos nativos, trazabilidad, links internos, schema sync, DBML, jerarquía de materias y auditoría a11y estática.
 - **Tests nativos Android corregidos:** Se reemplazaron los tests generados por template que referenciaban paquetes de Capacitor por tests bajo `com.lumapse.app`.
-- **Backlog/TODO actualizados:** El `TODO` raíz y `BACKLOG.md` registran como completada la capa de automatización, mantienen Hito 04 en cierre formal y clasifican esta tanda como preparación de Hito 05.
+- **Backlog/TODO actualizados:** El `TODO` raíz y `BACKLOG.md` registran como completada la capa de automatización, cierran formalmente Hito 04 y clasifican esta tanda como preparación de Hito 05.
 - **Versionado de paquete alineado:** `package.json` y `package-lock.json` pasan de `0.1.0` a `0.4.7`, manteniendo el paquete sincronizado con la última versión cerrada documentada antes de preparar un release/APK.
 - **Seguimiento de velocidad actualizado:** `docs/gestion/seguimiento-velocidad.md` queda sincronizado con `scripts/generate-velocity-report.py`: 17 HU formalizadas, 78 SP acumulados y velocidad promedio de 26.0 SP/hito.
 - **CSP web ajustada para SQLite WASM:** `index.html` permite el runtime WASM local necesario para `jeep-sqlite`/`sql.js`, manteniendo los recursos restringidos a orígenes locales.
 
 ---
 
-## Hito 04: Organización y UX (En cierre, no cerrado formalmente)
+## Hito 04: Organización y UX (Cerrado formalmente)
 
 > Las versiones 0.4.0 a 0.4.7 componen el Hito 04. Cada sub-versión agrupa un lote
 > lógico de trabajo entregado de forma incremental siguiendo la metodología Kanban (ADR-003).
-> El hito queda en cierre hasta resolver o descartar explícitamente sus pendientes UX/documentales: contador, onboarding, indicador offline/online, ayuda Markdown, empty states, sincronización documental/versionado y gráficos DB al final.
+> El hito queda cerrado formalmente el 2026-06-01. El cierre se realiza con empty states pulidos y decisiones explícitas de postergación/descarte para las funcionalidades que podían agregar fricción o sugerir capacidades no presentes todavía.
+
+### Cierre formal — 2026-06-01
+
+#### Changed
+- **Empty states de cierre UX:** Se pulieron los mensajes de feed vacío, búsqueda sin resultados, materia sin notas, archivo vacío y fecha sin notas para orientar sin agregar onboarding obligatorio.
+- **RF-006 postergado:** El contador de palabras/caracteres no se incorpora al MVP para preservar un editor liviano. Queda como posible mejora futura si estudiantes reales lo solicitan.
+- **RF-024 postergado:** El indicador online/offline se posterga hasta que exista sincronización, backup o integración externa. En el producto actual, todas las acciones centrales funcionan offline.
+- **RF-022 postergado:** El onboarding carousel se posterga para no bloquear la primera nota con una experiencia previa. Se evaluará con feedback post-release.
+- **DP-006 consolidada:** La ayuda Markdown y coach marks quedan fuera del Hito 04; cualquier ayuda ampliada deberá integrarse con la futura sección "Acerca de" de Hito 05 sin saturar la interfaz.
 
 ---
 

@@ -1,10 +1,22 @@
 # TODO — Lumapse
 
-## Proximo paso logico: Fechas academicas discretas
+## Proximo paso logico: Hito 05 — Testing, calidad y distribucion
 
-**Estado:** planificacion previa a implementacion.
-**Objetivo:** agregar un apartado discreto de fechas academicas ligado al calendario existente, sin convertir Lumapse en una agenda.
-**Idea central:** el usuario sigue viniendo a tomar notas; las fechas solo agregan contexto academico util, visible y local.
+**Estado:** Hito 04 cerrado formalmente el 2026-06-01. Fechas academicas discretas completadas como incremento anticipado y documentadas en backlog/changelog.
+**Objetivo:** preparar la primera release distribuible con quality gate, APK firmado, validacion manual y documentacion final.
+**Idea central:** Lumapse ya tiene un nucleo funcional solido; el siguiente paso no es sumar UI, sino estabilizar, empaquetar y validar con estudiantes reales.
+
+Decisiones de cierre Hito 04:
+
+- RF-006 (contador de palabras/caracteres): postergado por decision de diseno.
+- RF-024 (indicador online/offline): postergado hasta que exista sincronizacion, backup o integracion externa.
+- RF-022 (onboarding): postergado hasta feedback post-release.
+- Coach marks y guia Markdown dedicada: fuera del MVP para proteger la interfaz sin friccion.
+- Empty states: pulidos como cierre UX minimo.
+
+---
+
+## Plan cerrado: Fechas academicas discretas
 
 Lumapse debe mantener su foco: captura rapida, notas por materia y organizacion liviana. Las fechas academicas existen para recordar parciales, finales, trabajos practicos y exposiciones dentro del mismo contexto donde el estudiante ya toma apuntes. No deben competir con las notas ni introducir una experiencia de calendario completa.
 

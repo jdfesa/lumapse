@@ -2,10 +2,30 @@
 
 Este documento funciona como una bandeja de entrada local para las tareas, mejoras y deuda técnica identificadas durante el desarrollo o en auditorías. Una vez que se inicia un Hito, las tareas relevantes de aquí se planifican y ejecutan.
 
-> **Hito activo:** 04 — Organización y UX (en cierre formal)
-> **Hito 05:** Preparación técnica iniciada (testing, CI y quality gates)
-> **Última actualización local:** 2026-05-31 — Cierre de Fechas Académicas discretas
-> **Última auditoría del backlog:** 2026-05-31
+> **Hito activo:** 05 — Testing, Calidad y Distribución
+> **Hito 04:** Cerrado formalmente el 2026-06-01
+> **Última actualización local:** 2026-06-01 — Cierre formal del Hito 04
+> **Última auditoría del backlog:** 2026-06-01
+
+---
+
+## 📌 Corte actual — Cierre formal del Hito 04 2026-06-01
+
+**Estado:** ✅ Cerrado formalmente. El Hito 04 queda concluido como bloque de Organización y UX. El cierre se realizó por implementación directa de los ajustes de menor fricción y por reclasificación explícita de funcionalidades opcionales que podían ensuciar la interfaz o sugerir capacidades que Lumapse todavía no ofrece.
+
+**Decisiones de cierre aplicadas:**
+
+- **RF-006 — Conteo de palabras/caracteres:** postergado. No se implementa en el MVP porque el núcleo actual de Lumapse es captura rápida de notas, no escritura con métricas editoriales. Si estudiantes reales lo solicitan después de la primera release, puede agregarse como metadato sutil calculado en UI, sin tocar SQLite.
+- **RF-024 — Indicador offline/online:** postergado hasta que exista sincronización, backup o integración externa. Como Lumapse es offline-first y no depende de la red para crear, editar, buscar u organizar notas, mostrar un estado online/offline permanente podría sugerir falsamente que hay sincronización pendiente.
+- **RF-022 — Onboarding carousel:** postergado. Para la primera entrega se prioriza que la app sea autoexplicativa mediante affordances, placeholders y empty states. Un onboarding obligatorio o demasiado visible agregaría fricción antes de tomar la primera nota.
+- **Coach marks contextuales:** descartados para Hito 04 y movidos a feedback post-release. Las burbujas de primera vez pueden ser útiles, pero también interrumpen una experiencia mobile-first que busca ser directa.
+- **DP-006 — Guía Markdown / Ayuda:** postergada para integrarse, si corresponde, con `RF-023 — Acerca de` en Hito 05. Lumapse no debe sentirse como un tutorial de Markdown; el usuario puede escribir texto plano sin aprender sintaxis.
+- **Empty states amigables:** implementados como pulido de UX sin agregar pantallas nuevas. Feed, búsqueda, fechas, archivo y materia vacía ahora comunican mejor qué ocurre y cuál es el siguiente gesto natural.
+- **Gráficos de base de datos:** quedan diferidos al cierre documental final, una vez congelado el modelo. La decisión no bloquea Hito 04 porque no implica deuda funcional ni inconsistencia del schema/DBML actual.
+
+**Criterio de cierre:** Hito 04 se cierra sin sumar UI innecesaria. Las decisiones se basan en la filosofía del producto: tomador de notas sin fricción, offline-first, mobile-first, sin sincronización todavía y abierto a incorporar mejoras cuando exista evidencia de adopción real por estudiantes.
+
+**Siguiente prioridad recomendada:** iniciar Hito 05 con foco en release: `verify`, release dry-run, APK firmado, pruebas manuales en Android y actualización final de artefactos de distribución.
 
 ---
 
@@ -42,13 +62,13 @@ npm run quality
 
 ---
 
-## 📌 Decisión de estado — Hitos 04/05 2026-05-26
+## 📌 Decisión de estado — Hitos 04/05 2026-06-01
 
-**Estado formal:** Hito 04 sigue siendo el hito activo, pero queda en **cierre formal**, no en desarrollo abierto. No se declara completado hasta resolver o descartar explícitamente los pendientes de cierre: RF-006, RF-022, RF-024, DP-006, empty states, sincronización documental/versionado y actualización de gráficos DB al final.
+**Estado formal:** Hito 04 queda **cerrado formalmente**. Los pendientes opcionales de cierre fueron resueltos por implementación mínima (empty states) o por decisión explícita de postergación/descarte para proteger la filosofía de Lumapse.
 
 **Clasificación de la automatización reciente:** GitHub Actions, quality gate, comandos npm de auditoría y smoke tests Android pertenecen a **preparación técnica del Hito 05**, aunque se hayan implementado antes del cierre formal del Hito 04. Esto evita mezclar alcance UX/producto con alcance de testing/distribución.
 
-**Regla operativa:** antes de abrir nuevas features de Hito 05, cerrar el bloque funcional/documental pendiente del Hito 04 o moverlo formalmente con justificación.
+**Regla operativa:** desde este corte, las nuevas tareas deben clasificarse como Hito 05, Hito 06 o backlog post-release. No reabrir Hito 04 salvo corrección crítica de documentación histórica.
 
 ---
 
@@ -75,7 +95,7 @@ npm run check:dbml
 
 **Resultado:** check de diálogos OK, trazabilidad OK, DBML sincronizado y test unitario Android OK. La tarea de actualizar gráficos de base de datos queda explícitamente postergada para el cierre final del Hito 04, tal como fue definido.
 
-**Siguiente prioridad recomendada:** cerrar formalmente el **Hito 04** sin tocar gráficos DB todavía. Orden sugerido: empty states amigables, onboarding RF-022, indicador offline/online RF-024, contador RF-006, guía Markdown opcional y sincronización documental/versionado.
+**Siguiente prioridad recomendada:** continuar con Hito 05: release dry-run, APK firmado, validación manual en Android y actualización final de artefactos de distribución.
 
 ---
 
@@ -185,7 +205,7 @@ Estos son los bloques recomendados para continuar. La prioridad es mantener traz
 | 2 | ~~**Diálogos de Confirmación y Modo Enfoque**~~ | ✅ Completado (2026-05-26) | Modal `ConfirmDialog` accesible, reemplazo de confirm/alert nativos y Modo Enfoque fullscreen con botón de encoger. |
 | 3 | ~~**Integridad de datos en cascadas**~~ | ✅ Completado (2026-05-26) | Invariantes de visibilidad agregadas y cascadas de materias/secciones protegidas por transacciones SQLite. |
 | 4 | ~~**Deploy Android seguro**~~ | ✅ Completado (2026-05-26) | `deploy-android.sh --target <deviceId>` y `--clean` documentados; el script falla si hay múltiples dispositivos sin target. |
-| 5 | **Cierre funcional/documental Hito 04** | Completar RF pequeños pendientes y sincronizar documentación viva. | RF-006/RF-024/RF-022/DP-006 evaluados o implementados, README/velocidad/versionado actualizados, `check-traceability.py` sin advertencias. |
+| 5 | ~~**Cierre funcional/documental Hito 04**~~ | ✅ Completado (2026-06-01) | RF-006/RF-024/RF-022/DP-006 evaluados con decisión explícita, empty states pulidos y README/estado de hito actualizados. |
 | 6 | ~~**Preparación CI documental**~~ | ✅ Completado (2026-05-26) | Workflow `CI — Quality Gate` ejecuta lint, tests, build, bundle budget, trazabilidad, doc links, schema sync, DBML check, jerarquía de subjects, a11y y check de diálogos nativos. |
 
 ---
@@ -354,20 +374,20 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 
 **Tareas:**
 - [x] **Branding visual de Lumapse:** Integrar logotipos reales e íconos en Android (launcher icons y splash screens) y en la UI web (header/drawer) eliminando la marca genérica de Capacitor.
-- [ ] **RF-006 — Conteo de palabras/caracteres:** decidir si se implementa en `NoteEditor` como contador visible y actualizar HU/RF según corresponda.
-- [ ] **RF-024 — Indicador offline/online:** decidir si se implementa como chip de estado en drawer/header usando eventos `online`/`offline`.
-- [ ] **RF-022 — Onboarding carousel (3 pantallas + saltar):** Flujo de bienvenida al primer inicio con 3 pantallas deslizables minimalistas que presenten las propuestas de valor: captura rápida, organización por materias y funcionamiento offline. Botón "Saltar" siempre visible. No forzar acciones, solo informar. Referencia: DP-006.
-- [ ] **Empty states amigables:** Mensajes visuales y cálidos para pantallas vacías (feed sin notas, papelera vacía, materia sin notas, resultados de búsqueda vacíos). Reemplaza la idea de notas precargadas — evita que el usuario nuevo piense que necesita saber Markdown para usar la app.
-- [ ] **Coach marks contextuales (tooltips de primera vez):** Burbujitas no intrusivas que aparecen *una sola vez* al llegar a una pantalla nueva (ej: primera vez que abre el drawer → tooltip sobre el botón "+" de materias). Se descartan al tocar y no vuelven a aparecer. Persistencia en `localStorage`.
+- [x] **RF-006 — Conteo de palabras/caracteres:** postergado por decisión de diseño (2026-06-01). No se implementa como contador visible en el MVP para evitar ruido en el editor. Si la comunidad estudiantil lo solicita, puede agregarse luego como metadato sutil calculado en UI.
+- [x] **RF-024 — Indicador offline/online:** postergado por decisión de producto (2026-06-01). Sin sincronización, backup o integraciones externas, mostrar un chip de red no cambia ninguna acción del usuario y puede inducir una expectativa falsa de sincronización.
+- [x] **RF-022 — Onboarding carousel (3 pantallas + saltar):** postergado por decisión de diseño (2026-06-01). La primera release prioriza una experiencia autoexplicativa y sin fricción; se evaluará con feedback real si hace falta un onboarding más explícito.
+- [x] **Empty states amigables:** Mensajes visuales y cálidos para pantallas vacías (feed sin notas, materia sin notas, búsqueda sin resultados, fechas sin notas y archivo vacío), sin agregar pantallas ni pasos extra.
+- [x] **Coach marks contextuales (tooltips de primera vez):** descartados para Hito 04 y movidos a evaluación post-release. La guía emergente puede interrumpir el flujo mobile-first de captura rápida.
 - [x] **Archivar materia/sección completa con cascada:** Permitir archivar una materia o sección entera de un solo toque, heredando dinámicamente visibilidad sin modificar el estado individual de notas y previniendo su pérdida (cascada pura sobre subjects). Drawer migrado a menú contextual y optimizaciones en store.
-- [ ] **Guía de Markdown accesible desde Ayuda (DP-006):** En lugar de notas precargadas, ofrecer una guía opcional de sintaxis Markdown dentro de la sección de Ayuda/Onboarding. El usuario la consulta solo si quiere; no se impone. Refuerza que Lumapse funciona con texto plano sin necesidad de aprender Markdown.
+- [x] **Guía de Markdown accesible desde Ayuda (DP-006):** postergada para integrarse, si corresponde, con `RF-023 — Acerca de` en Hito 05. Lumapse debe funcionar como app de notas de texto plano sin exigir aprendizaje de Markdown.
 - [x] **README principal:** sincronizar stack y roadmap con el estado real post-SQLite, reemplazando referencias obsoletas a IndexedDB. Completado 2026-05-26.
 - [x] **Seguimiento de velocidad:** ✅ Completado (2026-05-26). `docs/gestion/seguimiento-velocidad.md` quedó sincronizado con `python3 scripts/generate-velocity-report.py` (17 HU, 78 SP, 26.0 SP/hito).
 - [x] **Versionado:** ✅ Completado (2026-05-26). `package.json` y `package-lock.json` alineados a `0.4.7`, la última versión cerrada documentada en `CHANGELOG.md`.
 - [x] **Informe final:** crear README de flujo por secciones, completar capítulos fuente iniciales y regenerar `INFORME-FINAL-COMPLETO.md`. Completado 2026-05-26.
-- [ ] **Cheatsheet de defensa:** actualizar `docs/gestion/cheatsheet-defensa.md` si los cambios del informe modifican el guion de defensa.
+- [x] **Cheatsheet de defensa:** actualizado con las decisiones de cierre de Hito 04 y el criterio de postergación intencional.
 
-**Criterio de cierre:** Documentación, backlog, requisitos y métricas reflejan el estado real del Hito 04; `check-traceability.py`, `check-doc-links.py`, `check-schema-sync.py` y `generate-dbml-from-code.py --check` pasan sin advertencias.
+**Criterio de cierre:** Hito 04 cerrado formalmente el 2026-06-01. Documentación, backlog, requisitos y métricas reflejan el estado real; las tareas que podrían agregar ruido visual quedan postergadas con justificación explícita.
 
 ---
 
@@ -389,11 +409,11 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 - [x] ~~**Historias de Usuario (Hitos 03 y 04):**~~ ✅ Completado (2026-05-18). HU-007 a HU-011 redactadas con criterios de aceptación, SP y trazabilidad.
 - [x] ~~**Actualizar Modelo de Dominio y Casos de Uso:**~~ ✅ Completado (2026-05-18). Entidad Tag eliminada, campos pinned/archived agregados, casos de uso corregidos (PWA→APK, Tags→Pin/Archivar).
 - [x] **Sincronizar README principal post-SQLite:** ✅ Completado (2026-05-26). El stack presenta SQLite como persistencia actual e IndexedDB queda como antecedente histórico/migración legacy.
-- [x] **Actualizar seguimiento de velocidad:** ✅ Completado (2026-05-26). El documento refleja las HU reales actuales (17 HU, 78 SP totales según `generate-velocity-report.py`) y deja Hito 04 en cierre formal.
+- [x] **Actualizar seguimiento de velocidad:** ✅ Completado (2026-06-01). El documento refleja las HU reales actuales, registra el cierre formal del Hito 04 y activa operativamente el Hito 05.
 - [ ] **Revisar documentos generados:** regenerar informe completo y cheatsheet cuando se cierren nuevos cambios, para evitar que los artefactos finales queden con métricas anteriores.
-- [ ] **Manual de usuario:** Crear un breve manual de usuario explicando los flujos principales, ya que el sistema tiene atajos visuales (Paso 9).
+- [ ] **Manual de usuario:** evaluar en Hito 05/06 un documento breve solo si la primera release evidencia fricción real de uso. No bloquear el cierre de Hito 04 con documentación que duplique la UI.
 - [x] ~~**Documentar Papelera de Reciclaje (Hito 04):**~~ ✅ Completado (2026-05-22). Añadido RF-026 y HU-016 (8 SP, 6 CA). Actualizado `CHANGELOG.md`, `modelo-dominio.md` (reescrito con Subject, deletedAt, statusEmoji, SQLite), DBML, DDL, normalización, y casos de uso (UC-16).
-- [ ] **Actualizar gráficos de base de datos:** Los gráficos exportados del diagrama Entidad-Relación (notación Chen) y el modelo lógico relacional han quedado desactualizados tras la adición de `deletedAt` y `statusEmoji` para la Papelera de Reciclaje. Es necesario regenerar las imágenes y actualizar los documentos correspondientes.
+- [ ] **Actualizar gráficos de base de datos:** Los gráficos exportados del diagrama Entidad-Relación (notación Chen) y el modelo lógico relacional han quedado desactualizados tras la adición de `deletedAt`, `statusEmoji` y `academic_events`. Se difiere al cierre documental final para regenerarlos una sola vez con el modelo congelado.
 
 ## 💻 Deuda Técnica — Código y Arquitectura
 
@@ -432,11 +452,11 @@ La encuesta de validación confirmó que el 69.2% de los estudiantes prefiere or
 
 | Idea | Tipo | Prioridad | Estado | Ubicación en Backlog |
 |---|---|---|---|---|
-| Empty states amigables (feed, papelera, materia vacía) | UX | Alta | Pendiente | Paso 10 |
-| Onboarding carousel — 3 pantallas + saltar (RF-022) | UX | Alta | Pendiente | Paso 10 |
-| Coach marks contextuales (tooltips de primera vez) | UX | Media | Pendiente | Paso 10 |
+| Empty states amigables (feed, papelera, materia vacía) | UX | Alta | Completado | Paso 10 |
+| Onboarding carousel — 3 pantallas + saltar (RF-022) | UX | Alta | Postergado | Hito futuro / feedback post-release |
+| Coach marks contextuales (tooltips de primera vez) | UX | Media | Descartado Hito 04 | Feedback post-release |
 | Archivar materia/sección completa con cascada | Funcionalidad | Alta | Completado | Paso 10 |
-| Guía de Markdown opcional en Ayuda (DP-006) | UX | Media | Pendiente | Paso 10 |
+| Guía de Markdown opcional en Ayuda (DP-006) | UX | Media | Postergado | Hito 05 / RF-023 |
 
 **Decisión de diseño — Notas precargadas descartadas:** Se evaluó y descartó la idea de precargar 2-3 notas de ejemplo en Markdown al primer inicio. Motivo: el usuario podría interpretar erróneamente que necesita aprender sintaxis Markdown para usar la app, cuando en realidad Lumapse funciona perfectamente con texto plano. Los empty states amigables cumplen la misma función de orientación sin generar esa fricción cognitiva.
 

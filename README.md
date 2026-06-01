@@ -4,7 +4,7 @@
 > Offline-first · Markdown · SQLite · Sin fricción.
 
 [![Estado del proyecto](https://img.shields.io/badge/estado-en%20desarrollo-a3e635?style=flat-square)](https://github.com/jdfesa/lumapse)
-[![Hito actual](https://img.shields.io/badge/hito-04%20en%20cierre%20%7C%2005%20preparaci%C3%B3n-3b82f6?style=flat-square)](./BACKLOG.md)
+[![Hito actual](https://img.shields.io/badge/hito-05%20testing%20y%20distribuci%C3%B3n-3b82f6?style=flat-square)](./BACKLOG.md)
 [![Licencia](https://img.shields.io/badge/licencia-GPLv3-737373?style=flat-square)](./LICENSE)
 [![Conventional Commits](https://img.shields.io/badge/commits-conventional-a3e635?style=flat-square)](https://www.conventionalcommits.org)
 
@@ -175,7 +175,7 @@ Completar el producto mínimo viable de captura y lectura de notas con Markdown 
 - Exportación/importación de notas Markdown
 - Funcionamiento offline bajo la arquitectura original PWA/IndexedDB
 
-### 🔄 Hito 04 — Organización y UX Móvil (Agosto 2026, en cierre) → [Informe](./docs/hitos/hito-04-agosto.md)
+### ✅ Hito 04 — Organización y UX Móvil (Agosto 2026) → [Informe](./docs/hitos/hito-04-agosto.md)
 
 Implementar el modelo de organización validado por el relevamiento y optimizar la experiencia móvil.
 
@@ -186,10 +186,11 @@ Implementar el modelo de organización validado por el relevamiento y optimizar 
 - Asignación y movimiento de notas entre Entrada y Materias
 - Archivado/restauración de materias y secciones con cascadas transaccionales
 - Búsqueda por texto, modo claro/oscuro, focus mode y diálogos personalizados
-- Pendientes de cierre formal: empty states, onboarding RF-022, indicador offline/online RF-024, contador RF-006, guía Markdown opcional y sincronización documental/versionado
-- Tarea diferida para el final: actualización de gráficos de base de datos
+- Empty states pulidos para feed, materias, búsqueda, archivo y fechas sin notas
+- Cierre formal 2026-06-01: RF-006, RF-022, RF-024, coach marks y guía Markdown se postergan o descartan para MVP por decisión de diseño, evitando ruido visual y falsas expectativas de sincronización
+- Tarea diferida para el cierre documental final: actualización de gráficos de base de datos
 
-### 🟡 Hito 05 — Testing, Calidad y Distribución (Septiembre 2026, preparación iniciada) → [Informe inicial](./docs/hitos/hito-05-septiembre.md)
+### 🔄 Hito 05 — Testing, Calidad y Distribución (Septiembre 2026, en curso) → [Informe inicial](./docs/hitos/hito-05-septiembre.md)
 
 Garantizar la calidad del código y preparar la distribución del producto.
 
