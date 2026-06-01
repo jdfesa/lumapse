@@ -1,9 +1,10 @@
 // =============================================================
 // ImportService — Lógica de importación
-// Hito 03: MVP Completo
+// Hito 05: revision de portabilidad local
 //
-// Responsabilidad: Importar archivos .md desde el sistema de
-// archivos local del usuario e insertarlos como nuevas notas.
+// Responsabilidad: conservar la base tecnica para importar archivos .md
+// desde el sistema de archivos local. Este servicio no esta expuesto en
+// la UI actual; RF-018 requiere politica de duplicados y organizacion.
 // =============================================================
 
 import { createNote } from '../store/NoteStore.js';

@@ -11,6 +11,7 @@ import { renderTrashView } from './TrashView.js';
 import { confirmDialog } from './ConfirmDialog.js';
 import { VirtualFeed } from './VirtualFeed.js';
 import { renderClearNoteStatusButton, renderNoteStatusBadge, renderNoteStatusMenuItems } from './NoteStatus.js';
+import { shareNoteAsMarkdown } from '../services/ShareNoteService.js';
 import './NoteList.css';
 
 const MARKDOWN_HEADING_REGEX = /^\s{0,3}#{1,6}\s+/
@@ -139,6 +140,7 @@ export class NoteList {
       onEdit: this.handleEdit,
       onDelete: this.handleDelete,
       onCopy: (button) => this.handleCopy(button),
+      onShare: (button) => this.handleShare(button),
       closeAllDropdowns: () => this.closeAllDropdowns(),
       refreshTrash: () => renderTrashView(this.feedContainer)
     });
@@ -198,6 +200,29 @@ export class NoteList {
       }, 1500);
     } catch (err) {
       console.error('Failed to copy', err);
+    }
+  }
+
+  async handleShare(btnElement) {
+    const id = btnElement.dataset.id;
+    const notes = NoteStore.getFilteredNotes();
+    const note = notes.find(n => n.id === id);
+    if (!note) return;
+
+    const originalHtml = btnElement.innerHTML;
+
+    try {
+      const result = await shareNoteAsMarkdown(note);
+      const label = result === 'copied' ? 'Copiado!' : 'Compartido';
+      btnElement.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> ${label}`;
+      setTimeout(() => {
+        btnElement.innerHTML = originalHtml;
+        this.closeAllDropdowns();
+      }, 1500);
+    } catch (err) {
+      if (err?.name !== 'AbortError') {
+        console.error('Failed to share', err);
+      }
     }
   }
 
@@ -299,6 +324,10 @@ export class NoteList {
               <button class="note-card__dropdown-btn js-btn-copy" data-id="${note.id}" title="Copiar nota">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                 Copiar
+              </button>
+              <button class="note-card__dropdown-btn js-btn-share" data-id="${note.id}" title="Compartir nota">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                Compartir
               </button>
               <button class="note-card__dropdown-btn note-card__dropdown-btn--delete js-btn-delete" data-id="${note.id}" title="Eliminar nota">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>

@@ -182,6 +182,10 @@ const ACTION_MAP = [
   {
     selector: '.js-btn-copy',
     handler: (_event, button, deps) => deps.onCopy(button)
+  },
+  {
+    selector: '.js-btn-share',
+    handler: (_event, button, deps) => deps.onShare(button)
   }
 ]
 
@@ -191,6 +195,7 @@ const ACTION_MAP = [
  * @param {Function} deps.onEdit Callback para editar nota (recibe id)
  * @param {Function} deps.onDelete Callback para eliminar nota (recibe id)
  * @param {Function} deps.onCopy Callback para copiar nota (recibe el elemento botón)
+ * @param {Function} deps.onShare Callback para compartir nota (recibe el elemento botón)
  * @param {Function} deps.closeAllDropdowns Cierra todos los dropdowns abiertos
  * @param {Function} deps.refreshTrash Re-renderiza la vista de papelera
  * @returns {Function} Event handler para el listener de clicks del feed

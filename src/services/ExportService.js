@@ -1,10 +1,10 @@
 // =============================================================
 // Servicio: ExportService
-// Hito 03: MVP Completo
+// Hito 05: revision de portabilidad local
 //
-// Responsabilidad: Manejar la lógica de exportación masiva de notas.
-// Exporta todas las notas como un archivo .zip que contiene
-// cada nota como un archivo .md separado (RF-017).
+// Responsabilidad: conservar la base tecnica de exportacion masiva
+// de notas. Este servicio no esta expuesto en la UI actual; RF-017
+// queda pendiente de decision/validacion mobile-first.
 // =============================================================
 
 import JSZip from 'jszip';
@@ -12,6 +12,7 @@ import { getAllNotes } from './sqlite/notes.js';
 
 /**
  * RF-017: Exportar todas las notas como .zip
+ * Estado: base tecnica no conectada a la UI actual.
  * Obtiene todas las notas de la base de datos, las añade a un
  * archivo zip usando JSZip y dispara la descarga en el navegador.
  */
