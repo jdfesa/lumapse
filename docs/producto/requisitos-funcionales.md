@@ -12,7 +12,7 @@
 - **Prioridad:** `MUST` (obligatorio) · `SHOULD` (deseable) · `COULD` (opcional si hay tiempo)
 - **Persona:** Persona de usuario que motiva el requisito → ver [personas.md](./personas.md)
 - **Hito:** Hito del roadmap donde se implementa → ver [README.md](../../README.md#roadmap)
-- **Estado:** `Pendiente` · `En desarrollo` · `Implementado` · `Verificado`
+- **Estado:** `Pendiente` · `En desarrollo` · `Implementado` · `Verificado` · `Postergado`
 
 ---
 
@@ -25,7 +25,7 @@
 | RF-003 | El sistema debe permitir **eliminar** una nota, con confirmación previa para evitar borrado accidental. | MUST | Lucía | 02 | Implementado |
 | RF-004 | El sistema debe mostrar un **listado de todas las notas** ordenadas por fecha de última modificación (más reciente primero). | MUST | Lucía | 02 | Implementado |
 | RF-005 | El sistema debe **auto-guardar** la nota activa cada 800ms de inactividad del usuario o al cambiar de nota. | MUST | Lucía | 02 | Implementado |
-| RF-006 | El sistema debe mostrar el **conteo de palabras y caracteres** de la nota activa. | COULD | Martín | 04 | Pendiente |
+| RF-006 | El sistema debe mostrar el **conteo de palabras y caracteres** de la nota activa. | COULD | Martín | Futuro | Postergado |
 
 ---
 
@@ -85,7 +85,7 @@
 | RF-019 | El sistema debe ofrecer un **modo oscuro** y un modo claro, con toggle visible. | SHOULD | Martín | 04 | Implementado |
 | RF-020 | El sistema debe ser **responsive**, adaptándose a pantallas desde 320px (móvil) hasta 1920px (desktop). | MUST | Lucía | 04 | Implementado |
 | RF-021 | ~~El sistema debe ser **instalable como PWA** desde el navegador.~~ Obsoleto: la distribución será como APK nativa con Capacitor ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)). | MUST | Lucía | 03 | Obsoleto (ADR-005) |
-| RF-022 | El sistema debe mostrar una **pantalla de bienvenida** (onboarding) solo en el primer uso, explicando las funcionalidades principales. | COULD | Lucía | 04 | Pendiente |
+| RF-022 | El sistema debe mostrar una **pantalla de bienvenida** (onboarding) solo en el primer uso, explicando las funcionalidades principales. | COULD | Lucía | Futuro | Postergado |
 | RF-025 | El sistema debe permitir al usuario asignar un **marcador de estado visual** (emoji curado) a cada nota, eligiendo entre un set de 4 opciones con significado académico (📖 ❓ 🔥 ✅). *(DP-005)* | SHOULD | Lucía | 04 | Implementado |
 
 ---
@@ -95,7 +95,17 @@
 | ID | Requisito | Prioridad | Persona | Hito | Estado |
 |---|---|---|---|---|---|
 | RF-023 | El sistema debe mostrar una sección **"Acerca de"** con información de la versión, autor y licencia. | SHOULD | Prof. Ramos | 05 | Pendiente |
-| RF-024 | El sistema debe mostrar un **indicador de estado offline/online** visible para el usuario. | COULD | Lucía | 04 | Pendiente |
+| RF-024 | El sistema debe mostrar un **indicador de estado offline/online** visible para el usuario. | COULD | Lucía | Futuro | Postergado |
+
+---
+
+## Decisiones de cierre del Hito 04
+
+El cierre formal del Hito 04 (2026-06-01) reclasifica `RF-006`, `RF-022` y `RF-024` como requisitos postergados. La decisión responde a la filosofía de Lumapse: tomador de notas sin fricción, offline-first y mobile-first. Las funcionalidades que agregan ruido visual o sugieren capacidades no disponibles todavía (por ejemplo sincronización) se conservan para evaluación post-release, cuando exista feedback real de estudiantes.
+
+- `RF-006` puede volver si la comunidad estudiantil pide métricas de escritura; debe implementarse como metadato sutil calculado en UI, sin persistencia adicional.
+- `RF-022` puede volver si la primera release evidencia que los empty states y affordances actuales no alcanzan para explicar la app.
+- `RF-024` debe esperar a que exista sincronización, backup o integración externa; antes de eso no modifica el comportamiento del producto.
 
 ---
 
@@ -116,9 +126,10 @@
 |---|---|---|
 | **02** (Junio) | RF-001 a RF-007 | 7 |
 | **03** (Julio) | RF-008 a RF-012, RF-016 a RF-018, RF-021 | 8 |
-| **04** (Agosto) | RF-006, RF-013 a RF-015, RF-019, RF-020, RF-022, RF-024, RF-025, RF-026 | 10 |
+| **04** (Agosto) | RF-013 a RF-015, RF-019, RF-020, RF-025, RF-026 | 7 |
 | **05** (Septiembre) | RF-023 | 1 |
 | **06** (Octubre) | RF-027 | 1 |
+| **Futuro / Post-release** | RF-006, RF-022, RF-024 | 3 |
 
 ---
 

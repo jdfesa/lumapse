@@ -147,7 +147,47 @@ Las siguientes decisiones se documentarán formalmente a medida que avance el de
 
 | ID | Tema | Disparador |
 |---|---|---|
-| DP-006 | Onboarding y ayuda contextual | Post Hito 04, cuando la estructura esté implementada |
+| DP-008 | Ayuda ampliada o tutoriales | Feedback post-release que demuestre fricción real de uso |
+
+---
+
+## DP-006: Ayuda Contextual sin Fricción
+
+**Fecha:** 2026-06-01
+**Estado:** ✅ Confirmada para cierre de Hito 04
+**Refs:** RF-006, RF-022, RF-024, RF-023, Hito 04
+
+### Contexto
+
+Al cerrar el Hito 04 quedaron pendientes varias ideas de ayuda o información secundaria: contador de palabras/caracteres, onboarding, indicador offline/online, coach marks y guía Markdown. Todas podían aportar valor en escenarios puntuales, pero también podían sumar ruido visual o sugerir capacidades que Lumapse todavía no ofrece, especialmente sincronización.
+
+Lumapse se define como un tomador de notas mobile-first, offline-first y sin fricción. En esta etapa no busca competir como editor académico avanzado ni como plataforma sincronizada. La primera release debe validar si estudiantes reales entienden la app a partir de su interfaz actual.
+
+### Decisión
+
+Cerrar Hito 04 sin agregar onboarding obligatorio, contador permanente, chip online/offline ni guía Markdown dedicada.
+
+En su lugar:
+
+- Mantener la interfaz principal enfocada en escribir, organizar y recuperar notas.
+- Pulir los empty states para orientar sin interrumpir.
+- Postergar la ayuda ampliada hasta contar con feedback real post-release.
+- Integrar información institucional mínima en `RF-023 — Acerca de` durante Hito 05 si no compromete la simplicidad.
+
+### Justificación
+
+- **Sin fricción:** cualquier elemento que el usuario deba leer antes de escribir retrasa la captura.
+- **Offline-first:** mostrar “online/offline” sin sincronización o backup puede crear una expectativa falsa.
+- **Mobile-first:** tooltips y coach marks consumen espacio y atención en pantallas pequeñas.
+- **Markdown opcional:** Lumapse permite escribir texto plano; no debe insinuar que aprender Markdown es requisito.
+- **Evidencia futura:** si la comunidad estudiantil adopta el producto y pide métricas, ayuda o sincronización, esas mejoras podrán priorizarse con datos reales.
+
+### Consecuencias
+
+- `RF-006`, `RF-022` y `RF-024` pasan a estado **Postergado**.
+- Los coach marks se descartan para Hito 04.
+- La guía Markdown se fusiona conceptualmente con una futura sección `Acerca de/Ayuda` si el feedback la justifica.
+- El cierre de Hito 04 se considera coherente con la propuesta de producto, no una omisión funcional.
 
 ---
 
