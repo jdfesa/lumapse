@@ -4,7 +4,7 @@
 > **Referencia:** Gómez, J. (2014), Secciones 5 y 7. Guía de Estudio PP3 (Ing. Mauricio Parada, 2026).  
 > **Fecha de creación:** 2026-05-15  
 > **Autor:** José David Sandoval  
-> **Actualización:** 2026-05-26 — sincronizado con `scripts/generate-velocity-report.py`.
+> **Actualización:** 2026-06-01 — cierre formal del Hito 04 y activación operativa del Hito 05.
 
 ---
 
@@ -68,7 +68,7 @@ Story Points normalizados contra las HU formales actuales:
 
 > **Nota metodológica:** La versión anterior de este documento incluía una estimación retroactiva por RF para el Hito 03. Desde esta actualización, el seguimiento toma como fuente única la tabla formal de trazabilidad de HU para evitar doble conteo y sostener consistencia con el script `generate-velocity-report.py`.
 
-### Hito 04 — Organización y UX (Agosto 2026, en cierre formal)
+### Hito 04 — Organización y UX (Agosto 2026, cerrado formalmente)
 
 Story Points entregados según las HU formalizadas:
 
@@ -83,7 +83,7 @@ Story Points entregados según las HU formalizadas:
 | HU-017 | Categorización y filtrado por materias | 8 |
 | | **Total Hito 04 entregado** | **37** |
 
-El Hito 04 registra 37 SP entregados, pero continúa en **cierre formal** porque quedan pendientes menores de UX/documentación aún no resueltos o descartados explícitamente: RF-006, RF-022, RF-024, empty states, ayuda Markdown y actualización final de gráficos de base de datos.
+El Hito 04 registra 37 SP entregados y queda **cerrado formalmente el 2026-06-01**. Los pendientes menores de UX fueron resueltos con una combinación de pulido mínimo (empty states) y decisiones explícitas de postergación/descarte para proteger la filosofía del producto: captura rápida, offline-first, mobile-first y sin sincronización todavía.
 
 ---
 
@@ -94,8 +94,8 @@ El Hito 04 registra 37 SP entregados, pero continúa en **cierre formal** porque
 | 01 | Mayo 2026 | — | — | — | — | ✅ Completado | Fundación, sin HU medibles en SP |
 | 02 | Junio 2026 | 20 | 20 | 20 SP/mes | 0 | ✅ Completado | Todas las HU completadas. Baseline: `LB-PROD-v0.1.0` |
 | 03 | Julio 2026 | 21 | 21 | 21 SP/mes | 0 | ✅ Completado | MVP completo normalizado contra HU formales. Baseline: `LB-PROD-v0.2.0` |
-| 04 | Agosto 2026 | 37 | 37 | 37 SP/mes | 0 | 🔄 En cierre | Organización por materias + UX mobile, con pendientes menores de cierre |
-| 05 | Septiembre 2026 | *por definir* | — | — | — | ⏳ Futuro | Testing + APK firmado |
+| 04 | Agosto 2026 | 37 | 37 | 37 SP/mes | 0 | ✅ Completado | Organización por materias + UX mobile cerrado formalmente |
+| 05 | Septiembre 2026 | *por definir* | — | — | — | 🔄 En curso | Testing + APK firmado |
 | 06 | Octubre 2026 | *por definir* | — | — | — | ⏳ Futuro | Informe final + entrega |
 
 ### Velocidad promedio (datos disponibles)
@@ -134,7 +134,7 @@ baja-moderada (CRUD, auto-guardado, listado).
 
 El Hito 03 se completó con éxito. La observación metodológica principal es que la primera versión de este seguimiento usaba una estimación retroactiva por RF. Esa lectura fue reemplazada por la fuente formal de HU, que reduce el riesgo de doble conteo y permite que el script de velocidad actúe como fuente reproducible.
 
-### Hito 04 — Entregado por encima del plan inicial, pendiente de cierre formal
+### Hito 04 — Entregado por encima del plan inicial y cerrado formalmente
 
 | Métrica | Valor |
 |---|---|
@@ -142,9 +142,9 @@ El Hito 03 se completó con éxito. La observación metodológica principal es q
 | SP entregados | 37 |
 | Desvío | 0 respecto de las HU formalizadas |
 
-El Hito 04 concentra el mayor volumen de SP del proyecto porque absorbió tanto la organización por materias como mejoras de UX, papelera, marcadores de estado y refuerzos de persistencia. Aunque la entrega funcional registrada en HU alcanza 37 SP, el hito no se declara cerrado hasta resolver o descartar explícitamente sus pendientes menores de cierre.
+El Hito 04 concentra el mayor volumen de SP del proyecto porque absorbió tanto la organización por materias como mejoras de UX, papelera, marcadores de estado y refuerzos de persistencia. La entrega funcional registrada en HU alcanza 37 SP y el cierre formal se completa al resolver los pendientes menores mediante decisiones de producto documentadas.
 
-> **Lección aprendida:** La velocidad no debe usarse como excusa para cerrar hitos por intuición. Un hito puede tener sus HU principales entregadas y, aun así, requerir cierre formal documental o de UX antes de pasar a la siguiente fase.
+> **Lección aprendida:** cerrar un hito no significa implementar toda idea opcional. En un producto minimalista, también es cierre declarar qué no se incorpora todavía y por qué.
 
 ---
 
@@ -152,8 +152,8 @@ El Hito 04 concentra el mayor volumen de SP del proyecto porque absorbió tanto 
 
 | Factor de riesgo | Probabilidad | Impacto | Mitigación |
 |---|---|---|---|
-| Mezclar cierre de Hito 04 con preparación de Hito 05 | Media | Medio | Mantener BACKLOG/CHANGELOG separados por estado formal de hito |
-| Pendientes UX pequeños crecen de alcance | Media | Medio | Implementar o descartar explícitamente RF-006, RF-022 y RF-024 |
+| Mezclar cierre de Hito 04 con preparación de Hito 05 | Mitigado | Medio | Hito 04 cerrado; Hito 05 activo desde 2026-06-01 |
+| Pendientes UX pequeños crecen de alcance | Mitigado | Medio | RF-006, RF-022 y RF-024 postergados con justificación |
 | Documentación generada queda desfasada | Media | Alto | Regenerar informe/cheatsheet solo en puntos de control |
 | Gráficos de base de datos requieren herramientas externas | Media | Bajo | Dejarlos para el cierre final, como ya se acordó |
 

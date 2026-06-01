@@ -1,18 +1,18 @@
 # Informe inicial de Hito 05 — Testing, Calidad y Distribución
 
-**Período:** Septiembre 2026 (preparación iniciada)
+**Período:** Septiembre 2026 (en curso)
 **Hito:** 05 — Testing, Calidad y Distribución
 **Proyecto:** Lumapse
-**Estado:** Preparación técnica iniciada; no activo formal hasta cerrar Hito 04
-**Última actualización:** 2026-05-26
+**Estado:** Activo formalmente tras el cierre del Hito 04
+**Última actualización:** 2026-06-01
 
 ---
 
 ## Resumen Ejecutivo
 
-El Hito 05 tiene como objetivo garantizar la calidad del producto y preparar su distribución. Aunque el Hito 04 continúa en cierre formal, ya se adelantaron piezas técnicas de Hito 05 porque reducen riesgo para las tareas restantes: suite de tests, quality gate, auditorías automatizadas y CI en GitHub Actions.
+El Hito 05 tiene como objetivo garantizar la calidad del producto y preparar su distribución. Parte de su base técnica se adelantó antes del cierre formal del Hito 04 para reducir riesgo: suite de tests, quality gate, auditorías automatizadas y CI en GitHub Actions.
 
-Esta preparación no implica cerrar Hito 04. El criterio operativo vigente es: primero cerrar o reclasificar formalmente los pendientes UX/documentales de Hito 04; luego avanzar con distribución, release y validación final.
+Desde el 2026-06-01, el Hito 04 queda cerrado formalmente y este hito pasa a ser el foco operativo del proyecto: release dry-run, APK firmado, validación manual en Android y preparación de artefactos de distribución.
 
 ---
 
@@ -46,4 +46,4 @@ Esta preparación no implica cerrar Hito 04. El criterio operativo vigente es: p
 
 ## Relación con Hito 04
 
-La preparación de Hito 05 se considera trabajo técnico adelantado. El hito activo de gestión sigue siendo Hito 04 hasta cerrar los pendientes de experiencia y documentación definidos en `BACKLOG.md`.
+La preparación de Hito 05 comenzó como trabajo técnico adelantado. Con el cierre formal del Hito 04, las tareas nuevas se clasifican en Hito 05, Hito 06 o backlog post-release. El Hito 04 solo debería reabrirse por correcciones críticas de documentación histórica.

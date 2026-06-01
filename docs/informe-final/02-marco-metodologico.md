@@ -125,7 +125,7 @@ Los requisitos del sistema se documentan como artefactos vivos, separados en req
 
 ### 2.6.1. Requisitos Funcionales
 
-Los requisitos funcionales cubren los módulos principales del producto: gestión de notas, persistencia local, Markdown, organización, importación/exportación, experiencia de usuario e información del sistema. En el estado actual del proyecto, el documento [requisitos-funcionales.md](../producto/requisitos-funcionales.md) registra 26 requisitos.
+Los requisitos funcionales cubren los módulos principales del producto: gestión de notas, persistencia local, Markdown, organización, importación/exportación, experiencia de usuario e información del sistema. En el estado actual del proyecto, el documento [requisitos-funcionales.md](../producto/requisitos-funcionales.md) registra 27 requisitos.
 
 El núcleo del MVP ya implementado incluye:
 
@@ -137,7 +137,7 @@ El núcleo del MVP ya implementado incluye:
 - Organización por materias, secciones, archivo y papelera.
 - Tema claro/oscuro y marcadores visuales de estado académico.
 
-Los pendientes relevantes se mantienen visibles para cierre formal del Hito 04 y preparación del Hito 05: contador de palabras/caracteres, onboarding, indicador offline/online y sección "Acerca de".
+Al cierre formal del Hito 04 (2026-06-01), los pendientes opcionales de UX se reclasificaron con justificación de producto: contador de palabras/caracteres, onboarding e indicador offline/online pasan a estado postergado para evitar ruido visual o falsas expectativas de sincronización. La sección "Acerca de" queda prevista para Hito 05.
 
 ### 2.6.2. Requisitos No Funcionales
 

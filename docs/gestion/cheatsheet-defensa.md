@@ -1,5 +1,5 @@
 # Cheat Sheet de Defensa — Lumapse
-**Generado automáticamente:** 2026-05-20
+**Última actualización:** 2026-06-01
 
 ## Métricas del Proyecto
 
@@ -7,13 +7,13 @@
 |---|---|
 | Archivos de código (JS/CSS) | 16 |
 | Líneas de código fuente | 2,365 |
-| Requisitos Funcionales | 24 (17 implementados, 5 pendientes, 2 obsoletos) |
-| Historias de Usuario | 14 |
-| Story Points totales | 59 |
+| Requisitos Funcionales | 27 (21 implementados, 1 pendiente, 3 postergados, 2 obsoletos) |
+| Historias de Usuario | 18 |
+| Story Points totales | 86 |
 | ADRs documentados | 6 |
 | Scripts de automatización | 29 |
-| Tablas en BD | 3 |
-| Columnas totales | 16 |
+| Tablas en BD | 4 |
+| Columnas totales | 26 |
 
 ## Decisiones Técnicas Clave
 
@@ -23,6 +23,7 @@
 | ADR-005 — Pivote de PWA a Aplicación Móvil Nativa (APK) | Migrar de PWA pura a aplicación móvil nativa empaquetada con Capacitor, reemplazando IndexedDB por SQLite como capa de persistencia. |
 | DP-003 — Mobile-first | Mobile-first. La interfaz se diseña y optimiza primero para pantallas de celular, con adaptación posterior a pantallas más grandes si el tiempo lo permite. |
 | DP-004 — Estructura de Información Opinionada — Materia › Sección › Nota | Implementar una estructura de información predefinida y opinionada con exactamente 3 secciones fijas en la navegación principal y máximo 2 niveles de carpetas creadas por el usuario |
+| DP-006 — Ayuda Contextual sin Fricción | Postergar onboarding, contador, indicador online/offline y guía Markdown para evitar ruido visual hasta tener feedback real post-release. |
 | DP-001 — Título unificado al estilo Typora | Eliminar el campo de título separado. |
 
 ## ADRs
@@ -53,6 +54,9 @@
 - **¿Por qué no hay `ON UPDATE` en las FKs?** → Sección 4 del DDL: las PK son UUID v4 generadas en cliente e inmutables por diseño.
 - **¿Por qué Capacitor sobre PWA pura?** → ADR-005: APK nativo, hardware real, distribución directa y persistencia local más robusta.
 - **¿Por qué SQLite sobre IndexedDB?** → ADR-006: modelo relacional, FKs, consultas consistentes y tooling web/native unificado.
+- **¿Por qué no agregaste contador de palabras?** → RF-006 quedó postergado: Lumapse prioriza captura rápida. Si estudiantes reales lo piden, se puede sumar como metadato sutil calculado en UI.
+- **¿Por qué no mostrás online/offline?** → RF-024 quedó postergado: sin sincronización ni backup, el estado de red no cambia el flujo y podría sugerir una sincronización inexistente.
+- **¿Por qué no hay onboarding o tutorial Markdown?** → DP-006: la primera release valida una interfaz autoexplicativa. Lumapse permite escribir texto plano; Markdown es una mejora, no una barrera de entrada.
 
 ## Fuentes
 

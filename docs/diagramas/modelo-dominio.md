@@ -140,7 +140,7 @@ Entidad principal del dominio. Representa una unidad de contenido creada por el 
 | Método | Retorno | Descripción |
 |---|---|---|
 | `getExcerpt(maxLength)` | `String` | Primeros `n` caracteres del contenido, para mostrar en el listado. |
-| `getWordCount()` | `Number` | Conteo de palabras del contenido ([RF-006](../producto/requisitos-funcionales.md)). |
+| `getWordCount()` | `Number` | Operación postergada; el conteo de palabras ([RF-006](../producto/requisitos-funcionales.md)) queda fuera del MVP para evitar ruido visual. |
 | `getCharCount()` | `Number` | Conteo de caracteres del contenido. |
 | `toMarkdownFile()` | `Blob` | Genera un archivo `.md` descargable con el contenido de la nota. |
 

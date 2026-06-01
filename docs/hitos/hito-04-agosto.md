@@ -1,10 +1,10 @@
 # Informe de Hito 04 — Organización y UX
 
-**Período:** Agosto 2026 (En cierre formal)
+**Período:** Agosto 2026 (Cerrado formalmente)
 **Hito:** 04 — Organización y UX
 **Proyecto:** Lumapse
-**Estado:** En cierre; no cerrado formalmente
-**Última actualización:** 2026-05-26
+**Estado:** Cerrado formalmente
+**Última actualización:** 2026-06-01
 
 ---
 
@@ -14,7 +14,7 @@ Este hito se enfoca en mejorar la experiencia de uso general, incorporar herrami
 
 Adicionalmente, los resultados de la [encuesta de validación](../producto/resultados-relevamiento.md) (n=120) ya están disponibles y han confirmado las decisiones de producto [DP-002](../producto/decisiones-producto.md) (organización por materia, 69.2% de preferencia) y [DP-003](../producto/decisiones-producto.md) (mobile-first, 72.5% prefiere celular).
 
-**Estado de cierre 2026-05-26:** El núcleo funcional del Hito 04 ya está implementado: Capacitor/Android, SQLite, materias/secciones, papelera, archivado/restauración en cascada, seguridad Markdown, modo claro/oscuro, focus mode y diálogos personalizados. El hito no se declara cerrado todavía porque quedan pendientes de cierre UX/documental: empty states, onboarding RF-022, indicador offline/online RF-024, contador RF-006, guía Markdown opcional, sincronización documental/versionado y actualización de gráficos DB al final.
+**Estado de cierre 2026-06-01:** El núcleo funcional del Hito 04 queda cerrado: Capacitor/Android, SQLite, materias/secciones, papelera, archivado/restauración en cascada, seguridad Markdown, modo claro/oscuro, focus mode, diálogos personalizados y empty states pulidos. Los pendientes opcionales se resolvieron por decisión de diseño: se postergan o descartan para MVP las piezas que podían agregar ruido visual o sugerir capacidades no presentes (sincronización, onboarding guiado o editor con métricas permanentes).
 
 ---
 
@@ -41,7 +41,7 @@ Adicionalmente, los resultados de la [encuesta de validación](../producto/resul
 | RF-014 | Organización por materias y secciones | ✅ Completado | SubjectService, drawerSubjects.js |
 | RF-026 | Papelera de reciclaje avanzada | ✅ Completado | TrashView, NoteStore.data.js |
 | UX | Focus mode y diálogos personalizados | ✅ Completado | ConfirmDialog.js, NoteEditor.js |
-| Cierre | Empty states, onboarding, indicador offline, contador, guía Markdown | ⏳ Pendiente | Paso 10 del backlog |
+| Cierre | Empty states y decisiones RF-006/RF-022/RF-024/DP-006 | ✅ Cerrado formalmente | Paso 10 del backlog |
 
 | ~~Tags~~ | ~~Filtrado de notas por etiqueta~~ | ❌ Descartado | Reemplazado por organización por materias ([DP-002](../producto/decisiones-producto.md)) |
 
@@ -89,15 +89,15 @@ Adicionalmente, los resultados de la [encuesta de validación](../producto/resul
 
 ---
 
-## Próximos Pasos
+## Decisiones de cierre
 
-1. **Empty states amigables:** cubrir feed vacío, papelera vacía, materia sin notas y búsqueda sin resultados.
-2. **Onboarding RF-022:** carousel informativo de 3 pantallas con opción de saltar.
-3. **Indicador offline/online RF-024:** chip o estado discreto en drawer/header.
-4. **Contador RF-006:** decidir e implementar contador de palabras/caracteres en `NoteEditor` o descartarlo con justificación.
-5. **Guía Markdown opcional (DP-006):** ayuda accesible sin imponer notas precargadas.
-6. **Sincronización documental/versionado:** README, velocidad, informe final, cheatsheet y versiones.
-7. **Gráficos DB:** regenerar al final, cuando el modelo esté congelado.
+1. **RF-006 — Conteo de palabras/caracteres:** postergado. No se agrega al editor porque Lumapse prioriza captura rápida y una superficie mínima. Si estudiantes reales lo solicitan, puede incorporarse como metadato calculado en UI, visible solo con contenido.
+2. **RF-024 — Indicador offline/online:** postergado hasta que exista sincronización, backup o integraciones externas. En el producto actual, todas las acciones centrales funcionan offline y el indicador podría sugerir una sincronización inexistente.
+3. **RF-022 — Onboarding:** postergado. La primera release se apoya en una interfaz directa, placeholders, botones con intención clara y empty states; se evaluará con feedback real si hace falta una bienvenida explícita.
+4. **Coach marks contextuales:** descartados para Hito 04. Pueden interrumpir el flujo mobile-first y no son necesarios para validar la primera entrega.
+5. **Guía Markdown opcional (DP-006):** postergada para integrarse con `RF-023 — Acerca de` en Hito 05 si corresponde. Lumapse permite escribir texto plano sin exigir aprender Markdown.
+6. **Empty states amigables:** implementados como cierre UX de baja fricción.
+7. **Gráficos DB:** diferidos al cierre documental final, cuando el modelo de datos quede congelado.
 
 ---
-*Documento vivo — Hito 04 en cierre formal; preparación técnica de Hito 05 registrada por separado.*
+*Documento vivo — Hito 04 cerrado formalmente; Hito 05 queda activo para testing, calidad y distribución.*
