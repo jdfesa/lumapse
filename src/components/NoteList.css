@@ -31,7 +31,26 @@
 
 .feed__empty {
   text-align: center;
-  padding: var(--space-8) 0;
+  padding: var(--space-8) var(--space-4);
   color: var(--color-text-muted);
   font-size: 0.95rem;
+}
+
+.feed__empty-icon {
+  color: var(--color-text-muted);
+  opacity: 0.45;
+  margin-bottom: var(--space-3);
+}
+
+.feed__empty-title {
+  color: var(--color-text);
+  font-weight: 600;
+  margin: 0 0 var(--space-2);
+}
+
+.feed__empty-copy {
+  max-width: 34rem;
+  margin: 0 auto;
+  font-size: 0.85rem;
+  line-height: 1.55;
 }

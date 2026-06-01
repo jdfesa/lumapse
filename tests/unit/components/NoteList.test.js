@@ -66,3 +66,41 @@ describe('NoteList implicit titles', () => {
     list.destroy()
   })
 })
+
+describe('NoteList empty states', () => {
+  it('muestra un estado vacío específico para búsquedas sin resultados', () => {
+    const list = createList()
+
+    list.renderNotes([], {
+      searchQuery: 'algebra',
+      viewMode: 'inbox',
+      dateFilter: null,
+      activeSubjectId: null,
+      subjects: { tree: [] },
+    })
+
+    expect(list.feedContainer.textContent).toContain('No encontramos notas para "algebra"')
+    expect(list.feedContainer.textContent).toContain('limpiá la búsqueda')
+
+    list.destroy()
+  })
+
+  it('muestra un estado vacío específico para una materia sin notas', () => {
+    const list = createList()
+
+    list.renderNotes([], {
+      searchQuery: '',
+      viewMode: 'subject',
+      dateFilter: null,
+      activeSubjectId: 'subject-1',
+      subjects: {
+        tree: [{ id: 'subject-1', name: 'Programación I', children: [] }],
+      },
+    })
+
+    expect(list.feedContainer.textContent).toContain('Programación I todavía no tiene notas')
+    expect(list.feedContainer.textContent).toContain('materia seleccionada')
+
+    list.destroy()
+  })
+})

@@ -75,6 +75,46 @@ function renderSubjectBadge(note, subjectsData) {
   return `<span class="note-card__subject-badge" style="--subject-color: ${color}">${label}</span>`;
 }
 
+function renderEmptyState(state) {
+  const query = (state.searchQuery || '').trim();
+  const subjectsData = state.subjects || { tree: [] };
+  const activeSubject = state.activeSubjectId
+    ? findSubject(state.activeSubjectId, subjectsData)?.subject
+    : null;
+
+  let title = 'Todavía no hay notas en Entrada.';
+  let copy = 'Escribí una idea arriba o asignala a una materia cuando la guardes.';
+
+  if (query) {
+    title = `No encontramos notas para "${escapeHtml(query)}".`;
+    copy = 'Probá con otra palabra o limpiá la búsqueda para volver al feed.';
+  } else if (state.dateFilter) {
+    title = 'No hay notas en esta fecha.';
+    copy = 'El calendario sigue marcando actividad cuando guardes apuntes ese día.';
+  } else if (state.viewMode === 'subject') {
+    title = activeSubject
+      ? `${escapeHtml(activeSubject.name)} todavía no tiene notas.`
+      : 'Esta materia todavía no tiene notas.';
+    copy = 'Guardá la próxima idea con esta materia seleccionada.';
+  } else if (state.viewMode === 'archived') {
+    title = 'No hay notas archivadas.';
+    copy = 'Cuando archives apuntes, vas a poder consultarlos desde acá.';
+  }
+
+  return `
+    <div class="feed__empty">
+      <svg class="feed__empty-icon" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+        <line x1="8" y1="7" x2="16" y2="7"></line>
+        <line x1="8" y1="11" x2="14" y2="11"></line>
+      </svg>
+      <p class="feed__empty-title">${title}</p>
+      <p class="feed__empty-copy">${copy}</p>
+    </div>
+  `;
+}
+
 export class NoteList {
   constructor(containerElement) {
     this.container = containerElement;
@@ -111,7 +151,7 @@ export class NoteList {
         renderTrashView(this.feedContainer);
       } else {
         const notesToRender = NoteStore.getFilteredNotes();
-        this.renderNotes(notesToRender, state.searchQuery, state.subjects);
+        this.renderNotes(notesToRender, state);
       }
     });
   }
@@ -168,25 +208,13 @@ export class NoteList {
     }
   }
 
-  renderNotes(notes, searchQuery, subjectsData) {
+  renderNotes(notes, state) {
+    const subjectsData = state.subjects;
     this.currentSubjectsData = subjectsData;
 
     if (notes.length === 0) {
       this.destroyVirtualFeed();
-      if (searchQuery) {
-        this.feedContainer.innerHTML = `
-          <div class="feed__empty">
-            <p>No se encontraron resultados para "${escapeHtml(searchQuery)}"</p>
-          </div>
-        `;
-      } else {
-        this.feedContainer.innerHTML = `
-          <div class="feed__empty">
-            <p>No hay notas todavía.</p>
-            <p>Escribe alguna idea arriba.</p>
-          </div>
-        `;
-      }
+      this.feedContainer.innerHTML = renderEmptyState(state);
       return;
     }
 
