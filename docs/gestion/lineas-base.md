@@ -100,18 +100,19 @@ git show LBREQ-v1.0 --no-patch
 | **Fecha del commit** | *(cierre del Hito 03)* |
 | **Fecha del tag** | 2026-05-15 (creado retrospectivamente) |
 | **Hito** | 03 — MVP Completo |
-| **Descripción** | Producto Mínimo Viable: editor con Markdown, export/import y PWA offline. |
+| **Descripción** | Producto Mínimo Viable original: editor con Markdown, base técnica de export/import y PWA offline. |
 
 **Funcionalidades añadidas respecto de LB-PROD-v0.1.0:**
 
 - `MarkdownService` — Renderizado de Markdown a HTML (marked + DOMPurify)
 - `MarkdownPreview` — Vista previa en tiempo real
 - Toggle de modos: Edición / Dividido / Lectura
-- `ExportService` — Exportar nota individual (.md) y masiva (.zip)
-- `ImportService` — Importar archivos .md
+- `ExportService` / `ImportService` — Base técnica inicial de portabilidad local
 - Service Worker + PWA instalable (vite-plugin-pwa)
 
-**RF completados acumulados:** RF-001 a RF-005, RF-007 a RF-012, RF-016 a RF-018, RF-021 (15 de 24)
+**RF completados acumulados según línea base original:** RF-001 a RF-005, RF-007 a RF-012, RF-016 a RF-018, RF-021 (15 de 24)
+
+> **Nota de revisión 2026-06-01:** tras el pivote mobile-first/SQLite, `RF-016`, `RF-017` y `RF-018` dejan de contarse como implementados visibles porque la UI actual no expone exportación/importación. `RF-016` se mueve a Hito 05 con alcance mínimo; `RF-017` y `RF-018` pasan a deuda posterior sin borrar el antecedente histórico de esta línea base.
 
 ---
 

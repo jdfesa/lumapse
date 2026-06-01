@@ -9,7 +9,9 @@
 
 ## Resumen Ejecutivo
 
-En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo Viable (MVP) real. Se incorpora la renderización de Markdown en tiempo real, la capacidad de exportar e importar notas como archivos `.md`, y la infraestructura necesaria para que la aplicación funcione completamente offline como una PWA instalable.
+En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo Viable (MVP) real. Se incorpora la renderización de Markdown en tiempo real, modos de lectura/escritura y la infraestructura necesaria para que la aplicación funcione offline bajo la arquitectura PWA original.
+
+> **Nota de revisión 2026-06-01:** Durante el pivote mobile-first a Capacitor/SQLite se conservaron servicios base de exportación/importación, pero los flujos dejaron de estar expuestos en la UI actual. Por trazabilidad, `RF-016` se reclasifica para Hito 05 como compartir/exportar nota individual, mientras `RF-017` y `RF-018` pasan a deuda posterior.
 
 ---
 
@@ -22,9 +24,9 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 | RF-010 | Renderizado de Markdown en tiempo real | MUST | ✅ Completado |
 | RF-011 | Soporte de sintaxis Markdown básica | MUST | ✅ Completado |
 | RF-012 | Modo edición / modo lectura (toggle) | SHOULD | ✅ Completado |
-| RF-016 | Exportar nota individual como `.md` | MUST | ✅ Completado |
-| RF-017 | Exportar todas las notas como `.zip` | SHOULD | ✅ Completado |
-| RF-018 | Importar archivos `.md` | SHOULD | ✅ Completado |
+| RF-016 | Exportar/compartir nota individual | SHOULD | ⏳ Reclasificado Hito 05 |
+| RF-017 | Exportar respaldo local `.zip` | SHOULD | ⏸️ Postergado |
+| RF-018 | Importar archivos o respaldos locales | COULD | ⏸️ Postergado |
 | RF-021 | PWA instalable desde el navegador | MUST | ✅ Completado |
 
 ---
@@ -36,9 +38,9 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 | `MarkdownService` (Renderizado Markdown → HTML) | ✅ Completado |
 | Componente `MarkdownPreview` (Vista previa en tiempo real) | ✅ Completado |
 | Toggle edición/lectura en `NoteEditor` | ✅ Completado |
-| Exportar nota individual como `.md` | ✅ Completado |
-| Exportar todas las notas como `.zip` | ✅ Completado |
-| Importar archivos `.md` | ✅ Completado |
+| Exportar/compartir nota individual | ⏳ Reclasificado Hito 05 |
+| Exportar respaldo local `.zip` | ⏸️ Postergado |
+| Importar archivos o respaldos locales | ⏸️ Postergado |
 | Service Worker para funcionamiento offline | ✅ Completado |
 | PWA instalable + auditoría Lighthouse | ✅ Completado |
 
@@ -50,7 +52,7 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 |---|---|---|
 | `marked` | ^18.0.3 | Parser de Markdown a HTML |
 | `dompurify` | ^3.4.2 | Sanitizador de HTML para prevención de XSS |
-| `jszip` | ^3.10.1 | Librería para generar archivos .zip dinámicos |
+| `jszip` | ^3.10.1 | Librería disponible para prototipo/base técnica de archivos .zip |
 | `vite-plugin-pwa` | ^1.3.0 | Plugin para generar el Service Worker usando Workbox |
 
 ---
@@ -80,24 +82,13 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 
 ---
 
-### 4. Exportar nota a Markdown
-- Se implementó la funcionalidad en `NoteEditor` para exportar la nota activa como archivo `.md` (RF-016).
-- Se agregó un botón de exportación en la cabecera del editor junto al botón de eliminar.
-- El archivo generado utiliza el título de la nota sanitizado como nombre de archivo y contiene el Markdown nativo.
+### 4. Base técnica de exportación/importación
+- Se incorporó `jszip` y quedaron servicios base para exportación/importación local.
+- La revisión posterior al pivote Android/SQLite confirma que estos servicios no son flujos visibles en la UI actual.
+- `RF-016` pasa a Hito 05 con alcance mobile-first mínimo: compartir/exportar una nota individual.
+- `RF-017` y `RF-018` quedan como deuda posterior por complejidad de backup, importación, duplicados y materias/secciones.
 
-### 5. Exportar todas las notas a ZIP
-- Se instaló la dependencia `jszip` para habilitar la compresión de archivos desde el navegador.
-- Se implementó `src/services/ExportService.js` con lógica para iterar sobre todas las notas almacenadas en IndexedDB.
-- Se previene la colisión de nombres de archivos si varias notas tienen el mismo título.
-- Se agregó un botón en la cabecera de `NoteList` (barra lateral) para disparar la exportación total (RF-017).
-
-### 6. Importar archivos Markdown
-- Se implementó `src/services/ImportService.js` con lógica para abrir un selector de archivos del sistema.
-- Se lee el contenido del archivo local y se usa el nombre del archivo (sin extensión) como título de la nota.
-- Se actualizó `NoteStore.createNote()` para aceptar parámetros iniciales (título y contenido) y delegarlos a `NoteService`.
-- Se agregó un botón de importación en la cabecera de `NoteList`, junto a los de crear y exportar (RF-018).
-
-### 7. PWA y Soporte Offline (Service Worker)
+### 5. PWA y Soporte Offline (Service Worker)
 - Se instaló la dependencia de desarrollo `vite-plugin-pwa` para habilitar el soporte PWA de forma profesional y mantenible.
 - Se configuró `vite.config.js` inyectando el plugin `VitePWA` con registro automático (`injectRegister: 'auto'`).
 - Se definió el modo `autoUpdate` para actualizar el Service Worker automáticamente sin interrumpir al usuario.

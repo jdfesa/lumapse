@@ -7,9 +7,9 @@
 |---|---|
 | Archivos de código (JS/CSS) | 16 |
 | Líneas de código fuente | 2,365 |
-| Requisitos Funcionales | 27 (21 implementados, 1 pendiente, 3 postergados, 2 obsoletos) |
+| Requisitos Funcionales | 27 (18 implementados, 1 en desarrollo, 1 pendiente, 5 postergados, 2 obsoletos) |
 | Historias de Usuario | 18 |
-| Story Points totales | 86 |
+| Story Points totales formalizados | 81 (70 cerrados en Hitos 02 a 04) |
 | ADRs documentados | 6 |
 | Scripts de automatización | 29 |
 | Tablas en BD | 4 |
@@ -57,6 +57,7 @@
 - **¿Por qué no agregaste contador de palabras?** → RF-006 quedó postergado: Lumapse prioriza captura rápida. Si estudiantes reales lo piden, se puede sumar como metadato sutil calculado en UI.
 - **¿Por qué no mostrás online/offline?** → RF-024 quedó postergado: sin sincronización ni backup, el estado de red no cambia el flujo y podría sugerir una sincronización inexistente.
 - **¿Por qué no hay onboarding o tutorial Markdown?** → DP-006: la primera release valida una interfaz autoexplicativa. Lumapse permite escribir texto plano; Markdown es una mejora, no una barrera de entrada.
+- **¿Export/import está implementado?** → No como flujo visible actual. Hito 05 toma solo `RF-016`: compartir/exportar una nota individual. Backup `.zip` (`RF-017`) e importación (`RF-018`) quedan como deuda posterior por su complejidad de archivos, merge y materias/secciones.
 
 ## Fuentes
 

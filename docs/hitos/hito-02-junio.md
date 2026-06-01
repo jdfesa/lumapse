@@ -71,7 +71,7 @@ En este hito nos enfocamos en el corazón de la aplicación: el editor de notas 
 
 ## Próximos Pasos
 
-El desarrollo continúa en el **Hito 03 — MVP Completo**, donde se integrará la renderización de Markdown, exportación/importación de archivos, y la capacidad offline mediante Service Workers.
+El desarrollo continúa en el **Hito 03 — MVP Completo**, donde se integrará la renderización de Markdown y la capacidad offline mediante Service Workers. La portabilidad local mediante exportación/importación queda como alcance a revisar más adelante según la evolución del producto.
 
 ---
 

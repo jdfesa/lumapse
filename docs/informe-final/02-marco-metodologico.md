@@ -125,7 +125,7 @@ Los requisitos del sistema se documentan como artefactos vivos, separados en req
 
 ### 2.6.1. Requisitos Funcionales
 
-Los requisitos funcionales cubren los módulos principales del producto: gestión de notas, persistencia local, Markdown, organización, importación/exportación, experiencia de usuario e información del sistema. En el estado actual del proyecto, el documento [requisitos-funcionales.md](../producto/requisitos-funcionales.md) registra 27 requisitos.
+Los requisitos funcionales cubren los módulos principales del producto: gestión de notas, persistencia local, Markdown, organización, portabilidad local, experiencia de usuario e información del sistema. En el estado actual del proyecto, el documento [requisitos-funcionales.md](../producto/requisitos-funcionales.md) registra 27 requisitos.
 
 El núcleo del MVP ya implementado incluye:
 
@@ -133,11 +133,10 @@ El núcleo del MVP ya implementado incluye:
 - Auto-guardado.
 - Persistencia local.
 - Renderizado Markdown y modos de lectura/escritura.
-- Exportación e importación de archivos Markdown.
 - Organización por materias, secciones, archivo y papelera.
 - Tema claro/oscuro y marcadores visuales de estado académico.
 
-Al cierre formal del Hito 04 (2026-06-01), los pendientes opcionales de UX se reclasificaron con justificación de producto: contador de palabras/caracteres, onboarding e indicador offline/online pasan a estado postergado para evitar ruido visual o falsas expectativas de sincronización. La sección "Acerca de" queda prevista para Hito 05.
+Al cierre formal del Hito 04 (2026-06-01), los pendientes opcionales de UX se reclasificaron con justificación de producto: contador de palabras/caracteres, onboarding e indicador offline/online pasan a estado postergado para evitar ruido visual o falsas expectativas de sincronización. La exportación/importación local también se revisa: existen servicios base, pero no un flujo visible actual. Hito 05 toma solo `RF-016` (compartir/exportar nota individual), mientras backup `.zip` e importación quedan postergados por complejidad. La sección "Acerca de" queda prevista para Hito 05.
 
 ### 2.6.2. Requisitos No Funcionales
 

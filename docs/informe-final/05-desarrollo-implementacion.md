@@ -10,7 +10,7 @@ Las carpetas principales son:
 |---|---|
 | `src/` | Código fuente de la aplicación web empaquetada. |
 | `src/components/` | Componentes de interfaz: editor, listado, tarjetas, diálogos, papelera y preview Markdown. |
-| `src/services/` | Servicios de negocio: Markdown, importación/exportación, temas, materias y persistencia SQLite. |
+| `src/services/` | Servicios de negocio: Markdown, temas, materias, persistencia SQLite y base técnica de portabilidad local en revisión. |
 | `src/store/` | Estado de aplicación, filtros y coordinación entre datos y UI. |
 | `android/` | Proyecto Android generado y mantenido por Capacitor. |
 | `docs/` | Documentación técnica, producto, gestión, hitos e informe final. |

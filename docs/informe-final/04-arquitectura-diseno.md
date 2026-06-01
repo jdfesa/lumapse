@@ -45,7 +45,7 @@ El modelo completo se documenta en [modelo-dominio.md](../diagramas/modelo-domin
 
 ## 4.4. Diagramas de Casos de Uso
 
-Los casos de uso describen el sistema desde la perspectiva del estudiante. El actor principal puede crear, editar, buscar, eliminar, fijar, archivar, exportar, importar y previsualizar notas. Además, interactúa con funciones de organización, tema visual y papelera.
+Los casos de uso describen el sistema desde la perspectiva del estudiante. El actor principal puede crear, editar, buscar, eliminar, fijar, archivar y previsualizar notas. Además, interactúa con funciones de organización, tema visual y papelera. El caso de compartir/exportar una nota individual queda documentado como alcance acotado de Hito 05; backup `.zip` e importación quedan como trabajo futuro.
 
 El diagrama documentado en [casos-de-uso.md](../diagramas/casos-de-uso.md) agrupa las funcionalidades en cinco áreas:
 
@@ -55,7 +55,7 @@ El diagrama documentado en [casos-de-uso.md](../diagramas/casos-de-uso.md) agrup
 - Datos y portabilidad.
 - Sistema y personalización.
 
-La relación `include` se usa para expresar que crear o editar una nota incluye siempre el auto-guardado. La relación `extend` se utiliza para acciones opcionales, como exportar todas las notas o gestionar la papelera después de una eliminación.
+La relación `include` se usa para expresar que crear o editar una nota incluye siempre el auto-guardado. La relación `extend` se utiliza para acciones opcionales, como gestionar la papelera después de una eliminación. Los casos de portabilidad local conservan valor analítico, pero se separan por alcance: nota individual en Hito 05, backup/importación como deuda posterior.
 
 ## 4.5. Diagramas de Secuencia
 
