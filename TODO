@@ -6,7 +6,7 @@
 
 **Estado:** Hito 04 cerrado formalmente el 2026-06-01.
 **Objetivo:** preparar la primera release distribuible con quality gate, APK firmado, validacion manual y documentacion final.
-**Criterio:** no sumar features nuevas salvo correcciones criticas; estabilizar, empaquetar y validar.
+**Criterio:** no sumar features nuevas salvo `RF-016` acotado y correcciones criticas; estabilizar, empaquetar y validar.
 
 ---
 
@@ -17,6 +17,7 @@
 - [ ] Ejecutar `npm run verify` como gate local antes de preparar APK.
 - [ ] Preparar checklist de validacion manual en Android real.
 - [ ] Definir si el incremento de Fechas Academicas discretas queda como release `0.4.8` o se agrupa en el proximo corte.
+- [ ] Validar `RF-016` en Android real: compartir/exportar nota individual desde el menu secundario.
 
 ---
 
@@ -25,8 +26,18 @@
 - [ ] Generar APK firmado para distribucion.
 - [ ] Registrar prueba manual en dispositivo Android real.
 - [ ] Publicar artefacto en GitHub Releases o documentar el mecanismo elegido.
+- [ ] Validar `RF-016`: compartir/exportar nota individual como Markdown desde una accion secundaria en Android real.
 - [ ] Implementar o planificar `RF-023 — Acerca de` con version, autor y licencia sin saturar la UI.
 - [ ] Revisar documentos generados cuando el corte de release este definido.
+
+---
+
+## Portabilidad local — decision Hito 05
+
+- [x] `RF-016`: agregar accion discreta para compartir/exportar la nota actual como Markdown; si Android share sheet esta disponible, priorizar compartir antes que descargar.
+- [x] `RF-016`: mantener el contenido de la nota como fuente de verdad; no recrear materias/secciones ni agregar UI visible extra en el editor.
+- [ ] `RF-017`: mover backup `.zip` local a deuda tecnica de largo plazo; requiere formato de backup, destino Android y pruebas en dispositivo real.
+- [ ] `RF-018`: mover importacion a deuda de mas largo plazo; si se retoma para nota individual, la nota importada entra en `Entrada` y no intenta recrear materia/seccion de origen.
 
 ---
 

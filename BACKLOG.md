@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 05 — Testing, Calidad y Distribución
 > **Hito 04:** Cerrado formalmente el 2026-06-01
-> **Última actualización:** 2026-06-01 — limpieza operativa del backlog
+> **Última actualización:** 2026-06-01 — revisión exportación/importación local
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -13,7 +13,9 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 Hito 04 quedó cerrado formalmente como bloque de Organización y UX. El cierre combinó implementación mínima de pulido UX (empty states) y decisiones explícitas de postergación/descarte para funcionalidades opcionales que podían agregar ruido visual o sugerir capacidades no presentes todavía.
 
-Hito 05 queda activo con foco en estabilización, calidad y distribución. La prioridad ya no es sumar funcionalidad nueva, sino validar el producto, preparar el APK y ordenar los artefactos finales.
+Hito 05 queda activo con foco en estabilización, calidad y distribución. La prioridad ya no es sumar funcionalidad nueva, salvo `RF-016` en alcance mínimo, sino validar el producto, preparar el APK y ordenar los artefactos finales.
+
+La revisión de exportación/importación corrige una sobrepromesa documental: existen servicios base (`ExportService`/`ImportService`), pero la UI actual no expone esos flujos. Para Hito 05 se conserva solo el alcance mínimo de compartir/exportar una nota individual; backup `.zip` e importación quedan como deuda de más largo plazo.
 
 ---
 
@@ -27,6 +29,7 @@ Hito 05 queda activo con foco en estabilización, calidad y distribución. La pr
 | 4 | APK firmado | Artefacto generado con versión definida |
 | 5 | Distribución | Release o mecanismo de entrega documentado |
 | 6 | RF-023 — Acerca de | Sección mínima con versión, autor y licencia, sin convertirla en tutorial |
+| 7 | RF-016 — Compartir/exportar nota individual | Acción secundaria implementada y validada en Android real |
 
 ---
 
@@ -41,6 +44,16 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | RF-024 | Indicador online/offline | Postergado | Sin sincronización o backup, el estado de red no modifica el flujo y puede crear expectativas falsas |
 | DP-006 | Guía Markdown dedicada | Postergado | Lumapse funciona con texto plano; Markdown no debe sentirse como requisito de entrada |
 | Coach marks | Tooltips de primera vez | Descartado para Hito 04 | Pueden interrumpir el flujo mobile-first de captura rápida |
+
+---
+
+## Portabilidad local — Alcance decidido
+
+| ID | Decisión | Complejidad | Recomendación |
+|---|---|---|---|
+| RF-016 | Compartir/exportar nota individual | Baja/Media | Implementado en menú secundario; pendiente validación en Android real |
+| RF-017 | Exportar respaldo `.zip` local | Media | Deuda técnica de largo plazo; útil para portabilidad, pero requiere formato de backup, destino Android y pruebas reales |
+| RF-018 | Importar `.md` o `.zip` | Media/Alta | Deuda de más largo plazo; si se retoma una nota individual, debe entrar en `Entrada` y no reconstruir materias/secciones automáticamente |
 
 ---
 
@@ -65,6 +78,7 @@ No incorporar en Hito 05 salvo decisión explícita:
 - Recurrencias, horarios o duración de eventos.
 - Sincronización externa.
 - Backup en nube.
+- Importación automática de backups complejos sin política de merge.
 - Tutoriales obligatorios.
 - Nuevas capas de organización más allá de Materia / Sección / Nota.
 
@@ -73,6 +87,8 @@ No incorporar en Hito 05 salvo decisión explícita:
 ## Largo Plazo / Post-Defensa
 
 - [ ] Sincronización o backup manual en la nube, por ejemplo Google Drive, si la comunidad estudiantil adopta el producto y lo pide.
+- [ ] Backup local `.zip` de workspace completo, con formato documentado y prueba en Android real.
+- [ ] Importación de notas/backups, empezando por nota individual hacia `Entrada` y dejando merge de materias/secciones para una etapa posterior.
 - [ ] Ayuda ampliada o mini guía Markdown dentro de una sección `Acerca de/Ayuda`, solo si el feedback demuestra fricción real.
 - [ ] Métricas de escritura como contador de palabras/caracteres, solo si aparecen casos de uso académicos concretos.
 - [ ] Onboarding o coach marks, solo si la primera release muestra problemas de descubrimiento.

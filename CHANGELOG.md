@@ -9,7 +9,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ## Próximo — Hito 05: Testing, Calidad y Distribución (Preparación iniciada)
 
-> Hito 05 todavía no reemplaza formalmente al Hito 04 como hito activo. La preparación técnica ya comenzó porque la suite de tests, CI y quality gates son prerequisitos para cerrar con seguridad el producto y preparar distribución.
+> Hito 05 queda activo desde el cierre formal del Hito 04 (2026-06-01). El foco es estabilizar, preparar distribución y revisar decisiones de alcance antes de la primera release.
 
 ---
 
@@ -21,6 +21,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Entrypoint estable de trazabilidad:** Nuevo `scripts/check-traceability.py` como wrapper compatible para el checker preservado en `check-traceability.py.replaced`.
 - **Inserción rápida de título:** El botón `+` y el comando `/titulo` permiten insertar un encabezado Markdown sin obligar al usuario a conocer la sintaxis de antemano.
 - **Fechas Académicas discretas (RF-027 / HU-027 / DP-007):** Implementación completa de marcadores académicos puntuales para parciales, finales, trabajos prácticos y exposiciones dentro del calendario existente. Incluye tabla SQLite `academic_events`, CRUD bajo nivel, servicio de dominio, store reactivo, dots en Heatmap, mini-card por día, modal accesible de creación/edición, lista colapsable de próximas fechas, acciones de editar/eliminar con confirmación accesible y tests unitarios de datos, store y UI.
+- **Compartir/exportar nota individual (RF-016):** Nueva acción secundaria "Compartir" en el menú de cada nota. Intenta compartir un archivo Markdown `.md` mediante Web Share API, cae a compartir texto si el entorno no soporta archivos y finalmente copia el Markdown si no hay share sheet disponible.
 
 ### Changed
 - **Búsqueda RF-015 más útil:** La lupa ahora busca globalmente entre notas activas aunque el usuario esté ubicado en Entrada o en una materia, y normaliza tildes para que `algebra` encuentre `Álgebra`.
@@ -29,8 +30,9 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Tests nativos Android corregidos:** Se reemplazaron los tests generados por template que referenciaban paquetes de Capacitor por tests bajo `com.lumapse.app`.
 - **Backlog/TODO actualizados:** El `TODO` raíz y `BACKLOG.md` registran como completada la capa de automatización, cierran formalmente Hito 04 y clasifican esta tanda como preparación de Hito 05.
 - **Versionado de paquete alineado:** `package.json` y `package-lock.json` pasan de `0.1.0` a `0.4.7`, manteniendo el paquete sincronizado con la última versión cerrada documentada antes de preparar un release/APK.
-- **Seguimiento de velocidad actualizado:** `docs/gestion/seguimiento-velocidad.md` queda sincronizado con `scripts/generate-velocity-report.py`: 17 HU formalizadas, 78 SP acumulados y velocidad promedio de 26.0 SP/hito.
+- **Seguimiento de velocidad actualizado:** `docs/gestion/seguimiento-velocidad.md` registra 18 HU formalizadas, 70 SP cerrados en Hitos 02 a 04 y velocidad promedio de 23.3 SP/hito tras acotar HU-008 a `RF-016`.
 - **CSP web ajustada para SQLite WASM:** `index.html` permite el runtime WASM local necesario para `jeep-sqlite`/`sql.js`, manteniendo los recursos restringidos a orígenes locales.
+- **Reclasificación RF-016/RF-017/RF-018:** La revisión documental confirma que exportación/importación conserva servicios base, pero no está expuesta como flujo de usuario en la UI actual. Hito 05 conserva solo `RF-016` (compartir/exportar nota individual); backup `.zip` e importación quedan como deuda posterior.
 
 ---
 
@@ -204,9 +206,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - `src/services/MarkdownService.js` — Servicio de conversión Markdown → HTML sanitizado (RF-010, RF-011).
 - `src/components/MarkdownPreview.js` + `.css` — Componente de vista previa de Markdown en tiempo real (RF-010).
 - Toggle de modos de vista en `NoteEditor` permitiendo alternar entre modo Edición, Dividido (Split) y Lectura (RF-012).
-- Botón y funcionalidad para exportar nota individual como archivo `.md` (RF-016) en el `NoteEditor`.
-- Botón y `ExportService` con `jszip` para exportar el workspace completo como `.zip` (RF-017) en el `NoteList`.
-- Botón e `ImportService` para importar archivos `.md` locales como nuevas notas (RF-018) en el `NoteList`.
+- Base técnica inicial para exportación/importación Markdown (`ExportService`, `ImportService`, `jszip`). La UI actual posterior al pivote mobile-first no expone estos flujos; `RF-016` queda para Hito 05 y `RF-017`/`RF-018` pasan a deuda posterior.
 - Dependencia `vite-plugin-pwa` y configuración en `vite.config.js` para generación automática de Service Worker y caché estático (RF-008, RF-009, RF-021).
 - `docs/hitos/hito-03-julio.md` — Informe de seguimiento del Hito 03 actualizado.
 
