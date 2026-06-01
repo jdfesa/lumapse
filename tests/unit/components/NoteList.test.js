@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('../../../src/store/NoteStore.js', () => ({
   subscribe: vi.fn(() => vi.fn()),
@@ -9,6 +9,7 @@ vi.mock('../../../src/store/NoteStore.js', () => ({
   updateNoteSilent: vi.fn(),
 }))
 
+import * as NoteStore from '../../../src/store/NoteStore.js'
 import { NoteList } from '../../../src/components/NoteList.js'
 
 function makeNote(overrides = {}) {
@@ -33,6 +34,15 @@ function createList() {
 
 beforeEach(() => {
   document.body.innerHTML = ''
+  vi.useRealTimers()
+  Object.defineProperty(navigator, 'clipboard', {
+    value: { writeText: vi.fn().mockResolvedValue(undefined) },
+    configurable: true,
+  })
+})
+
+afterEach(() => {
+  vi.useRealTimers()
 })
 
 describe('NoteList implicit titles', () => {
@@ -100,6 +110,43 @@ describe('NoteList empty states', () => {
 
     expect(list.feedContainer.textContent).toContain('Programación I todavía no tiene notas')
     expect(list.feedContainer.textContent).toContain('materia seleccionada')
+
+    list.destroy()
+  })
+})
+
+describe('NoteList copy feedback', () => {
+  it('muestra Copiado con check antes de cerrar suavemente el dropdown', async () => {
+    vi.useFakeTimers()
+    NoteStore.getFilteredNotes.mockReturnValueOnce([makeNote()])
+    const list = createList()
+    const wrapper = document.createElement('div')
+    wrapper.innerHTML = `
+      <div class="note-card__dropdown is-open">
+        <button class="note-card__dropdown-btn js-btn-copy" data-id="note-1">
+          <span>Copiar</span>
+        </button>
+      </div>
+    `
+    const dropdown = wrapper.querySelector('.note-card__dropdown')
+    const button = wrapper.querySelector('button')
+    document.body.appendChild(wrapper)
+
+    await list.handleCopy(button)
+
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith('Resumen\nCuerpo')
+    expect(button.textContent).toContain('Copiado')
+    expect(button.disabled).toBe(true)
+    expect(button.classList.contains('note-card__dropdown-btn--copied')).toBe(true)
+
+    await vi.advanceTimersByTimeAsync(1000)
+    expect(dropdown.classList.contains('is-closing')).toBe(true)
+
+    await vi.advanceTimersByTimeAsync(220)
+    expect(dropdown.classList.contains('is-open')).toBe(false)
+    expect(dropdown.classList.contains('is-closing')).toBe(false)
+    expect(button.disabled).toBe(false)
+    expect(button.textContent).toContain('Copiar')
 
     list.destroy()
   })

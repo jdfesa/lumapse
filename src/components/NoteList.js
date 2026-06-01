@@ -15,6 +15,8 @@ import './NoteList.css';
 
 const MARKDOWN_HEADING_REGEX = /^\s{0,3}#{1,6}\s+/
 const STRUCTURAL_MARKDOWN_REGEX = /^\s*(?:[-*+]\s+|\d+\.\s+|>\s+|```|\|)/
+const COPY_FEEDBACK_VISIBLE_MS = 1000
+const COPY_FEEDBACK_FADE_MS = 220
 
 function cleanImplicitTitle(line) {
   return line
@@ -191,11 +193,23 @@ export class NoteList {
     try {
       await navigator.clipboard.writeText(note.content);
       const originalHtml = btnElement.innerHTML;
-      btnElement.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Copiado!`;
+      const dropdown = btnElement.closest('.note-card__dropdown');
+      btnElement.disabled = true;
+      btnElement.classList.add('note-card__dropdown-btn--copied');
+      btnElement.setAttribute('aria-live', 'polite');
+      btnElement.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg> Copiado`;
       setTimeout(() => {
-        btnElement.innerHTML = originalHtml;
-        this.closeAllDropdowns();
-      }, 1500);
+        dropdown?.classList.add('is-closing');
+        setTimeout(() => {
+          if (btnElement.isConnected) {
+            btnElement.innerHTML = originalHtml;
+            btnElement.disabled = false;
+            btnElement.classList.remove('note-card__dropdown-btn--copied');
+            btnElement.removeAttribute('aria-live');
+          }
+          dropdown?.classList.remove('is-open', 'is-closing');
+        }, COPY_FEEDBACK_FADE_MS);
+      }, COPY_FEEDBACK_VISIBLE_MS);
     } catch (err) {
       console.error('Failed to copy', err);
     }

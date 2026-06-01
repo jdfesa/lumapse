@@ -147,6 +147,13 @@
   transform: translateY(0);
 }
 
+.note-card__dropdown.is-closing {
+  opacity: 0;
+  visibility: visible;
+  transform: translateY(-4px) scale(0.98);
+  pointer-events: none;
+}
+
 .note-card__dropdown-btn {
   background: transparent;
   border: none;
@@ -166,6 +173,16 @@
 .note-card__dropdown-btn:hover {
   background-color: var(--color-surface-hover);
   color: var(--color-text-bright);
+}
+
+.note-card__dropdown-btn:disabled {
+  cursor: default;
+}
+
+.note-card__dropdown-btn--copied,
+.note-card__dropdown-btn--copied:hover {
+  color: var(--color-accent);
+  background-color: var(--color-accent-dim);
 }
 
 .note-card__dropdown-btn--delete {

@@ -203,18 +203,17 @@ export function createFeedActionRouter(deps) {
       return
     }
 
-    const menuButton = event.target.closest('.js-btn-menu')
-
-    if (!menuButton) {
-      deps.closeAllDropdowns()
-    }
-
     for (const entry of ACTION_MAP) {
       const button = event.target.closest(entry.selector)
       if (button) {
+        if (entry.selector !== '.js-btn-menu' && entry.selector !== '.js-btn-copy') {
+          deps.closeAllDropdowns()
+        }
         entry.handler(event, button, deps)
         return
       }
     }
+
+    deps.closeAllDropdowns()
   }
 }

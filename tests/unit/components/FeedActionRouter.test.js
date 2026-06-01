@@ -11,14 +11,19 @@ vi.mock('../../../src/components/TrashView.js', () => ({
   renderTrashView: vi.fn(),
 }))
 
-function createRouter() {
-  return createFeedActionRouter({
+function createDeps(overrides = {}) {
+  return {
     onEdit: vi.fn(),
     onDelete: vi.fn(),
     onCopy: vi.fn(),
     closeAllDropdowns: vi.fn(),
     feedContainer: document.createElement('div'),
-  })
+    ...overrides,
+  }
+}
+
+function createRouter(overrides = {}) {
+  return createFeedActionRouter(createDeps(overrides))
 }
 
 function renderCheckbox({ line = 1, checked = false } = {}) {
@@ -53,6 +58,22 @@ beforeEach(() => {
     }],
   })
   NoteStore.updateNoteSilent.mockResolvedValue(undefined)
+})
+
+describe('FeedActionRouter dropdown actions', () => {
+  it('mantiene abierto el dropdown para que Copiar pueda mostrar feedback visual', () => {
+    const deps = createDeps()
+    const router = createFeedActionRouter(deps)
+    const feed = document.createElement('div')
+    feed.innerHTML = '<button class="note-card__dropdown-btn js-btn-copy" data-id="note-1">Copiar</button>'
+    const button = feed.querySelector('button')
+    feed.addEventListener('click', router)
+
+    button.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
+
+    expect(deps.closeAllDropdowns).not.toHaveBeenCalled()
+    expect(deps.onCopy).toHaveBeenCalledWith(button)
+  })
 })
 
 describe('FeedActionRouter task checkboxes', () => {
