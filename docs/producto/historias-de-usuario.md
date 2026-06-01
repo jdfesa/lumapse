@@ -172,25 +172,27 @@
 
 ---
 
-### HU-008 — Exportar e importar notas
+### HU-008 — Portabilidad local de notas
 
 | Campo | Detalle |
 |---|---|
-| **Historia** | Como **estudiante**, quiero **exportar mis notas como archivos `.md` e importar archivos Markdown existentes**, para **hacer backup de mi trabajo o migrar contenido desde otras herramientas**. |
-| **RF asociados** | [RF-016, RF-017, RF-018](./requisitos-funcionales.md) |
+| **Historia** | Como **estudiante**, quiero **compartir una nota individual en Markdown**, para **enviarla a otra persona o moverla fuera de Lumapse sin depender de sincronización**. |
+| **RF asociados** | [RF-016](./requisitos-funcionales.md) |
 | **Persona** | [Martín](./personas.md#persona-2--martín-el-estudiante-práctico) |
 | **Prioridad** | SHOULD |
-| **Story Points** | **8 SP** — Tres flujos distintos (exportar nota individual, exportar workspace como `.zip`, importar `.md`), manejo del filesystem del dispositivo, y dependencia de `jszip`. |
-| **Hito** | 03 |
+| **Story Points** | **3 SP** — Flujo acotado de compartir/exportar nota individual, validación en Android real y ubicación discreta en UI. |
+| **Hito** | 05 |
+
+> **Estado de revisión 2026-06-01:** el alcance de Hito 05 se reduce a `RF-016`. Backup `.zip` (`RF-017`) e importación (`RF-018`) quedan como deuda posterior. Si en el futuro se importa una nota individual exportada desde Lumapse, debe crearse en `Entrada` y no intentar recrear materia/sección de origen.
 
 **Criterios de Aceptación:**
 
 | CA | Descripción | Verificación |
 |---|---|---|
-| CA-01 | Se puede exportar una nota individual como archivo `.md` desde el editor. | Test funcional (verificar descarga) |
-| CA-02 | Se puede exportar el workspace completo como archivo `.zip` con todas las notas. | Test funcional (verificar contenido del zip) |
-| CA-03 | Se pueden importar uno o más archivos `.md` desde el dispositivo, creando notas nuevas. | Test funcional |
-| CA-04 | Las notas importadas conservan el contenido Markdown original sin alteraciones. | Comparación manual de contenido |
+| CA-01 | El usuario puede compartir/exportar la nota actual como Markdown desde una acción secundaria. | Test funcional en Android real |
+| CA-02 | El contenido compartido conserva el Markdown original de la nota. | Comparación manual de contenido |
+| CA-03 | La acción no reemplaza ni duplica la función existente de copiar contenido; queda como alternativa de portabilidad. | Revisión UX mobile-first |
+| CA-04 | La interfaz principal de captura no suma controles permanentes nuevos. | Inspección visual |
 
 ---
 
@@ -425,13 +427,13 @@
 
 ## Resumen
 
-| Métrica | Hito 02 | Hito 03 | Hito 04 | Hito 06 | Total |
-|---|---|---|---|---|---|
-| **Total HU** | 6 | 4 | 7 | 1 | **18** |
-| **Total Story Points** | 20 | 21 | 37 | 8 | **86** |
-| **Total Criterios de Aceptación** | 20 | 14 | 30 | 7 | **71** |
-| **Prioridad predominante** | MUST | MUST/SHOULD | SHOULD/MUST | SHOULD | — |
-| **Personas cubiertas** | Lucía (4), Martín (2) | Lucía (2), Martín (2) | Lucía (6), Martín (1) | Lucía (1) | Lucía (13), Martín (5) |
+| Métrica | Hito 02 | Hito 03 | Hito 04 | Hito 05 | Hito 06 | Total |
+|---|---|---|---|---|---|---|
+| **Total HU** | 6 | 3 | 7 | 1 | 1 | **18** |
+| **Total Story Points** | 20 | 13 | 37 | 3 | 8 | **81** |
+| **Total Criterios de Aceptación** | 20 | 10 | 30 | 4 | 7 | **71** |
+| **Prioridad predominante** | MUST | MUST/SHOULD | SHOULD/MUST | SHOULD | SHOULD | — |
+| **Personas cubiertas** | Lucía (4), Martín (2) | Lucía (2), Martín (1) | Lucía (6), Martín (1) | Martín (1) | Lucía (1) | Lucía (13), Martín (5) |
 
 ---
 
@@ -446,7 +448,7 @@
 | HU-005 | RF-005 | Lucía | Auto-guardado | 5 | 02 |
 | HU-006 | RF-007 | Martín | Persistencia local | 5 | 02 |
 | HU-007 | RF-010/011 | Lucía | Renderizar Markdown | 5 | 03 |
-| HU-008 | RF-016/017/018 | Martín | Exportar/Importar notas | 8 | 03 |
+| HU-008 | RF-016 | Martín | Compartir/exportar nota individual | 3 | 05 |
 | HU-012 | RF-008 | Lucía | Funcionamiento offline | 5 | 03 |
 | HU-013 | RF-012 | Martín | Modos edición/lectura | 3 | 03 |
 | HU-009 | RF-013 | Lucía | Fijar y archivar notas | 5 | 04 |
@@ -457,7 +459,7 @@
 | HU-016 | RF-026 | Lucía | Papelera de reciclaje | 8 | 04 |
 | HU-017 | RF-014 | Lucía | Categorización y filtrado por materias | 8 | 04 |
 | HU-027 | RF-027 | Lucía | Fechas académicas discretas | 8 | 06 |
-| | | | **Total** | **86** | |
+| | | | **Total** | **81** | |
 
 ---
 

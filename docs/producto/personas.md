@@ -74,7 +74,7 @@ Martín ya probó Obsidian, Logseq y Notion. Le gusta Obsidian pero le molesta q
 - Una herramienta que use **Markdown nativo** (no un editor WYSIWYG forzado).
 - Que los datos se queden **en su dispositivo** (no en la nube de otro).
 - Que funcione **en el navegador** (cross-platform, sin instalar nada pesado).
-- Poder exportar e importar sus notas (no quedar atrapado en un formato propietario).
+- Poder exportar sus notas y eventualmente importar contenido local (no quedar atrapado en un formato propietario).
 
 ### Cita representativa
 

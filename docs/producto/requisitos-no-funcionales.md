@@ -31,7 +31,7 @@
 | ID | Requisito | Métrica | Verificación |
 |---|---|---|---|
 | RNF-005 | Un usuario nuevo debe poder **crear su primera nota en menos de 10 segundos** desde la primera carga de la app, sin instrucciones previas. | Tiempo a primera nota ≤ 10s | Test con usuario real (Hito 05) |
-| RNF-006 | Toda función principal (crear, buscar, exportar) debe ser accesible en **máximo 2 clicks/taps** desde la pantalla principal. | Profundidad de navegación ≤ 2 | Revisión de flujo de UI |
+| RNF-006 | Toda función principal actual (crear, buscar, organizar) debe ser accesible en **máximo 2 clicks/taps** desde la pantalla principal. | Profundidad de navegación ≤ 2 | Revisión de flujo de UI |
 | RNF-007 | La tipografía mínima legible debe ser **16px** en dispositivos móviles. | font-size ≥ 16px en viewport < 768px | Inspección CSS |
 | RNF-008 | Los elementos interactivos (botones, links) deben tener un área de toque mínima de **44x44 px** en dispositivos táctiles. | Touch target ≥ 44x44 px | Lighthouse accessibility audit |
 
@@ -64,7 +64,7 @@
 |---|---|---|---|
 | RNF-016 | La aplicación debe funcionar correctamente en los **últimos 2 major versions** de: Chrome, Firefox, Safari y Edge. | Funcionalidad completa en 4 navegadores | Test manual en cada navegador |
 | RNF-017 | La aplicación debe ser **instalable como PWA** en Android (Chrome), iOS (Safari) y desktop (Chrome/Edge). | Prompt de instalación disponible | Test manual en cada plataforma |
-| RNF-018 | Las notas exportadas deben ser archivos `.md` estándar, legibles en cualquier editor de texto. | Archivos exportados abren en VS Code, Notepad, vim | Test manual |
+| RNF-018 | Cuando se habilite exportación local, las notas exportadas deben ser archivos `.md` estándar, legibles en cualquier editor de texto. | Archivos exportados abren en VS Code, Notepad, vim | Test manual asociado a RF-016/RF-017 |
 
 ---
 

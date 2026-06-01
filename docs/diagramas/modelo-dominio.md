@@ -202,9 +202,9 @@ Capa de lógica de negocio para operaciones sobre notas. Delega la persistencia 
 | `getTrashNotes()` | `Note[]` | Recupera las notas eliminadas lógicamente (`deletedAt IS NOT NULL`), ordenadas por fecha de eliminación. |
 | `restoreNote(id)` | `void` | Restaura una nota desde la papelera: `deletedAt = NULL`. |
 | `permanentlyDeleteNote(id)` | `void` | Elimina una nota físicamente de la BD (DELETE). |
-| `exportAsMarkdown(id)` | `Blob` | Genera un archivo `.md` para descarga. |
-| `exportAllAsZip()` | `Blob` | Genera un `.zip` con todas las notas como archivos `.md`. |
-| `importFromMarkdown(file)` | `Note` | Crea una nota a partir de un archivo `.md` importado. |
+| `exportAsMarkdown(id)` | `Blob` | Hito 05: generaría un archivo `.md` o flujo de compartir para una nota individual. |
+| `exportAllAsZip()` | `Blob` | Futuro: generaría un `.zip` local con notas y metadatos mínimos. |
+| `importFromMarkdown(file)` | `Note` | Futuro: importaría una nota hacia `Entrada`; requiere política de duplicados antes de exponerse en UI. |
 
 ---
 

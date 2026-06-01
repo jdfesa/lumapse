@@ -27,8 +27,8 @@ Esta carpeta contiene los **diagramas técnicos y de análisis** del proyecto, u
 | Hito | Diagramas a agregar |
 |---|---|
 | **02** (Junio) | Diagrama de componentes (arquitectura `src/`) |
-| **03** (Julio) | Secuencia: flujo de export/import, registro de Service Worker |
-| **05** (Septiembre) | Diagrama de despliegue (PWA → GitHub Pages) |
+| **03** (Julio) | Registro de Service Worker del alcance PWA original |
+| **05** (Septiembre) | Diagrama de despliegue APK y flujo de compartir/exportar nota individual (RF-016) |
 
 ---
 

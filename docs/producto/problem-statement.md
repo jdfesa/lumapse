@@ -82,7 +82,7 @@ Lumapse **no pretende** reemplazar a Notion, Obsidian o cualquier herramienta en
 │  ✓ Funcionamiento 100% offline                      │
 │  ✓ Sin cuenta, sin servidores, sin tracking         │
 │  ✓ Instalable como PWA en cualquier dispositivo     │
-│  ✓ Export/Import para no quedar atrapado             │
+│  ✓ Portabilidad local planificada                    │
 └─────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────┐

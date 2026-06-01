@@ -1,7 +1,7 @@
 # Diagrama de Casos de Uso — Lumapse
 
 **Tipo:** Diagrama UML de Comportamiento  
-**Última actualización:** Mayo 2026  
+**Última actualización:** 2026-06-01
 **Autor:** José David Sandoval
 
 ---
@@ -10,7 +10,7 @@
 
 Representar las funcionalidades principales del sistema desde la perspectiva del usuario, identificando los **actores** que interactúan con la aplicación y los **casos de uso** que el sistema ofrece. Este diagrama es el punto de partida para entender **qué hace Lumapse**, no cómo lo hace internamente.
 
-> **Nota de evolución:** Desde el pivote a app nativa ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)), se eliminaron los casos de uso relacionados con PWA y Service Worker (UC-13 y UC-15 del modelo anterior). Se incorporaron los casos de uso de organización (Pin/Archivar) y personalización visual (tema oscuro/claro) implementados en el Hito 04.
+> **Nota de evolución:** Desde el pivote a app nativa ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)), se eliminaron los casos de uso relacionados con PWA y Service Worker (UC-13 y UC-15 del modelo anterior). Se incorporaron los casos de uso de organización (Pin/Archivar) y personalización visual (tema oscuro/claro) implementados en el Hito 04. UC-10 queda como alcance acotado de Hito 05; UC-11 y UC-12 pasan a deuda posterior.
 
 ---
 
@@ -47,9 +47,9 @@ flowchart LR
 
     %% ── Casos de Uso: Datos ──
     subgraph DATOS ["Datos y Portabilidad"]
-        UC10["Exportar Nota .md"]
-        UC11["Importar Nota .md"]
-        UC12["Exportar Todas las Notas .zip"]
+        UC10["Compartir/Exportar Nota .md (Hito 05)"]
+        UC11["Importar Contenido Local (Futuro)"]
+        UC12["Exportar Backup .zip (Futuro)"]
     end
 
     %% ── Casos de Uso: Sistema ──
@@ -98,7 +98,7 @@ flowchart LR
 |---|---|---|
 | **Estudiante** | Principal | Usuario final de la aplicación. Representa a las personas [Lucía](../producto/personas.md#persona-1--lucía-la-estudiante-organizada) y [Martín](../producto/personas.md#persona-2--martín-el-estudiante-práctico). Interactúa directamente con todas las funcionalidades de la UI. |
 | **Capacitor (Runtime Nativo)** | Sistema | Framework que empaqueta la web app como APK nativo para Android. Gestiona el ciclo de vida de la app, el acceso a APIs nativas y la distribución del binario en el dispositivo ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)). |
-| **Sistema de Archivos** | Sistema | Interfaz del SO que permite la lectura y escritura de archivos `.md` para las funcionalidades de exportación e importación. |
+| **Sistema de Archivos** | Sistema | Interfaz del SO que permitiría leer/escribir archivos locales para portabilidad. Su integración visible queda pendiente de decisión en Hito 05. |
 
 ---
 
@@ -133,9 +133,9 @@ flowchart LR
 
 | ID | Caso de Uso | Descripción | RF asociado |
 |---|---|---|---|
-| UC-10 | Exportar Nota .md | El estudiante descarga una nota como archivo `.md`. | [RF-016](../producto/requisitos-funcionales.md) |
-| UC-11 | Importar Nota .md | El estudiante carga un archivo `.md` para crear una nota. | [RF-018](../producto/requisitos-funcionales.md) |
-| UC-12 | Exportar Todas .zip | El estudiante descarga todas las notas como un `.zip`. | [RF-017](../producto/requisitos-funcionales.md) |
+| UC-10 | Compartir/Exportar Nota .md | El estudiante comparte o guarda una nota como Markdown. Reclasificado para Hito 05. | [RF-016](../producto/requisitos-funcionales.md) |
+| UC-11 | Importar Contenido Local | El estudiante incorpora archivos locales sin sobrescribir notas existentes. Deuda posterior; una nota individual importada debe entrar en `Entrada`. | [RF-018](../producto/requisitos-funcionales.md) |
+| UC-12 | Exportar Backup .zip | El estudiante genera un respaldo local `.zip` del workspace. Deuda técnica de largo plazo. | [RF-017](../producto/requisitos-funcionales.md) |
 
 ### Sistema y Personalización
 
@@ -153,7 +153,7 @@ flowchart LR
 |---|---|---|---|
 | **«include»** | UC-01 (Crear Nota) | UC-14 (Auto-guardar) | Toda nota creada se persiste automáticamente. El auto-guardado es un comportamiento obligatorio que siempre ocurre. |
 | **«include»** | UC-02 (Editar Nota) | UC-14 (Auto-guardar) | Toda edición dispara el auto-guardado. Es un flujo obligatorio, no opcional. |
-| **«extend»** | UC-10 (Exportar Nota) | UC-12 (Exportar Todas) | Exportar todas las notas es una extensión opcional del caso base de exportar una nota individual. Solo se activa si el usuario elige la opción de exportación masiva. |
+| **«extend»** | UC-10 (Compartir/Exportar Nota) | UC-12 (Exportar Backup) | El respaldo completo es una extensión opcional del caso base de portabilidad individual, pero queda postergado por complejidad de formato, destino Android y pruebas reales. |
 | **«extend»** | UC-03 (Eliminar Nota) | UC-16 (Gestionar Papelera) | La eliminación de una nota envía el elemento a la papelera (soft-delete). El usuario puede gestionar la papelera opcionalmente después. |
 
 ### ¿Por qué `«include»` y no `«extend»` para el auto-guardado?
@@ -168,8 +168,10 @@ flowchart LR
 | Hito | Casos de Uso |
 |---|---|
 | **02** (Junio) | UC-01 a UC-04, UC-14 |
-| **03** (Julio) | UC-08 a UC-12 |
+| **03** (Julio) | UC-08, UC-09 |
 | **04** (Agosto) | UC-05, UC-06, UC-07, UC-13, UC-15, UC-16 |
+| **05** (Septiembre) | UC-10 |
+| **Futuro / Post-release** | UC-11, UC-12 |
 
 ---
 
