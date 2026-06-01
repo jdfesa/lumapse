@@ -10,7 +10,7 @@
 
 Representar las funcionalidades principales del sistema desde la perspectiva del usuario, identificando los **actores** que interactúan con la aplicación y los **casos de uso** que el sistema ofrece. Este diagrama es el punto de partida para entender **qué hace Lumapse**, no cómo lo hace internamente.
 
-> **Nota de evolución:** Desde el pivote a app nativa ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)), se eliminaron los casos de uso relacionados con PWA y Service Worker (UC-13 y UC-15 del modelo anterior). Se incorporaron los casos de uso de organización (Pin/Archivar) y personalización visual (tema oscuro/claro) implementados en el Hito 04. UC-10 queda como alcance acotado de Hito 05; UC-11 y UC-12 pasan a deuda posterior.
+> **Nota de evolución:** Desde el pivote a app nativa ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)), se eliminaron los casos de uso relacionados con PWA y Service Worker (UC-13 y UC-15 del modelo anterior). Se incorporaron los casos de uso de organización (Pin/Archivar) y personalización visual (tema oscuro/claro) implementados en el Hito 04. UC-10, UC-11 y UC-12 pasan a deuda posterior.
 
 ---
 
@@ -47,7 +47,7 @@ flowchart LR
 
     %% ── Casos de Uso: Datos ──
     subgraph DATOS ["Datos y Portabilidad"]
-        UC10["Compartir/Exportar Nota .md (Hito 05)"]
+        UC10["Compartir/Exportar Nota .md (Futuro)"]
         UC11["Importar Contenido Local (Futuro)"]
         UC12["Exportar Backup .zip (Futuro)"]
     end
@@ -133,7 +133,7 @@ flowchart LR
 
 | ID | Caso de Uso | Descripción | RF asociado |
 |---|---|---|---|
-| UC-10 | Compartir/Exportar Nota .md | El estudiante comparte o guarda una nota como Markdown. Reclasificado para Hito 05. | [RF-016](../producto/requisitos-funcionales.md) |
+| UC-10 | Compartir/Exportar Nota .md | El estudiante comparte o guarda una nota como Markdown. Deuda posterior; requiere share sheet nativo de Android validado. | [RF-016](../producto/requisitos-funcionales.md) |
 | UC-11 | Importar Contenido Local | El estudiante incorpora archivos locales sin sobrescribir notas existentes. Deuda posterior; una nota individual importada debe entrar en `Entrada`. | [RF-018](../producto/requisitos-funcionales.md) |
 | UC-12 | Exportar Backup .zip | El estudiante genera un respaldo local `.zip` del workspace. Deuda técnica de largo plazo. | [RF-017](../producto/requisitos-funcionales.md) |
 
@@ -170,8 +170,7 @@ flowchart LR
 | **02** (Junio) | UC-01 a UC-04, UC-14 |
 | **03** (Julio) | UC-08, UC-09 |
 | **04** (Agosto) | UC-05, UC-06, UC-07, UC-13, UC-15, UC-16 |
-| **05** (Septiembre) | UC-10 |
-| **Futuro / Post-release** | UC-11, UC-12 |
+| **Futuro / Post-release** | UC-10, UC-11, UC-12 |
 
 ---
 

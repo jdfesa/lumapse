@@ -112,7 +112,7 @@ git show LBREQ-v1.0 --no-patch
 
 **RF completados acumulados según línea base original:** RF-001 a RF-005, RF-007 a RF-012, RF-016 a RF-018, RF-021 (15 de 24)
 
-> **Nota de revisión 2026-06-01:** tras el pivote mobile-first/SQLite, `RF-016`, `RF-017` y `RF-018` dejan de contarse como implementados visibles porque la UI actual no expone exportación/importación. `RF-016` se mueve a Hito 05 con alcance mínimo; `RF-017` y `RF-018` pasan a deuda posterior sin borrar el antecedente histórico de esta línea base.
+> **Nota de revisión 2026-06-01:** tras el pivote mobile-first/SQLite, `RF-016`, `RF-017` y `RF-018` dejan de contarse como implementados visibles porque la UI actual no expone exportación/importación. Los tres pasan a deuda posterior sin borrar el antecedente histórico de esta línea base.
 
 ---
 

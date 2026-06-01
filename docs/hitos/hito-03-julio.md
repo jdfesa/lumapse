@@ -11,7 +11,7 @@
 
 En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo Viable (MVP) real. Se incorpora la renderización de Markdown en tiempo real, modos de lectura/escritura y la infraestructura necesaria para que la aplicación funcione offline bajo la arquitectura PWA original.
 
-> **Nota de revisión 2026-06-01:** Durante el pivote mobile-first a Capacitor/SQLite se conservaron servicios base de exportación/importación, pero los flujos dejaron de estar expuestos en la UI actual. Por trazabilidad, `RF-016` se reclasifica para Hito 05 como compartir/exportar nota individual, mientras `RF-017` y `RF-018` pasan a deuda posterior.
+> **Nota de revisión 2026-06-01:** Durante el pivote mobile-first a Capacitor/SQLite se conservaron servicios base de exportación/importación, pero los flujos dejaron de estar expuestos en la UI actual. Por trazabilidad, `RF-016`, `RF-017` y `RF-018` pasan a deuda posterior; compartir solo vuelve si se implementa con share sheet nativo y se valida en Android real.
 
 ---
 
@@ -24,7 +24,7 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 | RF-010 | Renderizado de Markdown en tiempo real | MUST | ✅ Completado |
 | RF-011 | Soporte de sintaxis Markdown básica | MUST | ✅ Completado |
 | RF-012 | Modo edición / modo lectura (toggle) | SHOULD | ✅ Completado |
-| RF-016 | Exportar/compartir nota individual | SHOULD | ⏳ Reclasificado Hito 05 |
+| RF-016 | Exportar/compartir nota individual | SHOULD | ⏸️ Postergado |
 | RF-017 | Exportar respaldo local `.zip` | SHOULD | ⏸️ Postergado |
 | RF-018 | Importar archivos o respaldos locales | COULD | ⏸️ Postergado |
 | RF-021 | PWA instalable desde el navegador | MUST | ✅ Completado |
@@ -38,7 +38,7 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 | `MarkdownService` (Renderizado Markdown → HTML) | ✅ Completado |
 | Componente `MarkdownPreview` (Vista previa en tiempo real) | ✅ Completado |
 | Toggle edición/lectura en `NoteEditor` | ✅ Completado |
-| Exportar/compartir nota individual | ⏳ Reclasificado Hito 05 |
+| Exportar/compartir nota individual | ⏸️ Postergado |
 | Exportar respaldo local `.zip` | ⏸️ Postergado |
 | Importar archivos o respaldos locales | ⏸️ Postergado |
 | Service Worker para funcionamiento offline | ✅ Completado |
@@ -85,7 +85,7 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 ### 4. Base técnica de exportación/importación
 - Se incorporó `jszip` y quedaron servicios base para exportación/importación local.
 - La revisión posterior al pivote Android/SQLite confirma que estos servicios no son flujos visibles en la UI actual.
-- `RF-016` pasa a Hito 05 con alcance mobile-first mínimo: compartir/exportar una nota individual.
+- `RF-016` queda como deuda posterior: compartir/exportar una nota individual solo si se implementa con share sheet nativo de Android y no duplica Copiar.
 - `RF-017` y `RF-018` quedan como deuda posterior por complejidad de backup, importación, duplicados y materias/secciones.
 
 ### 5. PWA y Soporte Offline (Service Worker)

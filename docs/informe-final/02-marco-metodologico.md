@@ -136,7 +136,7 @@ El núcleo del MVP ya implementado incluye:
 - Organización por materias, secciones, archivo y papelera.
 - Tema claro/oscuro y marcadores visuales de estado académico.
 
-Al cierre formal del Hito 04 (2026-06-01), los pendientes opcionales de UX se reclasificaron con justificación de producto: contador de palabras/caracteres, onboarding e indicador offline/online pasan a estado postergado para evitar ruido visual o falsas expectativas de sincronización. La exportación/importación local también se revisa: existen servicios base, pero no un flujo visible actual. Hito 05 toma solo `RF-016` (compartir/exportar nota individual), mientras backup `.zip` e importación quedan postergados por complejidad. La sección "Acerca de" queda prevista para Hito 05.
+Al cierre formal del Hito 04 (2026-06-01), los pendientes opcionales de UX se reclasificaron con justificación de producto: contador de palabras/caracteres, onboarding e indicador offline/online pasan a estado postergado para evitar ruido visual o falsas expectativas de sincronización. La exportación/importación local también se revisa: existen servicios base, pero no un flujo visible actual. Compartir una nota individual se posterga hasta contar con share sheet nativo de Android validado; backup `.zip` e importación quedan postergados por complejidad. La sección "Acerca de" queda prevista para Hito 05.
 
 ### 2.6.2. Requisitos No Funcionales
 

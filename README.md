@@ -172,7 +172,7 @@ Completar el producto mínimo viable de captura y lectura de notas con Markdown 
 - Soporte de sintaxis: encabezados, negritas, listas, código, enlaces
 - Toolbar de edición (negrita, cursiva, encabezado, lista) para usuarios no técnicos
 - Modo edición / modo lectura (toggle)
-- Servicios base de exportación/importación Markdown; la UI actual no los expone, `RF-016` pasa a Hito 05 y backup/importación quedan como deuda futura
+- Servicios base de exportación/importación Markdown; la UI actual no los expone y la portabilidad local queda como deuda futura
 - Funcionamiento offline bajo la arquitectura original PWA/IndexedDB
 
 ### ✅ Hito 04 — Organización y UX Móvil (Agosto 2026) → [Informe](./docs/hitos/hito-04-agosto.md)
@@ -202,7 +202,6 @@ Garantizar la calidad del código y preparar la distribución del producto.
 - Publicación del APK en GitHub Releases
 - Corrección de bugs y edge cases
 - Sección "Acerca de" con información del sistema
-- Portabilidad local mínima: compartir/exportar una nota individual (`RF-016`)
 
 ### ⏳ Hito 06 — Entrega Final (Octubre 2026)
 

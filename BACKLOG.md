@@ -13,9 +13,9 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 Hito 04 quedó cerrado formalmente como bloque de Organización y UX. El cierre combinó implementación mínima de pulido UX (empty states) y decisiones explícitas de postergación/descarte para funcionalidades opcionales que podían agregar ruido visual o sugerir capacidades no presentes todavía.
 
-Hito 05 queda activo con foco en estabilización, calidad y distribución. La prioridad ya no es sumar funcionalidad nueva, salvo `RF-016` en alcance mínimo, sino validar el producto, preparar el APK y ordenar los artefactos finales.
+Hito 05 queda activo con foco en estabilización, calidad y distribución. La prioridad ya no es sumar funcionalidad nueva, sino validar el producto, preparar el APK y ordenar los artefactos finales.
 
-La revisión de exportación/importación corrige una sobrepromesa documental: existen servicios base (`ExportService`/`ImportService`), pero la UI actual no expone esos flujos. Para Hito 05 se conserva solo el alcance mínimo de compartir/exportar una nota individual; backup `.zip` e importación quedan como deuda de más largo plazo.
+La revisión de exportación/importación corrige una sobrepromesa documental: existen servicios base (`ExportService`/`ImportService`), pero la UI actual no expone esos flujos. La opción "Compartir" solo tendría sentido si abre el share sheet nativo de Android y ofrece apps como WhatsApp; si termina copiando contenido, duplica una acción existente y agrega ruido. Por eso toda la portabilidad local se posterga como feature futura.
 
 ---
 
@@ -29,7 +29,6 @@ La revisión de exportación/importación corrige una sobrepromesa documental: e
 | 4 | APK firmado | Artefacto generado con versión definida |
 | 5 | Distribución | Release o mecanismo de entrega documentado |
 | 6 | RF-023 — Acerca de | Sección mínima con versión, autor y licencia, sin convertirla en tutorial |
-| 7 | RF-016 — Compartir/exportar nota individual | Acción secundaria implementada y validada en Android real |
 
 ---
 
@@ -51,7 +50,7 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 
 | ID | Decisión | Complejidad | Recomendación |
 |---|---|---|---|
-| RF-016 | Compartir/exportar nota individual | Baja/Media | Implementado en menú secundario; pendiente validación en Android real |
+| RF-016 | Compartir/exportar nota individual | Media | Postergar: requiere `@capacitor/share`, posible `@capacitor/filesystem`, sync nativo y prueba real de WhatsApp/share sheet |
 | RF-017 | Exportar respaldo `.zip` local | Media | Deuda técnica de largo plazo; útil para portabilidad, pero requiere formato de backup, destino Android y pruebas reales |
 | RF-018 | Importar `.md` o `.zip` | Media/Alta | Deuda de más largo plazo; si se retoma una nota individual, debe entrar en `Entrada` y no reconstruir materias/secciones automáticamente |
 
@@ -87,6 +86,7 @@ No incorporar en Hito 05 salvo decisión explícita:
 ## Largo Plazo / Post-Defensa
 
 - [ ] Sincronización o backup manual en la nube, por ejemplo Google Drive, si la comunidad estudiantil adopta el producto y lo pide.
+- [ ] Compartir nota individual con share sheet nativo de Android, solo si se valida que ofrece apps reales como WhatsApp y no duplica la acción Copiar.
 - [ ] Backup local `.zip` de workspace completo, con formato documentado y prueba en Android real.
 - [ ] Importación de notas/backups, empezando por nota individual hacia `Entrada` y dejando merge de materias/secciones para una etapa posterior.
 - [ ] Ayuda ampliada o mini guía Markdown dentro de una sección `Acerca de/Ayuda`, solo si el feedback demuestra fricción real.

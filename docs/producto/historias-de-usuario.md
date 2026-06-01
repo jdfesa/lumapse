@@ -181,9 +181,9 @@
 | **Persona** | [Martín](./personas.md#persona-2--martín-el-estudiante-práctico) |
 | **Prioridad** | SHOULD |
 | **Story Points** | **3 SP** — Flujo acotado de compartir/exportar nota individual, validación en Android real y ubicación discreta en UI. |
-| **Hito** | 05 |
+| **Hito** | Futuro |
 
-> **Estado de revisión 2026-06-01:** el alcance de Hito 05 se reduce a `RF-016`. Backup `.zip` (`RF-017`) e importación (`RF-018`) quedan como deuda posterior. Si en el futuro se importa una nota individual exportada desde Lumapse, debe crearse en `Entrada` y no intentar recrear materia/sección de origen.
+> **Estado de revisión 2026-06-01:** el alcance se posterga completo. Compartir solo tiene sentido si usa share sheet nativo de Android con apps reales como WhatsApp; si cae a copiar contenido, duplica una acción existente y no debe estar en la UI. Backup `.zip` (`RF-017`) e importación (`RF-018`) quedan como deuda posterior. Si en el futuro se importa una nota individual exportada desde Lumapse, debe crearse en `Entrada` y no intentar recrear materia/sección de origen.
 
 **Criterios de Aceptación:**
 
@@ -427,13 +427,13 @@
 
 ## Resumen
 
-| Métrica | Hito 02 | Hito 03 | Hito 04 | Hito 05 | Hito 06 | Total |
-|---|---|---|---|---|---|---|
-| **Total HU** | 6 | 3 | 7 | 1 | 1 | **18** |
-| **Total Story Points** | 20 | 13 | 37 | 3 | 8 | **81** |
-| **Total Criterios de Aceptación** | 20 | 10 | 30 | 4 | 7 | **71** |
-| **Prioridad predominante** | MUST | MUST/SHOULD | SHOULD/MUST | SHOULD | SHOULD | — |
-| **Personas cubiertas** | Lucía (4), Martín (2) | Lucía (2), Martín (1) | Lucía (6), Martín (1) | Martín (1) | Lucía (1) | Lucía (13), Martín (5) |
+| Métrica | Hito 02 | Hito 03 | Hito 04 | Hito 05 | Hito 06 | Futuro | Total |
+|---|---|---|---|---|---|---|---|
+| **Total HU** | 6 | 3 | 7 | 0 | 1 | 1 | **18** |
+| **Total Story Points** | 20 | 13 | 37 | 0 | 8 | 3 | **81** |
+| **Total Criterios de Aceptación** | 20 | 10 | 30 | 0 | 7 | 4 | **71** |
+| **Prioridad predominante** | MUST | MUST/SHOULD | SHOULD/MUST | — | SHOULD | SHOULD | — |
+| **Personas cubiertas** | Lucía (4), Martín (2) | Lucía (2), Martín (1) | Lucía (6), Martín (1) | — | Lucía (1) | Martín (1) | Lucía (13), Martín (5) |
 
 ---
 
@@ -448,7 +448,7 @@
 | HU-005 | RF-005 | Lucía | Auto-guardado | 5 | 02 |
 | HU-006 | RF-007 | Martín | Persistencia local | 5 | 02 |
 | HU-007 | RF-010/011 | Lucía | Renderizar Markdown | 5 | 03 |
-| HU-008 | RF-016 | Martín | Compartir/exportar nota individual | 3 | 05 |
+| HU-008 | RF-016 | Martín | Compartir/exportar nota individual | 3 | Futuro |
 | HU-012 | RF-008 | Lucía | Funcionamiento offline | 5 | 03 |
 | HU-013 | RF-012 | Martín | Modos edición/lectura | 3 | 03 |
 | HU-009 | RF-013 | Lucía | Fijar y archivar notas | 5 | 04 |

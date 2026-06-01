@@ -28,7 +28,7 @@ Esta carpeta contiene los **diagramas técnicos y de análisis** del proyecto, u
 |---|---|
 | **02** (Junio) | Diagrama de componentes (arquitectura `src/`) |
 | **03** (Julio) | Registro de Service Worker del alcance PWA original |
-| **05** (Septiembre) | Diagrama de despliegue APK y flujo de compartir/exportar nota individual (RF-016) |
+| **05** (Septiembre) | Diagrama de despliegue APK |
 
 ---
 

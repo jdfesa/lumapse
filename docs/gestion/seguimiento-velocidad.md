@@ -65,7 +65,7 @@ Story Points normalizados contra las HU formales actuales:
 | HU-013 | Modos edición/lectura | 3 |
 | | **Total Hito 03** | **13** |
 
-> **Nota metodológica:** `HU-008` fue reclasificada y acotada al Hito 05 porque exportación/importación no está expuesta en la UI actual. Hito 05 toma solo compartir/exportar una nota individual; backup `.zip` e importación quedan como deuda posterior.
+> **Nota metodológica:** `HU-008` fue reclasificada como futura porque exportación/importación no está expuesta en la UI actual. Compartir nota individual solo vuelve si se implementa con share sheet nativo de Android; backup `.zip` e importación quedan como deuda posterior.
 
 ### Hito 04 — Organización y UX (Agosto 2026, cerrado formalmente)
 
@@ -94,7 +94,7 @@ El Hito 04 registra 37 SP entregados y queda **cerrado formalmente el 2026-06-01
 | 02 | Junio 2026 | 20 | 20 | 20 SP/mes | 0 | ✅ Completado | Todas las HU completadas. Baseline: `LB-PROD-v0.1.0` |
 | 03 | Julio 2026 | 13 | 13 | 13 SP/mes | 0 | ✅ Completado | Markdown, lectura/escritura y offline; portabilidad local reclasificada |
 | 04 | Agosto 2026 | 37 | 37 | 37 SP/mes | 0 | ✅ Completado | Organización por materias + UX mobile cerrado formalmente |
-| 05 | Septiembre 2026 | 3 + *por definir* | — | — | — | 🔄 En curso | Testing + APK firmado + RF-016 compartir/exportar nota |
+| 05 | Septiembre 2026 | *por definir* | — | — | — | 🔄 En curso | Testing + APK firmado |
 | 06 | Octubre 2026 | *por definir* | — | — | — | ⏳ Futuro | Informe final + entrega |
 
 ### Velocidad promedio (datos disponibles)
@@ -129,7 +129,7 @@ baja-moderada (CRUD, auto-guardado, listado).
 | SP entregados | 13 |
 | Desvío | 0 (100% de cumplimiento) |
 
-El Hito 03 se completó con éxito dentro del alcance hoy verificable: Markdown, modos de lectura/escritura y soporte offline original. La portabilidad local se reclasifica: nota individual para Hito 05, backup/importación para deuda posterior.
+El Hito 03 se completó con éxito dentro del alcance hoy verificable: Markdown, modos de lectura/escritura y soporte offline original. La portabilidad local se reclasifica como deuda posterior por requerir integración nativa, formato de backup y política de importación.
 
 ### Hito 04 — Entregado por encima del plan inicial y cerrado formalmente
 
