@@ -112,7 +112,7 @@ export class UpcomingAcademicEvents {
     this.container.hidden = false
     this.container.innerHTML = `
       <section class="upcoming-academic-events ${this.collapsed ? 'upcoming-academic-events--collapsed' : ''}" aria-label="Proximas fechas academicas">
-        <button class="upcoming-academic-events__header" id="upcoming-academic-events-toggle" type="button" aria-expanded="${String(!this.collapsed)}">
+        <button class="upcoming-academic-events__header" id="upcoming-academic-events-toggle" type="button" aria-expanded="${String(!this.collapsed)}" title="${this.collapsed ? 'Mostrar proximas fechas' : 'Ocultar proximas fechas'}" aria-label="${this.collapsed ? 'Mostrar proximas fechas' : 'Ocultar proximas fechas'}">
           <span class="upcoming-academic-events__title">Proximas fechas</span>
           <span class="upcoming-academic-events__count">${this.events.length}</span>
           ${this.renderToggleIcon()}

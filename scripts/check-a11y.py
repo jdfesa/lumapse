@@ -54,6 +54,20 @@ def clean_line(line):
     return line.strip()
 
 
+def collect_tag(lines, start_index):
+    tag_lines = [lines[start_index]]
+
+    if ">" in lines[start_index]:
+        return lines[start_index]
+
+    for next_line in lines[start_index + 1:start_index + 10]:
+        tag_lines.append(next_line)
+        if ">" in next_line:
+            break
+
+    return "".join(tag_lines)
+
+
 def add_issue(issues, path, line_number, line, problem):
     issues.append({
         "path": path,
@@ -65,25 +79,30 @@ def add_issue(issues, path, line_number, line, problem):
 
 def scan_file(path):
     issues = []
+    lines = read_lines(path)
 
-    for line_number, line in enumerate(read_lines(path), 1):
-        if IMG_RE.search(line) and not ALT_RE.search(line):
-            add_issue(
-                issues,
-                path,
-                line_number,
-                line,
-                "Etiqueta <img> sin atributo 'alt'.",
-            )
+    for line_number, line in enumerate(lines, 1):
+        if IMG_RE.search(line):
+            tag = collect_tag(lines, line_number - 1)
+            if not ALT_RE.search(tag):
+                add_issue(
+                    issues,
+                    path,
+                    line_number,
+                    line,
+                    "Etiqueta <img> sin atributo 'alt'.",
+                )
 
-        if BUTTON_RE.search(line) and not ARIA_LABEL_RE.search(line) and not TITLE_RE.search(line):
-            add_issue(
-                issues,
-                path,
-                line_number,
-                line,
-                "Etiqueta <button> sin atributo 'aria-label' o 'title'.",
-            )
+        if BUTTON_RE.search(line):
+            tag = collect_tag(lines, line_number - 1)
+            if not ARIA_LABEL_RE.search(tag) and not TITLE_RE.search(tag):
+                add_issue(
+                    issues,
+                    path,
+                    line_number,
+                    line,
+                    "Etiqueta <button> sin atributo 'aria-label' o 'title'.",
+                )
 
         tabindex_match = TABINDEX_RE.search(line)
         if tabindex_match:
