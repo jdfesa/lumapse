@@ -65,6 +65,7 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Documentación | Revisar documentos generados antes del corte final | Media | Informe completo y cheatsheet deben reflejar la versión de release |
 | Diagramas | Actualizar gráficos DB exportados | Media | Regenerar al cierre documental final con modelo congelado |
 | Release | Definir versión del próximo corte | Media | Evaluar si Fechas Académicas discretas sale como `0.4.8` |
+| Adjuntos | Planificar adjuntos de imagen post-release | Media | Valor alto para fotos de pizarrón; debe implementarse sin cargar SQLite ni saturar el feed |
 
 ---
 
@@ -89,6 +90,7 @@ No incorporar en Hito 05 salvo decisión explícita:
 - [ ] Compartir nota individual con share sheet nativo de Android, solo si se valida que ofrece apps reales como WhatsApp y no duplica la acción Copiar.
 - [ ] Backup local `.zip` de workspace completo, con formato documentado y prueba en Android real.
 - [ ] Importación de notas/backups, empezando por nota individual hacia `Entrada` y dejando merge de materias/secciones para una etapa posterior.
+- [ ] Adjuntos de imagen para notas: permitir tomar o seleccionar fotos de pizarrón, guardar una copia optimizada y una miniatura en storage local de la app, registrar solo metadata/rutas en SQLite, cargar miniaturas de forma lazy y eliminar archivos físicos al vaciar papelera. No guardar imágenes como base64 dentro de `notes.content` ni depender de rutas públicas externas como almacenamiento principal.
 - [ ] Ayuda ampliada o mini guía Markdown dentro de una sección `Acerca de/Ayuda`, solo si el feedback demuestra fricción real.
 - [ ] Métricas de escritura como contador de palabras/caracteres, solo si aparecen casos de uso académicos concretos.
 - [ ] Onboarding o coach marks, solo si la primera release muestra problemas de descubrimiento.
