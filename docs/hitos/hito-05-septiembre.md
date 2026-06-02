@@ -4,7 +4,7 @@
 **Hito:** 05 — Testing, Calidad y Distribución
 **Proyecto:** Lumapse
 **Estado:** Activo formalmente tras el cierre del Hito 04
-**Última actualización:** 2026-06-01
+**Última actualización:** 2026-06-02
 
 ---
 
@@ -20,15 +20,30 @@ Desde el 2026-06-01, el Hito 04 queda cerrado formalmente y este hito pasa a ser
 
 | Área | Estado | Evidencia |
 |---|---|---|
-| Suite Vitest | ✅ Implementada | `npm run test` con 371 tests |
-| Quality gate local | ✅ Implementado | `npm run quality`, `npm run verify` |
+| Suite Vitest | ✅ Implementada | `npm run test` con 494 tests |
+| Quality gate local | ✅ Verificado | `npm run verify` ejecutado sin fallos el 2026-06-02 |
 | GitHub Actions | ✅ Implementado | Workflow `CI — Quality Gate` |
 | Auditorías documentales/schema | ✅ Implementadas | `check:traceability`, `check:docs`, `check:schema`, `check:dbml`, `check:subjects` |
 | Guardia de diálogos nativos | ✅ Implementada | `npm run check:native-dialogs` |
 | Smoke tests Android | ✅ Corregidos | Tests bajo `com.lumapse.app` |
+| Checklist Android | ✅ Preparado | [`checklist-validacion-android.md`](../gestion/checklist-validacion-android.md) |
 | Distribución APK | ⏳ Pendiente | APK firmado y GitHub Releases |
 | Testing en dispositivo real | ⏳ Pendiente | Validación manual formal |
-| Release dry-run | ⏳ Pendiente | `scripts/release-helper.py --type patch --dry-run` |
+| Release dry-run | ✅ Completado | `scripts/release-helper.py --type patch --dry-run` propone `0.4.8` sin bloqueos |
+
+---
+
+## Estrategia de Release Candidata
+
+El corte `0.4.8` se toma como **release candidata funcional** para validacion controlada, no como cierre final del producto ni como apertura de nuevas funcionalidades. Su objetivo es demostrar que el nucleo de Lumapse ya puede probarse como APK: captura de notas, organizacion por materias/secciones, busqueda, Markdown, estados academicos, papelera, fechas academicas discretas, persistencia local SQLite y funcionamiento offline.
+
+Cualquier feedback recibido durante esta etapa debe clasificarse en tres grupos:
+
+- **Bug bloqueante:** impide usar, instalar, guardar datos o navegar flujos principales.
+- **Mejora menor:** ajuste de claridad, texto, accesibilidad o friccion que no cambia el alcance.
+- **Feature post-release:** ideas valiosas, como adjuntos de imagen, backup o sincronizacion, que se registran en backlog sin entrar al corte actual.
+
+Esta estrategia evita que la beta se convierta en expansion de alcance. La prioridad del Hito 05 sigue siendo estabilizar, probar en Android real y preparar distribucion.
 
 ---
 

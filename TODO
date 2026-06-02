@@ -12,11 +12,11 @@
 
 ## Proxima sesion
 
-- [ ] Ejecutar release dry-run con `python3 scripts/release-helper.py --type patch --dry-run`.
-- [ ] Revisar salida del dry-run y documentar bloqueos si aparecen.
-- [ ] Ejecutar `npm run verify` como gate local antes de preparar APK.
-- [ ] Preparar checklist de validacion manual en Android real.
-- [ ] Definir si el incremento de Fechas Academicas discretas queda como release `0.4.8` o se agrupa en el proximo corte.
+- [x] Ejecutar release dry-run con `python3 scripts/release-helper.py --type patch --dry-run`.
+- [x] Revisar salida del dry-run y documentar bloqueos si aparecen.
+- [x] Ejecutar `npm run verify` como gate local antes de preparar APK.
+- [x] Preparar checklist de validacion manual en Android real.
+- [x] Definir el corte como `0.4.8` release candidata/beta funcional para validacion controlada.
 
 ---
 
