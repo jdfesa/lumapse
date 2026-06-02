@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 05 — Testing, Calidad y Distribución
 > **Hito 04:** Cerrado formalmente el 2026-06-01
-> **Última actualización:** 2026-06-01 — revisión exportación/importación local
+> **Última actualización:** 2026-06-02 — plan backup `.zip` y Google Drive post-release
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -15,7 +15,9 @@ Hito 04 quedó cerrado formalmente como bloque de Organización y UX. El cierre 
 
 Hito 05 queda activo con foco en estabilización, calidad y distribución. La prioridad ya no es sumar funcionalidad nueva, sino validar el producto, preparar el APK y ordenar los artefactos finales.
 
-La revisión de exportación/importación corrige una sobrepromesa documental: existen servicios base (`ExportService`/`ImportService`), pero la UI actual no expone esos flujos. La opción "Compartir" solo tendría sentido si abre el share sheet nativo de Android y ofrece apps como WhatsApp; si termina copiando contenido, duplica una acción existente y agrega ruido. Por eso toda la portabilidad local se posterga como feature futura.
+La revisión de exportación/importación corrige una sobrepromesa documental: existen servicios base (`ExportService`/`ImportService`), pero la UI actual no expone esos flujos. La opción "Compartir" solo tendría sentido si abre el share sheet nativo de Android y ofrece apps como WhatsApp; si termina copiando contenido, duplica una acción existente y agrega ruido.
+
+El benchmark contra apps como Markor refuerza una deuda crítica: Lumapse no debe encerrar al estudiante en SQLite sin salida. Por eso `RF-017` se reclasifica como feature post-release prioritaria: backup `.zip` local, export legible, restauración y salida a Google Drive o almacenamiento elegido por el usuario. El plan operativo queda en [`PLAN-BACKUP-GOOGLE-DRIVE.md`](PLAN-BACKUP-GOOGLE-DRIVE.md).
 
 ---
 
@@ -51,7 +53,7 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | ID | Decisión | Complejidad | Recomendación |
 |---|---|---|---|
 | RF-016 | Compartir/exportar nota individual | Media | Postergar: requiere `@capacitor/share`, posible `@capacitor/filesystem`, sync nativo y prueba real de WhatsApp/share sheet |
-| RF-017 | Exportar respaldo `.zip` local | Media | Deuda técnica de largo plazo; útil para portabilidad, pero requiere formato de backup, destino Android y pruebas reales |
+| RF-017 | Exportar respaldo `.zip` local + salida externa | Media/Alta | Feature post-release prioritaria; plan por fases en [`PLAN-BACKUP-GOOGLE-DRIVE.md`](PLAN-BACKUP-GOOGLE-DRIVE.md). Primero backup local/restaurable, luego destino Drive por selector/share sheet, y solo después Drive API directa |
 | RF-018 | Importar `.md` o `.zip` | Media/Alta | Deuda de más largo plazo; si se retoma una nota individual, debe entrar en `Entrada` y no reconstruir materias/secciones automáticamente |
 
 ---
@@ -66,6 +68,7 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Diagramas | Actualizar gráficos DB exportados | Media | Regenerar al cierre documental final con modelo congelado |
 | Release | Definir versión del próximo corte | Media | Evaluar si Fechas Académicas discretas sale como `0.4.8` |
 | Adjuntos | Planificar adjuntos de imagen post-release | Media | Valor alto para fotos de pizarrón; debe implementarse sin cargar SQLite ni saturar el feed |
+| Backup | Planificar backup `.zip` y Google Drive post-release | Alta | Feature crítica para propiedad del dato; ver [`PLAN-BACKUP-GOOGLE-DRIVE.md`](PLAN-BACKUP-GOOGLE-DRIVE.md). Distinguir backup manual de sincronización real |
 
 ---
 
@@ -77,7 +80,7 @@ No incorporar en Hito 05 salvo decisión explícita:
 - Notificaciones push.
 - Recurrencias, horarios o duración de eventos.
 - Sincronización externa.
-- Backup en nube.
+- Backup en nube dentro del Hito 05; queda planificado como feature prioritaria post-release.
 - Importación automática de backups complejos sin política de merge.
 - Tutoriales obligatorios.
 - Nuevas capas de organización más allá de Materia / Sección / Nota.
@@ -86,7 +89,8 @@ No incorporar en Hito 05 salvo decisión explícita:
 
 ## Largo Plazo / Post-Defensa
 
-- [ ] Sincronización o backup manual en la nube, por ejemplo Google Drive, si la comunidad estudiantil adopta el producto y lo pide.
+- [ ] Backup manual `.zip` con salida a Google Drive o almacenamiento elegido por el usuario. Prioridad alta post-release: Lumapse debe permitir que el estudiante conserve sus notas si pierde, rompe o cambia el teléfono. Ver [`PLAN-BACKUP-GOOGLE-DRIVE.md`](PLAN-BACKUP-GOOGLE-DRIVE.md).
+- [ ] Sincronización real multi-dispositivo, solo después de validar backup/restauración y con feedback fuerte de adopción.
 - [ ] Compartir nota individual con share sheet nativo de Android, solo si se valida que ofrece apps reales como WhatsApp y no duplica la acción Copiar.
 - [ ] Backup local `.zip` de workspace completo, con formato documentado y prueba en Android real.
 - [ ] Importación de notas/backups, empezando por nota individual hacia `Entrada` y dejando merge de materias/secciones para una etapa posterior.

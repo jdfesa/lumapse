@@ -41,11 +41,12 @@
 
 ## Pendientes diferidos
 
+- [ ] Convertir `RF-017` en feature post-release prioritaria: backup `.zip` local + salida a Google Drive/almacenamiento elegido por el usuario. Plan por fases en [`PLAN-BACKUP-GOOGLE-DRIVE.md`](PLAN-BACKUP-GOOGLE-DRIVE.md).
+- [ ] Reabrir `RF-024` como indicador online/offline acotado a backup externo, sin prometer sincronizacion automatica.
 - [ ] Actualizar graficos de base de datos al cierre documental final, con el modelo congelado.
 - [ ] Evaluar manual de usuario solo si la primera release evidencia friccion real.
 - [ ] Considerar contador de palabras/caracteres (`RF-006`) solo con feedback estudiantil.
 - [ ] Considerar onboarding (`RF-022`) solo si los empty states no alcanzan.
-- [ ] Considerar indicador online/offline (`RF-024`) cuando exista sincronizacion, backup o integracion externa.
 
 ---
 
