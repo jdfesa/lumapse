@@ -1,8 +1,20 @@
 # Ideas UX/UI y Arquitectura — Roadmap de Inspiración
 
 > **Origen principal:** análisis de usememos/memos (ver [`memos-benchmark.md`](./memos-benchmark.md))  
+> **Contexto comparativo:** benchmark general de apps open-source (ver [`benchmark-open-source-notes-2026.md`](./benchmark-open-source-notes-2026.md))  
 > **Criterio de prioridad:** realismo académico — memos es una app madura, Lumapse es un MVP enfocado.  
 > **Fecha:** 2026-05-15
+
+---
+
+## Rol de este documento
+
+Este archivo no es un benchmark independiente. Es la **capa accionable**: toma ideas estudiadas en la
+carpeta de inspiración y las traduce a posibles mejoras para Lumapse, con horizonte temporal,
+riesgo e implementación tentativa.
+
+Memos fue el origen inicial del roadmap, pero el benchmark general permite revisar estas ideas contra
+otras referencias como Joplin, Markor, Notesnook o Logseq antes de convertirlas en backlog real.
 
 ---
 

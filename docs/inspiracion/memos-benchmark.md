@@ -5,7 +5,21 @@
 > **Demo público:** https://demo.usememos.com/  
 > **Versión analizada:** v0.28.0 (abril 2026)  
 > **Fecha de análisis:** 2026-05-15  
-> **Analista:** José David Sandoval
+> **Analista:** José David Sandoval  
+> **Rol en la carpeta:** deep dive de la referencia inicial. Ver también el benchmark general en
+> [`benchmark-open-source-notes-2026.md`](./benchmark-open-source-notes-2026.md).
+
+---
+
+## 0. Por qué este documento existe
+
+Memos fue el primer producto open-source estudiado como referencia para Lumapse. Por eso tiene un
+análisis propio: no porque sea una nota aislada, sino porque su filosofía de captura rápida, timeline,
+tags y simplicidad visual ayudó a ordenar varias decisiones tempranas de UX.
+
+Dentro de la carpeta de inspiración, este documento funciona como **deep dive**. La comparación contra
+otras apps se mantiene en [`benchmark-open-source-notes-2026.md`](./benchmark-open-source-notes-2026.md),
+donde Memos aparece junto a Joplin, Markor, Notesnook, Logseq, SiYuan, AppFlowy, Saber y Zettlr.
 
 ---
 
@@ -82,5 +96,7 @@ sin WiFi confiable, que necesita organizar apuntes por materia.
 
 ## 6. Referencia a ideas concretas
 
-Ver [`ideas-ux-roadmap.md`](./ideas-ux-roadmap.md) para el desglose de ideas
-aplicables con horizonte temporal (corto / mediano / largo plazo).
+Ver [`ideas-ux-roadmap.md`](./ideas-ux-roadmap.md) para el desglose de ideas aplicables con horizonte
+temporal (corto / mediano / largo plazo). Ver también
+[`benchmark-open-source-notes-2026.md`](./benchmark-open-source-notes-2026.md) para ubicar a Memos
+dentro del mapa general de referencias open-source.
