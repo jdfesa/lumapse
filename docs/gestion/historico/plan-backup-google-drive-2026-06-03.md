@@ -2,7 +2,7 @@
 
 > **Fecha:** 2026-06-02  
 > **Revision de alcance:** 2026-06-03
-> **Rama de trabajo:** `codex/backup-google-drive`
+> **Rama de trabajo:** `feature/backup-google-drive`
 > **Estado:** implementacion completada y archivada como evidencia de gestion  
 > **Motivo:** Lumapse es offline-first, pero el estudiante debe poder recuperar sus notas si pierde,
 > rompe o cambia el telefono. La propiedad del dato es parte del valor del producto.
@@ -681,7 +681,7 @@ Complejidad: muy alta.
 
 Completado hasta ahora:
 
-- [x] Rama de trabajo `codex/backup-google-drive`.
+- [x] Rama de trabajo `feature/backup-google-drive`.
 - [x] Contrato `backupFormatVersion = 1` con nombre canonico, `manifest.json`, politica de datos y
   helpers de nombres seguros.
 - [x] Generador ZIP local con `manifest.json`, `README.txt`, JSON estructurado y Markdown legible.
