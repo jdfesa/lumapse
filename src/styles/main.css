@@ -46,6 +46,136 @@
   object-fit: contain;
 }
 
+.app-header__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  max-width: min(220px, 56vw);
+}
+
+.app-logo__text {
+  color: var(--color-text-bright);
+  font-weight: 600;
+  font-size: 1.1rem;
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-header__logo-icon-btn {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: calc(var(--space-2) * -1);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-bright);
+  background: transparent;
+  cursor: pointer;
+  transition: background-color var(--transition), border-color var(--transition), color var(--transition);
+}
+
+.app-header__logo-icon-btn .app-logo__icon {
+  min-width: 0;
+}
+
+.app-header__logo-icon-btn:hover,
+.app-header__logo-icon-btn[aria-expanded="true"],
+.app-header__logo-icon-btn--active {
+  background-color: var(--color-surface-hover);
+  border-color: var(--color-border);
+}
+
+.app-header__logo-icon-btn--active {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.app-menu-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: min(var(--drawer-width), 88vw);
+  background-color: var(--color-surface);
+  z-index: 100;
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 8px 0 30px var(--color-shadow);
+}
+
+.app-menu-drawer.is-open {
+  transform: translateX(0);
+}
+
+.app-menu-drawer__header {
+  height: var(--header-height);
+  padding: 0 var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.app-menu-drawer__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.app-menu-drawer__item {
+  width: 100%;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--transition), border-color var(--transition), color var(--transition);
+}
+
+.app-menu-drawer__item:hover,
+.app-menu-drawer__item--active {
+  color: var(--color-text-bright);
+  background-color: var(--color-surface-hover);
+}
+
+.app-menu-drawer__item--active {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.app-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--color-backdrop);
+  z-index: 90;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.app-menu-backdrop.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .icon-btn {
   background: transparent;
   border: none;

@@ -14,7 +14,7 @@
  */
 export function renderAppShell() {
   return `
-    <!-- Drawer (Sidebar derecho para búsqueda y extras) -->
+    <!-- Drawer (Sidebar derecho para búsqueda y navegación de notas) -->
     <aside id="drawer" class="drawer">
       <div class="drawer__header">
         <div class="app-logo">
@@ -67,18 +67,6 @@ export function renderAppShell() {
           <span id="trash-count" class="drawer__trash-count" style="display:none">0</span>
         </button>
 
-        <!-- Backup manual externo -->
-        <button id="btn-backup" class="drawer__nav-btn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>
-          <span id="backup-btn-label">Backup</span>
-        </button>
-
-        <!-- Toggle Tema (RF-019) -->
-        <button id="btn-toggle-theme" class="drawer__nav-btn">
-          <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
-          <span id="theme-btn-label">Cambiar tema</span>
-        </button>
-
         <!-- Herramientas de Test (Temporales - Ocultas por defecto) -->
         <!--
         <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--color-border);">
@@ -96,13 +84,39 @@ export function renderAppShell() {
     </aside>
     <div id="drawer-backdrop" class="drawer-backdrop"></div>
 
+    <!-- App Menu (mantenimiento y configuración) -->
+    <aside id="app-menu-drawer" class="app-menu-drawer" aria-label="Opciones de Lumapse" aria-hidden="true">
+      <div class="app-menu-drawer__header">
+        <div class="app-logo">
+          <img src="icons/icon-144x144.png" width="24" height="24" alt="Lumapse" class="app-logo__icon" loading="eager">
+          Lumapse
+        </div>
+        <button id="btn-close-app-menu" class="icon-btn" title="Cerrar opciones de Lumapse" aria-label="Cerrar opciones de Lumapse">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="app-menu-drawer__content">
+        <button id="btn-backup" class="app-menu-drawer__item" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>
+          <span id="backup-btn-label">Backup</span>
+        </button>
+        <button id="btn-toggle-theme" class="app-menu-drawer__item" type="button">
+          <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"></svg>
+          <span id="theme-btn-label">Cambiar tema</span>
+        </button>
+      </div>
+    </aside>
+    <div id="app-menu-backdrop" class="app-menu-backdrop"></div>
+
     <!-- Main Content -->
     <main class="main-layout">
       <div class="feed-container">
         <header class="app-header">
-          <div class="app-logo">
-            <img src="icons/icon-144x144.png" width="24" height="24" alt="Lumapse" class="app-logo__icon" loading="eager">
-            Lumapse
+          <div class="app-header__brand">
+            <button id="btn-open-app-menu" class="app-header__logo-icon-btn" type="button" aria-controls="app-menu-drawer" aria-expanded="false" title="Opciones de Lumapse" aria-label="Opciones de Lumapse">
+              <img src="icons/icon-144x144.png" width="24" height="24" alt="" class="app-logo__icon" loading="eager" aria-hidden="true">
+            </button>
+            <span class="app-logo__text">Lumapse</span>
           </div>
           <div class="app-header__actions">
             <button id="btn-toggle-calendar" class="icon-btn" title="Calendario">
