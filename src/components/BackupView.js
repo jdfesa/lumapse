@@ -8,8 +8,11 @@
 import {
   BACKUP_FLOW_STATUS,
   createAndShareCurrentBackup,
+  dismissCurrentBackupReminder,
+  getCurrentBackupReminder,
   getExternalBackupReadiness,
 } from '../services/backup/BackupFlowService.js'
+import { BACKUP_REMINDER_REASONS } from '../services/backup/BackupReminderService.js'
 import { showErrorToast } from './Toast.js'
 import './BackupView.css'
 
@@ -19,7 +22,7 @@ const UI_STATE = Object.freeze({
   WARNING: 'warning',
   OFFLINE: 'offline',
   BUSY: 'busy',
-  SUCCESS: 'success',
+  SUCCESS: 'success', CANCELLED: 'cancelled',
   ERROR: 'error',
 })
 
@@ -63,9 +66,43 @@ function renderBackupIcon() {
   `
 }
 
+function reminderCopy(reminder) {
+  if (!reminder?.shouldShow) return null
+
+  if (reminder.reason === BACKUP_REMINDER_REASONS.BACKUP_DUE) {
+    return {
+      title: 'Backup pendiente',
+      message: `Pasaron ${reminder.daysSinceLastBackup} dias desde el ultimo backup. Podes crear uno ahora sin activar sincronizacion automatica.`,
+    }
+  }
+
+  return {
+    title: 'Primer backup pendiente',
+    message: 'Todavia no registramos un backup manual. Podes crear un ZIP externo para conservar tus notas fuera de la app.',
+  }
+}
+
+function renderBackupReminder(reminder) {
+  const copy = reminderCopy(reminder)
+  if (!copy) return ''
+
+  return `
+    <div class="backup-view__reminder" role="status">
+      <div class="backup-view__reminder-copy">
+        <p class="backup-view__reminder-title">${copy.title}</p>
+        <p class="backup-view__message">${copy.message}</p>
+      </div>
+      <button class="backup-view__reminder-dismiss js-btn-dismiss-backup-reminder" type="button" aria-label="Cerrar aviso de backup" title="Cerrar aviso de backup">
+        Cerrar aviso
+      </button>
+    </div>
+  `
+}
+
 function renderBackupView(state) {
   const busy = state.uiState === UI_STATE.BUSY
   const success = state.uiState === UI_STATE.SUCCESS
+  const cancelled = state.uiState === UI_STATE.CANCELLED
   const error = state.uiState === UI_STATE.ERROR
   const disabled = state.disabled || busy
   const countText = state.counts
@@ -88,14 +125,17 @@ function renderBackupView(state) {
         ${countText ? `<p class="backup-view__meta">Ultimo ZIP: ${countText}</p>` : ''}
       </div>
 
+      ${renderBackupReminder(state.reminder)}
+
       <div class="backup-view__actions">
-        <button class="backup-view__button js-btn-create-backup" ${disabled ? 'disabled' : ''}>
+        <button class="backup-view__button js-btn-create-backup" type="button" aria-label="${busy ? 'Preparando backup' : state.actionLabel}" title="${busy ? 'Preparando backup' : state.actionLabel}" ${disabled ? 'disabled' : ''}>
           ${busy ? 'Preparando backup...' : state.actionLabel}
         </button>
-        ${state.showRefresh ? '<button class="backup-view__button backup-view__button--secondary js-btn-refresh-backup">Actualizar estado</button>' : ''}
+        ${state.showRefresh ? '<button class="backup-view__button backup-view__button--secondary js-btn-refresh-backup" type="button" aria-label="Actualizar estado de backup" title="Actualizar estado de backup">Actualizar estado</button>' : ''}
       </div>
 
       ${success ? '<p class="backup-view__result backup-view__result--success">Backup entregado al selector del sistema. Verificá que aparezca en Google Drive o en el destino elegido.</p>' : ''}
+      ${cancelled ? '<p class="backup-view__result backup-view__result--neutral">Selector cerrado sin elegir destino. Podés volver a intentar cuando quieras.</p>' : ''}
       ${error ? `<p class="backup-view__result backup-view__result--error">${state.errorMessage}</p>` : ''}
 
       <p class="backup-view__note">
@@ -109,6 +149,8 @@ export class BackupView {
   constructor(container, deps = {}) {
     this.container = container
     this.getReadiness = deps.getReadiness || getExternalBackupReadiness
+    this.getReminder = deps.getReminder || getCurrentBackupReminder
+    this.dismissReminder = deps.dismissReminder || dismissCurrentBackupReminder
     this.createAndShare = deps.createAndShare || createAndShareCurrentBackup
     this.destroyed = false
     this.state = {
@@ -118,6 +160,7 @@ export class BackupView {
       actionLabel: 'Crear backup externo',
       disabled: true,
       showRefresh: false,
+      reminder: null,
     }
 
     this.handleClick = this.handleClick.bind(this)
@@ -140,6 +183,14 @@ export class BackupView {
     this.container.innerHTML = renderBackupView(this.state)
   }
 
+  async loadReminder() {
+    try {
+      return await this.getReminder()
+    } catch {
+      return null
+    }
+  }
+
   async refresh() {
     this.state = {
       ...this.state,
@@ -152,11 +203,15 @@ export class BackupView {
     this.render()
 
     try {
-      const readiness = await this.getReadiness()
+      const [readiness, reminder] = await Promise.all([
+        this.getReadiness(),
+        this.loadReminder(),
+      ])
       if (this.destroyed) return
       this.state = {
         ...statusCopy(readiness.status),
         networkState: readiness.networkState,
+        reminder,
         showRefresh: true,
       }
     } catch (error) {
@@ -168,6 +223,7 @@ export class BackupView {
         actionLabel: 'Crear backup externo',
         disabled: true,
         showRefresh: true,
+        reminder: this.state.reminder,
         errorMessage: error.message || 'Error desconocido.',
       }
     }
@@ -183,6 +239,7 @@ export class BackupView {
       message: 'Creando ZIP y preparando el selector de Android.',
       disabled: true,
       showRefresh: false,
+      reminder: this.state.reminder,
     }
     this.render()
 
@@ -193,13 +250,26 @@ export class BackupView {
         this.state = {
           ...statusCopy(result.status),
           networkState: result.networkState,
+          reminder: this.state.reminder,
           showRefresh: true,
         }
       } else if (result.status === BACKUP_FLOW_STATUS.BLOCKED_OFFLINE) {
         this.state = {
           ...statusCopy(result.status),
           networkState: result.networkState,
+          reminder: this.state.reminder,
           showRefresh: true,
+        }
+      } else if (result.status === BACKUP_FLOW_STATUS.CANCELLED) {
+        this.state = {
+          uiState: UI_STATE.CANCELLED,
+          title: 'Backup sin destino elegido',
+          message: result.message || 'El selector se cerró antes de guardar o compartir el ZIP.',
+          actionLabel: 'Intentar de nuevo',
+          disabled: false,
+          showRefresh: true,
+          networkState: result.networkState,
+          reminder: this.state.reminder,
         }
       } else {
         this.state = {
@@ -211,6 +281,7 @@ export class BackupView {
           showRefresh: true,
           networkState: result.networkState,
           counts: result.backup?.counts,
+          reminder: { shouldShow: false },
         }
       }
     } catch (error) {
@@ -224,6 +295,7 @@ export class BackupView {
         actionLabel: 'Reintentar backup',
         disabled: false,
         showRefresh: true,
+        reminder: this.state.reminder,
         errorMessage: message,
       }
       showErrorToast(message)
@@ -232,7 +304,30 @@ export class BackupView {
     this.render()
   }
 
+  async dismissBackupReminder() {
+    try {
+      await this.dismissReminder()
+    } catch {
+      // El cierre del aviso no debe bloquear la pantalla de backup.
+    }
+
+    if (this.destroyed) return
+    this.state = {
+      ...this.state,
+      reminder: {
+        ...(this.state.reminder || {}),
+        shouldShow: false,
+      },
+    }
+    this.render()
+  }
+
   async handleClick(event) {
+    if (event.target.closest('.js-btn-dismiss-backup-reminder')) {
+      await this.dismissBackupReminder()
+      return
+    }
+
     const createButton = event.target.closest('.js-btn-create-backup')
     if (createButton) {
       await this.createBackup(this.state.uiState === UI_STATE.WARNING)

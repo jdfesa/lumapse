@@ -5,9 +5,12 @@ vi.mock('../../../src/services/backup/BackupFlowService.js', () => ({
     READY: 'ready',
     BLOCKED_OFFLINE: 'blocked-offline',
     REQUIRES_WARNING: 'requires-warning',
+    CANCELLED: 'cancelled',
     SHARED: 'shared',
   },
   createAndShareCurrentBackup: vi.fn(),
+  dismissCurrentBackupReminder: vi.fn(),
+  getCurrentBackupReminder: vi.fn(),
   getExternalBackupReadiness: vi.fn(),
 }))
 
@@ -18,6 +21,8 @@ vi.mock('../../../src/components/Toast.js', () => ({
 import {
   BACKUP_FLOW_STATUS,
   createAndShareCurrentBackup,
+  dismissCurrentBackupReminder,
+  getCurrentBackupReminder,
   getExternalBackupReadiness,
 } from '../../../src/services/backup/BackupFlowService.js'
 import { showErrorToast } from '../../../src/components/Toast.js'
@@ -76,6 +81,13 @@ beforeEach(() => {
   document.body.innerHTML = ''
   vi.clearAllMocks()
   getExternalBackupReadiness.mockResolvedValue(WIFI_READINESS)
+  getCurrentBackupReminder.mockResolvedValue({
+    shouldShow: false,
+    reason: 'recent-backup',
+    daysSinceLastBackup: 2,
+    thresholdDays: 30,
+  })
+  dismissCurrentBackupReminder.mockReturnValue('2026-06-03T12:00:00.000Z')
   createAndShareCurrentBackup.mockResolvedValue({
     status: BACKUP_FLOW_STATUS.SHARED,
     networkState: WIFI_READINESS.networkState,
@@ -149,6 +161,90 @@ describe('BackupView', () => {
 
     expect(container.textContent).toContain('Backup preparado')
     expect(container.textContent).toContain('5 nota(s), 2 materia(s), 1 fecha(s)')
+
+    view.destroy()
+  })
+
+  it('muestra estado neutral si el usuario cierra el selector sin elegir destino', async () => {
+    createAndShareCurrentBackup.mockResolvedValue({
+      status: BACKUP_FLOW_STATUS.CANCELLED,
+      message: 'El selector se cerro sin elegir un destino para el backup.',
+      networkState: WIFI_READINESS.networkState,
+    })
+    const container = createContainer()
+    const view = new BackupView(container)
+
+    await view.init()
+    container.querySelector('.js-btn-create-backup').click()
+    await Promise.resolve()
+    await Promise.resolve()
+
+    expect(container.textContent).toContain('Backup sin destino elegido')
+    expect(container.textContent).toContain('Selector cerrado sin elegir destino')
+    expect(showErrorToast).not.toHaveBeenCalled()
+
+    view.destroy()
+  })
+
+  it('muestra recordatorio cuando nunca hubo backup previo', async () => {
+    getCurrentBackupReminder.mockResolvedValue({
+      shouldShow: true,
+      reason: 'never-backed-up',
+      daysSinceLastBackup: null,
+      thresholdDays: 30,
+    })
+    const container = createContainer()
+    const view = new BackupView(container)
+
+    await view.init()
+
+    expect(container.textContent).toContain('Primer backup pendiente')
+    expect(container.textContent).toContain('Todavia no registramos un backup manual')
+
+    view.destroy()
+  })
+
+  it('permite cerrar el recordatorio sin iniciar backup', async () => {
+    getCurrentBackupReminder.mockResolvedValue({
+      shouldShow: true,
+      reason: 'backup-due',
+      daysSinceLastBackup: 35,
+      thresholdDays: 30,
+    })
+    const container = createContainer()
+    const view = new BackupView(container)
+
+    await view.init()
+    container.querySelector('.js-btn-dismiss-backup-reminder').click()
+    await Promise.resolve()
+    await Promise.resolve()
+
+    expect(dismissCurrentBackupReminder).toHaveBeenCalledTimes(1)
+    expect(createAndShareCurrentBackup).not.toHaveBeenCalled()
+    expect(container.textContent).not.toContain('Backup pendiente')
+
+    view.destroy()
+  })
+
+  it('oculta el recordatorio despues de crear un backup exitoso', async () => {
+    getCurrentBackupReminder.mockResolvedValue({
+      shouldShow: true,
+      reason: 'backup-due',
+      daysSinceLastBackup: 35,
+      thresholdDays: 30,
+    })
+    const container = createContainer()
+    const view = new BackupView(container)
+
+    await view.init()
+    expect(container.textContent).toContain('Backup pendiente')
+
+    container.querySelector('.js-btn-create-backup').click()
+    await Promise.resolve()
+    await Promise.resolve()
+
+    expect(container.textContent).toContain('Backup preparado')
+    expect(container.textContent).not.toContain('Backup pendiente')
 
     view.destroy()
   })
