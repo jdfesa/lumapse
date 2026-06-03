@@ -301,11 +301,11 @@ documentos/seleccion de destino.
 |---|---|
 | `src/services/backup/BackupFormat.js` | Constantes, version, nombres seguros, paths, manifest |
 | `src/services/backup/BackupDataSource.js` | Leer notas, materias/secciones y fechas academicas desde SQLite |
-| `src/services/backup/BackupZipService.js` | Construir ZIP con JSZip y devolver `Blob`/`ArrayBuffer` |
+| `src/services/backup/BackupZipService.js` | Construir ZIP v1 con escritor liviano propio y devolver `Blob`/`ArrayBuffer` |
 | `src/services/backup/BackupNetworkService.js` | Traducir estado de red a `wifi`, `cellular`, `offline`, `unknown` |
 | `src/services/backup/BackupShareService.js` | Guardar ZIP en cache y abrir share sheet |
 | `src/services/backup/BackupReminderService.js` | Calcular si corresponde recordar backup por antiguedad |
-| `src/services/ExportService.js` | Mantener fachada publica o delegar al nuevo servicio de backup |
+| `src/services/ExportService.js` | Fachada web/legada delegada al nuevo servicio de backup v1 |
 
 ### 4.4 Secuencia tecnica
 
@@ -328,7 +328,7 @@ UI Backup
 | Error | Respuesta de producto |
 |---|---|
 | No hay datos para respaldar | Mostrar "Todavia no hay notas, materias ni fechas para respaldar." |
-| JSZip falla | Mostrar error local y no abrir selector |
+| Generador ZIP falla | Mostrar error local y no abrir selector |
 | Filesystem falla | Mostrar "No se pudo preparar el archivo temporal." |
 | Share no disponible | Ofrecer fallback web/local si corresponde |
 | Drive no aparece | Indicar que se puede guardar en otro destino o revisar instalacion/configuracion de Drive |
@@ -695,19 +695,32 @@ Completado hasta ahora:
 - [x] Servicio de decision para recordatorio de backup vencido a los 30 dias.
 - [x] Vista `Backup` accesible desde el drawer, con estados WiFi, advertencia, offline, exito, error y
   refresco de red.
+- [x] Persistencia local de `lastBackupCreatedAt` y `lastBackupReminderDismissedAt`.
+- [x] Recordatorio local de 30 dias visible en la UI de `Backup`, sin iniciar backup automatico.
+- [x] `ExportService.js` mantenido como fachada web/legada, delegando el contenido al backup canonico v1.
+- [x] Acceso `Backup` mantenido en el drawer durante validacion; moverlo a `Ajustes/Acerca de` queda para cuando exista esa pantalla.
 - [x] Ocultar el composer en la vista `Backup` y evitar que `Entrada` quede marcada como activa.
 - [x] Tests unitarios focales de servicios, store y UI de backup.
 - [x] Suite completa de tests, lint y build ejecutados en esta rama.
+- [x] Presupuesto de bundle ajustado a un limite sano para esta etapa: JS 220 kB gzip,
+  CSS 25 kB gzip, HTML 5 kB gzip y total 250 kB gzip.
+- [x] Generador ZIP de runtime migrado a `BackupZipArchive` liviano para evitar sumar JSZip al
+  bundle principal.
+- [x] Cancelar/cerrar el selector nativo se trata como estado neutral, no como error de backup.
+- [x] Verificacion manual local del ZIP generado con `unzip`: rutas, Markdown, JSON y
+  `manifest.json` correctos.
 
 Pendiente antes de merge:
 
 - [ ] Validar manualmente en Android real con WiFi, datos moviles y modo avion.
 - [ ] Confirmar que Google Drive aparece como destino del selector o documentar fallback disponible.
-- [ ] Verificar manualmente el ZIP generado: rutas, Markdown, JSON y `manifest.json`.
-- [ ] Integrar persistencia de `lastBackupCreatedAt` y `lastBackupReminderDismissedAt`.
-- [ ] Mostrar recordatorio de 30 dias en UI sin iniciar backup automatico.
-- [ ] Decidir si `ExportService.js` debe delegar al nuevo servicio de backup o mantenerse separado.
-- [ ] Definir si el acceso `Backup` queda en el drawer o se mueve a una futura pantalla de ajustes.
+- [x] Verificar manualmente el ZIP generado: rutas, Markdown, JSON y `manifest.json`.
+- [x] Integrar persistencia de `lastBackupCreatedAt` y `lastBackupReminderDismissedAt`.
+- [x] Mostrar recordatorio de 30 dias en UI sin iniciar backup automatico.
+- [x] Decidir si `ExportService.js` debe delegar al nuevo servicio de backup o mantenerse separado:
+  delega al backup canonico v1 y conserva solo la descarga web como compatibilidad.
+- [x] Definir si el acceso `Backup` queda en el drawer o se mueve a una futura pantalla de ajustes:
+  queda en el drawer para validacion de esta rama.
 
 ---
 
