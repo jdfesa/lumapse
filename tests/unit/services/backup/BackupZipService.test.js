@@ -179,4 +179,13 @@ describe('BackupZipService', () => {
       content: '',
     }))).toContain('# Resumen')
   })
+
+  it('agrega encabezado de titulo cuando el contenido no lo incluye', () => {
+    const markdown = noteToMarkdown(note({
+      title: 'Resumen',
+      content: 'Apuntes de la clase.',
+    }))
+
+    expect(markdown).toContain('\n# Resumen\n\nApuntes de la clase.\n')
+  })
 })

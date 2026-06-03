@@ -5,13 +5,13 @@
 // normalizados, sin depender de UI, Android ni SQLite directamente.
 // =============================================================
 
-import JSZip from 'jszip'
 import {
   buildBackupManifest,
   createBackupFilename,
   createUniqueFilename,
   slugifyBackupPath,
 } from './BackupFormat.js'
+import { createZipContent } from './BackupZipArchive.js'
 
 export const BACKUP_MIME_TYPE = 'application/zip'
 
@@ -76,15 +76,36 @@ function buildSubjectPath(subject, subjectsById) {
   return [slugifyBackupPath(subject.name)]
 }
 
+function singleLineValue(value) {
+  return String(value ?? '').replace(/\s+/g, ' ').trim()
+}
+
 function frontMatterLine(key, value) {
-  return `${key}: ${value ?? ''}`
+  return `${key}: ${singleLineValue(value)}`
+}
+
+function markdownTitle(title) {
+  return singleLineValue(title) || 'Sin titulo'
+}
+
+function stripHeadingMarker(line) {
+  return line.replace(/^\s{0,3}#{1,6}\s+/, '').trim()
+}
+
+function startsWithTitleHeading(content, title) {
+  const firstLine = content.split('\n').find(line => line.trim())
+  if (!firstLine || !/^\s{0,3}#{1,6}\s+/.test(firstLine)) return false
+
+  return stripHeadingMarker(firstLine) === markdownTitle(title)
 }
 
 export function noteToMarkdown(note) {
+  const title = markdownTitle(note.title)
+  const content = (note.content || '').trim()
   const lines = [
     '---',
     frontMatterLine('id', note.id),
-    frontMatterLine('title', note.title),
+    frontMatterLine('title', title),
     frontMatterLine('subjectId', note.subjectId),
     frontMatterLine('createdAt', note.createdAt),
     frontMatterLine('updatedAt', note.updatedAt),
@@ -92,13 +113,17 @@ export function noteToMarkdown(note) {
     '',
   ]
 
-  const content = (note.content || '').trim()
-  lines.push(content || `# ${note.title}`)
+  if (!content || !startsWithTitleHeading(content, title)) {
+    lines.push(`# ${title}`)
+    if (content) lines.push('', content)
+  } else {
+    lines.push(content)
+  }
 
   return `${lines.join('\n').trimEnd()}\n`
 }
 
-function addMarkdownNotes(zip, notes, subjects) {
+function addMarkdownNotes(zipFiles, notes, subjects) {
   const subjectsById = new Map(subjects.map(subject => [subject.id, subject]))
   const usedNamesByDirectory = new Map()
   const paths = []
@@ -113,7 +138,7 @@ function addMarkdownNotes(zip, notes, subjects) {
 
     const filename = createUniqueFilename(note.title, usedNamesByDirectory.get(directory))
     const path = `${directory}/${filename}`
-    zip.file(path, noteToMarkdown(note))
+    zipFiles.push({ path, content: noteToMarkdown(note) })
     paths.push(path)
   }
 
@@ -141,17 +166,7 @@ function createReadmeText(manifest) {
   ].join('\n')
 }
 
-/**
- * Genera un ZIP de backup desde datos ya leidos por la app.
- * @param {object} data Datos exportables
- * @param {object[]} data.subjects Materias y secciones
- * @param {object[]} data.notes Notas
- * @param {object[]} data.academicEvents Fechas academicas
- * @param {object} options Opciones de generacion
- * @param {Date|string|number} options.createdAt Fecha de creacion
- * @param {'blob'|'arraybuffer'|'base64'} options.type Tipo de salida JSZip
- * @returns {Promise<{content: Blob|ArrayBuffer|string, contentType: string, filename: string, manifest: object}>}
- */
+/** Genera un ZIP de backup desde datos ya leidos por la app. */
 export async function generateBackupZip(data = {}, options = {}) {
   const subjects = normalizeSubjects(data.subjects)
   const notes = normalizeNotes(data.notes)
@@ -163,7 +178,7 @@ export async function generateBackupZip(data = {}, options = {}) {
 
   const createdAt = options.createdAt || new Date()
   const filename = options.filename || createBackupFilename(createdAt)
-  const zip = new JSZip()
+  const zipFiles = []
   const files = [
     'data/subjects.json',
     'data/notes.json',
@@ -172,10 +187,12 @@ export async function generateBackupZip(data = {}, options = {}) {
     'manifest.json',
   ]
 
-  zip.file('data/subjects.json', toPrettyJson(subjects))
-  zip.file('data/notes.json', toPrettyJson(notes))
-  zip.file('data/academic-events.json', toPrettyJson(academicEvents))
-  files.push(...addMarkdownNotes(zip, notes, subjects))
+  zipFiles.push(
+    { path: 'data/subjects.json', content: toPrettyJson(subjects) },
+    { path: 'data/notes.json', content: toPrettyJson(notes) },
+    { path: 'data/academic-events.json', content: toPrettyJson(academicEvents) }
+  )
+  files.push(...addMarkdownNotes(zipFiles, notes, subjects))
 
   const manifest = buildBackupManifest({
     createdAt,
@@ -188,12 +205,15 @@ export async function generateBackupZip(data = {}, options = {}) {
     files,
   })
 
-  zip.file('manifest.json', toPrettyJson(manifest))
-  zip.file('README.txt', createReadmeText(manifest))
+  zipFiles.push(
+    { path: 'manifest.json', content: toPrettyJson(manifest) },
+    { path: 'README.txt', content: createReadmeText(manifest) }
+  )
 
-  const content = await zip.generateAsync({
+  const content = createZipContent(zipFiles, {
+    createdAt,
     type: options.type || 'blob',
-    compression: 'DEFLATE',
+    mimeType: BACKUP_MIME_TYPE,
   })
 
   return {
