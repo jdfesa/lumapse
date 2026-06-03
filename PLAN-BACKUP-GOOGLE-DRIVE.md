@@ -712,8 +712,11 @@ Completado hasta ahora:
 
 Pendiente antes de merge:
 
-- [ ] Validar manualmente en Android real con WiFi, datos moviles y modo avion.
-- [ ] Confirmar que Google Drive aparece como destino del selector o documentar fallback disponible.
+- [x] Validar manualmente en Android real con WiFi, datos moviles y modo avion:
+  backup creado correctamente desde la APK desplegada.
+- [x] Confirmar que Google Drive aparece como destino del selector o documentar fallback disponible:
+  Google Drive no estaba instalado en el dispositivo; el backup se guardo correctamente como `.zip`
+  usando gestor de archivos/share sheet como fallback.
 - [x] Verificar manualmente el ZIP generado: rutas, Markdown, JSON y `manifest.json`.
 - [x] Integrar persistencia de `lastBackupCreatedAt` y `lastBackupReminderDismissedAt`.
 - [x] Mostrar recordatorio de 30 dias en UI sin iniciar backup automatico.
