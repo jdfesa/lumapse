@@ -62,3 +62,38 @@ describe('NoteEditor maintenance views', () => {
     editor.destroy()
   })
 })
+
+describe('NoteEditor subject picker', () => {
+  it('usa un picker propio en lugar de un select nativo', () => {
+    const editor = createEditor()
+
+    expect(editor.container.querySelector('select#composer-subject-select')).toBeNull()
+    expect(editor.container.querySelector('input#composer-subject-select[type="hidden"]')).not.toBeNull()
+    expect(editor.container.querySelector('#composer-subject-trigger')?.textContent).toContain('Entrada')
+
+    editor.destroy()
+  })
+
+  it('actualiza el subjectId oculto al elegir una seccion', () => {
+    const editor = createEditor()
+    editor.updateSubjectSelect({
+      tree: [{
+        id: 'subj-lit',
+        name: 'Literatura Argentina',
+        color: '#818cf8',
+        children: [{ id: 'sec-borges', name: 'Borges' }],
+      }],
+    })
+
+    editor.container.querySelector('#composer-subject-trigger').click()
+    editor.container
+      .querySelector('.composer__subject-option[data-subject-id="sec-borges"]')
+      .click()
+
+    expect(editor.container.querySelector('#composer-subject-select').value).toBe('sec-borges')
+    expect(editor.container.querySelector('#composer-subject-label').textContent).toBe('Borges')
+    expect(editor.container.querySelector('#composer-subject-menu').hidden).toBe(true)
+
+    editor.destroy()
+  })
+})

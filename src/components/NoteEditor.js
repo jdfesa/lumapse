@@ -6,6 +6,7 @@
 import * as NoteStore from '../store/NoteStore.js';
 import { SlashCommandHandler } from './SlashCommandHandler.js';
 import { EditorPopup } from './EditorPopup.js';
+import { SubjectPicker } from './SubjectPicker.js';
 import './NoteEditor.css';
 
 export class NoteEditor {
@@ -17,6 +18,7 @@ export class NoteEditor {
     this.handleInput = this.handleInput.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.subjectPicker = null;
     
     // Render inicial
     this.render();
@@ -49,9 +51,23 @@ export class NoteEditor {
         ></textarea>
         <div class="composer__footer">
           <div class="composer__tools">
-            <select id="composer-subject-select" class="composer__subject-select" title="Materia">
-              <option value="">Entrada</option>
-            </select>
+            <div class="composer__subject-picker" id="composer-subject-picker">
+              <input type="hidden" id="composer-subject-select" value="">
+              <button
+                id="composer-subject-trigger"
+                class="composer__subject-trigger"
+                type="button"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-controls="composer-subject-menu"
+                title="Materia"
+              >
+                <span class="composer__subject-trigger-dot"></span>
+                <span id="composer-subject-label" class="composer__subject-trigger-label">Entrada</span>
+                <svg class="composer__subject-trigger-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div id="composer-subject-menu" class="composer__subject-menu" role="listbox" aria-label="Materia" hidden></div>
+            </div>
             <button class="composer__tool-btn composer__plus-btn" title="Insertar" id="composer-plus-btn">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
@@ -76,6 +92,8 @@ export class NoteEditor {
     this.container.querySelector('#btn-exit-focus').addEventListener('click', () => {
       this.exitFocusMode();
     });
+
+    this.subjectPicker = new SubjectPicker(this.container.querySelector('#composer-subject-picker'));
 
     // Botón +: menú de inserción
     this.setupPlusButton(input, composer);
@@ -222,12 +240,11 @@ export class NoteEditor {
 
   async handleSave() {
     const input = this.container.querySelector('#composer-input');
-    const subjectSelect = this.container.querySelector('#composer-subject-select');
     const content = input.value.trim();
     
     if (!content) return;
 
-    const subjectId = subjectSelect.value || null;
+    const subjectId = this.subjectPicker?.getValue() || null;
 
     if (this.currentEditId) {
       // Estamos editando
@@ -286,7 +303,7 @@ export class NoteEditor {
   onStateChange(state) {
     const { activeNoteId, notes, subjects } = state;
 
-    // Actualizar opciones del select de materias
+    // Actualizar opciones del picker de materias
     this.updateSubjectSelect(subjects);
     
     // Si se seleccionó una nota (para editar)
@@ -298,10 +315,7 @@ export class NoteEditor {
         input.value = noteToEdit.content;
         
         // Pre-seleccionar la materia de la nota
-        const subjectSelect = this.container.querySelector('#composer-subject-select');
-        if (subjectSelect) {
-          subjectSelect.value = noteToEdit.subjectId || '';
-        }
+        this.subjectPicker?.setValue(noteToEdit.subjectId || '');
         
         // Trigger resize & btn state
         input.dispatchEvent(new window.Event('input'));
@@ -323,38 +337,21 @@ export class NoteEditor {
       this.container.querySelector('#btn-save-note').disabled = true;
     }
 
-    // Sincronizar el select con la materia activa si NO estamos editando una nota
+    // Sincronizar el picker con la materia activa si NO estamos editando una nota
     if (!activeNoteId && !this.currentEditId) {
-      const select = this.container.querySelector('#composer-subject-select');
-      if (select && select.value !== (state.activeSubjectId || '')) {
-        select.value = state.activeSubjectId || '';
+      const nextSubjectId = state.activeSubjectId || '';
+      if (this.subjectPicker?.getValue() !== nextSubjectId) {
+        this.subjectPicker?.setValue(nextSubjectId);
       }
     }
   }
 
   /**
-   * Actualiza las opciones del <select> de materias en el composer.
+   * Actualiza las opciones del selector de materias en el composer.
    * @param {object} subjectsData Árbol de materias del store
    */
   updateSubjectSelect(subjectsData) {
-    const select = this.container.querySelector('#composer-subject-select');
-    if (!select || !subjectsData || !subjectsData.tree) return;
-
-    const currentValue = select.value;
-
-    let options = '<option value="">Entrada</option>';
-    for (const subject of subjectsData.tree) {
-      // En mobile native UI, los estilos en <option> son ignorados, así que removemos el bullet ●
-      options += `<option value="${subject.id}">${this.escapeHtml(subject.name)}</option>`;
-      // Agregar secciones hijas indentadas
-      for (const child of (subject.children || [])) {
-        options += `<option value="${child.id}">&nbsp;&nbsp;↳ ${this.escapeHtml(child.name)}</option>`;
-      }
-    }
-
-    select.innerHTML = options;
-    // Restaurar selección previa si sigue siendo válida
-    select.value = currentValue;
+    this.subjectPicker?.update(subjectsData);
   }
 
   escapeHtml(text) {
@@ -366,6 +363,7 @@ export class NoteEditor {
     if (this.unsubscribe) this.unsubscribe();
     if (this.slashHandler) this.slashHandler.destroy();
     if (this.plusPopup) this.plusPopup.destroy();
+    if (this.subjectPicker) this.subjectPicker.destroy();
     this.container.innerHTML = '';
   }
 }

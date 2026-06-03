@@ -43,7 +43,9 @@
 
 .composer__tools {
   display: flex;
+  align-items: center;
   gap: var(--space-2);
+  min-width: 0;
 }
 
 .composer__tool-btn {
@@ -92,7 +94,18 @@
 }
 
 /* Subject selector in composer toolbar (Paso 9) */
-.composer__subject-select {
+.composer__subject-picker {
+  position: relative;
+  min-width: 0;
+}
+
+.composer__subject-trigger {
+  height: 32px;
+  width: min(170px, 46vw);
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: var(--space-2);
   background: var(--color-bg);
   border: 1px solid var(--color-border);
   color: var(--color-text);
@@ -102,17 +115,121 @@
   border-radius: var(--radius-sm);
   outline: none;
   cursor: pointer;
-  max-width: 160px;
-  transition: border-color var(--transition);
+  transition: background-color var(--transition), border-color var(--transition), color var(--transition);
 }
 
-.composer__subject-select:focus {
+.composer__subject-trigger:hover,
+.composer__subject-trigger:focus-visible,
+.composer__subject-trigger[aria-expanded="true"] {
+  background: var(--color-surface-hover);
   border-color: var(--color-accent);
 }
 
-.composer__subject-select option {
+.composer__subject-trigger-dot,
+.composer__subject-option-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--subject-color, var(--color-accent));
+}
+
+.composer__subject-trigger--inbox .composer__subject-trigger-dot,
+.composer__subject-option--inbox .composer__subject-option-dot {
+  background: transparent;
+  border: 1px solid var(--color-accent);
+}
+
+.composer__subject-trigger-label,
+.composer__subject-option-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.composer__subject-trigger-icon {
+  color: var(--color-text-muted);
+  transition: transform var(--transition);
+}
+
+.composer__subject-trigger[aria-expanded="true"] .composer__subject-trigger-icon {
+  transform: rotate(180deg);
+}
+
+.composer__subject-menu {
+  position: absolute;
+  left: 0;
+  top: calc(100% + var(--space-2));
+  z-index: 80;
+  width: min(280px, calc(100vw - 48px));
+  max-height: min(248px, 42vh);
+  padding: var(--space-2);
   background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 16px 36px var(--color-shadow);
+  overflow-y: auto;
+}
+
+.composer__subject-menu[hidden] {
+  display: none;
+}
+
+.composer__subject-option {
+  position: relative;
+  width: 100%;
+  min-height: 34px;
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
   color: var(--color-text);
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--transition), border-color var(--transition), color var(--transition);
+}
+
+.composer__subject-option:hover,
+.composer__subject-option:focus-visible {
+  background: var(--color-surface-hover);
+  color: var(--color-text-bright);
+  outline: none;
+}
+
+.composer__subject-option[aria-selected="true"] {
+  color: var(--color-accent);
+  background: var(--color-accent-dim);
+  border-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
+}
+
+.composer__subject-option--child {
+  padding-left: calc(var(--space-6) + var(--space-2));
+  min-height: 32px;
+  color: var(--color-text-muted);
+}
+
+.composer__subject-option--child::before {
+  content: "";
+  position: absolute;
+  left: var(--space-3);
+  top: 0;
+  width: var(--space-3);
+  height: 50%;
+  border-left: 1px solid var(--color-border-hover);
+  border-bottom: 1px solid var(--color-border-hover);
+  border-bottom-left-radius: var(--radius-sm);
+}
+
+@media (max-width: 420px) {
+  .composer__subject-trigger {
+    width: min(145px, 42vw);
+  }
 }
 
 /* ============================================================
