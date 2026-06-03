@@ -1,0 +1,121 @@
+.backup-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-5) 0;
+}
+
+.backup-view__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.backup-view__icon {
+  flex: 0 0 auto;
+  color: var(--color-accent);
+}
+
+.backup-view__heading {
+  min-width: 0;
+}
+
+.backup-view__eyebrow {
+  margin: 0 0 var(--space-1);
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.backup-view__title {
+  margin: 0;
+  color: var(--color-text-bright);
+  font-size: 1.25rem;
+  font-weight: 650;
+}
+
+.backup-view__status {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+}
+
+.backup-view__status-title {
+  margin: 0;
+  color: var(--color-text-bright);
+  font-weight: 600;
+}
+
+.backup-view__message,
+.backup-view__meta,
+.backup-view__note,
+.backup-view__result {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.backup-view__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.backup-view__button {
+  min-height: 38px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-sm);
+  color: var(--color-surface);
+  background-color: var(--color-accent);
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity var(--transition), background-color var(--transition), color var(--transition);
+}
+
+.backup-view__button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.backup-view__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.backup-view__button--secondary {
+  color: var(--color-text);
+  background-color: transparent;
+  border-color: var(--color-border);
+}
+
+.backup-view__result {
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+}
+
+.backup-view__result--success {
+  color: #22c55e;
+  background-color: rgba(34, 197, 94, 0.1);
+}
+
+.backup-view__result--error {
+  color: #f87171;
+  background-color: rgba(248, 113, 113, 0.1);
+}
+
+@media (max-width: 560px) {
+  .backup-view__actions {
+    flex-direction: column;
+  }
+
+  .backup-view__button {
+    width: 100%;
+  }
+}

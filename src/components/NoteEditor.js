@@ -23,10 +23,10 @@ export class NoteEditor {
     
     // Suscribirse a cambios
     this.unsubscribe = NoteStore.subscribe((state) => {
-      // Ocultar composer en modo papelera
+      // Ocultar composer en vistas de mantenimiento
       const composer = this.container.querySelector('.composer');
       if (composer) {
-        composer.style.display = state.viewMode === 'trash' ? 'none' : '';
+        composer.style.display = ['trash', 'backup'].includes(state.viewMode) ? 'none' : '';
       }
       this.onStateChange(state);
     });

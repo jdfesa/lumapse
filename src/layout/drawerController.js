@@ -83,6 +83,18 @@ export function initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS }) {
     closeDrawer()
   })
 
+  // --- Backup manual externo ---
+  const btnBackup = document.getElementById('btn-backup')
+
+  btnBackup.addEventListener('click', () => {
+    showingArchived = false
+    archivedLabel.textContent = 'Ver archivadas'
+    btnArchiveToggle.classList.remove('drawer__nav-btn--active')
+    NoteStore.setViewBackup()
+    updateSubjectActiveState(null)
+    closeDrawer()
+  })
+
   // --- Subjects Navigation (Paso 9) ---
   const { updateSubjectActiveState, renderSubjects } = initSubjects({
     NoteStore,
@@ -108,6 +120,7 @@ export function initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS }) {
     }
     // Actualizar estado activo del botón papelera
     btnTrash.classList.toggle('drawer__nav-btn--active', state.viewMode === 'trash')
+    btnBackup.classList.toggle('drawer__nav-btn--active', state.viewMode === 'backup')
   })
 
   // --- Theme Toggle (RF-019) ---

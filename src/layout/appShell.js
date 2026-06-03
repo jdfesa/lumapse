@@ -67,6 +67,12 @@ export function renderAppShell() {
           <span id="trash-count" class="drawer__trash-count" style="display:none">0</span>
         </button>
 
+        <!-- Backup manual externo -->
+        <button id="btn-backup" class="drawer__nav-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>
+          <span id="backup-btn-label">Backup</span>
+        </button>
+
         <!-- Toggle Tema (RF-019) -->
         <button id="btn-toggle-theme" class="drawer__nav-btn">
           <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>

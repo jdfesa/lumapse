@@ -8,6 +8,7 @@ import * as MarkdownService from '../services/MarkdownService.js';
 import { formatRelativeDate, escapeHtml, findSubject, buildMoveMenu } from './NoteCardRenderer.js';
 import { createFeedActionRouter } from './FeedActionRouter.js';
 import { renderTrashView } from './TrashView.js';
+import { BackupView } from './BackupView.js';
 import { confirmDialog } from './ConfirmDialog.js';
 import { VirtualFeed } from './VirtualFeed.js';
 import { renderClearNoteStatusButton, renderNoteStatusBadge, renderNoteStatusMenuItems } from './NoteStatus.js';
@@ -122,6 +123,7 @@ export class NoteList {
     this.container = containerElement;
     this.unsubscribe = null;
     this.virtualFeed = null;
+    this.backupView = null;
     this.currentSubjectsData = null;
     
     // Bindings
@@ -150,8 +152,13 @@ export class NoteList {
     this.unsubscribe = NoteStore.subscribe((state) => {
       if (state.viewMode === 'trash') {
         this.destroyVirtualFeed();
+        this.destroyBackupView();
         renderTrashView(this.feedContainer);
+      } else if (state.viewMode === 'backup') {
+        this.destroyVirtualFeed();
+        this.renderBackupView();
       } else {
+        this.destroyBackupView();
         const notesToRender = NoteStore.getFilteredNotes();
         this.renderNotes(notesToRender, state);
       }
@@ -220,6 +227,21 @@ export class NoteList {
       this.virtualFeed.destroy();
       this.virtualFeed = null;
     }
+  }
+
+  destroyBackupView() {
+    if (this.backupView) {
+      this.backupView.destroy();
+      this.backupView = null;
+    }
+  }
+
+  renderBackupView() {
+    if (this.backupView) return;
+
+    this.feedContainer.innerHTML = '';
+    this.backupView = new BackupView(this.feedContainer);
+    this.backupView.init();
   }
 
   renderNotes(notes, state) {
@@ -331,6 +353,7 @@ export class NoteList {
   destroy() {
     if (this.unsubscribe) this.unsubscribe();
     this.destroyVirtualFeed();
+    this.destroyBackupView();
     document.removeEventListener('click', this.handleGlobalClick);
     this.container.innerHTML = '';
   }

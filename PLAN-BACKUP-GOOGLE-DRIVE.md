@@ -267,7 +267,7 @@ Reglas para carpetas y archivos:
 
 ## 4. Diseno tecnico propuesto
 
-### 4.1 Estado actual del repo
+### 4.1 Estado de partida de la rama
 
 - `jszip` ya esta instalado.
 - `src/services/ExportService.js` existe, pero hoy dispara una descarga web de notas Markdown.
@@ -481,7 +481,8 @@ Regla de producto:
 
 UI sugerida:
 
-- Ubicacion: pantalla `Backup` dentro de `Acerca de` o `Ajustes`.
+- Ubicacion inicial: acceso `Backup` en el drawer para llegar rapido durante la validacion de esta
+  rama. Mas adelante puede moverse a `Acerca de` o `Ajustes` si esa navegacion existe.
 - Texto no invasivo:
   - Offline: "Sin conexion. Tus notas siguen disponibles. El backup en nube requiere conexion."
   - Celular: "Con datos moviles. Podés crear backup, pero puede consumir datos."
@@ -676,7 +677,41 @@ Complejidad: muy alta.
 
 ---
 
-## 10. Fuentes tecnicas consultadas
+## 10. Avance de esta rama (2026-06-03)
+
+Completado hasta ahora:
+
+- [x] Rama de trabajo `codex/backup-google-drive`.
+- [x] Contrato `backupFormatVersion = 1` con nombre canonico, `manifest.json`, politica de datos y
+  helpers de nombres seguros.
+- [x] Generador ZIP local con `manifest.json`, `README.txt`, JSON estructurado y Markdown legible.
+- [x] Data source desde SQLite para materias/secciones, notas y fechas academicas actuales.
+- [x] Servicio de backup actual (`BackupService`) que arma el ZIP desde los datos reales.
+- [x] Servicio de conectividad de producto para WiFi, datos moviles, red desconocida y offline.
+- [x] Servicio nativo de conectividad con `@capacitor/network`.
+- [x] Instalacion y sync de `@capacitor/network`, `@capacitor/filesystem` y `@capacitor/share`.
+- [x] Servicio de share/cache para escribir el ZIP temporal y abrir el selector nativo.
+- [x] Orquestador del flujo manual: red -> ZIP -> cache -> share sheet.
+- [x] Servicio de decision para recordatorio de backup vencido a los 30 dias.
+- [x] Vista `Backup` accesible desde el drawer, con estados WiFi, advertencia, offline, exito, error y
+  refresco de red.
+- [x] Ocultar el composer en la vista `Backup` y evitar que `Entrada` quede marcada como activa.
+- [x] Tests unitarios focales de servicios, store y UI de backup.
+- [x] Suite completa de tests, lint y build ejecutados en esta rama.
+
+Pendiente antes de merge:
+
+- [ ] Validar manualmente en Android real con WiFi, datos moviles y modo avion.
+- [ ] Confirmar que Google Drive aparece como destino del selector o documentar fallback disponible.
+- [ ] Verificar manualmente el ZIP generado: rutas, Markdown, JSON y `manifest.json`.
+- [ ] Integrar persistencia de `lastBackupCreatedAt` y `lastBackupReminderDismissedAt`.
+- [ ] Mostrar recordatorio de 30 dias en UI sin iniciar backup automatico.
+- [ ] Decidir si `ExportService.js` debe delegar al nuevo servicio de backup o mantenerse separado.
+- [ ] Definir si el acceso `Backup` queda en el drawer o se mueve a una futura pantalla de ajustes.
+
+---
+
+## 11. Fuentes tecnicas consultadas
 
 - Capacitor Network API: https://capacitorjs.com/docs/apis/network
 - Capacitor Share API: https://capacitorjs.com/docs/apis/share
@@ -687,7 +722,7 @@ Complejidad: muy alta.
 
 ---
 
-## 11. Conclusion
+## 12. Conclusion
 
 Esta feature es critica para que Lumapse no secuestre las notas del estudiante. El camino profesional
 no es abandonar SQLite ni prometer sync prematura, sino agregar una capa de backup/export robusta:

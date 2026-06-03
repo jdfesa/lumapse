@@ -8,6 +8,7 @@ vi.mock('../../../src/store/NoteStore.js', () => ({
 }))
 
 import { NoteEditor } from '../../../src/components/NoteEditor.js'
+import * as NoteStore from '../../../src/store/NoteStore.js'
 
 function createEditor() {
   const container = document.createElement('div')
@@ -40,6 +41,23 @@ describe('NoteEditor title extraction', () => {
     const editor = createEditor()
 
     expect(editor.extractTitle('1. Repasar matrices')).toBe('Repasar matrices')
+
+    editor.destroy()
+  })
+})
+
+describe('NoteEditor maintenance views', () => {
+  it('oculta el composer en la vista backup', () => {
+    let subscriber
+    NoteStore.subscribe.mockImplementationOnce((callback) => {
+      subscriber = callback
+      return vi.fn()
+    })
+
+    const editor = createEditor()
+    subscriber({ viewMode: 'backup' })
+
+    expect(editor.container.querySelector('.composer').style.display).toBe('none')
 
     editor.destroy()
   })

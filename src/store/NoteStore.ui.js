@@ -111,3 +111,12 @@ export function setViewTrash() {
   state.activeSubjectId = null
   notify()
 }
+
+/**
+ * Cambia a la vista de Backup manual.
+ */
+export function setViewBackup() {
+  state.viewMode = 'backup'
+  state.activeSubjectId = null
+  notify()
+}

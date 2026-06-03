@@ -352,4 +352,24 @@ describe('NoteStore.ui', () => {
       expectNotifyFrom(() => NoteStoreUi.setViewTrash())
     })
   })
+
+  describe('setViewBackup()', () => {
+    it('pone viewMode = "backup"', () => {
+      NoteStoreUi.setViewBackup()
+
+      expect(state.viewMode).toBe('backup')
+    })
+
+    it('pone activeSubjectId = null', () => {
+      state.activeSubjectId = 'subj-1'
+
+      NoteStoreUi.setViewBackup()
+
+      expect(state.activeSubjectId).toBeNull()
+    })
+
+    it('llama notify()', () => {
+      expectNotifyFrom(() => NoteStoreUi.setViewBackup())
+    })
+  })
 })

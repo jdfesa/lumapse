@@ -288,8 +288,9 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
 
   /** Actualiza qué botón de materia tiene la clase --active */
   function updateSubjectActiveState(activeId) {
+    const state = NoteStore.getState()
     // Inbox
-    btnInbox.classList.toggle('drawer__subject-btn--active', activeId === null && !getShowingArchived())
+    btnInbox.classList.toggle('drawer__subject-btn--active', state.viewMode === 'inbox' && activeId === null && !getShowingArchived())
     // Materias
     subjectsList.querySelectorAll('.js-subject-nav').forEach(btn => {
       btn.classList.toggle('drawer__subject-btn--active', btn.dataset.subject === activeId)
