@@ -5,12 +5,15 @@
 // el selector nativo para compartir/guardar el archivo.
 // =============================================================
 
-import { Directory, Filesystem } from '@capacitor/filesystem'
-import { Share } from '@capacitor/share'
+import { registerPlugin } from '@capacitor/core'
 
 export const BACKUP_SHARE_TITLE = 'Backup Lumapse'
 export const BACKUP_SHARE_TEXT = 'Backup manual de Lumapse.'
 export const BACKUP_SHARE_DIALOG_TITLE = 'Guardar backup de Lumapse'
+export const BACKUP_CACHE_DIRECTORY = 'CACHE'
+
+const Filesystem = registerPlugin('Filesystem')
+const Share = registerPlugin('Share')
 
 function encodeBinaryString(binary) {
   if (typeof globalThis.btoa === 'function') {
@@ -40,6 +43,11 @@ export function arrayBufferToBase64(buffer) {
 
 function isArrayBufferLike(content) {
   return Object.prototype.toString.call(content) === '[object ArrayBuffer]'
+}
+
+function isShareCancelledError(error) {
+  const value = `${error?.code || ''} ${error?.message || error || ''}`.toLowerCase()
+  return value.includes('cancel') || value.includes('dismiss')
 }
 
 export async function backupContentToBase64(content) {
@@ -83,12 +91,12 @@ export async function writeBackupToCache(backup) {
   await Filesystem.writeFile({
     path,
     data,
-    directory: Directory.Cache,
+    directory: BACKUP_CACHE_DIRECTORY,
   })
 
   const result = await Filesystem.getUri({
     path,
-    directory: Directory.Cache,
+    directory: BACKUP_CACHE_DIRECTORY,
   })
 
   return {
@@ -108,12 +116,20 @@ export async function shareBackupFile(fileRef, options = {}) {
     throw new Error('El dispositivo no permite compartir archivos desde Lumapse.')
   }
 
-  return Share.share({
-    title: options.title || BACKUP_SHARE_TITLE,
-    text: options.text || BACKUP_SHARE_TEXT,
-    files: [fileRef.uri],
-    dialogTitle: options.dialogTitle || BACKUP_SHARE_DIALOG_TITLE,
-  })
+  try {
+    return await Share.share({
+      title: options.title || BACKUP_SHARE_TITLE,
+      text: options.text || BACKUP_SHARE_TEXT,
+      files: [fileRef.uri],
+      dialogTitle: options.dialogTitle || BACKUP_SHARE_DIALOG_TITLE,
+    })
+  } catch (error) {
+    if (isShareCancelledError(error)) {
+      return { cancelled: true }
+    }
+
+    throw error
+  }
 }
 
 export async function shareBackupZip(backup, options = {}) {

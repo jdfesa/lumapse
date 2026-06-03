@@ -1,28 +1,29 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { Directory, Filesystem } from '@capacitor/filesystem'
-import { Share } from '@capacitor/share'
+
+const { Filesystem, Share } = vi.hoisted(() => ({
+  Filesystem: {
+    writeFile: vi.fn(),
+    getUri: vi.fn(),
+  },
+  Share: {
+    canShare: vi.fn(),
+    share: vi.fn(),
+  },
+}))
+
 import {
+  BACKUP_CACHE_DIRECTORY,
   backupContentToBase64,
   shareBackupFile,
   shareBackupZip,
   writeBackupToCache,
 } from '../../../../src/services/backup/BackupShareService.js'
 
-vi.mock('@capacitor/filesystem', () => ({
-  Directory: {
-    Cache: 'CACHE',
-  },
-  Filesystem: {
-    writeFile: vi.fn(),
-    getUri: vi.fn(),
-  },
-}))
-
-vi.mock('@capacitor/share', () => ({
-  Share: {
-    canShare: vi.fn(),
-    share: vi.fn(),
-  },
+vi.mock('@capacitor/core', () => ({
+  registerPlugin: vi.fn((name) => ({
+    Filesystem,
+    Share,
+  }[name])),
 }))
 
 function arrayBufferFromText(text) {
@@ -66,11 +67,11 @@ describe('BackupShareService', () => {
       expect(Filesystem.writeFile).toHaveBeenCalledWith({
         path: 'lumapse-2026-06-03-12-30.zip',
         data: 'THVtYXBzZQ==',
-        directory: Directory.Cache,
+        directory: BACKUP_CACHE_DIRECTORY,
       })
       expect(Filesystem.getUri).toHaveBeenCalledWith({
         path: 'lumapse-2026-06-03-12-30.zip',
-        directory: Directory.Cache,
+        directory: BACKUP_CACHE_DIRECTORY,
       })
       expect(fileRef).toEqual({
         filename: 'lumapse-2026-06-03-12-30.zip',
@@ -104,6 +105,14 @@ describe('BackupShareService', () => {
 
       await expect(shareBackupFile({ uri: 'file:///cache/lumapse.zip' })).rejects.toThrow('no permite compartir')
       expect(Share.share).not.toHaveBeenCalled()
+    })
+
+    it('trata la cancelacion del selector como resultado neutral', async () => {
+      Share.share.mockRejectedValue(new Error('Share cancelled'))
+
+      await expect(shareBackupFile({ uri: 'file:///cache/lumapse.zip' })).resolves.toEqual({
+        cancelled: true,
+      })
     })
   })
 
