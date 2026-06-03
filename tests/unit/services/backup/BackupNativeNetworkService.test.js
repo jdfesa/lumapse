@@ -1,19 +1,31 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { Network } from '@capacitor/network'
-import {
-  getCurrentBackupNetworkState,
-  onBackupNetworkStateChange,
-} from '../../../../src/services/backup/BackupNativeNetworkService.js'
 
-vi.mock('@capacitor/network', () => ({
+const { Network } = vi.hoisted(() => ({
   Network: {
     getStatus: vi.fn(),
     addListener: vi.fn(),
   },
 }))
 
+import {
+  getCurrentBackupNetworkState,
+  onBackupNetworkStateChange,
+} from '../../../../src/services/backup/BackupNativeNetworkService.js'
+
+vi.mock('@capacitor/core', () => ({
+  registerPlugin: vi.fn(() => Network),
+}))
+
 beforeEach(() => {
   vi.clearAllMocks()
+  Object.defineProperty(globalThis.navigator, 'onLine', {
+    value: true,
+    configurable: true,
+  })
+  Object.defineProperty(globalThis.navigator, 'connection', {
+    value: undefined,
+    configurable: true,
+  })
 })
 
 describe('BackupNativeNetworkService', () => {
@@ -30,6 +42,21 @@ describe('BackupNativeNetworkService', () => {
         recommended: true,
       })
       expect(Network.getStatus).toHaveBeenCalledTimes(1)
+    })
+
+    it('usa fallback web conservador si Capacitor Network no responde', async () => {
+      Network.getStatus.mockRejectedValue(new Error('plugin no disponible'))
+      Object.defineProperty(globalThis.navigator, 'connection', {
+        value: { effectiveType: '4g' },
+        configurable: true,
+      })
+
+      await expect(getCurrentBackupNetworkState()).resolves.toMatchObject({
+        connected: true,
+        connectionType: 'unknown',
+        externalBackupAllowed: true,
+        requiresWarning: true,
+      })
     })
   })
 
