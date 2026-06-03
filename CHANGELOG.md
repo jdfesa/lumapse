@@ -21,6 +21,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Entrypoint estable de trazabilidad:** Nuevo `scripts/check-traceability.py` como wrapper compatible para el checker preservado en `check-traceability.py.replaced`.
 - **Inserción rápida de título:** El botón `+` y el comando `/titulo` permiten insertar un encabezado Markdown sin obligar al usuario a conocer la sintaxis de antemano.
 - **Fechas Académicas discretas (RF-027 / HU-027 / DP-007):** Implementación completa de marcadores académicos puntuales para parciales, finales, trabajos prácticos y exposiciones dentro del calendario existente. Incluye tabla SQLite `academic_events`, CRUD bajo nivel, servicio de dominio, store reactivo, dots en Heatmap, mini-card por día, modal accesible de creación/edición, lista colapsable de próximas fechas, acciones de editar/eliminar con confirmación accesible y tests unitarios de datos, store y UI.
+- **Backup manual externo (RF-017):** Nueva vista `Backup` accesible desde el drawer para crear un `.zip` manual restaurable y legible, con `manifest.json`, JSON estructurado, notas Markdown por materia/sección, recordatorio local de 30 días, detección WiFi/datos móviles/offline y salida por share sheet/gestor de archivos. Validado en Android real; si Google Drive está instalado puede aparecer como destino, y si no, funciona el fallback de almacenamiento elegido por el usuario.
 
 ### Changed
 - **Búsqueda RF-015 más útil:** La lupa ahora busca globalmente entre notas activas aunque el usuario esté ubicado en Entrada o en una materia, y normaliza tildes para que `algebra` encuentre `Álgebra`.
@@ -31,7 +32,8 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Versionado de paquete alineado:** `package.json` y `package-lock.json` pasan de `0.1.0` a `0.4.7`, manteniendo el paquete sincronizado con la última versión cerrada documentada antes de preparar un release/APK.
 - **Seguimiento de velocidad actualizado:** `docs/gestion/seguimiento-velocidad.md` registra 18 HU formalizadas, 70 SP cerrados en Hitos 02 a 04 y velocidad promedio de 23.3 SP/hito tras reclasificar HU-008 como futura.
 - **CSP web ajustada para SQLite WASM:** `index.html` permite el runtime WASM local necesario para `jeep-sqlite`/`sql.js`, manteniendo los recursos restringidos a orígenes locales.
-- **Reclasificación RF-016/RF-017/RF-018:** La revisión documental confirma que exportación/importación conserva servicios base, pero no está expuesta como flujo de usuario en la UI actual. La portabilidad local se posterga completa: compartir solo vuelve si usa share sheet nativo de Android y no duplica la acción Copiar.
+- **Reclasificación RF-016/RF-018 y cierre de RF-017:** La revisión documental mantiene compartir nota individual e importación como decisiones futuras, pero `RF-017` deja de ser deuda abierta porque la primera versión de backup manual externo ya quedó integrada y validada en Android real.
+- **Plan de backup archivado:** El plan operativo de backup `.zip` y Google Drive se movió desde la raíz a `docs/gestion/historico/plan-backup-google-drive-2026-06-03.md` para conservar evidencia sin ensuciar el directorio principal.
 
 ---
 

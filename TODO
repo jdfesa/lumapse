@@ -34,14 +34,14 @@
 
 - [x] `RF-016`: postergar compartir/exportar nota individual hasta implementar share sheet nativo con `@capacitor/share` y validarlo en Android real.
 - [x] `RF-016`: no mostrar boton "Compartir" si el flujo termina copiando contenido, porque duplicaria la accion existente de Copiar.
-- [x] `RF-017`: mover backup `.zip` local a deuda tecnica de largo plazo; requiere formato de backup, destino Android y pruebas en dispositivo real.
+- [x] `RF-017`: integrar backup `.zip` manual con formato restaurable/legible, destino Android por share sheet/gestor de archivos y prueba en dispositivo real.
 - [x] `RF-018`: mover importacion a deuda de mas largo plazo; si se retoma para nota individual, la nota importada entra en `Entrada` y no intenta recrear materia/seccion de origen.
 
 ---
 
 ## Pendientes diferidos
 
-- [ ] Convertir `RF-017` en feature post-release prioritaria: backup `.zip` local + salida a Google Drive/almacenamiento elegido por el usuario. Plan por fases en [`PLAN-BACKUP-GOOGLE-DRIVE.md`](PLAN-BACKUP-GOOGLE-DRIVE.md).
+- [x] Convertir `RF-017` en feature post-release prioritaria: backup `.zip` local + salida a almacenamiento elegido por el usuario. Plan cerrado en [`docs/gestion/historico/plan-backup-google-drive-2026-06-03.md`](docs/gestion/historico/plan-backup-google-drive-2026-06-03.md).
 - [ ] Reabrir `RF-024` como indicador online/offline acotado a backup externo, sin prometer sincronizacion automatica.
 - [ ] Actualizar graficos de base de datos al cierre documental final, con el modelo congelado.
 - [ ] Evaluar manual de usuario solo si la primera release evidencia friccion real.

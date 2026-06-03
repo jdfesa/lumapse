@@ -3,7 +3,7 @@
 > **Fecha:** 2026-06-02  
 > **Revision de alcance:** 2026-06-03
 > **Rama de trabajo:** `codex/backup-google-drive`
-> **Estado:** feature post-release prioritaria  
+> **Estado:** implementacion completada y archivada como evidencia de gestion  
 > **Motivo:** Lumapse es offline-first, pero el estudiante debe poder recuperar sus notas si pierde,
 > rompe o cambia el telefono. La propiedad del dato es parte del valor del producto.
 
