@@ -350,11 +350,17 @@ Objetivo:
 
 No cambiar la sanitizacion sin tests.
 
-Estado parcial:
+Estado:
 
 - Implementado: render visual de callouts principales con titulo, icono compacto y color por tipo en preview y tarjetas.
 - Implementado: soporte de titulo personalizado y callout solo con titulo.
-- Pendiente: ajuste fino de iconografia si se incorporan referencias visuales definitivas para cada tipo.
+- Implementado: tablas con overflow horizontal propio para mobile en preview y tarjetas.
+- Implementado: bloques de codigo con scroll horizontal estable y texto sin wrap forzado.
+- Implementado: separadores `hr` con espaciado consistente.
+- Implementado: blockquotes simples discretos sin pisar los estilos por tipo de los callouts.
+- Implementado: checkboxes alineados y tactiles sin quitar vinetas de listas normales.
+- Implementado: tests de regresion para `hr`, blockquotes, tablas sanitizadas y sanitizacion dentro de callouts.
+- Pendiente opcional: revision visual manual en mobile/desktop y ajuste fino de iconografia si se incorporan referencias definitivas para cada tipo.
 
 ### Fase 6: Ayuda liviana opcional
 
