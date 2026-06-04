@@ -268,14 +268,13 @@ Items iniciales:
 - Link.
 - Fecha de hoy.
 - Callouts principales: Nota, Info, Tarea, Importante, Pregunta, Advertencia, Ejemplo y Cita destacada.
-- Modo Enfoque.
 
 Reglas:
 
 - Usar el mismo registry que el slash menu.
-- `Modo Enfoque` puede seguir siendo una accion especial sin snippet.
 - Si el textarea no tiene foco, enfocar antes de insertar.
 - Si hay seleccion, reemplazarla con el bloque elegido salvo comandos inline.
+- `Modo Enfoque` queda fuera del menu `+` y vive como boton dedicado del composer por ser una accion frecuente.
 
 ### Fase 3: Boton `Aa` para formato inline
 
@@ -430,7 +429,10 @@ Orden recomendado:
 1. Selector de materia.
 2. `+` insertar bloque.
 3. `Aa` formato.
-4. Guardar.
+4. Boton de `Modo Enfoque` con icono de flechas diagonales hacia afuera.
+5. Guardar.
+
+El selector de materia debe mantenerse compacto para dejar espacio a las acciones frecuentes en mobile.
 
 No agregar una barra enorme permanente. Lumapse debe seguir respirando simple.
 
@@ -463,13 +465,16 @@ Tests manuales:
 Tests unitarios:
 
 - Boton `+` abre menu.
+- Tocar `+` otra vez cierra el menu sin insertar nada.
 - Elegir `Encabezado 1` inserta `# `.
-- Elegir `Modo Enfoque` activa focus sin insertar texto.
+- `Modo Enfoque` no aparece dentro del menu `+`.
+- Boton dedicado de `Modo Enfoque` activa focus sin insertar texto.
 - El popup se cierra despues de elegir item.
 
 Tests manuales:
 
 - Tap en `+` con teclado virtual abierto.
+- Tap otra vez en `+` cierra el menu si fue abierto por error.
 - Tap fuera cierra menu.
 - Guardar nota despues de insertar bloques.
 
