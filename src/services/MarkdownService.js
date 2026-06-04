@@ -33,6 +33,23 @@ marked.setOptions({
 })
 
 const TASK_LINE_REGEX = /^\s*[-*+]\s+\[[ xX]\]\s+/
+const CALLOUT_START_REGEX = /^\[!([a-z][a-z0-9-]*)\]([+-]?)(?:\s+(.+))?$/i
+
+const CALLOUT_TYPES = {
+  note: 'Nota',
+  info: 'Info',
+  todo: 'Tarea',
+  important: 'Importante',
+  question: 'Pregunta',
+  warning: 'Advertencia',
+  example: 'Ejemplo',
+  quote: 'Cita',
+  tip: 'Tip',
+  success: 'Correcto',
+  failure: 'Error',
+  danger: 'Peligro',
+  bug: 'Bug',
+}
 
 function getTaskLineNumbers(markdown) {
   return markdown
@@ -43,6 +60,71 @@ function getTaskLineNumbers(markdown) {
       }
       return lineNumbers
     }, [])
+}
+
+function escapeHtml(text) {
+  return String(text || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+}
+
+function stripBlockquotePrefix(line) {
+  return line.replace(/^>\s?/, '')
+}
+
+function parseCalloutStart(line) {
+  if (!line.startsWith('>')) return null
+
+  const content = stripBlockquotePrefix(line).trim()
+  const match = content.match(CALLOUT_START_REGEX)
+  if (!match) return null
+
+  const type = match[1].toLowerCase()
+  const safeType = CALLOUT_TYPES[type] ? type : 'note'
+  const title = match[3]?.trim() || CALLOUT_TYPES[type] || type
+
+  return { type: safeType, title }
+}
+
+function renderCalloutHtml(callout, bodyLines) {
+  const bodyMarkdown = bodyLines.join('\n').trim()
+  const bodyHtml = bodyMarkdown ? marked.parse(bodyMarkdown) : ''
+
+  return `
+<blockquote class="md-callout md-callout--${callout.type}">
+<p class="md-callout__title"><span class="md-callout__icon"></span><strong>${escapeHtml(callout.title)}</strong></p>
+${bodyHtml}
+</blockquote>`
+}
+
+function renderCallouts(markdown) {
+  const lines = markdown.split('\n')
+  const output = []
+
+  for (let index = 0; index < lines.length; index++) {
+    const callout = parseCalloutStart(lines[index])
+    if (!callout) {
+      output.push(lines[index])
+      continue
+    }
+
+    const bodyLines = []
+    index++
+
+    while (index < lines.length && lines[index].startsWith('>')) {
+      if (parseCalloutStart(lines[index])) break
+      bodyLines.push(stripBlockquotePrefix(lines[index]))
+      index++
+    }
+
+    index--
+    output.push(renderCalloutHtml(callout, bodyLines))
+  }
+
+  return output.join('\n')
 }
 
 // -------------------------------------------------------------
@@ -80,7 +162,7 @@ export function renderMarkdown(markdown, options = {}) {
   const lineOffset = Number.isInteger(options.lineOffset) ? options.lineOffset : 0
 
   // 1. Parsear Markdown → HTML crudo
-  const rawHtml = marked.parse(markdown)
+  const rawHtml = marked.parse(renderCallouts(markdown))
 
   // 2. Sanitizar HTML para prevenir XSS
   //    DOMPurify elimina scripts, event handlers y cualquier
@@ -107,6 +189,7 @@ export function renderMarkdown(markdown, options = {}) {
     ALLOWED_TAGS: [
       'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
       'p', 'br', 'hr',
+      'span',
       'strong', 'em', 'del', 's',
       'ul', 'ol', 'li',
       'blockquote',
@@ -232,6 +315,7 @@ export function hasMarkdownSyntax(text) {
     /^```/m,                // Bloques de código
     /\[.+\]\(.+\)/,         // Enlaces
     /~~.+~~/,               // Tachado
+    /^>\s+\[![a-z][a-z0-9-]*\]/im, // Callouts
   ]
 
   return markdownPatterns.some(pattern => pattern.test(text))
