@@ -27,9 +27,6 @@
   line-height: 1.75;
   font-size: 0.95rem;
   color: var(--color-text-bright);
-  max-width: 100%;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 /* Encabezados */
@@ -68,22 +65,6 @@
   margin-bottom: var(--space-4);
 }
 
-.md-preview__content blockquote:not(.md-callout) {
-  border-left: 3px solid color-mix(in srgb, var(--color-accent) 72%, var(--color-border));
-  margin: 0 0 var(--space-4) 0;
-  padding: var(--space-2) var(--space-4);
-  color: var(--color-text-muted);
-  background-color: color-mix(in srgb, var(--color-surface) 82%, transparent);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-}
-
-.md-preview__content hr {
-  height: 1px;
-  margin: var(--space-6) 0;
-  border: 0;
-  background: var(--color-border);
-}
-
 /* Callout: solo override de margen para contexto preview */
 .md-preview__content .md-callout {
   margin: 0 0 var(--space-4) 0;
@@ -100,98 +81,10 @@
   margin-bottom: var(--space-1);
 }
 
-/* Código */
-.md-preview__content code {
-  font-family: var(--font-mono);
-  font-size: 0.85em;
-  background-color: var(--color-surface);
-  color: var(--color-accent);
-  padding: 0.2em 0.4em;
-  border-radius: var(--radius-sm);
-}
-
-.md-preview__content pre {
-  max-width: 100%;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: var(--space-4);
-  margin-bottom: var(--space-4);
-  overflow-x: auto;
-  line-height: 1.6;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-}
-
-.md-preview__content pre code {
-  background-color: transparent;
-  color: inherit;
-  padding: 0;
-  border-radius: 0;
-  white-space: pre;
-  overflow-wrap: normal;
-  word-break: normal;
-}
-
-/* Tablas */
-.md-preview__content table {
-  display: block;
-  width: max-content;
-  min-width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
-  border-collapse: separate;
-  border-spacing: 0;
-  margin-bottom: var(--space-4);
-  font-size: 0.9rem;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-}
-
-.md-preview__content th,
-.md-preview__content td {
-  border: 1px solid var(--color-border);
-  border-left: 0;
-  border-top: 0;
-  padding: var(--space-2) var(--space-3);
-  text-align: left;
-  white-space: nowrap;
-}
-
-.md-preview__content th:first-child,
-.md-preview__content td:first-child {
-  border-left: 1px solid var(--color-border);
-}
-
-.md-preview__content thead:first-child tr:first-child th,
-.md-preview__content tbody:first-child tr:first-child td {
-  border-top: 1px solid var(--color-border);
-}
-
-.md-preview__content th {
-  background-color: var(--color-surface);
-  font-weight: 600;
-  color: var(--color-text-bright);
-}
-
 /* Imágenes */
 .md-preview__content img {
   max-width: 100%;
   border-radius: var(--radius-sm);
   margin-bottom: var(--space-4);
   border: 1px solid var(--color-border);
-}
-
-/* Tareas (Checkboxes) */
-.md-preview__content input[type="checkbox"] {
-  accent-color: var(--color-accent);
-  inline-size: 1.05rem;
-  block-size: 1.05rem;
-  margin-right: var(--space-2);
-  vertical-align: -0.16em;
-}
-
-.md-preview__content li:has(> input[type="checkbox"]) {
-  list-style: none;
-  margin-left: calc(-1 * var(--space-5));
 }

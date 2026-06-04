@@ -1,0 +1,164 @@
+/* ============================================================
+   Elementos Markdown compartidos por preview y tarjetas
+   ============================================================ */
+
+:is(.md-preview__content, .note-card__content) {
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+:is(.md-preview__content, .note-card__content) blockquote:not(.md-callout) {
+  color: var(--color-text-muted);
+  background: color-mix(in srgb, var(--color-surface) 84%, transparent);
+  border-left: 3px solid color-mix(in srgb, var(--color-accent) 70%, var(--color-border));
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.md-preview__content blockquote:not(.md-callout) {
+  margin: 0 0 var(--space-4) 0;
+  padding: var(--space-2) var(--space-4);
+}
+
+.note-card__content blockquote:not(.md-callout) {
+  margin: 0 0 var(--space-2) 0;
+  padding: var(--space-1) var(--space-3);
+}
+
+:is(.md-preview__content, .note-card__content) hr {
+  height: 1px;
+  border: 0;
+  background: var(--color-border);
+}
+
+.md-preview__content hr {
+  margin: var(--space-6) 0;
+}
+
+.note-card__content hr {
+  margin: var(--space-4) 0;
+}
+
+:is(.md-preview__content, .note-card__content) code {
+  font-family: var(--font-mono);
+  background: var(--color-surface);
+  color: var(--color-accent);
+}
+
+.md-preview__content code {
+  font-size: 0.85em;
+  padding: 0.2em 0.4em;
+  border-radius: var(--radius-sm);
+}
+
+.note-card__content code {
+  font-size: 0.9em;
+  padding: 0.1em 0.3em;
+  border-radius: 4px;
+}
+
+:is(.md-preview__content, .note-card__content) pre {
+  max-width: 100%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.md-preview__content pre {
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+  line-height: 1.6;
+}
+
+.note-card__content pre {
+  margin: var(--space-3) 0;
+  padding: var(--space-3);
+  line-height: 1.55;
+}
+
+:is(.md-preview__content, .note-card__content) pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+  white-space: pre;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+:is(.md-preview__content, .note-card__content) table {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.md-preview__content table {
+  margin-bottom: var(--space-4);
+}
+
+.note-card__content table {
+  margin: var(--space-3) 0;
+  border-radius: var(--radius-md);
+}
+
+:is(.md-preview__content, .note-card__content) th,
+:is(.md-preview__content, .note-card__content) td {
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+:is(.md-preview__content, .note-card__content) th:first-child,
+:is(.md-preview__content, .note-card__content) td:first-child {
+  border-left: 1px solid var(--color-border);
+}
+
+:is(.md-preview__content, .note-card__content) thead:first-child tr:first-child th,
+:is(.md-preview__content, .note-card__content) tbody:first-child tr:first-child td {
+  border-top: 1px solid var(--color-border);
+}
+
+:is(.md-preview__content, .note-card__content) th {
+  background: var(--color-surface);
+  color: var(--color-text-bright);
+  font-weight: 600;
+}
+
+.note-card__content th {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+}
+
+.note-card__content tr:last-child td {
+  border-bottom: none;
+}
+
+:is(.md-preview__content, .note-card__content) input[type="checkbox"] {
+  accent-color: var(--color-accent);
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  margin-right: var(--space-2);
+  vertical-align: -0.16em;
+}
+
+.note-card__content input[type="checkbox"] {
+  cursor: pointer;
+}
+
+:is(.md-preview__content, .note-card__content) li:has(> input[type="checkbox"]) {
+  list-style: none;
+  margin-left: calc(-1 * var(--space-5));
+}

@@ -14,6 +14,7 @@
 
 import { renderMarkdown } from '../services/MarkdownService.js';
 import './callout.css';
+import './markdown-elements.css';
 import './MarkdownPreview.css';
 
 export class MarkdownPreview {
