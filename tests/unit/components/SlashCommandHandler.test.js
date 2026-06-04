@@ -96,5 +96,18 @@ describe('SlashCommandHandler', () => {
     expect(textarea.selectionStart).toBe(1)
     expect(textarea.selectionEnd).toBe(6)
   })
-})
 
+  it('inserta callout note compatible usando alias en espanol', () => {
+    setTextareaValue('/')
+    setTextareaValue('/nota')
+
+    findPopupItem('Nota').dispatchEvent(new window.MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+    }))
+
+    expect(textarea.value).toBe('> [!note]\n> ')
+    expect(textarea.selectionStart).toBe(12)
+    expect(textarea.selectionEnd).toBe(12)
+  })
+})

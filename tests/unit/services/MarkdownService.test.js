@@ -98,6 +98,37 @@ describe('renderMarkdown()', () => {
 
       expect(html).toContain('data-line="2"')
     })
+
+    it('renderiza callout note con clase, titulo e icono', () => {
+      const html = MarkdownService.renderMarkdown('> [!note]\n> Como este.')
+
+      expect(html).toContain('class="md-callout md-callout--note"')
+      expect(html).toContain('class="md-callout__icon"')
+      expect(html).toContain('<strong>Nota</strong>')
+      expect(html).toContain('<p>Como este.</p>')
+    })
+
+    it('respeta titulo personalizado en callouts', () => {
+      const html = MarkdownService.renderMarkdown('> [!warning] Revisar antes del final\n> Fechas tentativas.')
+
+      expect(html).toContain('class="md-callout md-callout--warning"')
+      expect(html).toContain('<strong>Revisar antes del final</strong>')
+      expect(html).toContain('<p>Fechas tentativas.</p>')
+    })
+
+    it('renderiza callout solo con titulo aunque no tenga cuerpo', () => {
+      const html = MarkdownService.renderMarkdown('> [!question] Duda para clase')
+
+      expect(html).toContain('class="md-callout md-callout--question"')
+      expect(html).toContain('<strong>Duda para clase</strong>')
+    })
+
+    it('escapa HTML peligroso en titulos de callout', () => {
+      const html = MarkdownService.renderMarkdown('> [!note] <img src=x onerror=alert(1)>')
+
+      expect(html).toContain('&lt;img src=x onerror=alert(1)&gt;')
+      expect(html).not.toContain('<img src=x')
+    })
   })
 
   describe('Sanitización XSS', () => {
@@ -260,5 +291,9 @@ describe('hasMarkdownSyntax()', () => {
 
   it('retorna true para texto con tachado', () => {
     expect(MarkdownService.hasMarkdownSyntax('~~tachado~~')).toBe(true)
+  })
+
+  it('retorna true para texto con callout', () => {
+    expect(MarkdownService.hasMarkdownSyntax('> [!note]\n> dato')).toBe(true)
   })
 })

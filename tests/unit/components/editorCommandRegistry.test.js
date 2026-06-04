@@ -27,7 +27,10 @@ describe('editorCommandRegistry', () => {
     expect(ids).toContain('table')
     expect(ids).toContain('link')
     expect(ids).toContain('today')
-    expect(ids).toContain('callout')
+    expect(ids).toContain('callout-note')
+    expect(ids).toContain('callout-important')
+    expect(ids).toContain('callout-question')
+    expect(ids).toContain('callout-warning')
   })
 
   it('agrega groupLabel a los comandos filtrados por superficie', () => {
@@ -46,5 +49,24 @@ describe('editorCommandRegistry', () => {
 
     expect(getCommandSnippet(command)).toBe('2026-06-04')
   })
-})
 
+  it('mantiene labels en espanol y callouts Markdown en ingles', () => {
+    const command = getEditorCommandsForSurface('slash')
+      .find(item => item.id === 'callout-note')
+
+    expect(command.label).toBe('Nota')
+    expect(command.aliases).toContain('nota')
+    expect(command.aliases).toContain('note')
+    expect(getCommandSnippet(command)).toBe('> [!note]\n> ')
+  })
+
+  it('expone comandos para el boton insertar', () => {
+    const commands = getEditorCommandsForSurface('insert')
+    const ids = commands.map(command => command.id)
+
+    expect(ids).toContain('heading-1')
+    expect(ids).toContain('task-list')
+    expect(ids).toContain('callout-important')
+    expect(ids).toContain('focus-mode')
+  })
+})

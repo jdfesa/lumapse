@@ -234,12 +234,19 @@ Estos comandos deben aparecer al escribir `/` al inicio de linea:
 | Estructura | Tabla simple | `table`, `tabla` | tabla 2x2 Markdown | Primer header seleccionado |
 | Estructura | Link | `link`, `enlace` | `[texto](url)` | `texto` seleccionado |
 | Utiles | Fecha de hoy | `fecha`, `date`, `hoy` | fecha local `YYYY-MM-DD` | Final |
-| Utiles | Destacado | `callout`, `destacado` | `> [!nota]\n> ` | Final |
+| Callouts | Nota | `callout`, `note`, `nota`, `destacado` | `> [!note]\n> ` | Final |
+| Callouts | Info | `info`, `informacion` | `> [!info]\n> ` | Final |
+| Callouts | Tarea | `todo`, `tarea`, `pendiente` | `> [!todo]\n> ` | Final |
+| Callouts | Importante | `important`, `importante` | `> [!important]\n> ` | Final |
+| Callouts | Pregunta | `question`, `pregunta`, `duda` | `> [!question]\n> ` | Final |
+| Callouts | Advertencia | `warning`, `advertencia`, `cuidado` | `> [!warning]\n> ` | Final |
+| Callouts | Ejemplo | `example`, `ejemplo` | `> [!example]\n> ` | Final |
+| Callouts | Cita destacada | `quote`, `cita` | `> [!quote]\n> ` | Final |
 
 Notas:
 
 - El comando `Texto` sirve para convertir `/texto` en linea normal eliminando el trigger.
-- `Destacado` debe ser Markdown legible aunque no exista soporte visual especial todavia.
+- Los labels visibles pueden estar en espanol, pero los identificadores Markdown de callout quedan en ingles por compatibilidad con la convencion extendida usada por editores como Obsidian.
 - La fecha se calcula al momento de insertar.
 
 ### Fase 2: Boton `+` como menu de insercion
@@ -260,6 +267,7 @@ Items iniciales:
 - Tabla simple.
 - Link.
 - Fecha de hoy.
+- Callouts principales: Nota, Info, Tarea, Importante, Pregunta, Advertencia, Ejemplo y Cita destacada.
 - Modo Enfoque.
 
 Reglas:
@@ -303,7 +311,14 @@ Comportamientos:
 - Enter despues de `1. ` vacio elimina el prefijo y sale de lista.
 - Enter despues de `- [ ] tarea` inserta `- [ ] `.
 - Enter despues de `- [ ] ` vacio elimina el prefijo y sale de lista.
+- Enter dentro de un bloque `> ...` inserta nueva linea con `> `.
+- Enter en una linea vacia `> ` elimina el prefijo y sale del callout/cita.
 - Mantener el comportamiento actual de tareas, pero generalizarlo.
+
+Estado parcial:
+
+- Implementado: continuacion y salida de listas con vinetas, listas numeradas y checkboxes.
+- Pendiente: continuacion y salida automatica de callouts/citas con prefijo `> `.
 
 No hacer todavia:
 
@@ -321,12 +336,18 @@ Revisar estilos en:
 Objetivo:
 
 - Tablas legibles en mobile con overflow horizontal si hace falta.
-- Blockquotes y destacados discretos.
+- Blockquotes y callouts discretos.
 - Separadores con margen correcto.
 - Codigo con scroll horizontal.
 - Checkboxes alineados y faciles de tocar.
 
 No cambiar la sanitizacion sin tests.
+
+Estado parcial:
+
+- Implementado: render visual de callouts principales con titulo, icono compacto y color por tipo en preview y tarjetas.
+- Implementado: soporte de titulo personalizado y callout solo con titulo.
+- Pendiente: ajuste fino de iconografia si se incorporan referencias visuales definitivas para cada tipo.
 
 ### Fase 6: Ayuda liviana opcional
 
@@ -576,4 +597,3 @@ Lumapse no necesita convertirse en Notion. Necesita que el estudiante pueda enri
 La direccion correcta es:
 
 > mas herramientas de escritura, menos complejidad estructural.
-
