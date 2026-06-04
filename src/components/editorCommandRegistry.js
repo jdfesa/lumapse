@@ -1,12 +1,10 @@
-// =============================================================
-// editorCommandRegistry — Catalogo unico de comandos del editor
-// Fase 1: Slash menu enriquecido
-// =============================================================
+import { INLINE_COMMANDS } from './editorInlineCommands.js'
 
 export const EDITOR_COMMAND_GROUPS = [
   { id: 'basic', label: 'Bloques basicos' },
   { id: 'structure', label: 'Estructura' },
   { id: 'callout', label: 'Callouts' },
+  { id: 'inline', label: 'Formato inline' },
   { id: 'utility', label: 'Utiles' },
 ]
 
@@ -238,6 +236,7 @@ export const EDITOR_COMMANDS = [
     aliases: ['cita'],
     description: 'Referencia textual',
   }),
+  ...INLINE_COMMANDS,
 ]
 
 export function getCommandGroupLabel(groupId) {
