@@ -6,6 +6,7 @@
 export const EDITOR_COMMAND_GROUPS = [
   { id: 'basic', label: 'Bloques basicos' },
   { id: 'structure', label: 'Estructura' },
+  { id: 'callout', label: 'Callouts' },
   { id: 'utility', label: 'Utiles' },
 ]
 
@@ -14,6 +15,20 @@ function formatLocalDate(date = new Date()) {
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')
   return `${year}-${month}-${day}`
+}
+
+function createCalloutCommand({ id, label, type, aliases, description }) {
+  const snippet = `> [!${type}]\n> `
+  return {
+    id: `callout-${id}`,
+    group: 'callout',
+    label,
+    aliases: ['callout', type, ...aliases],
+    description,
+    snippet,
+    cursorOffset: snippet.length,
+    surfaces: ['slash', 'insert'],
+  }
 }
 
 export const EDITOR_COMMANDS = [
@@ -25,7 +40,7 @@ export const EDITOR_COMMANDS = [
     description: 'Linea normal',
     snippet: '',
     cursorOffset: 0,
-    surfaces: ['slash'],
+    surfaces: ['slash', 'insert'],
   },
   {
     id: 'heading-1',
@@ -35,7 +50,7 @@ export const EDITOR_COMMANDS = [
     description: 'Titulo principal',
     snippet: '# ',
     cursorOffset: 2,
-    surfaces: ['slash'],
+    surfaces: ['slash', 'insert'],
   },
   {
     id: 'heading-2',
@@ -45,7 +60,7 @@ export const EDITOR_COMMANDS = [
     description: 'Subtitulo',
     snippet: '## ',
     cursorOffset: 3,
-    surfaces: ['slash'],
+    surfaces: ['slash', 'insert'],
   },
   {
     id: 'heading-3',
@@ -75,7 +90,7 @@ export const EDITOR_COMMANDS = [
     description: 'Item con punto',
     snippet: '- ',
     cursorOffset: 2,
-    surfaces: ['slash'],
+    surfaces: ['slash', 'insert'],
   },
   {
     id: 'numbered-list',
@@ -85,7 +100,7 @@ export const EDITOR_COMMANDS = [
     description: 'Item numerado',
     snippet: '1. ',
     cursorOffset: 3,
-    surfaces: ['slash'],
+    surfaces: ['slash', 'insert'],
   },
   {
     id: 'task-list',
@@ -95,7 +110,7 @@ export const EDITOR_COMMANDS = [
     description: 'Checkbox pendiente',
     snippet: '- [ ] ',
     cursorOffset: 6,
-    surfaces: ['slash'],
+    surfaces: ['slash', 'insert'],
   },
   {
     id: 'quote',
@@ -105,7 +120,7 @@ export const EDITOR_COMMANDS = [
     description: 'Bloque citado',
     snippet: '> ',
     cursorOffset: 2,
-    surfaces: ['slash'],
+    surfaces: ['slash', 'insert'],
   },
   {
     id: 'divider',
@@ -115,7 +130,7 @@ export const EDITOR_COMMANDS = [
     description: 'Linea horizontal',
     snippet: '---',
     cursorOffset: 3,
-    surfaces: ['slash'],
+    surfaces: ['slash', 'insert'],
   },
   {
     id: 'code-block',
@@ -125,7 +140,7 @@ export const EDITOR_COMMANDS = [
     description: 'Bloque de codigo',
     snippet: '```\n\n```',
     cursorOffset: 4,
-    surfaces: ['slash'],
+    surfaces: ['slash', 'insert'],
   },
   {
     id: 'table',
@@ -136,7 +151,7 @@ export const EDITOR_COMMANDS = [
     snippet: '| Header | Header |\n| ------ | ------ |\n| Cell   | Cell   |',
     cursorOffset: 2,
     selectLength: 6,
-    surfaces: ['slash'],
+    surfaces: ['slash', 'insert'],
   },
   {
     id: 'link',
@@ -147,7 +162,7 @@ export const EDITOR_COMMANDS = [
     snippet: '[texto](url)',
     cursorOffset: 1,
     selectLength: 5,
-    surfaces: ['slash'],
+    surfaces: ['slash', 'insert'],
   },
   {
     id: 'today',
@@ -156,18 +171,73 @@ export const EDITOR_COMMANDS = [
     aliases: ['fecha', 'date', 'hoy'],
     description: 'Inserta YYYY-MM-DD',
     snippet: () => formatLocalDate(),
-    surfaces: ['slash'],
+    surfaces: ['slash', 'insert'],
   },
   {
-    id: 'callout',
+    id: 'focus-mode',
     group: 'utility',
-    label: 'Destacado',
-    aliases: ['callout', 'destacado', 'nota'],
-    description: 'Bloque resaltado',
-    snippet: '> [!nota]\n> ',
-    cursorOffset: 12,
-    surfaces: ['slash'],
+    label: 'Modo Enfoque',
+    aliases: ['focus', 'enfoque', 'fullscreen'],
+    description: 'Sin distracciones',
+    action: 'focus-mode',
+    surfaces: ['insert'],
   },
+  createCalloutCommand({
+    id: 'note',
+    label: 'Nota',
+    type: 'note',
+    aliases: ['nota', 'destacado'],
+    description: 'Callout general',
+  }),
+  createCalloutCommand({
+    id: 'info',
+    label: 'Info',
+    type: 'info',
+    aliases: ['informacion'],
+    description: 'Dato aclaratorio',
+  }),
+  createCalloutCommand({
+    id: 'todo',
+    label: 'Tarea',
+    type: 'todo',
+    aliases: ['tarea', 'pendiente'],
+    description: 'Accion pendiente',
+  }),
+  createCalloutCommand({
+    id: 'important',
+    label: 'Importante',
+    type: 'important',
+    aliases: ['importante'],
+    description: 'Punto clave',
+  }),
+  createCalloutCommand({
+    id: 'question',
+    label: 'Pregunta',
+    type: 'question',
+    aliases: ['pregunta', 'duda'],
+    description: 'Duda para resolver',
+  }),
+  createCalloutCommand({
+    id: 'warning',
+    label: 'Advertencia',
+    type: 'warning',
+    aliases: ['advertencia', 'cuidado', 'warning'],
+    description: 'Atencion o riesgo',
+  }),
+  createCalloutCommand({
+    id: 'example',
+    label: 'Ejemplo',
+    type: 'example',
+    aliases: ['ejemplo'],
+    description: 'Caso o ejercicio',
+  }),
+  createCalloutCommand({
+    id: 'quote',
+    label: 'Cita destacada',
+    type: 'quote',
+    aliases: ['cita'],
+    description: 'Referencia textual',
+  }),
 ]
 
 export function getCommandGroupLabel(groupId) {
@@ -187,4 +257,3 @@ export function getCommandSnippet(command) {
   if (!command) return ''
   return typeof command.snippet === 'function' ? command.snippet() : (command.snippet || '')
 }
-
