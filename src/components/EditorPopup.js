@@ -1,3 +1,5 @@
+import { renderEditorPopupIcon } from './editorPopupIcons.js';
+
 /* ============================================================
    Componente: EditorPopup — Popup flotante reutilizable
    Hito 04: Editor Enhancements (Slash Commands, Link Lumapse)
@@ -121,8 +123,8 @@ export class EditorPopup {
 
     let lastGroup = null;
     this.el.innerHTML = this.filteredItems.map((item, i) => {
-      const descHtml = item.description
-        ? `<span class="editor-popup__desc">${this.escapeHtml(item.description)}</span>`
+      const hintHtml = item.hint
+        ? `<span class="editor-popup__hint-key">${this.escapeHtml(item.hint)}</span>`
         : '';
       const groupHtml = item.groupLabel && item.groupLabel !== lastGroup
         ? `<div class="editor-popup__group">${this.escapeHtml(item.groupLabel)}</div>`
@@ -134,8 +136,9 @@ export class EditorPopup {
            role="option"
            aria-selected="${i === this.activeIndex}"
            data-index="${i}">
+        <span class="editor-popup__icon">${renderEditorPopupIcon(item.icon)}</span>
         <span class="editor-popup__label">${this.escapeHtml(item.label)}</span>
-        ${descHtml}
+        ${hintHtml}
       </div>
     `;
     }).join('');

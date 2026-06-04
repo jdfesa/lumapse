@@ -29,6 +29,23 @@ function createCalloutCommand({ id, label, type, aliases, description }) {
   }
 }
 
+const COMMAND_VISUALS = {
+  text: { icon: 'text' },
+  'heading-1': { icon: 'heading-1', hint: '#' },
+  'heading-2': { icon: 'heading-2', hint: '##' },
+  'heading-3': { icon: 'heading-3', hint: '###' },
+  'heading-4': { icon: 'heading-4', hint: '####' },
+  'bulleted-list': { icon: 'bullet', hint: '-' },
+  'numbered-list': { icon: 'numbered-list', hint: '1.' },
+  'task-list': { icon: 'check', hint: '[]' },
+  quote: { icon: 'quote', hint: '>' },
+  divider: { icon: 'divider', hint: '---' },
+  'code-block': { icon: 'code', hint: '```' },
+  table: { icon: 'table', hint: '|' },
+  link: { icon: 'link', hint: 'url' },
+  today: { icon: 'today' },
+}
+
 export const EDITOR_COMMANDS = [
   {
     id: 'text',
@@ -240,10 +257,21 @@ export function getEditorCommandsForSurface(surface) {
     .map(command => ({
       ...command,
       groupLabel: getCommandGroupLabel(command.group),
+      ...getCommandVisual(command),
     }))
 }
 
 export function getCommandSnippet(command) {
   if (!command) return ''
   return typeof command.snippet === 'function' ? command.snippet() : (command.snippet || '')
+}
+
+function getCommandVisual(command) {
+  if (command.group === 'callout') {
+    return { icon: command.id, hint: '>' }
+  }
+  if (command.group === 'inline') {
+    return { icon: command.id, hint: command.before || '' }
+  }
+  return COMMAND_VISUALS[command.id] || { icon: 'text' }
 }
