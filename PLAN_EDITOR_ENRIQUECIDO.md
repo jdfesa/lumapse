@@ -172,6 +172,8 @@ Campos:
 - `cursorOffset`: posicion del cursor tras insertar.
 - `selectLength`: cantidad de caracteres a seleccionar, opcional.
 - `surfaces`: donde aparece: `slash`, `insert`, `inline`.
+- `icon`: identificador visual para el popup, opcional.
+- `hint`: pista Markdown breve para el lado derecho del popup, opcional.
 - `insertMode`: `replace-trigger`, `insert-at-cursor`, `wrap-selection`.
 
 ### 6.2 EditorPopup mejorado
@@ -179,12 +181,17 @@ Campos:
 Extender `src/components/EditorPopup.js` para soportar:
 
 - Grupos visuales.
-- Items con icono opcional.
+- Items con icono minimalista a la izquierda.
+- Pistas Markdown discretas a la derecha cuando aportan contexto (`#`, `##`, `-`, `1.`, etc.).
 - Busqueda por `label`, `description` y `aliases`.
 - Estado "Sin resultados" sin cerrar automaticamente.
 - Footer opcional.
 - Navegacion con flechas, Enter y Escape.
 - Click/tap fuera para cerrar.
+
+Estado:
+
+- Implementado: el popup usa iconos SVG/textuales y pistas Markdown en lugar de mostrar descripciones redundantes dentro de cada item.
 
 Regla importante:
 
