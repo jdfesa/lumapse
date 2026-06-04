@@ -129,6 +129,19 @@ describe('NoteEditor insert menu', () => {
     editor.destroy()
   })
 
+  it('muestra iconos y pistas Markdown en lugar de descripciones redundantes', () => {
+    const editor = createEditor()
+
+    editor.container.querySelector('#composer-plus-btn').click()
+    const headingItem = findPopupItem(editor.container, 'Encabezado 1')
+
+    expect(headingItem.querySelector('.editor-popup__icon-text').textContent).toBe('H1')
+    expect(headingItem.querySelector('.editor-popup__hint-key').textContent).toBe('#')
+    expect(headingItem.querySelector('.editor-popup__desc')).toBeNull()
+
+    editor.destroy()
+  })
+
   it('usa el registry del editor para insertar callouts desde el boton +', () => {
     const editor = createEditor()
     const input = editor.container.querySelector('#composer-input')

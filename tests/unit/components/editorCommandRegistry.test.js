@@ -40,6 +40,18 @@ describe('editorCommandRegistry', () => {
     expect(command.groupLabel).toBe('Bloques basicos')
   })
 
+  it('agrega metadatos visuales para el popup', () => {
+    const heading = getEditorCommandsForSurface('insert')
+      .find(item => item.id === 'heading-1')
+    const bullet = getEditorCommandsForSurface('insert')
+      .find(item => item.id === 'bulleted-list')
+
+    expect(heading.icon).toBe('heading-1')
+    expect(heading.hint).toBe('#')
+    expect(bullet.icon).toBe('bullet')
+    expect(bullet.hint).toBe('-')
+  })
+
   it('calcula la fecha local para el comando Fecha de hoy', () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date(2026, 5, 4, 10, 30, 0))
