@@ -1,8 +1,3 @@
-// =============================================================
-// Componente: NoteEditor (Composer)
-// Hito 04: Interfaz Microblog (estilo Memos)
-// =============================================================
-
 import * as NoteStore from '../store/NoteStore.js';
 import { SlashCommandHandler } from './SlashCommandHandler.js';
 import { EditorPopup } from './EditorPopup.js';
@@ -13,31 +8,28 @@ import './NoteEditor.css';
 const TASK_LIST_LINE_REGEX = /^(\s*)([-*+])\s+\[[ xX]\]\s+(.*)$/;
 const BULLETED_LIST_LINE_REGEX = /^(\s*)([-*+]\s+)(.*)$/;
 const NUMBERED_LIST_LINE_REGEX = /^(\s*)(\d+)([.)]\s+)(.*)$/;
+const BLOCKQUOTE_LINE_REGEX = /^(\s*>\s?)(.*)$/;
 
 function getMarkdownContinuation(currentLine) {
   const taskMatch = currentLine.match(TASK_LIST_LINE_REGEX);
   if (taskMatch) {
-    return {
-      prefix: `${taskMatch[1]}${taskMatch[2]} [ ] `,
-      text: taskMatch[3],
-    };
+    return { prefix: `${taskMatch[1]}${taskMatch[2]} [ ] `, text: taskMatch[3] };
   }
 
   const bulletMatch = currentLine.match(BULLETED_LIST_LINE_REGEX);
   if (bulletMatch) {
-    return {
-      prefix: `${bulletMatch[1]}${bulletMatch[2]}`,
-      text: bulletMatch[3],
-    };
+    return { prefix: `${bulletMatch[1]}${bulletMatch[2]}`, text: bulletMatch[3] };
   }
 
   const numberedMatch = currentLine.match(NUMBERED_LIST_LINE_REGEX);
   if (numberedMatch) {
     const nextNumber = Number.parseInt(numberedMatch[2], 10) + 1;
-    return {
-      prefix: `${numberedMatch[1]}${nextNumber}${numberedMatch[3]}`,
-      text: numberedMatch[4],
-    };
+    return { prefix: `${numberedMatch[1]}${nextNumber}${numberedMatch[3]}`, text: numberedMatch[4] };
+  }
+
+  const blockquoteMatch = currentLine.match(BLOCKQUOTE_LINE_REGEX);
+  if (blockquoteMatch) {
+    return { prefix: blockquoteMatch[1].trimEnd() + ' ', text: blockquoteMatch[2] };
   }
 
   return null;
@@ -48,18 +40,14 @@ export class NoteEditor {
     this.container = container;
     this.currentEditId = null;
     
-    // Bind para mantener 'this'
     this.handleInput = this.handleInput.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.subjectPicker = null;
     
-    // Render inicial
     this.render();
     
-    // Suscribirse a cambios
     this.unsubscribe = NoteStore.subscribe((state) => {
-      // Ocultar composer en vistas de mantenimiento
       const composer = this.container.querySelector('.composer');
       if (composer) {
         composer.style.display = ['trash', 'backup'].includes(state.viewMode) ? 'none' : '';
@@ -119,10 +107,8 @@ export class NoteEditor {
     input.addEventListener('keydown', this.handleKeyDown);
     saveBtn.addEventListener('click', this.handleSave);
 
-    // Slash commands: instanciar handler con el popup dentro del composer
     this.slashHandler = new SlashCommandHandler(input, composer);
 
-    // Botón salir de modo enfoque
     this.container.querySelector('#btn-exit-focus').addEventListener('click', () => {
       this.exitFocusMode();
     });

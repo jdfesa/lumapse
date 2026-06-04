@@ -211,6 +211,43 @@ describe('NoteEditor Markdown list continuation', () => {
     editor.destroy()
   })
 
+  it('continua callouts y sale con Enter sobre linea vacia', () => {
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+
+    input.value = '> [!warning]\n> esta es una advertencia'
+    input.setSelectionRange(input.value.length, input.value.length)
+
+    const firstEnter = pressEnter(input)
+
+    expect(firstEnter.defaultPrevented).toBe(true)
+    expect(input.value).toBe('> [!warning]\n> esta es una advertencia\n> ')
+    expect(input.selectionStart).toBe(input.value.length)
+
+    const secondEnter = pressEnter(input)
+
+    expect(secondEnter.defaultPrevented).toBe(true)
+    expect(input.value).toBe('> [!warning]\n> esta es una advertencia\n')
+    expect(input.selectionStart).toBe(input.value.length)
+
+    editor.destroy()
+  })
+
+  it('continua blockquotes simples con el prefijo >', () => {
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+
+    input.value = '> cita de clase'
+    input.setSelectionRange(input.value.length, input.value.length)
+
+    pressEnter(input)
+
+    expect(input.value).toBe('> cita de clase\n> ')
+    expect(input.selectionStart).toBe(input.value.length)
+
+    editor.destroy()
+  })
+
   it('no intercepta Enter en texto normal', () => {
     const editor = createEditor()
     const input = editor.container.querySelector('#composer-input')
