@@ -13,6 +13,7 @@
 // =============================================================
 
 import { renderMarkdown } from '../services/MarkdownService.js';
+import './callout.css';
 import './MarkdownPreview.css';
 
 export class MarkdownPreview {

@@ -1,0 +1,114 @@
+/* ============================================================
+   Estilos compartidos para callouts Markdown
+   Usado por MarkdownPreview.css y NoteCard.css
+   ============================================================ */
+
+.md-callout {
+  --callout-color: var(--color-accent);
+  --callout-bg: var(--color-accent-dim);
+  --callout-icon: "i";
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text);
+  background: var(--callout-bg);
+  border-left: 3px solid var(--callout-color);
+  border-radius: var(--radius-md);
+}
+
+.md-callout__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-2) 0;
+  color: var(--callout-color);
+  font-weight: 700;
+}
+
+.md-callout__icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.md-callout__icon::before {
+  content: var(--callout-icon);
+}
+
+.md-callout p:last-child,
+.md-callout ul:last-child,
+.md-callout ol:last-child,
+.md-callout pre:last-child {
+  margin-bottom: 0;
+}
+
+/* --- Variantes por tipo --- */
+
+.md-callout--note {
+  --callout-color: #60a5fa;
+  --callout-bg: rgba(96, 165, 250, 0.12);
+  --callout-icon: "i";
+}
+
+.md-callout--info {
+  --callout-color: #22d3ee;
+  --callout-bg: rgba(34, 211, 238, 0.12);
+  --callout-icon: "i";
+}
+
+.md-callout--todo {
+  --callout-color: #a78bfa;
+  --callout-bg: rgba(167, 139, 250, 0.12);
+  --callout-icon: "T";
+}
+
+.md-callout--important {
+  --callout-color: #fb7185;
+  --callout-bg: rgba(251, 113, 133, 0.12);
+  --callout-icon: "!";
+}
+
+.md-callout--question {
+  --callout-color: #f59e0b;
+  --callout-bg: rgba(245, 158, 11, 0.13);
+  --callout-icon: "?";
+}
+
+.md-callout--warning {
+  --callout-color: #f97316;
+  --callout-bg: rgba(249, 115, 22, 0.13);
+  --callout-icon: "!";
+}
+
+.md-callout--example {
+  --callout-color: #34d399;
+  --callout-bg: rgba(52, 211, 153, 0.12);
+  --callout-icon: "#";
+}
+
+.md-callout--quote {
+  --callout-color: #94a3b8;
+  --callout-bg: rgba(148, 163, 184, 0.12);
+  --callout-icon: "\"";
+}
+
+.md-callout--tip,
+.md-callout--success {
+  --callout-color: #2dd4bf;
+  --callout-bg: rgba(45, 212, 191, 0.12);
+  --callout-icon: "+";
+}
+
+.md-callout--failure,
+.md-callout--danger,
+.md-callout--bug {
+  --callout-color: #ef4444;
+  --callout-bg: rgba(239, 68, 68, 0.12);
+  --callout-icon: "!";
+}

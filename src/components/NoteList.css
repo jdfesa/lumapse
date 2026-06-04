@@ -4,6 +4,7 @@
    ============================================================ */
 
 /* Importar estilos de componentes hijo */
+@import './callout.css';
 @import './NoteCard.css';
 @import './TrashView.css';
 
