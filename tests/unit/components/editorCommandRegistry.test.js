@@ -67,7 +67,7 @@ describe('editorCommandRegistry', () => {
     expect(ids).toContain('heading-1')
     expect(ids).toContain('task-list')
     expect(ids).toContain('callout-important')
-    expect(ids).toContain('focus-mode')
+    expect(ids).not.toContain('focus-mode')
   })
 
   it('expone comandos de formato inline', () => {

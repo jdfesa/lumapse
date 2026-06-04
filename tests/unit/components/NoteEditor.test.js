@@ -114,6 +114,21 @@ describe('NoteEditor subject picker', () => {
 })
 
 describe('NoteEditor insert menu', () => {
+  it('ordena las acciones como Entrada, +, Aa y Modo Enfoque', () => {
+    const editor = createEditor()
+    const ids = [...editor.container.querySelector('.composer__tools').children]
+      .map(element => element.id)
+
+    expect(ids).toEqual([
+      'composer-subject-picker',
+      'composer-plus-btn',
+      'composer-format-btn',
+      'composer-focus-btn',
+    ])
+
+    editor.destroy()
+  })
+
   it('usa el registry del editor para insertar callouts desde el boton +', () => {
     const editor = createEditor()
     const input = editor.container.querySelector('#composer-input')
@@ -129,11 +144,34 @@ describe('NoteEditor insert menu', () => {
     editor.destroy()
   })
 
-  it('mantiene Modo Enfoque como accion del menu +', () => {
+  it('cierra el menu + al tocar el boton de nuevo', () => {
+    vi.useFakeTimers()
+    let editor
+    try {
+      editor = createEditor()
+      const plusBtn = editor.container.querySelector('#composer-plus-btn')
+
+      plusBtn.dispatchEvent(new window.Event('pointerdown', { bubbles: true }))
+      plusBtn.click()
+      vi.advanceTimersByTime(60)
+      expect(findPopupItem(editor.container, 'Importante')).not.toBeUndefined()
+
+      plusBtn.dispatchEvent(new window.Event('pointerdown', { bubbles: true }))
+      plusBtn.click()
+      expect(editor.container.querySelector('.editor-popup__item')).toBeNull()
+    } finally {
+      editor?.destroy()
+      vi.useRealTimers()
+    }
+  })
+
+  it('usa un boton dedicado para Modo Enfoque fuera del menu +', () => {
     const editor = createEditor()
 
     editor.container.querySelector('#composer-plus-btn').click()
-    findPopupItem(editor.container, 'Modo Enfoque').click()
+    expect(findPopupItem(editor.container, 'Modo Enfoque')).toBeUndefined()
+
+    editor.container.querySelector('#composer-focus-btn').click()
 
     expect(editor.container.querySelector('.composer').classList.contains('composer--focus')).toBe(true)
     expect(document.body.classList.contains('focus-mode-active')).toBe(true)
@@ -144,6 +182,27 @@ describe('NoteEditor insert menu', () => {
 })
 
 describe('NoteEditor inline format menu', () => {
+  it('cierra el menu Aa al tocar el boton de nuevo', () => {
+    vi.useFakeTimers()
+    let editor
+    try {
+      editor = createEditor()
+      const formatBtn = editor.container.querySelector('#composer-format-btn')
+
+      formatBtn.dispatchEvent(new window.Event('pointerdown', { bubbles: true }))
+      formatBtn.click()
+      vi.advanceTimersByTime(60)
+      expect(findPopupItem(editor.container, 'Negrita')).not.toBeUndefined()
+
+      formatBtn.dispatchEvent(new window.Event('pointerdown', { bubbles: true }))
+      formatBtn.click()
+      expect(editor.container.querySelector('.editor-popup__item')).toBeNull()
+    } finally {
+      editor?.destroy()
+      vi.useRealTimers()
+    }
+  })
+
   it('envuelve seleccion con negrita desde el boton Aa', () => {
     const editor = createEditor()
     const input = editor.container.querySelector('#composer-input')
