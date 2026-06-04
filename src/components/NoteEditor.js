@@ -6,8 +6,42 @@
 import * as NoteStore from '../store/NoteStore.js';
 import { SlashCommandHandler } from './SlashCommandHandler.js';
 import { EditorPopup } from './EditorPopup.js';
+import { getCommandSnippet, getEditorCommandsForSurface } from './editorCommandRegistry.js';
 import { SubjectPicker } from './SubjectPicker.js';
 import './NoteEditor.css';
+
+const TASK_LIST_LINE_REGEX = /^(\s*)([-*+])\s+\[[ xX]\]\s+(.*)$/;
+const BULLETED_LIST_LINE_REGEX = /^(\s*)([-*+]\s+)(.*)$/;
+const NUMBERED_LIST_LINE_REGEX = /^(\s*)(\d+)([.)]\s+)(.*)$/;
+
+function getMarkdownContinuation(currentLine) {
+  const taskMatch = currentLine.match(TASK_LIST_LINE_REGEX);
+  if (taskMatch) {
+    return {
+      prefix: `${taskMatch[1]}${taskMatch[2]} [ ] `,
+      text: taskMatch[3],
+    };
+  }
+
+  const bulletMatch = currentLine.match(BULLETED_LIST_LINE_REGEX);
+  if (bulletMatch) {
+    return {
+      prefix: `${bulletMatch[1]}${bulletMatch[2]}`,
+      text: bulletMatch[3],
+    };
+  }
+
+  const numberedMatch = currentLine.match(NUMBERED_LIST_LINE_REGEX);
+  if (numberedMatch) {
+    const nextNumber = Number.parseInt(numberedMatch[2], 10) + 1;
+    return {
+      prefix: `${numberedMatch[1]}${nextNumber}${numberedMatch[3]}`,
+      text: numberedMatch[4],
+    };
+  }
+
+  return null;
+}
 
 export class NoteEditor {
   constructor(container) {
@@ -108,10 +142,10 @@ export class NoteEditor {
     this.plusPopup = new EditorPopup({
       container: composer,
       onSelect: (item) => {
-        if (item.id === 'focus-mode') {
+        if (item.action === 'focus-mode') {
           this.enterFocusMode();
-        } else if (item.id === 'heading') {
-          this.insertAtCursor(textarea, '# ');
+        } else {
+          this.insertCommandAtCursor(textarea, item);
         }
       },
       onDismiss: () => {},
@@ -122,23 +156,31 @@ export class NoteEditor {
       if (this.plusPopup.isVisible()) {
         this.plusPopup.hide();
       } else {
-        this.plusPopup.show([
-          { id: 'heading', label: 'Título', description: '' },
-          { id: 'focus-mode', label: 'Modo Enfoque', description: 'Sin distracciones' },
-        ], "Tipea / para comandos");
+        this.plusPopup.show(
+          getEditorCommandsForSurface('insert'),
+          'Tambien podes escribir / al inicio de linea'
+        );
       }
     });
   }
 
-  insertAtCursor(textarea, snippet) {
+  insertCommandAtCursor(textarea, command) {
+    const snippet = getCommandSnippet(command);
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
     const before = textarea.value.substring(0, start);
     const after = textarea.value.substring(end);
 
     textarea.value = before + snippet + after;
-    const cursor = start + snippet.length;
-    textarea.setSelectionRange(cursor, cursor);
+    const cursorOffset = Number.isInteger(command.cursorOffset)
+      ? command.cursorOffset
+      : snippet.length;
+    const cursor = start + cursorOffset;
+    if (command.selectLength) {
+      textarea.setSelectionRange(cursor, cursor + command.selectLength);
+    } else {
+      textarea.setSelectionRange(cursor, cursor);
+    }
     textarea.dispatchEvent(new window.Event('input', { bubbles: true }));
     textarea.focus();
   }
@@ -192,9 +234,8 @@ export class NoteEditor {
   }
 
   /**
-   * Auto-continue para listas de tareas (todo).
-   * Enter después de '- [ ] texto' → nueva línea con '- [ ] '
-   * Enter en '- [ ] ' vacío → elimina el prefijo (salir del modo lista)
+   * Auto-continue para listas Markdown.
+   * Un Enter continúa el patrón; Enter sobre el item vacío sale de la lista.
    */
   handleKeyDown(e) {
     if (e.key !== 'Enter') return;
@@ -212,22 +253,19 @@ export class NoteEditor {
     const lastNewline = beforeCursor.lastIndexOf('\n');
     const currentLine = beforeCursor.substring(lastNewline + 1);
 
-    // Verificar si la línea actual es un item de todo
-    const todoMatch = currentLine.match(/^(- \[[ x]\] )(.*)/); 
-    if (!todoMatch) return;
-
-    const text = todoMatch[2];
+    const continuation = getMarkdownContinuation(currentLine);
+    if (!continuation) return;
 
     e.preventDefault();
 
-    if (!text.trim()) {
+    if (!continuation.text.trim()) {
       // Item vacío: eliminar el prefijo (salir del modo lista)
       const lineStart = lastNewline + 1;
       textarea.value = value.substring(0, lineStart) + value.substring(selectionStart);
       textarea.setSelectionRange(lineStart, lineStart);
     } else {
-      // Insertar nueva línea con prefijo de todo
-      const newPrefix = '\n- [ ] ';
+      // Insertar nueva línea con el prefijo Markdown correspondiente
+      const newPrefix = `\n${continuation.prefix}`;
       const after = value.substring(selectionStart);
       textarea.value = beforeCursor + newPrefix + after;
       const newPos = selectionStart + newPrefix.length;
