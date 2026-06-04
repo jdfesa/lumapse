@@ -75,6 +75,17 @@ describe('renderMarkdown()', () => {
       expect(html).toContain('<pre><code>bloque')
     })
 
+    it('convierte separador Markdown en <hr>', () => {
+      expect(MarkdownService.renderMarkdown('---')).toContain('<hr>')
+    })
+
+    it('convierte blockquote simple en <blockquote>', () => {
+      const html = MarkdownService.renderMarkdown('> Cita de clase')
+
+      expect(html).toContain('<blockquote>')
+      expect(html).toContain('<p>Cita de clase</p>')
+    })
+
     it('convierte [texto](url) en enlace', () => {
       const html = MarkdownService.renderMarkdown('[texto](./nota.md)')
 
@@ -128,6 +139,14 @@ describe('renderMarkdown()', () => {
 
       expect(html).toContain('&lt;img src=x onerror=alert(1)&gt;')
       expect(html).not.toContain('<img src=x')
+    })
+
+    it('sanitiza HTML peligroso dentro del cuerpo de un callout', () => {
+      const html = MarkdownService.renderMarkdown('> [!warning]\n> <script>alert(1)</script>\n> Texto seguro')
+
+      expect(html).toContain('class="md-callout md-callout--warning"')
+      expect(html).not.toContain('<script')
+      expect(html).toContain('Texto seguro')
     })
   })
 
@@ -212,6 +231,17 @@ describe('renderMarkdown()', () => {
       expect(html).toContain('<thead>')
       expect(html).toContain('<tbody>')
       expect(html).toContain('<td>1</td>')
+    })
+
+    it('elimina atributos peligrosos en tablas HTML permitidas', () => {
+      const html = MarkdownService.renderMarkdown(
+        '<table onclick="alert(1)"><tr><td onmouseover="alert(1)">ok</td></tr></table>'
+      )
+
+      expect(html).toContain('<table>')
+      expect(html).toContain('<td>ok</td>')
+      expect(html).not.toContain('onclick')
+      expect(html).not.toContain('onmouseover')
     })
   })
 
