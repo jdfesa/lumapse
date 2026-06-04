@@ -2,38 +2,9 @@ import * as NoteStore from '../store/NoteStore.js';
 import { SlashCommandHandler } from './SlashCommandHandler.js';
 import { EditorPopup } from './EditorPopup.js';
 import { getCommandSnippet, getEditorCommandsForSurface } from './editorCommandRegistry.js';
+import { applyInlineCommand, getMarkdownContinuation } from './editorTextTransforms.js';
 import { SubjectPicker } from './SubjectPicker.js';
 import './NoteEditor.css';
-
-const TASK_LIST_LINE_REGEX = /^(\s*)([-*+])\s+\[[ xX]\]\s+(.*)$/;
-const BULLETED_LIST_LINE_REGEX = /^(\s*)([-*+]\s+)(.*)$/;
-const NUMBERED_LIST_LINE_REGEX = /^(\s*)(\d+)([.)]\s+)(.*)$/;
-const BLOCKQUOTE_LINE_REGEX = /^(\s*>\s?)(.*)$/;
-
-function getMarkdownContinuation(currentLine) {
-  const taskMatch = currentLine.match(TASK_LIST_LINE_REGEX);
-  if (taskMatch) {
-    return { prefix: `${taskMatch[1]}${taskMatch[2]} [ ] `, text: taskMatch[3] };
-  }
-
-  const bulletMatch = currentLine.match(BULLETED_LIST_LINE_REGEX);
-  if (bulletMatch) {
-    return { prefix: `${bulletMatch[1]}${bulletMatch[2]}`, text: bulletMatch[3] };
-  }
-
-  const numberedMatch = currentLine.match(NUMBERED_LIST_LINE_REGEX);
-  if (numberedMatch) {
-    const nextNumber = Number.parseInt(numberedMatch[2], 10) + 1;
-    return { prefix: `${numberedMatch[1]}${nextNumber}${numberedMatch[3]}`, text: numberedMatch[4] };
-  }
-
-  const blockquoteMatch = currentLine.match(BLOCKQUOTE_LINE_REGEX);
-  if (blockquoteMatch) {
-    return { prefix: blockquoteMatch[1].trimEnd() + ' ', text: blockquoteMatch[2] };
-  }
-
-  return null;
-}
 
 export class NoteEditor {
   constructor(container) {
@@ -93,6 +64,9 @@ export class NoteEditor {
             <button class="composer__tool-btn composer__plus-btn" title="Insertar" id="composer-plus-btn">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
+            <button class="composer__tool-btn composer__format-btn" title="Formato" id="composer-format-btn" aria-label="Formato">
+              Aa
+            </button>
           </div>
           <button id="btn-save-note" class="composer__save-btn" title="Guardar nota" disabled>Guardar</button>
         </div>
@@ -115,8 +89,8 @@ export class NoteEditor {
 
     this.subjectPicker = new SubjectPicker(this.container.querySelector('#composer-subject-picker'));
 
-    // Botón +: menú de inserción
     this.setupPlusButton(input, composer);
+    this.setupFormatButton(input, composer);
   }
 
   /**
@@ -145,6 +119,28 @@ export class NoteEditor {
         this.plusPopup.show(
           getEditorCommandsForSurface('insert'),
           'Tambien podes escribir / al inicio de linea'
+        );
+      }
+    });
+  }
+
+  setupFormatButton(textarea, composer) {
+    const formatBtn = this.container.querySelector('#composer-format-btn');
+
+    this.formatPopup = new EditorPopup({
+      container: composer,
+      onSelect: (item) => applyInlineCommand(textarea, item),
+      onDismiss: () => {},
+    });
+
+    formatBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (this.formatPopup.isVisible()) {
+        this.formatPopup.hide();
+      } else {
+        this.formatPopup.show(
+          getEditorCommandsForSurface('inline'),
+          'Selecciona texto o inserta un placeholder'
         );
       }
     });
@@ -387,6 +383,7 @@ export class NoteEditor {
     if (this.unsubscribe) this.unsubscribe();
     if (this.slashHandler) this.slashHandler.destroy();
     if (this.plusPopup) this.plusPopup.destroy();
+    if (this.formatPopup) this.formatPopup.destroy();
     if (this.subjectPicker) this.subjectPicker.destroy();
     this.container.innerHTML = '';
   }

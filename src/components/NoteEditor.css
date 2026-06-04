@@ -67,6 +67,13 @@
   color: var(--color-text-bright);
 }
 
+.composer__format-btn {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
 .composer__save-btn {
   background-color: var(--color-accent);
   color: #fff;
