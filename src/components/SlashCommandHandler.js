@@ -10,57 +10,10 @@
 // =============================================================
 
 import { EditorPopup } from './EditorPopup.js';
+import { getCommandSnippet, getEditorCommandsForSurface } from './editorCommandRegistry.js';
 import './EditorPopup.css';
 
-/**
- * Comandos disponibles.
- * Cada comando define el snippet a insertar y la posición relativa
- * del cursor después de la inserción (offset desde el inicio del snippet).
- */
-const SLASH_COMMANDS = [
-  {
-    id: 'title',
-    label: '/titulo',
-    description: '',
-    snippet: '# ',
-    cursorOffset: 2,
-  },
-  {
-    id: 'todo',
-    label: '/todo',
-    description: '',
-    snippet: '- [ ] ',
-    // Cursor al final del primer item
-    cursorOffset: 6,
-  },
-  {
-    id: 'code',
-    label: '/code',
-    description: '',
-    snippet: '```\n\n```',
-    // Cursor en la línea vacía entre backticks
-    cursorOffset: 4,
-  },
-  {
-    id: 'table',
-    label: '/table',
-    description: '',
-    snippet: '| Header | Header |\n| ------ | ------ |\n| Cell   | Cell   |',
-    // Cursor al inicio del primer "Header"
-    cursorOffset: 2,
-    // Seleccionar "Header" para que el usuario lo reemplace
-    selectLength: 6,
-  },
-  {
-    id: 'link',
-    label: '/link',
-    description: '',
-    snippet: '[texto](url)',
-    // Cursor seleccionando "texto"
-    cursorOffset: 1,
-    selectLength: 5,
-  },
-];
+const SLASH_COMMANDS = getEditorCommandsForSurface('slash');
 
 export class SlashCommandHandler {
   /**
@@ -144,7 +97,7 @@ export class SlashCommandHandler {
   activate(position) {
     this.active = true;
     this.triggerPosition = position;
-    this.popup.show(SLASH_COMMANDS);
+    this.popup.show(SLASH_COMMANDS, 'Escribi para filtrar, Enter para insertar');
   }
 
   /**
@@ -162,16 +115,20 @@ export class SlashCommandHandler {
    */
   insertSnippet(command) {
     const { value, selectionStart } = this.textarea;
+    const snippet = getCommandSnippet(command);
 
     // Calcular rango a reemplazar: desde "/" hasta la posición actual del cursor
     const before = value.substring(0, this.triggerPosition);
     const after = value.substring(selectionStart);
 
     // Nuevo valor con el snippet insertado
-    this.textarea.value = before + command.snippet + after;
+    this.textarea.value = before + snippet + after;
 
     // Posicionar el cursor dentro del snippet
-    const cursorPos = this.triggerPosition + command.cursorOffset;
+    const cursorOffset = Number.isInteger(command.cursorOffset)
+      ? command.cursorOffset
+      : snippet.length;
+    const cursorPos = this.triggerPosition + cursorOffset;
     if (command.selectLength) {
       // Seleccionar texto para que el usuario lo reemplace (ej: "Header", "texto")
       this.textarea.setSelectionRange(cursorPos, cursorPos + command.selectLength);
