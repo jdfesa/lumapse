@@ -74,6 +74,10 @@
   line-height: 1;
 }
 
+.composer--focus .composer__focus-btn {
+  display: none;
+}
+
 .composer__save-btn {
   background-color: var(--color-accent);
   color: #fff;
@@ -108,7 +112,7 @@
 
 .composer__subject-trigger {
   height: 32px;
-  width: min(170px, 46vw);
+  width: clamp(112px, 36vw, 150px);
   display: grid;
   grid-template-columns: 10px minmax(0, 1fr) 16px;
   align-items: center;
@@ -235,7 +239,7 @@
 
 @media (max-width: 420px) {
   .composer__subject-trigger {
-    width: min(145px, 42vw);
+    width: clamp(96px, 30vw, 128px);
   }
 }
 

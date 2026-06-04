@@ -171,15 +171,6 @@ export const EDITOR_COMMANDS = [
     snippet: () => formatLocalDate(),
     surfaces: ['slash', 'insert'],
   },
-  {
-    id: 'focus-mode',
-    group: 'utility',
-    label: 'Modo Enfoque',
-    aliases: ['focus', 'enfoque', 'fullscreen'],
-    description: 'Sin distracciones',
-    action: 'focus-mode',
-    surfaces: ['insert'],
-  },
   createCalloutCommand({
     id: 'note',
     label: 'Nota',

@@ -67,6 +67,9 @@ export class NoteEditor {
             <button class="composer__tool-btn composer__format-btn" title="Formato" id="composer-format-btn" aria-label="Formato">
               Aa
             </button>
+            <button class="composer__tool-btn composer__focus-btn" title="Ampliar editor" id="composer-focus-btn" aria-label="Ampliar editor">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"></path><path d="M21 3l-7 7"></path><path d="M9 21H3v-6"></path><path d="M3 21l7-7"></path></svg>
+            </button>
           </div>
           <button id="btn-save-note" class="composer__save-btn" title="Guardar nota" disabled>Guardar</button>
         </div>
@@ -83,8 +86,11 @@ export class NoteEditor {
 
     this.slashHandler = new SlashCommandHandler(input, composer);
 
-    this.container.querySelector('#btn-exit-focus').addEventListener('click', () => {
-      this.exitFocusMode();
+    this.container.querySelector('#btn-exit-focus').addEventListener('click', () => this.exitFocusMode());
+    this.container.querySelector('#composer-focus-btn').addEventListener('click', () => {
+      this.plusPopup?.hide();
+      this.formatPopup?.hide();
+      this.enterFocusMode();
     });
 
     this.subjectPicker = new SubjectPicker(this.container.querySelector('#composer-subject-picker'));
@@ -101,26 +107,13 @@ export class NoteEditor {
 
     this.plusPopup = new EditorPopup({
       container: composer,
-      onSelect: (item) => {
-        if (item.action === 'focus-mode') {
-          this.enterFocusMode();
-        } else {
-          this.insertCommandAtCursor(textarea, item);
-        }
-      },
+      onSelect: (item) => this.insertCommandAtCursor(textarea, item),
       onDismiss: () => {},
     });
 
-    plusBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (this.plusPopup.isVisible()) {
-        this.plusPopup.hide();
-      } else {
-        this.plusPopup.show(
-          getEditorCommandsForSurface('insert'),
-          'Tambien podes escribir / al inicio de linea'
-        );
-      }
+    this.bindPopupButton(plusBtn, this.plusPopup, 'plusMenuWasVisibleOnPointerDown', () => {
+      this.formatPopup?.hide();
+      this.plusPopup.show(getEditorCommandsForSurface('insert'), 'Tambien podes escribir / al inicio de linea');
     });
   }
 
@@ -133,15 +126,23 @@ export class NoteEditor {
       onDismiss: () => {},
     });
 
-    formatBtn.addEventListener('click', (e) => {
+    this.bindPopupButton(formatBtn, this.formatPopup, 'formatMenuWasVisibleOnPointerDown', () => {
+      this.plusPopup?.hide();
+      this.formatPopup.show(getEditorCommandsForSurface('inline'), 'Selecciona texto o inserta un placeholder');
+    });
+  }
+
+  bindPopupButton(button, popup, visibilityKey, showPopup) {
+    button.addEventListener('pointerdown', () => {
+      this[visibilityKey] = popup.isVisible();
+    });
+    button.addEventListener('click', (e) => {
       e.stopPropagation();
-      if (this.formatPopup.isVisible()) {
-        this.formatPopup.hide();
+      if (this[visibilityKey] || popup.isVisible()) {
+        this[visibilityKey] = false;
+        popup.hide();
       } else {
-        this.formatPopup.show(
-          getEditorCommandsForSurface('inline'),
-          'Selecciona texto o inserta un placeholder'
-        );
+        showPopup();
       }
     });
   }
