@@ -40,6 +40,16 @@
 }
 
 /* --- Items --- */
+.editor-popup__group {
+  padding: var(--space-2) var(--space-3) var(--space-1);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
 .editor-popup__item {
   display: flex;
   align-items: center;

@@ -28,6 +28,7 @@ export class EditorPopup {
     this.filteredItems = [];
     this.activeIndex = 0;
     this.visible = false;
+    this.clickOutsideTimer = null;
 
     // Crear el elemento DOM
     this.el = document.createElement('div');
@@ -59,7 +60,7 @@ export class EditorPopup {
     // Escuchar teclas de navegación
     document.addEventListener('keydown', this.handleKeyDown, true);
     // Cerrar al hacer click fuera (con delay para evitar el click que abrió el popup)
-    setTimeout(() => {
+    this.clickOutsideTimer = setTimeout(() => {
       document.addEventListener('click', this.handleClickOutside, true);
     }, 50);
   }
@@ -73,6 +74,11 @@ export class EditorPopup {
     this.el.classList.remove('is-visible');
     this.el.innerHTML = '';
 
+    if (this.clickOutsideTimer) {
+      clearTimeout(this.clickOutsideTimer);
+      this.clickOutsideTimer = null;
+    }
+
     document.removeEventListener('keydown', this.handleKeyDown, true);
     document.removeEventListener('click', this.handleClickOutside, true);
   }
@@ -82,19 +88,10 @@ export class EditorPopup {
    * @param {string} query
    */
   filterItems(query) {
-    const q = query.toLowerCase();
-    this.filteredItems = this.items.filter(item =>
-      item.label.toLowerCase().includes(q) ||
-      item.description.toLowerCase().includes(q)
-    );
+    const q = query.trim().toLowerCase();
+    this.filteredItems = this.items.filter(item => this.getSearchText(item).includes(q));
     this.activeIndex = 0;
     this.renderItems();
-
-    // Si no hay resultados, cerrar
-    if (this.filteredItems.length === 0) {
-      this.hide();
-      this.onDismiss();
-    }
   }
 
   /**
@@ -118,14 +115,21 @@ export class EditorPopup {
   renderItems() {
     if (this.filteredItems.length === 0) {
       this.el.innerHTML = '<div class="editor-popup__empty">Sin resultados</div>';
+      this.renderFooterHint();
       return;
     }
 
+    let lastGroup = null;
     this.el.innerHTML = this.filteredItems.map((item, i) => {
       const descHtml = item.description
         ? `<span class="editor-popup__desc">${this.escapeHtml(item.description)}</span>`
         : '';
+      const groupHtml = item.groupLabel && item.groupLabel !== lastGroup
+        ? `<div class="editor-popup__group">${this.escapeHtml(item.groupLabel)}</div>`
+        : '';
+      lastGroup = item.groupLabel || lastGroup;
       return `
+      ${groupHtml}
       <div class="editor-popup__item ${i === this.activeIndex ? 'editor-popup__item--active' : ''}"
            role="option"
            aria-selected="${i === this.activeIndex}"
@@ -136,10 +140,7 @@ export class EditorPopup {
     `;
     }).join('');
 
-    // Footer hint (ej: "Escribe / para comandos")
-    if (this.footerHint) {
-      this.el.innerHTML += `<div class="editor-popup__hint">${this.escapeHtml(this.footerHint)}</div>`;
-    }
+    this.renderFooterHint();
 
     // Click en cada item
     this.el.querySelectorAll('.editor-popup__item').forEach(itemEl => {
@@ -157,7 +158,7 @@ export class EditorPopup {
 
     // Scroll al item activo
     const activeEl = this.el.querySelector('.editor-popup__item--active');
-    if (activeEl) {
+    if (activeEl && typeof activeEl.scrollIntoView === 'function') {
       activeEl.scrollIntoView({ block: 'nearest' });
     }
   }
@@ -173,6 +174,7 @@ export class EditorPopup {
       case 'ArrowDown':
         e.preventDefault();
         e.stopPropagation();
+        if (this.filteredItems.length === 0) return;
         this.activeIndex = (this.activeIndex + 1) % this.filteredItems.length;
         this.renderItems();
         break;
@@ -180,6 +182,7 @@ export class EditorPopup {
       case 'ArrowUp':
         e.preventDefault();
         e.stopPropagation();
+        if (this.filteredItems.length === 0) return;
         this.activeIndex = (this.activeIndex - 1 + this.filteredItems.length) % this.filteredItems.length;
         this.renderItems();
         break;
@@ -216,6 +219,23 @@ export class EditorPopup {
   escapeHtml(text) {
     if (!text) return '';
     return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  getSearchText(item) {
+    return [
+      item.label,
+      item.description,
+      ...(item.aliases || []),
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase();
+  }
+
+  renderFooterHint() {
+    if (this.footerHint) {
+      this.el.innerHTML += `<div class="editor-popup__hint">${this.escapeHtml(this.footerHint)}</div>`;
+    }
   }
 
   /**
