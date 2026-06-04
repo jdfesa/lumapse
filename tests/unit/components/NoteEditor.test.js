@@ -143,6 +143,87 @@ describe('NoteEditor insert menu', () => {
   })
 })
 
+describe('NoteEditor inline format menu', () => {
+  it('envuelve seleccion con negrita desde el boton Aa', () => {
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+
+    input.value = 'parcial'
+    input.setSelectionRange(0, input.value.length)
+    editor.container.querySelector('#composer-format-btn').click()
+    findPopupItem(editor.container, 'Negrita').click()
+
+    expect(input.value).toBe('**parcial**')
+    expect(input.selectionStart).toBe(2)
+    expect(input.selectionEnd).toBe(9)
+
+    editor.destroy()
+  })
+
+  it('inserta placeholder seleccionado cuando no hay seleccion', () => {
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+
+    input.value = 'hola '
+    input.setSelectionRange(input.value.length, input.value.length)
+    editor.container.querySelector('#composer-format-btn').click()
+    findPopupItem(editor.container, 'Cursiva').click()
+
+    expect(input.value).toBe('hola *texto*')
+    expect(input.selectionStart).toBe(6)
+    expect(input.selectionEnd).toBe(11)
+
+    editor.destroy()
+  })
+
+  it('selecciona url al crear link desde texto seleccionado', () => {
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+
+    input.value = 'web'
+    input.setSelectionRange(0, input.value.length)
+    editor.container.querySelector('#composer-format-btn').click()
+    findPopupItem(editor.container, 'Link').click()
+
+    expect(input.value).toBe('[web](url)')
+    expect(input.selectionStart).toBe(6)
+    expect(input.selectionEnd).toBe(9)
+
+    editor.destroy()
+  })
+
+  it('selecciona texto al crear link sin seleccion', () => {
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+
+    input.setSelectionRange(0, 0)
+    editor.container.querySelector('#composer-format-btn').click()
+    findPopupItem(editor.container, 'Link').click()
+
+    expect(input.value).toBe('[texto](url)')
+    expect(input.selectionStart).toBe(1)
+    expect(input.selectionEnd).toBe(6)
+
+    editor.destroy()
+  })
+
+  it('usa backticks para codigo inline', () => {
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+
+    input.value = 'const x'
+    input.setSelectionRange(0, input.value.length)
+    editor.container.querySelector('#composer-format-btn').click()
+    findPopupItem(editor.container, 'Codigo inline').click()
+
+    expect(input.value).toBe('`const x`')
+    expect(input.selectionStart).toBe(1)
+    expect(input.selectionEnd).toBe(8)
+
+    editor.destroy()
+  })
+})
+
 describe('NoteEditor Markdown list continuation', () => {
   it('continua vinetas con Enter y sale con Enter sobre item vacio', () => {
     const editor = createEditor()

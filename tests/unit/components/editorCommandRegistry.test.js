@@ -69,4 +69,21 @@ describe('editorCommandRegistry', () => {
     expect(ids).toContain('callout-important')
     expect(ids).toContain('focus-mode')
   })
+
+  it('expone comandos de formato inline', () => {
+    const commands = getEditorCommandsForSurface('inline')
+    const ids = commands.map(command => command.id)
+    const bold = commands.find(command => command.id === 'inline-bold')
+
+    expect(ids).toEqual([
+      'inline-bold',
+      'inline-italic',
+      'inline-strike',
+      'inline-code',
+      'inline-link',
+    ])
+    expect(bold.before).toBe('**')
+    expect(bold.after).toBe('**')
+    expect(bold.placeholder).toBe('texto')
+  })
 })

@@ -299,6 +299,13 @@ Reglas:
 - Para link con seleccion, insertar `[seleccion](url)` y seleccionar `url`.
 - No abrir modales en esta fase.
 
+Estado:
+
+- Implementado: boton `Aa` junto al `+` con Negrita, Cursiva, Tachado, Codigo inline y Link desde el registry compartido.
+- Implementado: envolver seleccion existente sin perderla.
+- Implementado: insertar placeholders seleccionables cuando no hay seleccion.
+- Implementado: comportamiento especial de Link, seleccionando `texto` sin seleccion previa y `url` cuando habia texto seleccionado.
+
 ### Fase 4: Escritura asistida
 
 Extender `handleKeyDown` en `NoteEditor`.
