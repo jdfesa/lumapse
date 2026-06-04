@@ -318,7 +318,7 @@ Comportamientos:
 Estado parcial:
 
 - Implementado: continuacion y salida de listas con vinetas, listas numeradas y checkboxes.
-- Pendiente: continuacion y salida automatica de callouts/citas con prefijo `> `.
+- Implementado: continuacion y salida automatica de callouts/citas con prefijo `> `.
 
 No hacer todavia:
 
