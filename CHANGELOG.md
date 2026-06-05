@@ -13,27 +13,30 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ---
 
-## [Unreleased] — Preparación Hito 05 — Automatización de Quality Gate y CI
+## [Unreleased] — Preparación Hito 05 — Quality Gate, Release y Mejoras Funcionales Controladas
 
 ### Added
 - **Scripts npm operativos:** Se expusieron `quality`, `verify`, `check:session`, `check:health`, `check:size`, `check:a11y`, `check:native-dialogs`, `check:traceability`, `check:docs`, `check:schema`, `check:dbml`, `check:subjects` y `deploy:android` para unificar el flujo local y CI.
 - **Check contra diálogos nativos:** Nuevo `scripts/check-native-dialogs.js`, que bloquea `alert()`, `confirm()` y `prompt()` en `src/`, con excepción explícita para `src/utils/seeder.js`.
 - **Entrypoint estable de trazabilidad:** Nuevo `scripts/check-traceability.py` como wrapper compatible para el checker preservado en `check-traceability.py.replaced`.
-- **Inserción rápida de título:** El botón `+` y el comando `/titulo` permiten insertar un encabezado Markdown sin obligar al usuario a conocer la sintaxis de antemano.
+- **Editor enriquecido y slash commands (RF-028 / HU-028):** El editor incorpora un registro compartido de comandos para `/`, botón `+` y botón `Aa`, con inserción de encabezados, listas, checkboxes, citas, tablas, separadores, código y callouts. Incluye formato inline sobre selección, botón dedicado de Modo Enfoque en el composer, continuidad inteligente con Enter para listas/citas/callouts, salida con línea vacía y popup visual con iconos/pistas compactas.
 - **Fechas Académicas discretas (RF-027 / HU-027 / DP-007):** Implementación completa de marcadores académicos puntuales para parciales, finales, trabajos prácticos y exposiciones dentro del calendario existente. Incluye tabla SQLite `academic_events`, CRUD bajo nivel, servicio de dominio, store reactivo, dots en Heatmap, mini-card por día, modal accesible de creación/edición, lista colapsable de próximas fechas, acciones de editar/eliminar con confirmación accesible y tests unitarios de datos, store y UI.
-- **Backup manual externo (RF-017):** Nueva vista `Backup` accesible desde el drawer para crear un `.zip` manual restaurable y legible, con `manifest.json`, JSON estructurado, notas Markdown por materia/sección, recordatorio local de 30 días, detección WiFi/datos móviles/offline y salida por share sheet/gestor de archivos. Validado en Android real; si Google Drive está instalado puede aparecer como destino, y si no, funciona el fallback de almacenamiento elegido por el usuario.
+- **Backup manual externo (RF-017 / HU-030):** Nueva vista `Backup` accesible desde el drawer para crear un `.zip` manual restaurable y legible, con `manifest.json`, JSON estructurado, notas Markdown por materia/sección, recordatorio local de 30 días, detección WiFi/datos móviles/offline y salida por share sheet/gestor de archivos. Validado en Android real; si Google Drive está instalado puede aparecer como destino, y si no, funciona el fallback de almacenamiento elegido por el usuario.
 
 ### Changed
 - **Búsqueda RF-015 más útil:** La lupa ahora busca globalmente entre notas activas aunque el usuario esté ubicado en Entrada o en una materia, y normaliza tildes para que `algebra` encuentre `Álgebra`.
 - **Título implícito más claro:** Las tarjetas destacan suavemente la primera línea no vacía como título cuando la nota no usa `#`, manteniendo el editor de un solo campo y reduciendo fricción para usuarios nuevos.
+- **Render Markdown enriquecido:** Callouts principales se renderizan con icono, color y título por tipo; blockquotes simples, tablas, separadores, código y checkboxes tienen estilos más estables en preview y tarjetas de nota.
+- **Tipografía de escritura más amable:** La interfaz conserva JetBrains Mono como identidad visual, pero el área de escritura y lectura de notas usa una pila serif nativa del sistema para una experiencia offline-first más cómoda en móvil.
 - **GitHub Actions ampliado:** El workflow existente pasó a ser `CI — Quality Gate` y ahora ejecuta lint, tests, build, bundle budget, check de diálogos nativos, trazabilidad, links internos, schema sync, DBML, jerarquía de materias y auditoría a11y estática.
 - **Tests nativos Android corregidos:** Se reemplazaron los tests generados por template que referenciaban paquetes de Capacitor por tests bajo `com.lumapse.app`.
-- **Backlog/TODO actualizados:** El `TODO` raíz y `BACKLOG.md` registran como completada la capa de automatización, cierran formalmente Hito 04 y clasifican esta tanda como preparación de Hito 05.
+- **Backlog/TODO actualizados:** El `TODO` raíz y `BACKLOG.md` registran como completada la capa de automatización, cierran formalmente Hito 04 y clasifican esta tanda como preparación de Hito 05 con cambios funcionales controlados.
 - **Versionado de paquete alineado:** `package.json` y `package-lock.json` pasan de `0.1.0` a `0.4.7`, manteniendo el paquete sincronizado con la última versión cerrada documentada antes de preparar un release/APK.
-- **Seguimiento de velocidad actualizado:** `docs/gestion/seguimiento-velocidad.md` registra 18 HU formalizadas, 70 SP cerrados en Hitos 02 a 04 y velocidad promedio de 23.3 SP/hito tras reclasificar HU-008 como futura.
+- **Seguimiento de velocidad actualizado:** `docs/gestion/seguimiento-velocidad.md` registra 20 HU formalizadas, 94 SP totales, 70 SP cerrados en Hitos 02 a 04 y 21 SP formalizados en curso para Hito 05.
 - **CSP web ajustada para SQLite WASM:** `index.html` permite el runtime WASM local necesario para `jeep-sqlite`/`sql.js`, manteniendo los recursos restringidos a orígenes locales.
 - **Reclasificación RF-016/RF-018 y cierre de RF-017:** La revisión documental mantiene compartir nota individual e importación como decisiones futuras, pero `RF-017` deja de ser deuda abierta porque la primera versión de backup manual externo ya quedó integrada y validada en Android real.
 - **Plan de backup archivado:** El plan operativo de backup `.zip` y Google Drive se movió desde la raíz a `docs/gestion/historico/plan-backup-google-drive-2026-06-03.md` para conservar evidencia sin ensuciar el directorio principal.
+- **Plan de editor enriquecido archivado:** El plan operativo de editor enriquecido y slash commands se movió desde la raíz a `docs/gestion/historico/plan-editor-enriquecido-2026-06-05.md` tras completar sus fases.
 
 ---
 

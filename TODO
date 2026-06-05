@@ -6,7 +6,7 @@
 
 **Estado:** Hito 04 cerrado formalmente el 2026-06-01.
 **Objetivo:** preparar la primera release distribuible con quality gate, APK firmado, validacion manual y documentacion final.
-**Criterio:** no sumar features nuevas salvo correcciones criticas; estabilizar, empaquetar y validar.
+**Criterio:** no sumar features nuevas salvo cambios funcionales acotados y documentados. Quedan registrados como parte de Hito 05 `RF-017`, `RF-027` y `RF-028`; desde este punto, estabilizar, empaquetar y validar.
 
 ---
 
@@ -17,6 +17,8 @@
 - [x] Ejecutar `npm run verify` como gate local antes de preparar APK.
 - [x] Preparar checklist de validacion manual en Android real.
 - [x] Definir el corte como `0.4.8` release candidata/beta funcional para validacion controlada.
+- [x] Cerrar y archivar plan de editor enriquecido en `docs/gestion/historico/`.
+- [x] Registrar `RF-028 / HU-028` como mejora funcional controlada de Hito 05.
 
 ---
 
@@ -36,6 +38,15 @@
 - [x] `RF-016`: no mostrar boton "Compartir" si el flujo termina copiando contenido, porque duplicaria la accion existente de Copiar.
 - [x] `RF-017`: integrar backup `.zip` manual con formato restaurable/legible, destino Android por share sheet/gestor de archivos y prueba en dispositivo real.
 - [x] `RF-018`: mover importacion a deuda de mas largo plazo; si se retoma para nota individual, la nota importada entra en `Entrada` y no intenta recrear materia/seccion de origen.
+
+---
+
+## Editor enriquecido — decision Hito 05
+
+- [x] `RF-028`: formalizar comandos `/`, menu `+`, boton `Aa`, Modo Enfoque dedicado y render visual de callouts como mejora de escritura opcional.
+- [x] Mantener texto plano como flujo base; los comandos enriquecen la nota solo si el usuario los elige.
+- [x] Archivar el plan operativo en [`docs/gestion/historico/plan-editor-enriquecido-2026-06-05.md`](docs/gestion/historico/plan-editor-enriquecido-2026-06-05.md).
+- [x] Actualizar trazabilidad en requisitos, HU, changelog, backlog y seguimiento de velocidad.
 
 ---
 

@@ -197,6 +197,9 @@ Garantizar la calidad del código y preparar la distribución del producto.
 - Suite de tests unitarios con Vitest (implementada)
 - GitHub Actions `CI — Quality Gate` (implementado)
 - Smoke tests nativos Android bajo `com.lumapse.app` (implementados)
+- Backup manual `.zip` externo con salida por share sheet/gestor de archivos (`RF-017`)
+- Fechas académicas discretas integradas al calendario existente (`RF-027`)
+- Editor enriquecido con slash commands, botón `+`, formato `Aa`, callouts y modo enfoque dedicado (`RF-028`)
 - Testing en dispositivos Android reales
 - Generación del APK firmado para distribución
 - Publicación del APK en GitHub Releases
