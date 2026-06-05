@@ -157,6 +157,28 @@ describe('NoteEditor insert menu', () => {
     editor.destroy()
   })
 
+  it('mantiene los menus de la toolbar disponibles en modo enfoque', () => {
+    const editor = createEditor()
+
+    editor.enterFocusMode()
+    editor.container.querySelector('#composer-plus-btn').click()
+    expect(findPopupItem(editor.container, 'Importante')).not.toBeUndefined()
+    expect(editor.container.querySelector('.editor-popup').parentElement)
+      .toBe(editor.container.querySelector('.composer__footer'))
+
+    editor.container.querySelector('#composer-format-btn').click()
+    expect(findPopupItem(editor.container, 'Negrita')).not.toBeUndefined()
+
+    editor.updateSubjectSelect({
+      tree: [{ id: 'subj-math', name: 'Matematica', color: '#60a5fa', children: [] }],
+    })
+    editor.container.querySelector('#composer-subject-trigger').click()
+    expect(editor.container.querySelector('#composer-subject-menu').hidden).toBe(false)
+
+    editor.exitFocusMode()
+    editor.destroy()
+  })
+
   it('cierra el menu + al tocar el boton de nuevo', () => {
     vi.useFakeTimers()
     let editor
