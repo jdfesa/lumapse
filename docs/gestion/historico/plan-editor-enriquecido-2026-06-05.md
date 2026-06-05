@@ -1,6 +1,6 @@
 # Plan de Implementacion: Editor Enriquecido y Slash Commands
 
-> Estado: plan operativo por fases.
+> Estado: historico cerrado. Implementado por fases y archivado el 2026-06-05.
 > Alcance: enriquecer la escritura de notas sin romper la filosofia simple, offline-first y mobile-first de Lumapse.
 > Inspiracion: comandos y barra de insercion de Notion mobile, adaptados a una app de notas academicas liviana.
 
@@ -87,7 +87,7 @@ Comandos disponibles hoy:
 - `/todo` -> `- [ ] `
 - `/code` -> bloque triple backtick
 - `/table` -> tabla Markdown simple
-- `/link` -> `[texto](url)`
+- `/link` -> `[texto]\(url\)`
 
 Limitaciones:
 
@@ -239,7 +239,7 @@ Estos comandos deben aparecer al escribir `/` al inicio de linea:
 | Bloques basicos | Separador | `hr`, `linea`, `divider` | `---` | Final |
 | Estructura | Codigo | `code`, `codigo` | ``````\n\n`````` | Linea interna |
 | Estructura | Tabla simple | `table`, `tabla` | tabla 2x2 Markdown | Primer header seleccionado |
-| Estructura | Link | `link`, `enlace` | `[texto](url)` | `texto` seleccionado |
+| Estructura | Link | `link`, `enlace` | `[texto]\(url\)` | `texto` seleccionado |
 | Utiles | Fecha de hoy | `fecha`, `date`, `hoy` | fecha local `YYYY-MM-DD` | Final |
 | Callouts | Nota | `callout`, `note`, `nota`, `destacado` | `> [!note]\n> ` | Final |
 | Callouts | Info | `info`, `informacion` | `> [!info]\n> ` | Final |
@@ -295,14 +295,14 @@ Menu:
 | Cursiva | envolver seleccion con `*` |
 | Tachado | envolver seleccion con `~~` |
 | Codigo inline | envolver seleccion con `` ` `` |
-| Link | envolver seleccion como `[texto](url)` |
+| Link | envolver seleccion como `[texto]\(url\)` |
 
 Reglas:
 
 - Si hay texto seleccionado, envolverlo.
 - Si no hay seleccion, insertar placeholder y seleccionarlo.
-- Para link sin seleccion, insertar `[texto](url)` y seleccionar `texto`.
-- Para link con seleccion, insertar `[seleccion](url)` y seleccionar `url`.
+- Para link sin seleccion, insertar `[texto]\(url\)` y seleccionar `texto`.
+- Para link con seleccion, insertar `[seleccion]\(url\)` y seleccionar `url`.
 - No abrir modales en esta fase.
 
 Estado:
@@ -456,7 +456,7 @@ Tests unitarios:
 - `/h1` filtra `Encabezado 1`.
 - `/todo` filtra `Lista de tareas`.
 - Seleccionar `Tabla simple` inserta tabla y selecciona primer header.
-- Seleccionar `Link` inserta `[texto](url)` y selecciona `texto`.
+- Seleccionar `Link` inserta `[texto]\(url\)` y selecciona `texto`.
 - Sin resultados muestra empty state sin cerrar popup.
 
 Tests manuales:
@@ -491,7 +491,7 @@ Tests unitarios:
 
 - Seleccion `parcial` + Negrita -> `**parcial**`.
 - Sin seleccion + Negrita -> `**texto**` con `texto` seleccionado.
-- Seleccion `web` + Link -> `[web](url)` con `url` seleccionado.
+- Seleccion `web` + Link -> `[web]\(url\)` con `url` seleccionado.
 - Codigo inline respeta backticks.
 
 Tests manuales:
