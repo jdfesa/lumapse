@@ -1,6 +1,6 @@
 # Documentación de Producto — Lumapse
 
-**Última actualización:** 2026-05-14
+**Última actualización:** 2026-06-05
 
 Esta carpeta contiene la documentación centrada en el **usuario y el producto**, siguiendo los principios de **Design Thinking** como marco metodológico de diseño.
 
@@ -19,9 +19,9 @@ Esta carpeta contiene la documentación centrada en el **usuario y el producto**
 | [`metodologia-muestral.md`](./metodologia-muestral.md) | Empatizar | Fórmula de muestreo para poblaciones finitas, cálculo de n, escenarios y contingencia |
 | [`problem-statement.md`](./problem-statement.md) | Definir | Declaración formal del problema que Lumapse resuelve |
 | [`analisis-competitivo.md`](./analisis-competitivo.md) | Definir / Idear | Comparación con herramientas existentes y diferenciación |
-| [`requisitos-funcionales.md`](./requisitos-funcionales.md) | Idear / Prototipar | Funcionalidades concretas del sistema (RF) — 24 requisitos |
+| [`requisitos-funcionales.md`](./requisitos-funcionales.md) | Idear / Prototipar | Funcionalidades concretas del sistema (RF) — 28 requisitos |
 | [`requisitos-no-funcionales.md`](./requisitos-no-funcionales.md) | Idear / Prototipar | Atributos de calidad del sistema (RNF) — 26 requisitos |
-| [`historias-de-usuario.md`](./historias-de-usuario.md) | Idear / Prototipar | Historias de Usuario con Criterios de Aceptación — Hito 02 |
+| [`historias-de-usuario.md`](./historias-de-usuario.md) | Idear / Prototipar | Historias de Usuario con Criterios de Aceptación — Hitos 02 a 05 y futuras formalizadas |
 | [`lean-canvas.md`](./lean-canvas.md) | Idear | Modelo de negocio y propuesta de valor |
 | [`resultados-relevamiento.md`](./resultados-relevamiento.md) | Empatizar / Definir | Resultados del análisis de 120 respuestas — hallazgos, cruces estadísticos, validación de artefactos y recomendaciones |
 | [`decisiones-producto.md`](./decisiones-producto.md) | Transversal | Decisiones de diseño de producto documentadas |

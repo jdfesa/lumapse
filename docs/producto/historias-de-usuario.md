@@ -1,7 +1,7 @@
 # Historias de Usuario — Lumapse
 
 **Fase Design Thinking:** Idear / Prototipar  
-**Última actualización:** 2026-05-31
+**Última actualización:** 2026-06-05
 **Autor:** José David Sandoval
 
 ---
@@ -13,7 +13,7 @@
 - **CA:** Criterio de Aceptación — condición verificable que define cuándo la historia está completa.
 - **SP:** Story Points — complejidad relativa en escala Fibonacci (1, 2, 3, 5, 8, 13). Ver [metodología de estimación](#metodología-de-estimación).
 - **Trazabilidad:** Cada HU referencia el RF que implementa y la Persona que la motiva.
-- **Alcance:** Este documento cubre las HU de los **Hitos 02, 03, 04 y funcionalidades planificadas para Hito 06**. Se ampliará en hitos posteriores.
+- **Alcance:** Este documento cubre las HU de los **Hitos 02, 03, 04, 05 y funcionalidades futuras formalizadas**. Se ampliará en hitos posteriores.
 
 ---
 
@@ -183,7 +183,7 @@
 | **Story Points** | **3 SP** — Flujo acotado de compartir/exportar nota individual, validación en Android real y ubicación discreta en UI. |
 | **Hito** | Futuro |
 
-> **Estado de revisión 2026-06-01:** el alcance se posterga completo. Compartir solo tiene sentido si usa share sheet nativo de Android con apps reales como WhatsApp; si cae a copiar contenido, duplica una acción existente y no debe estar en la UI. Backup `.zip` (`RF-017`) e importación (`RF-018`) quedan como deuda posterior. Si en el futuro se importa una nota individual exportada desde Lumapse, debe crearse en `Entrada` y no intentar recrear materia/sección de origen.
+> **Estado de revisión 2026-06-05:** compartir una nota individual (`RF-016`) sigue postergado y solo tiene sentido si usa share sheet nativo de Android con apps reales como WhatsApp. El backup `.zip` se reabrió y quedó formalizado aparte como `RF-017 / HU-030`; la importación (`RF-018`) sigue como deuda posterior. Si en el futuro se importa una nota individual exportada desde Lumapse, debe crearse en `Entrada` y no intentar recrear materia/sección de origen.
 
 **Criterios de Aceptación:**
 
@@ -398,7 +398,7 @@
 
 ---
 
-## Hito 06 — Fechas Académicas Discretas (Octubre 2026)
+## Hito 05 — Preparación de Release y Mejoras Funcionales Controladas (Septiembre 2026)
 
 ### HU-027 — Marcar fechas académicas importantes
 
@@ -409,7 +409,7 @@
 | **Persona** | [Lucía](./personas.md#persona-1--lucía-la-estudiante-organizada) |
 | **Prioridad** | SHOULD |
 | **Story Points** | **8 SP** — Integra nueva tabla SQLite, servicio de dominio, estado global, render en Heatmap, diálogo accesible y lista de próximas fechas, manteniendo el alcance deliberadamente acotado. |
-| **Hito** | 06 |
+| **Hito** | 05 |
 
 **Criterios de Aceptación:**
 
@@ -425,15 +425,70 @@
 
 ---
 
+### HU-028 — Enriquecer notas con comandos de formato
+
+| Campo | Detalle |
+|---|---|
+| **Historia** | Como **estudiante**, quiero **insertar bloques y aplicar formato desde comandos simples**, para **estructurar mis apuntes sin memorizar toda la sintaxis Markdown**. |
+| **RF asociados** | [RF-028](./requisitos-funcionales.md) |
+| **Persona** | [Lucía](./personas.md#persona-1--lucía-la-estudiante-organizada), [Martín](./personas.md#persona-2--martín-el-estudiante-práctico) |
+| **Prioridad** | SHOULD |
+| **Story Points** | **5 SP** — Registro compartido de comandos, menús `/`, `+` y `Aa`, continuidad de listas/callouts, render visual de callouts y ajustes responsive del composer. |
+| **Hito** | 05 |
+
+**Criterios de Aceptación:**
+
+| CA | Descripción | Verificación |
+|---|---|---|
+| CA-01 | El slash menu ofrece bloques básicos como texto, encabezados, listas, tareas, cita, tabla, separador, código y callouts. | Test unitario + inspección visual |
+| CA-02 | El botón `+` abre/cierra el menú de inserción sin parpadeos y usa iconos/pistas compactas en lugar de textos redundantes. | Test de interacción + revisión visual |
+| CA-03 | El botón `Aa` aplica formato inline sobre la selección: negrita, cursiva, tachado, código inline y link. | Test unitario |
+| CA-04 | Listas, checkboxes, listas numeradas, citas y callouts continúan el patrón al presionar Enter y salen del bloque con una línea vacía. | Test unitario de textarea |
+| CA-05 | Los callouts principales se escriben con identificadores en inglés (`note`, `tip`, `warning`, etc.) y se renderizan con icono, color y título apropiados. | Test de MarkdownService + inspección visual |
+| CA-06 | El botón dedicado de Modo Enfoque funciona también dentro de la vista fullscreen y no queda atrapado por menús desplazados. | Test funcional |
+| CA-07 | El contenido guardado sigue siendo Markdown legible y portable, sin introducir formato propietario ni dependencias online. | Revisión de contenido persistido |
+
+---
+
+### HU-030 — Crear backup manual externo
+
+| Campo | Detalle |
+|---|---|
+| **Historia** | Como **estudiante práctico**, quiero **generar un respaldo manual de mis notas en un archivo `.zip` legible**, para **conservar una copia fuera de Lumapse sin depender de sincronización automática**. |
+| **RF asociados** | [RF-017](./requisitos-funcionales.md) |
+| **Persona** | [Martín](./personas.md#persona-2--martín-el-estudiante-práctico) |
+| **Prioridad** | SHOULD |
+| **Story Points** | **8 SP** — Generación de ZIP, manifiesto, JSON estructurado, Markdown por materia/sección, salida nativa Android, recordatorio local y validación manual en dispositivo real. |
+| **Hito** | 05 |
+
+**Criterios de Aceptación:**
+
+| CA | Descripción | Verificación |
+|---|---|---|
+| CA-01 | El usuario puede generar un `.zip` desde una vista secundaria de Backup. | Test funcional |
+| CA-02 | El archivo contiene `manifest.json`, datos estructurados y notas Markdown legibles por materia/sección. | Test unitario + verificación con `unzip` |
+| CA-03 | La exportación funciona sin conexión y no sube datos automáticamente a servicios externos. | Prueba en modo avión |
+| CA-04 | En Android, el usuario puede elegir destino mediante share sheet o gestor de archivos; Google Drive solo aparece si está instalado. | Prueba manual en dispositivo real |
+| CA-05 | La app muestra estado de red y recordatorio local de 30 días sin prometer sincronización automática. | Test de UI |
+| CA-06 | El plan operativo queda archivado como evidencia histórica. | Revisión documental |
+
+---
+
+## Hito 06 — Entrega Final (Octubre 2026)
+
+No hay HU funcionales nuevas asignadas a Hito 06 en este corte. El foco previsto es cierre documental, validación final y presentación académica.
+
+---
+
 ## Resumen
 
 | Métrica | Hito 02 | Hito 03 | Hito 04 | Hito 05 | Hito 06 | Futuro | Total |
 |---|---|---|---|---|---|---|---|
-| **Total HU** | 6 | 3 | 7 | 0 | 1 | 1 | **18** |
-| **Total Story Points** | 20 | 13 | 37 | 0 | 8 | 3 | **81** |
-| **Total Criterios de Aceptación** | 20 | 10 | 30 | 0 | 7 | 4 | **71** |
-| **Prioridad predominante** | MUST | MUST/SHOULD | SHOULD/MUST | — | SHOULD | SHOULD | — |
-| **Personas cubiertas** | Lucía (4), Martín (2) | Lucía (2), Martín (1) | Lucía (6), Martín (1) | — | Lucía (1) | Martín (1) | Lucía (13), Martín (5) |
+| **Total HU** | 6 | 3 | 7 | 3 | 0 | 1 | **20** |
+| **Total Story Points** | 20 | 13 | 37 | 21 | 0 | 3 | **94** |
+| **Total Criterios de Aceptación** | 20 | 10 | 30 | 20 | 0 | 4 | **84** |
+| **Prioridad predominante** | MUST | MUST/SHOULD | SHOULD/MUST | SHOULD | — | SHOULD | — |
+| **Personas cubiertas** | Lucía (4), Martín (2) | Lucía (2), Martín (1) | Lucía (6), Martín (1) | Lucía (2), Martín (2) | — | Martín (1) | Lucía (14), Martín (7) |
 
 ---
 
@@ -458,8 +513,10 @@
 | HU-015 | RF-025 | Lucía | Marcadores de estado académico | 3 | 04 |
 | HU-016 | RF-026 | Lucía | Papelera de reciclaje | 8 | 04 |
 | HU-017 | RF-014 | Lucía | Categorización y filtrado por materias | 8 | 04 |
-| HU-027 | RF-027 | Lucía | Fechas académicas discretas | 8 | 06 |
-| | | | **Total** | **81** | |
+| HU-027 | RF-027 | Lucía | Fechas académicas discretas | 8 | 05 |
+| HU-028 | RF-028 | Lucía, Martín | Editor enriquecido y slash commands | 5 | 05 |
+| HU-030 | RF-017 | Martín | Backup manual externo | 8 | 05 |
+| | | | **Total** | **94** | |
 
 ---
 

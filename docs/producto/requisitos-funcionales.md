@@ -1,7 +1,7 @@
 # Requisitos Funcionales — Lumapse
 
 **Fase Design Thinking:** Idear / Prototipar  
-**Última actualización:** 2026-06-01 (revisión exportación/importación local)
+**Última actualización:** 2026-06-05 (editor enriquecido y alcance Hito 05)
 **Autor:** José David Sandoval
 
 ---
@@ -46,6 +46,7 @@
 | RF-010 | El sistema debe renderizar **Markdown en tiempo real** (preview) mientras el usuario escribe. | MUST | Martín | 03 | Implementado |
 | RF-011 | El sistema debe soportar al menos la sintaxis Markdown básica: encabezados, negritas, cursivas, listas, código inline, bloques de código, y enlaces. | MUST | Martín | 03 | Implementado |
 | RF-012 | El sistema debe ofrecer un **modo de solo lectura** (preview) y un **modo de edición** para cada nota. | SHOULD | Martín | 03 | Implementado |
+| RF-028 | El sistema debe ofrecer herramientas opcionales de **formato e inserción Markdown** desde comandos `/`, botón `+`, botón `Aa` y comportamiento de continuidad inteligente, manteniendo texto plano como experiencia base. | SHOULD | Lucía, Martín | 05 | Implementado |
 
 ---
 
@@ -64,7 +65,7 @@
 
 | ID | Requisito | Prioridad | Persona | Hito | Estado |
 |---|---|---|---|---|---|
-| RF-027 | El sistema debe permitir marcar **fechas académicas puntuales** en el calendario existente, con tipo de evento (parcial, final, trabajo práctico o exposición), fecha obligatoria, descripción breve opcional y asociación opcional a una materia o sección. La funcionalidad debe actuar como recordatorio visual pasivo integrado al Heatmap, sin notificaciones, recurrencia, horarios ni sincronización externa. | SHOULD | Lucía | 06 | Implementado |
+| RF-027 | El sistema debe permitir marcar **fechas académicas puntuales** en el calendario existente, con tipo de evento (parcial, final, trabajo práctico o exposición), fecha obligatoria, descripción breve opcional y asociación opcional a una materia o sección. La funcionalidad debe actuar como recordatorio visual pasivo integrado al Heatmap, sin notificaciones, recurrencia, horarios ni sincronización externa. | SHOULD | Lucía | 05 | Implementado |
 
 ---
 
@@ -73,7 +74,7 @@
 | ID | Requisito | Prioridad | Persona | Hito | Estado |
 |---|---|---|---|---|---|
 | RF-016 | El sistema debe permitir **compartir o exportar una nota individual** como Markdown desde una acción secundaria. | SHOULD | Martín | Futuro | Postergado |
-| RF-017 | El sistema debe permitir **exportar un respaldo local** del workspace como archivo `.zip`, idealmente con notas `.md` y metadatos mínimos de organización. | SHOULD | Martín | Futuro | Postergado |
+| RF-017 | El sistema debe permitir **exportar un respaldo local** del workspace como archivo `.zip`, con manifiesto, datos estructurados y notas `.md` legibles, usando salida externa por share sheet o gestor de archivos. | SHOULD | Martín | 05 | Implementado |
 | RF-018 | El sistema debe permitir **importar contenido local** desde archivos `.md` o respaldos `.zip`, con política explícita para duplicados y materias existentes. | COULD | Martín | Futuro | Postergado |
 
 ---
@@ -101,12 +102,12 @@
 
 ## Decisión de revisión — Exportación/importación local
 
-La revisión del 2026-06-01 detecta que `src/services/ExportService.js` e `src/services/ImportService.js` conservan una base técnica parcial de exportación/importación, pero la funcionalidad no está conectada a la interfaz actual ni cubierta como flujo verificable de usuario. Por lo tanto, `RF-016`, `RF-017` y `RF-018` dejan de contarse como requisitos implementados del producto actual.
+La revisión del 2026-06-01 detectó que `src/services/ExportService.js` e `src/services/ImportService.js` conservaban una base técnica parcial de exportación/importación, pero la funcionalidad no estaba conectada a la interfaz actual ni cubierta como flujo verificable de usuario. Por lo tanto, `RF-016`, `RF-017` y `RF-018` dejaron de contarse temporalmente como requisitos implementados del producto actual.
 
 La decisión protege la filosofía de Lumapse: tomador de notas sin fricción, offline-first, mobile-first y sin sincronización todavía. Compartir una nota individual puede aportar portabilidad real solo si abre el share sheet nativo de Android y permite elegir apps instaladas como WhatsApp. Si termina copiando contenido, duplica la acción existente de Copiar y agrega ruido. Exportar respaldos completos o importar contenido exige reglas de merge, colisiones de nombres y reconstrucción de materias/secciones, por lo que queda como deuda posterior.
 
 - `RF-016` queda postergado: debe retomarse con `@capacitor/share`, posible `@capacitor/filesystem`, `npx cap sync` y prueba real en Android antes de aparecer en la UI.
-- `RF-017` queda como deuda técnica de largo plazo: backup local `.zip`, con formato y destino Android definidos antes de implementarlo.
+- `RF-017` se reabrió y completó el 2026-06-03 como backup manual `.zip` restaurable/legible, con salida externa por share sheet o gestor de archivos. La restauración completa y Drive API directa quedan fuera de este RF inicial.
 - `RF-018` queda como deuda de más largo plazo: si se retoma para una nota individual, la nota importada debe entrar en `Entrada`; no debe recrear materias/secciones de origen automáticamente.
 
 ## Decisiones de cierre del Hito 04
@@ -124,9 +125,9 @@ El cierre formal del Hito 04 (2026-06-01) reclasifica `RF-006`, `RF-022` y `RF-0
 | Prioridad | Cantidad | Descripción |
 |---|---|---|
 | **MUST** | 13 | Funcionalidades obligatorias para el MVP |
-| **SHOULD** | 10 | Funcionalidades deseables que completan la experiencia |
+| **SHOULD** | 11 | Funcionalidades deseables que completan la experiencia |
 | **COULD** | 4 | Funcionalidades opcionales si hay tiempo disponible |
-| **Total** | **27** | |
+| **Total** | **28** | |
 
 ---
 
@@ -137,9 +138,9 @@ El cierre formal del Hito 04 (2026-06-01) reclasifica `RF-006`, `RF-022` y `RF-0
 | **02** (Junio) | RF-001 a RF-005, RF-007 | 6 |
 | **03** (Julio) | RF-008 a RF-012, RF-021 | 6 |
 | **04** (Agosto) | RF-013 a RF-015, RF-019, RF-020, RF-025, RF-026 | 7 |
-| **05** (Septiembre) | RF-023 | 1 |
-| **06** (Octubre) | RF-027 | 1 |
-| **Futuro / Post-release** | RF-006, RF-016 a RF-018, RF-022, RF-024 | 6 |
+| **05** (Septiembre) | RF-017, RF-023, RF-027, RF-028 | 4 |
+| **06** (Octubre) | — | 0 |
+| **Futuro / Post-release** | RF-006, RF-016, RF-018, RF-022, RF-024 | 5 |
 
 ---
 

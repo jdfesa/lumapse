@@ -120,7 +120,7 @@ Los criterios se derivan directamente de las necesidades identificadas en las [p
 | **Peso pluma** | APK nativa liviana (< 10 MB estimado). Se instala directamente, sin depender del navegador. |
 | **Arranque instantáneo** | Sin splash screens, sin carga de workspace, sin sincronización inicial. |
 | **Markdown nativo** | No es un add-on o extensión. Es el formato base de todas las notas. |
-| **Sin vendor lock-in** | Portabilidad local planificada sobre Markdown puro. Compartir/exportar se posterga hasta validar share sheet nativo; backup e importación quedan como deuda posterior. |
+| **Sin vendor lock-in** | Portabilidad local sobre Markdown puro. Compartir/exportar nota individual se posterga hasta validar share sheet nativo; el backup manual `.zip` ya cubre una primera salida externa y la importación queda como deuda posterior. |
 
 ---
 
