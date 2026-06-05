@@ -4,7 +4,7 @@
 > **Referencia:** Gómez, J. (2014), Secciones 5 y 7. Guía de Estudio PP3 (Ing. Mauricio Parada, 2026).  
 > **Fecha de creación:** 2026-05-15  
 > **Autor:** José David Sandoval  
-> **Actualización:** 2026-06-01 — cierre formal del Hito 04 y activación operativa del Hito 05.
+> **Actualización:** 2026-06-05 — incorporación trazable de mejoras funcionales controladas en Hito 05.
 
 ---
 
@@ -65,7 +65,7 @@ Story Points normalizados contra las HU formales actuales:
 | HU-013 | Modos edición/lectura | 3 |
 | | **Total Hito 03** | **13** |
 
-> **Nota metodológica:** `HU-008` fue reclasificada como futura porque exportación/importación no está expuesta en la UI actual. Compartir nota individual solo vuelve si se implementa con share sheet nativo de Android; backup `.zip` e importación quedan como deuda posterior.
+> **Nota metodológica:** `HU-008` fue reclasificada como futura porque compartir/exportar una nota individual no está expuesto en la UI actual. El backup `.zip` se reabrió después como `RF-017 / HU-030` y quedó formalizado en Hito 05; la importación (`RF-018`) sigue como deuda posterior.
 
 ### Hito 04 — Organización y UX (Agosto 2026, cerrado formalmente)
 
@@ -84,6 +84,19 @@ Story Points entregados según las HU formalizadas:
 
 El Hito 04 registra 37 SP entregados y queda **cerrado formalmente el 2026-06-01**. Los pendientes menores de UX fueron resueltos con una combinación de pulido mínimo (empty states) y decisiones explícitas de postergación/descarte para proteger la filosofía del producto: captura rápida, offline-first, mobile-first y sin sincronización todavía.
 
+### Hito 05 — Testing, Calidad y Distribución (Septiembre 2026, en curso)
+
+Story Points formalizados hasta el 2026-06-05:
+
+| HU | Funcionalidad | SP |
+|---|---|---|
+| HU-027 | Fechas académicas discretas | 8 |
+| HU-028 | Editor enriquecido y slash commands | 5 |
+| HU-030 | Backup manual externo | 8 |
+| | **Total Hito 05 formalizado** | **21** |
+
+El Hito 05 mantiene su objetivo principal de testing, calidad y distribución, pero incorpora tres mejoras funcionales acotadas aprobadas durante la preparación de release. Se registran como cambios de alcance controlados porque ya quedaron implementados, probados y documentados, sin reabrir el Hito 04.
+
 ---
 
 ## 4. Tabla de seguimiento de velocidad
@@ -94,7 +107,7 @@ El Hito 04 registra 37 SP entregados y queda **cerrado formalmente el 2026-06-01
 | 02 | Junio 2026 | 20 | 20 | 20 SP/mes | 0 | ✅ Completado | Todas las HU completadas. Baseline: `LB-PROD-v0.1.0` |
 | 03 | Julio 2026 | 13 | 13 | 13 SP/mes | 0 | ✅ Completado | Markdown, lectura/escritura y offline; portabilidad local reclasificada |
 | 04 | Agosto 2026 | 37 | 37 | 37 SP/mes | 0 | ✅ Completado | Organización por materias + UX mobile cerrado formalmente |
-| 05 | Septiembre 2026 | *por definir* | — | — | — | 🔄 En curso | Testing + APK firmado |
+| 05 | Septiembre 2026 | 21 | 21 | 21 SP/mes parcial | 0 | 🔄 En curso | Testing + APK firmado, backup, fechas discretas y editor enriquecido |
 | 06 | Octubre 2026 | *por definir* | — | — | — | ⏳ Futuro | Informe final + entrega |
 
 ### Velocidad promedio (datos disponibles)
@@ -103,7 +116,7 @@ El Hito 04 registra 37 SP entregados y queda **cerrado formalmente el 2026-06-01
 Velocidad promedio = (20 + 13 + 37) / 3 = 23.3 SP/hito
 ```
 
-> El script `python3 scripts/generate-velocity-report.py` permite auditar los SP formalizados por hito desde la tabla de HU. Para velocidad real cerrada se consideran solo los hitos formalmente completados (02 a 04). Al 2026-06-01, el proyecto registra **18 HU formalizadas**, **81 SP totales planificados/formalizados** y **70 SP cerrados** en Hitos 02 a 04.
+> El script `python3 scripts/generate-velocity-report.py` permite auditar los SP formalizados por hito desde la tabla de HU. Para velocidad real cerrada se consideran solo los hitos formalmente completados (02 a 04). Al 2026-06-05, el proyecto registra **20 HU formalizadas**, **94 SP totales planificados/formalizados**, **70 SP cerrados** en Hitos 02 a 04 y **21 SP formalizados en curso** para Hito 05.
 
 ---
 

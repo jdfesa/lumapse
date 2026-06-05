@@ -12,6 +12,7 @@
 En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo Viable (MVP) real. Se incorpora la renderización de Markdown en tiempo real, modos de lectura/escritura y la infraestructura necesaria para que la aplicación funcione offline bajo la arquitectura PWA original.
 
 > **Nota de revisión 2026-06-01:** Durante el pivote mobile-first a Capacitor/SQLite se conservaron servicios base de exportación/importación, pero los flujos dejaron de estar expuestos en la UI actual. Por trazabilidad, `RF-016`, `RF-017` y `RF-018` pasan a deuda posterior; compartir solo vuelve si se implementa con share sheet nativo y se valida en Android real.
+> **Nota de evolución 2026-06-05:** `RF-017` fue reabierto y completado posteriormente en Hito 05 como backup manual `.zip`; `RF-016` y `RF-018` siguen postergados.
 
 ---
 
@@ -25,7 +26,7 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 | RF-011 | Soporte de sintaxis Markdown básica | MUST | ✅ Completado |
 | RF-012 | Modo edición / modo lectura (toggle) | SHOULD | ✅ Completado |
 | RF-016 | Exportar/compartir nota individual | SHOULD | ⏸️ Postergado |
-| RF-017 | Exportar respaldo local `.zip` | SHOULD | ⏸️ Postergado |
+| RF-017 | Exportar respaldo local `.zip` | SHOULD | ✅ Implementado posteriormente en Hito 05 |
 | RF-018 | Importar archivos o respaldos locales | COULD | ⏸️ Postergado |
 | RF-021 | PWA instalable desde el navegador | MUST | ✅ Completado |
 
@@ -86,7 +87,7 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 - Se incorporó `jszip` y quedaron servicios base para exportación/importación local.
 - La revisión posterior al pivote Android/SQLite confirma que estos servicios no son flujos visibles en la UI actual.
 - `RF-016` queda como deuda posterior: compartir/exportar una nota individual solo si se implementa con share sheet nativo de Android y no duplica Copiar.
-- `RF-017` y `RF-018` quedan como deuda posterior por complejidad de backup, importación, duplicados y materias/secciones.
+- `RF-017` se reabre después en Hito 05 como backup manual externo; `RF-018` queda como deuda posterior por complejidad de importación, duplicados y materias/secciones.
 
 ### 5. PWA y Soporte Offline (Service Worker)
 - Se instaló la dependencia de desarrollo `vite-plugin-pwa` para habilitar el soporte PWA de forma profesional y mantenible.

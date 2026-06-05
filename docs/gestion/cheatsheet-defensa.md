@@ -57,7 +57,7 @@
 - **¿Por qué no agregaste contador de palabras?** → RF-006 quedó postergado: Lumapse prioriza captura rápida. Si estudiantes reales lo piden, se puede sumar como metadato sutil calculado en UI.
 - **¿Por qué no mostrás online/offline?** → RF-024 quedó postergado: sin sincronización ni backup, el estado de red no cambia el flujo y podría sugerir una sincronización inexistente.
 - **¿Por qué no hay onboarding o tutorial Markdown?** → DP-006: la primera release valida una interfaz autoexplicativa. Lumapse permite escribir texto plano; Markdown es una mejora, no una barrera de entrada.
-- **¿Export/import está implementado?** → No como flujo visible actual. `RF-016` se posterga porque solo vale la pena si abre el share sheet nativo de Android; si termina copiando contenido, duplica el botón Copiar. Backup `.zip` (`RF-017`) e importación (`RF-018`) quedan como deuda posterior por su complejidad de archivos, merge y materias/secciones.
+- **¿Export/import está implementado?** → Parcialmente. `RF-016` se posterga porque compartir una nota individual solo vale la pena si abre el share sheet nativo de Android; si termina copiando contenido, duplica el botón Copiar. `RF-017` ya está implementado como backup manual `.zip` legible/restaurable con salida externa. `RF-018` queda como deuda posterior por importación, merge y materias/secciones.
 
 ## Fuentes
 

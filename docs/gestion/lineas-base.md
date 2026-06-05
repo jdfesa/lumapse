@@ -112,7 +112,7 @@ git show LBREQ-v1.0 --no-patch
 
 **RF completados acumulados según línea base original:** RF-001 a RF-005, RF-007 a RF-012, RF-016 a RF-018, RF-021 (15 de 24)
 
-> **Nota de revisión 2026-06-01:** tras el pivote mobile-first/SQLite, `RF-016`, `RF-017` y `RF-018` dejan de contarse como implementados visibles porque la UI actual no expone exportación/importación. Los tres pasan a deuda posterior sin borrar el antecedente histórico de esta línea base.
+> **Nota de revisión 2026-06-01:** tras el pivote mobile-first/SQLite, `RF-016`, `RF-017` y `RF-018` dejaron de contarse como implementados visibles porque la UI actual no exponía exportación/importación. `RF-017` fue reabierto y completado luego en Hito 05 como backup manual `.zip`; `RF-016` y `RF-018` siguen como deuda posterior.
 
 ---
 
@@ -132,6 +132,7 @@ Una vez establecida una LB, todo cambio en el alcance debe pasar por un proceso 
 | Fecha | Cambio | Impacto | Línea base afectada | Referencia |
 |---|---|---|---|---|
 | 2026-05-14 | Pivote de PWA a app nativa (Capacitor + SQLite) | Alto — cambia la arquitectura de persistencia y distribución | LB-REQ-v1.0 (RF-007, RF-008, RF-009 impactados) | [ADR-005](../adr/ADR-005-pivote-app-nativa.md) |
+| 2026-06-05 | Normalización de mejoras funcionales de Hito 05 (`RF-017`, `RF-027`, `RF-028`) | Medio — registra backup manual, fechas discretas y editor enriquecido como alcance aprobado antes de release | LB-REQ-v1.0 (alcance extendido y trazabilidad actualizada) | [CHANGELOG](../../CHANGELOG.md), [Hito 05](../hitos/hito-05-septiembre.md) |
 
 > **Nota:** El pivote a app nativa fue el cambio más significativo respecto de la LB de
 > requerimientos original. Fue documentado como ADR-005, fundamentado en evidencia

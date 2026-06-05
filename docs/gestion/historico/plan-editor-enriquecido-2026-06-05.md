@@ -65,13 +65,13 @@ Agregar en documentacion de producto cuando se empiece a implementar:
 
 | ID | Requisito | Prioridad | Persona | Hito | Estado |
 |---|---|---|---|---|---|
-| RF-028 | El sistema debe ofrecer herramientas opcionales de formato e insercion para enriquecer notas Markdown desde comandos `/`, boton `+` y acciones de formato inline, sin requerir aprendizaje previo de Markdown. | SHOULD | Lucia, Martin | Futuro / Hito editor | Pendiente |
+| RF-028 | El sistema debe ofrecer herramientas opcionales de formato e insercion para enriquecer notas Markdown desde comandos `/`, boton `+` y acciones de formato inline, sin requerir aprendizaje previo de Markdown. | SHOULD | Lucia, Martin | 05 | Implementado |
 
-Historias sugeridas:
+Historias sugeridas durante el borrador interno, luego absorbidas formalmente en `HU-028`:
 
-- **HU-028 - Insertar bloques con `/`:** Como estudiante, quiero escribir `/` y elegir un bloque de formato, para estructurar mis apuntes rapidamente sin memorizar sintaxis Markdown.
-- **HU-029 - Formatear texto seleccionado:** Como estudiante, quiero seleccionar texto y aplicar negrita, cursiva, codigo o link, para mejorar mis notas sin escribir simbolos manualmente.
-- **HU-030 - Continuar listas automaticamente:** Como estudiante, quiero que las listas continuen al presionar Enter, para tomar apuntes fluidamente durante clase.
+- **Insertar bloques con `/`:** Como estudiante, quiero escribir `/` y elegir un bloque de formato, para estructurar mis apuntes rapidamente sin memorizar sintaxis Markdown.
+- **Formatear texto seleccionado:** Como estudiante, quiero seleccionar texto y aplicar negrita, cursiva, codigo o link, para mejorar mis notas sin escribir simbolos manualmente.
+- **Continuar listas automaticamente:** Como estudiante, quiero que las listas continuen al presionar Enter, para tomar apuntes fluidamente durante clase.
 
 ---
 

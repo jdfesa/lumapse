@@ -4,7 +4,7 @@
 **Hito:** 05 — Testing, Calidad y Distribución
 **Proyecto:** Lumapse
 **Estado:** Activo formalmente tras el cierre del Hito 04
-**Última actualización:** 2026-06-02
+**Última actualización:** 2026-06-05
 
 ---
 
@@ -14,13 +14,15 @@ El Hito 05 tiene como objetivo garantizar la calidad del producto y preparar su 
 
 Desde el 2026-06-01, el Hito 04 queda cerrado formalmente y este hito pasa a ser el foco operativo del proyecto: release dry-run, APK firmado, validación manual en Android y preparación de artefactos de distribución.
 
+Durante esta etapa también se aceptaron mejoras funcionales controladas que elevan la utilidad real de la beta sin cambiar la arquitectura offline-first: backup manual externo (`RF-017`), fechas académicas discretas (`RF-027`) y editor enriquecido (`RF-028`). Quedan registradas en requisitos, HU, changelog y seguimiento de velocidad para evitar que parezcan trabajo fuera de hito.
+
 ---
 
 ## Avance Inicial
 
 | Área | Estado | Evidencia |
 |---|---|---|
-| Suite Vitest | ✅ Implementada | `npm run test` con 494 tests |
+| Suite Vitest | ✅ Implementada | `npm run test` con 632 tests |
 | Quality gate local | ✅ Verificado | `npm run verify` ejecutado sin fallos el 2026-06-02 |
 | GitHub Actions | ✅ Implementado | Workflow `CI — Quality Gate` |
 | Auditorías documentales/schema | ✅ Implementadas | `check:traceability`, `check:docs`, `check:schema`, `check:dbml`, `check:subjects` |
@@ -30,6 +32,9 @@ Desde el 2026-06-01, el Hito 04 queda cerrado formalmente y este hito pasa a ser
 | Distribución APK | ⏳ Pendiente | APK firmado y GitHub Releases |
 | Testing en dispositivo real | ⏳ Pendiente | Validación manual formal |
 | Release dry-run | ✅ Completado | `scripts/release-helper.py --type patch --dry-run` propone `0.4.8` sin bloqueos |
+| Backup manual externo | ✅ Implementado | `RF-017 / HU-030`, plan histórico archivado |
+| Fechas académicas discretas | ✅ Implementado | `RF-027 / HU-027`, mejora adelantada y acotada |
+| Editor enriquecido | ✅ Implementado | `RF-028 / HU-028`, slash commands, `+`, `Aa`, callouts y foco |
 
 ---
 
@@ -44,6 +49,16 @@ Cualquier feedback recibido durante esta etapa debe clasificarse en tres grupos:
 - **Feature post-release:** ideas valiosas, como adjuntos de imagen, backup o sincronizacion, que se registran en backlog sin entrar al corte actual.
 
 Esta estrategia evita que la beta se convierta en expansion de alcance. La prioridad del Hito 05 sigue siendo estabilizar, probar en Android real y preparar distribucion.
+
+## Cambios de Alcance Controlados
+
+| RF/HU | Cambio | Justificación | Estado |
+|---|---|---|---|
+| `RF-017 / HU-030` | Backup manual `.zip` externo | Evita vendor lock-in y permite salida local antes de la beta | Implementado |
+| `RF-027 / HU-027` | Fechas académicas discretas | Aporta recordatorios pasivos sin agenda completa, notificaciones ni sync | Implementado |
+| `RF-028 / HU-028` | Editor enriquecido y slash commands | Mejora la toma de notas sin obligar a aprender Markdown ni introducir formato propietario | Implementado |
+
+Estos cambios no reabren Hito 04. Se consideran parte de Hito 05 porque fueron definidos, implementados y documentados después del cierre formal del 2026-06-01.
 
 ---
 
