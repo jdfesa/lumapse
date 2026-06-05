@@ -79,6 +79,7 @@ export class NoteEditor {
     const input = this.container.querySelector('#composer-input');
     const saveBtn = this.container.querySelector('#btn-save-note');
     const composer = this.container.querySelector('.composer');
+    const footer = this.container.querySelector('.composer__footer');
 
     input.addEventListener('input', this.handleInput);
     input.addEventListener('keydown', this.handleKeyDown);
@@ -95,8 +96,8 @@ export class NoteEditor {
 
     this.subjectPicker = new SubjectPicker(this.container.querySelector('#composer-subject-picker'));
 
-    this.setupPlusButton(input, composer);
-    this.setupFormatButton(input, composer);
+    this.setupPlusButton(input, footer);
+    this.setupFormatButton(input, footer);
   }
 
   /**

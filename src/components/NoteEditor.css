@@ -33,6 +33,7 @@
 }
 
 .composer__footer {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -312,6 +313,19 @@
   padding-top: var(--space-3);
   margin-top: auto;
   flex-shrink: 0;
+  z-index: 2;
+}
+
+.composer--focus .editor-popup {
+  top: auto;
+  bottom: calc(100% + var(--space-2));
+  margin-top: 0;
+  max-height: min(320px, 44vh);
+}
+
+.composer--focus .composer__subject-menu {
+  top: auto;
+  bottom: calc(100% + var(--space-2));
 }
 
 /* Ocultar el resto de la app cuando focus está activo */
