@@ -24,8 +24,9 @@
 
 /* --- Contenido renderizado ---------------------------------- */
 .md-preview__content {
+  font-family: var(--font-note);
   line-height: 1.75;
-  font-size: 0.95rem;
+  font-size: 0.98rem;
   color: var(--color-text-bright);
 }
 

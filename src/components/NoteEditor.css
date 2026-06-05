@@ -21,9 +21,9 @@
   background: transparent;
   border: none;
   color: var(--color-text-bright);
-  font-family: var(--font-mono);
-  font-size: 0.95rem;
-  line-height: 1.6;
+  font-family: var(--font-note);
+  font-size: 0.98rem;
+  line-height: 1.68;
   resize: none;
   outline: none;
 }
@@ -304,8 +304,8 @@
 .composer--focus .composer__textarea {
   flex: 1;
   min-height: 0;
-  font-size: 1.05rem;
-  line-height: 1.8;
+  font-size: 1rem;
+  line-height: 1.76;
 }
 
 .composer--focus .composer__footer {

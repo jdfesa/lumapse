@@ -91,15 +91,16 @@
 }
 
 .note-card__content {
-  font-size: 0.95rem;
-  line-height: 1.6;
+  font-family: var(--font-note);
+  font-size: 0.96rem;
+  line-height: 1.66;
   color: var(--color-text-bright);
 }
 
 .note-card__implicit-title {
   margin: 0 0 var(--space-2) 0;
   color: var(--color-text-bright);
-  font-family: var(--font-mono);
+  font-family: var(--font-note);
   font-size: 1.08rem;
   font-weight: 700;
   line-height: 1.35;

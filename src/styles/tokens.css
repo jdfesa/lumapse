@@ -65,8 +65,11 @@
   --color-accent-level-3: rgba(129, 140, 248, 1);
   --color-accent-glow:    rgba(129, 140, 248, 0.4);
 
-  /* Typography — JetBrains Mono self-hosted (RNF-009) */
+  /* Typography — UI mono self-hosted + note text native/offline */
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  --font-ui: var(--font-mono);
+  --font-note: ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
   /* Layout */
   --header-height: 60px;
@@ -130,7 +133,7 @@
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 0.95rem;
   line-height: 1.6;
   min-height: 100dvh;
