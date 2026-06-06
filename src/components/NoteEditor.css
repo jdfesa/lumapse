@@ -15,6 +15,39 @@
   box-shadow: 0 4px 12px var(--color-shadow-light);
 }
 
+.composer__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.composer__title-input {
+  width: 100%;
+  min-height: 34px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  color: var(--color-text-bright);
+  font-family: var(--font-note);
+  font-size: 1.08rem;
+  font-weight: 700;
+  line-height: 1.35;
+  outline: none;
+  padding: 0 0 var(--space-2);
+}
+
+.composer__title-input::placeholder {
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.composer__title-input:focus {
+  border-bottom-color: color-mix(in srgb, var(--color-accent) 45%, var(--color-border));
+}
+
 .composer__textarea {
   width: 100%;
   min-height: 80px;
@@ -26,6 +59,7 @@
   line-height: 1.68;
   resize: none;
   outline: none;
+  padding-top: var(--space-1);
 }
 
 .composer__textarea::placeholder {
@@ -306,6 +340,11 @@
   min-height: 0;
   font-size: 1rem;
   line-height: 1.76;
+}
+
+.composer--focus .composer__title-input {
+  font-size: 1.18rem;
+  margin-top: var(--space-1);
 }
 
 .composer--focus .composer__footer {
