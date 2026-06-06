@@ -12,6 +12,7 @@ import {
   slugifyBackupPath,
 } from './BackupFormat.js'
 import { createZipContent } from './BackupZipArchive.js'
+import { stripRedundantTitleFromContent } from '../NoteTitleService.js'
 
 export const BACKUP_MIME_TYPE = 'application/zip'
 
@@ -88,20 +89,9 @@ function markdownTitle(title) {
   return singleLineValue(title) || 'Sin titulo'
 }
 
-function stripHeadingMarker(line) {
-  return line.replace(/^\s{0,3}#{1,6}\s+/, '').trim()
-}
-
-function startsWithTitleHeading(content, title) {
-  const firstLine = content.split('\n').find(line => line.trim())
-  if (!firstLine || !/^\s{0,3}#{1,6}\s+/.test(firstLine)) return false
-
-  return stripHeadingMarker(firstLine) === markdownTitle(title)
-}
-
 export function noteToMarkdown(note) {
   const title = markdownTitle(note.title)
-  const content = (note.content || '').trim()
+  const content = stripRedundantTitleFromContent(note.content || '', title)
   const lines = [
     '---',
     frontMatterLine('id', note.id),
@@ -113,12 +103,8 @@ export function noteToMarkdown(note) {
     '',
   ]
 
-  if (!content || !startsWithTitleHeading(content, title)) {
-    lines.push(`# ${title}`)
-    if (content) lines.push('', content)
-  } else {
-    lines.push(content)
-  }
+  lines.push(`# ${title}`)
+  if (content) lines.push('', content)
 
   return `${lines.join('\n').trimEnd()}\n`
 }
