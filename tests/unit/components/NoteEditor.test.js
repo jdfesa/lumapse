@@ -33,6 +33,7 @@ function pressEnter(input) {
 
 beforeEach(() => {
   document.body.innerHTML = ''
+  vi.clearAllMocks()
 })
 
 describe('NoteEditor title extraction', () => {
@@ -56,6 +57,88 @@ describe('NoteEditor title extraction', () => {
     const editor = createEditor()
 
     expect(editor.extractTitle('1. Repasar matrices')).toBe('Repasar matrices')
+
+    editor.destroy()
+  })
+})
+
+describe('NoteEditor separate title UX', () => {
+  it('muestra un titulo opcional separado del cuerpo', () => {
+    const editor = createEditor()
+
+    expect(editor.container.querySelector('#composer-title-input')?.placeholder).toBe('Sin título')
+    expect(editor.container.querySelector('#composer-input')?.placeholder).toBe('Escribí algo...')
+
+    editor.destroy()
+  })
+
+  it('permite guardar una nota con solo titulo', async () => {
+    const editor = createEditor()
+    const titleInput = editor.container.querySelector('#composer-title-input')
+    const saveBtn = editor.container.querySelector('#btn-save-note')
+
+    titleInput.value = 'Clase 1'
+    titleInput.dispatchEvent(new window.Event('input'))
+
+    expect(saveBtn.disabled).toBe(false)
+
+    await editor.handleSave()
+
+    expect(NoteStore.createNote).toHaveBeenCalledWith('Clase 1', '', null)
+
+    editor.destroy()
+  })
+
+  it('usa un encabezado pegado en el cuerpo como titulo y lo quita del contenido guardado', async () => {
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+
+    input.value = '# Algebra lineal\n\nMatrices'
+    input.dispatchEvent(new window.Event('input'))
+
+    await editor.handleSave()
+
+    expect(NoteStore.createNote).toHaveBeenCalledWith('Algebra lineal', 'Matrices', null)
+
+    editor.destroy()
+  })
+
+  it('mantiene Sin titulo cuando el usuario deja el titulo vacio y escribe cuerpo normal', async () => {
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+
+    input.value = 'Apuntes de la clase'
+    input.dispatchEvent(new window.Event('input'))
+
+    await editor.handleSave()
+
+    expect(NoteStore.createNote).toHaveBeenCalledWith('Sin título', 'Apuntes de la clase', null)
+
+    editor.destroy()
+  })
+
+  it('carga notas antiguas separando la primera linea si ya era el titulo', () => {
+    let subscriber
+    NoteStore.subscribe.mockImplementationOnce((callback) => {
+      subscriber = callback
+      return vi.fn()
+    })
+
+    const editor = createEditor()
+    subscriber({
+      activeNoteId: 'note-1',
+      notes: [{
+        id: 'note-1',
+        title: 'Resumen',
+        content: 'Resumen\n\nCuerpo',
+        subjectId: null,
+      }],
+      subjects: { tree: [] },
+      viewMode: 'inbox',
+    })
+
+    expect(editor.container.querySelector('#composer-title-input').value).toBe('Resumen')
+    expect(editor.container.querySelector('#composer-input').value).toBe('Cuerpo')
 
     editor.destroy()
   })
