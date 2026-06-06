@@ -5,6 +5,7 @@
 
 import * as NoteStore from '../store/NoteStore.js';
 import * as MarkdownService from '../services/MarkdownService.js';
+import { getNoteContentPresentation } from '../services/NoteTitleService.js';
 import { formatRelativeDate, escapeHtml, findSubject, buildMoveMenu } from './NoteCardRenderer.js';
 import { createFeedActionRouter } from './FeedActionRouter.js';
 import { renderTrashView } from './TrashView.js';
@@ -14,52 +15,16 @@ import { VirtualFeed } from './VirtualFeed.js';
 import { renderClearNoteStatusButton, renderNoteStatusBadge, renderNoteStatusMenuItems } from './NoteStatus.js';
 import './NoteList.css';
 
-const MARKDOWN_HEADING_REGEX = /^\s{0,3}#{1,6}\s+/
-const STRUCTURAL_MARKDOWN_REGEX = /^\s*(?:[-*+]\s+|\d+\.\s+|>\s+|```|\|)/
 const COPY_FEEDBACK_VISIBLE_MS = 1000
 const COPY_FEEDBACK_FADE_MS = 220
 
-function cleanImplicitTitle(line) {
-  return line
-    .trim()
-    .replace(/^\s{0,3}#{1,6}\s+/, '')
-    .replace(/^\s*(?:[-*+>]\s+|\d+\.\s+)/, '')
-    .replace(/[*_~`[\]()]/g, '')
-    .trim()
-}
-
-function getImplicitTitlePresentation(note) {
-  const content = note.content || ''
-  const lines = content.split('\n')
-  const titleLineIndex = lines.findIndex(line => line.trim())
-  if (titleLineIndex === -1) return null
-
-  const titleLine = lines[titleLineIndex]
-  const trimmed = titleLine.trim()
-  if (
-    MARKDOWN_HEADING_REGEX.test(trimmed) ||
-    STRUCTURAL_MARKDOWN_REGEX.test(trimmed)
-  ) {
-    return null
-  }
-
-  const title = cleanImplicitTitle(titleLine)
-  if (!title) return null
-
-  return {
-    title,
-    body: lines.slice(titleLineIndex + 1).join('\n'),
-    lineOffset: titleLineIndex + 1,
-  }
-}
-
 function renderImplicitTitleBlock(note) {
-  const titlePresentation = getImplicitTitlePresentation(note);
-  const bodyMarkdown = titlePresentation ? titlePresentation.body : (note.content || '');
+  const titlePresentation = getNoteContentPresentation(note);
+  const bodyMarkdown = titlePresentation.body || '';
   const renderedContent = bodyMarkdown.trim()
-    ? MarkdownService.renderMarkdown(bodyMarkdown, { lineOffset: titlePresentation?.lineOffset || 0 })
+    ? MarkdownService.renderMarkdown(bodyMarkdown, { lineOffset: titlePresentation.lineOffset || 0 })
     : '';
-  const titleHtml = titlePresentation
+  const titleHtml = titlePresentation.title
     ? `<h2 class="note-card__implicit-title">${escapeHtml(titlePresentation.title)}</h2>`
     : '';
 
