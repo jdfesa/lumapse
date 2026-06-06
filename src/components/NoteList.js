@@ -255,7 +255,7 @@ export class NoteList {
       <article class="note-card${isPinned ? ' note-card--pinned' : ''}" data-id="${note.id}">
         <header class="note-card__header">
           <span class="note-card__time">
-            ${isPinned ? '<svg class="note-card__pin-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M16 2l-4 4-6-2-2 2 5 5-5 7 2 2 7-5 5 5 2-2-2-6 4-4z"/></svg>' : ''}
+            ${isPinned ? '<svg class="note-card__pin-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 2l-4 4-6-2-2 2 5 5-5 7 2 2 7-5 5 5 2-2-2-6 4-4z"></path></svg>' : ''}
             ${timeStr}
             ${renderSubjectBadge(note, subjectsData)}
             ${archivedBadge}
