@@ -188,4 +188,14 @@ describe('BackupZipService', () => {
 
     expect(markdown).toContain('\n# Resumen\n\nApuntes de la clase.\n')
   })
+
+  it('no duplica el titulo cuando una nota vieja lo tenia como primera linea', () => {
+    const markdown = noteToMarkdown(note({
+      title: 'Resumen',
+      content: 'Resumen\n\nCuerpo de la nota.',
+    }))
+
+    expect(markdown.match(/^# Resumen$/gm)).toHaveLength(1)
+    expect(markdown).toContain('\n# Resumen\n\nCuerpo de la nota.\n')
+  })
 })
