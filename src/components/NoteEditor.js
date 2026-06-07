@@ -1,11 +1,11 @@
 import * as NoteStore from '../store/NoteStore.js';
 import { SlashCommandHandler } from './SlashCommandHandler.js';
-import { EditorPopup } from './EditorPopup.js';
-import { getCommandSnippet, getEditorCommandsForSurface } from './editorCommandRegistry.js';
-import { applyInlineCommand, getMarkdownContinuation } from './editorTextTransforms.js';
+import { getMarkdownContinuation } from './editorTextTransforms.js';
 import { SubjectPicker } from './SubjectPicker.js';
 import { createEditorDraftPayload, EditorDraftCapture, EditorDraftRestorer } from './NoteEditorDrafts.js';
+import { setupEditorPopups } from './NoteEditorPopups.js';
 import { renderNoteEditorTemplate } from './NoteEditorTemplate.js';
+import { confirmDialog } from './ConfirmDialog.js';
 import { extractNoteTitle, resolveNoteTitleForSave, splitNoteForEditing, stripRedundantTitleFromContent } from '../services/NoteTitleService.js';
 import './NoteEditor.css';
 
@@ -18,10 +18,12 @@ export class NoteEditor {
     this.isSaving = false;
     this.restoredDraftActive = false;
     this.restoredDraftSubjectId = null;
+    this.lastState = null;
     
     this.handleInput = this.handleInput.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleDiscardDraft = this.handleDiscardDraft.bind(this);
     this.handlePageHide = this.handlePageHide.bind(this);
     this.handleSubjectChange = this.handleSubjectChange.bind(this);
     this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
@@ -53,6 +55,7 @@ export class NoteEditor {
     const input = this.container.querySelector('#composer-input');
     const subjectInput = this.container.querySelector('#composer-subject-select');
     const saveBtn = this.container.querySelector('#btn-save-note');
+    const discardBtn = this.container.querySelector('#btn-discard-draft');
     const composer = this.container.querySelector('.composer');
     const footer = this.container.querySelector('.composer__footer');
 
@@ -67,6 +70,7 @@ export class NoteEditor {
     input.addEventListener('keydown', this.handleKeyDown);
     subjectInput.addEventListener('change', this.handleSubjectChange);
     saveBtn.addEventListener('click', this.handleSave);
+    discardBtn.addEventListener('click', this.handleDiscardDraft);
 
     this.slashHandler = new SlashCommandHandler(input, composer);
 
@@ -79,74 +83,7 @@ export class NoteEditor {
 
     this.subjectPicker = new SubjectPicker(this.container.querySelector('#composer-subject-picker'));
 
-    this.setupPlusButton(input, footer);
-    this.setupFormatButton(input, footer);
-  }
-
-  setupPlusButton(textarea, composer) {
-    const plusBtn = this.container.querySelector('#composer-plus-btn');
-
-    this.plusPopup = new EditorPopup({
-      container: composer,
-      onSelect: (item) => this.insertCommandAtCursor(textarea, item),
-      onDismiss: () => {},
-    });
-
-    this.bindPopupButton(plusBtn, this.plusPopup, 'plusMenuWasVisibleOnPointerDown', () => {
-      this.formatPopup?.hide();
-      this.plusPopup.show(getEditorCommandsForSurface('insert'), 'Tambien podes escribir / al inicio de linea');
-    });
-  }
-
-  setupFormatButton(textarea, composer) {
-    const formatBtn = this.container.querySelector('#composer-format-btn');
-
-    this.formatPopup = new EditorPopup({
-      container: composer,
-      onSelect: (item) => applyInlineCommand(textarea, item),
-      onDismiss: () => {},
-    });
-
-    this.bindPopupButton(formatBtn, this.formatPopup, 'formatMenuWasVisibleOnPointerDown', () => {
-      this.plusPopup?.hide();
-      this.formatPopup.show(getEditorCommandsForSurface('inline'), 'Selecciona texto o inserta un placeholder');
-    });
-  }
-
-  bindPopupButton(button, popup, visibilityKey, showPopup) {
-    button.addEventListener('pointerdown', () => {
-      this[visibilityKey] = popup.isVisible();
-    });
-    button.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (this[visibilityKey] || popup.isVisible()) {
-        this[visibilityKey] = false;
-        popup.hide();
-      } else {
-        showPopup();
-      }
-    });
-  }
-
-  insertCommandAtCursor(textarea, command) {
-    const snippet = getCommandSnippet(command);
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const before = textarea.value.substring(0, start);
-    const after = textarea.value.substring(end);
-
-    textarea.value = before + snippet + after;
-    const cursorOffset = Number.isInteger(command.cursorOffset)
-      ? command.cursorOffset
-      : snippet.length;
-    const cursor = start + cursorOffset;
-    if (command.selectLength) {
-      textarea.setSelectionRange(cursor, cursor + command.selectLength);
-    } else {
-      textarea.setSelectionRange(cursor, cursor);
-    }
-    textarea.dispatchEvent(new window.Event('input', { bubbles: true }));
-    textarea.focus();
+    setupEditorPopups(this, input, footer);
   }
 
   enterFocusMode() {
@@ -189,7 +126,7 @@ export class NoteEditor {
     this.updateSaveState();
 
     if (!this.isApplyingState) {
-      if (this.restoredDraftActive) this.showDraftStatus('Cambios pendientes');
+      this.updateDraftIndicator();
       this.draftCapture.schedule();
     }
   }
@@ -197,9 +134,38 @@ export class NoteEditor {
   handleSubjectChange() {
     if (!this.isApplyingState) {
       this.restoredDraftSubjectId = this.subjectPicker?.getValue() || null;
-      if (this.restoredDraftActive) this.showDraftStatus('Cambios pendientes');
+      this.updateDraftIndicator();
       this.draftCapture.schedule();
     }
+  }
+
+  async handleDiscardDraft() {
+    const confirmed = await confirmDialog({
+      title: 'Descartar borrador',
+      message: '¿Descartar este borrador?',
+      confirmText: 'Descartar',
+      cancelText: 'Conservar',
+      danger: true,
+    });
+    if (!confirmed) return;
+
+    this.discardDraft();
+  }
+
+  discardDraft() {
+    this.isApplyingState = true;
+    this.draftCapture.discard();
+
+    if (this.currentEditId) {
+      NoteStore.selectNote(null);
+    }
+
+    this.currentEditId = null;
+    this.currentEditBaseUpdatedAt = null;
+    this.restoredDraftActive = false;
+    this.restoredDraftSubjectId = null;
+    this.resetEditorForCreate();
+    this.isApplyingState = false;
   }
 
   handleVisibilityChange() {
@@ -310,7 +276,7 @@ export class NoteEditor {
     this.currentEditBaseUpdatedAt = null;
     this.restoredDraftActive = false;
     this.restoredDraftSubjectId = null;
-    this.showDraftStatus('');
+    this.hideDraftStatus();
 
     this.exitFocusMode();
   }
@@ -321,6 +287,7 @@ export class NoteEditor {
 
   onStateChange(state) {
     const { activeNoteId, notes, subjects } = state;
+    this.lastState = state;
 
     this.updateSubjectSelect(subjects);
     if (this.tryRestoreDraft(state)) return;
@@ -330,7 +297,7 @@ export class NoteEditor {
       this.draftCapture.flush();
       this.restoredDraftActive = false;
       this.restoredDraftSubjectId = null;
-      this.showDraftStatus('');
+      this.hideDraftStatus();
       const noteToEdit = notes.find(n => n.id === activeNoteId);
       if (noteToEdit) {
         this.currentEditId = activeNoteId;
@@ -365,7 +332,7 @@ export class NoteEditor {
       input.style.height = 'auto';
       this.container.querySelector('#btn-save-note').textContent = 'Guardar';
       this.container.querySelector('#btn-save-note').disabled = true;
-      this.showDraftStatus('');
+      this.hideDraftStatus();
       this.isApplyingState = false;
     }
 
@@ -420,11 +387,44 @@ export class NoteEditor {
   }
 
   showDraftStatus(message) {
+    const composer = this.container.querySelector('.composer');
+    const actions = this.container.querySelector('#composer-draft-actions');
     const status = this.container.querySelector('#composer-draft-status');
-    if (!status) return;
+    const discardBtn = this.container.querySelector('#btn-discard-draft');
+    if (!composer || !actions || !status || !discardBtn) return;
 
     status.textContent = message;
-    status.hidden = !message;
+    actions.hidden = !message;
+    composer.classList.toggle('composer--draft-pending', Boolean(message));
+    discardBtn.textContent = this.currentEditId ? 'Descartar cambios' : 'Descartar';
+  }
+
+  hideDraftStatus() {
+    this.showDraftStatus('');
+  }
+
+  getPendingDraftLabel() {
+    return this.currentEditId ? 'Cambios pendientes' : 'Borrador sin guardar';
+  }
+
+  updateDraftIndicator() {
+    if (this.createDraftPayload()) {
+      this.showDraftStatus(this.getPendingDraftLabel());
+    } else {
+      this.hideDraftStatus();
+    }
+  }
+
+  resetEditorForCreate() {
+    const titleInput = this.container.querySelector('#composer-title-input');
+    const input = this.container.querySelector('#composer-input');
+    titleInput.value = '';
+    input.value = '';
+    input.style.height = 'auto';
+    this.subjectPicker?.setValue(this.lastState?.activeSubjectId || '');
+    this.container.querySelector('#btn-save-note').textContent = 'Guardar';
+    this.updateSaveState();
+    this.hideDraftStatus();
   }
 
   focusRestoredDraft(target) {

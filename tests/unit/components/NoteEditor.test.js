@@ -13,7 +13,12 @@ vi.mock('../../../src/services/EditorDraftService.js', () => ({
   clearDraft: vi.fn(),
 }))
 
+vi.mock('../../../src/components/ConfirmDialog.js', () => ({
+  confirmDialog: vi.fn(() => Promise.resolve(true)),
+}))
+
 import { NoteEditor } from '../../../src/components/NoteEditor.js'
+import { confirmDialog } from '../../../src/components/ConfirmDialog.js'
 import * as EditorDraftService from '../../../src/services/EditorDraftService.js'
 import * as NoteStore from '../../../src/store/NoteStore.js'
 
@@ -41,6 +46,7 @@ function pressEnter(input) {
 beforeEach(() => {
   document.body.innerHTML = ''
   vi.clearAllMocks()
+  confirmDialog.mockResolvedValue(true)
   EditorDraftService.loadDraft.mockReturnValue(null)
 })
 
@@ -556,6 +562,110 @@ describe('NoteEditor draft restoration', () => {
       subjectId: 'subj-math',
     })
     expect(NoteStore.createNote).not.toHaveBeenCalled()
+
+    editor.destroy()
+  })
+})
+
+describe('NoteEditor draft discard', () => {
+  it('muestra indicador visual y accion de descarte al escribir una nota nueva', () => {
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+
+    input.value = 'Borrador en progreso'
+    input.dispatchEvent(new window.Event('input'))
+
+    expect(editor.container.querySelector('.composer').classList.contains('composer--draft-pending')).toBe(true)
+    expect(editor.container.querySelector('#composer-draft-actions').hidden).toBe(false)
+    expect(editor.container.querySelector('#composer-draft-status').textContent).toBe('Borrador sin guardar')
+    expect(editor.container.querySelector('#btn-discard-draft').textContent).toBe('Descartar')
+
+    editor.destroy()
+  })
+
+  it('descarta una nota nueva luego de confirmar', async () => {
+    const editor = createEditor()
+    const titleInput = editor.container.querySelector('#composer-title-input')
+    const input = editor.container.querySelector('#composer-input')
+
+    titleInput.value = 'Clase temporal'
+    titleInput.dispatchEvent(new window.Event('input'))
+    input.value = 'Texto temporal'
+    input.dispatchEvent(new window.Event('input'))
+
+    await editor.handleDiscardDraft()
+
+    expect(confirmDialog).toHaveBeenCalledWith({
+      title: 'Descartar borrador',
+      message: '¿Descartar este borrador?',
+      confirmText: 'Descartar',
+      cancelText: 'Conservar',
+      danger: true,
+    })
+    expect(EditorDraftService.clearDraft).toHaveBeenCalled()
+    expect(titleInput.value).toBe('')
+    expect(input.value).toBe('')
+    expect(editor.container.querySelector('#btn-save-note').disabled).toBe(true)
+    expect(editor.container.querySelector('#composer-draft-actions').hidden).toBe(true)
+    expect(editor.container.querySelector('.composer').classList.contains('composer--draft-pending')).toBe(false)
+    expect(NoteStore.createNote).not.toHaveBeenCalled()
+
+    editor.destroy()
+  })
+
+  it('conserva el borrador si el usuario cancela el descarte', async () => {
+    confirmDialog.mockResolvedValueOnce(false)
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+
+    input.value = 'No descartar'
+    input.dispatchEvent(new window.Event('input'))
+
+    await editor.handleDiscardDraft()
+
+    expect(EditorDraftService.clearDraft).not.toHaveBeenCalled()
+    expect(input.value).toBe('No descartar')
+    expect(editor.container.querySelector('#composer-draft-actions').hidden).toBe(false)
+
+    editor.destroy()
+  })
+
+  it('descarta cambios de edicion sin actualizar la nota original', async () => {
+    let subscriber
+    NoteStore.subscribe.mockImplementationOnce((callback) => {
+      subscriber = callback
+      return vi.fn()
+    })
+
+    const editor = createEditor()
+    subscriber({
+      activeNoteId: 'note-1',
+      notes: [{
+        id: 'note-1',
+        title: 'Resumen original',
+        content: 'Resumen original\n\nContenido original',
+        subjectId: null,
+        updatedAt: '2026-06-06T10:00:00.000Z',
+      }],
+      subjects: { tree: [] },
+      viewMode: 'inbox',
+    })
+
+    const input = editor.container.querySelector('#composer-input')
+    input.value = 'Cambio pendiente'
+    input.dispatchEvent(new window.Event('input'))
+
+    expect(editor.container.querySelector('#composer-draft-status').textContent).toBe('Cambios pendientes')
+    expect(editor.container.querySelector('#btn-discard-draft').textContent).toBe('Descartar cambios')
+
+    await editor.handleDiscardDraft()
+
+    expect(EditorDraftService.clearDraft).toHaveBeenCalled()
+    expect(NoteStore.updateNote).not.toHaveBeenCalled()
+    expect(NoteStore.selectNote).toHaveBeenCalledWith(null)
+    expect(editor.container.querySelector('#composer-title-input').value).toBe('')
+    expect(editor.container.querySelector('#composer-input').value).toBe('')
+    expect(editor.container.querySelector('#composer-draft-actions').hidden).toBe(true)
 
     editor.destroy()
   })
