@@ -7,7 +7,13 @@ vi.mock('../../../src/store/NoteStore.js', () => ({
   selectNote: vi.fn(),
 }))
 
+vi.mock('../../../src/services/EditorDraftService.js', () => ({
+  saveDraft: vi.fn(),
+  clearDraft: vi.fn(),
+}))
+
 import { NoteEditor } from '../../../src/components/NoteEditor.js'
+import * as EditorDraftService from '../../../src/services/EditorDraftService.js'
 import * as NoteStore from '../../../src/store/NoteStore.js'
 
 function createEditor() {
@@ -191,6 +197,185 @@ describe('NoteEditor subject picker', () => {
     expect(editor.container.querySelector('#composer-subject-select').value).toBe('sec-borges')
     expect(editor.container.querySelector('#composer-subject-label').textContent).toBe('Borges')
     expect(editor.container.querySelector('#composer-subject-menu').hidden).toBe(true)
+
+    editor.destroy()
+  })
+})
+
+describe('NoteEditor draft capture', () => {
+  it('guarda un borrador de nota nueva al cambiar el titulo luego del debounce', () => {
+    vi.useFakeTimers()
+    const editor = createEditor()
+    const titleInput = editor.container.querySelector('#composer-title-input')
+
+    titleInput.value = 'Clase 1'
+    titleInput.dispatchEvent(new window.Event('input'))
+
+    expect(EditorDraftService.saveDraft).not.toHaveBeenCalled()
+
+    vi.advanceTimersByTime(500)
+
+    expect(EditorDraftService.saveDraft).toHaveBeenCalledWith({
+      mode: 'create',
+      noteId: null,
+      title: 'Clase 1',
+      content: '',
+      subjectId: null,
+      baseUpdatedAt: null,
+    })
+
+    editor.destroy()
+  })
+
+  it('no guarda borradores vacios de notas nuevas y limpia el borrador previo', () => {
+    vi.useFakeTimers()
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+
+    input.value = '   '
+    input.dispatchEvent(new window.Event('input'))
+
+    vi.advanceTimersByTime(500)
+
+    expect(EditorDraftService.saveDraft).not.toHaveBeenCalled()
+    expect(EditorDraftService.clearDraft).toHaveBeenCalledTimes(1)
+
+    editor.destroy()
+  })
+
+  it('guarda el subjectId elegido junto con el contenido en progreso', () => {
+    vi.useFakeTimers()
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+    editor.updateSubjectSelect({
+      tree: [{
+        id: 'subj-lit',
+        name: 'Literatura Argentina',
+        color: '#818cf8',
+        children: [{ id: 'sec-borges', name: 'Borges' }],
+      }],
+    })
+
+    input.value = 'Apuntes de clase'
+    input.dispatchEvent(new window.Event('input'))
+    editor.container.querySelector('#composer-subject-trigger').click()
+    editor.container
+      .querySelector('.composer__subject-option[data-subject-id="sec-borges"]')
+      .click()
+
+    vi.advanceTimersByTime(500)
+
+    expect(EditorDraftService.saveDraft).toHaveBeenCalledWith({
+      mode: 'create',
+      noteId: null,
+      title: '',
+      content: 'Apuntes de clase',
+      subjectId: 'sec-borges',
+      baseUpdatedAt: null,
+    })
+
+    editor.destroy()
+  })
+
+  it('guarda un borrador de edicion asociado a la nota original solo cuando el usuario modifica', () => {
+    vi.useFakeTimers()
+    let subscriber
+    NoteStore.subscribe.mockImplementationOnce((callback) => {
+      subscriber = callback
+      return vi.fn()
+    })
+
+    const editor = createEditor()
+    subscriber({
+      activeNoteId: 'note-1',
+      notes: [{
+        id: 'note-1',
+        title: 'Resumen',
+        content: 'Resumen\n\nCuerpo',
+        subjectId: 'subj-math',
+        updatedAt: '2026-06-06T10:00:00.000Z',
+      }],
+      subjects: {
+        tree: [{ id: 'subj-math', name: 'Matematica', color: '#60a5fa', children: [] }],
+      },
+      viewMode: 'inbox',
+    })
+
+    vi.advanceTimersByTime(500)
+    expect(EditorDraftService.saveDraft).not.toHaveBeenCalled()
+
+    const input = editor.container.querySelector('#composer-input')
+    input.value = 'Cuerpo editado'
+    input.dispatchEvent(new window.Event('input'))
+    vi.advanceTimersByTime(500)
+
+    expect(EditorDraftService.saveDraft).toHaveBeenCalledWith({
+      mode: 'edit',
+      noteId: 'note-1',
+      title: 'Resumen',
+      content: 'Cuerpo editado',
+      subjectId: 'subj-math',
+      baseUpdatedAt: '2026-06-06T10:00:00.000Z',
+    })
+
+    editor.destroy()
+  })
+
+  it('fuerza el guardado pendiente en pagehide sin esperar el debounce', () => {
+    vi.useFakeTimers()
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+
+    input.value = 'Antes de salir'
+    input.dispatchEvent(new window.Event('input'))
+
+    window.dispatchEvent(new window.Event('pagehide'))
+
+    expect(EditorDraftService.saveDraft).toHaveBeenCalledWith({
+      mode: 'create',
+      noteId: null,
+      title: '',
+      content: 'Antes de salir',
+      subjectId: null,
+      baseUpdatedAt: null,
+    })
+
+    editor.destroy()
+  })
+
+  it('fuerza el guardado antes de cambiar a una nota activa', () => {
+    vi.useFakeTimers()
+    let subscriber
+    NoteStore.subscribe.mockImplementationOnce((callback) => {
+      subscriber = callback
+      return vi.fn()
+    })
+
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+    input.value = 'Borrador antes de editar otra nota'
+    input.dispatchEvent(new window.Event('input'))
+
+    subscriber({
+      activeNoteId: 'note-2',
+      notes: [{
+        id: 'note-2',
+        title: 'Otra nota',
+        content: 'Otra nota\n\nContenido',
+        subjectId: null,
+      }],
+      subjects: { tree: [] },
+      viewMode: 'inbox',
+    })
+
+    expect(EditorDraftService.saveDraft).toHaveBeenCalledWith({
+      mode: 'create',
+      noteId: null,
+      title: '',
+      content: 'Borrador antes de editar otra nota',
+      subjectId: null,
+      baseUpdatedAt: null,
+    })
 
     editor.destroy()
   })

@@ -4,6 +4,8 @@ import { EditorPopup } from './EditorPopup.js';
 import { getCommandSnippet, getEditorCommandsForSurface } from './editorCommandRegistry.js';
 import { applyInlineCommand, getMarkdownContinuation } from './editorTextTransforms.js';
 import { SubjectPicker } from './SubjectPicker.js';
+import { createEditorDraftPayload, EditorDraftCapture } from './NoteEditorDrafts.js';
+import { renderNoteEditorTemplate } from './NoteEditorTemplate.js';
 import { extractNoteTitle, resolveNoteTitleForSave, splitNoteForEditing, stripRedundantTitleFromContent } from '../services/NoteTitleService.js';
 import './NoteEditor.css';
 
@@ -11,13 +13,26 @@ export class NoteEditor {
   constructor(container) {
     this.container = container;
     this.currentEditId = null;
+    this.currentEditBaseUpdatedAt = null;
+    this.isApplyingState = false;
+    this.isSaving = false;
     
     this.handleInput = this.handleInput.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handlePageHide = this.handlePageHide.bind(this);
+    this.handleSubjectChange = this.handleSubjectChange.bind(this);
+    this.handleVisibilityChange = this.handleVisibilityChange.bind(this);
     this.subjectPicker = null;
     
     this.render();
+    this.draftCapture = new EditorDraftCapture({
+      createPayload: () => this.createDraftPayload(),
+      isBlocked: () => this.isApplyingState || this.isSaving,
+    });
+
+    document.addEventListener('visibilitychange', this.handleVisibilityChange);
+    window.addEventListener('pagehide', this.handlePageHide);
     
     this.unsubscribe = NoteStore.subscribe((state) => {
       const composer = this.container.querySelector('.composer');
@@ -29,54 +44,11 @@ export class NoteEditor {
   }
 
   render() {
-    this.container.innerHTML = `
-      <div class="composer">
-        <div class="composer__focus-header" style="display:none">
-          <span class="composer__focus-title">Modo Enfoque</span>
-          <button class="composer__focus-exit" id="btn-exit-focus" title="Salir del modo enfoque">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 14 10 20"></polyline><polyline points="20 10 14 10 14 4"></polyline><line x1="14" y1="10" x2="21" y2="3"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
-          </button>
-        </div>
-        <label class="composer__label" for="composer-title-input">Título</label>
-        <input id="composer-title-input" class="composer__title-input" type="text" placeholder="Sin título" autocomplete="off" spellcheck="true">
-        <label class="composer__label" for="composer-input">Contenido</label>
-        <textarea id="composer-input" class="composer__textarea" placeholder="Escribí algo..." rows="3"></textarea>
-        <div class="composer__footer">
-          <div class="composer__tools">
-            <div class="composer__subject-picker" id="composer-subject-picker">
-              <input type="hidden" id="composer-subject-select" value="">
-              <button
-                id="composer-subject-trigger"
-                class="composer__subject-trigger"
-                type="button"
-                aria-haspopup="listbox"
-                aria-expanded="false"
-                aria-controls="composer-subject-menu"
-                title="Materia"
-              >
-                <span class="composer__subject-trigger-dot"></span>
-                <span id="composer-subject-label" class="composer__subject-trigger-label">Entrada</span>
-                <svg class="composer__subject-trigger-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-              </button>
-              <div id="composer-subject-menu" class="composer__subject-menu" role="listbox" aria-label="Materia" hidden></div>
-            </div>
-            <button class="composer__tool-btn composer__plus-btn" title="Insertar" id="composer-plus-btn">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            </button>
-            <button class="composer__tool-btn composer__format-btn" title="Formato" id="composer-format-btn" aria-label="Formato">
-              Aa
-            </button>
-            <button class="composer__tool-btn composer__focus-btn" title="Ampliar editor" id="composer-focus-btn" aria-label="Ampliar editor">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"></path><path d="M21 3l-7 7"></path><path d="M9 21H3v-6"></path><path d="M3 21l7-7"></path></svg>
-            </button>
-          </div>
-          <button id="btn-save-note" class="composer__save-btn" title="Guardar nota" disabled>Guardar</button>
-        </div>
-      </div>
-    `;
+    this.container.innerHTML = renderNoteEditorTemplate();
 
     const titleInput = this.container.querySelector('#composer-title-input');
     const input = this.container.querySelector('#composer-input');
+    const subjectInput = this.container.querySelector('#composer-subject-select');
     const saveBtn = this.container.querySelector('#btn-save-note');
     const composer = this.container.querySelector('.composer');
     const footer = this.container.querySelector('.composer__footer');
@@ -90,6 +62,7 @@ export class NoteEditor {
     });
     input.addEventListener('input', this.handleInput);
     input.addEventListener('keydown', this.handleKeyDown);
+    subjectInput.addEventListener('change', this.handleSubjectChange);
     saveBtn.addEventListener('click', this.handleSave);
 
     this.slashHandler = new SlashCommandHandler(input, composer);
@@ -211,6 +184,42 @@ export class NoteEditor {
     }
     
     this.updateSaveState();
+
+    if (!this.isApplyingState) {
+      this.draftCapture.schedule();
+    }
+  }
+
+  handleSubjectChange() {
+    if (!this.isApplyingState) {
+      this.draftCapture.schedule();
+    }
+  }
+
+  handleVisibilityChange() {
+    if (document.visibilityState === 'hidden') {
+      this.draftCapture.flush();
+    }
+  }
+
+  handlePageHide() {
+    this.draftCapture.flush();
+  }
+
+  createDraftPayload() {
+    const titleInput = this.container.querySelector('#composer-title-input');
+    const input = this.container.querySelector('#composer-input');
+    const title = titleInput?.value || '';
+    const content = input?.value || '';
+    const subjectId = this.subjectPicker?.getValue() || null;
+
+    return createEditorDraftPayload({
+      currentEditId: this.currentEditId,
+      currentEditBaseUpdatedAt: this.currentEditBaseUpdatedAt,
+      title,
+      content,
+      subjectId,
+    });
   }
 
   updateSaveState() {
@@ -263,19 +272,26 @@ export class NoteEditor {
     
     if (!rawTitle && !rawContent) return;
 
+    this.draftCapture.flush();
+
     const title = resolveNoteTitleForSave(rawTitle, rawContent);
     const content = stripRedundantTitleFromContent(rawContent, title);
     const subjectId = this.subjectPicker?.getValue() || null;
 
-    if (this.currentEditId) {
-      await NoteStore.updateNote(this.currentEditId, {
-        content: content,
-        title,
-        subjectId: subjectId
-      });
-      NoteStore.selectNote(null); 
-    } else {
-      await NoteStore.createNote(title, content, subjectId);
+    this.isSaving = true;
+    try {
+      if (this.currentEditId) {
+        await NoteStore.updateNote(this.currentEditId, {
+          content: content,
+          title,
+          subjectId: subjectId
+        });
+        NoteStore.selectNote(null); 
+      } else {
+        await NoteStore.createNote(title, content, subjectId);
+      }
+    } finally {
+      this.isSaving = false;
     }
 
     titleInput.value = '';
@@ -298,12 +314,15 @@ export class NoteEditor {
     this.updateSubjectSelect(subjects);
     
     if (activeNoteId && activeNoteId !== this.currentEditId) {
+      this.draftCapture.flush();
       const noteToEdit = notes.find(n => n.id === activeNoteId);
       if (noteToEdit) {
         this.currentEditId = activeNoteId;
+        this.currentEditBaseUpdatedAt = noteToEdit.updatedAt || null;
         const titleInput = this.container.querySelector('#composer-title-input');
         const input = this.container.querySelector('#composer-input');
         const editableNote = splitNoteForEditing(noteToEdit);
+        this.isApplyingState = true;
         titleInput.value = editableNote.title;
         input.value = editableNote.body;
         
@@ -311,6 +330,7 @@ export class NoteEditor {
         
         titleInput.dispatchEvent(new window.Event('input'));
         input.dispatchEvent(new window.Event('input'));
+        this.isApplyingState = false;
         
         input.focus();
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -318,14 +338,18 @@ export class NoteEditor {
         this.container.querySelector('#btn-save-note').textContent = 'Actualizar';
       }
     } else if (!activeNoteId && this.currentEditId) {
+      this.draftCapture.flush();
       this.currentEditId = null;
+      this.currentEditBaseUpdatedAt = null;
       const titleInput = this.container.querySelector('#composer-title-input');
       const input = this.container.querySelector('#composer-input');
+      this.isApplyingState = true;
       titleInput.value = '';
       input.value = '';
       input.style.height = 'auto';
       this.container.querySelector('#btn-save-note').textContent = 'Guardar';
       this.container.querySelector('#btn-save-note').disabled = true;
+      this.isApplyingState = false;
     }
 
     if (!activeNoteId && !this.currentEditId) {
@@ -346,6 +370,9 @@ export class NoteEditor {
   }
 
   destroy() {
+    this.draftCapture.flush();
+    document.removeEventListener('visibilitychange', this.handleVisibilityChange);
+    window.removeEventListener('pagehide', this.handlePageHide);
     if (this.unsubscribe) this.unsubscribe();
     if (this.slashHandler) this.slashHandler.destroy();
     if (this.plusPopup) this.plusPopup.destroy();
