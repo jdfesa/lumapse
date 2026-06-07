@@ -803,6 +803,223 @@ describe('NoteEditor draft cleanup on save', () => {
   })
 })
 
+describe('NoteEditor draft edge cases', () => {
+  it('fuerza guardado al cambiar a Backup sin perder el texto del editor', () => {
+    let subscriber
+    NoteStore.subscribe.mockImplementationOnce((callback) => {
+      subscriber = callback
+      return vi.fn()
+    })
+
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+    input.value = 'Revisar antes de backup'
+    input.dispatchEvent(new window.Event('input'))
+
+    subscriber({
+      activeNoteId: null,
+      notes: [],
+      notesLoaded: true,
+      subjects: { tree: [] },
+      viewMode: 'backup',
+    })
+
+    expect(EditorDraftService.saveDraft).toHaveBeenCalledWith({
+      mode: 'create',
+      noteId: null,
+      title: '',
+      content: 'Revisar antes de backup',
+      subjectId: null,
+      baseUpdatedAt: null,
+    })
+    expect(input.value).toBe('Revisar antes de backup')
+    expect(editor.container.querySelector('.composer').style.display).toBe('none')
+
+    editor.destroy()
+  })
+
+  it('convierte una edicion en borrador de creacion si la nota desaparece del store', async () => {
+    let subscriber
+    NoteStore.subscribe.mockImplementationOnce((callback) => {
+      subscriber = callback
+      return vi.fn()
+    })
+
+    const editor = createEditor()
+    subscriber({
+      activeNoteId: 'note-1',
+      notes: [{
+        id: 'note-1',
+        title: 'Resumen',
+        content: 'Resumen\n\nCuerpo',
+        subjectId: null,
+        updatedAt: '2026-06-06T10:00:00.000Z',
+      }],
+      notesLoaded: true,
+      subjects: { tree: [] },
+      viewMode: 'inbox',
+    })
+
+    const input = editor.container.querySelector('#composer-input')
+    input.value = 'Cambio pendiente'
+    input.dispatchEvent(new window.Event('input'))
+
+    subscriber({
+      activeNoteId: null,
+      notes: [],
+      notesLoaded: true,
+      subjects: { tree: [] },
+      viewMode: 'inbox',
+    })
+
+    expect(EditorDraftService.saveDraft).toHaveBeenCalledWith({
+      mode: 'edit',
+      noteId: 'note-1',
+      title: 'Resumen',
+      content: 'Cambio pendiente',
+      subjectId: null,
+      baseUpdatedAt: '2026-06-06T10:00:00.000Z',
+    })
+    expect(input.value).toBe('Cambio pendiente')
+    expect(editor.container.querySelector('#btn-save-note').textContent).toBe('Guardar')
+    expect(editor.container.querySelector('#composer-draft-status').textContent).toBe('Borrador recuperado')
+
+    await editor.handleSave()
+
+    expect(NoteStore.createNote).toHaveBeenCalledWith('Resumen', 'Cambio pendiente', null)
+    expect(NoteStore.updateNote).not.toHaveBeenCalled()
+
+    editor.destroy()
+  })
+
+  it('restaura como creacion un borrador de edicion cuyo noteId ya no existe', () => {
+    let subscriber
+    EditorDraftService.loadDraft.mockReturnValueOnce({
+      version: 1,
+      mode: 'edit',
+      noteId: 'missing-note',
+      title: 'Apunte rescatado',
+      content: 'Texto pendiente',
+      subjectId: null,
+      baseUpdatedAt: '2026-06-06T10:00:00.000Z',
+      savedAt: '2026-06-07T03:00:00.000Z',
+    })
+    NoteStore.subscribe.mockImplementationOnce((callback) => {
+      subscriber = callback
+      return vi.fn()
+    })
+
+    const editor = createEditor()
+    subscriber({
+      activeNoteId: null,
+      notes: [],
+      notesLoaded: true,
+      subjects: { tree: [] },
+      viewMode: 'inbox',
+    })
+
+    expect(editor.container.querySelector('#composer-title-input').value).toBe('Apunte rescatado')
+    expect(editor.container.querySelector('#composer-input').value).toBe('Texto pendiente')
+    expect(editor.container.querySelector('#btn-save-note').textContent).toBe('Guardar')
+    expect(editor.container.querySelector('#composer-draft-status').textContent).toBe('Borrador recuperado')
+    expect(NoteStore.updateNote).not.toHaveBeenCalled()
+
+    editor.destroy()
+  })
+
+  it('mantiene el borrador al entrar y salir de Modo Enfoque', () => {
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+
+    input.value = 'Escritura en foco'
+    input.dispatchEvent(new window.Event('input'))
+    editor.enterFocusMode()
+    editor.exitFocusMode()
+    window.dispatchEvent(new window.Event('pagehide'))
+
+    expect(editor.container.querySelector('.composer').classList.contains('composer--focus')).toBe(false)
+    expect(input.value).toBe('Escritura en foco')
+    expect(EditorDraftService.saveDraft).toHaveBeenCalledWith({
+      mode: 'create',
+      noteId: null,
+      title: '',
+      content: 'Escritura en foco',
+      subjectId: null,
+      baseUpdatedAt: null,
+    })
+
+    editor.destroy()
+  })
+
+  it('guarda borrador con solo titulo y no crea nota automaticamente', () => {
+    vi.useFakeTimers()
+    const editor = createEditor()
+    const titleInput = editor.container.querySelector('#composer-title-input')
+
+    titleInput.value = 'Solo titulo'
+    titleInput.dispatchEvent(new window.Event('input'))
+    vi.advanceTimersByTime(500)
+
+    expect(EditorDraftService.saveDraft).toHaveBeenCalledWith({
+      mode: 'create',
+      noteId: null,
+      title: 'Solo titulo',
+      content: '',
+      subjectId: null,
+      baseUpdatedAt: null,
+    })
+    expect(NoteStore.createNote).not.toHaveBeenCalled()
+
+    editor.destroy()
+  })
+
+  it('guarda borrador con solo cuerpo y no crea nota automaticamente', () => {
+    vi.useFakeTimers()
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+
+    input.value = 'Solo cuerpo'
+    input.dispatchEvent(new window.Event('input'))
+    vi.advanceTimersByTime(500)
+
+    expect(EditorDraftService.saveDraft).toHaveBeenCalledWith({
+      mode: 'create',
+      noteId: null,
+      title: '',
+      content: 'Solo cuerpo',
+      subjectId: null,
+      baseUpdatedAt: null,
+    })
+    expect(NoteStore.createNote).not.toHaveBeenCalled()
+
+    editor.destroy()
+  })
+
+  it('preserva un cuerpo pegado con encabezado y lo normaliza recien al guardar', async () => {
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+
+    input.value = '# Algebra lineal\n\nMatrices'
+    input.dispatchEvent(new window.Event('input'))
+    window.dispatchEvent(new window.Event('pagehide'))
+
+    expect(EditorDraftService.saveDraft).toHaveBeenCalledWith({
+      mode: 'create',
+      noteId: null,
+      title: '',
+      content: '# Algebra lineal\n\nMatrices',
+      subjectId: null,
+      baseUpdatedAt: null,
+    })
+
+    await editor.handleSave()
+
+    expect(NoteStore.createNote).toHaveBeenCalledWith('Algebra lineal', 'Matrices', null)
+
+    editor.destroy()
+  })
+})
+
 describe('NoteEditor insert menu', () => {
   it('ordena las acciones como Entrada, +, Aa y Modo Enfoque', () => {
     const editor = createEditor()

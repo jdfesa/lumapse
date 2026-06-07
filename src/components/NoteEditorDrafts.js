@@ -101,10 +101,10 @@ export class EditorDraftRestorer {
 
     if (this.draft.mode === 'edit') {
       const note = state.notes?.find(item => item.id === this.draft.noteId);
-      if (!note) return null;
+      if (!note && !state.notesLoaded) return null;
 
       this.restored = true;
-      return createDraftRestoration(this.draft, note);
+      return createDraftRestoration(note ? this.draft : { ...this.draft, mode: 'create', noteId: null }, note);
     }
 
     this.restored = true;

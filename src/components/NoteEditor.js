@@ -294,6 +294,11 @@ export class NoteEditor {
     this.updateSubjectSelect(subjects);
     if (this.tryRestoreDraft(state)) return;
     this.syncRestoredDraftSubject();
+
+    if (['trash', 'backup'].includes(state.viewMode)) {
+      this.draftCapture.flush();
+      return;
+    }
     
     if (activeNoteId && activeNoteId !== this.currentEditId) {
       this.draftCapture.flush();
@@ -323,6 +328,8 @@ export class NoteEditor {
         this.container.querySelector('#btn-save-note').textContent = 'Actualizar';
       }
     } else if (!activeNoteId && this.currentEditId && !this.restoredDraftActive) {
+      if (this.handleMissingEditedNote(notes, state.notesLoaded)) return;
+
       this.draftCapture.flush();
       this.currentEditId = null;
       this.currentEditBaseUpdatedAt = null;
@@ -386,6 +393,19 @@ export class NoteEditor {
     if (this.subjectPicker?.getValue() !== this.restoredDraftSubjectId) {
       this.subjectPicker?.setValue(this.restoredDraftSubjectId);
     }
+  }
+
+  handleMissingEditedNote(notes = [], notesLoaded = false) {
+    if (!notesLoaded || notes.some(note => note.id === this.currentEditId)) return false;
+
+    this.draftCapture.flush();
+    this.currentEditId = null;
+    this.currentEditBaseUpdatedAt = null;
+    this.restoredDraftActive = true;
+    this.restoredDraftSubjectId = this.subjectPicker?.getValue() || null;
+    this.container.querySelector('#btn-save-note').textContent = 'Guardar';
+    this.showDraftStatus('Borrador recuperado');
+    return true;
   }
 
   showDraftStatus(message) {
