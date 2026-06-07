@@ -33,7 +33,7 @@ export class SubjectPicker {
       const option = event.target.closest('.composer__subject-option');
       if (!option) return;
 
-      this.setValue(option.dataset.subjectId || '');
+      this.setValue(option.dataset.subjectId || '', { emitChange: true });
       this.close();
       this.trigger.focus();
     });
@@ -135,9 +135,10 @@ export class SubjectPicker {
   }
 
   setValue(value, options = {}) {
-    const { renderMenu = true } = options;
+    const { emitChange = false, renderMenu = true } = options;
     if (!this.input || !this.label || !this.trigger) return;
 
+    const previousValue = this.input.value;
     const selected = this.options.find(option => option.id === value) || this.options[0];
 
     this.input.value = selected.id;
@@ -147,6 +148,10 @@ export class SubjectPicker {
 
     if (renderMenu) {
       this.renderMenu(selected.id);
+    }
+
+    if (emitChange && previousValue !== selected.id) {
+      this.input.dispatchEvent(new window.Event('change', { bubbles: true }));
     }
   }
 
