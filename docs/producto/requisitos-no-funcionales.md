@@ -42,7 +42,7 @@
 | ID | Requisito | Métrica | Verificación |
 |---|---|---|---|
 | RNF-009 | La aplicación debe funcionar **100% offline** después de la primera visita con conexión. | Todas las funcionalidades disponibles sin red | Test manual en modo avión |
-| RNF-010 | Los datos del usuario no deben perderse ante un cierre inesperado del navegador (crash, batería agotada). | Pérdida de datos = 0 notas tras crash | Auto-guardado persistente cada 800ms de inactividad |
+| RNF-010 | El trabajo en curso del usuario no debe perderse ante cierre inesperado, pausa de la app, bloqueo del teléfono o cambio temporal a otra aplicación. | Pérdida de borrador = 0 en flujos principales de crear/editar | Borrador persistente local restaurado al volver al editor |
 | RNF-011 | El Service Worker debe cachear correctamente todos los assets estáticos para garantizar la disponibilidad offline. | Cache hit rate = 100% para assets | Lighthouse PWA audit |
 
 ---

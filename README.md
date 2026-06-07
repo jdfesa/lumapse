@@ -159,7 +159,7 @@ Construir el corazón funcional de la aplicación: editor de notas con persisten
 - `NoteStore`: gestor de estado reactivo (patrón Observer)
 - Componente `NoteList`: barra lateral con listado de notas
 - Componente `NoteEditor`: editor de título y contenido
-- Auto-guardado automático con debounce (800ms)
+- Guardado explícito de notas con persistencia local
 - Eliminación de notas con confirmación de seguridad
 
 > **Nota:** Este hito se implementó con IndexedDB como capa de persistencia inicial. La migración a SQLite se ejecuta posteriormente durante el Hito 04, tras el pivote documentado en [ADR-005](./docs/adr/ADR-005-pivote-app-nativa.md) y formalizado técnicamente en [ADR-006](./docs/adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md).
@@ -197,6 +197,7 @@ Garantizar la calidad del código y preparar la distribución del producto.
 - Suite de tests unitarios con Vitest (implementada)
 - GitHub Actions `CI — Quality Gate` (implementado)
 - Smoke tests nativos Android bajo `com.lumapse.app` (implementados)
+- Borradores persistentes del editor para continuar notas tras cambiar de app o consultar PDFs (`RF-005`)
 - Backup manual `.zip` externo con salida por share sheet/gestor de archivos (`RF-017`)
 - Fechas académicas discretas integradas al calendario existente (`RF-027`)
 - Editor enriquecido con slash commands, botón `+`, formato `Aa`, callouts y modo enfoque dedicado (`RF-028`)

@@ -6,7 +6,7 @@
 
 **Estado:** Hito 04 cerrado formalmente el 2026-06-01.
 **Objetivo:** preparar la primera release distribuible con quality gate, APK firmado, validacion manual y documentacion final.
-**Criterio:** no sumar features nuevas salvo cambios funcionales acotados y documentados. Quedan registrados como parte de Hito 05 `RF-017`, `RF-027` y `RF-028`; desde este punto, estabilizar, empaquetar y validar.
+**Criterio:** no sumar features nuevas salvo cambios funcionales acotados y documentados. Quedan registrados como parte de Hito 05 `RF-005`, `RF-017`, `RF-027` y `RF-028`; desde este punto, estabilizar, empaquetar y validar.
 
 ---
 
@@ -19,6 +19,7 @@
 - [x] Definir el corte como `0.4.8` release candidata/beta funcional para validacion controlada.
 - [x] Cerrar y archivar plan de editor enriquecido en `docs/gestion/historico/`.
 - [x] Registrar `RF-028 / HU-028` como mejora funcional controlada de Hito 05.
+- [x] Registrar `RF-005 / HU-005` como borradores persistentes del editor y archivar su plan operativo.
 
 ---
 
@@ -46,6 +47,16 @@
 - [x] `RF-028`: formalizar comandos `/`, menu `+`, boton `Aa`, Modo Enfoque dedicado y render visual de callouts como mejora de escritura opcional.
 - [x] Mantener texto plano como flujo base; los comandos enriquecen la nota solo si el usuario los elige.
 - [x] Archivar el plan operativo en [`docs/gestion/historico/plan-editor-enriquecido-2026-06-05.md`](docs/gestion/historico/plan-editor-enriquecido-2026-06-05.md).
+- [x] Actualizar trazabilidad en requisitos, HU, changelog, backlog y seguimiento de velocidad.
+
+---
+
+## Borradores persistentes — decision Hito 05
+
+- [x] `RF-005`: reemplazar auto-guardado final silencioso por borrador persistente local del editor.
+- [x] Mantener control del usuario: la nota final solo se crea o actualiza al tocar `Guardar` o `Actualizar`.
+- [x] Validar manualmente el caso real de salir a consultar/copiar desde un PDF y volver a continuar la nota.
+- [x] Archivar el plan operativo en [`docs/gestion/historico/plan-borradores-persistentes-2026-06-06.md`](docs/gestion/historico/plan-borradores-persistentes-2026-06-06.md).
 - [x] Actualizar trazabilidad en requisitos, HU, changelog, backlog y seguimiento de velocidad.
 
 ---

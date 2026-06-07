@@ -72,7 +72,7 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 - Se creó `src/components/MarkdownPreview.js` como clase modular que recibe texto Markdown y lo renderiza como HTML seguro.
 - Se creó `src/components/MarkdownPreview.css` con estilos completos para el HTML renderizado: encabezados (h1-h6), párrafos, listas, código inline y bloques, blockquotes, tablas GFM, enlaces y separadores.
 - Se integró el componente dentro de `NoteEditor`: el editor ahora presenta un layout split (textarea a la izquierda, preview a la derecha) separados por un borde visual.
-- El preview se actualiza de forma **instantánea** con cada keystroke (sin debounce), mientras que el auto-guardado a IndexedDB mantiene su debounce de 800ms.
+- El preview se actualiza de forma **instantánea** con cada keystroke (sin debounce). La protección contra pérdida de escritura se revisa posteriormente como borrador persistente del editor en `RF-005 / HU-005`.
 - Se implementó un cache interno (`lastContent`) para evitar re-renders innecesarios cuando el contenido no cambia.
 - Se verificó visualmente en el navegador: el Markdown se renderiza correctamente en tiempo real.
 

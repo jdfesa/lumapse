@@ -11,6 +11,8 @@
 
 En este hito nos enfocamos en el corazón de la aplicación: el editor de notas y la persistencia de datos. El objetivo principal es lograr un CRUD completo (Crear, Leer, Actualizar, Eliminar) de notas almacenadas localmente usando IndexedDB, sin depender de servidores externos.
 
+> **Nota de revisión 2026-06-07:** el auto-guardado final silencioso implementado inicialmente queda supersedido por `RF-005 / HU-005` como borradores persistentes del editor en Hito 05. La decisión vigente protege el trabajo en curso sin crear ni actualizar notas finales sin confirmación explícita.
+
 ---
 
 ## Objetivos del Hito — Estado

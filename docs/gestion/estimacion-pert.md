@@ -37,7 +37,7 @@ Rango 68% = [E - σ,  E + σ]    → intervalo de confianza
 ## 2. Selección de módulos a estimar
 
 Se aplica PERT a los módulos con **mayor incertidumbre técnica**, no a todo el proyecto.
-Los módulos del Hito 02 (CRUD, auto-guardado, listado) ya fueron completados y su duración
+Los módulos del Hito 02 (CRUD, listado y persistencia local) ya fueron completados y su duración
 real es conocida; no tiene sentido estimarlos retroactivamente con PERT.
 
 | Módulo | Hito | Incertidumbre | ¿Aplica PERT? |

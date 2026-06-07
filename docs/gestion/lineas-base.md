@@ -83,11 +83,14 @@ git show LBREQ-v1.0 --no-patch
 - `NoteStore` — Gestor de estado reactivo (patrón Observer)
 - `NoteList` — Componente de listado de notas
 - `NoteEditor` — Editor de título y contenido
-- Auto-guardado con debounce (800ms)
+- Auto-guardado con debounce (800ms), luego supersedido por la revisión de `RF-005`
 - Eliminación con confirmación de seguridad
 
-**RF completados:** RF-001 a RF-005, RF-007 (6 de 24)  
-**Story Points entregados:** 20 SP
+**RF completados según línea base original:** RF-001 a RF-005, RF-007 (6 de 24)  
+**Story Points entregados según línea base original:** 20 SP  
+**Story Points normalizados vigentes:** 15 SP
+
+> **Nota de revisión 2026-06-07:** `RF-005` dejó de contarse como auto-guardado final silencioso del Hito 02. La necesidad se mantiene, pero la solución verificada se formaliza en Hito 05 como borrador persistente del editor.
 
 ---
 
@@ -133,6 +136,7 @@ Una vez establecida una LB, todo cambio en el alcance debe pasar por un proceso 
 |---|---|---|---|---|
 | 2026-05-14 | Pivote de PWA a app nativa (Capacitor + SQLite) | Alto — cambia la arquitectura de persistencia y distribución | LB-REQ-v1.0 (RF-007, RF-008, RF-009 impactados) | [ADR-005](../adr/ADR-005-pivote-app-nativa.md) |
 | 2026-06-05 | Normalización de mejoras funcionales de Hito 05 (`RF-017`, `RF-027`, `RF-028`) | Medio — registra backup manual, fechas discretas y editor enriquecido como alcance aprobado antes de release | LB-REQ-v1.0 (alcance extendido y trazabilidad actualizada) | [CHANGELOG](../../CHANGELOG.md), [Hito 05](../hitos/hito-05-septiembre.md) |
+| 2026-06-07 | Reclasificación de `RF-005 / HU-005` como borradores persistentes del editor | Medio — reemplaza auto-guardado final silencioso por protección local del trabajo en curso, sin crear ni actualizar notas finales sin confirmación | LB-REQ-v1.0 (criterio funcional refinado y trazabilidad actualizada) | [CHANGELOG](../../CHANGELOG.md), [Requisitos funcionales](../producto/requisitos-funcionales.md) |
 
 > **Nota:** El pivote a app nativa fue el cambio más significativo respecto de la LB de
 > requerimientos original. Fue documentado como ADR-005, fundamentado en evidencia

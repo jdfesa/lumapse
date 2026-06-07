@@ -1,6 +1,6 @@
 # Documentación de Producto — Lumapse
 
-**Última actualización:** 2026-06-05
+**Última actualización:** 2026-06-07
 
 Esta carpeta contiene la documentación centrada en el **usuario y el producto**, siguiendo los principios de **Design Thinking** como marco metodológico de diseño.
 

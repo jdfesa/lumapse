@@ -1,7 +1,7 @@
 # Historias de Usuario — Lumapse
 
 **Fase Design Thinking:** Idear / Prototipar  
-**Última actualización:** 2026-06-05
+**Última actualización:** 2026-06-07
 **Autor:** José David Sandoval
 
 ---
@@ -102,28 +102,6 @@
 | CA-02 | Cada ítem del listado muestra: título, extracto del contenido (primeros 80 caracteres), y fecha de última modificación. | Inspección visual |
 | CA-03 | Las notas están ordenadas por fecha de última modificación, la más reciente primero. | Test unitario (comparar orden del array) |
 | CA-04 | Si no hay notas, se muestra un estado vacío con instrucciones para crear la primera nota. | Test funcional |
-
----
-
-### HU-005 — Auto-guardado automático
-
-| Campo | Detalle |
-|---|---|
-| **Historia** | Como **estudiante**, quiero que **mis notas se guarden automáticamente** mientras escribo, para **no perder contenido si cierro la app o se queda sin batería**. |
-| **RF asociados** | [RF-005](./requisitos-funcionales.md) |
-| **Persona** | [Lucía](./personas.md#persona-1--lucía-la-estudiante-organizada) |
-| **Prioridad** | MUST |
-| **Story Points** | **5 SP** — Lógica de debounce temporal, manejo de eventos de cambio, indicador visual de estado, y edge cases (cierre inesperado, cambio de nota). |
-| **Hito** | 02 |
-
-**Criterios de Aceptación:**
-
-| CA | Descripción | Verificación |
-|---|---|---|
-| CA-01 | La nota activa se persiste en IndexedDB después de 800ms de inactividad del usuario. | Test unitario con timer mock |
-| CA-02 | La nota activa se persiste al cambiar a otra nota o al cerrar el editor. | Test funcional |
-| CA-03 | Se muestra un indicador visual sutil de estado de guardado (ej: "Guardado" / "Guardando..."). | Inspección visual |
-| CA-04 | Después de un cierre inesperado del navegador, al reabrir la app la nota conserva el último contenido guardado. | Test manual |
 
 ---
 
@@ -400,6 +378,30 @@
 
 ## Hito 05 — Preparación de Release y Mejoras Funcionales Controladas (Septiembre 2026)
 
+### HU-005 — Borradores persistentes del editor
+
+| Campo | Detalle |
+|---|---|
+| **Historia** | Como **estudiante**, quiero que **Lumapse conserve un borrador local de lo que estoy escribiendo o editando**, para **poder salir a consultar un PDF, copiar texto o volver más tarde sin perder mi trabajo y manteniendo el control sobre cuándo se guarda la nota final**. |
+| **RF asociados** | [RF-005](./requisitos-funcionales.md) |
+| **Persona** | [Lucía](./personas.md#persona-1--lucía-la-estudiante-organizada) |
+| **Prioridad** | MUST |
+| **Story Points** | **5 SP** — Persistencia local con debounce, restauración de nota nueva y edición, indicador visual, descarte explícito y edge cases de navegación/cierre. |
+| **Hito** | 05 |
+
+**Criterios de Aceptación:**
+
+| CA | Descripción | Verificación |
+|---|---|---|
+| CA-01 | Mientras el usuario crea una nota, el editor conserva título, contenido y materia/sección seleccionada como borrador local sin crear una nota final. | Test unitario + prueba manual |
+| CA-02 | Mientras el usuario edita una nota existente, el editor conserva los cambios pendientes asociados a la nota original sin actualizarla hasta tocar `Actualizar`. | Test unitario |
+| CA-03 | Al volver a Lumapse o reabrir una vista con editor disponible, el borrador se restaura y permite continuar escribiendo. | Test de componente + prueba manual con cambio de app/PDF |
+| CA-04 | Al guardar o actualizar con éxito, el borrador se elimina; si falla la persistencia definitiva, el borrador queda disponible. | Test unitario |
+| CA-05 | El usuario puede descartar el borrador con confirmación explícita y el editor vuelve a un estado limpio. | Test de componente |
+| CA-06 | Si la nota original de un borrador de edición ya no existe, el contenido pendiente se conserva como borrador de nota nueva para evitar pérdida de texto. | Test unitario |
+
+---
+
 ### HU-027 — Marcar fechas académicas importantes
 
 | Campo | Detalle |
@@ -484,11 +486,11 @@ No hay HU funcionales nuevas asignadas a Hito 06 en este corte. El foco previsto
 
 | Métrica | Hito 02 | Hito 03 | Hito 04 | Hito 05 | Hito 06 | Futuro | Total |
 |---|---|---|---|---|---|---|---|
-| **Total HU** | 6 | 3 | 7 | 3 | 0 | 1 | **20** |
-| **Total Story Points** | 20 | 13 | 37 | 21 | 0 | 3 | **94** |
-| **Total Criterios de Aceptación** | 20 | 10 | 30 | 20 | 0 | 4 | **84** |
-| **Prioridad predominante** | MUST | MUST/SHOULD | SHOULD/MUST | SHOULD | — | SHOULD | — |
-| **Personas cubiertas** | Lucía (4), Martín (2) | Lucía (2), Martín (1) | Lucía (6), Martín (1) | Lucía (2), Martín (2) | — | Martín (1) | Lucía (14), Martín (7) |
+| **Total HU** | 5 | 3 | 7 | 4 | 0 | 1 | **20** |
+| **Total Story Points** | 15 | 13 | 37 | 26 | 0 | 3 | **94** |
+| **Total Criterios de Aceptación** | 16 | 10 | 30 | 26 | 0 | 4 | **86** |
+| **Prioridad predominante** | MUST | MUST/SHOULD | SHOULD/MUST | MUST/SHOULD | — | SHOULD | — |
+| **Personas cubiertas** | Lucía (3), Martín (2) | Lucía (2), Martín (1) | Lucía (6), Martín (1) | Lucía (3), Martín (2) | — | Martín (1) | Lucía (14), Martín (7) |
 
 ---
 
@@ -500,7 +502,6 @@ No hay HU funcionales nuevas asignadas a Hito 06 en este corte. El foco previsto
 | HU-002 | RF-002 | Martín | Editar nota | 3 | 02 |
 | HU-003 | RF-003 | Lucía | Eliminar nota | 2 | 02 |
 | HU-004 | RF-004 | Lucía | Listado de notas | 3 | 02 |
-| HU-005 | RF-005 | Lucía | Auto-guardado | 5 | 02 |
 | HU-006 | RF-007 | Martín | Persistencia local | 5 | 02 |
 | HU-007 | RF-010/011 | Lucía | Renderizar Markdown | 5 | 03 |
 | HU-008 | RF-016 | Martín | Compartir/exportar nota individual | 3 | Futuro |
@@ -513,6 +514,7 @@ No hay HU funcionales nuevas asignadas a Hito 06 en este corte. El foco previsto
 | HU-015 | RF-025 | Lucía | Marcadores de estado académico | 3 | 04 |
 | HU-016 | RF-026 | Lucía | Papelera de reciclaje | 8 | 04 |
 | HU-017 | RF-014 | Lucía | Categorización y filtrado por materias | 8 | 04 |
+| HU-005 | RF-005 | Lucía | Borradores persistentes del editor | 5 | 05 |
 | HU-027 | RF-027 | Lucía | Fechas académicas discretas | 8 | 05 |
 | HU-028 | RF-028 | Lucía, Martín | Editor enriquecido y slash commands | 5 | 05 |
 | HU-030 | RF-017 | Martín | Backup manual externo | 8 | 05 |

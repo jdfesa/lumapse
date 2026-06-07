@@ -1,7 +1,7 @@
 # Requisitos Funcionales — Lumapse
 
 **Fase Design Thinking:** Idear / Prototipar  
-**Última actualización:** 2026-06-05 (editor enriquecido y alcance Hito 05)
+**Última actualización:** 2026-06-07 (borradores persistentes del editor)
 **Autor:** José David Sandoval
 
 ---
@@ -12,7 +12,7 @@
 - **Prioridad:** `MUST` (obligatorio) · `SHOULD` (deseable) · `COULD` (opcional si hay tiempo)
 - **Persona:** Persona de usuario que motiva el requisito → ver [personas.md](./personas.md)
 - **Hito:** Hito del roadmap donde se implementa → ver [README.md](../../README.md#roadmap)
-- **Estado:** `Pendiente` · `En desarrollo` · `Implementado` · `Verificado` · `Postergado`
+- **Estado:** `Pendiente` · `En desarrollo` · `Implementado` · `Verificado` · `Postergado` · `Obsoleto`
 
 ---
 
@@ -24,7 +24,7 @@
 | RF-002 | El sistema debe permitir **editar** el título y contenido de una nota existente. | MUST | Lucía, Martín | 02 | Implementado |
 | RF-003 | El sistema debe permitir **eliminar** una nota, con confirmación previa para evitar borrado accidental. | MUST | Lucía | 02 | Implementado |
 | RF-004 | El sistema debe mostrar un **listado de todas las notas** ordenadas por fecha de última modificación (más reciente primero). | MUST | Lucía | 02 | Implementado |
-| RF-005 | El sistema debe **auto-guardar** la nota activa cada 800ms de inactividad del usuario o al cambiar de nota. | MUST | Lucía | 02 | Implementado |
+| RF-005 | El sistema debe conservar un **borrador persistente local del editor** mientras el usuario crea o edita una nota, restaurarlo al volver a la app y eliminarlo al guardar, actualizar o descartar, sin crear ni modificar notas finales sin confirmación explícita. | MUST | Lucía | 05 | Verificado |
 | RF-006 | El sistema debe mostrar el **conteo de palabras y caracteres** de la nota activa. | COULD | Martín | Futuro | Postergado |
 
 ---
@@ -100,6 +100,16 @@
 
 ---
 
+## Decisión de revisión — RF-005 y borradores persistentes
+
+La revisión del 2026-06-07 reemplaza la interpretación inicial de `RF-005` como auto-guardado final silencioso por un modelo de borrador persistente del editor.
+
+La decisión protege la intención del usuario: Lumapse debe evitar pérdida de trabajo en curso si el estudiante sale de la app, consulta un PDF, copia texto, bloquea el teléfono o vuelve más tarde, pero no debe crear notas incompletas ni actualizar una nota final sin que el usuario toque `Guardar` o `Actualizar`.
+
+El borrador conserva localmente título, contenido, materia/sección seleccionada y, cuando corresponde, la nota original que se está editando. Se restaura al volver al editor, muestra un indicador sutil de cambios pendientes y puede descartarse explícitamente. El borrador se limpia solo después de guardar/actualizar con éxito o de confirmar el descarte. Si la nota original editada desaparece antes de restaurar, el contenido pendiente se conserva como borrador de nota nueva para no perder texto.
+
+Validación manual: el flujo fue probado saliendo de Lumapse para consultar un PDF, copiar texto y volver al editor, manteniendo el borrador disponible y editable como se esperaba.
+
 ## Decisión de revisión — Exportación/importación local
 
 La revisión del 2026-06-01 detectó que `src/services/ExportService.js` e `src/services/ImportService.js` conservaban una base técnica parcial de exportación/importación, pero la funcionalidad no estaba conectada a la interfaz actual ni cubierta como flujo verificable de usuario. Por lo tanto, `RF-016`, `RF-017` y `RF-018` dejaron de contarse temporalmente como requisitos implementados del producto actual.
@@ -135,10 +145,10 @@ El cierre formal del Hito 04 (2026-06-01) reclasifica `RF-006`, `RF-022` y `RF-0
 
 | Hito | Requisitos | Cantidad |
 |---|---|---|
-| **02** (Junio) | RF-001 a RF-005, RF-007 | 6 |
+| **02** (Junio) | RF-001 a RF-004, RF-007 | 5 |
 | **03** (Julio) | RF-008 a RF-012, RF-021 | 6 |
 | **04** (Agosto) | RF-013 a RF-015, RF-019, RF-020, RF-025, RF-026 | 7 |
-| **05** (Septiembre) | RF-017, RF-023, RF-027, RF-028 | 4 |
+| **05** (Septiembre) | RF-005, RF-017, RF-023, RF-027, RF-028 | 5 |
 | **06** (Octubre) | — | 0 |
 | **Futuro / Post-release** | RF-006, RF-016, RF-018, RF-022, RF-024 | 5 |
 

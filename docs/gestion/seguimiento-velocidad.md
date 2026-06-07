@@ -4,7 +4,7 @@
 > **Referencia:** Gómez, J. (2014), Secciones 5 y 7. Guía de Estudio PP3 (Ing. Mauricio Parada, 2026).  
 > **Fecha de creación:** 2026-05-15  
 > **Autor:** José David Sandoval  
-> **Actualización:** 2026-06-05 — incorporación trazable de mejoras funcionales controladas en Hito 05.
+> **Actualización:** 2026-06-07 — reclasificación de RF-005/HU-005 como borradores persistentes del editor en Hito 05.
 
 ---
 
@@ -50,9 +50,10 @@ Story Points asignados en [`historias-de-usuario.md`](../producto/historias-de-u
 | HU-002 | Editar nota existente | 3 |
 | HU-003 | Eliminar nota con confirmación | 2 |
 | HU-004 | Ver listado de notas | 3 |
-| HU-005 | Auto-guardado automático | 5 |
 | HU-006 | Persistencia local sin servidor | 5 |
-| | **Total Hito 02** | **20** |
+| | **Total Hito 02 normalizado** | **15** |
+
+> **Nota metodológica:** `RF-005 / HU-005` fue reclasificada el 2026-06-07. La necesidad original de no perder texto se mantiene, pero la solución validada ya no es auto-guardado final silencioso sino borrador persistente del editor, por lo que se registra en Hito 05.
 
 ### Hito 03 — MVP Completo (Julio 2026)
 
@@ -86,16 +87,17 @@ El Hito 04 registra 37 SP entregados y queda **cerrado formalmente el 2026-06-01
 
 ### Hito 05 — Testing, Calidad y Distribución (Septiembre 2026, en curso)
 
-Story Points formalizados hasta el 2026-06-05:
+Story Points formalizados hasta el 2026-06-07:
 
 | HU | Funcionalidad | SP |
 |---|---|---|
+| HU-005 | Borradores persistentes del editor | 5 |
 | HU-027 | Fechas académicas discretas | 8 |
 | HU-028 | Editor enriquecido y slash commands | 5 |
 | HU-030 | Backup manual externo | 8 |
-| | **Total Hito 05 formalizado** | **21** |
+| | **Total Hito 05 formalizado** | **26** |
 
-El Hito 05 mantiene su objetivo principal de testing, calidad y distribución, pero incorpora tres mejoras funcionales acotadas aprobadas durante la preparación de release. Se registran como cambios de alcance controlados porque ya quedaron implementados, probados y documentados, sin reabrir el Hito 04.
+El Hito 05 mantiene su objetivo principal de testing, calidad y distribución, pero incorpora cuatro mejoras funcionales acotadas aprobadas durante la preparación de release. Se registran como cambios de alcance controlados porque ya quedaron implementados, probados y documentados, sin reabrir el Hito 04.
 
 ---
 
@@ -104,19 +106,19 @@ El Hito 05 mantiene su objetivo principal de testing, calidad y distribución, p
 | Hito | Período | SP planificados | SP entregados | Velocidad real | Desvío | Estado | Notas |
 |---|---|---|---|---|---|---|---|
 | 01 | Mayo 2026 | — | — | — | — | ✅ Completado | Fundación, sin HU medibles en SP |
-| 02 | Junio 2026 | 20 | 20 | 20 SP/mes | 0 | ✅ Completado | Todas las HU completadas. Baseline: `LB-PROD-v0.1.0` |
+| 02 | Junio 2026 | 15 | 15 | 15 SP/mes | 0 | ✅ Completado | Core CRUD y persistencia local; RF-005 reclasificado a Hito 05 |
 | 03 | Julio 2026 | 13 | 13 | 13 SP/mes | 0 | ✅ Completado | Markdown, lectura/escritura y offline; portabilidad local reclasificada |
 | 04 | Agosto 2026 | 37 | 37 | 37 SP/mes | 0 | ✅ Completado | Organización por materias + UX mobile cerrado formalmente |
-| 05 | Septiembre 2026 | 21 | 21 | 21 SP/mes parcial | 0 | 🔄 En curso | Testing + APK firmado, backup, fechas discretas y editor enriquecido |
+| 05 | Septiembre 2026 | 26 | 26 | 26 SP/mes parcial | 0 | 🔄 En curso | Testing + APK firmado, backup, fechas discretas, editor enriquecido y borradores persistentes |
 | 06 | Octubre 2026 | *por definir* | — | — | — | ⏳ Futuro | Informe final + entrega |
 
 ### Velocidad promedio (datos disponibles)
 
 ```
-Velocidad promedio = (20 + 13 + 37) / 3 = 23.3 SP/hito
+Velocidad promedio = (15 + 13 + 37) / 3 = 21.7 SP/hito
 ```
 
-> El script `python3 scripts/generate-velocity-report.py` permite auditar los SP formalizados por hito desde la tabla de HU. Para velocidad real cerrada se consideran solo los hitos formalmente completados (02 a 04). Al 2026-06-05, el proyecto registra **20 HU formalizadas**, **94 SP totales planificados/formalizados**, **70 SP cerrados** en Hitos 02 a 04 y **21 SP formalizados en curso** para Hito 05.
+> El script `python3 scripts/generate-velocity-report.py` permite auditar los SP formalizados por hito desde la tabla de HU. Para velocidad real cerrada se consideran solo los hitos formalmente completados (02 a 04). Al 2026-06-07, el proyecto registra **20 HU formalizadas**, **94 SP totales planificados/formalizados**, **65 SP cerrados** en Hitos 02 a 04 y **26 SP formalizados en curso** para Hito 05.
 
 ---
 
@@ -126,13 +128,11 @@ Velocidad promedio = (20 + 13 + 37) / 3 = 23.3 SP/hito
 
 | Métrica | Valor |
 |---|---|
-| SP planificados | 20 |
-| SP entregados | 20 |
+| SP planificados | 15 |
+| SP entregados | 15 |
 | Desvío | 0 (100% de cumplimiento) |
 
-El Hito 02 se completó según lo planificado. Las 6 HU fueron implementadas y verificadas.
-Esto indica que la estimación inicial fue precisa para funcionalidades de complejidad
-baja-moderada (CRUD, auto-guardado, listado).
+El Hito 02 se completó según el alcance normalizado actual. Las 5 HU de core CRUD, listado y persistencia local fueron implementadas y verificadas. La protección contra pérdida de escritura se conserva como necesidad de producto, pero su solución definitiva se formalizó después como borrador persistente del editor en Hito 05.
 
 ### Hito 03 — Sin desvío, con reclasificación de alcance
 
