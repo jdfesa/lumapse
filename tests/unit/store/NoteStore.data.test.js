@@ -62,6 +62,7 @@ function listenForNotify() {
 
 beforeEach(() => {
   state.notes = []
+  state.notesLoaded = false
   state.activeNoteId = null
   state.searchQuery = ''
   state.dateFilter = null
@@ -98,6 +99,12 @@ describe('NoteStore.data', () => {
       await NoteStoreData.loadNotes()
 
       expect(state.notes).toEqual(notes)
+    })
+
+    it('marca notesLoaded cuando termina de cargar notas', async () => {
+      await NoteStoreData.loadNotes()
+
+      expect(state.notesLoaded).toBe(true)
     })
 
     it('llama notify() después de cargar', async () => {

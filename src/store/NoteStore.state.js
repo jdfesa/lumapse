@@ -4,6 +4,7 @@
 
 export const state = {
   notes: [],              // Todas las notas cargadas
+  notesLoaded: false,     // Indica si loadNotes() ya resolvió al menos una vez
   activeNoteId: null,     // ID de la nota seleccionada actualmente
   searchQuery: '',        // RF-015: Query de búsqueda actual
   dateFilter: null,       // Filtro por fecha (YYYY-MM-DD)

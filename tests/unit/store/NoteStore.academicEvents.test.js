@@ -40,6 +40,7 @@ function listenForNotify() {
 
 beforeEach(() => {
   state.notes = []
+  state.notesLoaded = false
   state.activeNoteId = null
   state.searchQuery = ''
   state.dateFilter = null

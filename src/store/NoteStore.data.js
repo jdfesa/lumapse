@@ -27,6 +27,7 @@ async function runStoreAction(operation, errorMessage, action) {
 
 export async function loadNotes() {
   state.notes = await NoteService.getAllNotes()
+  state.notesLoaded = true
   notify()
 }
 
