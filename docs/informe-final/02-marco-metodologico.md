@@ -125,12 +125,12 @@ Los requisitos del sistema se documentan como artefactos vivos, separados en req
 
 ### 2.6.1. Requisitos Funcionales
 
-Los requisitos funcionales cubren los módulos principales del producto: gestión de notas, persistencia local, Markdown, organización, portabilidad local, experiencia de usuario e información del sistema. En el estado actual del proyecto, el documento [requisitos-funcionales.md](../producto/requisitos-funcionales.md) registra 27 requisitos.
+Los requisitos funcionales cubren los módulos principales del producto: gestión de notas, persistencia local, Markdown, organización, portabilidad local, experiencia de usuario e información del sistema. En el estado actual del proyecto, el documento [requisitos-funcionales.md](../producto/requisitos-funcionales.md) registra 28 requisitos.
 
 El núcleo del MVP ya implementado incluye:
 
 - Creación, edición, listado, búsqueda y eliminación de notas.
-- Auto-guardado.
+- Borradores persistentes del editor.
 - Persistencia local.
 - Renderizado Markdown y modos de lectura/escritura.
 - Organización por materias, secciones, archivo y papelera.

@@ -28,7 +28,7 @@ Los componentes principales son:
 
 | Componente | Responsabilidad |
 |---|---|
-| `NoteEditor` | Edición de contenido Markdown, auto-guardado y modos de trabajo. |
+| `NoteEditor` | Edición de contenido Markdown, borradores persistentes y modos de trabajo. |
 | `MarkdownPreview` | Renderizado seguro del Markdown. |
 | `NoteList` y `NoteCardRenderer` | Listado y representación visual de notas. |
 | `TrashView` | Papelera, restauración y eliminación definitiva. |
@@ -56,7 +56,7 @@ Esta división permite testear reglas de negocio sin renderizar toda la interfaz
 
 ## 5.4. Capa de Persistencia (Evolución de IndexedDB a SQLite)
 
-La persistencia tuvo dos etapas. En la fase inicial del MVP se implementó almacenamiento local con IndexedDB, suficiente para validar el editor, el auto-guardado y el funcionamiento offline en navegador. Luego, tras el relevamiento de datos y el pivote a app nativa, se decidió migrar a SQLite.
+La persistencia tuvo dos etapas. En la fase inicial del MVP se implementó almacenamiento local con IndexedDB, suficiente para validar el editor y el funcionamiento offline en navegador. Luego, tras el relevamiento de datos y el pivote a app nativa, se decidió migrar a SQLite. La protección actual del trabajo en curso se resuelve con borradores persistentes locales del editor, separados del guardado definitivo de notas.
 
 La motivación del cambio fue doble:
 

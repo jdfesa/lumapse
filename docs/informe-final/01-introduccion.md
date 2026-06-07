@@ -30,7 +30,7 @@ Desarrollar y documentar una aplicación móvil offline-first para que estudiant
 - Analizar los datos obtenidos para validar o ajustar las hipótesis iniciales del producto.
 - Definir personas de usuario, requisitos funcionales, requisitos no funcionales, historias de usuario y decisiones de producto trazables.
 - Diseñar una arquitectura local-first que priorice funcionamiento offline, privacidad y persistencia robusta.
-- Implementar un editor de notas con soporte Markdown, auto-guardado, búsqueda y organización por materias y secciones, dejando la portabilidad local de notas como decisión explícita de alcance.
+- Implementar un editor de notas con soporte Markdown, borradores persistentes, búsqueda y organización por materias y secciones, dejando la portabilidad local de notas como decisión explícita de alcance.
 - Migrar la persistencia desde IndexedDB hacia SQLite, de acuerdo con la evidencia recolectada y las decisiones arquitectónicas aprobadas.
 - Empaquetar la aplicación como APK Android mediante Capacitor.
 - Incorporar pruebas unitarias, validaciones documentales y un quality gate automatizado para sostener la calidad del código y la documentación.

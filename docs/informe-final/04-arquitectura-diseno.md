@@ -55,15 +55,15 @@ El diagrama documentado en [casos-de-uso.md](../diagramas/casos-de-uso.md) agrup
 - Datos y portabilidad.
 - Sistema y personalización.
 
-La relación `include` se usa para expresar que crear o editar una nota incluye siempre el auto-guardado. La relación `extend` se utiliza para acciones opcionales, como gestionar la papelera después de una eliminación. Los casos de portabilidad local conservan valor analítico, pero se postergan por su dependencia de integración nativa y validación real en Android.
+La relación `include` se usa para expresar que crear o editar una nota incluye siempre la protección del borrador persistente del editor. La relación `extend` se utiliza para acciones opcionales, como gestionar la papelera después de una eliminación. En portabilidad local, el backup `.zip` ya está integrado como salida manual, mientras que compartir notas individuales e importar contenido quedan como deuda posterior.
 
 ## 4.5. Diagramas de Secuencia
 
-Los diagramas de secuencia permiten representar el flujo temporal entre UI, estado y persistencia. El flujo más importante del producto es crear una nota y auto-guardarla mientras el estudiante escribe.
+Los diagramas de secuencia permiten representar el flujo temporal entre UI, estado y persistencia. El flujo más importante del producto es crear una nota protegida por borrador persistente mientras el estudiante escribe.
 
-El diagrama inicial documentado en [secuencia-crear-nota.md](../diagramas/secuencia-crear-nota.md) modela el comportamiento base: el usuario crea una nota, la UI delega en el store, el store crea el objeto de dominio, se persiste y luego la UI se actualiza. La misma lógica conceptual se mantiene tras la migración a SQLite, aunque la capa de persistencia concreta evolucionó desde IndexedDB hacia los servicios SQLite.
+El diagrama documentado en [secuencia-crear-nota.md](../diagramas/secuencia-crear-nota.md) modela el comportamiento vigente: el usuario abre el editor, la UI conserva el borrador localmente mientras escribe, el store persiste la nota definitiva solo cuando el usuario confirma con `Guardar` o `Actualizar`, y el borrador se limpia después del éxito.
 
-Como criterio de documentación viva, los diagramas deben actualizarse cuando el flujo técnico cambie de manera sustancial. En el estado actual, el diagrama conserva valor conceptual, pero queda pendiente ajustar sus participantes para reflejar completamente `src/services/sqlite/`.
+Como criterio de documentación viva, los diagramas deben actualizarse cuando el flujo técnico cambie de manera sustancial. En el estado actual, el diagrama ya refleja la separación entre borrador local y persistencia definitiva en SQLite.
 
 ## 4.6. Diseño de Interfaz (UI/UX y Mobile-First)
 
