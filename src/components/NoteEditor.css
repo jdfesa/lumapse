@@ -15,6 +15,12 @@
   box-shadow: 0 4px 12px var(--color-shadow-light);
 }
 
+.composer--draft-pending {
+  box-shadow:
+    inset 3px 0 0 color-mix(in srgb, var(--color-accent) 78%, transparent),
+    0 4px 12px var(--color-shadow-light);
+}
+
 .composer__label {
   position: absolute;
   width: 1px;
@@ -139,11 +145,41 @@
   transform: none;
 }
 
+.composer__draft-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: calc(var(--space-1) * -1);
+}
+
+.composer__draft-actions[hidden] {
+  display: none;
+}
+
 .composer__draft-status {
-  margin: calc(var(--space-1) * -1) 0 0;
+  margin: 0;
   color: var(--color-text-muted);
   font-family: var(--font-mono);
   font-size: 0.78rem;
+}
+
+.composer__discard-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  padding: var(--space-1) 0;
+}
+
+.composer__discard-btn:hover,
+.composer__discard-btn:focus-visible {
+  color: var(--color-text-bright);
+  outline: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* Subject selector in composer toolbar (Paso 9) */
