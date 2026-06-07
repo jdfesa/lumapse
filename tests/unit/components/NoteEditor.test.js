@@ -8,6 +8,7 @@ vi.mock('../../../src/store/NoteStore.js', () => ({
 }))
 
 vi.mock('../../../src/services/EditorDraftService.js', () => ({
+  loadDraft: vi.fn(),
   saveDraft: vi.fn(),
   clearDraft: vi.fn(),
 }))
@@ -40,6 +41,7 @@ function pressEnter(input) {
 beforeEach(() => {
   document.body.innerHTML = ''
   vi.clearAllMocks()
+  EditorDraftService.loadDraft.mockReturnValue(null)
 })
 
 describe('NoteEditor title extraction', () => {
@@ -376,6 +378,184 @@ describe('NoteEditor draft capture', () => {
       subjectId: null,
       baseUpdatedAt: null,
     })
+
+    editor.destroy()
+  })
+})
+
+describe('NoteEditor draft restoration', () => {
+  it('restaura un borrador de nota nueva sin crear una nota final', () => {
+    let subscriber
+    EditorDraftService.loadDraft.mockReturnValueOnce({
+      version: 1,
+      mode: 'create',
+      noteId: null,
+      title: 'Clase recuperada',
+      content: 'Contenido pendiente',
+      subjectId: 'sec-borges',
+      baseUpdatedAt: null,
+      savedAt: '2026-06-07T03:00:00.000Z',
+    })
+    NoteStore.subscribe.mockImplementationOnce((callback) => {
+      subscriber = callback
+      return vi.fn()
+    })
+
+    const editor = createEditor()
+    subscriber({
+      activeNoteId: null,
+      notes: [],
+      subjects: {
+        tree: [{
+          id: 'subj-lit',
+          name: 'Literatura Argentina',
+          color: '#818cf8',
+          children: [{ id: 'sec-borges', name: 'Borges' }],
+        }],
+      },
+      activeSubjectId: '',
+      viewMode: 'inbox',
+    })
+
+    expect(editor.container.querySelector('#composer-title-input').value).toBe('Clase recuperada')
+    expect(editor.container.querySelector('#composer-input').value).toBe('Contenido pendiente')
+    expect(editor.container.querySelector('#composer-subject-select').value).toBe('sec-borges')
+    expect(editor.container.querySelector('#btn-save-note').textContent).toBe('Guardar')
+    expect(editor.container.querySelector('#btn-save-note').disabled).toBe(false)
+    expect(editor.container.querySelector('#composer-draft-status').textContent).toBe('Borrador recuperado')
+    expect(document.activeElement).toBe(editor.container.querySelector('#composer-input'))
+    expect(NoteStore.createNote).not.toHaveBeenCalled()
+    expect(EditorDraftService.saveDraft).not.toHaveBeenCalled()
+
+    editor.destroy()
+  })
+
+  it('enfoca el titulo cuando el borrador recuperado solo tiene titulo', () => {
+    let subscriber
+    EditorDraftService.loadDraft.mockReturnValueOnce({
+      version: 1,
+      mode: 'create',
+      noteId: null,
+      title: 'Idea suelta',
+      content: '',
+      subjectId: null,
+      baseUpdatedAt: null,
+      savedAt: '2026-06-07T03:00:00.000Z',
+    })
+    NoteStore.subscribe.mockImplementationOnce((callback) => {
+      subscriber = callback
+      return vi.fn()
+    })
+
+    const editor = createEditor()
+    subscriber({
+      activeNoteId: null,
+      notes: [],
+      subjects: { tree: [] },
+      activeSubjectId: '',
+      viewMode: 'inbox',
+    })
+
+    expect(document.activeElement).toBe(editor.container.querySelector('#composer-title-input'))
+
+    editor.destroy()
+  })
+
+  it('espera a que exista la nota original antes de restaurar un borrador de edicion', () => {
+    let subscriber
+    EditorDraftService.loadDraft.mockReturnValueOnce({
+      version: 1,
+      mode: 'edit',
+      noteId: 'note-1',
+      title: 'Resumen pendiente',
+      content: 'Cambios sin actualizar',
+      subjectId: 'subj-math',
+      baseUpdatedAt: '2026-06-06T10:00:00.000Z',
+      savedAt: '2026-06-07T03:00:00.000Z',
+    })
+    NoteStore.subscribe.mockImplementationOnce((callback) => {
+      subscriber = callback
+      return vi.fn()
+    })
+
+    const editor = createEditor()
+    subscriber({
+      activeNoteId: null,
+      notes: [],
+      subjects: {
+        tree: [{ id: 'subj-math', name: 'Matematica', color: '#60a5fa', children: [] }],
+      },
+      viewMode: 'inbox',
+    })
+
+    expect(editor.container.querySelector('#composer-title-input').value).toBe('')
+
+    subscriber({
+      activeNoteId: null,
+      notes: [{
+        id: 'note-1',
+        title: 'Resumen original',
+        content: 'Original',
+        subjectId: 'subj-math',
+        updatedAt: '2026-06-06T10:00:00.000Z',
+      }],
+      subjects: {
+        tree: [{ id: 'subj-math', name: 'Matematica', color: '#60a5fa', children: [] }],
+      },
+      viewMode: 'inbox',
+    })
+
+    expect(editor.container.querySelector('#composer-title-input').value).toBe('Resumen pendiente')
+    expect(editor.container.querySelector('#composer-input').value).toBe('Cambios sin actualizar')
+    expect(editor.container.querySelector('#composer-subject-select').value).toBe('subj-math')
+    expect(editor.container.querySelector('#btn-save-note').textContent).toBe('Actualizar')
+    expect(editor.container.querySelector('#composer-draft-status').textContent).toBe('Cambios pendientes')
+    expect(NoteStore.updateNote).not.toHaveBeenCalled()
+
+    editor.destroy()
+  })
+
+  it('actualiza la nota original al guardar un borrador de edicion restaurado', async () => {
+    let subscriber
+    EditorDraftService.loadDraft.mockReturnValueOnce({
+      version: 1,
+      mode: 'edit',
+      noteId: 'note-1',
+      title: 'Resumen pendiente',
+      content: 'Cambios sin actualizar',
+      subjectId: 'subj-math',
+      baseUpdatedAt: '2026-06-06T10:00:00.000Z',
+      savedAt: '2026-06-07T03:00:00.000Z',
+    })
+    NoteStore.subscribe.mockImplementationOnce((callback) => {
+      subscriber = callback
+      return vi.fn()
+    })
+
+    const editor = createEditor()
+    subscriber({
+      activeNoteId: null,
+      notes: [{
+        id: 'note-1',
+        title: 'Resumen original',
+        content: 'Original',
+        subjectId: 'subj-math',
+        updatedAt: '2026-06-06T10:00:00.000Z',
+      }],
+      subjects: {
+        tree: [{ id: 'subj-math', name: 'Matematica', color: '#60a5fa', children: [] }],
+      },
+      viewMode: 'inbox',
+    })
+
+    await editor.handleSave()
+
+    expect(NoteStore.updateNote).toHaveBeenCalledWith('note-1', {
+      title: 'Resumen pendiente',
+      content: 'Cambios sin actualizar',
+      subjectId: 'subj-math',
+    })
+    expect(NoteStore.createNote).not.toHaveBeenCalled()
 
     editor.destroy()
   })

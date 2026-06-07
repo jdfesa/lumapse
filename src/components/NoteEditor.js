@@ -4,7 +4,7 @@ import { EditorPopup } from './EditorPopup.js';
 import { getCommandSnippet, getEditorCommandsForSurface } from './editorCommandRegistry.js';
 import { applyInlineCommand, getMarkdownContinuation } from './editorTextTransforms.js';
 import { SubjectPicker } from './SubjectPicker.js';
-import { createEditorDraftPayload, EditorDraftCapture } from './NoteEditorDrafts.js';
+import { createEditorDraftPayload, EditorDraftCapture, EditorDraftRestorer } from './NoteEditorDrafts.js';
 import { renderNoteEditorTemplate } from './NoteEditorTemplate.js';
 import { extractNoteTitle, resolveNoteTitleForSave, splitNoteForEditing, stripRedundantTitleFromContent } from '../services/NoteTitleService.js';
 import './NoteEditor.css';
@@ -16,6 +16,8 @@ export class NoteEditor {
     this.currentEditBaseUpdatedAt = null;
     this.isApplyingState = false;
     this.isSaving = false;
+    this.restoredDraftActive = false;
+    this.restoredDraftSubjectId = null;
     
     this.handleInput = this.handleInput.bind(this);
     this.handleSave = this.handleSave.bind(this);
@@ -26,6 +28,7 @@ export class NoteEditor {
     this.subjectPicker = null;
     
     this.render();
+    this.draftRestorer = new EditorDraftRestorer();
     this.draftCapture = new EditorDraftCapture({
       createPayload: () => this.createDraftPayload(),
       isBlocked: () => this.isApplyingState || this.isSaving,
@@ -186,12 +189,15 @@ export class NoteEditor {
     this.updateSaveState();
 
     if (!this.isApplyingState) {
+      if (this.restoredDraftActive) this.showDraftStatus('Cambios pendientes');
       this.draftCapture.schedule();
     }
   }
 
   handleSubjectChange() {
     if (!this.isApplyingState) {
+      this.restoredDraftSubjectId = this.subjectPicker?.getValue() || null;
+      if (this.restoredDraftActive) this.showDraftStatus('Cambios pendientes');
       this.draftCapture.schedule();
     }
   }
@@ -300,6 +306,11 @@ export class NoteEditor {
     const btnSave = this.container.querySelector('#btn-save-note');
     btnSave.textContent = 'Guardar';
     btnSave.disabled = true;
+    this.currentEditId = null;
+    this.currentEditBaseUpdatedAt = null;
+    this.restoredDraftActive = false;
+    this.restoredDraftSubjectId = null;
+    this.showDraftStatus('');
 
     this.exitFocusMode();
   }
@@ -312,9 +323,14 @@ export class NoteEditor {
     const { activeNoteId, notes, subjects } = state;
 
     this.updateSubjectSelect(subjects);
+    if (this.tryRestoreDraft(state)) return;
+    this.syncRestoredDraftSubject();
     
     if (activeNoteId && activeNoteId !== this.currentEditId) {
       this.draftCapture.flush();
+      this.restoredDraftActive = false;
+      this.restoredDraftSubjectId = null;
+      this.showDraftStatus('');
       const noteToEdit = notes.find(n => n.id === activeNoteId);
       if (noteToEdit) {
         this.currentEditId = activeNoteId;
@@ -337,7 +353,7 @@ export class NoteEditor {
         
         this.container.querySelector('#btn-save-note').textContent = 'Actualizar';
       }
-    } else if (!activeNoteId && this.currentEditId) {
+    } else if (!activeNoteId && this.currentEditId && !this.restoredDraftActive) {
       this.draftCapture.flush();
       this.currentEditId = null;
       this.currentEditBaseUpdatedAt = null;
@@ -349,10 +365,11 @@ export class NoteEditor {
       input.style.height = 'auto';
       this.container.querySelector('#btn-save-note').textContent = 'Guardar';
       this.container.querySelector('#btn-save-note').disabled = true;
+      this.showDraftStatus('');
       this.isApplyingState = false;
     }
 
-    if (!activeNoteId && !this.currentEditId) {
+    if (!activeNoteId && !this.currentEditId && !this.restoredDraftActive) {
       const nextSubjectId = state.activeSubjectId || '';
       if (this.subjectPicker?.getValue() !== nextSubjectId) {
         this.subjectPicker?.setValue(nextSubjectId);
@@ -364,9 +381,55 @@ export class NoteEditor {
     this.subjectPicker?.update(subjectsData);
   }
 
-  escapeHtml(text) {
-    if (!text) return '';
-    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  tryRestoreDraft(state) {
+    const restoration = this.draftRestorer.restore(state);
+    if (!restoration) return false;
+
+    this.applyRestoredDraft(restoration);
+    return true;
+  }
+
+  applyRestoredDraft(restoration) {
+    this.restoredDraftActive = true;
+    this.restoredDraftSubjectId = restoration.subjectId || null;
+    this.currentEditId = restoration.currentEditId;
+    this.currentEditBaseUpdatedAt = restoration.currentEditBaseUpdatedAt;
+    this.applyEditorValues(restoration);
+    this.showDraftStatus(restoration.statusText);
+    this.focusRestoredDraft(restoration.focusTarget);
+  }
+
+  applyEditorValues({ title, content, subjectId, saveLabel }) {
+    const titleInput = this.container.querySelector('#composer-title-input');
+    const input = this.container.querySelector('#composer-input');
+    this.isApplyingState = true;
+    titleInput.value = title || '';
+    input.value = content || '';
+    this.subjectPicker?.setValue(subjectId || '');
+    titleInput.dispatchEvent(new window.Event('input'));
+    input.dispatchEvent(new window.Event('input'));
+    this.container.querySelector('#btn-save-note').textContent = saveLabel;
+    this.isApplyingState = false;
+  }
+
+  syncRestoredDraftSubject() {
+    if (!this.restoredDraftActive || !this.restoredDraftSubjectId) return;
+    if (this.subjectPicker?.getValue() !== this.restoredDraftSubjectId) {
+      this.subjectPicker?.setValue(this.restoredDraftSubjectId);
+    }
+  }
+
+  showDraftStatus(message) {
+    const status = this.container.querySelector('#composer-draft-status');
+    if (!status) return;
+
+    status.textContent = message;
+    status.hidden = !message;
+  }
+
+  focusRestoredDraft(target) {
+    const selector = target === 'title' ? '#composer-title-input' : '#composer-input';
+    this.container.querySelector(selector)?.focus();
   }
 
   destroy() {
