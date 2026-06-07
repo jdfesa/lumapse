@@ -46,6 +46,16 @@ export class EditorDraftCapture {
 
     this.hasChanges = false;
   }
+
+  discard() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+
+    this.hasChanges = false;
+    clearDraft();
+  }
 }
 
 export function createEditorDraftPayload({
