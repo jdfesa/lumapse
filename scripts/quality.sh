@@ -15,6 +15,14 @@ echo "=================================================="
 
 FAIL=0
 
+tests_finished_without_failures() {
+  local output="$1"
+
+  printf '%s\n' "$output" | grep -Eq 'Test Files[[:space:]].*passed[[:space:]]+\([0-9]+\)' || return 1
+  printf '%s\n' "$output" | grep -Eq 'Tests[[:space:]].*passed[[:space:]]+\([0-9]+\)' || return 1
+  ! printf '%s\n' "$output" | grep -Eq '^(.*Test Files|.*Tests)[[:space:]].*failed'
+}
+
 # 1. Linting
 echo ""
 echo "[1/4] Ejecutando ESLint..."
@@ -29,12 +37,13 @@ fi
 echo ""
 echo "[2/4] Ejecutando tests unitarios..."
 set +e
-npm run test --silent 2>&1
+TEST_OUTPUT="$(npm run test --silent 2>&1)"
 TEST_EXIT=$?
 set -e
+printf '%s\n' "$TEST_OUTPUT"
 if [ $TEST_EXIT -eq 0 ]; then
   echo "OK Tests: OK"
-elif [ $TEST_EXIT -eq 139 ]; then
+elif [ $TEST_EXIT -eq 139 ] && tests_finished_without_failures "$TEST_OUTPUT"; then
   echo "OK Tests: OK (⚠️  Node segfault al cerrar — ignorado)"
 else
   echo "FALLO Tests: FALLO (exit $TEST_EXIT)"
