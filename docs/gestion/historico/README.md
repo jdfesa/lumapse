@@ -8,6 +8,7 @@ Esta carpeta conserva artefactos operativos cerrados para mantener evidencia del
 - `plan-fechas-academicas-discretas-2026-05-31.md`: plan operativo completo usado para implementar RF-027 / HU-027 / DP-007.
 - `plan-backup-google-drive-2026-06-03.md`: plan operativo completo usado para implementar el backup manual `.zip` y salida externa por share sheet/gestor de archivos.
 - `plan-editor-enriquecido-2026-06-05.md`: plan operativo completo usado para implementar RF-028 / HU-028, slash commands, toolbar de formato y callouts.
+- `plan-borradores-persistentes-2026-06-06.md`: plan operativo completo usado para implementar RF-005 / HU-005 como borradores persistentes del editor.
 
 ## Criterio
 
