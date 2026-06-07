@@ -17,7 +17,7 @@ Esta carpeta contiene los **diagramas técnicos y de análisis** del proyecto, u
 | Diagrama | Tipo UML | Descripción |
 |---|---|---|
 | [`casos-de-uso.md`](./casos-de-uso.md) | Comportamiento | Actores del sistema y funcionalidades principales |
-| [`secuencia-crear-nota.md`](./secuencia-crear-nota.md) | Comportamiento | Flujo de interacción al crear y auto-guardar una nota |
+| [`secuencia-crear-nota.md`](./secuencia-crear-nota.md) | Comportamiento | Flujo de interacción al crear una nota con borrador persistente |
 | [`modelo-dominio.md`](./modelo-dominio.md) | Estructura | Entidades del dominio y sus relaciones |
 
 ---

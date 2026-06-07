@@ -1,85 +1,104 @@
-# Diagrama de Secuencia — Crear y Auto-guardar Nota
+# Diagrama de Secuencia — Crear Nota con Borrador Persistente
 
 **Tipo:** Diagrama UML de Comportamiento (Secuencia)  
-**Última actualización:** Mayo 2026  
+**Última actualización:** 2026-06-07  
 **Autor:** José David Sandoval
 
 ---
 
 ## Objetivo del diagrama
 
-Modelar la interacción entre los componentes del sistema durante el flujo principal de **crear una nueva nota y auto-guardarla**. Este es el caso de uso más frecuente y crítico de Lumapse: el estudiante abre la app, crea una nota, escribe contenido y la app lo persiste automáticamente.
+Modelar la interacción entre los componentes del sistema durante el flujo principal de **crear una nueva nota protegida por borrador persistente**. Este flujo evita pérdida de texto si el estudiante sale de Lumapse, consulta un PDF, copia contenido o vuelve más tarde, sin crear una nota final hasta que toca `Guardar`.
 
 ---
 
-## Diagrama de Secuencia: Crear Nota
+## Diagrama de Secuencia: Abrir editor de nota nueva
 
 ```mermaid
 sequenceDiagram
     actor EST as Estudiante
     participant UI as Interfaz (UI)
-    participant STORE as Estado (Store)
-    participant IDB as IndexedDB
+    participant DRAFT as EditorDraftService
 
     EST ->>+ UI: Presiona botón "Nueva Nota"
-    UI ->>+ STORE: crearNota()
-    STORE ->> STORE: Genera ID único (crypto.randomUUID)
-    STORE ->> STORE: Crea objeto Note {id, título, contenido, createdAt, updatedAt}
-    STORE ->>+ IDB: put(note)
-    IDB -->>- STORE: OK — nota persistida
-    STORE -->>- UI: notaCreada(note)
-    UI ->> UI: Actualiza listado de notas
-    UI ->> UI: Abre editor con nota vacía
+    UI ->>+ DRAFT: loadDraft()
+    DRAFT -->>- UI: borrador existente o null
+    UI ->> UI: Renderiza editor limpio o restaura borrador
     UI -->>- EST: Editor activo con cursor listo
 ```
 
 ---
 
-## Diagrama de Secuencia: Auto-guardado
+## Diagrama de Secuencia: Conservar borrador mientras escribe
 
 ```mermaid
 sequenceDiagram
     actor EST as Estudiante
     participant UI as Interfaz (UI)
     participant TIMER as Debounce Timer
-    participant STORE as Estado (Store)
-    participant IDB as IndexedDB
+    participant DRAFT as EditorDraftService
 
-    EST ->> UI: Escribe contenido en el editor
-    UI ->> TIMER: Reinicia temporizador (800ms)
+    EST ->> UI: Escribe título, contenido o cambia materia
+    UI ->> TIMER: Reinicia temporizador de borrador
 
-    Note over TIMER: El estudiante deja de escribir...
+    Note over TIMER: El estudiante deja de escribir o cambia de vista...
 
-    TIMER ->>+ STORE: guardarNota(noteId, nuevoContenido)
-    STORE ->> STORE: Actualiza updatedAt = Date.now()
-    STORE ->>+ IDB: put(notaActualizada)
-    IDB -->>- STORE: OK — nota persistida
-    STORE -->>- UI: notaGuardada(note)
-    UI ->> EST: Indicador visual: "✓ Guardado"
+    TIMER ->>+ DRAFT: saveDraft({mode, title, content, subjectId})
+    DRAFT -->>- TIMER: OK - borrador local persistido
+    UI ->> EST: Indicador visual de cambios pendientes
 ```
 
 ---
 
-## Diagrama de Secuencia: Cambio de nota activa
+## Diagrama de Secuencia: Guardar nota final
 
 ```mermaid
 sequenceDiagram
     actor EST as Estudiante
     participant UI as Interfaz (UI)
     participant STORE as Estado (Store)
-    participant IDB as IndexedDB
+    participant DB as SQLite
+    participant DRAFT as EditorDraftService
 
-    EST ->> UI: Selecciona otra nota del listado
-    UI ->>+ STORE: guardarNota(notaActualId, contenidoActual)
-    STORE ->>+ IDB: put(notaActualizada)
-    IDB -->>- STORE: OK
-    STORE -->>- UI: notaGuardada
+    EST ->>+ UI: Toca "Guardar"
+    UI ->>+ STORE: createNote({title, content, subjectId})
+    STORE ->>+ DB: INSERT note
+    DB -->>- STORE: OK - nota persistida
+    STORE -->>- UI: notaCreada(note)
+    UI ->>+ DRAFT: clearDraft()
+    DRAFT -->>- UI: OK
+    UI -->>- EST: Nota creada y editor limpio
+```
 
-    UI ->>+ STORE: cargarNota(nuevaNotaId)
-    STORE ->>+ IDB: get(nuevaNotaId)
-    IDB -->>- STORE: nota
-    STORE -->>- UI: notaCargada(nota)
-    UI ->> EST: Editor muestra contenido de la nota seleccionada
+---
+
+## Diagrama de Secuencia: Volver a Lumapse con borrador pendiente
+
+```mermaid
+sequenceDiagram
+    actor EST as Estudiante
+    participant UI as Interfaz (UI)
+    participant DRAFT as EditorDraftService
+    participant STORE as Estado (Store)
+
+    EST ->> UI: Vuelve desde otra app o abre una vista con editor
+    UI ->>+ DRAFT: loadDraft()
+    DRAFT -->>- UI: draft
+
+    alt Borrador de nota nueva
+        UI ->> UI: Restaura título, contenido y materia
+        UI ->> EST: Botón "Guardar" disponible
+    else Borrador de edición
+        UI ->>+ STORE: getNoteById(originalNoteId)
+        STORE -->>- UI: nota original o null
+        alt Nota original existe
+            UI ->> UI: Restaura cambios pendientes
+            UI ->> EST: Botón "Actualizar" disponible
+        else Nota original ya no existe
+            UI ->> UI: Convierte el contenido pendiente en borrador de nota nueva
+            UI ->> EST: Botón "Guardar" disponible
+        end
+    end
 ```
 
 ---
@@ -88,11 +107,12 @@ sequenceDiagram
 
 | Participante | Responsabilidad | Ubicación en el código |
 |---|---|---|
-| **Estudiante** | Actor principal. Inicia las acciones de crear, editar y navegar entre notas. | — |
-| **Interfaz (UI)** | Capa de presentación. Maneja eventos del DOM, renderiza el listado y el editor. | `src/components/` |
-| **Estado (Store)** | Gestión del estado de la aplicación. Coordina las operaciones CRUD y mantiene la nota activa en memoria. | `src/store/` |
-| **Debounce Timer** | Mecanismo de temporización que evita escrituras excesivas a la base de datos. Solo persiste después de 800ms de inactividad. | `src/components/NoteEditor.js` |
-| **IndexedDB** | Capa de persistencia local del navegador. Almacena las notas como objetos estructurados. | `src/services/` (vía librería `idb`) |
+| **Estudiante** | Actor principal. Inicia las acciones de crear, editar, cambiar de app y confirmar guardado. | — |
+| **Interfaz (UI)** | Capa de presentación. Maneja eventos del DOM, renderiza el listado, el editor, indicadores y confirmaciones. | `src/components/` |
+| **Estado (Store)** | Gestión del estado de la aplicación. Coordina las operaciones CRUD definitivas y mantiene notas/materias en memoria. | `src/store/` |
+| **EditorDraftService** | Persistencia local del borrador en curso, con payload versionado y tolerancia a datos corruptos o fallos de storage. | `src/services/EditorDraftService.js` |
+| **Debounce Timer** | Mecanismo de temporización que evita escrituras excesivas del borrador mientras el usuario escribe. | `src/components/NoteEditorDrafts.js` |
+| **SQLite** | Capa de persistencia local definitiva para notas guardadas. | `src/services/sqlite/` |
 
 ---
 
@@ -100,32 +120,33 @@ sequenceDiagram
 
 | Decisión | Justificación | ADR relacionado |
 |---|---|---|
-| Debounce de 800ms | Evita escrituras innecesarias a disco; equilibra entre persistencia frecuente y rendimiento. El valor original de diseño fue 3 segundos, pero se implementó en 800ms para mayor responsividad. | — |
-| `crypto.randomUUID()` para IDs | Genera UUIDs v4 sin dependencias externas, soportado en todos los navegadores modernos. | [ADR-001](../adr/ADR-001-stack-tecnologico.md) |
-| IndexedDB como persistencia | Almacenamiento transaccional, asíncrono, con capacidad superior a localStorage. Migración a SQLite aprobada en [ADR-005](../adr/ADR-005-pivote-app-nativa.md). | [ADR-002](../adr/ADR-002-persistencia-indexeddb.md) |
-| Guardado al cambiar de nota | Garantiza que nunca se pierde contenido, incluso si el usuario no espera al debounce. | — |
+| Borrador persistente local | Protege trabajo en curso ante cierre, pausa o cambio de app sin ensuciar el feed con notas incompletas. | [ADR-005](../adr/ADR-005-pivote-app-nativa.md) |
+| Guardado final explícito | Respeta la intención del usuario: la nota definitiva solo se crea o actualiza con `Guardar` o `Actualizar`. | — |
+| Limpieza tras éxito | El borrador se elimina solo cuando la persistencia definitiva fue exitosa o cuando el usuario confirma descarte. | — |
+| Conversión segura de edición a creación | Si la nota original desaparece, el contenido pendiente se conserva como nota nueva para evitar pérdida de texto. | — |
 
 ---
 
-## Escenarios alternativos
-
-### Error al persistir en IndexedDB
+## Escenario alternativo: error al guardar la nota final
 
 ```mermaid
 sequenceDiagram
     actor EST as Estudiante
     participant UI as Interfaz (UI)
     participant STORE as Estado (Store)
-    participant IDB as IndexedDB
+    participant DB as SQLite
+    participant DRAFT as EditorDraftService
 
-    STORE ->>+ IDB: put(nota)
-    IDB -->>- STORE: ERROR (cuota excedida / error de escritura)
-    STORE -->> UI: errorGuardado(error)
-    UI ->> EST: Indicador visual: "⚠ Error al guardar — reintentando..."
-    UI ->> STORE: reintentar en 5 segundos
+    EST ->>+ UI: Toca "Guardar"
+    UI ->>+ STORE: createNote({title, content, subjectId})
+    STORE ->>+ DB: INSERT note
+    DB -->>- STORE: ERROR
+    STORE -->>- UI: errorGuardado(error)
+    UI ->> DRAFT: conserva borrador existente
+    UI -->>- EST: Mensaje de error sin perder contenido
 ```
 
-> **Nota:** El manejo de errores de persistencia es un requisito no funcional ([RNF-010](../producto/requisitos-no-funcionales.md)). La implementación concreta se definirá en el Hito 02.
+> **Nota:** El manejo de errores de persistencia se relaciona con [RNF-010](../producto/requisitos-no-funcionales.md). El borrador persistente actúa como red de seguridad hasta que la nota final se guarde correctamente.
 
 ---
 
