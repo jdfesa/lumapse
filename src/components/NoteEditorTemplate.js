@@ -42,6 +42,7 @@ export function renderNoteEditorTemplate() {
         </div>
         <button id="btn-save-note" class="composer__save-btn" title="Guardar nota" disabled>Guardar</button>
       </div>
+      <p id="composer-draft-status" class="composer__draft-status" hidden></p>
     </div>
   `;
 }

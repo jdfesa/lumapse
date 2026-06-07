@@ -139,6 +139,13 @@
   transform: none;
 }
 
+.composer__draft-status {
+  margin: calc(var(--space-1) * -1) 0 0;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
 /* Subject selector in composer toolbar (Paso 9) */
 .composer__subject-picker {
   position: relative;
