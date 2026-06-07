@@ -266,6 +266,8 @@ export class NoteEditor {
       this.isSaving = false;
     }
 
+    this.draftCapture.discard();
+
     titleInput.value = '';
     input.value = '';
     input.style.height = 'auto';
