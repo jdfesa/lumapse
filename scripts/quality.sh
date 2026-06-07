@@ -36,17 +36,19 @@ fi
 # 2. Tests unitarios
 echo ""
 echo "[2/4] Ejecutando tests unitarios..."
+TEST_LOG="$(mktemp "${TMPDIR:-/tmp}/lumapse-tests.XXXXXX")"
 set +e
-TEST_OUTPUT="$(npm run test --silent 2>&1)"
-TEST_EXIT=$?
+npm run test --silent 2>&1 | tee "$TEST_LOG"
+TEST_RUN_EXIT=${PIPESTATUS[0]}
 set -e
-printf '%s\n' "$TEST_OUTPUT"
-if [ $TEST_EXIT -eq 0 ]; then
+TEST_OUTPUT="$(cat "$TEST_LOG")"
+rm -f "$TEST_LOG"
+if [ $TEST_RUN_EXIT -eq 0 ]; then
   echo "OK Tests: OK"
-elif [ $TEST_EXIT -eq 139 ] && tests_finished_without_failures "$TEST_OUTPUT"; then
+elif [ $TEST_RUN_EXIT -eq 139 ] && tests_finished_without_failures "$TEST_OUTPUT"; then
   echo "OK Tests: OK (⚠️  Node segfault al cerrar — ignorado)"
 else
-  echo "FALLO Tests: FALLO (exit $TEST_EXIT)"
+  echo "FALLO Tests: FALLO (exit $TEST_RUN_EXIT)"
   FAIL=1
 fi
 
