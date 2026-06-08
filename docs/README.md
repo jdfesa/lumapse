@@ -32,6 +32,7 @@ Los documentos formales de la materia (PDFs, presentaciones, plantillas) se encu
 | `05-analisis-y-relevamiento/` | Material de análisis y relevamiento de sistemas |
 | `06-estimacion-y-medicion/` | Libro de estimación y medición de proyectos software |
 | `07-guia-relevamiento-y-analisis/` | Guía de relevamiento y análisis |
+| `08-planilla-de-seguimiento/` | Planilla de seguimiento de actividades en PDF e instructivo/guía del profesor para registrar los encuentros con la tutora |
 
 ---
 
