@@ -134,3 +134,30 @@ Sin embargo, se decidió mantenerlo como **campo calculado desnormalizado** por 
 3. **Consistencia automática:** El campo se recalcula y actualiza en cada operación de guardado (`updateNote`), garantizando que siempre refleja el estado actual del contenido.
 
 Esta desnormalización está documentada en el análisis de normalización y es defendible ante el tribunal como una **decisión técnica fundamentada** en las restricciones del entorno de ejecución.
+
+## 4.8. Patrones de Arquitectura y Diseño de Software
+
+Lumapse no utiliza un único patrón de diseño, sino una combinación de **patrones arquitectónicos** y **patrones de diseño de software (GoF)** para mantener la base de código en Vanilla JS estructurada, escalable y mantenible.
+
+### Patrones Arquitectónicos
+
+*   **Arquitectura en Capas (Layered Architecture):**
+    El proyecto aplica una separación estricta de responsabilidades a través de su estructura de directorios:
+    *   **Capa de Presentación (UI):** (`src/components/`, `src/layout/`) Encargada de manipular el DOM y gestionar eventos de usuario de forma aislada.
+    *   **Capa de Negocio / Lógica:** (`src/services/`) Contiene la lógica de aplicación pura (e.g., `MarkdownService`, `ExportService`), completamente agnóstica de la interfaz gráfica.
+    *   **Capa de Datos:** (`src/store/`, `src/services/sqlite/`) Responsable del estado global de la aplicación y la persistencia local.
+*   **Arquitectura Offline-First:**
+    La fuente de verdad primaria es la base de datos local (SQLite). Esto garantiza resiliencia, disponibilidad sin conexión y rendimiento óptimo, alineándose con las necesidades de gestión de conocimiento personal (PKM).
+
+### Patrones de Diseño (GoF y UI)
+
+Al carecer de un framework reactivo como React o Vue, la aplicación implementa patrones manuales para la reactividad y la estructura de componentes:
+
+*   **Patrón Observer (Publicador/Suscriptor):**
+    Utilizado extensamente para el manejo del estado global. El almacén central (`NoteStore`) actúa como publicador, permitiendo que múltiples componentes de la UI (suscriptores) reaccionen automáticamente a los cambios de estado (mediante `NoteStore.subscribe`) sin acoplar fuertemente la lógica de presentación con la de negocio.
+*   **Patrón Component (UI Components):**
+    La interfaz gráfica se descompone en clases encapsuladas. Cada componente (e.g., `NoteEditor`) recibe un contenedor del DOM, renderiza su propia plantilla HTML, gestiona sus *event listeners* internamente y expone un método de limpieza (`destroy()`), imitando el ciclo de vida de componentes de frameworks modernos.
+*   **Patrón Command (y Command Registry):**
+    Implementado en la interacción del editor (e.g., `editorCommandRegistry.js`, `SlashCommandHandler.js`). Encapsula acciones del usuario como comandos independientes registrados centralmente. Esto desacopla a quien invoca la acción (un atajo de teclado o botón) del receptor (la lógica del editor), facilitando agregar nuevas funciones sin modificar el código base del componente.
+*   **Patrón Singleton / Module:**
+    Aplicado en servicios esenciales (como `MarkdownService`) que exportan funciones puras o instancias únicas a lo largo del ciclo de vida de la aplicación, optimizando la huella de memoria y asegurando un comportamiento consistente en todo el sistema.
