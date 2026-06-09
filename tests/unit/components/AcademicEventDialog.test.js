@@ -92,9 +92,56 @@ describe('AcademicEventDialog', () => {
 
     expect(document.querySelector('.academic-event-dialog__title').textContent).toBe('Nueva fecha academica')
     expect(document.querySelector('input[name="date"]').value).toBe('2026-06-20')
-    expect(document.querySelector('select[name="subjectId"]').value).toBe('sec-1')
+    expect(document.querySelector('select[name="subjectId"]')).toBeNull()
+    expect(document.querySelector('input[name="subjectId"]').value).toBe('subj-1')
+    expect(document.querySelector('.academic-event-dialog__subject-trigger-label').textContent).toBe('Algebra')
     expect(document.querySelector('.academic-event-dialog__type--active')?.dataset.type).toBe('parcial')
     expect(document.activeElement).toBe(document.querySelector('input[name="date"]'))
+  })
+
+  it('muestra solo materias raiz en el picker academico', () => {
+    storeMock.state = defaultState({
+      subjects: {
+        tree: [
+          {
+            id: 'subj-lit',
+            name: 'Literatura Argentina',
+            color: '#818cf8',
+            children: [
+              { id: 'sec-borges', name: 'Borges' },
+              { id: 'sec-cortazar', name: 'Cortazar' },
+            ],
+          },
+          {
+            id: 'subj-prog',
+            name: 'Programacion I',
+            color: '#34d399',
+            children: [
+              { id: 'sec-u1', name: 'Unidad I' },
+              { id: 'sec-u2', name: 'Unidad II' },
+            ],
+          },
+          { id: 'subj-db', name: 'Base de Datos', color: '#f97316', children: [] },
+        ],
+      },
+    })
+    storeMock.getState.mockReturnValue(storeMock.state)
+
+    openAcademicEventDialog({ subjectId: 'sec-u2' })
+    document.querySelector('.academic-event-dialog__subject-trigger').click()
+
+    const optionLabels = [...document.querySelectorAll('.academic-event-dialog__subject-option-label')]
+      .map(label => label.textContent)
+
+    expect(document.querySelector('input[name="subjectId"]').value).toBe('subj-prog')
+    expect(optionLabels).toEqual([
+      'Sin materia',
+      'Literatura Argentina',
+      'Programacion I',
+      'Base de Datos',
+    ])
+    expect(optionLabels).not.toContain('Unidad II')
+    expect(document.querySelector('.academic-event-dialog__subject-option--child')).toBeNull()
   })
 
   it('cancela sin tocar el store y restaura el foco', async () => {
@@ -139,14 +186,17 @@ describe('AcademicEventDialog', () => {
       type: 'tp',
       title: 'Entrega informe',
       date: '2026-06-14',
-      subjectId: 'sec-1',
+      subjectId: 'subj-1',
     })
     storeMock.createAcademicEvent.mockResolvedValue(saved)
 
     const promise = openAcademicEventDialog({ date: '2026-06-14' })
 
     document.querySelector('.academic-event-dialog__type[data-type="tp"]').click()
-    document.querySelector('select[name="subjectId"]').value = 'sec-1'
+    document.querySelector('.academic-event-dialog__subject-trigger').click()
+    document
+      .querySelector('.academic-event-dialog__subject-option[data-subject-id="subj-1"]')
+      .click()
     document.querySelector('input[name="title"]').value = '  Entrega informe  '
 
     await submitDialog()
@@ -154,7 +204,7 @@ describe('AcademicEventDialog', () => {
     expect(storeMock.createAcademicEvent).toHaveBeenCalledWith({
       type: 'tp',
       date: '2026-06-14',
-      subjectId: 'sec-1',
+      subjectId: 'subj-1',
       title: 'Entrega informe',
     })
 
@@ -198,12 +248,12 @@ describe('AcademicEventDialog', () => {
   it('cierra con Escape y cicla foco dentro del modal', async () => {
     const promise = openAcademicEventDialog({ date: '2026-06-14' })
     const dateInput = document.querySelector('input[name="date"]')
-    const subjectSelect = document.querySelector('select[name="subjectId"]')
+    const subjectTrigger = document.querySelector('.academic-event-dialog__subject-trigger')
 
     expect(document.activeElement).toBe(dateInput)
 
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }))
-    expect(document.activeElement).toBe(subjectSelect)
+    expect(document.activeElement).toBe(subjectTrigger)
 
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
     await finishAnimation()

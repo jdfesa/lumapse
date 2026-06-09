@@ -23,16 +23,6 @@ function isValidDateParts(year, month, day) {
     parsed.getUTCDate() === day
 }
 
-function appendSubjectOption(select, subject, selectedSubjectId, depth = 0) {
-  const option = document.createElement('option')
-  option.value = subject.id
-  option.textContent = `${depth > 0 ? '  ' : ''}${subject.name}`
-  option.selected = subject.id === selectedSubjectId
-  select.appendChild(option)
-
-  return option.selected
-}
-
 export function getInitialSubjectId(options, state, event) {
   if (event?.subjectId) return event.subjectId
   if (options.subjectId) return options.subjectId
@@ -57,32 +47,56 @@ export function createLabeledControl(labelText, control, className = '') {
   return wrapper
 }
 
-export function renderSubjectOptions(select, subjectsData, selectedSubjectId) {
-  let hasSelectedSubject = !selectedSubjectId
+export function normalizeSubjectIdForAcademicEvent(subjectsData, selectedSubjectId) {
+  if (!selectedSubjectId) return ''
 
-  const emptyOption = document.createElement('option')
-  emptyOption.value = ''
-  emptyOption.textContent = 'Sin materia'
-  emptyOption.selected = !selectedSubjectId
-  select.appendChild(emptyOption)
+  const tree = Array.isArray(subjectsData?.tree) ? subjectsData.tree : []
+  for (const subject of tree) {
+    if (subject.id === selectedSubjectId) return subject.id
+
+    const children = subject.children || []
+    if (children.some(child => child.id === selectedSubjectId)) {
+      return subject.id
+    }
+  }
+
+  return selectedSubjectId
+}
+
+export function buildSubjectOptions(subjectsData, selectedSubjectId) {
+  const normalizedSubjectId = normalizeSubjectIdForAcademicEvent(subjectsData, selectedSubjectId)
+  const options = [{
+    id: '',
+    label: 'Sin materia',
+    color: '',
+    isChild: false,
+    unavailable: false,
+  }]
+  let hasSelectedSubject = !normalizedSubjectId
 
   const tree = Array.isArray(subjectsData?.tree) ? subjectsData.tree : []
   tree.forEach(subject => {
-    hasSelectedSubject = appendSubjectOption(select, subject, selectedSubjectId) || hasSelectedSubject
-
-    const children = subject.children || []
-    children.forEach(child => {
-      hasSelectedSubject = appendSubjectOption(select, child, selectedSubjectId, 1) || hasSelectedSubject
+    options.push({
+      id: subject.id,
+      label: subject.name,
+      color: subject.color || '',
+      isChild: false,
+      unavailable: false,
     })
+    hasSelectedSubject = subject.id === normalizedSubjectId || hasSelectedSubject
   })
 
-  if (selectedSubjectId && !hasSelectedSubject) {
-    const option = document.createElement('option')
-    option.value = selectedSubjectId
-    option.textContent = 'Materia no disponible'
-    option.selected = true
-    select.appendChild(option)
+  if (normalizedSubjectId && !hasSelectedSubject) {
+    options.push({
+      id: normalizedSubjectId,
+      label: 'Materia no disponible',
+      color: '',
+      isChild: false,
+      unavailable: true,
+    })
   }
+
+  return options
 }
 
 export function validateAcademicEventPayload(payload) {

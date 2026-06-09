@@ -139,11 +139,155 @@
 }
 
 .academic-event-dialog__input:focus,
+.academic-event-dialog__subject-trigger:focus-visible,
 .academic-event-dialog__type:focus-visible,
 .academic-event-dialog__btn:focus-visible {
   border-color: var(--color-accent);
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
+}
+
+.academic-event-dialog__subject-picker {
+  position: relative;
+  min-width: 0;
+}
+
+.academic-event-dialog__subject-trigger {
+  width: 100%;
+  min-height: 38px;
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-text-bright);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--transition), border-color var(--transition), color var(--transition);
+}
+
+.academic-event-dialog__subject-trigger:hover,
+.academic-event-dialog__subject-trigger[aria-expanded="true"] {
+  background: var(--color-surface-hover);
+  border-color: var(--color-accent);
+}
+
+.academic-event-dialog__subject-trigger-dot,
+.academic-event-dialog__subject-option-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--subject-color, var(--color-accent));
+}
+
+.academic-event-dialog__subject-trigger--empty .academic-event-dialog__subject-trigger-dot,
+.academic-event-dialog__subject-option--empty .academic-event-dialog__subject-option-dot {
+  background: transparent;
+  border: 1px solid var(--color-accent);
+}
+
+.academic-event-dialog__subject-trigger--unavailable .academic-event-dialog__subject-trigger-dot,
+.academic-event-dialog__subject-option--unavailable .academic-event-dialog__subject-option-dot {
+  background: transparent;
+  border: 1px dashed var(--color-text-muted);
+}
+
+.academic-event-dialog__subject-trigger-label,
+.academic-event-dialog__subject-option-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.academic-event-dialog__subject-trigger-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-muted);
+  transition: transform var(--transition);
+}
+
+.academic-event-dialog__subject-trigger[aria-expanded="true"] .academic-event-dialog__subject-trigger-icon {
+  transform: rotate(180deg);
+}
+
+.academic-event-dialog__subject-menu {
+  width: 100%;
+  max-height: min(188px, 30vh);
+  margin-top: var(--space-2);
+  padding: var(--space-2);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-border) 55%, transparent);
+}
+
+.academic-event-dialog__subject-menu[hidden] {
+  display: none;
+}
+
+.academic-event-dialog__subject-option {
+  position: relative;
+  width: 100%;
+  min-height: 34px;
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  color: var(--color-text);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--transition), border-color var(--transition), color var(--transition);
+}
+
+.academic-event-dialog__subject-option:hover,
+.academic-event-dialog__subject-option:focus-visible {
+  color: var(--color-text-bright);
+  background: var(--color-surface-hover);
+  outline: none;
+}
+
+.academic-event-dialog__subject-option[aria-selected="true"] {
+  color: var(--color-accent);
+  background: var(--color-accent-dim);
+  border-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
+}
+
+.academic-event-dialog__subject-option--child {
+  min-height: 32px;
+  padding-left: calc(var(--space-6) + var(--space-2));
+  color: var(--color-text-muted);
+}
+
+.academic-event-dialog__subject-option--child::before {
+  content: "";
+  position: absolute;
+  left: var(--space-3);
+  top: 0;
+  width: var(--space-3);
+  height: 50%;
+  border-left: 1px solid var(--color-border-hover);
+  border-bottom: 1px solid var(--color-border-hover);
+  border-bottom-left-radius: var(--radius-sm);
+}
+
+.academic-event-dialog__subject-option--unavailable {
+  color: var(--color-text-muted);
 }
 
 .academic-event-dialog__error {

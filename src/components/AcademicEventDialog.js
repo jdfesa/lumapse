@@ -10,9 +10,9 @@ import {
   createLabeledControl,
   getInitialDate,
   getInitialSubjectId,
-  renderSubjectOptions,
   validateAcademicEventPayload,
 } from './AcademicEventDialog.helpers.js'
+import { AcademicEventSubjectPicker } from './AcademicEventSubjectPicker.js'
 import {
   ACADEMIC_EVENT_TYPE_ORDER,
   getAcademicEventType,
@@ -20,7 +20,7 @@ import {
 } from './AcademicEventTypes.js'
 
 const DIALOG_EXIT_MS = 120
-const FOCUSABLE_SELECTOR = 'button:not([disabled]), input:not([disabled]), select:not([disabled])'
+const FOCUSABLE_SELECTOR = 'button:not([disabled]):not([tabindex="-1"]), input:not([disabled]):not([type="hidden"])'
 
 let activeDialog = null
 
@@ -62,7 +62,7 @@ export function openAcademicEventDialog(options = {}) {
     const titleEl = document.createElement('h2')
     const typeGroup = document.createElement('div')
     const dateInput = document.createElement('input')
-    const subjectSelect = document.createElement('select')
+    const subjectPicker = new AcademicEventSubjectPicker(state.subjects, initialSubjectId)
     const titleInput = document.createElement('input')
     const helper = document.createElement('p')
     const errorEl = document.createElement('p')
@@ -134,10 +134,6 @@ export function openAcademicEventDialog(options = {}) {
     dateInput.placeholder = 'YYYY-MM-DD'
     dateInput.value = getInitialDate(options, state, event)
 
-    subjectSelect.className = 'academic-event-dialog__input'
-    subjectSelect.name = 'subjectId'
-    renderSubjectOptions(subjectSelect, state.subjects, initialSubjectId)
-
     titleInput.className = 'academic-event-dialog__input'
     titleInput.name = 'title'
     titleInput.maxLength = 80
@@ -157,7 +153,7 @@ export function openAcademicEventDialog(options = {}) {
       helper,
       createLabeledControl('Tipo', typeGroup, 'academic-event-dialog__field--types'),
       createLabeledControl('Fecha', dateInput),
-      createLabeledControl('Materia', subjectSelect),
+      createLabeledControl('Materia', subjectPicker.element),
       createLabeledControl('Nota breve', titleInput),
       errorEl,
       actions,
@@ -167,6 +163,7 @@ export function openAcademicEventDialog(options = {}) {
 
     function getFocusables() {
       return [...dialog.querySelectorAll(FOCUSABLE_SELECTOR)]
+        .filter(element => !element.closest('[hidden]'))
     }
 
     function showError(message, field) {
@@ -186,7 +183,7 @@ export function openAcademicEventDialog(options = {}) {
     }
 
     function readPayload() {
-      const subjectId = subjectSelect.value.trim()
+      const subjectId = subjectPicker.getValue().trim()
       const title = titleInput.value.trim()
 
       return {
@@ -199,6 +196,7 @@ export function openAcademicEventDialog(options = {}) {
 
     const cleanup = () => {
       document.removeEventListener('keydown', handleKeydown)
+      subjectPicker.destroy()
       previousFocus?.focus?.()
     }
 
@@ -211,8 +209,24 @@ export function openAcademicEventDialog(options = {}) {
     function handleKeydown(keyboardEvent) {
       if (keyboardEvent.key === 'Escape') {
         keyboardEvent.preventDefault()
+        if (subjectPicker.isOpen()) {
+          subjectPicker.close()
+          subjectPicker.focusTrigger()
+          return
+        }
         finish(null)
       } else if (keyboardEvent.key === 'Tab') {
+        if (subjectPicker.isOpen()) {
+          subjectPicker.close()
+
+          if (subjectPicker.hasMenuFocus()) {
+            keyboardEvent.preventDefault()
+            const nextFocus = keyboardEvent.shiftKey ? subjectPicker.trigger : titleInput
+            nextFocus.focus()
+            return
+          }
+        }
+
         const focusables = getFocusables()
         const currentIndex = focusables.indexOf(document.activeElement)
         const atStart = currentIndex <= 0
@@ -261,6 +275,7 @@ export function openAcademicEventDialog(options = {}) {
     })
 
     backdrop.addEventListener('click', (clickEvent) => {
+      if (!subjectPicker.contains(clickEvent.target)) subjectPicker.close()
       if (clickEvent.target === backdrop) finish(null)
     })
     cancelBtn.addEventListener('click', () => finish(null))
