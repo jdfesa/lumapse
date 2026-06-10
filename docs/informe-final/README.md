@@ -27,3 +27,11 @@ Por regla general, no se edita manualmente el informe completo. Se regenera solo
 El informe está en etapa de actualización. Algunas secciones todavía funcionan como esqueleto o contienen contenido parcial, y el informe completo puede quedar desfasado si se edita o regenera antes de terminar la revisión por capítulos.
 
 El próximo trabajo debe priorizar completar y sincronizar las secciones fuente antes de volver a ensamblar el documento completo.
+
+## Formato final de entrega
+
+Como último paso, cuando el informe ya esté estructurado, revisado y listo para la instancia de defensa, se preparará una versión formal en PDF usando LaTeX.
+
+La edición diaria seguirá realizándose en Markdown dentro de este directorio. LaTeX no reemplaza a las secciones fuente durante el desarrollo del informe; se reserva como capa final de presentación para maquetar índice, numeración, figuras, tablas, anexos y referencias con formato académico.
+
+La generación final podrá automatizarse mediante un script específico cuando el contenido esté consolidado.
