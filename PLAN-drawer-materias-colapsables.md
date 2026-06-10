@@ -51,7 +51,7 @@ Agregar un control de expandir/contraer secciones por materia en el drawer, con 
 
 - [x] Crear rama de trabajo.
 - [x] Crear este plan en la raiz del repo.
-- [ ] Confirmar comportamiento deseado para seccion activa dentro de materia colapsada.
+- [x] Confirmar comportamiento deseado para seccion activa dentro de materia colapsada.
 
 ### Fase 1 - Estado persistente local
 
@@ -62,29 +62,29 @@ Agregar un control de expandir/contraer secciones por materia en el drawer, con 
 
 ### Fase 2 - Render e interaccion del drawer
 
-- [ ] Agregar boton de expandir/contraer por materia con secciones.
-- [ ] Renderizar secciones segun estado expandido/colapsado.
-- [ ] Actualizar `aria-expanded`.
-- [ ] Evitar navegacion cuando se toca la flecha.
-- [ ] Expandir una materia al crear una nueva seccion.
-- [ ] Resolver visualmente el caso de seccion activa dentro de materia colapsada.
+- [x] Agregar boton de expandir/contraer por materia con secciones.
+- [x] Renderizar secciones segun estado expandido/colapsado.
+- [x] Actualizar `aria-expanded`.
+- [x] Evitar navegacion cuando se toca la flecha.
+- [x] Expandir una materia al crear una nueva seccion.
+- [x] Resolver visualmente el caso de seccion activa dentro de materia colapsada.
 
 ### Fase 3 - Estilos mobile first
 
-- [ ] Ajustar tamanos tactiles del boton.
-- [ ] Mantener alineacion con bolita de color, nombre y contador.
-- [ ] Evitar saltos visuales al expandir o contraer.
-- [ ] Verificar nombres largos con ellipsis.
-- [ ] Mantener coherencia visual con el resto del drawer.
+- [x] Ajustar tamanos tactiles del boton.
+- [x] Mantener alineacion con bolita de color, nombre y contador.
+- [x] Evitar saltos visuales al expandir o contraer.
+- [x] Verificar nombres largos con ellipsis.
+- [x] Mantener coherencia visual con el resto del drawer.
 
 ### Fase 4 - Tests
 
-- [ ] Testear que una materia con secciones renderiza flecha.
-- [ ] Testear que una materia sin secciones no renderiza flecha.
-- [ ] Testear contraer y expandir.
-- [ ] Testear persistencia en `localStorage`.
-- [ ] Testear que click en la flecha no navega.
-- [ ] Testear que crear seccion expande la materia padre.
+- [x] Testear que una materia con secciones renderiza flecha.
+- [x] Testear que una materia sin secciones no renderiza flecha.
+- [x] Testear contraer y expandir.
+- [x] Testear persistencia en `localStorage`.
+- [x] Testear que click en la flecha no navega.
+- [x] Testear que crear seccion expande la materia padre.
 
 ### Fase 5 - Verificacion manual
 
@@ -113,3 +113,9 @@ Agregar un control de expandir/contraer secciones por materia en el drawer, con 
 ## Notas de producto
 
 Este cambio no busca ocultar complejidad academica, sino permitir que el estudiante elija cuanto detalle necesita ver en cada momento. El drawer debe ayudar a orientarse, no convertirse en una lista interminable que obligue a hacer scroll para todo.
+
+## Estado 2026-06-10
+
+- Fases 0 a 4 cerradas por implementacion y tests automatizados.
+- Verificacion tecnica ejecutada: `npm run test`, `npm run build`, `npm run lint`, `npm run check:native-dialogs`.
+- Verificacion manual pendiente: no se pudo levantar el servidor local dentro del sandbox (`EPERM` en `127.0.0.1:5173`) y no se aprobo ejecutarlo fuera del sandbox.
