@@ -6,6 +6,12 @@
 import { escapeHtml } from './appShell.js'
 import { showErrorToast } from '../components/Toast.js'
 import { handleUnarchiveSubjectButton, renderArchivedSubjects } from './drawerArchivedSubjects.js'
+import {
+  isSubjectCollapsed,
+  readCollapsedSubjectIds,
+  setSubjectCollapsed,
+  toggleSubjectCollapsed,
+} from './drawerSubjectCollapseState.js'
 import { setupSubjectContextMenu } from './drawerSubjectContextMenu.js'
 
 /**
@@ -112,6 +118,16 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
       return
     }
 
+    // Botón para expandir/contraer secciones de una materia
+    const btnCollapse = e.target.closest('.js-subject-collapse')
+    if (btnCollapse) {
+      e.preventDefault()
+      e.stopPropagation()
+      toggleSubjectCollapsed(btnCollapse.dataset.subject)
+      renderSubjects(NoteStore.getState().subjects)
+      return
+    }
+
     // Botón desarchivar materia/sección
     const btnUnarchive = e.target.closest('.js-btn-unarchive-subject')
     if (btnUnarchive) {
@@ -190,6 +206,10 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
 
   /** Muestra/oculta el formulario inline de sección para una materia */
   function toggleSectionForm(parentId) {
+    if (expandSubject(parentId)) {
+      renderSubjects(NoteStore.getState().subjects)
+    }
+
     // Cerrar cualquier otro formulario abierto
     subjectsList.querySelectorAll('.drawer__section-form').forEach(form => {
       form.style.display = 'none'
@@ -214,12 +234,24 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
     const input = form.querySelector('.js-section-name-input')
     const name = input ? input.value.trim() : ''
     if (!name) return
+    const wasCollapsed = isSubjectCollapsed(parentId)
+    if (wasCollapsed) setSubjectCollapsed(parentId, false)
     try {
       await NoteStore.createSubject(name, parentColor, parentId)
       form.style.display = 'none'
     } catch (err) {
+      if (wasCollapsed) setSubjectCollapsed(parentId, true)
       showErrorToast(err.message)
     }
+  }
+
+  /** Expande una materia si estaba colapsada. */
+  function expandSubject(subjectId) {
+    const collapsedSubjectIds = readCollapsedSubjectIds()
+    if (!isSubjectCollapsed(subjectId, collapsedSubjectIds)) return false
+
+    setSubjectCollapsed(subjectId, false, collapsedSubjectIds)
+    return true
   }
 
   /** Cierra el formulario de sección */
@@ -315,9 +347,22 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
       return
     }
 
+    let collapsedSubjectIds = readCollapsedSubjectIds()
+
     subjectsList.innerHTML = subjectsData.tree.map(subject => {
       const isActive = state.activeSubjectId === subject.id
-      const childrenHtml = (subject.children || []).map(child => {
+      const children = subject.children || []
+      const hasChildren = children.length > 0
+      const hasActiveChild = children.some(child => child.id === state.activeSubjectId)
+      if (hasChildren && hasActiveChild && isSubjectCollapsed(subject.id, collapsedSubjectIds)) {
+        collapsedSubjectIds = setSubjectCollapsed(subject.id, false, collapsedSubjectIds)
+      }
+
+      const isCollapsed = hasChildren && isSubjectCollapsed(subject.id, collapsedSubjectIds)
+      const collapseButtonHtml = hasChildren
+        ? renderCollapseButton(subject, isCollapsed)
+        : ''
+      const childrenHtml = isCollapsed ? '' : children.map(child => {
         const isChildActive = state.activeSubjectId === child.id
         return `
           <div class="drawer__subject-row drawer__subject-row--child">
@@ -333,6 +378,13 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
           </div>
         `
       }).join('')
+      const childrenGroupHtml = hasChildren
+        ? `
+          <div id="subject-children-${subject.id}" class="drawer__subject-children"${isCollapsed ? ' hidden' : ''}>
+            ${childrenHtml}
+          </div>
+        `
+        : ''
 
       // Formulario inline para crear sección (oculto por defecto)
       const sectionFormHtml = `
@@ -354,6 +406,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
       return `
         <div class="drawer__subject-group">
           <div class="drawer__subject-row">
+            ${collapseButtonHtml}
             <div class="drawer__subject-btn js-subject-nav${isActive ? ' drawer__subject-btn--active' : ''}" 
                  role="button" tabindex="0" 
                  data-subject="${subject.id}"
@@ -367,7 +420,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>
-          ${childrenHtml}
+          ${childrenGroupHtml}
           ${sectionFormHtml}
         </div>
       `
@@ -375,4 +428,23 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
   }
 
   return { updateSubjectActiveState, renderSubjects }
+}
+
+function renderCollapseButton(subject, isCollapsed) {
+  const subjectName = escapeHtml(subject.name)
+  const action = isCollapsed ? 'Expandir' : 'Contraer'
+
+  return `
+    <button class="drawer__subject-collapse js-subject-collapse"
+            type="button"
+            data-subject="${subject.id}"
+            aria-expanded="${String(!isCollapsed)}"
+            aria-controls="subject-children-${subject.id}"
+            aria-label="${action} secciones de ${subjectName}"
+            title="${action} secciones">
+      <svg class="drawer__subject-collapse-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  `
 }
