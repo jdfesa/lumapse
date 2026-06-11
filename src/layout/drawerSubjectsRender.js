@@ -10,7 +10,7 @@ import {
  * Renderiza la lista de materias desde el árbol del store.
  * Extraído de drawerSubjects.js para reducir tamaño de archivo.
  */
-export function renderSubjectsList(subjectsData, { NoteStore, subjectsList, inboxCount, getShowingArchived }) {
+export function renderSubjectsList(subjectsData, { NoteStore, subjectsList, inboxCount }) {
   if (!subjectsData) return
 
   const state = NoteStore.getState()

@@ -8,7 +8,7 @@
 
 import * as AcademicEventService from '../services/AcademicEventService.js'
 import { DatabaseError } from '../services/sqlite/errors.js'
-import { showErrorToast } from '../components/Toast.js'
+import { showErrorToast } from '../components/common/Toast.js'
 import { state, notify } from './NoteStore.state.js'
 
 async function runStoreAction(operation, errorMessage, action) {

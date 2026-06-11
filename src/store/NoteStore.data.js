@@ -5,7 +5,7 @@
 import * as NoteService from '../services/sqlite/notes.js'
 import * as SubjectService from '../services/SubjectService.js'
 import { DatabaseError } from '../services/sqlite/errors.js'
-import { showErrorToast } from '../components/Toast.js'
+import { showErrorToast } from '../components/common/Toast.js'
 import { getFilteredNotes as applyFilters } from './noteFilters.js'
 import { state, notify } from './NoteStore.state.js'
 

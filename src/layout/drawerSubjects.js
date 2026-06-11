@@ -3,9 +3,8 @@
 // Extraído de drawerController.js para reducir LOC.
 // =============================================================
 
-import { escapeHtml } from './appShell.js'
-import { showErrorToast } from '../components/Toast.js'
-import { handleUnarchiveSubjectButton, renderArchivedSubjects } from './drawerArchivedSubjects.js'
+import { showErrorToast } from '../components/common/Toast.js'
+import { handleUnarchiveSubjectButton } from './drawerArchivedSubjects.js'
 import {
   isSubjectCollapsed,
   readCollapsedSubjectIds,

@@ -2,7 +2,7 @@
 // layout/drawerSubjectContextMenu — Menú contextual de materias
 // =============================================================
 
-import { confirmDialog } from '../components/ConfirmDialog.js'
+import { confirmDialog } from '../components/common/ConfirmDialog.js'
 
 /**
  * Configura un único menú contextual reutilizable para materias/secciones.

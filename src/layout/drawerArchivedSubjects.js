@@ -2,7 +2,7 @@
 // layout/drawerArchivedSubjects — Render de materias archivadas
 // =============================================================
 
-import { confirmDialog } from '../components/ConfirmDialog.js'
+import { confirmDialog } from '../components/common/ConfirmDialog.js'
 import { escapeHtml } from './appShell.js'
 
 /**
