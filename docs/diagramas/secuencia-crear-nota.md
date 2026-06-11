@@ -111,7 +111,7 @@ sequenceDiagram
 | **Interfaz (UI)** | Capa de presentación. Maneja eventos del DOM, renderiza el listado, el editor, indicadores y confirmaciones. | `src/components/` |
 | **Estado (Store)** | Gestión del estado de la aplicación. Coordina las operaciones CRUD definitivas y mantiene notas/materias en memoria. | `src/store/` |
 | **EditorDraftService** | Persistencia local del borrador en curso, con payload versionado y tolerancia a datos corruptos o fallos de storage. | `src/services/EditorDraftService.js` |
-| **Debounce Timer** | Mecanismo de temporización que evita escrituras excesivas del borrador mientras el usuario escribe. | `src/components/NoteEditorDrafts.js` |
+| **Debounce Timer** | Mecanismo de temporización que evita escrituras excesivas del borrador mientras el usuario escribe. | `src/components/note-editor/NoteEditorDrafts.js` |
 | **SQLite** | Capa de persistencia local definitiva para notas guardadas. | `src/services/sqlite/` |
 
 ---

@@ -81,7 +81,13 @@ La guía completa de instalación, dispositivos de prueba y flujo de trabajo est
 ```
 lumapse/
 ├── src/                    # Código fuente de la aplicación
-│   ├── components/         # Componentes UI (NoteEditor, NoteList, MarkdownPreview)
+│   ├── components/         # Componentes UI organizados por feature
+│   │   ├── academic-events/ # Calendario, heatmap y fechas académicas
+│   │   ├── backup/         # Vista UI del backup manual
+│   │   ├── common/         # ConfirmDialog, Toast y piezas transversales
+│   │   ├── feed/           # Listado, tarjetas, acciones y papelera
+│   │   ├── markdown/       # Preview y estilos Markdown compartidos
+│   │   └── note-editor/    # Editor, borradores, comandos y popups
 │   ├── services/           # Lógica de negocio (notas, Markdown, temas, materias, SQLite)
 │   ├── store/              # Estado de la aplicación (NoteStore)
 │   ├── styles/             # CSS modular
@@ -95,7 +101,7 @@ lumapse/
 │   ├── scripts/            # Pipeline modular de análisis
 │   └── graficos/           # Gráficos generados (12 archivos)
 ├── docs/                   # Documentación del proyecto
-│   ├── adr/                # Architecture Decision Records (6 ADRs)
+│   ├── adr/                # Architecture Decision Records (7 ADRs)
 │   ├── diagramas/          # Diagramas UML (Mermaid)
 │   ├── gestion/            # Estimación, planificación y control de avance
 │   ├── hitos/              # Informes de avance mensuales

@@ -14,6 +14,7 @@ Los ADRs vigentes cubren:
 | [ADR-004](../adr/ADR-004-estructura-carpetas.md) | Estructura de carpetas del proyecto. | Aceptado |
 | [ADR-005](../adr/ADR-005-pivote-app-nativa.md) | Pivote de PWA a aplicación móvil nativa con Capacitor. | Aceptado |
 | [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md) | Arquitectura SQLite para web de desarrollo y entorno nativo. | Aceptado |
+| [ADR-007](../adr/ADR-007-organizacion-componentes-por-feature.md) | Organización de componentes UI por feature folders. | Aceptado |
 
 La evolución más importante fue el pivote desde una PWA con IndexedDB hacia una app Android empaquetada con Capacitor y persistencia SQLite. Este cambio no elimina el valor de las decisiones iniciales: las conserva como antecedentes y muestra cómo el proyecto respondió a evidencia empírica nueva.
 
@@ -143,7 +144,7 @@ Lumapse no utiliza un único patrón de diseño, sino una combinación de **patr
 
 *   **Arquitectura en Capas (Layered Architecture):**
     El proyecto aplica una separación estricta de responsabilidades a través de su estructura de directorios:
-    *   **Capa de Presentación (UI):** (`src/components/`, `src/layout/`) Encargada de manipular el DOM y gestionar eventos de usuario de forma aislada.
+    *   **Capa de Presentación (UI):** (`src/components/`, `src/layout/`) Encargada de manipular el DOM y gestionar eventos de usuario de forma aislada. Dentro de `src/components/`, los archivos se agrupan por feature (`note-editor/`, `feed/`, `academic-events/`, `backup/`, `markdown/`, `common/`) para sostener la mantenibilidad a medida que crece la UI.
     *   **Capa de Negocio / Lógica:** (`src/services/`) Contiene la lógica de aplicación pura (e.g., `MarkdownService`, `ExportService`), completamente agnóstica de la interfaz gráfica.
     *   **Capa de Datos:** (`src/store/`, `src/services/sqlite/`) Responsable del estado global de la aplicación y la persistencia local.
 *   **Arquitectura Offline-First:**

@@ -9,7 +9,7 @@ Las carpetas principales son:
 | Carpeta | Propósito |
 |---|---|
 | `src/` | Código fuente de la aplicación web empaquetada. |
-| `src/components/` | Componentes de interfaz: editor, listado, tarjetas, diálogos, papelera y preview Markdown. |
+| `src/components/` | Componentes de interfaz organizados por feature: editor, feed, fechas académicas, backup, Markdown y piezas comunes. |
 | `src/services/` | Servicios de negocio: Markdown, temas, materias, persistencia SQLite y base técnica de portabilidad local en revisión. |
 | `src/store/` | Estado de aplicación, filtros y coordinación entre datos y UI. |
 | `android/` | Proyecto Android generado y mantenido por Capacitor. |
@@ -28,16 +28,18 @@ Los componentes principales son:
 
 | Componente | Responsabilidad |
 |---|---|
-| `NoteEditor` | Edición de contenido Markdown, borradores persistentes y modos de trabajo. |
-| `MarkdownPreview` | Renderizado seguro del Markdown. |
-| `NoteList` y `NoteCardRenderer` | Listado y representación visual de notas. |
-| `TrashView` | Papelera, restauración y eliminación definitiva. |
-| `ConfirmDialog` | Confirmaciones personalizadas para reemplazar diálogos nativos. |
-| `Toast` | Mensajes breves de estado y feedback. |
+| `note-editor/NoteEditor` | Edición de contenido Markdown, borradores persistentes y modos de trabajo. |
+| `markdown/MarkdownPreview` | Renderizado seguro del Markdown. |
+| `feed/NoteList` y `feed/NoteCardRenderer` | Listado y representación visual de notas. |
+| `feed/TrashView` | Papelera, restauración y eliminación definitiva. |
+| `academic-events/Heatmap` y `academic-events/UpcomingAcademicEvents` | Calendario, fechas académicas discretas y recordatorios próximos. |
+| `backup/BackupView` | Vista del flujo manual de backup externo. |
+| `common/ConfirmDialog` | Confirmaciones personalizadas para reemplazar diálogos nativos. |
+| `common/Toast` | Mensajes breves de estado y feedback. |
 | `drawerSubjects` | Navegación por materias y secciones. |
 | `drawerController` | Coordinación del drawer lateral. |
 
-La capa de presentación no accede directamente a la base de datos. Interactúa con el store y los servicios, respetando una separación entre UI, estado y persistencia.
+La capa de presentación no accede directamente a la base de datos. Interactúa con el store y los servicios, respetando una separación entre UI, estado y persistencia. La organización por carpetas de feature se documenta en [ADR-007](../adr/ADR-007-organizacion-componentes-por-feature.md) y evita que `src/components/` se convierta en una carpeta plana difícil de mantener.
 
 ## 5.3. Gestión de Estado Reactivo
 
