@@ -17,8 +17,10 @@ import {
   deleteAcademicEventRow,
 } from './sqlite/academicEvents.js'
 import { getSubjectRowById } from './sqlite/subjects.js'
+import { ACADEMIC_EVENT_TITLE_MAX_LENGTH } from './AcademicEventRules.js'
 
 export const ACADEMIC_EVENT_TYPES = Object.freeze(['parcial', 'final', 'tp', 'exposicion'])
+export { ACADEMIC_EVENT_TITLE_MAX_LENGTH }
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 
@@ -52,6 +54,10 @@ function normalizeTitle(title) {
   if (title === undefined || title === null) return null
 
   const normalized = String(title).trim()
+  if (normalized.length > ACADEMIC_EVENT_TITLE_MAX_LENGTH) {
+    throw new Error(`La nota breve no puede superar ${ACADEMIC_EVENT_TITLE_MAX_LENGTH} caracteres.`)
+  }
+
   return normalized || null
 }
 

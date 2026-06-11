@@ -3,6 +3,7 @@
 // =============================================================
 
 import { getAcademicEventType } from './AcademicEventTypes.js'
+import { ACADEMIC_EVENT_TITLE_MAX_LENGTH } from '../services/AcademicEventRules.js'
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 
@@ -34,16 +35,19 @@ export function getInitialDate(options, state, event) {
   return event?.date || options.date || state.dateFilter || todayLocalDate()
 }
 
-export function createLabeledControl(labelText, control, className = '') {
+export function createLabeledControl(labelText, control, className = '', afterControl = null) {
   const isNativeControl = ['INPUT', 'SELECT', 'TEXTAREA'].includes(control.tagName)
-  const wrapper = document.createElement(isNativeControl ? 'label' : 'div')
+  const useExternalLabel = Boolean(afterControl && isNativeControl && control.id)
+  const wrapper = document.createElement(isNativeControl && !useExternalLabel ? 'label' : 'div')
   wrapper.className = `academic-event-dialog__field ${className}`.trim()
 
-  const labelSpan = document.createElement('span')
+  const labelSpan = document.createElement(useExternalLabel ? 'label' : 'span')
   labelSpan.className = 'academic-event-dialog__label'
   labelSpan.textContent = labelText
+  if (useExternalLabel) labelSpan.htmlFor = control.id
 
   wrapper.append(labelSpan, control)
+  if (afterControl) wrapper.appendChild(afterControl)
   return wrapper
 }
 
@@ -126,6 +130,13 @@ export function validateAcademicEventPayload(payload) {
     return {
       message: 'La fecha ingresada no existe.',
       field: 'date',
+    }
+  }
+
+  if (payload.title && payload.title.length > ACADEMIC_EVENT_TITLE_MAX_LENGTH) {
+    return {
+      message: `La nota breve no puede superar ${ACADEMIC_EVENT_TITLE_MAX_LENGTH} caracteres.`,
+      field: 'title',
     }
   }
 
