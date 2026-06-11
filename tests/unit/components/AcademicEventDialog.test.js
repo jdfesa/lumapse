@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { ACADEMIC_EVENT_TITLE_MAX_LENGTH } from '../../../src/services/AcademicEventRules.js'
 
 const storeMock = vi.hoisted(() => ({
   state: null,
@@ -178,6 +179,41 @@ describe('AcademicEventDialog', () => {
     alertSpy.mockRestore()
     confirmSpy.mockRestore()
     promptSpy.mockRestore()
+  })
+
+  it('muestra un contador sutil para la nota breve y actualiza su estado', () => {
+    openAcademicEventDialog({ date: '2026-06-14' })
+
+    const titleInput = document.querySelector('input[name="title"]')
+    const counter = document.querySelector('.academic-event-dialog__char-counter')
+
+    expect(titleInput.maxLength).toBe(ACADEMIC_EVENT_TITLE_MAX_LENGTH)
+    expect(titleInput.getAttribute('aria-describedby')).toBe('academic-event-dialog-note-counter')
+    expect(counter.textContent).toBe(`0/${ACADEMIC_EVENT_TITLE_MAX_LENGTH}`)
+
+    titleInput.value = 'Entrega informe'
+    titleInput.dispatchEvent(new Event('input', { bubbles: true }))
+
+    expect(counter.textContent).toBe(`15/${ACADEMIC_EVENT_TITLE_MAX_LENGTH}`)
+    expect(counter.classList.contains('academic-event-dialog__char-counter--near-limit')).toBe(false)
+
+    titleInput.value = 'x'.repeat(ACADEMIC_EVENT_TITLE_MAX_LENGTH - 5)
+    titleInput.dispatchEvent(new Event('input', { bubbles: true }))
+
+    expect(counter.textContent).toBe(`${ACADEMIC_EVENT_TITLE_MAX_LENGTH - 5}/${ACADEMIC_EVENT_TITLE_MAX_LENGTH}`)
+    expect(counter.classList.contains('academic-event-dialog__char-counter--near-limit')).toBe(true)
+  })
+
+  it('valida que la nota breve no supere el limite antes de guardar', async () => {
+    openAcademicEventDialog({ date: '2026-06-14' })
+
+    document.querySelector('input[name="title"]').value = 'x'.repeat(ACADEMIC_EVENT_TITLE_MAX_LENGTH + 1)
+
+    await submitDialog()
+
+    expect(document.querySelector('.academic-event-dialog__error').hidden).toBe(false)
+    expect(document.querySelector('.academic-event-dialog__error').textContent).toContain('nota breve')
+    expect(storeMock.createAcademicEvent).not.toHaveBeenCalled()
   })
 
   it('crea una fecha academica con payload normalizado', async () => {

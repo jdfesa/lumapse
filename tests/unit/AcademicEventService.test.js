@@ -162,6 +162,16 @@ describe('AcademicEventService', () => {
       })
     })
 
+    it('rechaza title demasiado largo sin tocar SQLite', async () => {
+      await expect(AcademicEventService.createAcademicEvent({
+        type: 'tp',
+        title: 'x'.repeat(AcademicEventService.ACADEMIC_EVENT_TITLE_MAX_LENGTH + 1),
+        date: '2026-06-14',
+      })).rejects.toThrow('nota breve')
+
+      expect(EventRows.createAcademicEventRow).not.toHaveBeenCalled()
+    })
+
     it('permite crear fecha sin materia asociada', async () => {
       const created = await AcademicEventService.createAcademicEvent({
         type: 'final',
@@ -316,6 +326,16 @@ describe('AcademicEventService', () => {
       await expect(AcademicEventService.updateAcademicEvent('event-1', {
         date: '2026-13-01',
       })).rejects.toThrow('valida')
+
+      expect(EventRows.updateAcademicEventRow).not.toHaveBeenCalled()
+    })
+
+    it('rechaza title demasiado largo antes de actualizar SQLite', async () => {
+      EventRows.getAcademicEventRowById.mockResolvedValue(event())
+
+      await expect(AcademicEventService.updateAcademicEvent('event-1', {
+        title: 'x'.repeat(AcademicEventService.ACADEMIC_EVENT_TITLE_MAX_LENGTH + 1),
+      })).rejects.toThrow('nota breve')
 
       expect(EventRows.updateAcademicEventRow).not.toHaveBeenCalled()
     })
