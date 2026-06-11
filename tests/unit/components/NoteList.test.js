@@ -10,7 +10,7 @@ vi.mock('../../../src/store/NoteStore.js', () => ({
 }))
 
 import * as NoteStore from '../../../src/store/NoteStore.js'
-import { NoteList } from '../../../src/components/NoteList.js'
+import { NoteList } from '../../../src/components/feed/NoteList.js'
 
 function makeNote(overrides = {}) {
   return {

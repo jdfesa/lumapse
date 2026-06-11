@@ -35,15 +35,15 @@ vi.mock('../../../src/store/NoteStore.js', () => ({
   deleteAcademicEvent: storeMock.deleteAcademicEvent,
 }))
 
-vi.mock('../../../src/components/AcademicEventDialog.js', () => ({
+vi.mock('../../../src/components/academic-events/AcademicEventDialog.js', () => ({
   openAcademicEventDialog: dialogMock.openAcademicEventDialog,
 }))
 
-vi.mock('../../../src/components/ConfirmDialog.js', () => ({
+vi.mock('../../../src/components/common/ConfirmDialog.js', () => ({
   confirmDialog: confirmMock.confirmDialog,
 }))
 
-import { Heatmap } from '../../../src/components/Heatmap.js'
+import { Heatmap } from '../../../src/components/academic-events/Heatmap.js'
 
 function note(overrides = {}) {
   return {

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-import { SlashCommandHandler } from '../../../src/components/SlashCommandHandler.js'
+import { SlashCommandHandler } from '../../../src/components/note-editor/SlashCommandHandler.js'
 
 let textarea
 let container

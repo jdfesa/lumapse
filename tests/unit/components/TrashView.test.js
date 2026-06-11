@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import * as SubjectService from '../../../src/services/SubjectService.js'
-import { renderTrashView } from '../../../src/components/TrashView.js'
+import { renderTrashView } from '../../../src/components/feed/TrashView.js'
 
 vi.mock('../../../src/services/SubjectService.js', () => ({
   getTrashItems: vi.fn(),

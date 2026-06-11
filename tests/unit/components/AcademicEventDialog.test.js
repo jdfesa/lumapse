@@ -72,7 +72,7 @@ beforeEach(async () => {
   storeMock.createAcademicEvent.mockResolvedValue(event({ id: 'created' }))
   storeMock.updateAcademicEvent.mockResolvedValue(event({ id: 'updated', title: 'Actualizado' }))
 
-  ;({ openAcademicEventDialog } = await import('../../../src/components/AcademicEventDialog.js'))
+  ;({ openAcademicEventDialog } = await import('../../../src/components/academic-events/AcademicEventDialog.js'))
 })
 
 afterEach(() => {

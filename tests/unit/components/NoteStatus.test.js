@@ -5,7 +5,7 @@ import {
   renderClearNoteStatusButton,
   renderNoteStatusBadge,
   renderNoteStatusMenuItems,
-} from '../../../src/components/NoteStatus.js'
+} from '../../../src/components/feed/NoteStatus.js'
 
 function render(html) {
   const wrapper = document.createElement('div')

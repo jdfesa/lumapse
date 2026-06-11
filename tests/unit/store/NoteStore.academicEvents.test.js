@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import * as AcademicEventService from '../../../src/services/AcademicEventService.js'
 import { DatabaseError } from '../../../src/services/sqlite/errors.js'
-import { showErrorToast } from '../../../src/components/Toast.js'
+import { showErrorToast } from '../../../src/components/common/Toast.js'
 import { state, subscribe } from '../../../src/store/NoteStore.state.js'
 import * as NoteStoreAcademicEvents from '../../../src/store/NoteStore.academicEvents.js'
 
@@ -14,7 +14,7 @@ vi.mock('../../../src/services/AcademicEventService.js', () => ({
   deleteAcademicEvent: vi.fn().mockResolvedValue(undefined),
 }))
 
-vi.mock('../../../src/components/Toast.js', () => ({
+vi.mock('../../../src/components/common/Toast.js', () => ({
   showErrorToast: vi.fn(),
 }))
 

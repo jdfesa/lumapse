@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import * as NoteStore from '../../../src/store/NoteStore.js'
-import { createFeedActionRouter } from '../../../src/components/FeedActionRouter.js'
+import { createFeedActionRouter } from '../../../src/components/feed/FeedActionRouter.js'
 
 vi.mock('../../../src/store/NoteStore.js', () => ({
   getState: vi.fn(),
   updateNoteSilent: vi.fn(),
 }))
 
-vi.mock('../../../src/components/TrashView.js', () => ({
+vi.mock('../../../src/components/feed/TrashView.js', () => ({
   renderTrashView: vi.fn(),
 }))
 

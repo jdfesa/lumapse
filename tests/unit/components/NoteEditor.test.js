@@ -13,12 +13,12 @@ vi.mock('../../../src/services/EditorDraftService.js', () => ({
   clearDraft: vi.fn(),
 }))
 
-vi.mock('../../../src/components/ConfirmDialog.js', () => ({
+vi.mock('../../../src/components/common/ConfirmDialog.js', () => ({
   confirmDialog: vi.fn(() => Promise.resolve(true)),
 }))
 
-import { NoteEditor } from '../../../src/components/NoteEditor.js'
-import { confirmDialog } from '../../../src/components/ConfirmDialog.js'
+import { NoteEditor } from '../../../src/components/note-editor/NoteEditor.js'
+import { confirmDialog } from '../../../src/components/common/ConfirmDialog.js'
 import * as EditorDraftService from '../../../src/services/EditorDraftService.js'
 import * as NoteStore from '../../../src/store/NoteStore.js'
 
