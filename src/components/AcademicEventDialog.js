@@ -12,6 +12,7 @@ import {
   getInitialSubjectId,
   validateAcademicEventPayload,
 } from './AcademicEventDialog.helpers.js'
+import { ACADEMIC_EVENT_TITLE_MAX_LENGTH } from '../services/AcademicEventRules.js'
 import { AcademicEventSubjectPicker } from './AcademicEventSubjectPicker.js'
 import {
   ACADEMIC_EVENT_TYPE_ORDER,
@@ -64,6 +65,8 @@ export function openAcademicEventDialog(options = {}) {
     const dateInput = document.createElement('input')
     const subjectPicker = new AcademicEventSubjectPicker(state.subjects, initialSubjectId)
     const titleInput = document.createElement('input')
+    const titleMeta = document.createElement('span')
+    const titleCounter = document.createElement('span')
     const helper = document.createElement('p')
     const errorEl = document.createElement('p')
     const actions = document.createElement('div')
@@ -135,10 +138,17 @@ export function openAcademicEventDialog(options = {}) {
     dateInput.value = getInitialDate(options, state, event)
 
     titleInput.className = 'academic-event-dialog__input'
+    titleInput.id = 'academic-event-dialog-note'
     titleInput.name = 'title'
-    titleInput.maxLength = 80
+    titleInput.maxLength = ACADEMIC_EVENT_TITLE_MAX_LENGTH
     titleInput.placeholder = 'Ej: Unidad 3, entrega informe, mesa regular'
     titleInput.value = event?.title || ''
+    titleInput.setAttribute('aria-describedby', 'academic-event-dialog-note-counter')
+
+    titleMeta.className = 'academic-event-dialog__note-meta'
+    titleCounter.id = 'academic-event-dialog-note-counter'
+    titleCounter.className = 'academic-event-dialog__char-counter'
+    titleMeta.appendChild(titleCounter)
 
     errorEl.id = 'academic-event-dialog-error'
     errorEl.className = 'academic-event-dialog__error'
@@ -154,7 +164,7 @@ export function openAcademicEventDialog(options = {}) {
       createLabeledControl('Tipo', typeGroup, 'academic-event-dialog__field--types'),
       createLabeledControl('Fecha', dateInput),
       createLabeledControl('Materia', subjectPicker.element),
-      createLabeledControl('Nota breve', titleInput),
+      createLabeledControl('Nota breve', titleInput, 'academic-event-dialog__field--note', titleMeta),
       errorEl,
       actions,
     )
@@ -174,6 +184,8 @@ export function openAcademicEventDialog(options = {}) {
         typeButtons.find(button => button.dataset.type === selectedType)?.focus()
       } else if (field === 'date') {
         dateInput.focus()
+      } else if (field === 'title') {
+        titleInput.focus()
       }
     }
 
@@ -192,6 +204,14 @@ export function openAcademicEventDialog(options = {}) {
         subjectId: subjectId || null,
         title: title || null,
       }
+    }
+
+    function updateTitleCounter() {
+      const length = titleInput.value.length
+      const nearLimit = length >= ACADEMIC_EVENT_TITLE_MAX_LENGTH - 10
+
+      titleCounter.textContent = `${length}/${ACADEMIC_EVENT_TITLE_MAX_LENGTH}`
+      titleCounter.classList.toggle('academic-event-dialog__char-counter--near-limit', nearLimit)
     }
 
     const cleanup = () => {
@@ -274,6 +294,7 @@ export function openAcademicEventDialog(options = {}) {
       }
     })
 
+    titleInput.addEventListener('input', updateTitleCounter)
     backdrop.addEventListener('click', (clickEvent) => {
       if (!subjectPicker.contains(clickEvent.target)) subjectPicker.close()
       if (clickEvent.target === backdrop) finish(null)
@@ -283,6 +304,7 @@ export function openAcademicEventDialog(options = {}) {
     activeDialog = backdrop
     document.body.appendChild(backdrop)
     document.addEventListener('keydown', handleKeydown)
+    updateTitleCounter()
     dateInput.focus()
     dateInput.select()
   })

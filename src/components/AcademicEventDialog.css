@@ -147,6 +147,31 @@
   outline-offset: 2px;
 }
 
+.academic-event-dialog__field--note {
+  gap: var(--space-1);
+}
+
+.academic-event-dialog__note-meta {
+  min-height: 14px;
+  display: flex;
+  justify-content: flex-end;
+  padding-inline: var(--space-1);
+}
+
+.academic-event-dialog__char-counter {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  line-height: 1.2;
+  opacity: 0.46;
+  transition: color var(--transition), opacity var(--transition);
+}
+
+.academic-event-dialog__char-counter--near-limit {
+  color: var(--color-accent);
+  opacity: 0.72;
+}
+
 .academic-event-dialog__subject-picker {
   position: relative;
   min-width: 0;
