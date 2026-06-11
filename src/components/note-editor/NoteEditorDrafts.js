@@ -1,4 +1,4 @@
-import { clearDraft, loadDraft, saveDraft } from '../services/EditorDraftService.js';
+import { clearDraft, loadDraft, saveDraft } from '../../services/EditorDraftService.js';
 
 const DRAFT_SAVE_DEBOUNCE_MS = 500;
 

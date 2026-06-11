@@ -12,7 +12,7 @@
 // RF cubiertos: RF-010 (renderizado en tiempo real)
 // =============================================================
 
-import { renderMarkdown } from '../services/MarkdownService.js';
+import { renderMarkdown } from '../../services/MarkdownService.js';
 import './callout.css';
 import './markdown-elements.css';
 import './MarkdownPreview.css';

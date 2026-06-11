@@ -4,8 +4,8 @@
    ============================================================ */
 
 /* Importar estilos de componentes hijo */
-@import './callout.css';
-@import './markdown-elements.css';
+@import '../markdown/callout.css';
+@import '../markdown/markdown-elements.css';
 @import './NoteCard.css';
 @import './NoteCardActions.css';
 @import './TrashView.css';

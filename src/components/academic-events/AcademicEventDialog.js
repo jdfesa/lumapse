@@ -5,14 +5,14 @@
 
 import './AcademicEventDialog.css'
 
-import * as NoteStore from '../store/NoteStore.js'
+import * as NoteStore from '../../store/NoteStore.js'
 import {
   createLabeledControl,
   getInitialDate,
   getInitialSubjectId,
   validateAcademicEventPayload,
 } from './AcademicEventDialog.helpers.js'
-import { ACADEMIC_EVENT_TITLE_MAX_LENGTH } from '../services/AcademicEventRules.js'
+import { ACADEMIC_EVENT_TITLE_MAX_LENGTH } from '../../services/AcademicEventRules.js'
 import { AcademicEventSubjectPicker } from './AcademicEventSubjectPicker.js'
 import {
   ACADEMIC_EVENT_TYPE_ORDER,

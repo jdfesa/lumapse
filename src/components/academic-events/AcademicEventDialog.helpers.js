@@ -3,7 +3,7 @@
 // =============================================================
 
 import { getAcademicEventType } from './AcademicEventTypes.js'
-import { ACADEMIC_EVENT_TITLE_MAX_LENGTH } from '../services/AcademicEventRules.js'
+import { ACADEMIC_EVENT_TITLE_MAX_LENGTH } from '../../services/AcademicEventRules.js'
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 

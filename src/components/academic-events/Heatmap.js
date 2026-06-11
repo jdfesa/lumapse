@@ -3,7 +3,7 @@
 // Hito 04: Navegación por fechas y actividad
 // =============================================================
 
-import * as NoteStore from '../store/NoteStore.js'
+import * as NoteStore from '../../store/NoteStore.js'
 import { bindAcademicEventActions } from './AcademicEventActions.js'
 import {
   renderAcademicEventDot,
@@ -16,6 +16,7 @@ import {
   isAcademicEventSubjectArchived,
 } from './AcademicEventSubjects.js'
 import { openAcademicEventDialog } from './AcademicEventDialog.js'
+import './Heatmap.css'
 
 function escapeHtml(value) {
   return String(value ?? '')

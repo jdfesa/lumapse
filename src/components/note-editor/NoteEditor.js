@@ -1,12 +1,12 @@
-import * as NoteStore from '../store/NoteStore.js';
+import * as NoteStore from '../../store/NoteStore.js';
 import { SlashCommandHandler } from './SlashCommandHandler.js';
 import { getMarkdownContinuation } from './editorTextTransforms.js';
 import { SubjectPicker } from './SubjectPicker.js';
 import { createEditorDraftPayload, EditorDraftCapture, EditorDraftRestorer } from './NoteEditorDrafts.js';
 import { setupEditorPopups } from './NoteEditorPopups.js';
 import { renderNoteEditorTemplate } from './NoteEditorTemplate.js';
-import { confirmDialog } from './ConfirmDialog.js';
-import { extractNoteTitle, resolveNoteTitleForSave, splitNoteForEditing, stripRedundantTitleFromContent } from '../services/NoteTitleService.js';
+import { confirmDialog } from '../common/ConfirmDialog.js';
+import { extractNoteTitle, resolveNoteTitleForSave, splitNoteForEditing, stripRedundantTitleFromContent } from '../../services/NoteTitleService.js';
 import './NoteEditor.css';
 
 export class NoteEditor {

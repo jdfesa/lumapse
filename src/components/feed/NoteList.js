@@ -3,14 +3,14 @@
 // Hito 04: Interfaz Microblog (estilo Memos)
 // =============================================================
 
-import * as NoteStore from '../store/NoteStore.js';
-import * as MarkdownService from '../services/MarkdownService.js';
-import { getNoteContentPresentation } from '../services/NoteTitleService.js';
+import * as NoteStore from '../../store/NoteStore.js';
+import * as MarkdownService from '../../services/MarkdownService.js';
+import { getNoteContentPresentation } from '../../services/NoteTitleService.js';
 import { formatRelativeDate, escapeHtml, findSubject, buildMoveMenu } from './NoteCardRenderer.js';
 import { createFeedActionRouter } from './FeedActionRouter.js';
 import { renderTrashView } from './TrashView.js';
-import { BackupView } from './BackupView.js';
-import { confirmDialog } from './ConfirmDialog.js';
+import { BackupView } from '../backup/BackupView.js';
+import { confirmDialog } from '../common/ConfirmDialog.js';
 import { VirtualFeed } from './VirtualFeed.js';
 import { renderClearNoteStatusButton, renderNoteStatusBadge, renderNoteStatusMenuItems } from './NoteStatus.js';
 import './NoteList.css';

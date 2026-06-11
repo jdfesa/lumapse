@@ -6,9 +6,9 @@
 // la acción correspondiente sin acoplar el componente NoteList.
 // =============================================================
 
-import * as NoteStore from '../store/NoteStore.js'
+import * as NoteStore from '../../store/NoteStore.js'
 import { renderTrashView } from './TrashView.js'
-import { confirmDialog } from './ConfirmDialog.js'
+import { confirmDialog } from '../common/ConfirmDialog.js'
 
 const TASK_LINE_REGEX = /^(\s*[-*+]\s+\[)([ xX])(\]\s+)/
 const pendingCheckboxToggles = new Set()

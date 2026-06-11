@@ -11,9 +11,9 @@ import {
   dismissCurrentBackupReminder,
   getCurrentBackupReminder,
   getExternalBackupReadiness,
-} from '../services/backup/BackupFlowService.js'
-import { BACKUP_REMINDER_REASONS } from '../services/backup/BackupReminderService.js'
-import { showErrorToast } from './Toast.js'
+} from '../../services/backup/BackupFlowService.js'
+import { BACKUP_REMINDER_REASONS } from '../../services/backup/BackupReminderService.js'
+import { showErrorToast } from '../common/Toast.js'
 import './BackupView.css'
 
 const UI_STATE = Object.freeze({

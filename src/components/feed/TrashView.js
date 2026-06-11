@@ -3,7 +3,7 @@
 // Extraído de NoteList.js para reducir LOC.
 // =============================================================
 
-import * as SubjectService from '../services/SubjectService.js';
+import * as SubjectService from '../../services/SubjectService.js';
 import { escapeHtml } from './NoteCardRenderer.js';
 
 function createDuplicateLabeler(getBaseName) {

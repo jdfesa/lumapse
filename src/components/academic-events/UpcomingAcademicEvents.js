@@ -5,7 +5,7 @@
 
 import './UpcomingAcademicEvents.css'
 
-import * as NoteStore from '../store/NoteStore.js'
+import * as NoteStore from '../../store/NoteStore.js'
 import { bindAcademicEventActions } from './AcademicEventActions.js'
 import {
   createAcademicEventSubjectCatalog,

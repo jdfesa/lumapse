@@ -2,8 +2,8 @@
 // AcademicEventActions — Acciones UI para fechas academicas
 // =============================================================
 
-import * as NoteStore from '../store/NoteStore.js'
-import { confirmDialog } from './ConfirmDialog.js'
+import * as NoteStore from '../../store/NoteStore.js'
+import { confirmDialog } from '../common/ConfirmDialog.js'
 import { openAcademicEventDialog } from './AcademicEventDialog.js'
 
 function eventTitle(event) {
