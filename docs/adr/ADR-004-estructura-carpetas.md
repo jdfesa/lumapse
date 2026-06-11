@@ -15,7 +15,7 @@ Al inicializar el proyecto era necesario definir cómo organizar los archivos de
 ```
 lumapse/
 ├── src/                    # Código fuente de la PWA
-│   ├── components/         # Componentes UI reutilizables
+│   ├── components/         # Componentes UI organizados por feature
 │   ├── services/           # Lógica de negocio (persistencia, parsers)
 │   ├── store/              # Estado de la aplicación (patrón observable)
 │   ├── styles/             # CSS modular (main.css + partials)
@@ -49,6 +49,10 @@ lumapse/
 2. **Convención de industria:** La estructura `src/` + `public/` es estándar en proyectos Vite/webpack.
 3. **Escalabilidad:** La modularización en `components/`, `services/` y `store/` permite crecer sin refactorizaciones drásticas.
 4. **Visibilidad del proceso:** Los ADRs en `docs/adr/` documentan el razonamiento detrás del código.
+
+## Revisión 2026-06-11
+
+La carpeta `src/components/` se reorganizó internamente por feature folders para mejorar mantenibilidad y escalabilidad sin alterar las capas principales de este ADR. La estructura vigente y sus reglas de mantenimiento quedan documentadas en [ADR-007](ADR-007-organizacion-componentes-por-feature.md).
 
 ## Consecuencias
 
