@@ -87,6 +87,7 @@ Objetivo: sostener alta cohesion, bajo acoplamiento, responsabilidad unica y una
 - [x] Migrar contrato de datos/orquestacion de backup a TypeScript: `BackupDataSource.ts`, `BackupService.ts` y tipos `BackupData`/`CurrentBackupZip`.
 - [x] Migrar transformacion del ZIP restaurable a TypeScript: `BackupZipService.ts`.
 - [x] Actualizar auditorias auxiliares y binario Rust para escanear `.ts` en tamaño, TODO/offline, a11y y metricas.
+- [x] Migrar CRUD/arbol activo de materias a TypeScript: `SubjectService.crud.ts`, manteniendo el barrel `SubjectService.js`.
 - [ ] Continuar con servicios de dominio/backup solo archivo por archivo, priorizando contratos de entrada/salida y reduccion de errores al refactorizar.
 - [ ] Evaluar store despues de consolidar servicios tipados; no migrarlo en bloque.
 - [ ] Dejar componentes grandes (`NoteEditor`, `NoteList`, `Heatmap`, `BackupView`) para el final; antes conviene seguir separando responsabilidades internas.

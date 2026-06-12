@@ -199,9 +199,10 @@ Migrar servicios donde los contratos reducen errores reales:
 - [x] `BackupService.ts`.
 - [x] `BackupZipService.ts`.
 - [x] Auditorias auxiliares y binario Rust actualizados para incluir `.ts`.
+- [x] `SubjectService.crud.ts`.
 - Servicios de backup que transforman datos, sin mezclar flujo nativo/share/storage en la misma tanda.
 - Capa SQLite por tabla, solo si los tipos ya estan claros.
-- `SubjectService.*` despues de estabilizar contratos de arbol y cascadas.
+- `SubjectService.trash` despues de estabilizar contratos de cascadas/papelera.
 
 Criterio de cierre:
 
@@ -300,7 +301,7 @@ No hace falta levantar servidor local como parte de estas fases. La validacion v
 ## 10. Orden Recomendado Inmediato
 
 1. Continuar servicios de dominio/backup con contratos de entrada/salida solo cuando el beneficio sea claro.
-2. Evaluar `BackupZipArchive` o `SubjectService.*` como proximos candidatos prudentes.
+2. Evaluar `SubjectService.trash` o `BackupZipArchive` como proximos candidatos prudentes.
 3. Dejar store y componentes grandes para fases posteriores.
 
-El mapa de tests por feature ya quedo alineado, el store ya no depende de feedback visual, el typecheck ya es parte del gate, la primera tanda de modulos puros esta migrada, `AcademicEventService` ya quedo tipado como primer servicio de dominio, la capa pura de backup ya cubre decisiones, datos, ZIP y orquestacion, y las auditorias automaticas ya escanean `.ts`. El proximo paso debe seguir siendo pequeno: tipar servicios con tests existentes, sin arrastrar componentes grandes ni mezclar capas.
+El mapa de tests por feature ya quedo alineado, el store ya no depende de feedback visual, el typecheck ya es parte del gate, la primera tanda de modulos puros esta migrada, `AcademicEventService` ya quedo tipado como primer servicio de dominio, la capa pura de backup ya cubre decisiones, datos, ZIP y orquestacion, `SubjectService.crud` ya cubre materias/arbol activo, y las auditorias automaticas ya escanean `.ts`. El proximo paso debe seguir siendo pequeno: tipar servicios con tests existentes, sin arrastrar componentes grandes ni mezclar capas.
