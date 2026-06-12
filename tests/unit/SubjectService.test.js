@@ -711,7 +711,7 @@ describe('SubjectService', () => {
       expect(result.tree[0]).toMatchObject({ id: 'root', children: [expect.objectContaining({ id: 'child' })] })
     })
 
-    it('incluye noteCount en cada nodo del árbol', async () => {
+    it('incluye noteCount directo en secciones y total agregado en materias', async () => {
       SubjectRows.getAllSubjectRows.mockResolvedValue([
         subject({ id: 'root', name: 'Root' }),
         subject({ id: 'child', name: 'Child', parentSubjectId: 'root' }),
@@ -720,8 +720,21 @@ describe('SubjectService', () => {
 
       const result = await SubjectService.getSubjectTree()
 
-      expect(result.tree[0].noteCount).toBe(4)
+      expect(result.tree[0].noteCount).toBe(6)
       expect(result.tree[0].children[0].noteCount).toBe(2)
+    })
+
+    it('no deja en cero una materia que solo tiene notas en sus secciones', async () => {
+      SubjectRows.getAllSubjectRows.mockResolvedValue([
+        subject({ id: 'root', name: 'Root' }),
+        subject({ id: 'child', name: 'Child', parentSubjectId: 'root' }),
+      ])
+      SubjectRows.countNotesBySubject.mockImplementation(async id => (id === 'child' ? 1 : 0))
+
+      const result = await SubjectService.getSubjectTree()
+
+      expect(result.tree[0].noteCount).toBe(1)
+      expect(result.tree[0].children[0].noteCount).toBe(1)
     })
 
     it('asocia correctamente los children con su padre', async () => {

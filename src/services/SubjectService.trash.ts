@@ -26,8 +26,32 @@ import {
   restoreNote as restoreNoteRow
 } from './sqlite/notes.js'
 import { runTransaction } from './sqlite/connection.js'
+import type { EntityId, HexColor } from '../domain/primitives'
+import type { Note, NoteChanges } from '../domain/notes'
+import type { Subject, SubjectChanges } from '../domain/subjects'
 
-function getUniqueNameForLevel(name, parentSubjectId, excludeId, allSubjects) {
+type SectionSubject = Subject & { parentSubjectId: EntityId }
+type TrashSubjectSection = SectionSubject & { noteCount: number }
+type TrashSubjectRoot = Subject & { noteCount: number, children: TrashSubjectSection[] }
+type TrashOrphanSection = SectionSubject & {
+  parentName: string
+  parentColor: HexColor | null
+  noteCount: number
+}
+
+export interface TrashItems {
+  notes: Note[]
+  subjects: TrashSubjectRoot[]
+  orphanSections: TrashOrphanSection[]
+  totalCount: number
+}
+
+function getUniqueNameForLevel(
+  name: string,
+  parentSubjectId: EntityId | null | undefined,
+  excludeId: EntityId | null,
+  allSubjects: Subject[]
+): string {
   const baseName = name.trim()
   const parentId = parentSubjectId || null
   const usedNames = new Set(
@@ -47,10 +71,14 @@ function getUniqueNameForLevel(name, parentSubjectId, excludeId, allSubjects) {
   return candidate
 }
 
-async function restoreSubjectRowWithUniqueName(subject, parentSubjectId, allSubjects) {
+async function restoreSubjectRowWithUniqueName(
+  subject: Subject,
+  parentSubjectId: EntityId | null,
+  allSubjects: Subject[]
+): Promise<Subject[]> {
   const targetParentId = parentSubjectId || null
   const uniqueName = getUniqueNameForLevel(subject.name, targetParentId, subject.id, allSubjects)
-  const changes = {}
+  const changes: SubjectChanges = {}
 
   if (uniqueName !== subject.name.trim()) {
     changes.name = uniqueName
@@ -67,7 +95,7 @@ async function restoreSubjectRowWithUniqueName(subject, parentSubjectId, allSubj
   }
   await restoreSubjectRow(subject.id)
 
-  const restoredSubject = {
+  const restoredSubject: Subject = {
     ...subject,
     ...changes,
     parentSubjectId: targetParentId,
@@ -87,10 +115,10 @@ async function restoreSubjectRowWithUniqueName(subject, parentSubjectId, allSubj
  * Envía a la papelera: la materia, sus secciones hijas y todas las notas.
  * @param {string} id ID de la materia
  */
-export async function deleteSubject(id) {
+export async function deleteSubject(id: EntityId): Promise<void> {
   return runTransaction(async () => {
     // 1. Obtener secciones hijas para eliminar sus notas también
-    const childIds = await getChildSubjectIds(id)
+    const childIds = (await getChildSubjectIds(id)) as EntityId[]
 
     // 2. Soft-delete de notas del subject padre
     await softDeleteNotesBySubject(id)
@@ -113,7 +141,7 @@ export async function deleteSubject(id) {
  * La materia padre NO se elimina.
  * @param {string} id ID de la sección
  */
-export async function deleteSection(id) {
+export async function deleteSection(id: EntityId): Promise<void> {
   return runTransaction(async () => {
     // 1. Soft-delete de notas de esta sección
     await softDeleteNotesBySubject(id)
@@ -128,13 +156,13 @@ export async function deleteSection(id) {
  * Restaura: la materia, sus secciones hijas y todas las notas.
  * @param {string} id ID de la materia
  */
-export async function restoreSubject(id) {
+export async function restoreSubject(id: EntityId): Promise<void> {
   return runTransaction(async () => {
-    const subject = await getSubjectRowById(id)
+    const subject = (await getSubjectRowById(id)) as Subject | undefined
     if (!subject) return
 
-    let allSubjects = await getAllSubjectRowsIncludingArchived()
-    const deletedSubjects = await getDeletedSubjectRows()
+    let allSubjects = (await getAllSubjectRowsIncludingArchived()) as Subject[]
+    const deletedSubjects = (await getDeletedSubjectRows()) as Subject[]
     const childSubjects = deletedSubjects.filter(child => child.parentSubjectId === id)
 
     // 1. Restaurar la materia con un nombre navegable único.
@@ -161,17 +189,17 @@ export async function restoreSubject(id) {
  * para que la sección tenga una ruta navegable.
  * @param {string} id ID de la sección
  */
-export async function restoreSection(id) {
+export async function restoreSection(id: EntityId): Promise<void> {
   return runTransaction(async () => {
-    const section = await getSubjectRowById(id)
+    const section = (await getSubjectRowById(id)) as Subject | undefined
     if (!section) return
 
-    let allSubjects = await getAllSubjectRowsIncludingArchived()
-    let targetParentId = section.parentSubjectId || null
+    let allSubjects = (await getAllSubjectRowsIncludingArchived()) as Subject[]
+    let targetParentId: EntityId | null = section.parentSubjectId || null
 
     // Verificar si el padre sigue existiendo como contenedor navegable.
     if (section.parentSubjectId) {
-      const parent = await getSubjectRowById(section.parentSubjectId)
+      const parent = (await getSubjectRowById(section.parentSubjectId)) as Subject | undefined
       if (!parent) {
         targetParentId = null
       } else if (parent.deletedAt) {
@@ -194,10 +222,10 @@ export async function restoreSection(id) {
  * Si su materia padre está eliminada, la nota cae en Entrada (subjectId = null).
  * @param {string} noteId ID de la nota
  */
-export async function restoreNoteFromTrash(noteId) {
+export async function restoreNoteFromTrash(noteId: EntityId): Promise<void> {
   // Primero necesitamos leer la nota para saber si su materia sigue viva
   const { getNoteById, updateNote } = await import('./sqlite/notes.js')
-  const note = await getNoteById(noteId)
+  const note = (await getNoteById(noteId)) as Note | undefined
   if (!note) return
 
   // Restaurar la nota
@@ -205,10 +233,11 @@ export async function restoreNoteFromTrash(noteId) {
 
   // Si tenía materia, verificar que siga activa
   if (note.subjectId) {
-    const subject = await getSubjectRowById(note.subjectId)
+    const subject = (await getSubjectRowById(note.subjectId)) as Subject | undefined
     if (!subject || subject.deletedAt) {
       // Materia eliminada: la nota pierde su subject (va a Entrada)
-      await updateNote(noteId, { subjectId: null })
+      const changes: NoteChanges = { subjectId: null }
+      await updateNote(noteId, changes)
     }
   }
 }
@@ -217,25 +246,27 @@ export async function restoreNoteFromTrash(noteId) {
  * Obtiene los items en la papelera organizados para la vista.
  * @returns {object} { notes, subjects, totalCount }
  */
-export async function getTrashItems() {
-  const deletedNotes = await getDeletedNotes()
-  const deletedSubjects = await getDeletedSubjectRows()
-  const activeSubjects = await getAllSubjectRowsIncludingArchived()
+export async function getTrashItems(): Promise<TrashItems> {
+  const deletedNotes = (await getDeletedNotes()) as Note[]
+  const deletedSubjects = (await getDeletedSubjectRows()) as Subject[]
+  const activeSubjects = (await getAllSubjectRowsIncludingArchived()) as Subject[]
 
   // Separar raíces y secciones eliminadas
   const roots = deletedSubjects.filter(s => !s.parentSubjectId)
-  const sections = deletedSubjects.filter(s => s.parentSubjectId)
-  const deletedSubjectIds = new Set(deletedSubjects.map(s => s.id))
-  const activeSubjectsById = new Map(activeSubjects.map(subject => [subject.id, subject]))
+  const sections = deletedSubjects.filter((s): s is SectionSubject => Boolean(s.parentSubjectId))
+  const deletedSubjectIds = new Set<EntityId>(deletedSubjects.map(s => s.id))
+  const activeSubjectsById = new Map<EntityId, Subject>(
+    activeSubjects.map((subject): [EntityId, Subject] => [subject.id, subject])
+  )
 
   // Construir árbol con conteos
-  const subjectTree = []
+  const subjectTree: TrashSubjectRoot[] = []
   for (const root of roots) {
-    const rootNoteCount = await countDeletedNotesBySubject(root.id)
-    const rootChildren = []
+    const rootNoteCount = (await countDeletedNotesBySubject(root.id)) as number
+    const rootChildren: TrashSubjectSection[] = []
 
     for (const child of sections.filter(c => c.parentSubjectId === root.id)) {
-      const childNoteCount = await countDeletedNotesBySubject(child.id)
+      const childNoteCount = (await countDeletedNotesBySubject(child.id)) as number
       rootChildren.push({ ...child, noteCount: childNoteCount })
     }
 
@@ -252,10 +283,10 @@ export async function getTrashItems() {
   )
 
   // Secciones huérfanas (su padre no está eliminado)
-  const orphanSections = []
+  const orphanSections: TrashOrphanSection[] = []
   for (const section of sections.filter(s => !deletedSubjectIds.has(s.parentSubjectId))) {
     const parent = activeSubjectsById.get(section.parentSubjectId)
-    const noteCount = await countDeletedNotesBySubject(section.id)
+    const noteCount = (await countDeletedNotesBySubject(section.id)) as number
     orphanSections.push({
       ...section,
       parentName: parent?.name || 'Materia original no disponible',
@@ -264,7 +295,7 @@ export async function getTrashItems() {
     })
   }
 
-  const totalCount = await countTrashItems()
+  const totalCount = (await countTrashItems()) as number
 
   return {
     notes: looseNotes,
@@ -277,7 +308,7 @@ export async function getTrashItems() {
 /**
  * Vacía toda la papelera (notas + materias). DELETE físico.
  */
-export async function emptyTrash() {
+export async function emptyTrash(): Promise<void> {
   await emptyTrashNotes()
   await emptyTrashSubjects()
 }
@@ -287,7 +318,7 @@ export async function emptyTrash() {
  * Se ejecuta al inicio de cada sesión.
  * @param {number} days Días de retención (default: 30)
  */
-export async function autoPurge(days = 30) {
+export async function autoPurge(days = 30): Promise<void> {
   await purgeOldDeletedNotes(days)
   await purgeOldDeletedSubjects(days)
 }

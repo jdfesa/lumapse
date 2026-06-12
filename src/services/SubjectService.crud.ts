@@ -233,7 +233,9 @@ export async function unarchiveSection(id: EntityId): Promise<void> {
 
 /**
  * Retorna las materias organizadas como árbol (padres con hijos).
- * Incluye conteo de notas por materia y conteo de Entrada (inbox).
+ * Incluye conteo de Entrada (inbox). En materias raíz, `noteCount`
+ * representa el total visible al navegar la materia: notas directas más
+ * notas de sus secciones. En secciones, `noteCount` es directo.
  *
  * Estructura retornada:
  * {
@@ -254,17 +256,19 @@ export async function getSubjectTree(): Promise<SubjectTree> {
   // Construir árbol con conteos
   const tree: Subject[] = []
   for (const root of roots) {
-    const rootCount = await countNotesBySubject(root.id)
+    const rootDirectCount = await countNotesBySubject(root.id)
     const rootChildren: Subject[] = []
+    let childTotalCount = 0
 
     for (const child of children.filter(c => c.parentSubjectId === root.id)) {
       const childCount = await countNotesBySubject(child.id)
+      childTotalCount += childCount
       rootChildren.push({ ...child, noteCount: childCount })
     }
 
     tree.push({
       ...root,
-      noteCount: rootCount,
+      noteCount: rootDirectCount + childTotalCount,
       children: rootChildren
     })
   }

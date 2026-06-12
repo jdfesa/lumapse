@@ -118,6 +118,13 @@ describe('drawerSubjects collapse', () => {
     expect(subjectsList.querySelector('[data-subject="subj-2"]')?.parentElement.querySelector('.js-subject-collapse')).toBeNull()
   })
 
+  it('renderiza contador agregado en materia y contador propio en sección', () => {
+    const { subjectsList } = setupSubjectsDrawer()
+
+    expect(subjectsList.querySelector('[data-subject="subj-1"] .drawer__subject-count').textContent).toBe('3')
+    expect(subjectsList.querySelector('[data-subject="sec-1"] .drawer__subject-count').textContent).toBe('1')
+  })
+
   it('colapsa y expande secciones persistiendo la preferencia local', () => {
     const { subjectsList } = setupSubjectsDrawer()
 

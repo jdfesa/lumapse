@@ -6,4 +6,4 @@
 // Patrón idéntico al usado en NoteStore.js.
 // =============================================================
 export { SUBJECT_COLORS, createSubject, getAllSubjects, getSubjectById, updateSubject, archiveSubject, unarchiveSubject, archiveSection, unarchiveSection, getSubjectTree } from './SubjectService.crud.ts'
-export { deleteSubject, deleteSection, restoreSubject, restoreSection, restoreNoteFromTrash, getTrashItems, emptyTrash, autoPurge } from './SubjectService.trash.js'
+export { deleteSubject, deleteSection, restoreSubject, restoreSection, restoreNoteFromTrash, getTrashItems, emptyTrash, autoPurge } from './SubjectService.trash.ts'
