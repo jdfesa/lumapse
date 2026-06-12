@@ -81,7 +81,7 @@ Objetivo: sostener alta cohesion, bajo acoplamiento, responsabilidad unica y una
 - [x] Empezar por tipos/contratos compartidos de dominio (`Note`, `Subject`, `AcademicEvent`, `AppState`, `BackupManifest`) usando TypeScript gradual, sin migrar componentes DOM grandes de entrada.
 - [x] Introducir `npm run typecheck` y sumarlo al gate `verify`.
 - [x] Migrar primer modulo puro a TypeScript: `src/services/AcademicEventRules.ts`.
-- [ ] Migrar primero modulos puros si el beneficio es claro: `noteFilters`, reglas academicas, validaciones de materias, `NoteTitleService` y formatos de backup.
+- [x] Migrar primero modulos puros si el beneficio es claro: `noteFilters`, reglas academicas, validaciones de materias, `NoteTitleService` y formatos de backup.
 - [ ] Evaluar despues servicios de dominio y store, priorizando contratos de entrada/salida y reduccion de errores al refactorizar.
 - [ ] Dejar componentes grandes (`NoteEditor`, `NoteList`, `Heatmap`, `BackupView`) para el final; antes conviene seguir separando responsabilidades internas.
 - [x] Reducir acoplamiento Store -> UI: `NoteStore.*` emite errores de dominio y la capa UI decide como mostrarlos.

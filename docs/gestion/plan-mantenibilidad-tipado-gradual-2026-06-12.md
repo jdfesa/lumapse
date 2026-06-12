@@ -168,15 +168,15 @@ Criterio de cierre:
 
 ### Fase 4 - Migrar Modulos Puros
 
-Estado: iniciada el 2026-06-12.
+Estado: completada el 2026-06-12 para la primera tanda.
 
 Migrar archivos pequenos donde TypeScript aporta claridad inmediata:
 
 1. [x] `src/services/AcademicEventRules.ts`
-2. `src/services/NoteTitleService.js`
-3. `src/services/SubjectService.validation.js`
-4. `src/services/backup/BackupFormat.js`
-5. `src/store/noteFilters.js`
+2. [x] `src/services/NoteTitleService.ts`
+3. [x] `src/services/SubjectService.validation.ts`
+4. [x] `src/services/backup/BackupFormat.ts`
+5. [x] `src/store/noteFilters.ts`
 6. `src/components/academic-events/AcademicEventTypes.js`
 7. `src/components/note-editor/editorTextTransforms.js`
 
@@ -291,8 +291,8 @@ No hace falta levantar servidor local como parte de estas fases. La validacion v
 
 ## 10. Orden Recomendado Inmediato
 
-1. Continuar migrando modulos puros pequenos, uno por vez.
-2. Priorizar `NoteTitleService`, `SubjectService.validation`, `BackupFormat` y luego `noteFilters`.
-3. Recién despues evaluar servicios de dominio y store.
+1. Evaluar servicios de dominio con contratos de entrada/salida.
+2. Priorizar `AcademicEventService`, servicios de backup y `SubjectService.*` solo si el beneficio supera el riesgo.
+3. Dejar store y componentes grandes para fases posteriores.
 
-El mapa de tests por feature ya quedo alineado, el store ya no depende de feedback visual y el typecheck ya es parte del gate. El proximo paso debe seguir siendo pequeno: migrar otro modulo puro con tests existentes, sin arrastrar componentes grandes ni mezclar capas.
+El mapa de tests por feature ya quedo alineado, el store ya no depende de feedback visual, el typecheck ya es parte del gate y la primera tanda de modulos puros esta migrada. El proximo paso debe seguir siendo pequeno: tipar servicios de dominio con tests existentes, sin arrastrar componentes grandes ni mezclar capas.

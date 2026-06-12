@@ -52,7 +52,7 @@ El store se dividió en módulos para reducir acoplamiento:
 | `NoteStore.state.js` | Estado base y suscripciones. |
 | `NoteStore.data.js` | Carga, creación, actualización y eliminación de datos. |
 | `NoteStore.ui.js` | Acciones de UI y coordinación de vistas. |
-| `noteFilters.js` | Reglas de filtrado y visibilidad de notas. |
+| `noteFilters.ts` | Reglas de filtrado y visibilidad de notas. |
 
 Esta división permite testear reglas de negocio sin renderizar toda la interfaz. También facilita mantener invariantes importantes, como ocultar notas eliminadas del feed, mostrar notas fijadas al tope y respetar el filtro por materia o sección.
 
