@@ -14,11 +14,13 @@ import {
   archiveChildSubjects
 } from './sqlite/subjects.js'
 import { runTransaction } from './sqlite/connection.js'
-import { generateUUID, validateNameRequired, validateNameUnique, validateMaxDepth } from './SubjectService.validation.ts'
+import { generateUUID, validateNameRequired, validateNameUnique, validateMaxDepth } from './SubjectService.validation'
+import type { EntityId, HexColor } from '../domain/primitives'
+import type { Subject, SubjectChanges, SubjectTree } from '../domain/subjects'
 
 // --- Paleta de colores predefinidos (estilo Notion) ---
 // 8 colores armoniosos, aptos para dark/light mode
-export const SUBJECT_COLORS = [
+export const SUBJECT_COLORS: readonly HexColor[] = [
   '#818cf8', // Indigo (accent default)
   '#f87171', // Rojo suave
   '#fb923c', // Naranja
@@ -29,7 +31,12 @@ export const SUBJECT_COLORS = [
   '#f472b6', // Rosa
 ]
 
-function getUniqueNameForLevel(name, parentSubjectId, excludeId, allSubjects) {
+function getUniqueNameForLevel(
+  name: string,
+  parentSubjectId: EntityId | null | undefined,
+  excludeId: EntityId | null,
+  allSubjects: Subject[],
+): string {
   const baseName = name.trim()
   const parentId = parentSubjectId || null
   const usedNames = new Set(
@@ -49,9 +56,13 @@ function getUniqueNameForLevel(name, parentSubjectId, excludeId, allSubjects) {
   return candidate
 }
 
-async function updateArchiveStateWithUniqueName(subject, archived, allSubjects) {
+async function updateArchiveStateWithUniqueName(
+  subject: Subject,
+  archived: boolean,
+  allSubjects: Subject[],
+): Promise<Subject[]> {
   const uniqueName = getUniqueNameForLevel(subject.name, subject.parentSubjectId, subject.id, allSubjects)
-  const changes = uniqueName === subject.name.trim()
+  const changes: SubjectChanges = uniqueName === subject.name.trim()
     ? { archived }
     : { archived, name: uniqueName }
 
@@ -71,15 +82,19 @@ async function updateArchiveStateWithUniqueName(subject, archived, allSubjects) 
  * @param {string|null} parentSubjectId ID del padre (null = materia raíz)
  * @returns {object} La materia creada
  */
-export async function createSubject(name, color = null, parentSubjectId = null) {
+export async function createSubject(
+  name: string,
+  color: HexColor | null = null,
+  parentSubjectId: EntityId | null = null,
+): Promise<Subject> {
   validateNameRequired(name)
 
-  const allSubjects = await getAllSubjectRowsIncludingArchived()
+  const allSubjects = await getAllSubjectRowsIncludingArchived() as Subject[]
 
   validateNameUnique(name, parentSubjectId, null, allSubjects)
   validateMaxDepth(parentSubjectId, allSubjects)
 
-  const subject = {
+  const subject: Subject = {
     id: generateUUID(),
     name: name.trim(),
     parentSubjectId: parentSubjectId || null,
@@ -96,8 +111,8 @@ export async function createSubject(name, color = null, parentSubjectId = null) 
  * Obtiene todas las materias no archivadas.
  * @returns {object[]} Lista plana de materias
  */
-export async function getAllSubjects() {
-  return await getAllSubjectRows()
+export async function getAllSubjects(): Promise<Subject[]> {
+  return await getAllSubjectRows() as Subject[]
 }
 
 /**
@@ -105,8 +120,8 @@ export async function getAllSubjects() {
  * @param {string} id ID de la materia
  * @returns {object|undefined}
  */
-export async function getSubjectById(id) {
-  return await getSubjectRowById(id)
+export async function getSubjectById(id: EntityId): Promise<Subject | undefined> {
+  return await getSubjectRowById(id) as Subject | undefined
 }
 
 /**
@@ -115,15 +130,15 @@ export async function getSubjectById(id) {
  * @param {string} id ID de la materia
  * @param {object} changes Campos a actualizar (name, color, parentSubjectId)
  */
-export async function updateSubject(id, changes) {
-  const existing = await getSubjectRowById(id)
+export async function updateSubject(id: EntityId, changes: SubjectChanges): Promise<void> {
+  const existing = await getSubjectRowById(id) as Subject | undefined
   if (!existing) {
     throw new Error(`Materia con id "${id}" no encontrada.`)
   }
 
   if (changes.name !== undefined) {
     validateNameRequired(changes.name)
-    const allSubjects = await getAllSubjectRowsIncludingArchived()
+    const allSubjects = await getAllSubjectRowsIncludingArchived() as Subject[]
     const parentId = changes.parentSubjectId !== undefined
       ? changes.parentSubjectId
       : existing.parentSubjectId
@@ -132,7 +147,7 @@ export async function updateSubject(id, changes) {
   }
 
   if (changes.parentSubjectId !== undefined) {
-    const allSubjects = await getAllSubjectRowsIncludingArchived()
+    const allSubjects = await getAllSubjectRowsIncludingArchived() as Subject[]
     validateMaxDepth(changes.parentSubjectId, allSubjects)
     validateNameUnique(changes.name || existing.name, changes.parentSubjectId, id, allSubjects)
   }
@@ -146,7 +161,7 @@ export async function updateSubject(id, changes) {
  * Orden: secciones hijas -> padre.
  * @param {string} id ID de la materia raíz
  */
-export async function archiveSubject(id) {
+export async function archiveSubject(id: EntityId): Promise<void> {
   return runTransaction(async () => {
     // 1. Archivar secciones hijas
     await archiveChildSubjects(id)
@@ -162,12 +177,12 @@ export async function archiveSubject(id) {
  * Orden: padre -> secciones hijas.
  * @param {string} id ID de la materia raíz
  */
-export async function unarchiveSubject(id) {
+export async function unarchiveSubject(id: EntityId): Promise<void> {
   return runTransaction(async () => {
-    const subject = await getSubjectRowById(id)
+    const subject = await getSubjectRowById(id) as Subject | undefined
     if (!subject) return
 
-    let allSubjects = await getAllSubjectRowsIncludingArchived()
+    let allSubjects = await getAllSubjectRowsIncludingArchived() as Subject[]
 
     // 1. Desarchivar el subject padre con nombre navegable único
     allSubjects = await updateArchiveStateWithUniqueName(subject, false, allSubjects)
@@ -186,7 +201,7 @@ export async function unarchiveSubject(id) {
  * La materia padre NO se archiva.
  * @param {string} id ID de la sección
  */
-export async function archiveSection(id) {
+export async function archiveSection(id: EntityId): Promise<void> {
   return runTransaction(async () => {
     await updateSubjectRow(id, { archived: true })
   })
@@ -198,15 +213,15 @@ export async function archiveSection(id) {
  * para que la sección y sus notas tengan una ruta navegable.
  * @param {string} id ID de la sección
  */
-export async function unarchiveSection(id) {
+export async function unarchiveSection(id: EntityId): Promise<void> {
   return runTransaction(async () => {
-    const section = await getSubjectRowById(id)
+    const section = await getSubjectRowById(id) as Subject | undefined
     if (!section) return
 
-    let allSubjects = await getAllSubjectRowsIncludingArchived()
+    let allSubjects = await getAllSubjectRowsIncludingArchived() as Subject[]
 
     if (section.parentSubjectId) {
-      const parent = await getSubjectRowById(section.parentSubjectId)
+      const parent = await getSubjectRowById(section.parentSubjectId) as Subject | undefined
       if (parent?.archived && !parent.deletedAt) {
         allSubjects = await updateArchiveStateWithUniqueName(parent, false, allSubjects)
       }
@@ -228,8 +243,8 @@ export async function unarchiveSection(id) {
  *   ]
  * }
  */
-export async function getSubjectTree() {
-  const allSubjects = await getAllSubjectRows()
+export async function getSubjectTree(): Promise<SubjectTree> {
+  const allSubjects = await getAllSubjectRows() as Subject[]
   const inboxCount = await getInboxCount()
 
   // Separar raíces y secciones
@@ -237,10 +252,10 @@ export async function getSubjectTree() {
   const children = allSubjects.filter(s => s.parentSubjectId)
 
   // Construir árbol con conteos
-  const tree = []
+  const tree: Subject[] = []
   for (const root of roots) {
     const rootCount = await countNotesBySubject(root.id)
-    const rootChildren = []
+    const rootChildren: Subject[] = []
 
     for (const child of children.filter(c => c.parentSubjectId === root.id)) {
       const childCount = await countNotesBySubject(child.id)
