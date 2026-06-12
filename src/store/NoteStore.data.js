@@ -5,25 +5,12 @@
 import * as NoteService from '../services/sqlite/notes.js'
 import * as SubjectService from '../services/SubjectService.js'
 import { DatabaseError } from '../services/sqlite/errors.js'
-import { showErrorToast } from '../components/common/Toast.js'
+import { emitStoreError, runStoreAction } from './NoteStore.errors.js'
 import { getFilteredNotes as applyFilters } from './noteFilters.js'
 import { state, notify } from './NoteStore.state.js'
 
 // Umbral para alerta de papelera llena
 const TRASH_WARNING_THRESHOLD = 50
-
-async function runStoreAction(operation, errorMessage, action) {
-  try {
-    return await action()
-  } catch (error) {
-    console.error(`[NoteStore] ${operation} failed:`, error)
-    if (error instanceof DatabaseError) {
-      showErrorToast(errorMessage)
-      return undefined
-    }
-    throw error
-  }
-}
 
 export async function loadNotes() {
   state.notes = await NoteService.getAllNotes()
@@ -106,7 +93,11 @@ export async function updateNoteSilent(id, changes) {
   } catch (error) {
     console.error('[NoteStore] updateNoteSilent failed:', error)
     if (error instanceof DatabaseError) {
-      showErrorToast('No se pudo actualizar la nota.')
+      emitStoreError({
+        operation: 'updateNoteSilent',
+        message: 'No se pudo actualizar la nota.',
+        cause: error,
+      })
     }
     throw error
   }

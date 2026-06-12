@@ -7,22 +7,8 @@
 // =============================================================
 
 import * as AcademicEventService from '../services/AcademicEventService.js'
-import { DatabaseError } from '../services/sqlite/errors.js'
-import { showErrorToast } from '../components/common/Toast.js'
+import { runStoreAction } from './NoteStore.errors.js'
 import { state, notify } from './NoteStore.state.js'
-
-async function runStoreAction(operation, errorMessage, action) {
-  try {
-    return await action()
-  } catch (error) {
-    console.error(`[NoteStore] ${operation} failed:`, error)
-    if (error instanceof DatabaseError) {
-      showErrorToast(errorMessage)
-      return undefined
-    }
-    throw error
-  }
-}
 
 function sortAcademicEvents(events) {
   return [...events].sort((a, b) => {

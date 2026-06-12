@@ -4,6 +4,7 @@ import * as SubjectRows from '../../../src/services/sqlite/subjects.js'
 import * as SubjectService from '../../../src/services/SubjectService.js'
 import * as noteFilters from '../../../src/store/noteFilters.js'
 import { DatabaseError } from '../../../src/services/sqlite/errors.js'
+import { subscribeToStoreErrors } from '../../../src/store/NoteStore.errors.js'
 import { state, subscribe } from '../../../src/store/NoteStore.state.js'
 import * as NoteStoreData from '../../../src/store/NoteStore.data.js'
 
@@ -196,6 +197,25 @@ describe('NoteStore.data', () => {
 
       expect(NoteService.createNote).toHaveBeenCalledWith('Sin título', '# ', null)
     })
+
+    it('emite error de store y retorna undefined ante DatabaseError', async () => {
+      const storeError = vi.fn()
+      const unsubscribe = subscribeToStoreErrors(storeError)
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const error = new DatabaseError('createNote', new Error('boom'))
+      NoteService.createNote.mockRejectedValueOnce(error)
+
+      await expect(NoteStoreData.createNote('T', 'C')).resolves.toBeUndefined()
+
+      expect(storeError).toHaveBeenCalledWith({
+        operation: 'createNote',
+        message: 'No se pudo crear la nota. Intenta de nuevo.',
+        cause: error,
+      })
+
+      unsubscribe()
+      errorSpy.mockRestore()
+    })
   })
 
   describe('updateNote()', () => {
@@ -249,6 +269,25 @@ describe('NoteStore.data', () => {
 
       await expect(NoteStoreData.updateNoteSilent('note-1', { title: 'Nueva' })).rejects.toBe(error)
 
+      errorSpy.mockRestore()
+    })
+
+    it('emite error de store si falla con DatabaseError', async () => {
+      const storeError = vi.fn()
+      const unsubscribe = subscribeToStoreErrors(storeError)
+      const error = new DatabaseError('updateNote', new Error('boom'))
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      NoteService.updateNote.mockRejectedValueOnce(error)
+
+      await expect(NoteStoreData.updateNoteSilent('note-1', { title: 'Nueva' })).rejects.toBe(error)
+
+      expect(storeError).toHaveBeenCalledWith({
+        operation: 'updateNoteSilent',
+        message: 'No se pudo actualizar la nota.',
+        cause: error,
+      })
+
+      unsubscribe()
       errorSpy.mockRestore()
     })
   })

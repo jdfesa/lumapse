@@ -17,6 +17,7 @@ import { NoteEditor as Composer } from './components/note-editor/NoteEditor.js'
 import { Heatmap } from './components/academic-events/Heatmap.js'
 import { UpcomingAcademicEvents } from './components/academic-events/UpcomingAcademicEvents.js'
 import { confirmDialog } from './components/common/ConfirmDialog.js'
+import { showErrorToast } from './components/common/Toast.js'
 import { renderAppShell } from './layout/appShell.js'
 import { initDrawer } from './layout/drawerController.js'
 // import { seedTiktokData, seedStressTest } from './utils/seeder.js'
@@ -37,6 +38,9 @@ async function initApp() {
   
   // 4. Inicializar drawer (búsqueda, materias, tema, archivados)
   initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS })
+  NoteStore.subscribeToStoreErrors(({ message }) => {
+    showErrorToast(message)
+  })
 
   // 5. Calendar popup toggle (DP-006)
   const btnCalendar = document.getElementById('btn-toggle-calendar')

@@ -6,6 +6,7 @@
 // en los componentes que ya dependen de NoteStore.
 
 export { subscribe, getState } from './NoteStore.state.js'
+export { subscribeToStoreErrors } from './NoteStore.errors.js'
 export * from './NoteStore.data.js'
 export * from './NoteStore.ui.js'
 export * from './NoteStore.academicEvents.js'

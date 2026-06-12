@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import * as AcademicEventService from '../../../src/services/AcademicEventService.js'
 import { DatabaseError } from '../../../src/services/sqlite/errors.js'
-import { showErrorToast } from '../../../src/components/common/Toast.js'
+import { subscribeToStoreErrors } from '../../../src/store/NoteStore.errors.js'
 import { state, subscribe } from '../../../src/store/NoteStore.state.js'
 import * as NoteStoreAcademicEvents from '../../../src/store/NoteStore.academicEvents.js'
 
@@ -12,10 +12,6 @@ vi.mock('../../../src/services/AcademicEventService.js', () => ({
   createAcademicEvent: vi.fn(),
   updateAcademicEvent: vi.fn(),
   deleteAcademicEvent: vi.fn().mockResolvedValue(undefined),
-}))
-
-vi.mock('../../../src/components/common/Toast.js', () => ({
-  showErrorToast: vi.fn(),
 }))
 
 function event(overrides = {}) {
@@ -162,14 +158,22 @@ describe('NoteStore.academicEvents', () => {
       expect(state.academicEventsForMonth).toEqual([])
     })
 
-    it('muestra toast y retorna undefined ante DatabaseError', async () => {
+    it('emite error de store y retorna undefined ante DatabaseError', async () => {
+      const storeError = vi.fn()
+      const unsubscribe = subscribeToStoreErrors(storeError)
       const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
-      AcademicEventService.createAcademicEvent.mockRejectedValue(new DatabaseError('createAcademicEvent', new Error('boom')))
+      const error = new DatabaseError('createAcademicEvent', new Error('boom'))
+      AcademicEventService.createAcademicEvent.mockRejectedValue(error)
 
       await expect(NoteStoreAcademicEvents.createAcademicEvent({})).resolves.toBeUndefined()
 
-      expect(showErrorToast).toHaveBeenCalledWith('No se pudo crear la fecha academica. Intenta de nuevo.')
+      expect(storeError).toHaveBeenCalledWith({
+        operation: 'createAcademicEvent',
+        message: 'No se pudo crear la fecha academica. Intenta de nuevo.',
+        cause: error,
+      })
       expect(state.academicEvents).toEqual([])
+      unsubscribe()
       errorSpy.mockRestore()
     })
   })
