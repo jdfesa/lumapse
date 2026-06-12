@@ -84,6 +84,7 @@ Objetivo: sostener alta cohesion, bajo acoplamiento, responsabilidad unica y una
 - [x] Migrar primero modulos puros si el beneficio es claro: `noteFilters`, reglas academicas, validaciones de materias, `NoteTitleService` y formatos de backup.
 - [x] Migrar primer servicio de dominio a TypeScript: `src/services/AcademicEventService.ts`, manteniendo API publica y tests existentes.
 - [x] Migrar servicios puros de decision de backup a TypeScript: `BackupNetworkService.ts` y `BackupReminderService.ts`.
+- [x] Migrar contrato de datos/orquestacion de backup a TypeScript: `BackupDataSource.ts`, `BackupService.ts` y tipos `BackupData`/`CurrentBackupZip`.
 - [ ] Continuar con servicios de dominio/backup solo archivo por archivo, priorizando contratos de entrada/salida y reduccion de errores al refactorizar.
 - [ ] Evaluar store despues de consolidar servicios tipados; no migrarlo en bloque.
 - [ ] Dejar componentes grandes (`NoteEditor`, `NoteList`, `Heatmap`, `BackupView`) para el final; antes conviene seguir separando responsabilidades internas.

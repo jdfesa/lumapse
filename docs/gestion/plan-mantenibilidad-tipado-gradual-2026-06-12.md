@@ -79,7 +79,7 @@ Primeros contratos candidatos:
 | `Subject` / `SubjectTree` | `src/domain/subjects.ts` | Evita ambiguedades entre materia raiz, seccion y arbol con conteos |
 | `AcademicEvent` | `src/domain/academicEvents.ts` | Conecta SQLite, servicio, store, Heatmap y listas |
 | `AppState` | `src/domain/store.ts` | Documenta el shape real del estado reactivo |
-| `BackupManifest` | `src/domain/backup.ts` | Hace estable el contrato restaurable del ZIP |
+| `BackupManifest` / `BackupData` | `src/domain/backup.ts` | Hace estable el contrato restaurable del ZIP y los datos que alimentan el backup |
 | `StoreErrorEvent` | `src/domain/storeErrors.ts` | Permite desacoplar errores del store y feedback UI |
 
 Estos contratos pueden empezar como TypeScript o, si se decide postergar toolchain, como JSDoc bien ubicado. La recomendacion es sumar TypeScript cuando tambien se agregue `typecheck`, para que los contratos sean verificables y no solo decorativos.
@@ -195,6 +195,8 @@ Migrar servicios donde los contratos reducen errores reales:
 - [x] `AcademicEventService.ts`.
 - [x] `BackupNetworkService.ts`.
 - [x] `BackupReminderService.ts`.
+- [x] `BackupDataSource.ts`.
+- [x] `BackupService.ts`.
 - Servicios de backup que transforman datos, sin mezclar flujo nativo/share/storage en la misma tanda.
 - Capa SQLite por tabla, solo si los tipos ya estan claros.
 - `SubjectService.*` despues de estabilizar contratos de arbol y cascadas.
@@ -296,7 +298,7 @@ No hace falta levantar servidor local como parte de estas fases. La validacion v
 ## 10. Orden Recomendado Inmediato
 
 1. Continuar servicios de dominio/backup con contratos de entrada/salida solo cuando el beneficio sea claro.
-2. Evaluar `BackupService`, `BackupDataSource` o `SubjectService.*` como proximos candidatos prudentes.
+2. Evaluar `BackupZipService` o `SubjectService.*` como proximos candidatos prudentes.
 3. Dejar store y componentes grandes para fases posteriores.
 
-El mapa de tests por feature ya quedo alineado, el store ya no depende de feedback visual, el typecheck ya es parte del gate, la primera tanda de modulos puros esta migrada, `AcademicEventService` ya quedo tipado como primer servicio de dominio, y `BackupNetworkService`/`BackupReminderService` cubren decisiones puras de backup. El proximo paso debe seguir siendo pequeno: tipar servicios con tests existentes, sin arrastrar componentes grandes ni mezclar capas.
+El mapa de tests por feature ya quedo alineado, el store ya no depende de feedback visual, el typecheck ya es parte del gate, la primera tanda de modulos puros esta migrada, `AcademicEventService` ya quedo tipado como primer servicio de dominio, y la capa pura de backup ya cubre decisiones, datos y orquestacion. El proximo paso debe seguir siendo pequeno: tipar servicios con tests existentes, sin arrastrar componentes grandes ni mezclar capas.
