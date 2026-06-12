@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import * as NoteService from '../../../src/services/sqlite/notes.js'
 import * as SubjectRows from '../../../src/services/sqlite/subjects.js'
 import * as SubjectService from '../../../src/services/SubjectService.js'
-import * as noteFilters from '../../../src/store/noteFilters.js'
+import * as noteFilters from '../../../src/store/noteFilters.ts'
 import { DatabaseError } from '../../../src/services/sqlite/errors.js'
 import { subscribeToStoreErrors } from '../../../src/store/NoteStore.errors.js'
 import { state, subscribe } from '../../../src/store/NoteStore.state.js'
@@ -37,7 +37,7 @@ vi.mock('../../../src/services/SubjectService.js', () => ({
   unarchiveSection: vi.fn().mockResolvedValue(undefined),
 }))
 
-vi.mock('../../../src/store/noteFilters.js', () => ({
+vi.mock('../../../src/store/noteFilters.ts', () => ({
   getFilteredNotes: vi.fn(() => ['filtered']),
 }))
 

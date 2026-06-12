@@ -7,7 +7,7 @@ import {
   createUniqueFilename,
   getDefaultBackupFiles,
   slugifyBackupPath,
-} from '../../../../src/services/backup/BackupFormat.js'
+} from '../../../../src/services/backup/BackupFormat.ts'
 
 describe('BackupFormat', () => {
   describe('createBackupFilename()', () => {

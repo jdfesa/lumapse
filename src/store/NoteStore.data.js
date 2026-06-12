@@ -6,7 +6,7 @@ import * as NoteService from '../services/sqlite/notes.js'
 import * as SubjectService from '../services/SubjectService.js'
 import { DatabaseError } from '../services/sqlite/errors.js'
 import { emitStoreError, runStoreAction } from './NoteStore.errors.js'
-import { getFilteredNotes as applyFilters } from './noteFilters.js'
+import { getFilteredNotes as applyFilters } from './noteFilters.ts'
 import { state, notify } from './NoteStore.state.js'
 
 // Umbral para alerta de papelera llena

@@ -6,7 +6,7 @@ import { createEditorDraftPayload, EditorDraftCapture, EditorDraftRestorer } fro
 import { setupEditorPopups } from './NoteEditorPopups.js';
 import { renderNoteEditorTemplate } from './NoteEditorTemplate.js';
 import { confirmDialog } from '../common/ConfirmDialog.js';
-import { extractNoteTitle, resolveNoteTitleForSave, splitNoteForEditing, stripRedundantTitleFromContent } from '../../services/NoteTitleService.js';
+import { extractNoteTitle, resolveNoteTitleForSave, splitNoteForEditing, stripRedundantTitleFromContent } from '../../services/NoteTitleService.ts';
 import './NoteEditor.css';
 
 export class NoteEditor {

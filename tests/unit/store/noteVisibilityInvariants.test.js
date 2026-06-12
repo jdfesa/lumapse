@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getFilteredNotes } from '../../../src/store/noteFilters.js'
+import { getFilteredNotes } from '../../../src/store/noteFilters.ts'
 
 const UPDATED_AT = '2024-01-15T10:00:00.000Z'
 

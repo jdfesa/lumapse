@@ -7,6 +7,37 @@
 // para mantener el store enfocado en estado y acciones.
 // =============================================================
 
+import type { EntityId, ISODateString, ISODateTimeString } from '../domain/primitives'
+import type { ViewMode } from '../domain/store'
+
+interface FilterableNote {
+  title?: string | null
+  content?: string | null
+  pinned?: boolean
+  archived?: boolean
+  subjectId?: EntityId | null
+  updatedAt?: ISODateTimeString | null
+}
+
+interface SubjectNode {
+  id: EntityId
+  children?: SubjectNode[]
+}
+
+interface SubjectTreeLike {
+  tree?: SubjectNode[]
+}
+
+interface NoteFilterState<TNote extends FilterableNote> {
+  notes: TNote[]
+  viewMode: ViewMode | string
+  activeSubjectId?: EntityId | null
+  searchQuery?: string | null
+  dateFilter?: ISODateString | null
+  subjects?: SubjectTreeLike | null
+  archivedSubjectIds?: EntityId[]
+}
+
 /**
  * Retorna las notas filtradas y ordenadas.
  * Orden: pinned primero, luego por updatedAt (más reciente primero).
@@ -22,22 +53,24 @@
  * @param {object} state Estado completo del store
  * @returns {object[]} Array de notas filtradas y ordenadas
  */
-export function getFilteredNotes(state) {
+export function getFilteredNotes<TNote extends FilterableNote>(state: NoteFilterState<TNote>): TNote[] {
   let filtered = state.notes
   const archivedIds = new Set(state.archivedSubjectIds || [])
   const query = normalizeSearchText(state.searchQuery)
   const searchGlobally = query && ['inbox', 'subject', 'all'].includes(state.viewMode)
+  const isArchivedSubject = (subjectId: EntityId | null | undefined) =>
+    Boolean(subjectId && archivedIds.has(subjectId))
 
   // 0. Filtrar por viewMode
   if (searchGlobally) {
     filtered = filtered.filter(note =>
-      !note.archived && !archivedIds.has(note.subjectId)
+      !note.archived && !isArchivedSubject(note.subjectId)
     )
   } else {
     switch (state.viewMode) {
       case 'inbox':
         filtered = filtered.filter(note =>
-          !note.archived && !note.subjectId && !archivedIds.has(note.subjectId)
+          !note.archived && !note.subjectId && !isArchivedSubject(note.subjectId)
         )
         break
       case 'subject': {
@@ -45,13 +78,13 @@ export function getFilteredNotes(state) {
         const childIds = getChildSubjectIds(state.subjects, state.activeSubjectId)
         const validIds = [state.activeSubjectId, ...childIds]
         filtered = filtered.filter(note =>
-          !note.archived && validIds.includes(note.subjectId) && !archivedIds.has(note.subjectId)
+          !note.archived && validIds.includes(note.subjectId ?? null) && !isArchivedSubject(note.subjectId)
         )
         break
       }
       case 'archived':
         filtered = filtered.filter(note =>
-          note.archived === true || archivedIds.has(note.subjectId)
+          note.archived === true || isArchivedSubject(note.subjectId)
         )
         break
       case 'trash':
@@ -61,7 +94,7 @@ export function getFilteredNotes(state) {
       case 'all':
       default:
         filtered = filtered.filter(note =>
-          !note.archived && !archivedIds.has(note.subjectId)
+          !note.archived && !isArchivedSubject(note.subjectId)
         )
         break
     }
@@ -91,13 +124,19 @@ export function getFilteredNotes(state) {
     if (a.pinned && !b.pinned) return -1
     if (!a.pinned && b.pinned) return 1
     // Dentro del mismo grupo, más reciente primero
-    return new Date(b.updatedAt) - new Date(a.updatedAt)
+    return getUpdatedAtTime(b.updatedAt) - getUpdatedAtTime(a.updatedAt)
   })
 
   return filtered
 }
 
-export function normalizeSearchText(value) {
+function getUpdatedAtTime(value: ISODateTimeString | null | undefined): number {
+  if (value === null) return 0
+  if (value === undefined) return Number.NaN
+  return new Date(value).getTime()
+}
+
+export function normalizeSearchText(value: unknown): string {
   return (value || '')
     .toString()
     .normalize('NFD')
@@ -113,7 +152,7 @@ export function normalizeSearchText(value) {
  * @param {string} parentId ID de la materia padre
  * @returns {string[]} IDs de las secciones hijas
  */
-export function getChildSubjectIds(subjects, parentId) {
+export function getChildSubjectIds(subjects?: SubjectTreeLike | null, parentId?: EntityId | null): EntityId[] {
   if (!subjects || !subjects.tree) return []
   const parent = subjects.tree.find(s => s.id === parentId)
   if (!parent || !parent.children) return []

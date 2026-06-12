@@ -3,11 +3,32 @@ export const DEFAULT_NOTE_TITLE = 'Sin título'
 const MARKDOWN_HEADING_REGEX = /^\s{0,3}#{1,6}\s+/
 const STRUCTURAL_MARKDOWN_REGEX = /^\s*(?:[-*+]\s+|\d+\.\s+|>\s+|```|\|)/
 
-function normalizeWhitespace(value) {
+interface NoteTitleSource {
+  title?: string | null
+  content?: string | null
+}
+
+interface SplitNoteForEditingResult {
+  title: string
+  body: string
+}
+
+interface NoteContentPresentation {
+  title: string
+  body: string
+  lineOffset: number
+}
+
+interface RedundantTitleLine {
+  lines: string[]
+  titleLineIndex: number
+}
+
+function normalizeWhitespace(value: unknown): string {
   return String(value ?? '').replace(/\s+/g, ' ').trim()
 }
 
-export function cleanTitleCandidate(line) {
+export function cleanTitleCandidate(line: unknown): string {
   return normalizeWhitespace(line)
     .replace(/^\s{0,3}#{1,6}\s+/, '')
     .replace(/^\s*(?:[-*+>]\s+|\d+\.\s+)/, '')
@@ -15,20 +36,20 @@ export function cleanTitleCandidate(line) {
     .trim()
 }
 
-export function normalizeNoteTitle(title) {
+export function normalizeNoteTitle(title: unknown): string {
   const value = normalizeWhitespace(title)
   return value || DEFAULT_NOTE_TITLE
 }
 
-export function isDefaultNoteTitle(title) {
+export function isDefaultNoteTitle(title: unknown): boolean {
   return normalizeNoteTitle(title).toLocaleLowerCase('es') === DEFAULT_NOTE_TITLE.toLocaleLowerCase('es')
 }
 
-function comparableTitle(value) {
+function comparableTitle(value: unknown): string {
   return cleanTitleCandidate(value).toLocaleLowerCase('es')
 }
 
-export function extractNoteTitle(content, fallback = DEFAULT_NOTE_TITLE) {
+export function extractNoteTitle(content: unknown, fallback: unknown = DEFAULT_NOTE_TITLE): string {
   const lines = String(content || '').split('\n')
 
   for (const line of lines) {
@@ -48,11 +69,11 @@ export function extractNoteTitle(content, fallback = DEFAULT_NOTE_TITLE) {
   return normalizeNoteTitle(fallback)
 }
 
-export function shouldDisplayNoteTitle(title) {
+export function shouldDisplayNoteTitle(title: unknown): boolean {
   return Boolean(normalizeWhitespace(title)) && !isDefaultNoteTitle(title)
 }
 
-function lineMatchesNoteTitle(line, title) {
+function lineMatchesNoteTitle(line: string, title: unknown): boolean {
   const trimmed = line.trim()
   const expected = comparableTitle(title)
   if (!trimmed || !expected) return false
@@ -66,7 +87,7 @@ function lineMatchesNoteTitle(line, title) {
   return comparableTitle(trimmed) === expected
 }
 
-function getRedundantTitleLine(content, title) {
+function getRedundantTitleLine(content: unknown, title: unknown): RedundantTitleLine | null {
   const text = String(content || '')
   if (!text.trim() || !shouldDisplayNoteTitle(title)) return null
 
@@ -81,7 +102,7 @@ function getRedundantTitleLine(content, title) {
   return { lines, titleLineIndex }
 }
 
-export function stripRedundantTitleFromContent(content, title) {
+export function stripRedundantTitleFromContent(content: unknown, title: unknown): string {
   const text = String(content || '')
   const redundantTitle = getRedundantTitleLine(text, title)
   if (!redundantTitle) {
@@ -96,14 +117,14 @@ export function stripRedundantTitleFromContent(content, title) {
   return bodyLines.join('\n').trim()
 }
 
-export function splitNoteForEditing(note = {}) {
+export function splitNoteForEditing(note: NoteTitleSource = {}): SplitNoteForEditingResult {
   const title = shouldDisplayNoteTitle(note.title) ? normalizeNoteTitle(note.title) : ''
   const body = stripRedundantTitleFromContent(note.content || '', note.title)
 
   return { title, body }
 }
 
-export function getNoteContentPresentation(note = {}) {
+export function getNoteContentPresentation(note: NoteTitleSource = {}): NoteContentPresentation {
   const title = shouldDisplayNoteTitle(note.title) ? normalizeNoteTitle(note.title) : ''
   const content = String(note.content || '')
   const redundantTitle = getRedundantTitleLine(content, title)
@@ -131,7 +152,7 @@ export function getNoteContentPresentation(note = {}) {
   }
 }
 
-export function resolveNoteTitleForSave(title, content) {
+export function resolveNoteTitleForSave(title: unknown, content: unknown): string {
   const explicitTitle = normalizeWhitespace(title)
   if (explicitTitle) return normalizeNoteTitle(explicitTitle)
 

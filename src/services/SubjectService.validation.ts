@@ -3,8 +3,16 @@
 // Extraído de SubjectService.js para reducir LOC.
 // =============================================================
 
+import type { EntityId } from '../domain/primitives'
+
+interface SubjectValidationRow {
+  id: EntityId
+  name: string
+  parentSubjectId?: EntityId | null
+}
+
 // --- Helper UUID ---
-function generateUUID() {
+function generateUUID(): string {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
     return crypto.randomUUID()
   }
@@ -22,8 +30,8 @@ function generateUUID() {
  * @param {string} name Nombre de la materia
  * @throws {Error} Si el nombre está vacío o es solo espacios
  */
-function validateNameRequired(name) {
-  if (!name || !name.trim()) {
+function validateNameRequired(name: unknown): void {
+  if (!name || !String(name).trim()) {
     throw new Error('El nombre de la materia es obligatorio.')
   }
 }
@@ -37,7 +45,12 @@ function validateNameRequired(name) {
  * @param {object[]} allSubjects Lista completa de materias
  * @throws {Error} Si ya existe una materia con ese nombre en ese nivel
  */
-function validateNameUnique(name, parentSubjectId, excludeId, allSubjects) {
+function validateNameUnique(
+  name: string,
+  parentSubjectId: EntityId | null,
+  excludeId: EntityId | null,
+  allSubjects: SubjectValidationRow[],
+): void {
   const normalized = name.trim().toLowerCase()
   const duplicate = allSubjects.find(s =>
     s.id !== excludeId &&
@@ -59,7 +72,7 @@ function validateNameUnique(name, parentSubjectId, excludeId, allSubjects) {
  * @param {object[]} allSubjects Lista completa de materias
  * @throws {Error} Si el padre ya es una sección (nivel 2)
  */
-function validateMaxDepth(parentSubjectId, allSubjects) {
+function validateMaxDepth(parentSubjectId: EntityId | null, allSubjects: SubjectValidationRow[]): void {
   if (!parentSubjectId) return // Nivel 1, siempre válido
 
   const parent = allSubjects.find(s => s.id === parentSubjectId)

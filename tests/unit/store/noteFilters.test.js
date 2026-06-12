@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getChildSubjectIds, getFilteredNotes } from '../../../src/store/noteFilters.js'
+import { getChildSubjectIds, getFilteredNotes } from '../../../src/store/noteFilters.ts'
 
 function makeNote(overrides = {}) {
   return {

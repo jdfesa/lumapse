@@ -14,7 +14,7 @@ import {
   archiveChildSubjects
 } from './sqlite/subjects.js'
 import { runTransaction } from './sqlite/connection.js'
-import { generateUUID, validateNameRequired, validateNameUnique, validateMaxDepth } from './SubjectService.validation.js'
+import { generateUUID, validateNameRequired, validateNameUnique, validateMaxDepth } from './SubjectService.validation.ts'
 
 // --- Paleta de colores predefinidos (estilo Notion) ---
 // 8 colores armoniosos, aptos para dark/light mode

@@ -10,9 +10,9 @@ import {
   createBackupFilename,
   createUniqueFilename,
   slugifyBackupPath,
-} from './BackupFormat.js'
+} from './BackupFormat.ts'
 import { createZipContent } from './BackupZipArchive.js'
-import { stripRedundantTitleFromContent } from '../NoteTitleService.js'
+import { stripRedundantTitleFromContent } from '../NoteTitleService.ts'
 
 export const BACKUP_MIME_TYPE = 'application/zip'
 
