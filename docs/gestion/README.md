@@ -14,6 +14,7 @@ de Gómez (2014).
 | [`lineas-base.md`](./lineas-base.md) | Registro de líneas base (tags Git) y releases formales | ✅ Completado |
 | [`seguimiento-velocidad.md`](./seguimiento-velocidad.md) | Tabla de velocidad: SP planificados vs. entregados por hito | ✅ Completado |
 | [`checklist-validacion-android.md`](./checklist-validacion-android.md) | Checklist de validacion manual en dispositivo Android real para Hito 05 | 🔄 Preparado |
+| [`plan-mantenibilidad-tipado-gradual-2026-06-12.md`](./plan-mantenibilidad-tipado-gradual-2026-06-12.md) | Estrategia por fases para modularidad, bajo acoplamiento y tipado gradual JS/TS | 🔄 Activo |
 | [`historico/`](./historico/) | Snapshots operativos cerrados preservados como evidencia de proceso | 📦 Archivo |
 
 ---
