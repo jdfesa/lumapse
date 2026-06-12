@@ -2,7 +2,14 @@
 """
 Lumapse — Cheat Sheet de Defensa
 Genera una hoja de defensa con métricas y decisiones clave del proyecto.
-Uso: python3 scripts/generate-defense-cheatsheet.py
+
+Uso intencional:
+  python3 scripts/generate-defense-cheatsheet.py --force
+
+Este script no forma parte del flujo diario de desarrollo. El cheat sheet
+es un artefacto personal de cierre/defensa y solo debería regenerarse cuando
+el proyecto esté completo o durante las últimas 1-2 semanas antes de la
+presentación del trabajo.
 """
 
 import os
@@ -37,6 +44,17 @@ CREATE_TABLE_RE = re.compile(
 )
 GENERATED_DATE_RE = re.compile(r"^\*\*Generado automáticamente:\*\*\s+(\d{4}-\d{2}-\d{2})\s*$", re.MULTILINE)
 TABLE_CONSTRAINTS = {"PRIMARY", "FOREIGN", "UNIQUE", "CHECK", "CONSTRAINT"}
+USAGE_NOTICE = """Uso:
+  python3 scripts/generate-defense-cheatsheet.py --force
+
+Este generador sobrescribe docs/gestion/cheatsheet-defensa.md.
+Ejecutarlo solo cuando el proyecto esté completo o durante las últimas
+1-2 semanas antes de la defensa/presentación del trabajo.
+
+No se recomienda regenerarlo en el trabajo diario: las métricas y respuestas
+del tribunal tienen sentido cuando el proyecto ya está maduro y cerca de
+entregarse.
+"""
 
 
 def relative_path(path):
@@ -118,6 +136,8 @@ def parse_requirements():
         status = cells[5]
         if status.startswith("Obsoleto"):
             status = "Obsoleto"
+        elif status.startswith("Postergado"):
+            status = "Postergado"
 
         counts_by_status[status] = counts_by_status.get(status, 0) + 1
         rf_rows.append({
@@ -395,7 +415,7 @@ def key_decisions(adrs, product_decisions):
                 "summary": first_sentence(adr["decision"]),
             })
 
-    for decision_id in ("DP-003", "DP-004", "DP-001"):
+    for decision_id in ("DP-003", "DP-004", "DP-006", "DP-001"):
         decision = decisions_by_id.get(decision_id)
         if decision:
             rows.append({
@@ -417,6 +437,7 @@ def build_markdown(context):
 
     implemented = rf["by_status"].get("Implementado", 0)
     pending = rf["by_status"].get("Pendiente", 0)
+    postponed = rf["by_status"].get("Postergado", 0)
     obsolete = rf["by_status"].get("Obsoleto", 0)
 
     lines = [
@@ -429,10 +450,11 @@ def build_markdown(context):
         "|---|---|",
         "| Archivos de código (JS/TS/CSS) | {0} |".format(format_number(code["files"])),
         "| Líneas de código fuente | {0} |".format(format_number(code["loc"])),
-        "| Requisitos Funcionales | {0} ({1} implementados, {2} pendientes, {3} obsoletos) |".format(
+        "| Requisitos Funcionales | {0} ({1} implementados, {2} pendiente(s), {3} postergados, {4} obsoletos) |".format(
             rf["total"],
             implemented,
             pending,
+            postponed,
             obsolete,
         ),
         "| Historias de Usuario | {0} |".format(hu["total"]),
@@ -489,6 +511,10 @@ def build_markdown(context):
         "- **¿Por qué no hay `ON UPDATE` en las FKs?** → Sección 4 del DDL: las PK son UUID v4 generadas en cliente e inmutables por diseño.",
         "- **¿Por qué Capacitor sobre PWA pura?** → ADR-005: APK nativo, hardware real, distribución directa y persistencia local más robusta.",
         "- **¿Por qué SQLite sobre IndexedDB?** → ADR-006: modelo relacional, FKs, consultas consistentes y tooling web/native unificado.",
+        "- **¿Por qué no agregaste contador de palabras?** → RF-006 quedó postergado: Lumapse prioriza captura rápida. Si estudiantes reales lo piden, se puede sumar como metadato sutil calculado en UI.",
+        "- **¿Por qué no mostrás online/offline?** → RF-024 quedó postergado: sin sincronización ni backup, el estado de red no cambia el flujo y podría sugerir una sincronización inexistente.",
+        "- **¿Por qué no hay onboarding o tutorial Markdown?** → DP-006: la primera release valida una interfaz autoexplicativa. Lumapse permite escribir texto plano; Markdown es una mejora, no una barrera de entrada.",
+        "- **¿Export/import está implementado?** → Parcialmente. `RF-016` se posterga porque compartir una nota individual solo vale la pena si abre el share sheet nativo de Android; si termina copiando contenido, duplica el botón Copiar. `RF-017` ya está implementado como backup manual `.zip` legible/restaurable con salida externa. `RF-018` queda como deuda posterior por importación, merge y materias/secciones.",
         "",
         "## Fuentes",
         "",
@@ -531,6 +557,16 @@ def print_header():
 
 def main():
     print_header()
+
+    if "--help" in sys.argv or "-h" in sys.argv:
+        print(USAGE_NOTICE)
+        return 0
+
+    if "--force" not in sys.argv:
+        print("⚠️  Generación omitida para evitar sobrescribir el cheat sheet por accidente.")
+        print()
+        print(USAGE_NOTICE)
+        return 2
 
     try:
         print("📥 Recolectando métricas y decisiones...")
