@@ -9,7 +9,7 @@ import { registerPlugin } from '@capacitor/core'
 import {
   getBackupNetworkState,
   resolveBackupNetworkState,
-} from './BackupNetworkService.js'
+} from './BackupNetworkService.ts'
 
 const Network = registerPlugin('Network')
 

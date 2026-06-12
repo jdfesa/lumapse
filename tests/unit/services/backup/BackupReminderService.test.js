@@ -4,7 +4,7 @@ import {
   BACKUP_REMINDER_REASONS,
   createBackupTimestamp,
   getBackupReminderState,
-} from '../../../../src/services/backup/BackupReminderService.js'
+} from '../../../../src/services/backup/BackupReminderService.ts'
 
 const NOW = new Date('2026-06-03T12:00:00.000Z')
 

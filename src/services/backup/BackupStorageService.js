@@ -5,7 +5,7 @@
 // para recordatorios locales. No guarda datos de usuario.
 // =============================================================
 
-import { createBackupTimestamp } from './BackupReminderService.js'
+import { createBackupTimestamp } from './BackupReminderService.ts'
 
 export const BACKUP_STORAGE_KEYS = Object.freeze({
   LAST_BACKUP_CREATED_AT: 'lumapse-backup-last-created-at',

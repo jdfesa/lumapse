@@ -6,7 +6,7 @@
 // sin acoplar componentes a servicios ni a SQLite.
 // =============================================================
 
-import * as AcademicEventService from '../services/AcademicEventService.js'
+import * as AcademicEventService from '../services/AcademicEventService.ts'
 import { runStoreAction } from './NoteStore.errors.js'
 import { state, notify } from './NoteStore.state.js'
 

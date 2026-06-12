@@ -3,7 +3,7 @@ import {
   BACKUP_CONNECTION_TYPES,
   getBackupNetworkState,
   resolveBackupNetworkState,
-} from '../../../../src/services/backup/BackupNetworkService.js'
+} from '../../../../src/services/backup/BackupNetworkService.ts'
 
 describe('BackupNetworkService', () => {
   describe('getBackupNetworkState()', () => {

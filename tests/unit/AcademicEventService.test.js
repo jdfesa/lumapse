@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import * as EventRows from '../../src/services/sqlite/academicEvents.js'
 import * as SubjectRows from '../../src/services/sqlite/subjects.js'
-import * as AcademicEventService from '../../src/services/AcademicEventService.js'
+import * as AcademicEventService from '../../src/services/AcademicEventService.ts'
 
 vi.mock('../../src/services/sqlite/academicEvents.js', () => ({
   createAcademicEventRow: vi.fn().mockResolvedValue(undefined),

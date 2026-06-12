@@ -6,7 +6,7 @@ import {
   getCurrentBackupReminder,
   getExternalBackupReadiness,
 } from '../../../../src/services/backup/BackupFlowService.js'
-import { BACKUP_REMINDER_REASONS } from '../../../../src/services/backup/BackupReminderService.js'
+import { BACKUP_REMINDER_REASONS } from '../../../../src/services/backup/BackupReminderService.ts'
 
 const WIFI_STATE = {
   connected: true,

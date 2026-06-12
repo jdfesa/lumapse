@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import * as AcademicEventService from '../../../src/services/AcademicEventService.js'
+import * as AcademicEventService from '../../../src/services/AcademicEventService.ts'
 import { DatabaseError } from '../../../src/services/sqlite/errors.js'
 import { subscribeToStoreErrors } from '../../../src/store/NoteStore.errors.js'
 import { state, subscribe } from '../../../src/store/NoteStore.state.js'
 import * as NoteStoreAcademicEvents from '../../../src/store/NoteStore.academicEvents.js'
 
-vi.mock('../../../src/services/AcademicEventService.js', () => ({
+vi.mock('../../../src/services/AcademicEventService.ts', () => ({
   getAcademicEvents: vi.fn().mockResolvedValue([]),
   getAcademicEventsByMonth: vi.fn().mockResolvedValue([]),
   getUpcomingAcademicEvents: vi.fn().mockResolvedValue([]),

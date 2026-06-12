@@ -12,7 +12,7 @@ import {
   getCurrentBackupReminder,
   getExternalBackupReadiness,
 } from '../../services/backup/BackupFlowService.js'
-import { BACKUP_REMINDER_REASONS } from '../../services/backup/BackupReminderService.js'
+import { BACKUP_REMINDER_REASONS } from '../../services/backup/BackupReminderService.ts'
 import { showErrorToast } from '../common/Toast.js'
 import './BackupView.css'
 
