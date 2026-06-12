@@ -108,7 +108,7 @@ pub fn collect_context(project_root: &Path) -> Result<TraceabilityContext, Strin
     // 6. SRC JS Comments
     let src_dir = project_root.join("src");
     let mut js_files = Vec::new();
-    collect_js_files(&src_dir, &mut js_files);
+    collect_code_files(&src_dir, &mut js_files);
     let js_block_re = Regex::new(r"(?s)/\*.*?\*/").unwrap();
     let js_line_re = Regex::new(r"//[^\n\r]*").unwrap();
     let html_comment_re = Regex::new(r"(?s)<!--.*?-->").unwrap();
@@ -152,12 +152,14 @@ pub fn collect_context(project_root: &Path) -> Result<TraceabilityContext, Strin
     Ok(ctx)
 }
 
-fn collect_js_files(dir: &Path, files: &mut Vec<PathBuf>) {
+fn collect_code_files(dir: &Path, files: &mut Vec<PathBuf>) {
     if let Ok(entries) = fs::read_dir(dir) {
         for entry in entries.flatten() {
             let path = entry.path();
-            if path.is_dir() { collect_js_files(&path, files); }
-            else if path.extension().and_then(|e| e.to_str()) == Some("js") { files.push(path); }
+            if path.is_dir() { collect_code_files(&path, files); }
+            else if matches!(path.extension().and_then(|e| e.to_str()), Some("js") | Some("ts")) {
+                files.push(path);
+            }
         }
     }
 }

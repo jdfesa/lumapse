@@ -19,6 +19,7 @@ ADR_RE = re.compile(r"\bADR-\d{3}\b")
 JS_BLOCK_COMMENT_RE = re.compile(r"/\*.*?\*/", re.DOTALL)
 JS_LINE_COMMENT_RE = re.compile(r"//[^\n\r]*")
 HTML_COMMENT_RE = re.compile(r"<!--.*?-->", re.DOTALL)
+CODE_COMMENT_EXTENSIONS = (".js", ".ts")
 
 
 def project_path(*parts):
@@ -144,9 +145,12 @@ def extract_js_comments(text):
 
 
 def find_rf_in_js_comments(directory):
-    """Busca menciones de RF-XXX en comentarios de src/**/*.js."""
-    pattern = os.path.join(directory, "**", "*.js")
-    files = sorted(glob.glob(pattern, recursive=True))
+    """Busca menciones de RF-XXX en comentarios de src/**/*.js y src/**/*.ts."""
+    files = []
+    for extension in CODE_COMMENT_EXTENSIONS:
+        pattern = os.path.join(directory, "**", "*{0}".format(extension))
+        files.extend(glob.glob(pattern, recursive=True))
+    files = sorted(set(files))
     rf_by_file = {}
     files_by_rf = {}
 
@@ -376,7 +380,7 @@ def print_header(context):
     print("   - BACKLOG.md")
     print("   - CHANGELOG.md")
     print(
-        "   - src/ ({0} archivos .js escaneados)".format(
+        "   - src/ ({0} archivos .js/.ts escaneados)".format(
             len(context["js"]["files"])
         )
     )
