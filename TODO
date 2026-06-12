@@ -82,7 +82,10 @@ Objetivo: sostener alta cohesion, bajo acoplamiento, responsabilidad unica y una
 - [x] Introducir `npm run typecheck` y sumarlo al gate `verify`.
 - [x] Migrar primer modulo puro a TypeScript: `src/services/AcademicEventRules.ts`.
 - [x] Migrar primero modulos puros si el beneficio es claro: `noteFilters`, reglas academicas, validaciones de materias, `NoteTitleService` y formatos de backup.
-- [ ] Evaluar despues servicios de dominio y store, priorizando contratos de entrada/salida y reduccion de errores al refactorizar.
+- [x] Migrar primer servicio de dominio a TypeScript: `src/services/AcademicEventService.ts`, manteniendo API publica y tests existentes.
+- [x] Migrar servicios puros de decision de backup a TypeScript: `BackupNetworkService.ts` y `BackupReminderService.ts`.
+- [ ] Continuar con servicios de dominio/backup solo archivo por archivo, priorizando contratos de entrada/salida y reduccion de errores al refactorizar.
+- [ ] Evaluar store despues de consolidar servicios tipados; no migrarlo en bloque.
 - [ ] Dejar componentes grandes (`NoteEditor`, `NoteList`, `Heatmap`, `BackupView`) para el final; antes conviene seguir separando responsabilidades internas.
 - [x] Reducir acoplamiento Store -> UI: `NoteStore.*` emite errores de dominio y la capa UI decide como mostrarlos.
 - [ ] Mantener Svelte/otro framework fuera del alcance por ahora; reabrir solo si la UI manual se vuelve costosa de mantener y existe un plan de migracion incremental verificable.
