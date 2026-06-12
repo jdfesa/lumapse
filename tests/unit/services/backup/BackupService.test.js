@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import * as BackupDataSource from '../../../../src/services/backup/BackupDataSource.js'
+import * as BackupDataSource from '../../../../src/services/backup/BackupDataSource.ts'
 import * as BackupZipService from '../../../../src/services/backup/BackupZipService.js'
 import {
   EMPTY_BACKUP_ERROR,
   createCurrentBackupZip,
-} from '../../../../src/services/backup/BackupService.js'
+} from '../../../../src/services/backup/BackupService.ts'
 
-vi.mock('../../../../src/services/backup/BackupDataSource.js', () => ({
+vi.mock('../../../../src/services/backup/BackupDataSource.ts', () => ({
   collectBackupData: vi.fn(),
   countBackupItems: vi.fn(),
   hasBackupData: vi.fn(),

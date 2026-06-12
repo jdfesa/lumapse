@@ -9,8 +9,9 @@ import {
   collectBackupData,
   countBackupItems,
   hasBackupData,
-} from './BackupDataSource.js'
+} from './BackupDataSource'
 import { generateBackupZip } from './BackupZipService.js'
+import type { CurrentBackupZip, GeneratedBackupZip, BackupZipOptions } from '../../domain/backup'
 
 export const EMPTY_BACKUP_ERROR = 'Todavia no hay notas, materias ni fechas para respaldar.'
 
@@ -20,14 +21,14 @@ export const EMPTY_BACKUP_ERROR = 'Todavia no hay notas, materias ni fechas para
  * @param {object} options Opciones delegadas al generador ZIP
  * @returns {Promise<{content: Blob|ArrayBuffer|string, contentType: string, filename: string, manifest: object, counts: object}>}
  */
-export async function createCurrentBackupZip(options = {}) {
+export async function createCurrentBackupZip(options: BackupZipOptions = {}): Promise<CurrentBackupZip> {
   const data = await collectBackupData()
 
   if (!hasBackupData(data)) {
     throw new Error(EMPTY_BACKUP_ERROR)
   }
 
-  const result = await generateBackupZip(data, options)
+  const result = await generateBackupZip(data, options) as GeneratedBackupZip
 
   return {
     ...result,

@@ -6,7 +6,7 @@ import {
   collectBackupData,
   countBackupItems,
   hasBackupData,
-} from '../../../../src/services/backup/BackupDataSource.js'
+} from '../../../../src/services/backup/BackupDataSource.ts'
 
 vi.mock('../../../../src/services/sqlite/academicEvents.js', () => ({
   getAcademicEventRows: vi.fn(),

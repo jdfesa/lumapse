@@ -6,9 +6,9 @@
 // =============================================================
 
 import { getCurrentBackupNetworkState } from './BackupNativeNetworkService.js'
-import { collectBackupData, hasBackupData } from './BackupDataSource.js'
+import { collectBackupData, hasBackupData } from './BackupDataSource.ts'
 import { getBackupReminderState } from './BackupReminderService.ts'
-import { createCurrentBackupZip } from './BackupService.js'
+import { createCurrentBackupZip } from './BackupService.ts'
 import { shareBackupZip } from './BackupShareService.js'
 import {
   getBackupReminderTimestamps,

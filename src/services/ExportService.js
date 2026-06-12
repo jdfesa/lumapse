@@ -5,7 +5,7 @@
 // web, delegando el contenido al contrato canonico de backup v1.
 // =============================================================
 
-import { createCurrentBackupZip } from './backup/BackupService.js'
+import { createCurrentBackupZip } from './backup/BackupService.ts'
 
 export function triggerBrowserDownload(content, filename, deps = {}) {
   const doc = deps.document || globalThis.document

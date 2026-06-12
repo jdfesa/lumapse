@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('../../../src/services/backup/BackupService.js', () => ({
+vi.mock('../../../src/services/backup/BackupService.ts', () => ({
   createCurrentBackupZip: vi.fn(),
 }))
 
-import { createCurrentBackupZip } from '../../../src/services/backup/BackupService.js'
+import { createCurrentBackupZip } from '../../../src/services/backup/BackupService.ts'
 import {
   exportAllNotesToZip,
   triggerBrowserDownload,
