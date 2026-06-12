@@ -12,7 +12,7 @@ import {
   getInitialSubjectId,
   validateAcademicEventPayload,
 } from './AcademicEventDialog.helpers.js'
-import { ACADEMIC_EVENT_TITLE_MAX_LENGTH } from '../../services/AcademicEventRules.js'
+import { ACADEMIC_EVENT_TITLE_MAX_LENGTH } from '../../services/AcademicEventRules.ts'
 import { AcademicEventSubjectPicker } from './AcademicEventSubjectPicker.js'
 import {
   ACADEMIC_EVENT_TYPE_ORDER,

@@ -17,7 +17,7 @@ import {
   deleteAcademicEventRow,
 } from './sqlite/academicEvents.js'
 import { getSubjectRowById } from './sqlite/subjects.js'
-import { ACADEMIC_EVENT_TITLE_MAX_LENGTH } from './AcademicEventRules.js'
+import { ACADEMIC_EVENT_TITLE_MAX_LENGTH } from './AcademicEventRules.ts'
 
 export const ACADEMIC_EVENT_TYPES = Object.freeze(['parcial', 'final', 'tp', 'exposicion'])
 export { ACADEMIC_EVENT_TITLE_MAX_LENGTH }

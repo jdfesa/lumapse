@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { ACADEMIC_EVENT_TITLE_MAX_LENGTH } from '../../../../src/services/AcademicEventRules.js'
+import { ACADEMIC_EVENT_TITLE_MAX_LENGTH } from '../../../../src/services/AcademicEventRules.ts'
 
 const storeMock = vi.hoisted(() => ({
   state: null,
