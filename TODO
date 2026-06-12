@@ -76,8 +76,8 @@
 
 Objetivo: sostener alta cohesion, bajo acoplamiento, responsabilidad unica y una base facil de revisar por humanos e IA. Estas tareas no son una reescritura ni bloquean el release; se incorporan solo cuando el costo-beneficio aporte claridad real.
 
-- [ ] Espejar la nueva organizacion por feature en `tests/unit/components/` (`academic-events/`, `backup/`, `common/`, `feed/`, `note-editor/`) para que tests y codigo tengan el mismo mapa mental.
-- [ ] Definir estrategia de tipado gradual antes de introducir TypeScript: documentar alcance, criterios de migracion, archivos candidatos y reglas de convivencia JS/TS.
+- [x] Definir estrategia de mantenibilidad y tipado gradual en [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md).
+- [x] Espejar la nueva organizacion por feature en `tests/unit/components/` (`academic-events/`, `backup/`, `common/`, `feed/`, `note-editor/`) para que tests y codigo tengan el mismo mapa mental.
 - [ ] Empezar por tipos/contratos compartidos de dominio (`Note`, `Subject`, `AcademicEvent`, `AppState`, `BackupManifest`) usando JSDoc o TypeScript gradual, sin migrar componentes DOM grandes de entrada.
 - [ ] Migrar primero modulos puros si el beneficio es claro: `noteFilters`, reglas academicas, validaciones de materias, `NoteTitleService` y formatos de backup.
 - [ ] Evaluar despues servicios de dominio y store, priorizando contratos de entrada/salida y reduccion de errores al refactorizar.

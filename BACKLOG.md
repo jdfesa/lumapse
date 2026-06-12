@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 05 — Testing, Calidad y Distribución
 > **Hito 04:** Cerrado formalmente el 2026-06-01
-> **Última actualización:** 2026-06-11 — componentes UI organizados por feature y plan gradual de mantenibilidad registrado
+> **Última actualización:** 2026-06-12 — estrategia de mantenibilidad y tipado gradual documentada
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -22,6 +22,8 @@ El benchmark contra apps como Markor refuerza una deuda crítica: Lumapse no deb
 El benchmark visual contra Notion mobile derivó en `RF-028`: controles opcionales de formato e inserción para enriquecer notas Markdown sin convertir Lumapse en un editor pesado. Las fases completadas incluyen slash commands, menú `+`, botón `Aa`, continuidad inteligente de listas/callouts, render visual de callouts y tipografía de escritura más cómoda. El plan cerrado queda archivado en [`docs/gestion/historico/plan-editor-enriquecido-2026-06-05.md`](docs/gestion/historico/plan-editor-enriquecido-2026-06-05.md).
 
 La revisión de `RF-005` reemplazó el auto-guardado final silencioso por borradores persistentes del editor. Lumapse conserva localmente el trabajo en curso al crear o editar, lo restaura al volver de otra app o vista, y lo limpia solo al guardar/actualizar con éxito o al descartar explícitamente. El plan cerrado queda archivado en [`docs/gestion/historico/plan-borradores-persistentes-2026-06-06.md`](docs/gestion/historico/plan-borradores-persistentes-2026-06-06.md).
+
+La estrategia de mantenibilidad y tipado gradual queda documentada en [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md). La primera fase operativa ya quedo aplicada: `tests/unit/components/` ahora espeja la organizacion por feature de `src/components/`. El siguiente paso recomendado es desacoplar el store de feedback visual, introducir contratos de dominio y recien despues migrar modulos puros a TypeScript, dejando los componentes DOM grandes para el final.
 
 ---
 
@@ -68,10 +70,9 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 
 | Área | Tarea | Prioridad | Notas |
 |---|---|---|---|
-| Arquitectura UI | Espejar `src/components/` en `tests/unit/components/` por feature folders | Media | Mejora descubribilidad y reduce riesgo al agregar funcionalidades: test y modulo quedan alineados |
 | Arquitectura UI | Separar responsabilidades restantes en componentes grandes | Media | Priorizar `NoteEditor`, `NoteList`, `Heatmap` y `BackupView` solo cuando haya cambios funcionales relacionados |
 | Acoplamiento | Desacoplar store de feedback visual (`Toast`) | Media | El store deberia emitir resultado/error; la UI decide como comunicarlo. Mejora bajo acoplamiento |
-| Tipado gradual | Definir estrategia JS/TS antes de migrar | Media | TypeScript convive con JS, pero debe adoptarse por contratos y modulos puros, no como reescritura total |
+| Tipado gradual | Aplicar estrategia JS/TS por fases | Media | Plan definido en [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md): tests por feature, desacoplamiento, contratos y modulos puros primero |
 | Tipado gradual | Crear contratos de dominio (`Note`, `Subject`, `AcademicEvent`, `AppState`, `BackupManifest`) | Media | Puede empezar con JSDoc o `.ts` pequenos; facilita refactors humanos/IA y documenta payloads reales |
 | Tipado gradual | Migrar primero modulos puros de bajo riesgo | Baja/Media | Candidatos: `noteFilters`, reglas academicas, validaciones, `NoteTitleService`, formatos de backup |
 | Framework UI | No incorporar Svelte por ahora | Baja | Costo de migracion alto vs beneficio actual; reabrir solo si DOM manual se vuelve una carga clara |
@@ -105,9 +106,10 @@ No incorporar en Hito 05 salvo decisión explícita:
 - [x] Backup manual `.zip` con salida a almacenamiento elegido por el usuario. Validado en Android real mediante share sheet/gestor de archivos; Google Drive queda disponible si esta instalado como destino.
 - [x] Borradores persistentes del editor (`RF-005`): protegen nota nueva y edición en curso sin crear ni actualizar notas finales sin confirmación.
 - [x] Editor enriquecido y slash commands (`RF-028`): `/`, `+`, `Aa`, Modo Enfoque dedicado, continuidad de listas/callouts, render visual de callouts y tipografia de escritura offline-first.
-- [ ] Plan de mantenibilidad gradual: aplicar mejoras pequenas y verificables que aumenten cohesion, reduzcan acoplamiento y faciliten revisiones humanas/IA, evitando reescrituras grandes.
-- [ ] Estrategia de TypeScript/JSDoc progresiva: tipar primero contratos y logica pura; migrar servicios/store solo cuando aporte seguridad real; dejar componentes DOM grandes para el final.
-- [ ] Reorganizacion de tests por feature folders para que nuevas funcionalidades tengan pruebas ubicables y no rompan modulos vecinos.
+- [x] Plan de mantenibilidad gradual documentado: [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md).
+- [x] Estrategia de TypeScript/JSDoc progresiva definida: tipar primero contratos y logica pura; migrar servicios/store solo cuando aporte seguridad real; dejar componentes DOM grandes para el final.
+- [x] Reorganizacion de tests por feature folders para que nuevas funcionalidades tengan pruebas ubicables y no rompan modulos vecinos.
+- [ ] Aplicar mejoras pequenas y verificables que aumenten cohesion, reduzcan acoplamiento y faciliten revisiones humanas/IA, evitando reescrituras grandes.
 - [ ] Restauracion desde backup `.zip`, empezando por importacion no destructiva en una carpeta `Restaurado YYYY-MM-DD`.
 - [ ] Sincronización real multi-dispositivo, solo después de validar backup/restauración y con feedback fuerte de adopción.
 - [ ] Compartir nota individual con share sheet nativo de Android, solo si se valida que ofrece apps reales como WhatsApp y no duplica la acción Copiar.

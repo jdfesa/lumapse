@@ -17,6 +17,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ### Added
 - **Scripts npm operativos:** Se expusieron `quality`, `verify`, `check:session`, `check:health`, `check:size`, `check:a11y`, `check:native-dialogs`, `check:traceability`, `check:docs`, `check:schema`, `check:dbml`, `check:subjects` y `deploy:android` para unificar el flujo local y CI.
+- **Plan de mantenibilidad y tipado gradual:** Se documentó en `docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md` una estrategia por fases para ordenar tests por feature, desacoplar store/UI, introducir contratos de dominio y migrar gradualmente módulos puros a TypeScript/JSDoc sin reescritura completa.
 - **Check contra diálogos nativos:** Nuevo `scripts/check-native-dialogs.js`, que bloquea `alert()`, `confirm()` y `prompt()` en `src/`, con excepción explícita para `src/utils/seeder.js`.
 - **Entrypoint estable de trazabilidad:** Nuevo `scripts/check-traceability.py` como wrapper compatible para el checker preservado en `check-traceability.py.replaced`.
 - **Editor enriquecido y slash commands (RF-028 / HU-028):** El editor incorpora un registro compartido de comandos para `/`, botón `+` y botón `Aa`, con inserción de encabezados, listas, checkboxes, citas, tablas, separadores, código y callouts. Incluye formato inline sobre selección, botón dedicado de Modo Enfoque en el composer, continuidad inteligente con Enter para listas/citas/callouts, salida con línea vacía y popup visual con iconos/pistas compactas.
@@ -26,6 +27,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ### Changed
 - **Componentes UI organizados por feature folders:** `src/components/` deja de ser una carpeta plana y pasa a agrupar editor, feed, fechas académicas, backup, Markdown y componentes comunes en subcarpetas explícitas. La decisión queda documentada en `docs/adr/ADR-007-organizacion-componentes-por-feature.md` y fue verificada con la suite unitaria.
+- **Tests de componentes organizados por feature folders:** `tests/unit/components/` ahora espeja la estructura de `src/components/` con carpetas `academic-events`, `backup`, `common`, `feed` y `note-editor`, manteniendo más cerca el mapa mental de código y pruebas.
 - **Búsqueda RF-015 más útil:** La lupa ahora busca globalmente entre notas activas aunque el usuario esté ubicado en Entrada o en una materia, y normaliza tildes para que `algebra` encuentre `Álgebra`.
 - **Título implícito más claro:** Las tarjetas destacan suavemente la primera línea no vacía como título cuando la nota no usa `#`, manteniendo el editor de un solo campo y reduciendo fricción para usuarios nuevos.
 - **Render Markdown enriquecido:** Callouts principales se renderizan con icono, color y título por tipo; blockquotes simples, tablas, separadores, código y checkboxes tienen estilos más estables en preview y tarjetas de nota.
