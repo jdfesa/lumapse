@@ -27,7 +27,7 @@ El problema que resuelve: las aplicaciones de notas existentes requieren cuenta,
 | Capa | Tecnología | Motivo |
 |---|---|---|
 | Build | [Vite 6](https://vite.dev) | Estándar de la industria, HMR, configuración mínima |
-| Lenguaje | JavaScript (ES2022+) | Sin transpilación adicional, módulos nativos |
+| Lenguaje | JavaScript (ES2022+) + TypeScript gradual | JS sigue siendo la base; TypeScript entra por contratos y módulos puros para mejorar mantenibilidad |
 | Persistencia actual | SQLite (vía `@capacitor-community/sqlite`) | Robusta, relacional, offline-first y alineada con [ADR-006](./docs/adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md) |
 | Simulación web SQLite | `sql.js` + `jeep-sqlite` | Permite desarrollo y tests locales manteniendo el mismo modelo de datos |
 | Empaquetado nativo | [Capacitor](https://capacitorjs.com/) + Android | Envuelve la web app en contenedor Android nativo |

@@ -17,9 +17,9 @@ El trabajo debe preservar la prioridad del Hito 05: estabilizar, validar en Andr
 ## 2. Lectura Actual
 
 - `src/components/` ya esta organizado por feature folders, pero `tests/unit/components/` todavia esta plano.
-- El proyecto usa JavaScript ES modules, Vite, Vitest y ESLint. No hay toolchain TypeScript instalado todavia.
+- El proyecto usa JavaScript ES modules, Vite, Vitest, ESLint y TypeScript gradual con `npm run typecheck`.
 - Hay buenos candidatos de bajo riesgo para tipado o migracion gradual: `noteFilters`, `NoteTitleService`, `AcademicEventRules`, validaciones de materias y formato de backup.
-- El store todavia conoce feedback visual mediante imports a `Toast`, lo que mezcla orquestacion de estado con UI.
+- El store ya no conoce feedback visual mediante imports a `Toast`; emite eventos de error de dominio y la UI decide como mostrarlos.
 - Los componentes grandes (`NoteEditor`, `NoteList`, `Heatmap`, `BackupView`) conviene dejarlos para el final, despues de separar responsabilidades internas y estabilizar contratos.
 
 ---
@@ -129,6 +129,8 @@ Criterio de cierre:
 
 ### Fase 2 - Desacoplar Store de Toast
 
+Estado: completada el 2026-06-12.
+
 Extraer el feedback visual fuera de `NoteStore.*`.
 
 Direccion sugerida:
@@ -140,33 +142,37 @@ Direccion sugerida:
 
 Criterio de cierre:
 
-- `rg "components/common/Toast" src/store tests/unit/store` no encuentra imports directos desde store.
-- Tests actuales del store adaptados.
-- `npm test`, `npm run lint` y `npm run build` pasan.
+- [x] `rg "components/common/Toast" src/store tests/unit/store` no encuentra imports directos desde store.
+- [x] Tests actuales del store adaptados.
+- [x] `npm test`, `npm run lint` y `npm run build` pasan.
 
 ### Fase 3 - Toolchain y Contratos
+
+Estado: completada el 2026-06-12.
 
 Introducir TypeScript sin migrar logica compleja.
 
 Tareas:
 
-- Agregar `typescript`.
-- Crear `tsconfig.json`.
-- Agregar `npm run typecheck`.
-- Definir contratos de dominio iniciales.
-- Documentar reglas de importacion entre `domain`, `services`, `store` y `components`.
+- [x] Agregar `typescript`.
+- [x] Crear `tsconfig.json`.
+- [x] Agregar `npm run typecheck`.
+- [x] Definir contratos de dominio iniciales.
+- [x] Documentar reglas de importacion entre `domain`, `services`, `store` y `components`.
 
 Criterio de cierre:
 
-- `npm run typecheck` pasa.
-- No hay cambios de comportamiento.
-- Los contratos cubren al menos `Note`, `Subject`, `AcademicEvent`, `AppState` y `BackupManifest`.
+- [x] `npm run typecheck` pasa.
+- [x] No hay cambios de comportamiento.
+- [x] Los contratos cubren al menos `Note`, `Subject`, `AcademicEvent`, `AppState` y `BackupManifest`.
 
 ### Fase 4 - Migrar Modulos Puros
 
+Estado: iniciada el 2026-06-12.
+
 Migrar archivos pequenos donde TypeScript aporta claridad inmediata:
 
-1. `src/services/AcademicEventRules.js`
+1. [x] `src/services/AcademicEventRules.ts`
 2. `src/services/NoteTitleService.js`
 3. `src/services/SubjectService.validation.js`
 4. `src/services/backup/BackupFormat.js`
@@ -285,9 +291,8 @@ No hace falta levantar servidor local como parte de estas fases. La validacion v
 
 ## 10. Orden Recomendado Inmediato
 
-1. Desacoplar `NoteStore.*` de `Toast`.
-2. Introducir toolchain TypeScript con `typecheck`.
-3. Crear contratos de dominio.
-4. Migrar modulos puros, uno por vez.
+1. Continuar migrando modulos puros pequenos, uno por vez.
+2. Priorizar `NoteTitleService`, `SubjectService.validation`, `BackupFormat` y luego `noteFilters`.
+3. Recién despues evaluar servicios de dominio y store.
 
-El mapa de tests por feature ya quedo alineado. El proximo paso reduce acoplamiento antes de tocar el store con tipos y deja los componentes grandes para cuando la base este mas clara.
+El mapa de tests por feature ya quedo alineado, el store ya no depende de feedback visual y el typecheck ya es parte del gate. El proximo paso debe seguir siendo pequeno: migrar otro modulo puro con tests existentes, sin arrastrar componentes grandes ni mezclar capas.

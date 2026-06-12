@@ -23,7 +23,7 @@ El benchmark visual contra Notion mobile derivó en `RF-028`: controles opcional
 
 La revisión de `RF-005` reemplazó el auto-guardado final silencioso por borradores persistentes del editor. Lumapse conserva localmente el trabajo en curso al crear o editar, lo restaura al volver de otra app o vista, y lo limpia solo al guardar/actualizar con éxito o al descartar explícitamente. El plan cerrado queda archivado en [`docs/gestion/historico/plan-borradores-persistentes-2026-06-06.md`](docs/gestion/historico/plan-borradores-persistentes-2026-06-06.md).
 
-La estrategia de mantenibilidad y tipado gradual queda documentada en [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md). La primera fase operativa ya quedo aplicada: `tests/unit/components/` ahora espeja la organizacion por feature de `src/components/`. El siguiente paso recomendado es desacoplar el store de feedback visual, introducir contratos de dominio y recien despues migrar modulos puros a TypeScript, dejando los componentes DOM grandes para el final.
+La estrategia de mantenibilidad y tipado gradual queda documentada en [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md). Las primeras fases operativas ya quedaron aplicadas: `tests/unit/components/` espeja la organizacion por feature de `src/components/`, `NoteStore.*` dejo de importar feedback visual, el proyecto ya tiene `typecheck` y contratos de dominio iniciales en `src/domain/`, y el primer modulo puro migrado es `src/services/AcademicEventRules.ts`. El siguiente paso recomendado es continuar con modulos puros pequenos, dejando los componentes DOM grandes para el final.
 
 ---
 
@@ -71,9 +71,7 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Área | Tarea | Prioridad | Notas |
 |---|---|---|---|
 | Arquitectura UI | Separar responsabilidades restantes en componentes grandes | Media | Priorizar `NoteEditor`, `NoteList`, `Heatmap` y `BackupView` solo cuando haya cambios funcionales relacionados |
-| Acoplamiento | Desacoplar store de feedback visual (`Toast`) | Media | El store deberia emitir resultado/error; la UI decide como comunicarlo. Mejora bajo acoplamiento |
-| Tipado gradual | Aplicar estrategia JS/TS por fases | Media | Plan definido en [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md): tests por feature, desacoplamiento, contratos y modulos puros primero |
-| Tipado gradual | Crear contratos de dominio (`Note`, `Subject`, `AcademicEvent`, `AppState`, `BackupManifest`) | Media | Puede empezar con JSDoc o `.ts` pequenos; facilita refactors humanos/IA y documenta payloads reales |
+| Tipado gradual | Aplicar estrategia JS/TS por fases | Media | Plan definido en [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md): typecheck y contratos ya iniciados; modulos puros primero |
 | Tipado gradual | Migrar primero modulos puros de bajo riesgo | Baja/Media | Candidatos: `noteFilters`, reglas academicas, validaciones, `NoteTitleService`, formatos de backup |
 | Framework UI | No incorporar Svelte por ahora | Baja | Costo de migracion alto vs beneficio actual; reabrir solo si DOM manual se vuelve una carga clara |
 | Testing | Agregar tests menores para `moveNote()` en `NoteStore.data.test.js` | Baja | Deuda post-auditoría, no bloquea release si el gate pasa |
@@ -109,6 +107,9 @@ No incorporar en Hito 05 salvo decisión explícita:
 - [x] Plan de mantenibilidad gradual documentado: [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md).
 - [x] Estrategia de TypeScript/JSDoc progresiva definida: tipar primero contratos y logica pura; migrar servicios/store solo cuando aporte seguridad real; dejar componentes DOM grandes para el final.
 - [x] Reorganizacion de tests por feature folders para que nuevas funcionalidades tengan pruebas ubicables y no rompan modulos vecinos.
+- [x] Store desacoplado de feedback visual: `NoteStore.*` emite errores de dominio y `main.js` decide mostrar `Toast`.
+- [x] Typecheck gradual incorporado al gate local y contratos de dominio iniciales creados en `src/domain/`.
+- [x] Primer modulo puro migrado a TypeScript: `src/services/AcademicEventRules.ts`.
 - [ ] Aplicar mejoras pequenas y verificables que aumenten cohesion, reduzcan acoplamiento y faciliten revisiones humanas/IA, evitando reescrituras grandes.
 - [ ] Restauracion desde backup `.zip`, empezando por importacion no destructiva en una carpeta `Restaurado YYYY-MM-DD`.
 - [ ] Sincronización real multi-dispositivo, solo después de validar backup/restauración y con feedback fuerte de adopción.
