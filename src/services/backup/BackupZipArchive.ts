@@ -11,7 +11,25 @@ const ZIP_VERSION = 20
 const CRC32_TABLE = createCrc32Table()
 const encoder = new globalThis.TextEncoder()
 
-function createCrc32Table() {
+export interface ZipArchiveFile {
+  path: string
+  content: string | Uint8Array
+}
+
+export interface ZipArchiveOptions {
+  createdAt?: Date | string | number
+  type?: 'arraybuffer' | 'base64' | 'blob' | string
+  mimeType?: string
+}
+
+export type ZipArchiveContent = Blob | ArrayBuffer | string
+
+interface DosDateParts {
+  time: number
+  date: number
+}
+
+function createCrc32Table(): Uint32Array {
   const table = new Uint32Array(256)
 
   for (let index = 0; index < 256; index += 1) {
@@ -27,7 +45,7 @@ function createCrc32Table() {
   return table
 }
 
-function crc32(bytes) {
+function crc32(bytes: Uint8Array): number {
   let crc = 0xffffffff
 
   for (const byte of bytes) {
@@ -37,7 +55,7 @@ function crc32(bytes) {
   return (crc ^ 0xffffffff) >>> 0
 }
 
-function dateToDosParts(value) {
+function dateToDosParts(value: Date | string | number): DosDateParts {
   const date = value instanceof Date ? value : new Date(value)
   const year = Math.max(1980, date.getFullYear())
 
@@ -55,11 +73,11 @@ function dateToDosParts(value) {
   }
 }
 
-function uint16(value) {
+function uint16(value: number): number[] {
   return [value & 0xff, (value >>> 8) & 0xff]
 }
 
-function uint32(value) {
+function uint32(value: number): number[] {
   return [
     value & 0xff,
     (value >>> 8) & 0xff,
@@ -68,7 +86,7 @@ function uint32(value) {
   ]
 }
 
-function concatBytes(parts) {
+function concatBytes(parts: Uint8Array[]): Uint8Array {
   const totalLength = parts.reduce((sum, part) => sum + part.length, 0)
   const output = new Uint8Array(totalLength)
   let offset = 0
@@ -81,13 +99,13 @@ function concatBytes(parts) {
   return output
 }
 
-function toBytes(content) {
+function toBytes(content: string | Uint8Array): Uint8Array {
   return content instanceof Uint8Array ? content : encoder.encode(String(content))
 }
 
-function createZip(files, createdAt) {
-  const localParts = []
-  const centralParts = []
+function createZip(files: ZipArchiveFile[], createdAt: Date | string | number): Uint8Array {
+  const localParts: Uint8Array[] = []
+  const centralParts: Uint8Array[] = []
   const dos = dateToDosParts(createdAt)
   let offset = 0
 
@@ -148,11 +166,13 @@ function createZip(files, createdAt) {
   return concatBytes([...localParts, centralDirectory, endOfCentralDirectory])
 }
 
-function arrayBufferFromBytes(bytes) {
-  return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength)
+function arrayBufferFromBytes(bytes: Uint8Array): ArrayBuffer {
+  const copy = new Uint8Array(bytes.byteLength)
+  copy.set(bytes)
+  return copy.buffer
 }
 
-function bytesToBase64(bytes) {
+function bytesToBase64(bytes: Uint8Array): string {
   let binary = ''
   const chunkSize = 0x8000
 
@@ -163,7 +183,10 @@ function bytesToBase64(bytes) {
   return globalThis.btoa(binary)
 }
 
-export function createZipContent(files, options = {}) {
+export function createZipContent(
+  files: ZipArchiveFile[],
+  options: ZipArchiveOptions = {},
+): ZipArchiveContent {
   const bytes = createZip(files, options.createdAt || new Date())
   const arrayBuffer = arrayBufferFromBytes(bytes)
 

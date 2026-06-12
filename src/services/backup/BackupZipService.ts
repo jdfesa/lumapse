@@ -11,7 +11,7 @@ import {
   createUniqueFilename,
   slugifyBackupPath,
 } from './BackupFormat'
-import { createZipContent } from './BackupZipArchive.js'
+import { createZipContent } from './BackupZipArchive'
 import { stripRedundantTitleFromContent } from '../NoteTitleService'
 import type {
   BackupData,
