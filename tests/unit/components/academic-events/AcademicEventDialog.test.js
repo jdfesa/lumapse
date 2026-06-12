@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { ACADEMIC_EVENT_TITLE_MAX_LENGTH } from '../../../src/services/AcademicEventRules.js'
+import { ACADEMIC_EVENT_TITLE_MAX_LENGTH } from '../../../../src/services/AcademicEventRules.js'
 
 const storeMock = vi.hoisted(() => ({
   state: null,
@@ -8,7 +8,7 @@ const storeMock = vi.hoisted(() => ({
   updateAcademicEvent: vi.fn(),
 }))
 
-vi.mock('../../../src/store/NoteStore.js', () => ({
+vi.mock('../../../../src/store/NoteStore.js', () => ({
   getState: storeMock.getState,
   createAcademicEvent: storeMock.createAcademicEvent,
   updateAcademicEvent: storeMock.updateAcademicEvent,
@@ -72,7 +72,7 @@ beforeEach(async () => {
   storeMock.createAcademicEvent.mockResolvedValue(event({ id: 'created' }))
   storeMock.updateAcademicEvent.mockResolvedValue(event({ id: 'updated', title: 'Actualizado' }))
 
-  ;({ openAcademicEventDialog } = await import('../../../src/components/academic-events/AcademicEventDialog.js'))
+  ;({ openAcademicEventDialog } = await import('../../../../src/components/academic-events/AcademicEventDialog.js'))
 })
 
 afterEach(() => {

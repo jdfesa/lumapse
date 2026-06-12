@@ -7,7 +7,7 @@ import {
   renderAcademicEventDot,
   renderAcademicEventIcon,
   renderAcademicEventListItem,
-} from '../../../src/components/academic-events/AcademicEventTypes.js'
+} from '../../../../src/components/academic-events/AcademicEventTypes.js'
 
 function render(html) {
   const wrapper = document.createElement('div')

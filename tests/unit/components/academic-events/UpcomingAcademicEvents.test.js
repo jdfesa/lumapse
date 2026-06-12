@@ -18,7 +18,7 @@ const storeMock = vi.hoisted(() => {
   return mock
 })
 
-vi.mock('../../../src/store/NoteStore.js', () => ({
+vi.mock('../../../../src/store/NoteStore.js', () => ({
   subscribe: storeMock.subscribe,
   deleteAcademicEvent: storeMock.deleteAcademicEvent,
 }))
@@ -31,18 +31,18 @@ const confirmMock = vi.hoisted(() => ({
   confirmDialog: vi.fn().mockResolvedValue(true),
 }))
 
-vi.mock('../../../src/components/academic-events/AcademicEventDialog.js', () => ({
+vi.mock('../../../../src/components/academic-events/AcademicEventDialog.js', () => ({
   openAcademicEventDialog: dialogMock.openAcademicEventDialog,
 }))
 
-vi.mock('../../../src/components/common/ConfirmDialog.js', () => ({
+vi.mock('../../../../src/components/common/ConfirmDialog.js', () => ({
   confirmDialog: confirmMock.confirmDialog,
 }))
 
 import {
   UpcomingAcademicEvents,
   getUpcomingEvents,
-} from '../../../src/components/academic-events/UpcomingAcademicEvents.js'
+} from '../../../../src/components/academic-events/UpcomingAcademicEvents.js'
 
 function event(overrides = {}) {
   return {

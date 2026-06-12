@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('../../../src/services/backup/BackupFlowService.js', () => ({
+vi.mock('../../../../src/services/backup/BackupFlowService.js', () => ({
   BACKUP_FLOW_STATUS: {
     READY: 'ready',
     BLOCKED_OFFLINE: 'blocked-offline',
@@ -14,7 +14,7 @@ vi.mock('../../../src/services/backup/BackupFlowService.js', () => ({
   getExternalBackupReadiness: vi.fn(),
 }))
 
-vi.mock('../../../src/components/common/Toast.js', () => ({
+vi.mock('../../../../src/components/common/Toast.js', () => ({
   showErrorToast: vi.fn(),
 }))
 
@@ -24,9 +24,9 @@ import {
   dismissCurrentBackupReminder,
   getCurrentBackupReminder,
   getExternalBackupReadiness,
-} from '../../../src/services/backup/BackupFlowService.js'
-import { showErrorToast } from '../../../src/components/common/Toast.js'
-import { BackupView } from '../../../src/components/backup/BackupView.js'
+} from '../../../../src/services/backup/BackupFlowService.js'
+import { showErrorToast } from '../../../../src/components/common/Toast.js'
+import { BackupView } from '../../../../src/components/backup/BackupView.js'
 
 const WIFI_READINESS = {
   status: BACKUP_FLOW_STATUS.READY,

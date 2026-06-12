@@ -6,7 +6,7 @@ beforeEach(async () => {
   vi.useFakeTimers()
   vi.resetModules()
   document.body.innerHTML = '<button id="origin">Origen</button>'
-  ;({ confirmDialog } = await import('../../../src/components/common/ConfirmDialog.js'))
+  ;({ confirmDialog } = await import('../../../../src/components/common/ConfirmDialog.js'))
 })
 
 async function finishAnimation() {

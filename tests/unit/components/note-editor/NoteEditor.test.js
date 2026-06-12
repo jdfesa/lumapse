@@ -1,26 +1,26 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('../../../src/store/NoteStore.js', () => ({
+vi.mock('../../../../src/store/NoteStore.js', () => ({
   subscribe: vi.fn(() => vi.fn()),
   createNote: vi.fn(),
   updateNote: vi.fn(),
   selectNote: vi.fn(),
 }))
 
-vi.mock('../../../src/services/EditorDraftService.js', () => ({
+vi.mock('../../../../src/services/EditorDraftService.js', () => ({
   loadDraft: vi.fn(),
   saveDraft: vi.fn(),
   clearDraft: vi.fn(),
 }))
 
-vi.mock('../../../src/components/common/ConfirmDialog.js', () => ({
+vi.mock('../../../../src/components/common/ConfirmDialog.js', () => ({
   confirmDialog: vi.fn(() => Promise.resolve(true)),
 }))
 
-import { NoteEditor } from '../../../src/components/note-editor/NoteEditor.js'
-import { confirmDialog } from '../../../src/components/common/ConfirmDialog.js'
-import * as EditorDraftService from '../../../src/services/EditorDraftService.js'
-import * as NoteStore from '../../../src/store/NoteStore.js'
+import { NoteEditor } from '../../../../src/components/note-editor/NoteEditor.js'
+import { confirmDialog } from '../../../../src/components/common/ConfirmDialog.js'
+import * as EditorDraftService from '../../../../src/services/EditorDraftService.js'
+import * as NoteStore from '../../../../src/store/NoteStore.js'
 
 function createEditor() {
   const container = document.createElement('div')

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('../../../src/store/NoteStore.js', () => ({
+vi.mock('../../../../src/store/NoteStore.js', () => ({
   subscribe: vi.fn(() => vi.fn()),
   getFilteredNotes: vi.fn(() => []),
   getState: vi.fn(() => ({ notes: [] })),
@@ -9,8 +9,8 @@ vi.mock('../../../src/store/NoteStore.js', () => ({
   updateNoteSilent: vi.fn(),
 }))
 
-import * as NoteStore from '../../../src/store/NoteStore.js'
-import { NoteList } from '../../../src/components/feed/NoteList.js'
+import * as NoteStore from '../../../../src/store/NoteStore.js'
+import { NoteList } from '../../../../src/components/feed/NoteList.js'
 
 function makeNote(overrides = {}) {
   return {
