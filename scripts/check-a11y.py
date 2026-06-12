@@ -32,7 +32,7 @@ def iter_target_files():
     if os.path.isdir(COMPONENTS_DIR):
         for root, _, filenames in os.walk(COMPONENTS_DIR):
             for filename in filenames:
-                if filename.endswith(".js"):
+                if filename.endswith((".js", ".ts")):
                     files.append(os.path.join(root, filename))
 
     if os.path.isfile(INDEX_HTML):

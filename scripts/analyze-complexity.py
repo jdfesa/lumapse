@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Lumapse — Análisis de Deuda Técnica
-Detecta archivos JS largos y líneas con anidación profunda en src/.
+Detecta archivos JS/TS largos y líneas con anidación profunda en src/.
 Uso: python3 scripts/analyze-complexity.py
 """
 
@@ -61,11 +61,15 @@ def analyze_file(path):
     }
 
 
-def find_js_files():
+def find_source_files():
     if not SRC_DIR.exists():
         return []
 
-    return sorted(path for path in SRC_DIR.rglob("*.js") if path.is_file())
+    files = []
+    for pattern in ("*.js", "*.ts"):
+        files.extend(path for path in SRC_DIR.rglob(pattern) if path.is_file())
+
+    return sorted(set(files))
 
 
 def sort_findings(findings):
@@ -98,9 +102,9 @@ def print_problem(finding):
 def main():
     print("🧬 Lumapse — Análisis de Deuda Técnica (Complejidad)")
     print("==================================================")
-    print("Escaneando archivos JS en src/ ...")
+    print("Escaneando archivos JS/TS en src/ ...")
 
-    findings = [analyze_file(path) for path in find_js_files()]
+    findings = [analyze_file(path) for path in find_source_files()]
     problems = [finding for finding in findings if finding["score"] > 0]
     healthy_count = len(findings) - len(problems)
 
@@ -108,7 +112,7 @@ def main():
         print_problem(finding)
 
     if healthy_count == len(findings):
-        print("✅ Todos los archivos JS están dentro de los límites saludables.")
+        print("✅ Todos los archivos JS/TS están dentro de los límites saludables.")
     else:
         print("✅ Los otros {} archivos están dentro de los límites saludables.".format(healthy_count))
 

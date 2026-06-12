@@ -8,7 +8,7 @@ set -Eeuo pipefail
 # se mantienen dentro de los presupuestos definidos.
 #
 # Presupuestos (gzip):
-#   JS:   220 kB
+#   JS emitido: 220 kB (incluye TypeScript compilado)
 #   CSS:   25 kB
 #   HTML:   5 kB
 #   Total: 250 kB
@@ -167,7 +167,8 @@ fi
 printf '✓ Build completado en %s\n' "$BUILD_TIME"
 printf '%s\n' '--------------------------------------------------'
 printf '📊 Análisis de tamaño (gzip):\n'
-print_budget_line "JS" "$JS_GZIP" "$BUDGET_JS"
+printf '   Nota: JS emitido = JavaScript final del build, incluyendo código TypeScript compilado.\n'
+print_budget_line "JS emitido" "$JS_GZIP" "$BUDGET_JS"
 print_budget_line "CSS" "$CSS_GZIP" "$BUDGET_CSS"
 print_budget_line "HTML" "$HTML_GZIP" "$BUDGET_HTML"
 printf '   ────────────────────────────────────────────────\n'

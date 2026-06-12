@@ -23,7 +23,7 @@ ADR_DIR = PROJECT_ROOT / "docs" / "adr"
 SRC_DIR = PROJECT_ROOT / "src"
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 
-CODE_EXTENSIONS = {".js", ".css"}
+CODE_EXTENSIONS = {".js", ".ts", ".css"}
 RF_RE = re.compile(r"\bRF-\d{3}\b")
 HU_RE = re.compile(r"^HU-\d{3}$")
 ADR_HEADING_RE = re.compile(r"^#\s+(ADR-\d{3}):\s+(.+?)\s*$", re.MULTILINE)
@@ -427,7 +427,7 @@ def build_markdown(context):
         "",
         "| Métrica | Valor |",
         "|---|---|",
-        "| Archivos de código (JS/CSS) | {0} |".format(format_number(code["files"])),
+        "| Archivos de código (JS/TS/CSS) | {0} |".format(format_number(code["files"])),
         "| Líneas de código fuente | {0} |".format(format_number(code["loc"])),
         "| Requisitos Funcionales | {0} ({1} implementados, {2} pendientes, {3} obsoletos) |".format(
             rf["total"],

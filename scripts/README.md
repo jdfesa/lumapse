@@ -130,7 +130,7 @@ Audita la coherencia y consistencia entre los documentos de trazabilidad del pro
 Escanea el código fuente y los assets del proyecto en busca de referencias a URLs externas que rompan la arquitectura offline-first.
 
 - **Problema que resuelve:** Como app pensada para funcionar completamente sin conexión y proteger la privacidad del usuario, cualquier referencia no intencional a recursos externos (imágenes, fuentes, scripts) es un riesgo crítico.
-- **Qué verifica:** Busca las cadenas `http://` y `https://` en los archivos JS, CSS e HTML de las carpetas `src/` y `public/`.
+- **Qué verifica:** Busca las cadenas `http://` y `https://` en los archivos JS, TS, CSS e HTML de las carpetas `src/` y `public/`.
 - **Características:** Ignora inteligentemente directorios como `node_modules/` o `docs/`, y marca posibles "falsos positivos" (como comentarios en el código) para revisión manual.
 - **Uso:**
   ```bash
@@ -157,7 +157,7 @@ Mide y controla el peso final de los archivos estáticos de producción contra l
 - **Problema que resuelve:** Asegura que la aplicación siga siendo extremadamente ligera para dispositivos móviles y contextos de conectividad limitada, alertando tempranamente si una nueva dependencia o feature dispara el tamaño del bundle.
 - **Qué verifica:**
   - Ejecuta el build de producción.
-  - Compara el tamaño comprimido (gzip) de archivos JS, CSS y HTML contra presupuestos predefinidos (ej. JS máximo 80kB).
+  - Compara el tamaño comprimido (gzip) del JS emitido por el build (incluye TypeScript compilado), CSS y HTML contra presupuestos predefinidos.
 - **Características:** Proporciona barras de progreso visuales directamente en la terminal. Falla automáticamente si se excede el presupuesto.
 - **Uso:**
   ```bash
@@ -195,7 +195,7 @@ Calcula métricas cuantitativas del proyecto para el informe final académico.
 
 - **Problema que resuelve:** Recolecta datos objetivos sobre tamaño de código, volumen documental y distribución de módulos, evitando conteos manuales difíciles de reproducir.
 - **Qué mide:**
-  - Archivos JS/CSS y líneas de código fuente no vacías en `src/`.
+  - Archivos JS/TS/CSS y líneas de código fuente no vacías en `src/`.
   - Cantidad de componentes en `src/components/`.
   - Cantidad de servicios en `src/services/`.
   - Cantidad de documentos Markdown en `docs/`.
@@ -278,7 +278,7 @@ Detecta señales simples de deuda técnica en archivos JavaScript.
 
 - **Problema que resuelve:** Ayuda a identificar archivos que están creciendo demasiado o acumulando anidación excesiva, dos señales tempranas de código difícil de mantener. También aporta evidencia cuantitativa para justificar refactorizaciones en el informe final.
 - **Qué mide:**
-  - Líneas de código no vacías por archivo `.js` en `src/`.
+  - Líneas de código no vacías por archivo `.js`/`.ts` en `src/`.
   - Líneas con más de 12 espacios iniciales, usadas como indicador de anidación profunda.
   - Archivos largos (`> 250` líneas) y archivos complejos (`> 10` líneas profundamente anidadas).
 - **Cuándo usarlo:** Antes de planificar refactors, al preparar una revisión técnica, después de implementar features grandes o cuando se necesite justificar deuda técnica con datos reproducibles.
@@ -440,7 +440,7 @@ Guardia de tamano de archivos que escanea `src/` y reporta archivos que superan 
 
 - **Problema que resuelve:** Los scripts existentes detectan deuda tecnica pero no la previenen. Este guardia reporta advertencias proactivamente para que los archivos no crezcan sin control.
 - **Que hace:**
-  - Escanea archivos JS, CSS y HTML en `src/`.
+  - Escanea archivos JS, TS, CSS y HTML en `src/`.
   - Cuenta lineas de codigo no vacias (LOC).
   - Reporta como AVISO los archivos que superan 250 LOC.
   - Reporta como PELIGRO los archivos que superan 400 LOC.
@@ -495,7 +495,7 @@ Dashboard consolidado de salud del proyecto. Ejecuta multiples checks y genera u
   - Tabla de archivos con LOC, complejidad y estado.
   - TODOs y FIXMEs en codigo (con sugerencia de moverlos al BACKLOG).
   - Estado de ESLint.
-  - Estadisticas generales (archivos JS/CSS, documentos MD, LOC totales).
+  - Estadisticas generales (archivos JS/TS/CSS, documentos MD, LOC totales).
   - Informacion de git (commit, branch).
 - **Que genera:** Reporte en terminal por defecto. Con `--save` guarda `docs/gestion/health-dashboard.md`.
 - **Uso:**

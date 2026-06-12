@@ -11,7 +11,8 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-CODE_EXTENSIONS = {".js", ".css"}
+CODE_EXTENSIONS = {".js", ".ts", ".css"}
+LOGIC_EXTENSIONS = {".js", ".ts"}
 WORD_RE = re.compile(r"\b[\wÁÉÍÓÚÜÑáéíóúüñ]+\b", re.UNICODE)
 
 
@@ -49,13 +50,6 @@ def count_source_lines(files):
     return total
 
 
-def count_files(directory):
-    if not directory.exists():
-        return 0
-
-    return sum(1 for path in directory.iterdir() if path.is_file())
-
-
 def markdown_files_for_word_count():
     docs_files = iter_files(PROJECT_ROOT / "docs", {".md"})
     root_files = sorted(path for path in PROJECT_ROOT.glob("*.md") if path.is_file())
@@ -79,15 +73,15 @@ def format_number(value):
 def main():
     source_files = iter_files(PROJECT_ROOT / "src", CODE_EXTENSIONS)
     source_loc = count_source_lines(source_files)
-    component_count = count_files(PROJECT_ROOT / "src" / "components")
-    service_count = count_files(PROJECT_ROOT / "src" / "services")
+    component_count = len(iter_files(PROJECT_ROOT / "src" / "components", LOGIC_EXTENSIONS))
+    service_count = len(iter_files(PROJECT_ROOT / "src" / "services", LOGIC_EXTENSIONS))
     docs_markdown_files, word_markdown_files = markdown_files_for_word_count()
     total_words = count_words(word_markdown_files)
 
     print("📊 Lumapse — Métricas del Proyecto (Generado para Informe Final)")
     print("==================================================")
     print("💻 Código Fuente:")
-    print("   - Archivos de código (JS/CSS): {} archivos".format(format_number(len(source_files))))
+    print("   - Archivos de código (JS/TS/CSS): {} archivos".format(format_number(len(source_files))))
     print("   - Líneas de código fuente (LOC): {} líneas".format(format_number(source_loc)))
     print("   - Componentes UI: {}".format(format_number(component_count)))
     print("   - Servicios core: {}".format(format_number(service_count)))

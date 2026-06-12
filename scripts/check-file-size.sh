@@ -3,7 +3,7 @@
 # ==============================================================================
 # Lumapse -- Guardia de Tamano de Archivos
 # ==============================================================================
-# Escanea archivos JS, CSS y HTML en src/ y reporta aquellos que superan el
+# Escanea archivos JS, TS, CSS y HTML en src/ y reporta aquellos que superan el
 # limite saludable de lineas de codigo (LOC).
 #
 # Filosofia: NUNCA bloquea el flujo de trabajo. Solo reporta advertencias
@@ -58,7 +58,7 @@ main() {
   local total=0
   local json_entries=""
 
-  # Buscar archivos JS, CSS y HTML en src/
+  # Buscar archivos JS, TS, CSS y HTML en src/
   while IFS= read -r -d '' file; do
     total=$((total + 1))
     local loc
@@ -89,7 +89,7 @@ main() {
     else
       ok_count=$((ok_count + 1))
     fi
-  done < <(find "$SRC_DIR" \( -name "*.js" -o -name "*.css" -o -name "*.html" \) -type f -print0 | sort -z)
+  done < <(find "$SRC_DIR" \( -name "*.js" -o -name "*.ts" -o -name "*.css" -o -name "*.html" \) -type f -print0 | sort -z)
 
   if [[ "$JSON_MODE" == true ]]; then
     printf '[%s]' "$json_entries"

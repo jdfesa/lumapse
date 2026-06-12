@@ -33,7 +33,7 @@ const LOC_WARN: usize = 250;
 const LOC_DANGER: usize = 400;
 
 /// Extensiones que nos interesan auditar
-const EXTENSIONS: &[&str] = &["js", "css", "html"];
+const EXTENSIONS: &[&str] = &["js", "ts", "css", "html"];
 
 /// Directorios a excluir del escaneo
 const EXCLUDED_DIRS: &[&str] = &[

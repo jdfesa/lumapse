@@ -10,7 +10,7 @@ import {
   countBackupItems,
   hasBackupData,
 } from './BackupDataSource'
-import { generateBackupZip } from './BackupZipService.js'
+import { generateBackupZip } from './BackupZipService'
 import type { CurrentBackupZip, GeneratedBackupZip, BackupZipOptions } from '../../domain/backup'
 
 export const EMPTY_BACKUP_ERROR = 'Todavia no hay notas, materias ni fechas para respaldar.'

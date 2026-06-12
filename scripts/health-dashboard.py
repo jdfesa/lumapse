@@ -79,12 +79,12 @@ def collect_file_metrics():
     if not SRC_DIR.exists():
         return metrics
 
-    for ext in ("*.js", "*.css"):
+    for ext in ("*.js", "*.ts", "*.css"):
         for path in sorted(SRC_DIR.rglob(ext)):
             if not path.is_file():
                 continue
             loc = count_loc(path)
-            nested = count_nested(path) if path.suffix == ".js" else 0
+            nested = count_nested(path) if path.suffix in (".js", ".ts") else 0
 
             # Determinar estado
             status = "ok"
@@ -126,7 +126,7 @@ def collect_todos():
     patterns = ["TODO", "FIXME", "HACK", "XXX", "BUG"]
     pattern = "|".join(patterns)
 
-    for ext in ("*.js", "*.css", "*.html"):
+    for ext in ("*.js", "*.ts", "*.css", "*.html"):
         for path in sorted(SRC_DIR.rglob(ext)):
             if not path.is_file():
                 continue
@@ -174,14 +174,15 @@ def collect_git_info():
 def collect_project_stats():
     """Estadisticas generales del proyecto."""
     js_files = list(SRC_DIR.rglob("*.js")) if SRC_DIR.exists() else []
+    ts_files = list(SRC_DIR.rglob("*.ts")) if SRC_DIR.exists() else []
     css_files = list(SRC_DIR.rglob("*.css")) if SRC_DIR.exists() else []
     doc_files = list(DOCS_DIR.rglob("*.md")) if DOCS_DIR.exists() else []
 
-    total_js_loc = sum(count_loc(f) for f in js_files)
+    total_js_loc = sum(count_loc(f) for f in js_files + ts_files)
     total_css_loc = sum(count_loc(f) for f in css_files)
 
     return {
-        "js_files": len(js_files),
+        "js_files": len(js_files) + len(ts_files),
         "css_files": len(css_files),
         "doc_files": len(doc_files),
         "total_js_loc": total_js_loc,
@@ -212,7 +213,7 @@ def generate_terminal_report(file_metrics, todos, lint_ok, git_info, stats):
 
     # Estadisticas generales
     print("--- Estadisticas Generales ---")
-    print("  Archivos JS: {} ({} LOC)".format(stats["js_files"], stats["total_js_loc"]))
+    print("  Archivos JS/TS: {} ({} LOC)".format(stats["js_files"], stats["total_js_loc"]))
     print("  Archivos CSS: {} ({} LOC)".format(stats["css_files"], stats["total_css_loc"]))
     print("  Documentos MD: {}".format(stats["doc_files"]))
     print("  ESLint: {}".format("OK" if lint_ok else "CON ERRORES"))
@@ -275,7 +276,7 @@ def generate_markdown_report(file_metrics, todos, lint_ok, git_info, stats):
     lines.append("")
     lines.append("| Metrica | Valor |")
     lines.append("|---------|-------|")
-    lines.append("| Archivos JS | {} ({} LOC) |".format(stats["js_files"], stats["total_js_loc"]))
+    lines.append("| Archivos JS/TS | {} ({} LOC) |".format(stats["js_files"], stats["total_js_loc"]))
     lines.append("| Archivos CSS | {} ({} LOC) |".format(stats["css_files"], stats["total_css_loc"]))
     lines.append("| Documentos MD | {} |".format(stats["doc_files"]))
     lines.append("| ESLint | {} |".format("OK" if lint_ok else "Con errores"))

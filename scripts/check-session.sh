@@ -139,7 +139,7 @@ while IFS= read -r -d '' file; do
     PROBLEMS=$((PROBLEMS + 1))
     printf "   ${YELLOW}[%d LOC]${NC} %s\n" "$LOC" "$RPATH"
   fi
-done < <(find "$PROJECT_ROOT/src" \( -name "*.js" -o -name "*.css" \) -type f -print0 2>/dev/null | sort -z)
+done < <(find "$PROJECT_ROOT/src" \( -name "*.js" -o -name "*.ts" -o -name "*.css" \) -type f -print0 2>/dev/null | sort -z)
 
 if [[ $PROBLEMS -eq 0 ]]; then
   printf "   ${GREEN}Todos los archivos dentro de los limites${NC}\n"
@@ -156,8 +156,8 @@ TODO_COUNT=0
 FIXME_COUNT=0
 
 if [[ -d "$PROJECT_ROOT/src" ]]; then
-  TODO_COUNT=$( (grep -rn "TODO\|HACK" "$PROJECT_ROOT/src/" --include="*.js" --include="*.css" --include="*.html" 2>/dev/null || true) | wc -l | tr -d ' ')
-  FIXME_COUNT=$( (grep -rn "FIXME\|XXX\|BUG" "$PROJECT_ROOT/src/" --include="*.js" --include="*.css" --include="*.html" 2>/dev/null || true) | wc -l | tr -d ' ')
+  TODO_COUNT=$( (grep -rn "TODO\|HACK" "$PROJECT_ROOT/src/" --include="*.js" --include="*.ts" --include="*.css" --include="*.html" 2>/dev/null || true) | wc -l | tr -d ' ')
+  FIXME_COUNT=$( (grep -rn "FIXME\|XXX\|BUG" "$PROJECT_ROOT/src/" --include="*.js" --include="*.ts" --include="*.css" --include="*.html" 2>/dev/null || true) | wc -l | tr -d ' ')
 fi
 
 if [[ $TODO_COUNT -eq 0 && $FIXME_COUNT -eq 0 ]]; then
@@ -165,13 +165,13 @@ if [[ $TODO_COUNT -eq 0 && $FIXME_COUNT -eq 0 ]]; then
 else
   if [[ $TODO_COUNT -gt 0 ]]; then
     printf "   ${YELLOW}TODOs:${NC} %d\n" "$TODO_COUNT"
-    grep -rn "TODO\|HACK" "$PROJECT_ROOT/src/" --include="*.js" --include="*.css" --include="*.html" 2>/dev/null | head -5 | while IFS= read -r line; do
+    grep -rn "TODO\|HACK" "$PROJECT_ROOT/src/" --include="*.js" --include="*.ts" --include="*.css" --include="*.html" 2>/dev/null | head -5 | while IFS= read -r line; do
       printf "   ${DIM}  %s${NC}\n" "${line#$PROJECT_ROOT/}"
     done
   fi
   if [[ $FIXME_COUNT -gt 0 ]]; then
     printf "   ${RED}FIXMEs:${NC} %d\n" "$FIXME_COUNT"
-    grep -rn "FIXME\|XXX\|BUG" "$PROJECT_ROOT/src/" --include="*.js" --include="*.css" --include="*.html" 2>/dev/null | head -5 | while IFS= read -r line; do
+    grep -rn "FIXME\|XXX\|BUG" "$PROJECT_ROOT/src/" --include="*.js" --include="*.ts" --include="*.css" --include="*.html" 2>/dev/null | head -5 | while IFS= read -r line; do
       printf "   ${DIM}  %s${NC}\n" "${line#$PROJECT_ROOT/}"
     done
   fi

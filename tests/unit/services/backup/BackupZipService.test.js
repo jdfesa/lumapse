@@ -4,7 +4,7 @@ import {
   BACKUP_MIME_TYPE,
   generateBackupZip,
   noteToMarkdown,
-} from '../../../../src/services/backup/BackupZipService.js'
+} from '../../../../src/services/backup/BackupZipService.ts'
 
 const CREATED_AT = new Date('2026-06-03T12:30:00.000Z')
 

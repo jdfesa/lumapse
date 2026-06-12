@@ -24,7 +24,7 @@ while IFS= read -r file; do
 done < <(
   {
     if [ -d "$PROJECT_ROOT/src" ]; then
-      find "$PROJECT_ROOT/src" -type f \( -name "*.js" -o -name "*.css" \)
+      find "$PROJECT_ROOT/src" -type f \( -name "*.js" -o -name "*.ts" -o -name "*.css" \)
     fi
 
     if [ -d "$PROJECT_ROOT/public" ]; then
