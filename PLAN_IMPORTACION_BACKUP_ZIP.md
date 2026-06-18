@@ -7,7 +7,7 @@
 
 - Fecha de inicio: 2026-06-18
 - Rama de trabajo: `codex/importar-backup-zip`
-- Estado actual: planificacion abierta
+- Estado actual: Fase 1 cerrada - parser y validador ZIP
 - Feature objetivo: importacion/restauracion desde backup `.zip` generado por Lumapse
 - Requisito relacionado: `RF-018`
 
@@ -163,12 +163,13 @@ Tareas:
 - [x] Crear rama `codex/importar-backup-zip`.
 - [x] Analizar formato actual del backup.
 - [x] Crear este plan en la raiz del repo.
-- [ ] Revisar si la politica `merge-safe` alcanza para el primer MVP.
+- [x] Revisar si la politica `merge-safe` alcanza para el primer MVP.
 
 Criterio de cierre:
 
 - El plan queda versionado.
 - No hay cambios funcionales todavia.
+- La politica inicial queda definida como `merge-safe`.
 
 Verificacion:
 
@@ -181,14 +182,14 @@ Objetivo: abrir un `.zip` Lumapse y convertirlo en datos importables sin tocar S
 
 Tareas:
 
-- [ ] Crear tipos en `src/domain/backupImport.ts`.
-- [ ] Implementar `BackupImportZipService.ts`.
-- [ ] Validar `manifest.json`.
-- [ ] Validar presencia y JSON valido de `data/subjects.json`, `data/notes.json`
+- [x] Crear tipos en `src/domain/backupImport.ts`.
+- [x] Implementar `BackupImportZipService.ts`.
+- [x] Validar `manifest.json`.
+- [x] Validar presencia y JSON valido de `data/subjects.json`, `data/notes.json`
   y `data/academic-events.json`.
-- [ ] Normalizar booleanos, fechas opcionales, `subjectId`, `parentSubjectId`
+- [x] Normalizar booleanos, fechas opcionales, `subjectId`, `parentSubjectId`
   y campos faltantes.
-- [ ] Agregar tests unitarios.
+- [x] Agregar tests unitarios.
 
 Criterio de cierre:
 
@@ -198,8 +199,8 @@ Criterio de cierre:
 
 Verificacion:
 
-- `npm test -- tests/unit/services/backup/BackupImportZipService.test.js`
-- `npm run typecheck`
+- [x] `npm test -- tests/unit/services/backup/BackupImportZipService.test.js`
+- [x] `npm run typecheck`
 
 ### Fase 2 - Preview y plan de importacion
 
@@ -396,3 +397,8 @@ Verificacion:
 - Se confirmo que el ZIP actual incluye JSON canonico restaurable.
 - Se definio que la primera version usara `data/*.json` como fuente de verdad.
 - Se creo este plan operativo en la raiz del repo.
+- Se cerro Fase 1 con tipos en `src/domain/backupImport.ts`, parser en
+  `src/services/backup/BackupImportZipService.ts` y tests focalizados.
+- Verificaciones ejecutadas:
+  - `npm test -- tests/unit/services/backup/BackupImportZipService.test.js`
+  - `npm run typecheck`
