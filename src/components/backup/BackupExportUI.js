@@ -1,0 +1,134 @@
+import { BACKUP_FLOW_STATUS } from '../../services/backup/BackupFlowService.js'
+import { BACKUP_REMINDER_REASONS } from '../../services/backup/BackupReminderService.ts'
+
+export const UI_STATE = Object.freeze({
+  LOADING: 'loading',
+  READY: 'ready',
+  WARNING: 'warning',
+  OFFLINE: 'offline',
+  BUSY: 'busy',
+  SUCCESS: 'success',
+  CANCELLED: 'cancelled',
+  ERROR: 'error',
+})
+
+function escapeHtml(value) {
+  const div = document.createElement('div')
+  div.textContent = String(value ?? '')
+  return div.innerHTML
+}
+
+export function statusCopy(status) {
+  if (status === BACKUP_FLOW_STATUS.BLOCKED_OFFLINE) {
+    return {
+      uiState: UI_STATE.OFFLINE,
+      title: 'Sin conexion',
+      message: 'Tus notas siguen disponibles. Para enviar un backup a Google Drive necesitás internet.',
+      actionLabel: 'Crear backup externo',
+      disabled: true,
+    }
+  }
+
+  if (status === BACKUP_FLOW_STATUS.REQUIRES_WARNING) {
+    return {
+      uiState: UI_STATE.WARNING,
+      title: 'Conexion con advertencia',
+      message: 'Podés crear el backup ahora, pero la red actual puede consumir datos móviles o no estar identificada.',
+      actionLabel: 'Crear backup de todos modos',
+      disabled: false,
+    }
+  }
+
+  return {
+    uiState: UI_STATE.READY,
+    title: 'Backup externo disponible',
+    message: 'Lumapse va a crear un ZIP manual y abrir el selector de Android para elegir Google Drive u otro destino.',
+    actionLabel: 'Crear backup externo',
+    disabled: false,
+  }
+}
+
+function renderBackupIcon() {
+  return `
+    <svg class="backup-view__icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 3v12"></path>
+      <path d="m7 10 5 5 5-5"></path>
+      <path d="M5 21h14"></path>
+    </svg>
+  `
+}
+
+function reminderCopy(reminder) {
+  if (!reminder?.shouldShow) return null
+
+  if (reminder.reason === BACKUP_REMINDER_REASONS.BACKUP_DUE) {
+    return {
+      title: 'Backup pendiente',
+      message: `Pasaron ${reminder.daysSinceLastBackup} dias desde el ultimo backup. Podes crear uno ahora sin activar sincronizacion automatica.`,
+    }
+  }
+
+  return {
+    title: 'Primer backup pendiente',
+    message: 'Todavia no registramos un backup manual. Podes crear un ZIP externo para conservar tus notas fuera de la app.',
+  }
+}
+
+function renderBackupReminder(reminder) {
+  const copy = reminderCopy(reminder)
+  if (!copy) return ''
+
+  return `
+    <div class="backup-view__reminder" role="status">
+      <div class="backup-view__reminder-copy">
+        <p class="backup-view__reminder-title">${copy.title}</p>
+        <p class="backup-view__message">${copy.message}</p>
+      </div>
+      <button class="backup-view__reminder-dismiss js-btn-dismiss-backup-reminder" type="button" aria-label="Cerrar aviso de backup" title="Cerrar aviso de backup">
+        Cerrar aviso
+      </button>
+    </div>
+  `
+}
+
+export function renderBackupExportSection(state) {
+  const busy = state.uiState === UI_STATE.BUSY
+  const success = state.uiState === UI_STATE.SUCCESS
+  const cancelled = state.uiState === UI_STATE.CANCELLED
+  const error = state.uiState === UI_STATE.ERROR
+  const disabled = state.disabled || busy
+  const countText = state.counts
+    ? `${state.counts.notes} nota(s), ${state.counts.subjects} materia(s), ${state.counts.academicEvents} fecha(s)`
+    : ''
+
+  return `
+    <section class="backup-view__panel backup-view__panel--export">
+      <div class="backup-view__header">
+        ${renderBackupIcon()}
+        <div class="backup-view__heading">
+          <p class="backup-view__eyebrow">Backup manual</p>
+          <h2 class="backup-view__title">Exportar respaldo</h2>
+        </div>
+      </div>
+
+      <div class="backup-view__status">
+        <p class="backup-view__status-title">${state.title}</p>
+        <p class="backup-view__message">${state.message}</p>
+        ${countText ? `<p class="backup-view__meta">Ultimo ZIP: ${countText}</p>` : ''}
+      </div>
+
+      ${renderBackupReminder(state.reminder)}
+
+      <div class="backup-view__actions">
+        <button class="backup-view__button js-btn-create-backup" type="button" aria-label="${busy ? 'Preparando backup' : state.actionLabel}" title="${busy ? 'Preparando backup' : state.actionLabel}" ${disabled ? 'disabled' : ''}>
+          ${busy ? 'Preparando backup...' : state.actionLabel}
+        </button>
+        ${state.showRefresh ? '<button class="backup-view__button backup-view__button--secondary js-btn-refresh-backup" type="button" aria-label="Actualizar estado de backup" title="Actualizar estado de backup">Actualizar estado</button>' : ''}
+      </div>
+
+      ${success ? '<p class="backup-view__result backup-view__result--success">Backup entregado al selector del sistema. Verificá que aparezca en Google Drive o en el destino elegido.</p>' : ''}
+      ${cancelled ? '<p class="backup-view__result backup-view__result--neutral">Selector cerrado sin elegir destino. Podés volver a intentar cuando quieras.</p>' : ''}
+      ${error ? `<p class="backup-view__result backup-view__result--error">${escapeHtml(state.errorMessage)}</p>` : ''}
+    </section>
+  `
+}

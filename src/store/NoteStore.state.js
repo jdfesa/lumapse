@@ -12,6 +12,7 @@ export const state = {
   subjects: [],           // Materias cargadas (árbol con conteos)
   activeSubjectId: null,  // Filtro: null = Entrada, ID = materia específica
   viewMode: 'inbox',      // 'inbox' | 'subject' | 'archived' | 'trash' | 'backup' | 'all'
+  backupPanel: 'export',  // 'export' | 'import'
   trashCount: 0,          // Cantidad total de items en papelera (para badge)
   showTrashWarning: false, // Flag: papelera tiene >50 items
   archivedSubjectIds: [], // IDs de subjects archivados (para filtros)

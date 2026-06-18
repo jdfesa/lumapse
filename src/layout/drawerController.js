@@ -117,17 +117,21 @@ export function initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS }) {
   })
 
   // --- Backup manual externo ---
-  const btnBackup = document.getElementById('btn-backup')
+  const btnExportBackup = document.getElementById('btn-export-backup')
+  const btnImportBackup = document.getElementById('btn-import-backup')
   const btnToggleTheme = document.getElementById('btn-toggle-theme')
 
-  btnBackup.addEventListener('click', () => {
+  function openBackupPanel(panel) {
     showingArchived = false
     archivedLabel.textContent = 'Ver archivadas'
     btnArchiveToggle.classList.remove('drawer__nav-btn--active')
-    NoteStore.setViewBackup()
+    NoteStore.setViewBackup(panel)
     updateSubjectActiveState(null)
     closeAppMenu()
-  })
+  }
+
+  btnExportBackup.addEventListener('click', () => openBackupPanel('export'))
+  btnImportBackup.addEventListener('click', () => openBackupPanel('import'))
 
   btnToggleTheme.addEventListener('click', closeAppMenu)
 
@@ -156,7 +160,8 @@ export function initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS }) {
     }
     // Actualizar estado activo del botón papelera
     btnTrash.classList.toggle('drawer__nav-btn--active', state.viewMode === 'trash')
-    btnBackup.classList.toggle('app-menu-drawer__item--active', state.viewMode === 'backup')
+    btnExportBackup.classList.toggle('app-menu-drawer__item--active', state.viewMode === 'backup' && state.backupPanel === 'export')
+    btnImportBackup.classList.toggle('app-menu-drawer__item--active', state.viewMode === 'backup' && state.backupPanel === 'import')
     btnOpenAppMenu.classList.toggle('app-header__logo-icon-btn--active', state.viewMode === 'backup')
   })
 

@@ -122,7 +122,7 @@ export class NoteList {
         renderTrashView(this.feedContainer);
       } else if (state.viewMode === 'backup') {
         this.destroyVirtualFeed();
-        this.renderBackupView();
+        this.renderBackupView(state.backupPanel);
       } else {
         this.destroyBackupView();
         const notesToRender = NoteStore.getFilteredNotes();
@@ -211,11 +211,15 @@ export class NoteList {
     await NoteStore.loadUpcomingAcademicEvents();
   }
 
-  renderBackupView() {
-    if (this.backupView) return;
+  renderBackupView(panel = 'export') {
+    if (this.backupView) {
+      this.backupView.setPanel(panel);
+      return;
+    }
 
     this.feedContainer.innerHTML = '';
     this.backupView = new BackupView(this.feedContainer, {
+      initialPanel: panel,
       onImportComplete: this.refreshAfterBackupImport,
     });
     this.backupView.init();

@@ -7,7 +7,7 @@
 
 - Fecha de inicio: 2026-06-18
 - Rama de trabajo: `codex/importar-backup-zip`
-- Estado actual: Fase 5 cerrada - UI en BackupView
+- Estado actual: Fase 5 cerrada - UI separada Exportar/Importar y guard LOC corregido
 - Feature objetivo: importacion/restauracion desde backup `.zip` generado por Lumapse
 - Requisito relacionado: `RF-018`
 
@@ -275,13 +275,19 @@ Verificacion:
 - [x] `npm test -- tests/unit/services/backup/BackupImportService.test.js`
 - [x] `npm run typecheck`
 
-### Fase 5 - UI en BackupView
+### Fase 5 - UI en Backup
 
-Objetivo: permitir importar desde la vista Backup sin invadir el feed.
+Objetivo: permitir importar desde la vista Backup sin invadir el feed y
+separar claramente la accion de exportar backup de la accion inversa de
+importar un ZIP compatible con Lumapse.
 
 Tareas:
 
 - [x] Agregar boton `Importar ZIP`.
+- [x] Separar la navegacion del drawer en `Exportar backup` e `Importar ZIP`.
+- [x] Separar la UI interna en pestanas `Exportar` e `Importar`.
+- [x] Extraer paneles de UI y controlador de importacion para mantener
+  `BackupView` por debajo del limite LOC.
 - [x] Abrir selector de archivo con `accept=".zip,application/zip"`.
 - [x] Mostrar estado de lectura.
 - [x] Mostrar preview antes de confirmar.
@@ -300,8 +306,11 @@ Criterio de cierre:
 Verificacion:
 
 - [x] `npm test -- tests/unit/components/backup/BackupView.test.js`
+- [x] `npm test -- tests/unit/components/backup/BackupView.test.js tests/unit/store/NoteStore.ui.test.js tests/unit/components/feed/NoteList.test.js`
+- [x] `npm run lint`
 - [x] `npm run typecheck`
 - [x] `npm run build`
+- [x] `scripts/lumapse-audit-bin --code`
 
 ### Fase 6 - Integracion y regresion
 
@@ -430,15 +439,25 @@ Verificacion:
   - `npm test -- tests/unit/services/backup/BackupImportService.test.js`
   - `npm test -- tests/unit/services/backup/BackupImportZipService.test.js tests/unit/services/backup/BackupImportPlanService.test.js tests/unit/services/backup/BackupImportDataSource.test.js tests/unit/services/backup/BackupImportService.test.js`
   - `npm run typecheck`
-- Se cerro Fase 5 integrando importacion en `BackupView`.
+- Se cerro Fase 5 integrando importacion en la experiencia de Backup.
+- Se ajusto la navegacion para separar `Exportar backup` de `Importar ZIP`,
+  evitando que una sola accion llamada "Backup" oculte la funcion inversa.
+- `BackupView` quedo como orquestador liviano y la UI/flujo se dividio en
+  `BackupExportUI`, `BackupImportUI`, `BackupViewPanels` y
+  `BackupImportFlowController`.
+- El guard Rust de tamano queda sin `PELIGRO`; `BackupView.js` baja a 279 LOC
+  no vacias en `scripts/lumapse-audit-bin --code`.
 - La UI permite seleccionar ZIP, generar preview, cancelar, confirmar con
   `ConfirmDialog`, aplicar importacion y mostrar resultado.
 - `NoteList` inyecta un callback para refrescar notas, materias, archivadas,
   papelera y fechas academicas despues de una importacion exitosa.
 - Verificaciones ejecutadas:
   - `npm test -- tests/unit/components/backup/BackupView.test.js`
+  - `npm test -- tests/unit/components/backup/BackupView.test.js tests/unit/store/NoteStore.ui.test.js tests/unit/components/feed/NoteList.test.js`
   - `npm test -- tests/unit/components/backup/BackupView.test.js tests/unit/components/feed/NoteList.test.js tests/unit/services/backup/BackupImportZipService.test.js tests/unit/services/backup/BackupImportPlanService.test.js tests/unit/services/backup/BackupImportDataSource.test.js tests/unit/services/backup/BackupImportService.test.js`
+  - `npm run lint`
   - `npm run typecheck`
   - `npm run build`
+  - `scripts/lumapse-audit-bin --code`
 - Verificacion visual local pendiente: `npm run dev -- --host 127.0.0.1 --port 5173`
   fallo dentro del sandbox con `EPERM` y la ejecucion escalada fue rechazada.

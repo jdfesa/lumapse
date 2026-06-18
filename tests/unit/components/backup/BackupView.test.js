@@ -170,7 +170,8 @@ describe('BackupView', () => {
 
     expect(container.textContent).toContain('Backup externo disponible')
     expect(container.textContent).toContain('Crear backup externo')
-    expect(container.textContent).toContain('Importar ZIP')
+    expect(container.textContent).toContain('Exportar respaldo')
+    expect(container.textContent).toContain('Importar')
     expect(container.querySelector('.js-btn-create-backup').disabled).toBe(false)
 
     view.destroy()
@@ -340,7 +341,7 @@ describe('BackupView', () => {
 
   it('abre el selector de archivo al tocar Importar ZIP', async () => {
     const container = createContainer()
-    const view = new BackupView(container)
+    const view = new BackupView(container, { initialPanel: 'import' })
 
     await view.init()
     const input = container.querySelector('.js-backup-import-input')
@@ -356,7 +357,7 @@ describe('BackupView', () => {
   it('prepara preview al seleccionar un ZIP', async () => {
     const prepareImport = vi.fn().mockResolvedValue(importPlan())
     const container = createContainer()
-    const view = new BackupView(container, { prepareImport })
+    const view = new BackupView(container, { initialPanel: 'import', prepareImport })
 
     await view.init()
     const file = selectImportFile(container)
@@ -378,6 +379,7 @@ describe('BackupView', () => {
     const onImportComplete = vi.fn().mockResolvedValue(undefined)
     const container = createContainer()
     const view = new BackupView(container, {
+      initialPanel: 'import',
       prepareImport,
       confirmImport,
       onImportComplete,
@@ -406,7 +408,7 @@ describe('BackupView', () => {
     const prepareImport = vi.fn().mockResolvedValue(importPlan())
     const confirmImport = vi.fn()
     const container = createContainer()
-    const view = new BackupView(container, { prepareImport, confirmImport })
+    const view = new BackupView(container, { initialPanel: 'import', prepareImport, confirmImport })
 
     await view.init()
     selectImportFile(container)
@@ -428,6 +430,7 @@ describe('BackupView', () => {
     const cancelConfirm = vi.fn().mockResolvedValue(false)
     const container = createContainer()
     const view = new BackupView(container, {
+      initialPanel: 'import',
       prepareImport,
       confirmImport,
       confirmDialog: cancelConfirm,
@@ -450,7 +453,7 @@ describe('BackupView', () => {
   it('muestra error y toast si falla la lectura del ZIP', async () => {
     const prepareImport = vi.fn().mockRejectedValue(new Error('ZIP invalido'))
     const container = createContainer()
-    const view = new BackupView(container, { prepareImport })
+    const view = new BackupView(container, { initialPanel: 'import', prepareImport })
 
     await view.init()
     selectImportFile(container)
@@ -458,6 +461,23 @@ describe('BackupView', () => {
 
     expect(container.textContent).toContain('ZIP invalido')
     expect(showErrorToast).toHaveBeenCalledWith('ZIP invalido')
+
+    view.destroy()
+  })
+
+  it('permite cambiar de exportar a importar con pestañas internas', async () => {
+    const container = createContainer()
+    const view = new BackupView(container)
+
+    await view.init()
+
+    expect(container.textContent).toContain('Exportar respaldo')
+    expect(container.textContent).not.toContain('Importar backup')
+
+    container.querySelector('[data-panel="import"]').click()
+
+    expect(container.textContent).toContain('Importar respaldo')
+    expect(container.textContent).toContain('Importar backup')
 
     view.destroy()
   })

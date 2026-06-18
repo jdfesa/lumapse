@@ -361,6 +361,18 @@ describe('NoteStore.ui', () => {
       expect(state.viewMode).toBe('backup')
     })
 
+    it('usa panel export por defecto', () => {
+      NoteStoreUi.setViewBackup()
+
+      expect(state.backupPanel).toBe('export')
+    })
+
+    it('permite abrir panel import', () => {
+      NoteStoreUi.setViewBackup('import')
+
+      expect(state.backupPanel).toBe('import')
+    })
+
     it('pone activeSubjectId = null', () => {
       state.activeSubjectId = 'subj-1'
 
