@@ -115,8 +115,9 @@ export function setViewTrash() {
 /**
  * Cambia a la vista de Backup manual.
  */
-export function setViewBackup() {
+export function setViewBackup(panel = 'export') {
   state.viewMode = 'backup'
+  state.backupPanel = panel === 'import' ? 'import' : 'export'
   state.activeSubjectId = null
   notify()
 }

@@ -95,6 +95,7 @@ export class NoteList {
     this.handleDelete = this.handleDelete.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
     this.handleGlobalClick = this.handleGlobalClick.bind(this);
+    this.refreshAfterBackupImport = this.refreshAfterBackupImport.bind(this);
     
     // Escuchar clics globales para cerrar dropdowns
     document.addEventListener('click', this.handleGlobalClick);
@@ -121,7 +122,7 @@ export class NoteList {
         renderTrashView(this.feedContainer);
       } else if (state.viewMode === 'backup') {
         this.destroyVirtualFeed();
-        this.renderBackupView();
+        this.renderBackupView(state.backupPanel);
       } else {
         this.destroyBackupView();
         const notesToRender = NoteStore.getFilteredNotes();
@@ -201,11 +202,27 @@ export class NoteList {
     }
   }
 
-  renderBackupView() {
-    if (this.backupView) return;
+  async refreshAfterBackupImport() {
+    await NoteStore.loadNotes();
+    await NoteStore.loadSubjects();
+    await NoteStore.loadArchivedSubjects();
+    await NoteStore.loadTrashCount();
+    await NoteStore.loadAcademicEvents();
+    await NoteStore.loadUpcomingAcademicEvents();
+  }
+
+  renderBackupView(panel = 'export') {
+    if (this.backupView) {
+      this.backupView.setPanel(panel);
+      return;
+    }
 
     this.feedContainer.innerHTML = '';
-    this.backupView = new BackupView(this.feedContainer);
+    this.backupView = new BackupView(this.feedContainer, {
+      initialPanel: panel,
+      onImportComplete: this.refreshAfterBackupImport,
+      onPanelChange: NoteStore.setViewBackup,
+    });
     this.backupView.init();
   }
 

@@ -14,6 +14,15 @@ vi.mock('../../../../src/services/backup/BackupFlowService.js', () => ({
   getExternalBackupReadiness: vi.fn(),
 }))
 
+vi.mock('../../../../src/services/backup/BackupImportService.ts', () => ({
+  confirmBackupImport: vi.fn(),
+  prepareBackupImport: vi.fn(),
+}))
+
+vi.mock('../../../../src/components/common/ConfirmDialog.js', () => ({
+  confirmDialog: vi.fn(),
+}))
+
 vi.mock('../../../../src/components/common/Toast.js', () => ({
   showErrorToast: vi.fn(),
 }))
@@ -25,13 +34,14 @@ import {
   getCurrentBackupReminder,
   getExternalBackupReadiness,
 } from '../../../../src/services/backup/BackupFlowService.js'
+import { confirmDialog } from '../../../../src/components/common/ConfirmDialog.js'
 import { showErrorToast } from '../../../../src/components/common/Toast.js'
 import { BackupView } from '../../../../src/components/backup/BackupView.js'
 
 const WIFI_READINESS = {
   status: BACKUP_FLOW_STATUS.READY,
   ready: true,
-  message: 'Con WiFi. Podes crear un backup externo.',
+  message: 'Con WiFi. Podes exportar un ZIP.',
   networkState: {
     connectionType: 'wifi',
     externalBackupAllowed: true,
@@ -42,7 +52,7 @@ const WIFI_READINESS = {
 const CELLULAR_READINESS = {
   status: BACKUP_FLOW_STATUS.REQUIRES_WARNING,
   ready: false,
-  message: 'Con datos moviles. Podes crear backup, pero puede consumir datos.',
+  message: 'Con datos moviles. Podes exportar un ZIP, pero puede consumir datos.',
   networkState: {
     connectionType: 'cellular',
     externalBackupAllowed: true,
@@ -77,6 +87,52 @@ function createDeferred() {
   return { promise, resolve, reject }
 }
 
+async function flushPromises(times = 4) {
+  for (let index = 0; index < times; index += 1) {
+    await Promise.resolve()
+  }
+}
+
+function importPlan(overrides = {}) {
+  return {
+    counts: {
+      subjects: { source: 2, importable: 2, skipped: 0 },
+      notes: { source: 5, importable: 5, skipped: 0 },
+      academicEvents: { source: 1, importable: 1, skipped: 0 },
+      renamedSubjects: 0,
+      relationshipRepairs: 0,
+      ...(overrides.counts || {}),
+    },
+    warnings: overrides.warnings || [],
+    ...(overrides.extra || {}),
+  }
+}
+
+function importResult(overrides = {}) {
+  return {
+    imported: {
+      subjects: 2,
+      notes: 5,
+      academicEvents: 1,
+      ...(overrides.imported || {}),
+    },
+    skipped: [],
+    renamedSubjects: [],
+    relationshipRepairs: [],
+    warnings: [],
+  }
+}
+
+function selectImportFile(container, file = new File(['zip'], 'lumapse.zip', { type: 'application/zip' })) {
+  const input = container.querySelector('.js-backup-import-input')
+  Object.defineProperty(input, 'files', {
+    value: [file],
+    configurable: true,
+  })
+  input.dispatchEvent(new Event('change', { bubbles: true }))
+  return file
+}
+
 beforeEach(() => {
   document.body.innerHTML = ''
   vi.clearAllMocks()
@@ -88,6 +144,7 @@ beforeEach(() => {
     thresholdDays: 30,
   })
   dismissCurrentBackupReminder.mockReturnValue('2026-06-03T12:00:00.000Z')
+  confirmDialog.mockResolvedValue(true)
   createAndShareCurrentBackup.mockResolvedValue({
     status: BACKUP_FLOW_STATUS.SHARED,
     networkState: WIFI_READINESS.networkState,
@@ -111,8 +168,9 @@ describe('BackupView', () => {
 
     await view.init()
 
-    expect(container.textContent).toContain('Backup externo disponible')
-    expect(container.textContent).toContain('Crear backup externo')
+    expect(container.textContent).toContain('Listo para exportar ZIP')
+    expect(container.textContent).toContain('Exportar ZIP')
+    expect(container.textContent).toContain('Importar ZIP')
     expect(container.querySelector('.js-btn-create-backup').disabled).toBe(false)
 
     view.destroy()
@@ -145,7 +203,7 @@ describe('BackupView', () => {
     await Promise.resolve()
 
     expect(createAndShareCurrentBackup).toHaveBeenCalledWith({ acceptNetworkWarning: true })
-    expect(container.textContent).toContain('Backup preparado')
+    expect(container.textContent).toContain('ZIP preparado')
 
     view.destroy()
   })
@@ -159,7 +217,7 @@ describe('BackupView', () => {
     await Promise.resolve()
     await Promise.resolve()
 
-    expect(container.textContent).toContain('Backup preparado')
+    expect(container.textContent).toContain('ZIP preparado')
     expect(container.textContent).toContain('5 nota(s), 2 materia(s), 1 fecha(s)')
 
     view.destroy()
@@ -179,7 +237,7 @@ describe('BackupView', () => {
     await Promise.resolve()
     await Promise.resolve()
 
-    expect(container.textContent).toContain('Backup sin destino elegido')
+    expect(container.textContent).toContain('ZIP sin destino elegido')
     expect(container.textContent).toContain('Selector cerrado sin elegir destino')
     expect(showErrorToast).not.toHaveBeenCalled()
 
@@ -198,8 +256,8 @@ describe('BackupView', () => {
 
     await view.init()
 
-    expect(container.textContent).toContain('Primer backup pendiente')
-    expect(container.textContent).toContain('Todavia no registramos un backup manual')
+    expect(container.textContent).toContain('Primer ZIP pendiente')
+    expect(container.textContent).toContain('Todavia no registramos un ZIP exportado')
 
     view.destroy()
   })
@@ -221,7 +279,7 @@ describe('BackupView', () => {
 
     expect(dismissCurrentBackupReminder).toHaveBeenCalledTimes(1)
     expect(createAndShareCurrentBackup).not.toHaveBeenCalled()
-    expect(container.textContent).not.toContain('Backup pendiente')
+    expect(container.textContent).not.toContain('Exportar ZIP pendiente')
 
     view.destroy()
   })
@@ -237,14 +295,14 @@ describe('BackupView', () => {
     const view = new BackupView(container)
 
     await view.init()
-    expect(container.textContent).toContain('Backup pendiente')
+    expect(container.textContent).toContain('Exportar ZIP pendiente')
 
     container.querySelector('.js-btn-create-backup').click()
     await Promise.resolve()
     await Promise.resolve()
 
-    expect(container.textContent).toContain('Backup preparado')
-    expect(container.textContent).not.toContain('Backup pendiente')
+    expect(container.textContent).toContain('ZIP preparado')
+    expect(container.textContent).not.toContain('Exportar ZIP pendiente')
 
     view.destroy()
   })
@@ -259,7 +317,7 @@ describe('BackupView', () => {
     await Promise.resolve()
     await Promise.resolve()
 
-    expect(container.textContent).toContain('No se pudo crear el backup')
+    expect(container.textContent).toContain('No se pudo exportar el ZIP')
     expect(container.textContent).toContain('No se pudo compartir')
     expect(showErrorToast).toHaveBeenCalledWith('No se pudo compartir')
 
@@ -276,6 +334,151 @@ describe('BackupView', () => {
     await Promise.resolve()
 
     expect(getExternalBackupReadiness).toHaveBeenCalledTimes(2)
+
+    view.destroy()
+  })
+
+  it('abre el selector de archivo al tocar Seleccionar ZIP', async () => {
+    const container = createContainer()
+    const view = new BackupView(container, { initialPanel: 'import' })
+
+    await view.init()
+    const input = container.querySelector('.js-backup-import-input')
+    const clickSpy = vi.spyOn(input, 'click')
+
+    container.querySelector('.js-btn-select-import').click()
+
+    expect(clickSpy).toHaveBeenCalledTimes(1)
+
+    view.destroy()
+  })
+
+  it('prepara preview al seleccionar un ZIP', async () => {
+    const prepareImport = vi.fn().mockResolvedValue(importPlan())
+    const container = createContainer()
+    const view = new BackupView(container, { initialPanel: 'import', prepareImport })
+
+    await view.init()
+    const file = selectImportFile(container)
+    await flushPromises()
+
+    expect(prepareImport).toHaveBeenCalledWith({ content: file, filename: 'lumapse.zip' })
+    expect(container.textContent).toContain('Preview listo')
+    expect(container.textContent).toContain('Importará: 5 nota(s), 2 materia(s), 1 fecha(s)')
+    expect(container.querySelector('.js-btn-confirm-import').textContent).toContain('Importar ZIP')
+
+    view.destroy()
+  })
+
+  it('confirma importacion preparada, refresca datos y muestra resultado', async () => {
+    const plan = importPlan()
+    const result = importResult()
+    const prepareImport = vi.fn().mockResolvedValue(plan)
+    const confirmImport = vi.fn().mockResolvedValue(result)
+    const onImportComplete = vi.fn().mockResolvedValue(undefined)
+    const container = createContainer()
+    const view = new BackupView(container, {
+      initialPanel: 'import',
+      prepareImport,
+      confirmImport,
+      onImportComplete,
+      confirmDialog,
+    })
+
+    await view.init()
+    selectImportFile(container)
+    await flushPromises()
+
+    container.querySelector('.js-btn-confirm-import').click()
+    await flushPromises()
+
+    expect(confirmDialog).toHaveBeenCalledWith(expect.objectContaining({
+      title: 'Confirmar importación ZIP',
+      confirmText: 'Importar ZIP',
+    }))
+    expect(confirmImport).toHaveBeenCalledWith(plan)
+    expect(onImportComplete).toHaveBeenCalledWith(result)
+    expect(container.textContent).toContain('Importación completada: 5 nota(s), 2 materia(s), 1 fecha(s).')
+
+    view.destroy()
+  })
+
+  it('cancela preview sin aplicar importacion', async () => {
+    const prepareImport = vi.fn().mockResolvedValue(importPlan())
+    const confirmImport = vi.fn()
+    const container = createContainer()
+    const view = new BackupView(container, { initialPanel: 'import', prepareImport, confirmImport })
+
+    await view.init()
+    selectImportFile(container)
+    await flushPromises()
+
+    expect(container.textContent).toContain('Preview listo')
+
+    container.querySelector('.js-btn-cancel-import').click()
+
+    expect(confirmImport).not.toHaveBeenCalled()
+    expect(container.textContent).not.toContain('Preview listo')
+
+    view.destroy()
+  })
+
+  it('no aplica importacion si la confirmacion se cancela', async () => {
+    const prepareImport = vi.fn().mockResolvedValue(importPlan())
+    const confirmImport = vi.fn()
+    const cancelConfirm = vi.fn().mockResolvedValue(false)
+    const container = createContainer()
+    const view = new BackupView(container, {
+      initialPanel: 'import',
+      prepareImport,
+      confirmImport,
+      confirmDialog: cancelConfirm,
+    })
+
+    await view.init()
+    selectImportFile(container)
+    await flushPromises()
+
+    container.querySelector('.js-btn-confirm-import').click()
+    await flushPromises()
+
+    expect(cancelConfirm).toHaveBeenCalledTimes(1)
+    expect(confirmImport).not.toHaveBeenCalled()
+    expect(container.textContent).toContain('Preview listo')
+
+    view.destroy()
+  })
+
+  it('muestra error y toast si falla la lectura del ZIP', async () => {
+    const prepareImport = vi.fn().mockRejectedValue(new Error('ZIP invalido'))
+    const container = createContainer()
+    const view = new BackupView(container, { initialPanel: 'import', prepareImport })
+
+    await view.init()
+    selectImportFile(container)
+    await flushPromises()
+
+    expect(container.textContent).toContain('ZIP invalido')
+    expect(showErrorToast).toHaveBeenCalledWith('ZIP invalido')
+
+    view.destroy()
+  })
+
+  it('permite cambiar de exportar a importar con pestañas internas', async () => {
+    const container = createContainer()
+    const onPanelChange = vi.fn()
+    const view = new BackupView(container, { onPanelChange })
+
+    await view.init()
+
+    expect(container.textContent).toContain('Exportar ZIP')
+    expect(container.textContent).not.toContain('Seleccioná un ZIP compatible')
+
+    container.querySelector('[data-panel="import"]').click()
+
+    expect(container.textContent).toContain('Importar ZIP')
+    expect(container.textContent).toContain('Seleccioná un ZIP compatible')
+    expect(onPanelChange).toHaveBeenCalledWith('import')
 
     view.destroy()
   })
