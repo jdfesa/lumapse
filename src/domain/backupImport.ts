@@ -78,6 +78,11 @@ export interface BackupImportApplyResult {
   warnings: string[]
 }
 
+export interface BackupImportFlowResult {
+  plan: BackupImportPlan
+  result: BackupImportApplyResult
+}
+
 export class BackupImportError extends Error {
   constructor(message: string) {
     super(message)
