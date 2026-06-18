@@ -95,6 +95,7 @@ export class NoteList {
     this.handleDelete = this.handleDelete.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
     this.handleGlobalClick = this.handleGlobalClick.bind(this);
+    this.refreshAfterBackupImport = this.refreshAfterBackupImport.bind(this);
     
     // Escuchar clics globales para cerrar dropdowns
     document.addEventListener('click', this.handleGlobalClick);
@@ -201,11 +202,22 @@ export class NoteList {
     }
   }
 
+  async refreshAfterBackupImport() {
+    await NoteStore.loadNotes();
+    await NoteStore.loadSubjects();
+    await NoteStore.loadArchivedSubjects();
+    await NoteStore.loadTrashCount();
+    await NoteStore.loadAcademicEvents();
+    await NoteStore.loadUpcomingAcademicEvents();
+  }
+
   renderBackupView() {
     if (this.backupView) return;
 
     this.feedContainer.innerHTML = '';
-    this.backupView = new BackupView(this.feedContainer);
+    this.backupView = new BackupView(this.feedContainer, {
+      onImportComplete: this.refreshAfterBackupImport,
+    });
     this.backupView.init();
   }
 

@@ -6,6 +6,10 @@
 // =============================================================
 
 import {
+  confirmBackupImport,
+  prepareBackupImport,
+} from '../../services/backup/BackupImportService.ts'
+import {
   BACKUP_FLOW_STATUS,
   createAndShareCurrentBackup,
   dismissCurrentBackupReminder,
@@ -13,6 +17,7 @@ import {
   getExternalBackupReadiness,
 } from '../../services/backup/BackupFlowService.js'
 import { BACKUP_REMINDER_REASONS } from '../../services/backup/BackupReminderService.ts'
+import { confirmDialog } from '../common/ConfirmDialog.js'
 import { showErrorToast } from '../common/Toast.js'
 import './BackupView.css'
 
@@ -23,6 +28,15 @@ const UI_STATE = Object.freeze({
   OFFLINE: 'offline',
   BUSY: 'busy',
   SUCCESS: 'success', CANCELLED: 'cancelled',
+  ERROR: 'error',
+})
+
+const IMPORT_STATE = Object.freeze({
+  IDLE: 'idle',
+  READING: 'reading',
+  PREVIEW: 'preview',
+  IMPORTING: 'importing',
+  SUCCESS: 'success',
   ERROR: 'error',
 })
 
@@ -63,6 +77,101 @@ function renderBackupIcon() {
       <path d="m7 10 5 5 5-5"></path>
       <path d="M5 21h14"></path>
     </svg>
+  `
+}
+
+function escapeHtml(value) {
+  const div = document.createElement('div')
+  div.textContent = String(value ?? '')
+  return div.innerHTML
+}
+
+function backupItemSummary(counts) {
+  if (!counts) return '0 nota(s), 0 materia(s), 0 fecha(s)'
+
+  return `${counts.notes} nota(s), ${counts.subjects} materia(s), ${counts.academicEvents} fecha(s)`
+}
+
+function planImportSummary(plan) {
+  if (!plan?.counts) return ''
+
+  return `${plan.counts.notes.importable} nota(s), ${plan.counts.subjects.importable} materia(s), ${plan.counts.academicEvents.importable} fecha(s)`
+}
+
+function planSkippedSummary(plan) {
+  if (!plan?.counts) return ''
+
+  return `${plan.counts.notes.skipped} nota(s), ${plan.counts.subjects.skipped} materia(s), ${plan.counts.academicEvents.skipped} fecha(s)`
+}
+
+function renderImportPreview(state) {
+  if (state.importStatus !== IMPORT_STATE.PREVIEW || !state.importPlan) return ''
+
+  const plan = state.importPlan
+  const skippedTotal = plan.counts.notes.skipped + plan.counts.subjects.skipped + plan.counts.academicEvents.skipped
+  const adjustmentTotal = plan.counts.renamedSubjects + plan.counts.relationshipRepairs
+
+  return `
+    <div class="backup-view__import-preview" role="status">
+      <p class="backup-view__status-title">Preview listo</p>
+      <p class="backup-view__message">${escapeHtml(state.importFilename || 'backup.zip')}</p>
+      <p class="backup-view__meta">Importará: ${planImportSummary(plan)}</p>
+      ${skippedTotal > 0 ? `<p class="backup-view__meta">Omitirá duplicados: ${planSkippedSummary(plan)}</p>` : ''}
+      ${adjustmentTotal > 0 ? `<p class="backup-view__meta">Ajustes: ${plan.counts.renamedSubjects} nombre(s), ${plan.counts.relationshipRepairs} relación(es)</p>` : ''}
+      ${plan.warnings.length > 0 ? `<p class="backup-view__meta">Avisos: ${plan.warnings.length}</p>` : ''}
+    </div>
+  `
+}
+
+function renderImportResult(state) {
+  if (state.importStatus === IMPORT_STATE.SUCCESS && state.importResult) {
+    return `
+      <p class="backup-view__result backup-view__result--success">
+        Importación completada: ${backupItemSummary(state.importResult.imported)}.
+      </p>
+    `
+  }
+
+  if (state.importStatus === IMPORT_STATE.ERROR) {
+    return `
+      <p class="backup-view__result backup-view__result--error">
+        ${escapeHtml(state.importErrorMessage || 'No se pudo importar el backup.')}
+      </p>
+    `
+  }
+
+  return ''
+}
+
+function renderImportPanel(state) {
+  const reading = state.importStatus === IMPORT_STATE.READING
+  const importing = state.importStatus === IMPORT_STATE.IMPORTING
+  const busy = reading || importing
+  const hasPreview = state.importStatus === IMPORT_STATE.PREVIEW && state.importPlan
+
+  return `
+    <div class="backup-view__import">
+      <input class="js-backup-import-input" type="file" accept=".zip,application/zip,application/x-zip-compressed" hidden>
+      <div class="backup-view__import-copy">
+        <p class="backup-view__status-title">Importar backup</p>
+        <p class="backup-view__message">Recuperá un ZIP generado por Lumapse.</p>
+      </div>
+      ${renderImportPreview(state)}
+      <div class="backup-view__actions">
+        <button class="backup-view__button backup-view__button--secondary js-btn-select-import" type="button" aria-label="Importar ZIP" title="Importar ZIP" ${busy ? 'disabled' : ''}>
+          ${reading ? 'Leyendo ZIP...' : 'Importar ZIP'}
+        </button>
+        ${hasPreview ? `
+          <button class="backup-view__button js-btn-confirm-import" type="button" aria-label="Confirmar importación" title="Confirmar importación" ${busy ? 'disabled' : ''}>
+            ${importing ? 'Importando...' : 'Confirmar importación'}
+          </button>
+          <button class="backup-view__button backup-view__button--secondary js-btn-cancel-import" type="button" aria-label="Cancelar importación" title="Cancelar importación" ${busy ? 'disabled' : ''}>
+            Cancelar
+          </button>
+        ` : ''}
+      </div>
+      ${renderImportResult(state)}
+    </div>
   `
 }
 
@@ -136,7 +245,9 @@ function renderBackupView(state) {
 
       ${success ? '<p class="backup-view__result backup-view__result--success">Backup entregado al selector del sistema. Verificá que aparezca en Google Drive o en el destino elegido.</p>' : ''}
       ${cancelled ? '<p class="backup-view__result backup-view__result--neutral">Selector cerrado sin elegir destino. Podés volver a intentar cuando quieras.</p>' : ''}
-      ${error ? `<p class="backup-view__result backup-view__result--error">${state.errorMessage}</p>` : ''}
+      ${error ? `<p class="backup-view__result backup-view__result--error">${escapeHtml(state.errorMessage)}</p>` : ''}
+
+      ${renderImportPanel(state)}
 
       <p class="backup-view__note">
         Esto no sincroniza automáticamente. Lumapse crea un ZIP restaurable y legible para que vos elijas dónde guardarlo.
@@ -152,6 +263,10 @@ export class BackupView {
     this.getReminder = deps.getReminder || getCurrentBackupReminder
     this.dismissReminder = deps.dismissReminder || dismissCurrentBackupReminder
     this.createAndShare = deps.createAndShare || createAndShareCurrentBackup
+    this.prepareImport = deps.prepareImport || prepareBackupImport
+    this.confirmImport = deps.confirmImport || confirmBackupImport
+    this.confirmDialog = deps.confirmDialog || confirmDialog
+    this.onImportComplete = deps.onImportComplete || (async () => {})
     this.destroyed = false
     this.state = {
       uiState: UI_STATE.LOADING,
@@ -161,14 +276,21 @@ export class BackupView {
       disabled: true,
       showRefresh: false,
       reminder: null,
+      importStatus: IMPORT_STATE.IDLE,
+      importPlan: null,
+      importResult: null,
+      importFilename: '',
+      importErrorMessage: '',
     }
 
     this.handleClick = this.handleClick.bind(this)
+    this.handleChange = this.handleChange.bind(this)
   }
 
   async init() {
     this.destroyed = false
     this.container.addEventListener('click', this.handleClick)
+    this.container.addEventListener('change', this.handleChange)
     this.render()
     await this.refresh()
   }
@@ -176,6 +298,7 @@ export class BackupView {
   destroy() {
     this.destroyed = true
     this.container.removeEventListener('click', this.handleClick)
+    this.container.removeEventListener('change', this.handleChange)
   }
 
   render() {
@@ -322,6 +445,118 @@ export class BackupView {
     this.render()
   }
 
+  selectImportFile() {
+    const input = this.container.querySelector('.js-backup-import-input')
+    input?.click()
+  }
+
+  clearImportPreview() {
+    this.state = {
+      ...this.state,
+      importStatus: IMPORT_STATE.IDLE,
+      importPlan: null,
+      importResult: null,
+      importFilename: '',
+      importErrorMessage: '',
+    }
+    this.render()
+  }
+
+  async prepareImportFromFile(file) {
+    if (!file) return
+
+    this.state = {
+      ...this.state,
+      importStatus: IMPORT_STATE.READING,
+      importPlan: null,
+      importResult: null,
+      importFilename: file.name || '',
+      importErrorMessage: '',
+    }
+    this.render()
+
+    try {
+      const plan = await this.prepareImport({ content: file, filename: file.name })
+      if (this.destroyed) return
+
+      this.state = {
+        ...this.state,
+        importStatus: IMPORT_STATE.PREVIEW,
+        importPlan: plan,
+        importResult: null,
+        importFilename: file.name || '',
+        importErrorMessage: '',
+      }
+    } catch (error) {
+      if (this.destroyed) return
+      const message = error.message || 'No se pudo leer el backup.'
+      this.state = {
+        ...this.state,
+        importStatus: IMPORT_STATE.ERROR,
+        importPlan: null,
+        importResult: null,
+        importErrorMessage: message,
+      }
+      showErrorToast(message)
+    }
+
+    this.render()
+  }
+
+  async confirmPreparedImport() {
+    if (!this.state.importPlan) return
+
+    const importSummary = planImportSummary(this.state.importPlan)
+    const confirmed = await this.confirmDialog({
+      title: 'Confirmar importación',
+      message: `Lumapse importará ${importSummary}. Tus datos actuales no se reemplazan.`,
+      confirmText: 'Importar',
+    })
+    if (!confirmed) return
+
+    this.state = {
+      ...this.state,
+      importStatus: IMPORT_STATE.IMPORTING,
+      importErrorMessage: '',
+    }
+    this.render()
+
+    try {
+      const result = await this.confirmImport(this.state.importPlan)
+      await this.onImportComplete(result)
+      if (this.destroyed) return
+
+      this.state = {
+        ...this.state,
+        importStatus: IMPORT_STATE.SUCCESS,
+        importPlan: null,
+        importResult: result,
+        importErrorMessage: '',
+      }
+    } catch (error) {
+      if (this.destroyed) return
+      const message = error.message || 'No se pudo importar el backup.'
+      this.state = {
+        ...this.state,
+        importStatus: IMPORT_STATE.ERROR,
+        importResult: null,
+        importErrorMessage: message,
+      }
+      showErrorToast(message)
+    }
+
+    this.render()
+  }
+
+  async handleChange(event) {
+    const input = event.target.closest?.('.js-backup-import-input')
+    if (!input) return
+
+    const file = input.files?.[0]
+    input.value = ''
+    await this.prepareImportFromFile(file)
+  }
+
   async handleClick(event) {
     if (event.target.closest('.js-btn-dismiss-backup-reminder')) {
       await this.dismissBackupReminder()
@@ -336,8 +571,23 @@ export class BackupView {
 
     if (event.target.closest('.js-btn-refresh-backup')) {
       await this.refresh()
+      return
+    }
+
+    if (event.target.closest('.js-btn-select-import')) {
+      this.selectImportFile()
+      return
+    }
+
+    if (event.target.closest('.js-btn-confirm-import')) {
+      await this.confirmPreparedImport()
+      return
+    }
+
+    if (event.target.closest('.js-btn-cancel-import')) {
+      this.clearImportPreview()
     }
   }
 }
 
-export { UI_STATE, renderBackupView }
+export { IMPORT_STATE, UI_STATE, renderBackupView }
