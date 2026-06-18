@@ -7,7 +7,7 @@
 
 - Fecha de inicio: 2026-06-18
 - Rama de trabajo: `codex/importar-backup-zip`
-- Estado actual: Fase 5 cerrada - UI separada Exportar ZIP/Importar ZIP y guard LOC corregido
+- Estado actual: Fase 6 cerrada - integracion y regresion automatizada
 - Feature objetivo: importacion/restauracion desde backup `.zip` generado por Lumapse
 - Requisito relacionado: `RF-018`
 
@@ -318,14 +318,14 @@ Objetivo: validar el flujo completo con un ZIP real generado por Lumapse.
 
 Tareas:
 
-- [ ] Crear ZIP de fixture desde `generateBackupZip`.
-- [ ] Importarlo en tests usando servicios reales donde sea viable.
-- [ ] Probar instalacion limpia.
-- [ ] Probar workspace con datos existentes.
-- [ ] Probar duplicados por ID.
-- [ ] Probar referencias rotas.
-- [ ] Probar materias archivadas.
-- [ ] Probar fechas academicas.
+- [x] Crear ZIP de fixture desde `generateBackupZip`.
+- [x] Importarlo en tests usando servicios reales donde sea viable.
+- [x] Probar instalacion limpia.
+- [x] Probar workspace con datos existentes.
+- [x] Probar duplicados por ID.
+- [x] Probar referencias rotas.
+- [x] Probar materias archivadas.
+- [x] Probar fechas academicas.
 
 Criterio de cierre:
 
@@ -335,9 +335,13 @@ Criterio de cierre:
 
 Verificacion:
 
-- `npm test`
-- `npm run build`
-- `npm run typecheck`
+- [x] `npm test -- tests/unit/services/backup/BackupImportRegression.test.js`
+- [x] `npm test -- tests/unit/services/backup/BackupImportRegression.test.js tests/unit/services/backup/BackupImportZipService.test.js tests/unit/services/backup/BackupImportPlanService.test.js tests/unit/services/backup/BackupImportDataSource.test.js tests/unit/services/backup/BackupImportService.test.js`
+- [x] `npm test`
+- [x] `npm run lint`
+- [x] `npm run typecheck`
+- [x] `npm run build`
+- [x] `scripts/lumapse-audit-bin --code`
 
 ### Fase 7 - Validacion Android real
 
@@ -463,3 +467,22 @@ Verificacion:
   - `scripts/lumapse-audit-bin --code`
 - Verificacion visual local pendiente: `npm run dev -- --host 127.0.0.1 --port 5173`
   fallo dentro del sandbox con `EPERM` y la ejecucion escalada fue rechazada.
+- Se cerro Fase 6 agregando regresion de integracion en
+  `tests/unit/services/backup/BackupImportRegression.test.js`.
+- La regresion crea ZIPs reales con `generateBackupZip()` y los reimporta con
+  `prepareBackupImport()`/`confirmBackupImport()` o `importBackupZip()`, usando
+  parser, planner y datasource reales con SQLite controlado por mock.
+- Cobertura agregada:
+  - instalacion limpia con materias, secciones, notas archivadas y fechas;
+  - workspace con datos existentes y renombre seguro;
+  - repeticion del mismo ZIP con duplicados por ID omitidos;
+  - referencias rotas reparadas a `null`;
+  - fallback de timestamps desde `manifest.createdAt`.
+- Verificaciones ejecutadas:
+  - `npm test -- tests/unit/services/backup/BackupImportRegression.test.js`
+  - `npm test -- tests/unit/services/backup/BackupImportRegression.test.js tests/unit/services/backup/BackupImportZipService.test.js tests/unit/services/backup/BackupImportPlanService.test.js tests/unit/services/backup/BackupImportDataSource.test.js tests/unit/services/backup/BackupImportService.test.js`
+  - `npm test`
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm run build`
+  - `scripts/lumapse-audit-bin --code`
