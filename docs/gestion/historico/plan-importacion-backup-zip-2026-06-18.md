@@ -1,13 +1,12 @@
 # Plan de importacion de backup ZIP - Lumapse
 
-> Documento operativo vivo. Cuando la feature quede implementada y validada,
-> este plan debe moverse a `docs/gestion/historico/`.
+> Estado: historico cerrado. Implementado por fases y archivado el 2026-06-18.
 
 ## Estado
 
 - Fecha de inicio: 2026-06-18
-- Rama de trabajo: `codex/importar-backup-zip`
-- Estado actual: Fase 6 cerrada - integracion y regresion automatizada
+- Rama de trabajo: `feature/importar-backup-zip`
+- Estado actual: Fase 8 en cierre - plan archivado en historico
 - Feature objetivo: importacion/restauracion desde backup `.zip` generado por Lumapse
 - Requisito relacionado: `RF-018`
 
@@ -160,7 +159,7 @@ Objetivo: dejar acordado el alcance antes de tocar codigo funcional.
 
 Tareas:
 
-- [x] Crear rama `codex/importar-backup-zip`.
+- [x] Crear rama `feature/importar-backup-zip`.
 - [x] Analizar formato actual del backup.
 - [x] Crear este plan en la raiz del repo.
 - [x] Revisar si la politica `merge-safe` alcanza para el primer MVP.
@@ -349,14 +348,14 @@ Objetivo: asegurar que el selector de archivo funciona en el entorno principal.
 
 Tareas:
 
-- [ ] Exportar ZIP desde Android real.
-- [ ] Guardarlo en almacenamiento local o Google Drive desde share sheet.
-- [ ] En una instalacion limpia, seleccionar el `.zip`.
-- [ ] Confirmar preview.
-- [ ] Importar.
-- [ ] Verificar feed, materias, archivadas y calendario.
-- [ ] Repetir importacion del mismo ZIP y confirmar que se omiten duplicados.
-- [ ] Documentar evidencia y bloqueos.
+- [x] Exportar ZIP desde Android real.
+- [x] Guardarlo en almacenamiento local o Google Drive desde share sheet.
+- [x] En una instalacion limpia, seleccionar el `.zip`.
+- [x] Confirmar preview.
+- [x] Importar.
+- [x] Verificar feed, materias, archivadas y calendario.
+- [x] Repetir importacion del mismo ZIP y confirmar que se omiten duplicados.
+- [x] Documentar evidencia y bloqueos.
 
 Criterio de cierre:
 
@@ -366,8 +365,8 @@ Criterio de cierre:
 
 Verificacion:
 
-- Checklist manual actualizado.
-- Evidencia registrada en docs de gestion o changelog segun corresponda.
+- [x] Checklist manual actualizado.
+- [x] Evidencia registrada en `docs/gestion/checklist-validacion-android.md`.
 
 ### Fase 8 - Documentacion y cierre
 
@@ -378,7 +377,7 @@ Tareas:
 - [ ] Actualizar `CHANGELOG.md`.
 - [ ] Actualizar `TODO` y `BACKLOG.md`.
 - [ ] Actualizar requisitos/HU si corresponde.
-- [ ] Mover este plan a `docs/gestion/historico/`.
+- [x] Mover este plan a `docs/gestion/historico/`.
 - [ ] Registrar comandos de verificacion finales.
 
 Criterio de cierre:
@@ -407,7 +406,7 @@ Verificacion:
 
 ### 2026-06-18
 
-- Se creo la rama `codex/importar-backup-zip`.
+- Se creo la rama `feature/importar-backup-zip`.
 - Se confirmo que el ZIP actual incluye JSON canonico restaurable.
 - Se definio que la primera version usara `data/*.json` como fuente de verdad.
 - Se creo este plan operativo en la raiz del repo.
@@ -487,4 +486,29 @@ Verificacion:
   - `npm run lint`
   - `npm run typecheck`
   - `npm run build`
+  - `scripts/lumapse-audit-bin --code`
+- Se cerro Fase 7 en Android real sobre dispositivo Samsung SM-G965F,
+  Android 10 / SDK 29.
+- Validacion ejecutada:
+  - deploy normal preservando datos;
+  - exportacion ZIP desde Android real;
+  - guardado del ZIP en Descargas;
+  - importacion del mismo ZIP sobre workspace existente con duplicados omitidos;
+  - deploy limpio `--clean`;
+  - importacion del ZIP en instalacion limpia;
+  - verificacion de feed, drawer de materias/secciones, archivadas y calendario;
+  - repeticion post-restauracion confirmando duplicados omitidos.
+- Resultado restaurado desde ZIP: 21 nota(s), 14 materia(s), 2 fecha(s).
+- Se confirmo que el selector web de archivo funciona dentro del WebView y abre
+  el picker nativo de Android; no se incorpora picker nativo adicional.
+- Hallazgo corregido durante Fase 7: al confirmar una importacion desde una
+  pestana interna, un refresh del store podia volver visualmente a `Exportar ZIP`.
+  Se sincronizo el panel activo mediante `onPanelChange` y `NoteStore.setViewBackup`.
+- Evidencia registrada en `docs/gestion/checklist-validacion-android.md`.
+- Verificaciones post-fix y documentacion:
+  - `npm test`
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm run build`
+  - `npm run check:docs`
   - `scripts/lumapse-audit-bin --code`
