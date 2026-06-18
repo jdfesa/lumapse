@@ -7,7 +7,7 @@
 
 - Fecha de inicio: 2026-06-18
 - Rama de trabajo: `codex/importar-backup-zip`
-- Estado actual: Fase 4 cerrada - orquestacion de importacion
+- Estado actual: Fase 5 cerrada - UI en BackupView
 - Feature objetivo: importacion/restauracion desde backup `.zip` generado por Lumapse
 - Requisito relacionado: `RF-018`
 
@@ -281,15 +281,15 @@ Objetivo: permitir importar desde la vista Backup sin invadir el feed.
 
 Tareas:
 
-- [ ] Agregar boton `Importar ZIP`.
-- [ ] Abrir selector de archivo con `accept=".zip,application/zip"`.
-- [ ] Mostrar estado de lectura.
-- [ ] Mostrar preview antes de confirmar.
-- [ ] Pedir confirmacion con `ConfirmDialog`.
-- [ ] Ejecutar importacion.
-- [ ] Refrescar store y vista.
-- [ ] Mostrar resultado final.
-- [ ] Agregar tests de componente.
+- [x] Agregar boton `Importar ZIP`.
+- [x] Abrir selector de archivo con `accept=".zip,application/zip"`.
+- [x] Mostrar estado de lectura.
+- [x] Mostrar preview antes de confirmar.
+- [x] Pedir confirmacion con `ConfirmDialog`.
+- [x] Ejecutar importacion.
+- [x] Refrescar store y vista.
+- [x] Mostrar resultado final.
+- [x] Agregar tests de componente.
 
 Criterio de cierre:
 
@@ -299,8 +299,9 @@ Criterio de cierre:
 
 Verificacion:
 
-- `npm test -- tests/unit/components/backup/BackupView.test.js`
-- `npm run typecheck`
+- [x] `npm test -- tests/unit/components/backup/BackupView.test.js`
+- [x] `npm run typecheck`
+- [x] `npm run build`
 
 ### Fase 6 - Integracion y regresion
 
@@ -429,3 +430,15 @@ Verificacion:
   - `npm test -- tests/unit/services/backup/BackupImportService.test.js`
   - `npm test -- tests/unit/services/backup/BackupImportZipService.test.js tests/unit/services/backup/BackupImportPlanService.test.js tests/unit/services/backup/BackupImportDataSource.test.js tests/unit/services/backup/BackupImportService.test.js`
   - `npm run typecheck`
+- Se cerro Fase 5 integrando importacion en `BackupView`.
+- La UI permite seleccionar ZIP, generar preview, cancelar, confirmar con
+  `ConfirmDialog`, aplicar importacion y mostrar resultado.
+- `NoteList` inyecta un callback para refrescar notas, materias, archivadas,
+  papelera y fechas academicas despues de una importacion exitosa.
+- Verificaciones ejecutadas:
+  - `npm test -- tests/unit/components/backup/BackupView.test.js`
+  - `npm test -- tests/unit/components/backup/BackupView.test.js tests/unit/components/feed/NoteList.test.js tests/unit/services/backup/BackupImportZipService.test.js tests/unit/services/backup/BackupImportPlanService.test.js tests/unit/services/backup/BackupImportDataSource.test.js tests/unit/services/backup/BackupImportService.test.js`
+  - `npm run typecheck`
+  - `npm run build`
+- Verificacion visual local pendiente: `npm run dev -- --host 127.0.0.1 --port 5173`
+  fallo dentro del sandbox con `EPERM` y la ejecucion escalada fue rechazada.
