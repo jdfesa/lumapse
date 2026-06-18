@@ -1,0 +1,398 @@
+# Plan de importacion de backup ZIP - Lumapse
+
+> Documento operativo vivo. Cuando la feature quede implementada y validada,
+> este plan debe moverse a `docs/gestion/historico/`.
+
+## Estado
+
+- Fecha de inicio: 2026-06-18
+- Rama de trabajo: `codex/importar-backup-zip`
+- Estado actual: planificacion abierta
+- Feature objetivo: importacion/restauracion desde backup `.zip` generado por Lumapse
+- Requisito relacionado: `RF-018`
+
+## Objetivo
+
+Implementar la funcion inversa del backup manual externo: permitir que una
+persona seleccione un `.zip` exportado por Lumapse y recupere sus materias,
+secciones, notas y fechas academicas en una instalacion nueva o en un dispositivo
+distinto.
+
+La primera version debe priorizar recuperacion segura, trazabilidad y ausencia
+de acciones destructivas. No debe prometer sincronizacion automatica ni reemplazo
+completo del workspace.
+
+## Contexto tecnico
+
+El backup actual ya contiene un contrato restaurable:
+
+- `manifest.json`
+- `data/subjects.json`
+- `data/notes.json`
+- `data/academic-events.json`
+- `README.txt`
+- Copias Markdown legibles dentro de `notes/`
+
+Para restaurar datos de Lumapse, la fuente canonica sera `data/*.json`.
+Los Markdown quedan como salida humana legible y como posible fallback futuro,
+pero no seran la fuente principal de importacion en esta fase.
+
+El servicio historico `src/services/ImportService.js` solo importa un `.md`
+individual y no resuelve backup, materias, secciones, fechas academicas ni
+politica de duplicados. Esta feature debe reemplazar ese alcance para `.zip`
+sin forzar una migracion completa del store ni de componentes grandes.
+
+## Principios de trabajo
+
+- Avanzar por fases pequenas, testeables y reversibles.
+- Mantener cambios quirurgicos: tocar solo los modulos necesarios.
+- Escribir servicios nuevos en TypeScript cuando el contrato aporte seguridad.
+- Conservar barrels/fachadas publicas cuando eviten romper imports existentes.
+- Separar lectura de ZIP, validacion, plan de importacion, escritura SQLite y UI.
+- No pisar ni borrar datos existentes en la primera version.
+- Ejecutar escrituras dentro de transacciones.
+- Mostrar preview antes de modificar la base local.
+- Cerrar cada fase con pruebas unitarias o verificacion manual documentada.
+
+## Alcance de la primera version
+
+Incluye:
+
+- Seleccionar un `.zip` desde el dispositivo o proveedor de documentos.
+- Validar que el archivo sea un backup Lumapse compatible.
+- Leer y normalizar `subjects`, `notes` y `academicEvents`.
+- Mostrar resumen antes de importar.
+- Importar en modo seguro, sin reemplazar workspace.
+- Restaurar jerarquia Materia -> Seccion cuando sea posible.
+- Restaurar notas, archivadas incluidas.
+- Restaurar fechas academicas.
+- Refrescar store, drawer, feed y calendario despues de importar.
+
+No incluye:
+
+- Google Drive API directa.
+- Sincronizacion multi-dispositivo.
+- Reemplazo completo del workspace.
+- Merge semantico de notas editadas en dos dispositivos.
+- Importacion desde Markdown como fuente canonica.
+- Adjuntos o imagenes, porque el contrato actual indica `includesAttachments: false`.
+- Restaurar papelera, porque el backup v1 excluye items con `deletedAt`.
+
+## Politica de importacion v1
+
+La politica inicial sera `merge-safe`:
+
+- Si el backup no es de `app: "Lumapse"` o usa una version no compatible, se rechaza.
+- Si falta `manifest.json` o algun JSON canonico, se rechaza.
+- Si el archivo no tiene datos importables, se rechaza.
+- Los IDs existentes en la base local no se sobreescriben.
+- Los registros nuevos conservan su ID original cuando no hay conflicto.
+- Las materias se importan antes que las secciones.
+- Si una seccion referencia un padre inexistente e irrecuperable, se importa como materia raiz.
+- Si una nota referencia una materia/seccion inexistente, entra en `Entrada`.
+- Si una fecha academica referencia una materia/seccion inexistente, queda sin materia.
+- Las colisiones de nombre dentro del mismo nivel deben resolverse con sufijo claro,
+  por ejemplo `(importada)`, sin cambiar IDs salvo que una decision posterior lo exija.
+- El resultado debe informar importados, omitidos, renombrados y relaciones corregidas.
+
+Esta politica se puede ajustar durante la fase de diseno de contrato si los tests
+revelan un caso mas seguro, pero cualquier cambio debe quedar registrado en este
+archivo antes de implementarse.
+
+## Arquitectura propuesta
+
+### Dominio
+
+- `src/domain/backupImport.ts`
+  - Tipos para preview, resumen, decisiones y resultado final.
+  - No debe depender de DOM, SQLite ni Capacitor.
+
+### Lectura y validacion del ZIP
+
+- `src/services/backup/BackupImportZipService.ts`
+  - Lee `File`, `Blob` o `ArrayBuffer`.
+  - Usa `JSZip`.
+  - Extrae `manifest.json` y `data/*.json`.
+  - Valida version, app, conteos basicos y estructura minima.
+  - Devuelve datos normalizados o errores de usuario.
+
+### Plan de importacion
+
+- `src/services/backup/BackupImportPlanService.ts`
+  - Compara backup vs datos locales.
+  - Calcula conteos, duplicados por ID, colisiones de nombre y relaciones rotas.
+  - Produce un preview sin escribir en SQLite.
+
+### Escritura SQLite
+
+- `src/services/backup/BackupImportDataSource.ts`
+  - Ejecuta la importacion ya planificada.
+  - Usa `runTransaction`.
+  - Inserta en orden: materias raiz, secciones, notas, fechas academicas.
+  - No depende de UI.
+
+### Orquestacion
+
+- `src/services/backup/BackupImportService.ts`
+  - Une lectura, preview y aplicacion.
+  - Expone API simple para la UI.
+
+### UI
+
+- `src/components/backup/BackupView.js`
+  - Mantener JS por ahora para no mezclar migracion grande de componente DOM.
+  - Agregar accion `Importar ZIP`.
+  - Mostrar preview y pedir confirmacion antes de escribir.
+  - Mostrar resultado final y errores.
+
+### Store
+
+- `src/store/NoteStore.data.js` y `src/store/NoteStore.academicEvents.js`
+  - Agregar una accion pequena para refrescar datos despues de importar si hace falta.
+  - Preferir reutilizar `loadNotes`, `loadSubjects`, `loadArchivedSubjects`,
+    `loadTrashCount`, `loadAcademicEvents` y `loadUpcomingAcademicEvents`.
+
+## Fases
+
+### Fase 0 - Plan y contrato
+
+Objetivo: dejar acordado el alcance antes de tocar codigo funcional.
+
+Tareas:
+
+- [x] Crear rama `codex/importar-backup-zip`.
+- [x] Analizar formato actual del backup.
+- [x] Crear este plan en la raiz del repo.
+- [ ] Revisar si la politica `merge-safe` alcanza para el primer MVP.
+
+Criterio de cierre:
+
+- El plan queda versionado.
+- No hay cambios funcionales todavia.
+
+Verificacion:
+
+- `git status --short --branch`
+- Revision manual de este archivo.
+
+### Fase 1 - Parser y validador de ZIP
+
+Objetivo: abrir un `.zip` Lumapse y convertirlo en datos importables sin tocar SQLite.
+
+Tareas:
+
+- [ ] Crear tipos en `src/domain/backupImport.ts`.
+- [ ] Implementar `BackupImportZipService.ts`.
+- [ ] Validar `manifest.json`.
+- [ ] Validar presencia y JSON valido de `data/subjects.json`, `data/notes.json`
+  y `data/academic-events.json`.
+- [ ] Normalizar booleanos, fechas opcionales, `subjectId`, `parentSubjectId`
+  y campos faltantes.
+- [ ] Agregar tests unitarios.
+
+Criterio de cierre:
+
+- Un ZIP generado por `BackupZipService` puede leerse correctamente.
+- Un ZIP corrupto, incompleto o incompatible devuelve error claro.
+- No se escribe en base de datos.
+
+Verificacion:
+
+- `npm test -- tests/unit/services/backup/BackupImportZipService.test.js`
+- `npm run typecheck`
+
+### Fase 2 - Preview y plan de importacion
+
+Objetivo: calcular que pasaria antes de escribir.
+
+Tareas:
+
+- [ ] Implementar `BackupImportPlanService.ts`.
+- [ ] Leer datos locales necesarios para detectar IDs existentes.
+- [ ] Detectar colisiones de nombre por nivel de materias/secciones.
+- [ ] Definir renombres seguros con sufijo `(importada)`.
+- [ ] Resolver referencias rotas a Entrada o raiz segun corresponda.
+- [ ] Devolver conteos: importables, omitidos, renombrados, relaciones corregidas.
+- [ ] Agregar tests unitarios puros.
+
+Criterio de cierre:
+
+- El preview permite explicar al usuario que se va a importar.
+- Los duplicados no se pisan.
+- Las relaciones rotas quedan explicitadas.
+
+Verificacion:
+
+- `npm test -- tests/unit/services/backup/BackupImportPlanService.test.js`
+- `npm run typecheck`
+
+### Fase 3 - Escritura transaccional
+
+Objetivo: aplicar un plan validado de importacion de forma atomica.
+
+Tareas:
+
+- [ ] Implementar `BackupImportDataSource.ts`.
+- [ ] Insertar materias raiz.
+- [ ] Insertar secciones.
+- [ ] Insertar notas.
+- [ ] Insertar fechas academicas.
+- [ ] Omitir IDs existentes sin modificar registros actuales.
+- [ ] Usar `runTransaction`.
+- [ ] Agregar tests de escritura con mocks de SQLite.
+
+Criterio de cierre:
+
+- Si falla una escritura intermedia, no queda importacion parcial.
+- Los datos existentes no cambian.
+- Los timestamps del backup se conservan en registros nuevos.
+
+Verificacion:
+
+- `npm test -- tests/unit/services/backup/BackupImportDataSource.test.js`
+- `npm run typecheck`
+
+### Fase 4 - Orquestacion de importacion
+
+Objetivo: exponer una API de servicio simple para la UI.
+
+Tareas:
+
+- [ ] Implementar `BackupImportService.ts`.
+- [ ] Exponer funcion para preparar preview desde archivo.
+- [ ] Exponer funcion para confirmar importacion desde preview validado.
+- [ ] Devolver resultado final con resumen de cambios.
+- [ ] Agregar tests de orquestacion.
+
+Criterio de cierre:
+
+- La UI puede usar una API pequena y estable.
+- El flujo preview -> confirmar no duplica parsing ni deja estado ambiguo.
+
+Verificacion:
+
+- `npm test -- tests/unit/services/backup/BackupImportService.test.js`
+- `npm run typecheck`
+
+### Fase 5 - UI en BackupView
+
+Objetivo: permitir importar desde la vista Backup sin invadir el feed.
+
+Tareas:
+
+- [ ] Agregar boton `Importar ZIP`.
+- [ ] Abrir selector de archivo con `accept=".zip,application/zip"`.
+- [ ] Mostrar estado de lectura.
+- [ ] Mostrar preview antes de confirmar.
+- [ ] Pedir confirmacion con `ConfirmDialog`.
+- [ ] Ejecutar importacion.
+- [ ] Refrescar store y vista.
+- [ ] Mostrar resultado final.
+- [ ] Agregar tests de componente.
+
+Criterio de cierre:
+
+- El usuario entiende que se va a importar antes de tocar la base.
+- Cancelar no modifica nada.
+- Un error de archivo o version no rompe la vista.
+
+Verificacion:
+
+- `npm test -- tests/unit/components/backup/BackupView.test.js`
+- `npm run typecheck`
+
+### Fase 6 - Integracion y regresion
+
+Objetivo: validar el flujo completo con un ZIP real generado por Lumapse.
+
+Tareas:
+
+- [ ] Crear ZIP de fixture desde `generateBackupZip`.
+- [ ] Importarlo en tests usando servicios reales donde sea viable.
+- [ ] Probar instalacion limpia.
+- [ ] Probar workspace con datos existentes.
+- [ ] Probar duplicados por ID.
+- [ ] Probar referencias rotas.
+- [ ] Probar materias archivadas.
+- [ ] Probar fechas academicas.
+
+Criterio de cierre:
+
+- Un backup generado por Lumapse se puede recuperar.
+- No se pierden datos locales existentes.
+- El flujo completo queda cubierto por tests focalizados.
+
+Verificacion:
+
+- `npm test`
+- `npm run build`
+- `npm run typecheck`
+
+### Fase 7 - Validacion Android real
+
+Objetivo: asegurar que el selector de archivo funciona en el entorno principal.
+
+Tareas:
+
+- [ ] Exportar backup desde Android real.
+- [ ] Guardarlo en almacenamiento local o Google Drive desde share sheet.
+- [ ] En una instalacion limpia, seleccionar el `.zip`.
+- [ ] Confirmar preview.
+- [ ] Importar.
+- [ ] Verificar feed, materias, archivadas y calendario.
+- [ ] Repetir importacion del mismo ZIP y confirmar que se omiten duplicados.
+- [ ] Documentar evidencia y bloqueos.
+
+Criterio de cierre:
+
+- Flujo validado manualmente en Android real.
+- Si el selector web de archivo no alcanza en WebView, queda documentada la
+  decision de incorporar un picker nativo en una fase adicional.
+
+Verificacion:
+
+- Checklist manual actualizado.
+- Evidencia registrada en docs de gestion o changelog segun corresponda.
+
+### Fase 8 - Documentacion y cierre
+
+Objetivo: cerrar trazabilidad y archivar el plan.
+
+Tareas:
+
+- [ ] Actualizar `CHANGELOG.md`.
+- [ ] Actualizar `TODO` y `BACKLOG.md`.
+- [ ] Actualizar requisitos/HU si corresponde.
+- [ ] Mover este plan a `docs/gestion/historico/`.
+- [ ] Registrar comandos de verificacion finales.
+
+Criterio de cierre:
+
+- La feature queda implementada, probada y documentada.
+- El plan deja de estar en raiz y pasa a historico.
+
+Verificacion:
+
+- `npm run verify` si el alcance documental y de codigo lo amerita.
+
+## Riesgos y mitigaciones
+
+| Riesgo | Mitigacion |
+|---|---|
+| El usuario cree que importacion equivale a sincronizacion | Mantener lenguaje de backup manual, no sync |
+| ZIP corrupto o ajeno a Lumapse | Validar manifest y estructura antes de escribir |
+| Datos existentes pisados por accidente | Modo `merge-safe`, sin overwrite en v1 |
+| Importacion parcial por error SQL | Usar `runTransaction` |
+| Relaciones a materias faltantes | Reubicar en Entrada o raiz e informarlo |
+| Duplicados de materias confunden la UI | Resolver colisiones con sufijo claro |
+| File picker no funciona bien en Android WebView | Validar manualmente y planificar picker nativo solo si hace falta |
+| Se mezcla migracion TS con refactor grande de UI | Tipar servicios nuevos y mantener componentes grandes en JS |
+
+## Bitacora
+
+### 2026-06-18
+
+- Se creo la rama `codex/importar-backup-zip`.
+- Se confirmo que el ZIP actual incluye JSON canonico restaurable.
+- Se definio que la primera version usara `data/*.json` como fuente de verdad.
+- Se creo este plan operativo en la raiz del repo.
