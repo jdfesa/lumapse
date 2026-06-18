@@ -7,7 +7,7 @@
 
 - Fecha de inicio: 2026-06-18
 - Rama de trabajo: `codex/importar-backup-zip`
-- Estado actual: Fase 3 cerrada - escritura transaccional
+- Estado actual: Fase 4 cerrada - orquestacion de importacion
 - Feature objetivo: importacion/restauracion desde backup `.zip` generado por Lumapse
 - Requisito relacionado: `RF-018`
 
@@ -259,11 +259,11 @@ Objetivo: exponer una API de servicio simple para la UI.
 
 Tareas:
 
-- [ ] Implementar `BackupImportService.ts`.
-- [ ] Exponer funcion para preparar preview desde archivo.
-- [ ] Exponer funcion para confirmar importacion desde preview validado.
-- [ ] Devolver resultado final con resumen de cambios.
-- [ ] Agregar tests de orquestacion.
+- [x] Implementar `BackupImportService.ts`.
+- [x] Exponer funcion para preparar preview desde archivo.
+- [x] Exponer funcion para confirmar importacion desde preview validado.
+- [x] Devolver resultado final con resumen de cambios.
+- [x] Agregar tests de orquestacion.
 
 Criterio de cierre:
 
@@ -272,8 +272,8 @@ Criterio de cierre:
 
 Verificacion:
 
-- `npm test -- tests/unit/services/backup/BackupImportService.test.js`
-- `npm run typecheck`
+- [x] `npm test -- tests/unit/services/backup/BackupImportService.test.js`
+- [x] `npm run typecheck`
 
 ### Fase 5 - UI en BackupView
 
@@ -419,4 +419,13 @@ Verificacion:
 - Verificaciones ejecutadas:
   - `npm test -- tests/unit/services/backup/BackupImportDataSource.test.js`
   - `npm test -- tests/unit/services/backup/BackupImportZipService.test.js tests/unit/services/backup/BackupImportPlanService.test.js tests/unit/services/backup/BackupImportDataSource.test.js`
+  - `npm run typecheck`
+- Se cerro Fase 4 con la fachada de orquestacion en
+  `src/services/backup/BackupImportService.ts`.
+- El flujo queda separado en dos pasos para UI: `prepareBackupImport()` genera
+  preview sin escribir y `confirmBackupImport()` aplica un plan ya confirmado.
+  Tambien queda `importBackupZip()` como atajo programatico.
+- Verificaciones ejecutadas:
+  - `npm test -- tests/unit/services/backup/BackupImportService.test.js`
+  - `npm test -- tests/unit/services/backup/BackupImportZipService.test.js tests/unit/services/backup/BackupImportPlanService.test.js tests/unit/services/backup/BackupImportDataSource.test.js tests/unit/services/backup/BackupImportService.test.js`
   - `npm run typecheck`
