@@ -7,7 +7,7 @@
 
 - Fecha de inicio: 2026-06-18
 - Rama de trabajo: `codex/importar-backup-zip`
-- Estado actual: Fase 5 cerrada - UI separada Exportar/Importar y guard LOC corregido
+- Estado actual: Fase 5 cerrada - UI separada Exportar ZIP/Importar ZIP y guard LOC corregido
 - Feature objetivo: importacion/restauracion desde backup `.zip` generado por Lumapse
 - Requisito relacionado: `RF-018`
 
@@ -284,8 +284,8 @@ importar un ZIP compatible con Lumapse.
 Tareas:
 
 - [x] Agregar boton `Importar ZIP`.
-- [x] Separar la navegacion del drawer en `Exportar backup` e `Importar ZIP`.
-- [x] Separar la UI interna en pestanas `Exportar` e `Importar`.
+- [x] Separar la navegacion del drawer en `Exportar ZIP` e `Importar ZIP`.
+- [x] Separar la UI interna en pestanas `Exportar ZIP` e `Importar ZIP`.
 - [x] Extraer paneles de UI y controlador de importacion para mantener
   `BackupView` por debajo del limite LOC.
 - [x] Abrir selector de archivo con `accept=".zip,application/zip"`.
@@ -345,7 +345,7 @@ Objetivo: asegurar que el selector de archivo funciona en el entorno principal.
 
 Tareas:
 
-- [ ] Exportar backup desde Android real.
+- [ ] Exportar ZIP desde Android real.
 - [ ] Guardarlo en almacenamiento local o Google Drive desde share sheet.
 - [ ] En una instalacion limpia, seleccionar el `.zip`.
 - [ ] Confirmar preview.
@@ -440,8 +440,10 @@ Verificacion:
   - `npm test -- tests/unit/services/backup/BackupImportZipService.test.js tests/unit/services/backup/BackupImportPlanService.test.js tests/unit/services/backup/BackupImportDataSource.test.js tests/unit/services/backup/BackupImportService.test.js`
   - `npm run typecheck`
 - Se cerro Fase 5 integrando importacion en la experiencia de Backup.
-- Se ajusto la navegacion para separar `Exportar backup` de `Importar ZIP`,
+- Se ajusto la navegacion para separar `Exportar ZIP` de `Importar ZIP`,
   evitando que una sola accion llamada "Backup" oculte la funcion inversa.
+- Se normalizo la microcopia de botones y titulos para que cada accion indique
+  explicitamente si crea o consume un ZIP.
 - `BackupView` quedo como orquestador liviano y la UI/flujo se dividio en
   `BackupExportUI`, `BackupImportUI`, `BackupViewPanels` y
   `BackupImportFlowController`.
