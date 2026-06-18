@@ -448,6 +448,8 @@ Verificacion:
   evitando que una sola accion llamada "Backup" oculte la funcion inversa.
 - Se normalizo la microcopia de botones y titulos para que cada accion indique
   explicitamente si crea o consume un ZIP.
+- Se corrigio la iconografia direccional: `Exportar ZIP` usa flecha de salida
+  y `Importar ZIP` usa flecha de entrada.
 - `BackupView` quedo como orquestador liviano y la UI/flujo se dividio en
   `BackupExportUI`, `BackupImportUI`, `BackupViewPanels` y
   `BackupImportFlowController`.
