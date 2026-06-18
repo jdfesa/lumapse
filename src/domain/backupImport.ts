@@ -70,6 +70,14 @@ export interface BackupImportPlan {
   warnings: string[]
 }
 
+export interface BackupImportApplyResult {
+  imported: BackupItemCounts
+  skipped: BackupImportSkippedItem[]
+  renamedSubjects: BackupImportSubjectRename[]
+  relationshipRepairs: BackupImportRelationshipRepair[]
+  warnings: string[]
+}
+
 export class BackupImportError extends Error {
   constructor(message: string) {
     super(message)
