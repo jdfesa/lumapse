@@ -72,7 +72,7 @@ function renderImportResult(state) {
   if (state.importStatus === IMPORT_STATE.ERROR) {
     return `
       <p class="backup-view__result backup-view__result--error">
-        ${escapeHtml(state.importErrorMessage || 'No se pudo importar el backup.')}
+        ${escapeHtml(state.importErrorMessage || 'No se pudo importar el ZIP.')}
       </p>
     `
   }
@@ -101,24 +101,24 @@ export function renderImportPanel(state) {
       <div class="backup-view__header">
         ${renderImportIcon()}
         <div class="backup-view__heading">
-          <p class="backup-view__eyebrow">Backup manual</p>
-          <h2 class="backup-view__title">Importar respaldo</h2>
+          <p class="backup-view__eyebrow">ZIP Lumapse</p>
+          <h2 class="backup-view__title">Importar ZIP</h2>
         </div>
       </div>
       <div class="backup-view__import">
         <input class="js-backup-import-input" type="file" accept=".zip,application/zip,application/x-zip-compressed" hidden>
         <div class="backup-view__import-copy">
-          <p class="backup-view__status-title">Importar backup</p>
-          <p class="backup-view__message">Recuperá un ZIP generado por Lumapse.</p>
+          <p class="backup-view__status-title">Importar ZIP</p>
+          <p class="backup-view__message">Seleccioná un ZIP compatible generado por Lumapse.</p>
         </div>
         ${renderImportPreview(state)}
         <div class="backup-view__actions">
-          <button class="backup-view__button backup-view__button--secondary js-btn-select-import" type="button" aria-label="Importar ZIP" title="Importar ZIP" ${busy ? 'disabled' : ''}>
-            ${reading ? 'Leyendo ZIP...' : 'Importar ZIP'}
+          <button class="backup-view__button backup-view__button--secondary js-btn-select-import" type="button" aria-label="Seleccionar ZIP" title="Seleccionar ZIP" ${busy ? 'disabled' : ''}>
+            ${reading ? 'Leyendo ZIP...' : 'Seleccionar ZIP'}
           </button>
           ${hasPreview ? `
-            <button class="backup-view__button js-btn-confirm-import" type="button" aria-label="Confirmar importación" title="Confirmar importación" ${busy ? 'disabled' : ''}>
-              ${importing ? 'Importando...' : 'Confirmar importación'}
+            <button class="backup-view__button js-btn-confirm-import" type="button" aria-label="Importar ZIP" title="Importar ZIP" ${busy ? 'disabled' : ''}>
+              ${importing ? 'Importando ZIP...' : 'Importar ZIP'}
             </button>
             <button class="backup-view__button backup-view__button--secondary js-btn-cancel-import" type="button" aria-label="Cancelar importación" title="Cancelar importación" ${busy ? 'disabled' : ''}>
               Cancelar

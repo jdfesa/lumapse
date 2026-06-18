@@ -23,8 +23,8 @@ export function statusCopy(status) {
     return {
       uiState: UI_STATE.OFFLINE,
       title: 'Sin conexion',
-      message: 'Tus notas siguen disponibles. Para enviar un backup a Google Drive necesitás internet.',
-      actionLabel: 'Crear backup externo',
+      message: 'Tus notas siguen disponibles. Para exportar un ZIP a Google Drive u otro destino necesitás internet.',
+      actionLabel: 'Exportar ZIP',
       disabled: true,
     }
   }
@@ -33,17 +33,17 @@ export function statusCopy(status) {
     return {
       uiState: UI_STATE.WARNING,
       title: 'Conexion con advertencia',
-      message: 'Podés crear el backup ahora, pero la red actual puede consumir datos móviles o no estar identificada.',
-      actionLabel: 'Crear backup de todos modos',
+      message: 'Podés exportar el ZIP ahora, pero la red actual puede consumir datos móviles o no estar identificada.',
+      actionLabel: 'Exportar ZIP de todos modos',
       disabled: false,
     }
   }
 
   return {
     uiState: UI_STATE.READY,
-    title: 'Backup externo disponible',
-    message: 'Lumapse va a crear un ZIP manual y abrir el selector de Android para elegir Google Drive u otro destino.',
-    actionLabel: 'Crear backup externo',
+    title: 'Listo para exportar ZIP',
+    message: 'Lumapse va a crear un ZIP restaurable y abrir el selector de Android para elegir Google Drive u otro destino.',
+    actionLabel: 'Exportar ZIP',
     disabled: false,
   }
 }
@@ -63,14 +63,14 @@ function reminderCopy(reminder) {
 
   if (reminder.reason === BACKUP_REMINDER_REASONS.BACKUP_DUE) {
     return {
-      title: 'Backup pendiente',
-      message: `Pasaron ${reminder.daysSinceLastBackup} dias desde el ultimo backup. Podes crear uno ahora sin activar sincronizacion automatica.`,
+      title: 'Exportar ZIP pendiente',
+      message: `Pasaron ${reminder.daysSinceLastBackup} dias desde el ultimo ZIP exportado. Podes exportar uno ahora sin activar sincronizacion automatica.`,
     }
   }
 
   return {
-    title: 'Primer backup pendiente',
-    message: 'Todavia no registramos un backup manual. Podes crear un ZIP externo para conservar tus notas fuera de la app.',
+    title: 'Primer ZIP pendiente',
+    message: 'Todavia no registramos un ZIP exportado. Podes exportar uno para conservar tus notas fuera de la app.',
   }
 }
 
@@ -84,7 +84,7 @@ function renderBackupReminder(reminder) {
         <p class="backup-view__reminder-title">${copy.title}</p>
         <p class="backup-view__message">${copy.message}</p>
       </div>
-      <button class="backup-view__reminder-dismiss js-btn-dismiss-backup-reminder" type="button" aria-label="Cerrar aviso de backup" title="Cerrar aviso de backup">
+      <button class="backup-view__reminder-dismiss js-btn-dismiss-backup-reminder" type="button" aria-label="Cerrar aviso de exportación ZIP" title="Cerrar aviso de exportación ZIP">
         Cerrar aviso
       </button>
     </div>
@@ -106,8 +106,8 @@ export function renderBackupExportSection(state) {
       <div class="backup-view__header">
         ${renderBackupIcon()}
         <div class="backup-view__heading">
-          <p class="backup-view__eyebrow">Backup manual</p>
-          <h2 class="backup-view__title">Exportar respaldo</h2>
+          <p class="backup-view__eyebrow">ZIP Lumapse</p>
+          <h2 class="backup-view__title">Exportar ZIP</h2>
         </div>
       </div>
 
@@ -120,13 +120,13 @@ export function renderBackupExportSection(state) {
       ${renderBackupReminder(state.reminder)}
 
       <div class="backup-view__actions">
-        <button class="backup-view__button js-btn-create-backup" type="button" aria-label="${busy ? 'Preparando backup' : state.actionLabel}" title="${busy ? 'Preparando backup' : state.actionLabel}" ${disabled ? 'disabled' : ''}>
-          ${busy ? 'Preparando backup...' : state.actionLabel}
+        <button class="backup-view__button js-btn-create-backup" type="button" aria-label="${busy ? 'Exportando ZIP' : state.actionLabel}" title="${busy ? 'Exportando ZIP' : state.actionLabel}" ${disabled ? 'disabled' : ''}>
+          ${busy ? 'Exportando ZIP...' : state.actionLabel}
         </button>
         ${state.showRefresh ? '<button class="backup-view__button backup-view__button--secondary js-btn-refresh-backup" type="button" aria-label="Actualizar estado de backup" title="Actualizar estado de backup">Actualizar estado</button>' : ''}
       </div>
 
-      ${success ? '<p class="backup-view__result backup-view__result--success">Backup entregado al selector del sistema. Verificá que aparezca en Google Drive o en el destino elegido.</p>' : ''}
+      ${success ? '<p class="backup-view__result backup-view__result--success">ZIP entregado al selector del sistema. Verificá que aparezca en Google Drive o en el destino elegido.</p>' : ''}
       ${cancelled ? '<p class="backup-view__result backup-view__result--neutral">Selector cerrado sin elegir destino. Podés volver a intentar cuando quieras.</p>' : ''}
       ${error ? `<p class="backup-view__result backup-view__result--error">${escapeHtml(state.errorMessage)}</p>` : ''}
     </section>

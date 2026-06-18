@@ -48,7 +48,7 @@ export class BackupImportFlowController {
       })
     } catch (error) {
       if (this.isDestroyed()) return
-      const message = error.message || 'No se pudo leer el backup.'
+      const message = error.message || 'No se pudo leer el ZIP.'
       this.setState({
         ...createInitialImportState(),
         importStatus: IMPORT_STATE.ERROR,
@@ -65,9 +65,9 @@ export class BackupImportFlowController {
     if (!plan) return
 
     const confirmed = await this.confirmDialog({
-      title: 'Confirmar importación',
-      message: `Lumapse importará ${planImportSummary(plan)}. Tus datos actuales no se reemplazan.`,
-      confirmText: 'Importar',
+      title: 'Confirmar importación ZIP',
+      message: `Lumapse importará ${planImportSummary(plan)} desde este ZIP. Tus datos actuales no se reemplazan.`,
+      confirmText: 'Importar ZIP',
     })
     if (!confirmed) return
     if (this.isDestroyed()) return
@@ -89,7 +89,7 @@ export class BackupImportFlowController {
       })
     } catch (error) {
       if (this.isDestroyed()) return
-      const message = error.message || 'No se pudo importar el backup.'
+      const message = error.message || 'No se pudo importar el ZIP.'
       this.setState({
         importStatus: IMPORT_STATE.ERROR,
         importResult: null,

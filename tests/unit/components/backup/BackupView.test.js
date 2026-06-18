@@ -41,7 +41,7 @@ import { BackupView } from '../../../../src/components/backup/BackupView.js'
 const WIFI_READINESS = {
   status: BACKUP_FLOW_STATUS.READY,
   ready: true,
-  message: 'Con WiFi. Podes crear un backup externo.',
+  message: 'Con WiFi. Podes exportar un ZIP.',
   networkState: {
     connectionType: 'wifi',
     externalBackupAllowed: true,
@@ -52,7 +52,7 @@ const WIFI_READINESS = {
 const CELLULAR_READINESS = {
   status: BACKUP_FLOW_STATUS.REQUIRES_WARNING,
   ready: false,
-  message: 'Con datos moviles. Podes crear backup, pero puede consumir datos.',
+  message: 'Con datos moviles. Podes exportar un ZIP, pero puede consumir datos.',
   networkState: {
     connectionType: 'cellular',
     externalBackupAllowed: true,
@@ -168,10 +168,9 @@ describe('BackupView', () => {
 
     await view.init()
 
-    expect(container.textContent).toContain('Backup externo disponible')
-    expect(container.textContent).toContain('Crear backup externo')
-    expect(container.textContent).toContain('Exportar respaldo')
-    expect(container.textContent).toContain('Importar')
+    expect(container.textContent).toContain('Listo para exportar ZIP')
+    expect(container.textContent).toContain('Exportar ZIP')
+    expect(container.textContent).toContain('Importar ZIP')
     expect(container.querySelector('.js-btn-create-backup').disabled).toBe(false)
 
     view.destroy()
@@ -204,7 +203,7 @@ describe('BackupView', () => {
     await Promise.resolve()
 
     expect(createAndShareCurrentBackup).toHaveBeenCalledWith({ acceptNetworkWarning: true })
-    expect(container.textContent).toContain('Backup preparado')
+    expect(container.textContent).toContain('ZIP preparado')
 
     view.destroy()
   })
@@ -218,7 +217,7 @@ describe('BackupView', () => {
     await Promise.resolve()
     await Promise.resolve()
 
-    expect(container.textContent).toContain('Backup preparado')
+    expect(container.textContent).toContain('ZIP preparado')
     expect(container.textContent).toContain('5 nota(s), 2 materia(s), 1 fecha(s)')
 
     view.destroy()
@@ -238,7 +237,7 @@ describe('BackupView', () => {
     await Promise.resolve()
     await Promise.resolve()
 
-    expect(container.textContent).toContain('Backup sin destino elegido')
+    expect(container.textContent).toContain('ZIP sin destino elegido')
     expect(container.textContent).toContain('Selector cerrado sin elegir destino')
     expect(showErrorToast).not.toHaveBeenCalled()
 
@@ -257,8 +256,8 @@ describe('BackupView', () => {
 
     await view.init()
 
-    expect(container.textContent).toContain('Primer backup pendiente')
-    expect(container.textContent).toContain('Todavia no registramos un backup manual')
+    expect(container.textContent).toContain('Primer ZIP pendiente')
+    expect(container.textContent).toContain('Todavia no registramos un ZIP exportado')
 
     view.destroy()
   })
@@ -280,7 +279,7 @@ describe('BackupView', () => {
 
     expect(dismissCurrentBackupReminder).toHaveBeenCalledTimes(1)
     expect(createAndShareCurrentBackup).not.toHaveBeenCalled()
-    expect(container.textContent).not.toContain('Backup pendiente')
+    expect(container.textContent).not.toContain('Exportar ZIP pendiente')
 
     view.destroy()
   })
@@ -296,14 +295,14 @@ describe('BackupView', () => {
     const view = new BackupView(container)
 
     await view.init()
-    expect(container.textContent).toContain('Backup pendiente')
+    expect(container.textContent).toContain('Exportar ZIP pendiente')
 
     container.querySelector('.js-btn-create-backup').click()
     await Promise.resolve()
     await Promise.resolve()
 
-    expect(container.textContent).toContain('Backup preparado')
-    expect(container.textContent).not.toContain('Backup pendiente')
+    expect(container.textContent).toContain('ZIP preparado')
+    expect(container.textContent).not.toContain('Exportar ZIP pendiente')
 
     view.destroy()
   })
@@ -318,7 +317,7 @@ describe('BackupView', () => {
     await Promise.resolve()
     await Promise.resolve()
 
-    expect(container.textContent).toContain('No se pudo crear el backup')
+    expect(container.textContent).toContain('No se pudo exportar el ZIP')
     expect(container.textContent).toContain('No se pudo compartir')
     expect(showErrorToast).toHaveBeenCalledWith('No se pudo compartir')
 
@@ -339,7 +338,7 @@ describe('BackupView', () => {
     view.destroy()
   })
 
-  it('abre el selector de archivo al tocar Importar ZIP', async () => {
+  it('abre el selector de archivo al tocar Seleccionar ZIP', async () => {
     const container = createContainer()
     const view = new BackupView(container, { initialPanel: 'import' })
 
@@ -366,7 +365,7 @@ describe('BackupView', () => {
     expect(prepareImport).toHaveBeenCalledWith({ content: file, filename: 'lumapse.zip' })
     expect(container.textContent).toContain('Preview listo')
     expect(container.textContent).toContain('Importará: 5 nota(s), 2 materia(s), 1 fecha(s)')
-    expect(container.textContent).toContain('Confirmar importación')
+    expect(container.querySelector('.js-btn-confirm-import').textContent).toContain('Importar ZIP')
 
     view.destroy()
   })
@@ -394,8 +393,8 @@ describe('BackupView', () => {
     await flushPromises()
 
     expect(confirmDialog).toHaveBeenCalledWith(expect.objectContaining({
-      title: 'Confirmar importación',
-      confirmText: 'Importar',
+      title: 'Confirmar importación ZIP',
+      confirmText: 'Importar ZIP',
     }))
     expect(confirmImport).toHaveBeenCalledWith(plan)
     expect(onImportComplete).toHaveBeenCalledWith(result)
@@ -471,13 +470,13 @@ describe('BackupView', () => {
 
     await view.init()
 
-    expect(container.textContent).toContain('Exportar respaldo')
-    expect(container.textContent).not.toContain('Importar backup')
+    expect(container.textContent).toContain('Exportar ZIP')
+    expect(container.textContent).not.toContain('Seleccioná un ZIP compatible')
 
     container.querySelector('[data-panel="import"]').click()
 
-    expect(container.textContent).toContain('Importar respaldo')
-    expect(container.textContent).toContain('Importar backup')
+    expect(container.textContent).toContain('Importar ZIP')
+    expect(container.textContent).toContain('Seleccioná un ZIP compatible')
 
     view.destroy()
   })

@@ -44,7 +44,7 @@ function renderBackupView(state) {
       ${renderBackupPanelTabs(panel)}
       ${panel === BACKUP_PANEL.EXPORT ? renderBackupExportSection(state) : renderImportPanel(state)}
       <p class="backup-view__note">
-        Esto no sincroniza automáticamente. Lumapse crea un ZIP restaurable y legible para que vos elijas dónde guardarlo.
+        Esto no sincroniza automáticamente. Exportar crea un ZIP restaurable; importar recupera un ZIP compatible.
       </p>
     </div>
   `
@@ -61,8 +61,8 @@ export class BackupView {
     this.state = {
       uiState: UI_STATE.LOADING,
       title: 'Revisando conexion',
-      message: 'Estamos comprobando si el backup externo está disponible.',
-      actionLabel: 'Crear backup externo',
+      message: 'Estamos comprobando si la exportación ZIP está disponible.',
+      actionLabel: 'Exportar ZIP',
       disabled: true,
       showRefresh: false,
       reminder: null,
@@ -135,7 +135,7 @@ export class BackupView {
       ...this.state,
       uiState: UI_STATE.LOADING,
       title: 'Revisando conexion',
-      message: 'Estamos comprobando si el backup externo está disponible.',
+      message: 'Estamos comprobando si la exportación ZIP está disponible.',
       disabled: true,
       showRefresh: false,
     }
@@ -161,7 +161,7 @@ export class BackupView {
         uiState: UI_STATE.ERROR,
         title: 'No se pudo revisar la conexion',
         message: 'Intentá nuevamente en unos segundos.',
-        actionLabel: 'Crear backup externo',
+        actionLabel: 'Exportar ZIP',
         disabled: true,
         showRefresh: true,
         errorMessage: error.message || 'Error desconocido.',
@@ -175,7 +175,7 @@ export class BackupView {
     this.state = {
       ...this.state,
       uiState: UI_STATE.BUSY,
-      title: 'Preparando backup',
+      title: 'Preparando ZIP',
       message: 'Creando ZIP y preparando el selector de Android.',
       disabled: true,
       showRefresh: false,
@@ -188,13 +188,13 @@ export class BackupView {
       this.updateAfterBackupFlow(result)
     } catch (error) {
       if (this.destroyed) return
-      const message = error.message || 'No se pudo crear el backup.'
+      const message = error.message || 'No se pudo exportar el ZIP.'
       this.state = {
         ...this.state,
         uiState: UI_STATE.ERROR,
-        title: 'No se pudo crear el backup',
+        title: 'No se pudo exportar el ZIP',
         message: 'Revisá la conexión o intentá nuevamente.',
-        actionLabel: 'Reintentar backup',
+        actionLabel: 'Reintentar exportación',
         disabled: false,
         showRefresh: true,
         errorMessage: message,
@@ -220,9 +220,9 @@ export class BackupView {
       this.state = {
         ...this.state,
         uiState: UI_STATE.CANCELLED,
-        title: 'Backup sin destino elegido',
+        title: 'ZIP sin destino elegido',
         message: result.message || 'El selector se cerró antes de guardar o compartir el ZIP.',
-        actionLabel: 'Intentar de nuevo',
+        actionLabel: 'Exportar ZIP de nuevo',
         disabled: false,
         showRefresh: true,
         networkState: result.networkState,
@@ -233,9 +233,9 @@ export class BackupView {
     this.state = {
       ...this.state,
       uiState: UI_STATE.SUCCESS,
-      title: 'Backup preparado',
+      title: 'ZIP preparado',
       message: 'Android abrió el selector para guardar o compartir el ZIP.',
-      actionLabel: 'Crear otro backup',
+      actionLabel: 'Exportar otro ZIP',
       disabled: false,
       showRefresh: true,
       networkState: result.networkState,

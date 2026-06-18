@@ -98,7 +98,7 @@ export function renderAppShell() {
       <div class="app-menu-drawer__content">
         <button id="btn-export-backup" class="app-menu-drawer__item" type="button">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>
-          <span id="export-backup-btn-label">Exportar backup</span>
+          <span id="export-backup-btn-label">Exportar ZIP</span>
         </button>
         <button id="btn-import-backup" class="app-menu-drawer__item" type="button">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V9"></path><path d="m17 14-5-5-5 5"></path><path d="M5 3h14"></path></svg>
