@@ -57,6 +57,7 @@ export class BackupView {
     this.getReminder = deps.getReminder || getCurrentBackupReminder
     this.dismissReminder = deps.dismissReminder || dismissCurrentBackupReminder
     this.createAndShare = deps.createAndShare || createAndShareCurrentBackup
+    this.onPanelChange = deps.onPanelChange || (() => {})
     this.destroyed = false
     this.state = {
       uiState: UI_STATE.LOADING,
@@ -111,7 +112,7 @@ export class BackupView {
     }
   }
 
-  setPanel(panel) {
+  setPanel(panel, options = {}) {
     const nextPanel = normalizeBackupPanel(panel)
     if (this.state.activePanel === nextPanel) return
 
@@ -120,6 +121,7 @@ export class BackupView {
       activePanel: nextPanel,
     }
     this.render()
+    if (options.notify) this.onPanelChange(nextPanel)
   }
 
   async loadReminder() {
@@ -274,7 +276,7 @@ export class BackupView {
   async handleClick(event) {
     const panelTab = event.target.closest('.js-backup-panel-tab')
     if (panelTab) {
-      this.setPanel(panelTab.dataset.panel)
+      this.setPanel(panelTab.dataset.panel, { notify: true })
       return
     }
 

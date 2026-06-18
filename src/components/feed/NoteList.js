@@ -221,6 +221,7 @@ export class NoteList {
     this.backupView = new BackupView(this.feedContainer, {
       initialPanel: panel,
       onImportComplete: this.refreshAfterBackupImport,
+      onPanelChange: NoteStore.setViewBackup,
     });
     this.backupView.init();
   }

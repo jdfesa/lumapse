@@ -466,7 +466,8 @@ describe('BackupView', () => {
 
   it('permite cambiar de exportar a importar con pestañas internas', async () => {
     const container = createContainer()
-    const view = new BackupView(container)
+    const onPanelChange = vi.fn()
+    const view = new BackupView(container, { onPanelChange })
 
     await view.init()
 
@@ -477,6 +478,7 @@ describe('BackupView', () => {
 
     expect(container.textContent).toContain('Importar ZIP')
     expect(container.textContent).toContain('Seleccioná un ZIP compatible')
+    expect(onPanelChange).toHaveBeenCalledWith('import')
 
     view.destroy()
   })
