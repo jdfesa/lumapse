@@ -7,7 +7,7 @@
 
 - Fecha de inicio: 2026-06-18
 - Rama de trabajo: `codex/importar-backup-zip`
-- Estado actual: Fase 1 cerrada - parser y validador ZIP
+- Estado actual: Fase 2 cerrada - preview y plan de importacion
 - Feature objetivo: importacion/restauracion desde backup `.zip` generado por Lumapse
 - Requisito relacionado: `RF-018`
 
@@ -208,13 +208,13 @@ Objetivo: calcular que pasaria antes de escribir.
 
 Tareas:
 
-- [ ] Implementar `BackupImportPlanService.ts`.
-- [ ] Leer datos locales necesarios para detectar IDs existentes.
-- [ ] Detectar colisiones de nombre por nivel de materias/secciones.
-- [ ] Definir renombres seguros con sufijo `(importada)`.
-- [ ] Resolver referencias rotas a Entrada o raiz segun corresponda.
-- [ ] Devolver conteos: importables, omitidos, renombrados, relaciones corregidas.
-- [ ] Agregar tests unitarios puros.
+- [x] Implementar `BackupImportPlanService.ts`.
+- [x] Leer datos locales necesarios para detectar IDs existentes.
+- [x] Detectar colisiones de nombre por nivel de materias/secciones.
+- [x] Definir renombres seguros con sufijo `(importada)`.
+- [x] Resolver referencias rotas a Entrada o raiz segun corresponda.
+- [x] Devolver conteos: importables, omitidos, renombrados, relaciones corregidas.
+- [x] Agregar tests unitarios puros.
 
 Criterio de cierre:
 
@@ -224,8 +224,8 @@ Criterio de cierre:
 
 Verificacion:
 
-- `npm test -- tests/unit/services/backup/BackupImportPlanService.test.js`
-- `npm run typecheck`
+- [x] `npm test -- tests/unit/services/backup/BackupImportPlanService.test.js`
+- [x] `npm run typecheck`
 
 ### Fase 3 - Escritura transaccional
 
@@ -401,4 +401,13 @@ Verificacion:
   `src/services/backup/BackupImportZipService.ts` y tests focalizados.
 - Verificaciones ejecutadas:
   - `npm test -- tests/unit/services/backup/BackupImportZipService.test.js`
+  - `npm run typecheck`
+- Se cerro Fase 2 con preview puro en
+  `src/services/backup/BackupImportPlanService.ts`.
+- El plan ahora detecta duplicados locales, IDs duplicados dentro del backup,
+  colisiones de nombre, relaciones rotas y ordena materias padre antes que
+  secciones para preparar la escritura transaccional.
+- Verificaciones ejecutadas:
+  - `npm test -- tests/unit/services/backup/BackupImportPlanService.test.js`
+  - `npm test -- tests/unit/services/backup/BackupImportZipService.test.js tests/unit/services/backup/BackupImportPlanService.test.js`
   - `npm run typecheck`
