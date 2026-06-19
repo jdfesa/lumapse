@@ -118,6 +118,7 @@ export class SubjectPicker {
       const childClass = option.isChild ? ' composer__subject-option--child' : '';
       const inboxClass = option.id ? '' : ' composer__subject-option--inbox';
       const dotStyle = option.color ? ` style="--subject-color: ${this.escapeAttribute(option.color)}"` : '';
+      const safeLabel = this.escapeAttribute(option.label);
 
       return `
         <button
@@ -126,6 +127,8 @@ export class SubjectPicker {
           role="option"
           data-subject-id="${this.escapeAttribute(option.id)}"
           aria-selected="${selected}"
+          aria-label="${safeLabel}"
+          title="${safeLabel}"
         >
           <span class="composer__subject-option-dot"${dotStyle}></span>
           <span class="composer__subject-option-label">${this.escapeHtml(option.label)}</span>

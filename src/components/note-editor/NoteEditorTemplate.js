@@ -44,7 +44,7 @@ export function renderNoteEditorTemplate() {
       </div>
       <div id="composer-draft-actions" class="composer__draft-actions" hidden>
         <p id="composer-draft-status" class="composer__draft-status"></p>
-        <button id="btn-discard-draft" class="composer__discard-btn" type="button">Descartar</button>
+        <button id="btn-discard-draft" class="composer__discard-btn" type="button" aria-label="Descartar borrador" title="Descartar borrador">Descartar</button>
       </div>
     </div>
   `;

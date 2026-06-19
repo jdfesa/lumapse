@@ -29,6 +29,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Tests nativos Android corregidos:** Se reemplazaron los tests generados por template que referenciaban paquetes de Capacitor por tests bajo `com.lumapse.app`.
 - **Versionado de paquete alineado:** `package.json` y `package-lock.json` pasan de `0.1.0` a `0.4.7`, manteniendo el paquete sincronizado con la última versión cerrada documentada antes de preparar un release/APK.
 - **CSP web ajustada para SQLite WASM:** `index.html` permite el runtime WASM local necesario para `jeep-sqlite`/`sql.js`, manteniendo los recursos restringidos a orígenes locales.
+- **Accesibilidad de controles secundarios:** Los tabs de Backup, el descarte de borrador y las opciones del selector de materia declaran etiquetas accesibles/tooltip, dejando `npm run check:a11y` sin advertencias.
 
 ### Bloque 2 — Mantenibilidad y TypeScript Gradual
 
