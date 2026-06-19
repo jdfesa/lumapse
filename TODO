@@ -6,7 +6,7 @@
 
 **Estado:** Hito 04 cerrado formalmente el 2026-06-01.
 **Objetivo:** preparar la primera release distribuible con quality gate, APK firmado, validacion manual y documentacion final.
-**Criterio:** no sumar features nuevas salvo cambios funcionales acotados y documentados. Quedan registrados como parte de Hito 05 `RF-005`, `RF-017`, `RF-023`, `RF-027` y `RF-028`; desde este punto, estabilizar, empaquetar y validar.
+**Criterio:** no sumar features nuevas salvo cambios funcionales acotados y documentados. Quedan registrados como parte de Hito 05 `RF-005`, `RF-017`, `RF-018`, `RF-023`, `RF-027` y `RF-028`; desde este punto, estabilizar, empaquetar y validar.
 
 ---
 
@@ -38,7 +38,8 @@
 - [x] `RF-016`: postergar compartir/exportar nota individual hasta implementar share sheet nativo con `@capacitor/share` y validarlo en Android real.
 - [x] `RF-016`: no mostrar boton "Compartir" si el flujo termina copiando contenido, porque duplicaria la accion existente de Copiar.
 - [x] `RF-017`: integrar backup `.zip` manual con formato restaurable/legible, destino Android por share sheet/gestor de archivos y prueba en dispositivo real.
-- [x] `RF-018`: mover importacion a deuda de mas largo plazo; si se retoma para nota individual, la nota importada entra en `Entrada` y no intenta recrear materia/seccion de origen.
+- [x] `RF-018`: integrar importacion de backup `.zip` generado por Lumapse con validacion de manifest, preview, escritura transaccional, duplicados no destructivos y prueba en Android real.
+- [x] Mantener importacion de nota individual `.md` como deuda futura separada; si se retoma, entra en `Entrada` y no intenta recrear materia/seccion de origen.
 
 ---
 

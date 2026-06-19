@@ -161,7 +161,7 @@
 | **Story Points** | **3 SP** — Flujo acotado de compartir/exportar nota individual, validación en Android real y ubicación discreta en UI. |
 | **Hito** | Futuro |
 
-> **Estado de revisión 2026-06-05:** compartir una nota individual (`RF-016`) sigue postergado y solo tiene sentido si usa share sheet nativo de Android con apps reales como WhatsApp. El backup `.zip` se reabrió y quedó formalizado aparte como `RF-017 / HU-030`; la importación (`RF-018`) sigue como deuda posterior. Si en el futuro se importa una nota individual exportada desde Lumapse, debe crearse en `Entrada` y no intentar recrear materia/sección de origen.
+> **Estado de revisión 2026-06-19:** compartir una nota individual (`RF-016`) sigue postergado y solo tiene sentido si usa share sheet nativo de Android con apps reales como WhatsApp. La portabilidad de workspace quedó formalizada aparte como exportación de backup `.zip` (`RF-017 / HU-030`) e importación de backup `.zip` generado por Lumapse (`RF-018 / HU-031`). Si en el futuro se importa una nota individual exportada desde Lumapse, debe crearse en `Entrada` y no intentar recrear materia/sección de origen.
 
 **Criterios de Aceptación:**
 
@@ -498,6 +498,31 @@
 
 ---
 
+### HU-031 — Importar backup ZIP de Lumapse
+
+| Campo | Detalle |
+|---|---|
+| **Historia** | Como **estudiante práctico**, quiero **importar un respaldo `.zip` generado por Lumapse**, para **recuperar mis notas en el mismo dispositivo o en una instalación limpia sin depender de sincronización automática**. |
+| **RF asociados** | [RF-018](./requisitos-funcionales.md) |
+| **Persona** | [Martín](./personas.md#persona-2--martín-el-estudiante-práctico) |
+| **Prioridad** | COULD |
+| **Story Points** | **8 SP** — Parser/validador de ZIP, preview de importación, política no destructiva de duplicados, escritura transaccional en SQLite, UI de confirmación y validación en Android real. |
+| **Hito** | 05 |
+
+**Criterios de Aceptación:**
+
+| CA | Descripción | Verificación |
+|---|---|---|
+| CA-01 | El usuario puede seleccionar un `.zip` generado por Lumapse desde la vista secundaria de Backup. | Test funcional |
+| CA-02 | La app valida `manifest.json`, versión/formato y archivos requeridos antes de escribir en la base local. | Test unitario |
+| CA-03 | Antes de confirmar, la UI muestra una vista previa con totales de notas, materias, secciones y fechas académicas detectadas. | Test de UI |
+| CA-04 | La importación escribe notas, materias, secciones y fechas académicas de forma transaccional; si hay error, el workspace existente queda intacto. | Test de integración |
+| CA-05 | Los duplicados y colisiones se resuelven con una política no destructiva, omitiendo elementos existentes en lugar de sobrescribirlos silenciosamente. | Test de regresión |
+| CA-06 | Al finalizar, la app informa cuántos elementos fueron importados, omitidos o rechazados. | Test funcional |
+| CA-07 | El flujo queda validado en Android real importando un ZIP en una instalación existente y en una instalación limpia. | Prueba manual documentada |
+
+---
+
 ## Hito 06 — Entrega Final (Octubre 2026)
 
 No hay HU funcionales nuevas asignadas a Hito 06 en este corte. El foco previsto es cierre documental, validación final y presentación académica.
@@ -508,11 +533,11 @@ No hay HU funcionales nuevas asignadas a Hito 06 en este corte. El foco previsto
 
 | Métrica | Hito 02 | Hito 03 | Hito 04 | Hito 05 | Hito 06 | Futuro | Total |
 |---|---|---|---|---|---|---|---|
-| **Total HU** | 5 | 3 | 7 | 5 | 0 | 1 | **21** |
-| **Total Story Points** | 15 | 13 | 37 | 28 | 0 | 3 | **96** |
-| **Total Criterios de Aceptación** | 16 | 10 | 30 | 30 | 0 | 4 | **90** |
+| **Total HU** | 5 | 3 | 7 | 6 | 0 | 1 | **22** |
+| **Total Story Points** | 15 | 13 | 37 | 36 | 0 | 3 | **104** |
+| **Total Criterios de Aceptación** | 16 | 10 | 30 | 37 | 0 | 4 | **97** |
 | **Prioridad predominante** | MUST | MUST/SHOULD | SHOULD/MUST | MUST/SHOULD | — | SHOULD | — |
-| **Personas cubiertas** | Lucía (3), Martín (2) | Lucía (2), Martín (1) | Lucía (6), Martín (1) | Lucía (3), Martín (2), Prof. Ramos (1) | — | Martín (1) | Lucía (14), Martín (7), Prof. Ramos (1) |
+| **Personas cubiertas** | Lucía (3), Martín (2) | Lucía (2), Martín (1) | Lucía (6), Martín (1) | Lucía (3), Martín (3), Prof. Ramos (1) | — | Martín (1) | Lucía (14), Martín (8), Prof. Ramos (1) |
 
 ---
 
@@ -541,7 +566,8 @@ No hay HU funcionales nuevas asignadas a Hito 06 en este corte. El foco previsto
 | HU-028 | RF-028 | Lucía, Martín | Editor enriquecido y slash commands | 5 | 05 |
 | HU-023 | RF-023 | Prof. Ramos | Sección Acerca de | 2 | 05 |
 | HU-030 | RF-017 | Martín | Backup manual externo | 8 | 05 |
-| | | | **Total** | **96** | |
+| HU-031 | RF-018 | Martín | Importación de backup ZIP | 8 | 05 |
+| | | | **Total** | **104** | |
 
 ---
 

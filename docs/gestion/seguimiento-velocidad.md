@@ -4,7 +4,7 @@
 > **Referencia:** Gómez, J. (2014), Secciones 5 y 7. Guía de Estudio PP3 (Ing. Mauricio Parada, 2026).  
 > **Fecha de creación:** 2026-05-15  
 > **Autor:** José David Sandoval  
-> **Actualización:** 2026-06-19 — incorporación de RF-023/HU-023 como sección Acerca de mínima en Hito 05.
+> **Actualización:** 2026-06-19 — incorporación de RF-018/HU-031 como importación ZIP y RF-023/HU-023 como sección Acerca de mínima en Hito 05.
 
 ---
 
@@ -66,7 +66,7 @@ Story Points normalizados contra las HU formales actuales:
 | HU-013 | Modos edición/lectura | 3 |
 | | **Total Hito 03** | **13** |
 
-> **Nota metodológica:** `HU-008` fue reclasificada como futura porque compartir/exportar una nota individual no está expuesto en la UI actual. El backup `.zip` se reabrió después como `RF-017 / HU-030` y quedó formalizado en Hito 05; la importación (`RF-018`) sigue como deuda posterior.
+> **Nota metodológica:** `HU-008` fue reclasificada como futura porque compartir/exportar una nota individual no está expuesto en la UI actual. La portabilidad de workspace se formalizó después en Hito 05 como exportación de backup `.zip` (`RF-017 / HU-030`) e importación de backup `.zip` generado por Lumapse (`RF-018 / HU-031`).
 
 ### Hito 04 — Organización y UX (Agosto 2026, cerrado formalmente)
 
@@ -96,7 +96,8 @@ Story Points formalizados hasta el 2026-06-19:
 | HU-028 | Editor enriquecido y slash commands | 5 |
 | HU-023 | Sección Acerca de | 2 |
 | HU-030 | Backup manual externo | 8 |
-| | **Total Hito 05 formalizado** | **28** |
+| HU-031 | Importación de backup ZIP | 8 |
+| | **Total Hito 05 formalizado** | **36** |
 
 El Hito 05 mantiene su objetivo principal de testing, calidad y distribución, pero incorpora mejoras funcionales acotadas aprobadas durante la preparación de release. Se registran como cambios de alcance controlados porque ya quedaron implementados, probados y documentados, sin reabrir el Hito 04.
 
@@ -110,7 +111,7 @@ El Hito 05 mantiene su objetivo principal de testing, calidad y distribución, p
 | 02 | Junio 2026 | 15 | 15 | 15 SP/mes | 0 | ✅ Completado | Core CRUD y persistencia local; RF-005 reclasificado a Hito 05 |
 | 03 | Julio 2026 | 13 | 13 | 13 SP/mes | 0 | ✅ Completado | Markdown, lectura/escritura y offline; portabilidad local reclasificada |
 | 04 | Agosto 2026 | 37 | 37 | 37 SP/mes | 0 | ✅ Completado | Organización por materias + UX mobile cerrado formalmente |
-| 05 | Septiembre 2026 | 28 | 28 | 28 SP/mes parcial | 0 | 🔄 En curso | Testing + APK firmado, backup, fechas discretas, editor enriquecido, borradores persistentes y Acerca de |
+| 05 | Septiembre 2026 | 36 | 36 | 36 SP/mes parcial | 0 | 🔄 En curso | Testing + APK firmado, export/import ZIP, fechas discretas, editor enriquecido, borradores persistentes y Acerca de |
 | 06 | Octubre 2026 | *por definir* | — | — | — | ⏳ Futuro | Informe final + entrega |
 
 ### Velocidad promedio (datos disponibles)
@@ -119,7 +120,7 @@ El Hito 05 mantiene su objetivo principal de testing, calidad y distribución, p
 Velocidad promedio = (15 + 13 + 37) / 3 = 21.7 SP/hito
 ```
 
-> El script `python3 scripts/generate-velocity-report.py` permite auditar los SP formalizados por hito desde la tabla de HU. Para velocidad real cerrada se consideran solo los hitos formalmente completados (02 a 04). Al 2026-06-19, el proyecto registra **21 HU formalizadas**, **96 SP totales planificados/formalizados**, **65 SP cerrados** en Hitos 02 a 04 y **28 SP formalizados en curso** para Hito 05.
+> El script `python3 scripts/generate-velocity-report.py` permite auditar los SP formalizados por hito desde la tabla de HU. Para velocidad real cerrada se consideran solo los hitos formalmente completados (02 a 04). Al 2026-06-19, el proyecto registra **22 HU formalizadas**, **104 SP totales planificados/formalizados**, **65 SP cerrados** en Hitos 02 a 04 y **36 SP formalizados en curso** para Hito 05.
 
 ---
 
@@ -143,7 +144,7 @@ El Hito 02 se completó según el alcance normalizado actual. Las 5 HU de core C
 | SP entregados | 13 |
 | Desvío | 0 (100% de cumplimiento) |
 
-El Hito 03 se completó con éxito dentro del alcance hoy verificable: Markdown, modos de lectura/escritura y soporte offline original. La portabilidad local se reclasifica como deuda posterior por requerir integración nativa, formato de backup y política de importación.
+El Hito 03 se completó con éxito dentro del alcance hoy verificable: Markdown, modos de lectura/escritura y soporte offline original. La portabilidad local de nota individual se reclasifica como deuda posterior; la portabilidad de workspace se resuelve más adelante en Hito 05 mediante exportación e importación de backup ZIP.
 
 ### Hito 04 — Entregado por encima del plan inicial y cerrado formalmente
 

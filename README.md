@@ -179,7 +179,7 @@ Completar el producto mínimo viable de captura y lectura de notas con Markdown 
 - Soporte de sintaxis: encabezados, negritas, listas, código, enlaces
 - Toolbar de edición (negrita, cursiva, encabezado, lista) para usuarios no técnicos
 - Modo edición / modo lectura (toggle)
-- Servicios base de exportación/importación Markdown; la UI actual no los expone y la portabilidad local queda como deuda futura
+- Servicios base de exportación/importación Markdown; la portabilidad verificable se separa luego entre nota individual futura y backups ZIP de workspace
 - Funcionamiento offline bajo la arquitectura original PWA/IndexedDB
 
 ### ✅ Hito 04 — Organización y UX Móvil (Agosto 2026) → [Informe](./docs/hitos/hito-04-agosto.md)
@@ -206,6 +206,7 @@ Garantizar la calidad del código y preparar la distribución del producto.
 - Smoke tests nativos Android bajo `com.lumapse.app` (implementados)
 - Borradores persistentes del editor para continuar notas tras cambiar de app o consultar PDFs (`RF-005`)
 - Backup manual `.zip` externo con salida por share sheet/gestor de archivos (`RF-017`)
+- Importación de backup `.zip` generado por Lumapse con preview y política no destructiva (`RF-018`)
 - Sección "Acerca de" con versión, autor, licencia y alcance offline/local (`RF-023`)
 - Fechas académicas discretas integradas al calendario existente (`RF-027`)
 - Editor enriquecido con slash commands, botón `+`, formato `Aa`, callouts y modo enfoque dedicado (`RF-028`)

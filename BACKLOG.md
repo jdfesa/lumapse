@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 05 — Testing, Calidad y Distribución
 > **Hito 04:** Cerrado formalmente el 2026-06-01
-> **Última actualización:** 2026-06-19 — sección Acerca de integrada para cierre de Hito 05
+> **Última actualización:** 2026-06-19 — importación ZIP y sección Acerca de integradas para cierre de Hito 05
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -13,11 +13,11 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 Hito 04 quedó cerrado formalmente como bloque de Organización y UX. El cierre combinó implementación mínima de pulido UX (empty states) y decisiones explícitas de postergación/descarte para funcionalidades opcionales que podían agregar ruido visual o sugerir capacidades no presentes todavía.
 
-Hito 05 queda activo con foco en estabilización, calidad y distribución. Durante la preparación de release se aprobaron mejoras funcionales acotadas y ya implementadas: borradores persistentes del editor (`RF-005`), backup manual externo (`RF-017`), sección Acerca de (`RF-023`), fechas académicas discretas (`RF-027`) y editor enriquecido (`RF-028`). Desde este punto, la prioridad vuelve a ser validar el producto, preparar el APK y ordenar los artefactos finales.
+Hito 05 queda activo con foco en estabilización, calidad y distribución. Durante la preparación de release se aprobaron mejoras funcionales acotadas y ya implementadas: borradores persistentes del editor (`RF-005`), backup manual externo (`RF-017`), importación de backup ZIP (`RF-018`), sección Acerca de (`RF-023`), fechas académicas discretas (`RF-027`) y editor enriquecido (`RF-028`). Desde este punto, la prioridad vuelve a ser validar el producto, preparar el APK y ordenar los artefactos finales.
 
-La revisión de exportación/importación corrige una sobrepromesa documental: existen servicios base (`ExportService`/`ImportService`), pero la UI actual no expone esos flujos. La opción "Compartir" solo tendría sentido si abre el share sheet nativo de Android y ofrece apps como WhatsApp; si termina copiando contenido, duplica una acción existente y agrega ruido.
+La revisión de exportación/importación corrige una sobrepromesa documental del Hito 03: los servicios base de Markdown no equivalían a un flujo de usuario validado. La opción "Compartir" para una nota individual (`RF-016`) solo tendría sentido si abre el share sheet nativo de Android y ofrece apps como WhatsApp; si termina copiando contenido, duplica una acción existente y agrega ruido. La portabilidad de workspace sí quedó resuelta de forma acotada con exportación e importación de backup `.zip` desde la vista Backup.
 
-El benchmark contra apps como Markor refuerza una deuda crítica: Lumapse no debe encerrar al estudiante en SQLite sin salida. La primera versión de `RF-017` ya quedó integrada como backup manual `.zip`, restaurable/legible, con salida externa por share sheet o gestor de archivos. El plan operativo cerrado queda archivado en [`docs/gestion/historico/plan-backup-google-drive-2026-06-03.md`](docs/gestion/historico/plan-backup-google-drive-2026-06-03.md).
+El benchmark contra apps como Markor refuerza una deuda crítica: Lumapse no debe encerrar al estudiante en SQLite sin salida. La primera versión de `RF-017` ya quedó integrada como backup manual `.zip`, restaurable/legible, con salida externa por share sheet o gestor de archivos. La primera versión de `RF-018` permite importar un ZIP generado por Lumapse con validación de manifest, preview, escritura transaccional y política no destructiva de duplicados. Los planes operativos cerrados quedan archivados en [`docs/gestion/historico/plan-backup-google-drive-2026-06-03.md`](docs/gestion/historico/plan-backup-google-drive-2026-06-03.md) y [`docs/gestion/historico/plan-importacion-backup-zip-2026-06-18.md`](docs/gestion/historico/plan-importacion-backup-zip-2026-06-18.md).
 
 El benchmark visual contra Notion mobile derivó en `RF-028`: controles opcionales de formato e inserción para enriquecer notas Markdown sin convertir Lumapse en un editor pesado. Las fases completadas incluyen slash commands, menú `+`, botón `Aa`, continuidad inteligente de listas/callouts, render visual de callouts y tipografía de escritura más cómoda. El plan cerrado queda archivado en [`docs/gestion/historico/plan-editor-enriquecido-2026-06-05.md`](docs/gestion/historico/plan-editor-enriquecido-2026-06-05.md).
 
@@ -61,8 +61,8 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | ID | Decisión | Complejidad | Recomendación |
 |---|---|---|---|
 | RF-016 | Compartir/exportar nota individual | Media | Postergar: requiere `@capacitor/share`, posible `@capacitor/filesystem`, sync nativo y prueba real de WhatsApp/share sheet |
-| RF-017 | Exportar respaldo `.zip` local + salida externa | Media/Alta | Primera version completada: backup manual restaurable/legible con share sheet/gestor de archivos. Plan cerrado en [`docs/gestion/historico/plan-backup-google-drive-2026-06-03.md`](docs/gestion/historico/plan-backup-google-drive-2026-06-03.md). Quedan para futuro restauracion completa y Drive API directa |
-| RF-018 | Importar `.md` o `.zip` | Media/Alta | Deuda de más largo plazo; si se retoma una nota individual, debe entrar en `Entrada` y no reconstruir materias/secciones automáticamente |
+| RF-017 | Exportar respaldo `.zip` local + salida externa | Media/Alta | Primera version completada: backup manual restaurable/legible con share sheet/gestor de archivos. Plan cerrado en [`docs/gestion/historico/plan-backup-google-drive-2026-06-03.md`](docs/gestion/historico/plan-backup-google-drive-2026-06-03.md). Queda para futuro Drive API directa |
+| RF-018 | Importar respaldo `.zip` generado por Lumapse | Media/Alta | Primera version completada: validacion de manifest, preview, importacion no destructiva, escritura transaccional y validacion Android real. Plan cerrado en [`docs/gestion/historico/plan-importacion-backup-zip-2026-06-18.md`](docs/gestion/historico/plan-importacion-backup-zip-2026-06-18.md). La importacion de nota individual `.md` queda como deuda futura separada |
 
 ---
 
@@ -78,9 +78,9 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Testing | Eliminar clave `deleteSection` duplicada en mock de tests | Baja | Limpieza de test fixture |
 | Documentación | Revisar documentos generados antes del corte final | Media | Informe completo y cheatsheet deben reflejar la versión de release |
 | Diagramas | Actualizar gráficos DB exportados | Media | Regenerar al cierre documental final con modelo congelado |
-| Release | Definir versión del próximo corte | Media | Evaluar si Fechas Académicas discretas sale como `0.4.8` |
+| Release | Definir versión del próximo corte | Media | Validar si el corte funcional de Hito 05 sale como `0.4.8` con backup ZIP, fechas académicas, editor enriquecido, borradores y Acerca de |
 | Adjuntos | Planificar adjuntos de imagen post-release | Media | Valor alto para fotos de pizarrón; debe implementarse sin cargar SQLite ni saturar el feed |
-| Backup | Restauracion desde backup `.zip` y Drive API directa | Alta | El backup manual externo ya esta integrado; quedan restauracion controlada y subida directa a Drive como fases futuras |
+| Backup | Restauracion avanzada y Drive API directa | Alta | Exportacion e importacion ZIP manual ya estan integradas; quedan reemplazo/merge avanzado de workspace y subida directa a Drive como fases futuras |
 
 ---
 
@@ -93,7 +93,7 @@ No incorporar en Hito 05 salvo decisión explícita:
 - Recurrencias, horarios o duración de eventos.
 - Sincronización externa.
 - Backup automatico en nube dentro del Hito 05; la primera version manual ya quedo integrada.
-- Importación automática de backups complejos sin política de merge.
+- Importación automática de backups complejos fuera del formato Lumapse o sin preview/política no destructiva.
 - Tutoriales obligatorios.
 - Nuevas capas de organización más allá de Materia / Sección / Nota.
 
@@ -102,6 +102,7 @@ No incorporar en Hito 05 salvo decisión explícita:
 ## Largo Plazo / Post-Defensa
 
 - [x] Backup manual `.zip` con salida a almacenamiento elegido por el usuario. Validado en Android real mediante share sheet/gestor de archivos; Google Drive queda disponible si esta instalado como destino.
+- [x] Importacion no destructiva de backup `.zip` generado por Lumapse, con preview, escritura transaccional, duplicados omitidos y validacion en Android real.
 - [x] Borradores persistentes del editor (`RF-005`): protegen nota nueva y edición en curso sin crear ni actualizar notas finales sin confirmación.
 - [x] Editor enriquecido y slash commands (`RF-028`): `/`, `+`, `Aa`, Modo Enfoque dedicado, continuidad de listas/callouts, render visual de callouts y tipografia de escritura offline-first.
 - [x] Plan de mantenibilidad gradual documentado: [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md).
@@ -118,7 +119,7 @@ No incorporar en Hito 05 salvo decisión explícita:
 - [x] Papelera avanzada de materias migrada a TypeScript: `SubjectService.trash`, preservando cascadas, restauracion navegable y `getTrashItems`.
 - [x] Escritor ZIP liviano migrado a TypeScript: `BackupZipArchive`, con test directo sobre formatos de salida y rutas UTF-8.
 - [ ] Aplicar mejoras pequenas y verificables que aumenten cohesion, reduzcan acoplamiento y faciliten revisiones humanas/IA, evitando reescrituras grandes.
-- [ ] Restauracion desde backup `.zip`, empezando por importacion no destructiva en una carpeta `Restaurado YYYY-MM-DD`.
+- [ ] Restauracion avanzada desde backup `.zip` con estrategia explicita de reemplazo/merge, solo despues de validar la importacion no destructiva actual con usuarios reales.
 - [ ] Sincronización real multi-dispositivo, solo después de validar backup/restauración y con feedback fuerte de adopción.
 - [ ] Compartir nota individual con share sheet nativo de Android, solo si se valida que ofrece apps reales como WhatsApp y no duplica la acción Copiar.
 - [ ] Google Drive API directa para subir backups a una carpeta elegida o `appDataFolder`, solo después de definir OAuth, scopes y fallback local.
@@ -135,6 +136,7 @@ No incorporar en Hito 05 salvo decisión explícita:
 - [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md): backlog completo antes de la limpieza.
 - [`docs/gestion/historico/plan-fechas-academicas-discretas-2026-05-31.md`](docs/gestion/historico/plan-fechas-academicas-discretas-2026-05-31.md): plan operativo completo de Fechas Académicas discretas.
 - [`docs/gestion/historico/plan-backup-google-drive-2026-06-03.md`](docs/gestion/historico/plan-backup-google-drive-2026-06-03.md): plan operativo completo del backup manual `.zip` externo.
+- [`docs/gestion/historico/plan-importacion-backup-zip-2026-06-18.md`](docs/gestion/historico/plan-importacion-backup-zip-2026-06-18.md): plan operativo completo de la importacion de backups `.zip` generados por Lumapse.
 - [`docs/gestion/historico/plan-editor-enriquecido-2026-06-05.md`](docs/gestion/historico/plan-editor-enriquecido-2026-06-05.md): plan operativo completo del editor enriquecido y slash commands.
 - [`docs/gestion/historico/plan-borradores-persistentes-2026-06-06.md`](docs/gestion/historico/plan-borradores-persistentes-2026-06-06.md): plan operativo completo de borradores persistentes del editor.
 - [`docs/hitos/hito-04-agosto.md`](docs/hitos/hito-04-agosto.md): informe formal del Hito 04.

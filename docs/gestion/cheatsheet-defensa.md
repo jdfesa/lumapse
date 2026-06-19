@@ -7,9 +7,9 @@
 |---|---|
 | Archivos de código (JS/CSS) | 16 |
 | Líneas de código fuente | 2,365 |
-| Requisitos Funcionales | 28 (20 implementados/verificados, 0 pendientes, 6 postergados, 2 obsoletos) |
-| Historias de Usuario | 21 |
-| Story Points totales formalizados | 96 (65 cerrados en Hitos 02 a 04) |
+| Requisitos Funcionales | 28 (22 implementados/verificados, 0 pendientes, 4 postergados, 2 obsoletos) |
+| Historias de Usuario | 22 |
+| Story Points totales formalizados | 104 (65 cerrados en Hitos 02 a 04) |
 | ADRs documentados | 6 |
 | Scripts de automatización | 29 |
 | Tablas en BD | 4 |
@@ -57,7 +57,7 @@
 - **¿Por qué no agregaste contador de palabras?** → RF-006 quedó postergado: Lumapse prioriza captura rápida. Si estudiantes reales lo piden, se puede sumar como metadato sutil calculado en UI.
 - **¿Por qué no mostrás online/offline?** → RF-024 quedó postergado: sin sincronización ni backup, el estado de red no cambia el flujo y podría sugerir una sincronización inexistente.
 - **¿Por qué no hay onboarding o tutorial Markdown?** → DP-006: la primera release valida una interfaz autoexplicativa. Lumapse permite escribir texto plano; Markdown es una mejora, no una barrera de entrada.
-- **¿Export/import está implementado?** → Parcialmente. `RF-016` se posterga porque compartir una nota individual solo vale la pena si abre el share sheet nativo de Android; si termina copiando contenido, duplica el botón Copiar. `RF-017` ya está implementado como backup manual `.zip` legible/restaurable con salida externa. `RF-018` queda como deuda posterior por importación, merge y materias/secciones.
+- **¿Export/import está implementado?** → Sí para backups de workspace: `RF-017` exporta un `.zip` legible/restaurable con salida externa y `RF-018` importa ZIPs generados por Lumapse con preview, transacción y duplicados no destructivos. Sigue postergado `RF-016`, que es compartir/exportar una nota individual, y también la importación `.md` de una nota suelta.
 
 ## Fuentes
 

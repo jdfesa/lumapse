@@ -14,7 +14,7 @@ El Hito 05 tiene como objetivo garantizar la calidad del producto y preparar su 
 
 Desde el 2026-06-01, el Hito 04 queda cerrado formalmente y este hito pasa a ser el foco operativo del proyecto: release dry-run, APK firmado, validación manual en Android y preparación de artefactos de distribución.
 
-Durante esta etapa también se aceptaron mejoras funcionales controladas que elevan la utilidad real de la beta sin cambiar la arquitectura offline-first: borradores persistentes del editor (`RF-005`), backup manual externo (`RF-017`), sección Acerca de (`RF-023`), fechas académicas discretas (`RF-027`) y editor enriquecido (`RF-028`). Quedan registradas en requisitos, HU, changelog y seguimiento de velocidad para evitar que parezcan trabajo fuera de hito.
+Durante esta etapa también se aceptaron mejoras funcionales controladas que elevan la utilidad real de la beta sin cambiar la arquitectura offline-first: borradores persistentes del editor (`RF-005`), backup manual externo (`RF-017`), importación de backup ZIP (`RF-018`), sección Acerca de (`RF-023`), fechas académicas discretas (`RF-027`) y editor enriquecido (`RF-028`). Quedan registradas en requisitos, HU, changelog y seguimiento de velocidad para evitar que parezcan trabajo fuera de hito.
 
 ---
 
@@ -22,7 +22,7 @@ Durante esta etapa también se aceptaron mejoras funcionales controladas que ele
 
 | Área | Estado | Evidencia |
 |---|---|---|
-| Suite Vitest | ✅ Implementada | `npm run test` con 671 tests |
+| Suite Vitest | ✅ Implementada | `npm run test` con 766 tests |
 | Quality gate local | ✅ Verificado | `npm run verify` ejecutado sin fallos el 2026-06-02 |
 | GitHub Actions | ✅ Implementado | Workflow `CI — Quality Gate` |
 | Auditorías documentales/schema | ✅ Implementadas | `check:traceability`, `check:docs`, `check:schema`, `check:dbml`, `check:subjects` |
@@ -34,6 +34,7 @@ Durante esta etapa también se aceptaron mejoras funcionales controladas que ele
 | Release dry-run | ✅ Completado | `scripts/release-helper.py --type patch --dry-run` propone `0.4.8` sin bloqueos |
 | Borradores persistentes del editor | ✅ Verificado | `RF-005 / HU-005`, plan histórico archivado y validación manual con cambio de app/PDF |
 | Backup manual externo | ✅ Implementado | `RF-017 / HU-030`, plan histórico archivado |
+| Importación de backup ZIP | ✅ Implementado | `RF-018 / HU-031`, preview, importación no destructiva y validación Android real |
 | Sección Acerca de | ✅ Implementado | `RF-023 / HU-023`, versión, autor, licencia y alcance offline/local |
 | Fechas académicas discretas | ✅ Implementado | `RF-027 / HU-027`, mejora adelantada y acotada |
 | Editor enriquecido | ✅ Implementado | `RF-028 / HU-028`, slash commands, `+`, `Aa`, callouts y foco |
@@ -42,13 +43,13 @@ Durante esta etapa también se aceptaron mejoras funcionales controladas que ele
 
 ## Estrategia de Release Candidata
 
-El corte `0.4.8` se toma como **release candidata funcional** para validacion controlada, no como cierre final del producto ni como apertura de nuevas funcionalidades. Su objetivo es demostrar que el nucleo de Lumapse ya puede probarse como APK: captura de notas, organizacion por materias/secciones, busqueda, Markdown, estados academicos, papelera, fechas academicas discretas, persistencia local SQLite y funcionamiento offline.
+El corte `0.4.8` se toma como **release candidata funcional** para validacion controlada, no como cierre final del producto ni como apertura de nuevas funcionalidades. Su objetivo es demostrar que el nucleo de Lumapse ya puede probarse como APK: captura de notas, organizacion por materias/secciones, busqueda, Markdown, estados academicos, papelera, fechas academicas discretas, backup ZIP manual, persistencia local SQLite y funcionamiento offline.
 
 Cualquier feedback recibido durante esta etapa debe clasificarse en tres grupos:
 
 - **Bug bloqueante:** impide usar, instalar, guardar datos o navegar flujos principales.
 - **Mejora menor:** ajuste de claridad, texto, accesibilidad o friccion que no cambia el alcance.
-- **Feature post-release:** ideas valiosas, como adjuntos de imagen, backup o sincronizacion, que se registran en backlog sin entrar al corte actual.
+- **Feature post-release:** ideas valiosas, como adjuntos de imagen, backup automático en nube o sincronizacion, que se registran en backlog sin entrar al corte actual.
 
 Esta estrategia evita que la beta se convierta en expansion de alcance. La prioridad del Hito 05 sigue siendo estabilizar, probar en Android real y preparar distribucion.
 
@@ -58,6 +59,7 @@ Esta estrategia evita que la beta se convierta en expansion de alcance. La prior
 |---|---|---|---|
 | `RF-005 / HU-005` | Borradores persistentes del editor | Protege trabajo en curso sin crear ni actualizar notas finales sin confirmación | Verificado |
 | `RF-017 / HU-030` | Backup manual `.zip` externo | Evita vendor lock-in y permite salida local antes de la beta | Implementado |
+| `RF-018 / HU-031` | Importación de backup ZIP | Permite recuperar un respaldo Lumapse sin sincronización automática ni sobrescritura silenciosa | Implementado |
 | `RF-023 / HU-023` | Sección Acerca de | Muestra identidad, licencia y alcance sin sumar tutorial obligatorio | Implementado |
 | `RF-027 / HU-027` | Fechas académicas discretas | Aporta recordatorios pasivos sin agenda completa, notificaciones ni sync | Implementado |
 | `RF-028 / HU-028` | Editor enriquecido y slash commands | Mejora la toma de notas sin obligar a aprender Markdown ni introducir formato propietario | Implementado |

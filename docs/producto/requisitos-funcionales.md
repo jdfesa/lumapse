@@ -1,7 +1,7 @@
 # Requisitos Funcionales — Lumapse
 
 **Fase Design Thinking:** Idear / Prototipar  
-**Última actualización:** 2026-06-19 (sección Acerca de)
+**Última actualización:** 2026-06-19 (importación ZIP y sección Acerca de)
 **Autor:** José David Sandoval
 
 ---
@@ -75,7 +75,7 @@
 |---|---|---|---|---|---|
 | RF-016 | El sistema debe permitir **compartir o exportar una nota individual** como Markdown desde una acción secundaria. | SHOULD | Martín | Futuro | Postergado |
 | RF-017 | El sistema debe permitir **exportar un respaldo local** del workspace como archivo `.zip`, con manifiesto, datos estructurados y notas `.md` legibles, usando salida externa por share sheet o gestor de archivos. | SHOULD | Martín | 05 | Implementado |
-| RF-018 | El sistema debe permitir **importar contenido local** desde archivos `.md` o respaldos `.zip`, con política explícita para duplicados y materias existentes. | COULD | Martín | Futuro | Postergado |
+| RF-018 | El sistema debe permitir **importar respaldos `.zip` generados por Lumapse**, validando el manifiesto, mostrando una vista previa, aplicando una política no destructiva para duplicados/colisiones y restaurando notas, materias, secciones y fechas académicas de forma transaccional. | COULD | Martín | 05 | Implementado |
 
 ---
 
@@ -114,11 +114,11 @@ Validación manual: el flujo fue probado saliendo de Lumapse para consultar un P
 
 La revisión del 2026-06-01 detectó que `src/services/ExportService.js` e `src/services/ImportService.js` conservaban una base técnica parcial de exportación/importación, pero la funcionalidad no estaba conectada a la interfaz actual ni cubierta como flujo verificable de usuario. Por lo tanto, `RF-016`, `RF-017` y `RF-018` dejaron de contarse temporalmente como requisitos implementados del producto actual.
 
-La decisión protege la filosofía de Lumapse: tomador de notas sin fricción, offline-first, mobile-first y sin sincronización todavía. Compartir una nota individual puede aportar portabilidad real solo si abre el share sheet nativo de Android y permite elegir apps instaladas como WhatsApp. Si termina copiando contenido, duplica la acción existente de Copiar y agrega ruido. Exportar respaldos completos o importar contenido exige reglas de merge, colisiones de nombres y reconstrucción de materias/secciones, por lo que queda como deuda posterior.
+La decisión protege la filosofía de Lumapse: tomador de notas sin fricción, offline-first, mobile-first y sin sincronización todavía. Compartir una nota individual puede aportar portabilidad real solo si abre el share sheet nativo de Android y permite elegir apps instaladas como WhatsApp. Si termina copiando contenido, duplica la acción existente de Copiar y agrega ruido. La portabilidad completa se resolvió en dos pasos acotados: exportación manual de backup `.zip` (`RF-017`) e importación no destructiva de backups generados por Lumapse (`RF-018`). Quedan para futuro la importación individual `.md`, estrategias avanzadas de merge/reemplazo y Drive API directa.
 
 - `RF-016` queda postergado: debe retomarse con `@capacitor/share`, posible `@capacitor/filesystem`, `npx cap sync` y prueba real en Android antes de aparecer en la UI.
-- `RF-017` se reabrió y completó el 2026-06-03 como backup manual `.zip` restaurable/legible, con salida externa por share sheet o gestor de archivos. La restauración completa y Drive API directa quedan fuera de este RF inicial.
-- `RF-018` queda como deuda de más largo plazo: si se retoma para una nota individual, la nota importada debe entrar en `Entrada`; no debe recrear materias/secciones de origen automáticamente.
+- `RF-017` se reabrió y completó el 2026-06-03 como backup manual `.zip` restaurable/legible, con salida externa por share sheet o gestor de archivos. Drive API directa queda fuera de este RF inicial.
+- `RF-018` se reabrió y completó el 2026-06-18 para importar respaldos `.zip` generados por Lumapse con validación de manifiesto, preview, escritura transaccional y política no destructiva de duplicados. La importación de una nota individual `.md` queda como deuda futura separada; si se retoma, la nota importada debe entrar en `Entrada` y no recrear materias/secciones automáticamente.
 
 ## Decisiones de cierre del Hito 04
 
@@ -148,9 +148,9 @@ El cierre formal del Hito 04 (2026-06-01) reclasifica `RF-006`, `RF-022` y `RF-0
 | **02** (Junio) | RF-001 a RF-004, RF-007 | 5 |
 | **03** (Julio) | RF-008 a RF-012, RF-021 | 6 |
 | **04** (Agosto) | RF-013 a RF-015, RF-019, RF-020, RF-025, RF-026 | 7 |
-| **05** (Septiembre) | RF-005, RF-017, RF-023, RF-027, RF-028 | 5 |
+| **05** (Septiembre) | RF-005, RF-017, RF-018, RF-023, RF-027, RF-028 | 6 |
 | **06** (Octubre) | — | 0 |
-| **Futuro / Post-release** | RF-006, RF-016, RF-018, RF-022, RF-024 | 5 |
+| **Futuro / Post-release** | RF-006, RF-016, RF-022, RF-024 | 4 |
 
 ---
 
