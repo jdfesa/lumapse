@@ -15,20 +15,28 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ## [Unreleased] — Preparación Hito 05 — Quality Gate, Release y Mejoras Funcionales Controladas
 
-### Added
+> Esta entrada se agrupa por bloques de trabajo para mantener el Hito 05 legible mientras sigue abierto. El corte final puede convertirse luego en una o más versiones formales si corresponde.
+
+### Bloque 1 — Quality Gate, Release y Auditorías
+
+#### Added
 - **Scripts npm operativos:** Se expusieron `quality`, `verify`, `check:session`, `check:health`, `check:size`, `check:a11y`, `check:native-dialogs`, `check:traceability`, `check:docs`, `check:schema`, `check:dbml`, `check:subjects` y `deploy:android` para unificar el flujo local y CI.
-- **Plan de mantenibilidad y tipado gradual:** Se documentó en `docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md` una estrategia por fases para ordenar tests por feature, desacoplar store/UI, introducir contratos de dominio y migrar gradualmente módulos puros a TypeScript/JSDoc sin reescritura completa.
-- **Typecheck gradual:** Se agregó TypeScript como dependencia de desarrollo, `tsconfig.json`, script `typecheck`, contratos iniciales en `src/domain/` y el typecheck dentro de `npm run verify`.
 - **Check contra diálogos nativos:** Nuevo `scripts/check-native-dialogs.js`, que bloquea `alert()`, `confirm()` y `prompt()` en `src/`, con excepción explícita para `src/utils/seeder.js`.
 - **Entrypoint estable de trazabilidad:** Nuevo `scripts/check-traceability.py` como wrapper compatible para el checker preservado en `check-traceability.py.replaced`.
-- **Editor enriquecido y slash commands (RF-028 / HU-028):** El editor incorpora un registro compartido de comandos para `/`, botón `+` y botón `Aa`, con inserción de encabezados, listas, checkboxes, citas, tablas, separadores, código y callouts. Incluye formato inline sobre selección, botón dedicado de Modo Enfoque en el composer, continuidad inteligente con Enter para listas/citas/callouts, salida con línea vacía y popup visual con iconos/pistas compactas.
-- **Borradores persistentes del editor (RF-005 / HU-005):** El editor conserva localmente el trabajo en curso al crear o editar notas, restaura el borrador al volver a la app o a una vista con editor, muestra un indicador sutil de cambios pendientes y permite descartarlo con confirmación. La nota final solo se crea o actualiza cuando el usuario toca `Guardar` o `Actualizar`; los borradores se limpian tras guardado exitoso o descarte explícito.
-- **Fechas Académicas discretas (RF-027 / HU-027 / DP-007):** Implementación completa de marcadores académicos puntuales para parciales, finales, trabajos prácticos y exposiciones dentro del calendario existente. Incluye tabla SQLite `academic_events`, CRUD bajo nivel, servicio de dominio, store reactivo, dots en Heatmap, mini-card por día, modal accesible de creación/edición, lista colapsable de próximas fechas, acciones de editar/eliminar con confirmación accesible y tests unitarios de datos, store y UI.
-- **Backup manual externo (RF-017 / HU-030):** Nueva vista `Backup` accesible desde el drawer para crear un `.zip` manual restaurable y legible, con `manifest.json`, JSON estructurado, notas Markdown por materia/sección, recordatorio local de 30 días, detección WiFi/datos móviles/offline y salida por share sheet/gestor de archivos. Validado en Android real; si Google Drive está instalado puede aparecer como destino, y si no, funciona el fallback de almacenamiento elegido por el usuario.
-- **Importación de backup ZIP (RF-018 / HU-031):** La vista `Backup` permite seleccionar un `.zip` generado por Lumapse, validar `manifest.json`, previsualizar notas/materias/secciones/fechas académicas, importar de forma transaccional y omitir duplicados sin sobrescribir datos existentes. Validado en Android real sobre workspace existente e instalación limpia.
-- **Sección Acerca de (RF-023 / HU-023):** Nueva vista accesible desde el menú de la app con versión tomada de `package.json`, autor, licencia, propósito y alcance offline/local, evitando convertirla en onboarding o guía Markdown.
 
-### Changed
+#### Changed
+- **GitHub Actions ampliado:** El workflow existente pasó a ser `CI — Quality Gate` y ahora ejecuta lint, tests, build, bundle budget, check de diálogos nativos, trazabilidad, links internos, schema sync, DBML, jerarquía de materias y auditoría a11y estática.
+- **Tests nativos Android corregidos:** Se reemplazaron los tests generados por template que referenciaban paquetes de Capacitor por tests bajo `com.lumapse.app`.
+- **Versionado de paquete alineado:** `package.json` y `package-lock.json` pasan de `0.1.0` a `0.4.7`, manteniendo el paquete sincronizado con la última versión cerrada documentada antes de preparar un release/APK.
+- **CSP web ajustada para SQLite WASM:** `index.html` permite el runtime WASM local necesario para `jeep-sqlite`/`sql.js`, manteniendo los recursos restringidos a orígenes locales.
+
+### Bloque 2 — Mantenibilidad y TypeScript Gradual
+
+#### Added
+- **Plan de mantenibilidad y tipado gradual:** Se documentó en `docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md` una estrategia por fases para ordenar tests por feature, desacoplar store/UI, introducir contratos de dominio y migrar gradualmente módulos puros a TypeScript/JSDoc sin reescritura completa.
+- **Typecheck gradual:** Se agregó TypeScript como dependencia de desarrollo, `tsconfig.json`, script `typecheck`, contratos iniciales en `src/domain/` y el typecheck dentro de `npm run verify`.
+
+#### Changed
 - **Componentes UI organizados por feature folders:** `src/components/` deja de ser una carpeta plana y pasa a agrupar editor, feed, fechas académicas, backup, Markdown y componentes comunes en subcarpetas explícitas. La decisión queda documentada en `docs/adr/ADR-007-organizacion-componentes-por-feature.md` y fue verificada con la suite unitaria.
 - **Tests de componentes organizados por feature folders:** `tests/unit/components/` ahora espeja la estructura de `src/components/` con carpetas `academic-events`, `backup`, `common`, `feed` y `note-editor`, manteniendo más cerca el mapa mental de código y pruebas.
 - **Store desacoplado del feedback visual:** `NoteStore.*` deja de importar `Toast`; ahora emite eventos de error de dominio mediante `NoteStore.errors.js` y `main.js` decide cómo comunicarlos en la UI.
@@ -40,21 +48,33 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Escritor ZIP liviano tipado:** `BackupZipArchive` pasa a `.ts`, fijando contratos para archivos ZIP, opciones de salida y retorno `Blob`/`ArrayBuffer`/base64, con test directo de rutas UTF-8 y contenido binario.
 - **CRUD de materias tipado:** `SubjectService.crud` pasa a `.ts`, declarando contratos de creación, actualización, archivo/desarchivo y árbol activo sobre `Subject`/`SubjectTree`, mientras `SubjectService.js` sigue como barrel público.
 - **Papelera avanzada tipada:** `SubjectService.trash` pasa a `.ts`, fijando contratos de cascada, restauración navegable, notas sueltas, secciones huérfanas y salida `getTrashItems` sin cambiar el barrel público.
-- **Contador de materias corregido:** el badge de una materia raíz ahora suma notas directas y notas de sus secciones, mientras cada sección mantiene su contador propio.
 - **Trazabilidad preparada para JS/TS:** El checker de trazabilidad escanea comentarios en archivos `.js` y `.ts`, evitando que futuras migraciones queden fuera del control documental.
+
+### Bloque 3 — Mejoras Funcionales Controladas
+
+#### Added
+- **Editor enriquecido y slash commands (RF-028 / HU-028):** El editor incorpora un registro compartido de comandos para `/`, botón `+` y botón `Aa`, con inserción de encabezados, listas, checkboxes, citas, tablas, separadores, código y callouts. Incluye formato inline sobre selección, botón dedicado de Modo Enfoque en el composer, continuidad inteligente con Enter para listas/citas/callouts, salida con línea vacía y popup visual con iconos/pistas compactas.
+- **Borradores persistentes del editor (RF-005 / HU-005):** El editor conserva localmente el trabajo en curso al crear o editar notas, restaura el borrador al volver a la app o a una vista con editor, muestra un indicador sutil de cambios pendientes y permite descartarlo con confirmación. La nota final solo se crea o actualiza cuando el usuario toca `Guardar` o `Actualizar`; los borradores se limpian tras guardado exitoso o descarte explícito.
+- **Fechas Académicas discretas (RF-027 / HU-027 / DP-007):** Implementación completa de marcadores académicos puntuales para parciales, finales, trabajos prácticos y exposiciones dentro del calendario existente. Incluye tabla SQLite `academic_events`, CRUD bajo nivel, servicio de dominio, store reactivo, dots en Heatmap, mini-card por día, modal accesible de creación/edición, lista colapsable de próximas fechas, acciones de editar/eliminar con confirmación accesible y tests unitarios de datos, store y UI.
+- **Backup manual externo (RF-017 / HU-030):** Nueva vista `Backup` accesible desde el drawer para crear un `.zip` manual restaurable y legible, con `manifest.json`, JSON estructurado, notas Markdown por materia/sección, recordatorio local de 30 días, detección WiFi/datos móviles/offline y salida por share sheet/gestor de archivos. Validado en Android real; si Google Drive está instalado puede aparecer como destino, y si no, funciona el fallback de almacenamiento elegido por el usuario.
+- **Importación de backup ZIP (RF-018 / HU-031):** La vista `Backup` permite seleccionar un `.zip` generado por Lumapse, validar `manifest.json`, previsualizar notas/materias/secciones/fechas académicas, importar de forma transaccional y omitir duplicados sin sobrescribir datos existentes. Validado en Android real sobre workspace existente e instalación limpia.
+- **Sección Acerca de (RF-023 / HU-023):** Nueva vista accesible desde el menú de la app con versión tomada de `package.json`, autor, licencia, propósito y alcance offline/local, evitando convertirla en onboarding o guía Markdown.
+
+#### Changed
+- **Contador de materias corregido:** el badge de una materia raíz ahora suma notas directas y notas de sus secciones, mientras cada sección mantiene su contador propio.
 - **Búsqueda RF-015 más útil:** La lupa ahora busca globalmente entre notas activas aunque el usuario esté ubicado en Entrada o en una materia, y normaliza tildes para que `algebra` encuentre `Álgebra`.
 - **Título implícito más claro:** Las tarjetas destacan suavemente la primera línea no vacía como título cuando la nota no usa `#`, manteniendo el editor de un solo campo y reduciendo fricción para usuarios nuevos.
 - **Render Markdown enriquecido:** Callouts principales se renderizan con icono, color y título por tipo; blockquotes simples, tablas, separadores, código y checkboxes tienen estilos más estables en preview y tarjetas de nota.
 - **Tipografía de escritura más amable:** La interfaz conserva JetBrains Mono como identidad visual, pero el área de escritura y lectura de notas usa una pila serif nativa del sistema para una experiencia offline-first más cómoda en móvil.
-- **GitHub Actions ampliado:** El workflow existente pasó a ser `CI — Quality Gate` y ahora ejecuta lint, tests, build, bundle budget, check de diálogos nativos, trazabilidad, links internos, schema sync, DBML, jerarquía de materias y auditoría a11y estática.
-- **Tests nativos Android corregidos:** Se reemplazaron los tests generados por template que referenciaban paquetes de Capacitor por tests bajo `com.lumapse.app`.
-- **Backlog/TODO actualizados:** El `TODO` raíz y `BACKLOG.md` registran como completada la capa de automatización, cierran formalmente Hito 04 y clasifican esta tanda como preparación de Hito 05 con cambios funcionales controlados.
-- **Versionado de paquete alineado:** `package.json` y `package-lock.json` pasan de `0.1.0` a `0.4.7`, manteniendo el paquete sincronizado con la última versión cerrada documentada antes de preparar un release/APK.
-- **Seguimiento de velocidad actualizado:** `docs/gestion/seguimiento-velocidad.md` registra 22 HU formalizadas, 104 SP totales, 65 SP cerrados en Hitos 02 a 04 y 36 SP formalizados en curso para Hito 05.
-- **CSP web ajustada para SQLite WASM:** `index.html` permite el runtime WASM local necesario para `jeep-sqlite`/`sql.js`, manteniendo los recursos restringidos a orígenes locales.
 - **Menú de app ampliado:** Las opciones de Lumapse ahora incluyen `Acerca de` junto a Exportar ZIP, Importar ZIP y cambio de tema; el editor se oculta en vistas informativas o de mantenimiento.
-- **Reclasificación RF-016 y cierre de RF-017/RF-018:** La revisión documental mantiene compartir/exportar nota individual e importación `.md` como decisiones futuras, pero `RF-017` y `RF-018` dejan de ser deuda abierta porque la exportación e importación manual de backups ZIP ya quedaron integradas y validadas en Android real.
 - **Reclasificación RF-005:** El auto-guardado final silencioso queda reemplazado por borradores persistentes del editor, preservando texto, título y materia/sección sin crear duplicados ni actualizar notas definitivas sin confirmación.
+
+### Bloque 4 — Documentación, Trazabilidad y Planes Cerrados
+
+#### Changed
+- **Backlog/TODO actualizados:** El `TODO` raíz y `BACKLOG.md` registran como completada la capa de automatización, cierran formalmente Hito 04 y clasifican esta tanda como preparación de Hito 05 con cambios funcionales controlados.
+- **Seguimiento de velocidad actualizado:** `docs/gestion/seguimiento-velocidad.md` registra 22 HU formalizadas, 104 SP totales, 65 SP cerrados en Hitos 02 a 04 y 36 SP formalizados en curso para Hito 05.
+- **Reclasificación RF-016 y cierre de RF-017/RF-018:** La revisión documental mantiene compartir/exportar nota individual e importación `.md` como decisiones futuras, pero `RF-017` y `RF-018` dejan de ser deuda abierta porque la exportación e importación manual de backups ZIP ya quedaron integradas y validadas en Android real.
 - **Plan de backup archivado:** El plan operativo de backup `.zip` y Google Drive se movió desde la raíz a `docs/gestion/historico/plan-backup-google-drive-2026-06-03.md` para conservar evidencia sin ensuciar el directorio principal.
 - **Plan de importación ZIP archivado:** El plan operativo de importación de backups `.zip` se conserva en `docs/gestion/historico/plan-importacion-backup-zip-2026-06-18.md` como evidencia de alcance, fases, pruebas y validación Android.
 - **Plan de editor enriquecido archivado:** El plan operativo de editor enriquecido y slash commands se movió desde la raíz a `docs/gestion/historico/plan-editor-enriquecido-2026-06-05.md` tras completar sus fases.
