@@ -46,6 +46,7 @@ interface NoteFilterState<TNote extends FilterableNote> {
  *   'inbox'    → notas sin materia, no archivadas individualmente
  *   'subject'  → notas de la materia activa (+ secciones hijas), no archivadas
  *   'archived' → notas archivadas individualmente o por subject archivado
+ *   'trash', 'backup' y 'about' usan vistas propias y no muestran feed normal
  *   'all'      → todas las no archivadas y fuera de subjects archivados
  *   Con búsqueda activa, 'inbox'/'subject'/'all' buscan globalmente
  *   entre notas activas para que la lupa no dependa de la ubicación actual.
@@ -88,8 +89,10 @@ export function getFilteredNotes<TNote extends FilterableNote>(state: NoteFilter
         )
         break
       case 'trash':
-        // La vista de papelera carga sus datos por separado (getTrashItems)
-        // El filtro normal retorna vacío para no mostrar notas activas
+      case 'backup':
+      case 'about':
+        // Estas vistas cargan contenido propio. El filtro normal retorna vacío
+        // para no mostrar notas activas debajo de la pantalla especializada.
         return []
       case 'all':
       default:

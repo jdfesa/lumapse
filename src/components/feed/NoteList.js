@@ -10,6 +10,7 @@ import { formatRelativeDate, escapeHtml, findSubject, buildMoveMenu } from './No
 import { createFeedActionRouter } from './FeedActionRouter.js';
 import { renderTrashView } from './TrashView.js';
 import { BackupView } from '../backup/BackupView.js';
+import { renderAboutView } from '../about/AboutView.js';
 import { confirmDialog } from '../common/ConfirmDialog.js';
 import { VirtualFeed } from './VirtualFeed.js';
 import { renderClearNoteStatusButton, renderNoteStatusBadge, renderNoteStatusMenuItems } from './NoteStatus.js';
@@ -123,6 +124,10 @@ export class NoteList {
       } else if (state.viewMode === 'backup') {
         this.destroyVirtualFeed();
         this.renderBackupView(state.backupPanel);
+      } else if (state.viewMode === 'about') {
+        this.destroyVirtualFeed();
+        this.destroyBackupView();
+        this.feedContainer.innerHTML = renderAboutView();
       } else {
         this.destroyBackupView();
         const notesToRender = NoteStore.getFilteredNotes();

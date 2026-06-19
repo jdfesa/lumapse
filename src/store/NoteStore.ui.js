@@ -121,3 +121,12 @@ export function setViewBackup(panel = 'export') {
   state.activeSubjectId = null
   notify()
 }
+
+/**
+ * Cambia a la vista informativa Acerca de.
+ */
+export function setViewAbout() {
+  state.viewMode = 'about'
+  state.activeSubjectId = null
+  notify()
+}

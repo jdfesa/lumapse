@@ -11,7 +11,7 @@ export const state = {
   sidebarOpen: true,      // RF-020: Sidebar visible (true por defecto en desktop)
   subjects: [],           // Materias cargadas (árbol con conteos)
   activeSubjectId: null,  // Filtro: null = Entrada, ID = materia específica
-  viewMode: 'inbox',      // 'inbox' | 'subject' | 'archived' | 'trash' | 'backup' | 'all'
+  viewMode: 'inbox',      // 'inbox' | 'subject' | 'archived' | 'trash' | 'backup' | 'about' | 'all'
   backupPanel: 'export',  // 'export' | 'import'
   trashCount: 0,          // Cantidad total de items en papelera (para badge)
   showTrashWarning: false, // Flag: papelera tiene >50 items

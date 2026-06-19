@@ -120,6 +120,7 @@ export function initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS }) {
   const btnExportBackup = document.getElementById('btn-export-backup')
   const btnImportBackup = document.getElementById('btn-import-backup')
   const btnToggleTheme = document.getElementById('btn-toggle-theme')
+  const btnAbout = document.getElementById('btn-about')
 
   function openBackupPanel(panel) {
     showingArchived = false
@@ -134,6 +135,15 @@ export function initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS }) {
   btnImportBackup.addEventListener('click', () => openBackupPanel('import'))
 
   btnToggleTheme.addEventListener('click', closeAppMenu)
+
+  btnAbout.addEventListener('click', () => {
+    showingArchived = false
+    archivedLabel.textContent = 'Ver archivadas'
+    btnArchiveToggle.classList.remove('drawer__nav-btn--active')
+    NoteStore.setViewAbout()
+    updateSubjectActiveState(null)
+    closeAppMenu()
+  })
 
   // --- Subjects Navigation (Paso 9) ---
   const { updateSubjectActiveState, renderSubjects } = initSubjects({
@@ -162,7 +172,8 @@ export function initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS }) {
     btnTrash.classList.toggle('drawer__nav-btn--active', state.viewMode === 'trash')
     btnExportBackup.classList.toggle('app-menu-drawer__item--active', state.viewMode === 'backup' && state.backupPanel === 'export')
     btnImportBackup.classList.toggle('app-menu-drawer__item--active', state.viewMode === 'backup' && state.backupPanel === 'import')
-    btnOpenAppMenu.classList.toggle('app-header__logo-icon-btn--active', state.viewMode === 'backup')
+    btnAbout.classList.toggle('app-menu-drawer__item--active', state.viewMode === 'about')
+    btnOpenAppMenu.classList.toggle('app-header__logo-icon-btn--active', ['backup', 'about'].includes(state.viewMode))
   })
 
   // --- Theme Toggle (RF-019) ---

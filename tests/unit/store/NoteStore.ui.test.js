@@ -45,6 +45,7 @@ beforeEach(() => {
   state.subjects = []
   state.activeSubjectId = null
   state.viewMode = 'inbox'
+  state.backupPanel = 'export'
   state.trashCount = 0
   state.showTrashWarning = false
   state.archivedSubjectIds = []
@@ -383,6 +384,26 @@ describe('NoteStore.ui', () => {
 
     it('llama notify()', () => {
       expectNotifyFrom(() => NoteStoreUi.setViewBackup())
+    })
+  })
+
+  describe('setViewAbout()', () => {
+    it('pone viewMode = "about"', () => {
+      NoteStoreUi.setViewAbout()
+
+      expect(state.viewMode).toBe('about')
+    })
+
+    it('pone activeSubjectId = null', () => {
+      state.activeSubjectId = 'subj-1'
+
+      NoteStoreUi.setViewAbout()
+
+      expect(state.activeSubjectId).toBeNull()
+    })
+
+    it('llama notify()', () => {
+      expectNotifyFrom(() => NoteStoreUi.setViewAbout())
     })
   })
 })

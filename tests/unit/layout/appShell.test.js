@@ -20,4 +20,11 @@ describe('appShell', () => {
     expect(pathValues(container, '#btn-export-backup')).toContain('M12 21V9')
     expect(pathValues(container, '#btn-import-backup')).toContain('M12 3v12')
   })
+
+  it('incluye acceso a la seccion Acerca de en el menu de app', () => {
+    const container = renderShellDocument()
+
+    expect(container.querySelector('#about-btn-label')?.textContent).toBe('Acerca de')
+    expect(container.querySelector('#btn-about circle')?.getAttribute('r')).toBe('10')
+  })
 })

@@ -9,6 +9,8 @@ import { confirmDialog } from '../common/ConfirmDialog.js';
 import { extractNoteTitle, resolveNoteTitleForSave, splitNoteForEditing, stripRedundantTitleFromContent } from '../../services/NoteTitleService.ts';
 import './NoteEditor.css';
 
+const COMPOSER_HIDDEN_VIEW_MODES = ['trash', 'backup', 'about'];
+
 export class NoteEditor {
   constructor(container) {
     this.container = container;
@@ -42,7 +44,7 @@ export class NoteEditor {
     this.unsubscribe = NoteStore.subscribe((state) => {
       const composer = this.container.querySelector('.composer');
       if (composer) {
-        composer.style.display = ['trash', 'backup'].includes(state.viewMode) ? 'none' : '';
+        composer.style.display = COMPOSER_HIDDEN_VIEW_MODES.includes(state.viewMode) ? 'none' : '';
       }
       this.onStateChange(state);
     });
@@ -295,7 +297,7 @@ export class NoteEditor {
     if (this.tryRestoreDraft(state)) return;
     this.syncRestoredDraftSubject();
 
-    if (['trash', 'backup'].includes(state.viewMode)) {
+    if (COMPOSER_HIDDEN_VIEW_MODES.includes(state.viewMode)) {
       this.draftCapture.flush();
       return;
     }

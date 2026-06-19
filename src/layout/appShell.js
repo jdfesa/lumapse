@@ -108,6 +108,15 @@ export function renderAppShell() {
           <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"></svg>
           <span id="theme-btn-label">Cambiar tema</span>
         </button>
+        <button id="btn-about" class="app-menu-drawer__item" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <span id="about-btn-label">Acerca de</span>
+        </button>
       </div>
     </aside>
     <div id="app-menu-backdrop" class="app-menu-backdrop"></div>
