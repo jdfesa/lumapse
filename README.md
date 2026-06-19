@@ -83,6 +83,7 @@ lumapse/
 ├── src/                    # Código fuente de la aplicación
 │   ├── components/         # Componentes UI organizados por feature
 │   │   ├── academic-events/ # Calendario, heatmap y fechas académicas
+│   │   ├── about/           # Sección Acerca de
 │   │   ├── backup/         # Vista UI del backup manual
 │   │   ├── common/         # ConfirmDialog, Toast y piezas transversales
 │   │   ├── feed/           # Listado, tarjetas, acciones y papelera
@@ -205,13 +206,13 @@ Garantizar la calidad del código y preparar la distribución del producto.
 - Smoke tests nativos Android bajo `com.lumapse.app` (implementados)
 - Borradores persistentes del editor para continuar notas tras cambiar de app o consultar PDFs (`RF-005`)
 - Backup manual `.zip` externo con salida por share sheet/gestor de archivos (`RF-017`)
+- Sección "Acerca de" con versión, autor, licencia y alcance offline/local (`RF-023`)
 - Fechas académicas discretas integradas al calendario existente (`RF-027`)
 - Editor enriquecido con slash commands, botón `+`, formato `Aa`, callouts y modo enfoque dedicado (`RF-028`)
 - Testing en dispositivos Android reales
 - Generación del APK firmado para distribución
 - Publicación del APK en GitHub Releases
 - Corrección de bugs y edge cases
-- Sección "Acerca de" con información del sistema
 
 ### ⏳ Hito 06 — Entrega Final (Octubre 2026)
 

@@ -6,7 +6,7 @@
 
 **Estado:** Hito 04 cerrado formalmente el 2026-06-01.
 **Objetivo:** preparar la primera release distribuible con quality gate, APK firmado, validacion manual y documentacion final.
-**Criterio:** no sumar features nuevas salvo cambios funcionales acotados y documentados. Quedan registrados como parte de Hito 05 `RF-005`, `RF-017`, `RF-027` y `RF-028`; desde este punto, estabilizar, empaquetar y validar.
+**Criterio:** no sumar features nuevas salvo cambios funcionales acotados y documentados. Quedan registrados como parte de Hito 05 `RF-005`, `RF-017`, `RF-023`, `RF-027` y `RF-028`; desde este punto, estabilizar, empaquetar y validar.
 
 ---
 
@@ -28,7 +28,7 @@
 - [ ] Generar APK firmado para distribucion.
 - [ ] Registrar prueba manual en dispositivo Android real.
 - [ ] Publicar artefacto en GitHub Releases o documentar el mecanismo elegido.
-- [ ] Implementar o planificar `RF-023 — Acerca de` con version, autor y licencia sin saturar la UI.
+- [x] Implementar `RF-023 — Acerca de` con version, autor, licencia y alcance offline/local sin saturar la UI.
 - [ ] Revisar documentos generados cuando el corte de release este definido.
 
 ---

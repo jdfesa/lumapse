@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 05 — Testing, Calidad y Distribución
 > **Hito 04:** Cerrado formalmente el 2026-06-01
-> **Última actualización:** 2026-06-12 — servicios de dominio/backup migrados a TypeScript por fases
+> **Última actualización:** 2026-06-19 — sección Acerca de integrada para cierre de Hito 05
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -13,7 +13,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 Hito 04 quedó cerrado formalmente como bloque de Organización y UX. El cierre combinó implementación mínima de pulido UX (empty states) y decisiones explícitas de postergación/descarte para funcionalidades opcionales que podían agregar ruido visual o sugerir capacidades no presentes todavía.
 
-Hito 05 queda activo con foco en estabilización, calidad y distribución. Durante la preparación de release se aprobaron cuatro mejoras funcionales acotadas y ya implementadas: borradores persistentes del editor (`RF-005`), backup manual externo (`RF-017`), fechas académicas discretas (`RF-027`) y editor enriquecido (`RF-028`). Desde este punto, la prioridad vuelve a ser validar el producto, preparar el APK y ordenar los artefactos finales.
+Hito 05 queda activo con foco en estabilización, calidad y distribución. Durante la preparación de release se aprobaron mejoras funcionales acotadas y ya implementadas: borradores persistentes del editor (`RF-005`), backup manual externo (`RF-017`), sección Acerca de (`RF-023`), fechas académicas discretas (`RF-027`) y editor enriquecido (`RF-028`). Desde este punto, la prioridad vuelve a ser validar el producto, preparar el APK y ordenar los artefactos finales.
 
 La revisión de exportación/importación corrige una sobrepromesa documental: existen servicios base (`ExportService`/`ImportService`), pero la UI actual no expone esos flujos. La opción "Compartir" solo tendría sentido si abre el share sheet nativo de Android y ofrece apps como WhatsApp; si termina copiando contenido, duplica una acción existente y agrega ruido.
 
@@ -36,7 +36,7 @@ La estrategia de mantenibilidad y tipado gradual queda documentada en [`docs/ges
 | 3 | Checklist Android | Flujo manual de prueba en dispositivo real documentado |
 | 4 | APK firmado | Artefacto generado con versión definida |
 | 5 | Distribución | Release o mecanismo de entrega documentado |
-| 6 | RF-023 — Acerca de | Sección mínima con versión, autor y licencia, sin convertirla en tutorial |
+| 6 | RF-023 — Acerca de | Sección mínima implementada con versión, autor, licencia y alcance offline/local, sin convertirla en tutorial |
 
 ---
 

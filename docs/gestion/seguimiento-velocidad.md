@@ -4,7 +4,7 @@
 > **Referencia:** Gómez, J. (2014), Secciones 5 y 7. Guía de Estudio PP3 (Ing. Mauricio Parada, 2026).  
 > **Fecha de creación:** 2026-05-15  
 > **Autor:** José David Sandoval  
-> **Actualización:** 2026-06-07 — reclasificación de RF-005/HU-005 como borradores persistentes del editor en Hito 05.
+> **Actualización:** 2026-06-19 — incorporación de RF-023/HU-023 como sección Acerca de mínima en Hito 05.
 
 ---
 
@@ -87,17 +87,18 @@ El Hito 04 registra 37 SP entregados y queda **cerrado formalmente el 2026-06-01
 
 ### Hito 05 — Testing, Calidad y Distribución (Septiembre 2026, en curso)
 
-Story Points formalizados hasta el 2026-06-07:
+Story Points formalizados hasta el 2026-06-19:
 
 | HU | Funcionalidad | SP |
 |---|---|---|
 | HU-005 | Borradores persistentes del editor | 5 |
 | HU-027 | Fechas académicas discretas | 8 |
 | HU-028 | Editor enriquecido y slash commands | 5 |
+| HU-023 | Sección Acerca de | 2 |
 | HU-030 | Backup manual externo | 8 |
-| | **Total Hito 05 formalizado** | **26** |
+| | **Total Hito 05 formalizado** | **28** |
 
-El Hito 05 mantiene su objetivo principal de testing, calidad y distribución, pero incorpora cuatro mejoras funcionales acotadas aprobadas durante la preparación de release. Se registran como cambios de alcance controlados porque ya quedaron implementados, probados y documentados, sin reabrir el Hito 04.
+El Hito 05 mantiene su objetivo principal de testing, calidad y distribución, pero incorpora mejoras funcionales acotadas aprobadas durante la preparación de release. Se registran como cambios de alcance controlados porque ya quedaron implementados, probados y documentados, sin reabrir el Hito 04.
 
 ---
 
@@ -109,7 +110,7 @@ El Hito 05 mantiene su objetivo principal de testing, calidad y distribución, p
 | 02 | Junio 2026 | 15 | 15 | 15 SP/mes | 0 | ✅ Completado | Core CRUD y persistencia local; RF-005 reclasificado a Hito 05 |
 | 03 | Julio 2026 | 13 | 13 | 13 SP/mes | 0 | ✅ Completado | Markdown, lectura/escritura y offline; portabilidad local reclasificada |
 | 04 | Agosto 2026 | 37 | 37 | 37 SP/mes | 0 | ✅ Completado | Organización por materias + UX mobile cerrado formalmente |
-| 05 | Septiembre 2026 | 26 | 26 | 26 SP/mes parcial | 0 | 🔄 En curso | Testing + APK firmado, backup, fechas discretas, editor enriquecido y borradores persistentes |
+| 05 | Septiembre 2026 | 28 | 28 | 28 SP/mes parcial | 0 | 🔄 En curso | Testing + APK firmado, backup, fechas discretas, editor enriquecido, borradores persistentes y Acerca de |
 | 06 | Octubre 2026 | *por definir* | — | — | — | ⏳ Futuro | Informe final + entrega |
 
 ### Velocidad promedio (datos disponibles)
@@ -118,7 +119,7 @@ El Hito 05 mantiene su objetivo principal de testing, calidad y distribución, p
 Velocidad promedio = (15 + 13 + 37) / 3 = 21.7 SP/hito
 ```
 
-> El script `python3 scripts/generate-velocity-report.py` permite auditar los SP formalizados por hito desde la tabla de HU. Para velocidad real cerrada se consideran solo los hitos formalmente completados (02 a 04). Al 2026-06-07, el proyecto registra **20 HU formalizadas**, **94 SP totales planificados/formalizados**, **65 SP cerrados** en Hitos 02 a 04 y **26 SP formalizados en curso** para Hito 05.
+> El script `python3 scripts/generate-velocity-report.py` permite auditar los SP formalizados por hito desde la tabla de HU. Para velocidad real cerrada se consideran solo los hitos formalmente completados (02 a 04). Al 2026-06-19, el proyecto registra **21 HU formalizadas**, **96 SP totales planificados/formalizados**, **65 SP cerrados** en Hitos 02 a 04 y **28 SP formalizados en curso** para Hito 05.
 
 ---
 

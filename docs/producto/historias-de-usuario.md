@@ -1,7 +1,7 @@
 # Historias de Usuario — Lumapse
 
 **Fase Design Thinking:** Idear / Prototipar  
-**Última actualización:** 2026-06-07
+**Última actualización:** 2026-06-19
 **Autor:** José David Sandoval
 
 ---
@@ -452,6 +452,28 @@
 
 ---
 
+### HU-023 — Consultar información de la aplicación
+
+| Campo | Detalle |
+|---|---|
+| **Historia** | Como **docente evaluador**, quiero **consultar una sección Acerca de con versión, autor, licencia y alcance del producto**, para **verificar la identidad de la app y sus condiciones sin depender de documentación externa**. |
+| **RF asociados** | [RF-023](./requisitos-funcionales.md) |
+| **Persona** | Prof. Ramos |
+| **Prioridad** | SHOULD |
+| **Story Points** | **2 SP** — Vista informativa simple: navegación secundaria, metadata de paquete, contenido estático y tests de render/escape. |
+| **Hito** | 05 |
+
+**Criterios de Aceptación:**
+
+| CA | Descripción | Verificación |
+|---|---|---|
+| CA-01 | Existe un acceso “Acerca de” dentro del menú de opciones de Lumapse, sin ocupar la interfaz principal de escritura. | Test de shell + inspección visual |
+| CA-02 | La vista muestra nombre de la app, versión, autor y licencia; la versión se toma de la metadata del paquete para evitar duplicación manual. | Test unitario |
+| CA-03 | La vista explica brevemente el propósito de Lumapse y su alcance offline/local, aclarando que no sincroniza ni envía datos automáticamente. | Test unitario + revisión UX |
+| CA-04 | La sección no incluye onboarding obligatorio ni guía Markdown ampliada; esa ayuda queda sujeta a feedback post-release. | Revisión de alcance |
+
+---
+
 ### HU-030 — Crear backup manual externo
 
 | Campo | Detalle |
@@ -486,11 +508,11 @@ No hay HU funcionales nuevas asignadas a Hito 06 en este corte. El foco previsto
 
 | Métrica | Hito 02 | Hito 03 | Hito 04 | Hito 05 | Hito 06 | Futuro | Total |
 |---|---|---|---|---|---|---|---|
-| **Total HU** | 5 | 3 | 7 | 4 | 0 | 1 | **20** |
-| **Total Story Points** | 15 | 13 | 37 | 26 | 0 | 3 | **94** |
-| **Total Criterios de Aceptación** | 16 | 10 | 30 | 26 | 0 | 4 | **86** |
+| **Total HU** | 5 | 3 | 7 | 5 | 0 | 1 | **21** |
+| **Total Story Points** | 15 | 13 | 37 | 28 | 0 | 3 | **96** |
+| **Total Criterios de Aceptación** | 16 | 10 | 30 | 30 | 0 | 4 | **90** |
 | **Prioridad predominante** | MUST | MUST/SHOULD | SHOULD/MUST | MUST/SHOULD | — | SHOULD | — |
-| **Personas cubiertas** | Lucía (3), Martín (2) | Lucía (2), Martín (1) | Lucía (6), Martín (1) | Lucía (3), Martín (2) | — | Martín (1) | Lucía (14), Martín (7) |
+| **Personas cubiertas** | Lucía (3), Martín (2) | Lucía (2), Martín (1) | Lucía (6), Martín (1) | Lucía (3), Martín (2), Prof. Ramos (1) | — | Martín (1) | Lucía (14), Martín (7), Prof. Ramos (1) |
 
 ---
 
@@ -517,8 +539,9 @@ No hay HU funcionales nuevas asignadas a Hito 06 en este corte. El foco previsto
 | HU-005 | RF-005 | Lucía | Borradores persistentes del editor | 5 | 05 |
 | HU-027 | RF-027 | Lucía | Fechas académicas discretas | 8 | 05 |
 | HU-028 | RF-028 | Lucía, Martín | Editor enriquecido y slash commands | 5 | 05 |
+| HU-023 | RF-023 | Prof. Ramos | Sección Acerca de | 2 | 05 |
 | HU-030 | RF-017 | Martín | Backup manual externo | 8 | 05 |
-| | | | **Total** | **94** | |
+| | | | **Total** | **96** | |
 
 ---
 

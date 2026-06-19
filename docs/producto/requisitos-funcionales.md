@@ -1,7 +1,7 @@
 # Requisitos Funcionales — Lumapse
 
 **Fase Design Thinking:** Idear / Prototipar  
-**Última actualización:** 2026-06-07 (borradores persistentes del editor)
+**Última actualización:** 2026-06-19 (sección Acerca de)
 **Autor:** José David Sandoval
 
 ---
@@ -95,7 +95,7 @@
 
 | ID | Requisito | Prioridad | Persona | Hito | Estado |
 |---|---|---|---|---|---|
-| RF-023 | El sistema debe mostrar una sección **"Acerca de"** con información de la versión, autor y licencia. | SHOULD | Prof. Ramos | 05 | Pendiente |
+| RF-023 | El sistema debe mostrar una sección **"Acerca de"** con información de la versión, autor, licencia, propósito y alcance offline/local, sin convertirse en onboarding ni guía de uso obligatoria. | SHOULD | Prof. Ramos | 05 | Implementado |
 | RF-024 | El sistema debe mostrar un **indicador de estado offline/online** visible para el usuario. | COULD | Lucía | Futuro | Postergado |
 
 ---

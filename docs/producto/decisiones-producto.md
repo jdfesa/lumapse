@@ -172,7 +172,7 @@ En su lugar:
 - Mantener la interfaz principal enfocada en escribir, organizar y recuperar notas.
 - Pulir los empty states para orientar sin interrumpir.
 - Postergar la ayuda ampliada hasta contar con feedback real post-release.
-- Integrar información institucional mínima en `RF-023 — Acerca de` durante Hito 05 si no compromete la simplicidad.
+- Integrar información institucional mínima en `RF-023 — Acerca de` durante Hito 05 sin comprometer la simplicidad.
 
 ### Justificación
 
@@ -185,6 +185,7 @@ En su lugar:
 ### Consecuencias
 
 - `RF-006`, `RF-022` y `RF-024` pasan a estado **Postergado**.
+- `RF-023` se implementa como sección informativa mínima: versión, autor, licencia, propósito y alcance offline/local.
 - Los coach marks se descartan para Hito 04.
 - La guía Markdown se fusiona conceptualmente con una futura sección `Acerca de/Ayuda` si el feedback la justifica.
 - El cierre de Hito 04 se considera coherente con la propuesta de producto, no una omisión funcional.

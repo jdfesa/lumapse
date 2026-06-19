@@ -1,5 +1,5 @@
 # Cheat Sheet de Defensa — Lumapse
-**Última actualización:** 2026-06-01
+**Última actualización:** 2026-06-19
 
 ## Métricas del Proyecto
 
@@ -7,9 +7,9 @@
 |---|---|
 | Archivos de código (JS/CSS) | 16 |
 | Líneas de código fuente | 2,365 |
-| Requisitos Funcionales | 27 (18 implementados, 1 pendiente, 6 postergados, 2 obsoletos) |
-| Historias de Usuario | 18 |
-| Story Points totales formalizados | 81 (70 cerrados en Hitos 02 a 04) |
+| Requisitos Funcionales | 28 (20 implementados/verificados, 0 pendientes, 6 postergados, 2 obsoletos) |
+| Historias de Usuario | 21 |
+| Story Points totales formalizados | 96 (65 cerrados en Hitos 02 a 04) |
 | ADRs documentados | 6 |
 | Scripts de automatización | 29 |
 | Tablas en BD | 4 |
