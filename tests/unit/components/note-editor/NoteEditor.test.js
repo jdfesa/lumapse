@@ -7,7 +7,7 @@ vi.mock('../../../../src/store/NoteStore.js', () => ({
   selectNote: vi.fn(),
 }))
 
-vi.mock('../../../../src/services/EditorDraftService.js', () => ({
+vi.mock('../../../../src/services/EditorDraftService.ts', () => ({
   loadDraft: vi.fn(),
   saveDraft: vi.fn(),
   clearDraft: vi.fn(),
@@ -19,7 +19,7 @@ vi.mock('../../../../src/components/common/ConfirmDialog.js', () => ({
 
 import { NoteEditor } from '../../../../src/components/note-editor/NoteEditor.js'
 import { confirmDialog } from '../../../../src/components/common/ConfirmDialog.js'
-import * as EditorDraftService from '../../../../src/services/EditorDraftService.js'
+import * as EditorDraftService from '../../../../src/services/EditorDraftService.ts'
 import * as NoteStore from '../../../../src/store/NoteStore.js'
 
 function createEditor() {

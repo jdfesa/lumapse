@@ -6,7 +6,7 @@ import {
   clearDraft,
   loadDraft,
   saveDraft,
-} from '../../../src/services/EditorDraftService.js'
+} from '../../../src/services/EditorDraftService.ts'
 
 const SAVED_AT = new Date('2026-06-07T03:00:00.000Z')
 
