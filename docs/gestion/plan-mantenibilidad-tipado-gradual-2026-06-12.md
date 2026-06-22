@@ -168,7 +168,7 @@ Criterio de cierre:
 
 ### Fase 4 - Migrar Modulos Puros
 
-Estado: completada el 2026-06-12 para la primera tanda.
+Estado: completada el 2026-06-12 para la primera tanda; `editorTextTransforms` se migro el 2026-06-22 con tests directos.
 
 Migrar archivos pequenos donde TypeScript aporta claridad inmediata:
 
@@ -178,7 +178,7 @@ Migrar archivos pequenos donde TypeScript aporta claridad inmediata:
 4. [x] `src/services/backup/BackupFormat.ts`
 5. [x] `src/store/noteFilters.ts`
 6. `src/components/academic-events/AcademicEventTypes.js`
-7. `src/components/note-editor/editorTextTransforms.js`
+7. [x] `src/components/note-editor/editorTextTransforms.ts`
 
 Criterio de cierre por archivo:
 

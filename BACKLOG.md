@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 05 — Testing, Calidad y Distribución
 > **Hito 04:** Cerrado formalmente el 2026-06-01
-> **Última actualización:** 2026-06-19 — importación ZIP y sección Acerca de integradas para cierre de Hito 05
+> **Última actualización:** 2026-06-22 — helper del editor tipado y deuda menor de tests cerrada
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -74,8 +74,6 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Tipado gradual | Aplicar estrategia JS/TS por fases | Media | Plan definido en [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md): typecheck, contratos, primera tanda de modulos puros, `AcademicEventService`, capa pura de backup, `BackupZipArchive`, `SubjectService.crud`, `SubjectService.trash` y auditorias `.ts` completadas |
 | Tipado gradual | Continuar servicios de dominio/backup archivo por archivo | Baja/Media | No avanzar en bloque; proximos candidatos requieren evaluar bordes nativos/share/storage o store con contratos mas claros |
 | Framework UI | No incorporar Svelte por ahora | Baja | Costo de migracion alto vs beneficio actual; reabrir solo si DOM manual se vuelve una carga clara |
-| Testing | Agregar tests menores para `moveNote()` en `NoteStore.data.test.js` | Baja | Deuda post-auditoría, no bloquea release si el gate pasa |
-| Testing | Eliminar clave `deleteSection` duplicada en mock de tests | Baja | Limpieza de test fixture |
 | Documentación | Revisar documentos generados antes del corte final | Media | Informe completo y cheatsheet deben reflejar la versión de release |
 | Diagramas | Actualizar gráficos DB exportados | Media | Regenerar al cierre documental final con modelo congelado |
 | Release | Definir versión del próximo corte | Media | Validar si el corte funcional de Hito 05 sale como `0.4.8` con backup ZIP, fechas académicas, editor enriquecido, borradores y Acerca de |
@@ -118,6 +116,8 @@ No incorporar en Hito 05 salvo decisión explícita:
 - [x] CRUD y arbol activo de materias migrado a TypeScript: `SubjectService.crud`, preservando `SubjectService.js` como API publica.
 - [x] Papelera avanzada de materias migrada a TypeScript: `SubjectService.trash`, preservando cascadas, restauracion navegable y `getTrashItems`.
 - [x] Escritor ZIP liviano migrado a TypeScript: `BackupZipArchive`, con test directo sobre formatos de salida y rutas UTF-8.
+- [x] Helper puro del editor enriquecido migrado a TypeScript: `editorTextTransforms`, con pruebas directas de continuacion Markdown y comandos inline.
+- [x] Deuda menor de tests cerrada: `moveNote()` cubierto en `NoteStore.data.test.js`; no queda una clave `deleteSection` duplicada en el mock vigente.
 - [ ] Aplicar mejoras pequenas y verificables que aumenten cohesion, reduzcan acoplamiento y faciliten revisiones humanas/IA, evitando reescrituras grandes.
 - [ ] Restauracion avanzada desde backup `.zip` con estrategia explicita de reemplazo/merge, solo despues de validar la importacion no destructiva actual con usuarios reales.
 - [ ] Sincronización real multi-dispositivo, solo después de validar backup/restauración y con feedback fuerte de adopción.
