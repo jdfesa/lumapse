@@ -248,6 +248,29 @@ describe('NoteStore.data', () => {
     })
   })
 
+  describe('moveNote()', () => {
+    it('actualiza el subjectId de la nota en persistencia y state.notes', async () => {
+      state.notes = [makeNote({ id: 'note-1', subjectId: null })]
+      NoteService.updateNote.mockResolvedValue(makeNote({ id: 'note-1', subjectId: 'subj-1' }))
+
+      await NoteStoreData.moveNote('note-1', 'subj-1')
+
+      expect(NoteService.updateNote).toHaveBeenCalledWith('note-1', { subjectId: 'subj-1' })
+      expect(state.notes[0].subjectId).toBe('subj-1')
+    })
+
+    it('recarga materias y notifica subscribers', async () => {
+      state.notes = [makeNote({ id: 'note-1' })]
+      const { listener, unsubscribe } = listenForNotify()
+
+      await NoteStoreData.moveNote('note-1', null)
+
+      expect(SubjectService.getSubjectTree).toHaveBeenCalled()
+      expect(listener).toHaveBeenCalledWith(state)
+      unsubscribe()
+    })
+  })
+
   describe('updateNoteSilent()', () => {
     it('actualiza la nota en state.notes sin notificar subscribers', async () => {
       state.notes = [makeNote({ id: 'note-1', title: 'Vieja' })]
