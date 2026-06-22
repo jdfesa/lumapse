@@ -3,7 +3,19 @@ const BULLETED_LIST_LINE_REGEX = /^(\s*)([-*+]\s+)(.*)$/;
 const NUMBERED_LIST_LINE_REGEX = /^(\s*)(\d+)([.)]\s+)(.*)$/;
 const BLOCKQUOTE_LINE_REGEX = /^(\s*>\s?)(.*)$/;
 
-export function getMarkdownContinuation(currentLine) {
+export type MarkdownContinuation = {
+  prefix: string
+  text: string
+}
+
+type InlineTextCommand = {
+  before?: string
+  after?: string
+  placeholder?: string
+  selectTarget?: string
+}
+
+export function getMarkdownContinuation(currentLine: string): MarkdownContinuation | null {
   const taskMatch = currentLine.match(TASK_LIST_LINE_REGEX);
   if (taskMatch) {
     return { prefix: `${taskMatch[1]}${taskMatch[2]} [ ] `, text: taskMatch[3] };
@@ -28,7 +40,7 @@ export function getMarkdownContinuation(currentLine) {
   return null;
 }
 
-export function applyInlineCommand(textarea, command) {
+export function applyInlineCommand(textarea: HTMLTextAreaElement, command: InlineTextCommand): void {
   const start = textarea.selectionStart;
   const end = textarea.selectionEnd;
   const selectedText = textarea.value.substring(start, end);

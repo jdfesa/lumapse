@@ -1,6 +1,6 @@
 import * as NoteStore from '../../store/NoteStore.js';
 import { SlashCommandHandler } from './SlashCommandHandler.js';
-import { getMarkdownContinuation } from './editorTextTransforms.js';
+import { getMarkdownContinuation } from './editorTextTransforms.ts';
 import { SubjectPicker } from './SubjectPicker.js';
 import { createEditorDraftPayload, EditorDraftCapture, EditorDraftRestorer } from './NoteEditorDrafts.js';
 import { setupEditorPopups } from './NoteEditorPopups.js';

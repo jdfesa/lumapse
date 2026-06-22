@@ -1,6 +1,6 @@
 import { EditorPopup } from './EditorPopup.js';
 import { getCommandSnippet, getEditorCommandsForSurface } from './editorCommandRegistry.js';
-import { applyInlineCommand } from './editorTextTransforms.js';
+import { applyInlineCommand } from './editorTextTransforms.ts';
 
 export function setupEditorPopups(editor, textarea, composer) {
   const plusBtn = editor.container.querySelector('#composer-plus-btn');
