@@ -309,7 +309,7 @@ async function loadZip(source: BackupImportSource | Blob | ArrayBuffer | Uint8Ar
     }
 
     return await JSZip.loadAsync(content)
-  } catch (error) {
+  } catch {
     throw new BackupImportError('No se pudo leer el ZIP de backup seleccionado.')
   }
 }
