@@ -119,6 +119,35 @@ git show LBREQ-v1.0 --no-patch
 
 ---
 
+### LB-PROD-v0.3.0 — Línea Base del Producto (Hito 04)
+
+| Campo | Detalle |
+|---|---|
+| **Tag Git** | `LB-PROD-v0.3.0` |
+| **Commit** | `b7f76df` |
+| **Fecha del commit** | 2026-06-01 |
+| **Fecha del tag** | 2026-06-25 (creado retrospectivamente) |
+| **Hito** | 04 — Organización y UX |
+| **Descripción** | Cierre formal del bloque de organización, UX móvil, persistencia SQLite y estabilización inicial. |
+
+**Funcionalidades añadidas respecto de LB-PROD-v0.2.0:**
+
+- Pivote formal a app nativa con Capacitor + SQLite, fundamentado en `ADR-005` y `ADR-006`.
+- Organización por materias y secciones, con navegación mobile-first en drawer.
+- Búsqueda global normalizada, notas fijadas/archivadas y estados académicos.
+- Tema claro/oscuro persistente con tokens CSS.
+- Papelera con soft-delete, restauración y cascadas transaccionales.
+- Fechas académicas discretas como recordatorios pasivos, sin agenda completa ni notificaciones.
+- Quality gate local, suite Vitest, auditorías de trazabilidad/schema/links y CI ampliado.
+- Cierre de alcance con postergación explícita de onboarding, contador permanente e indicador online/offline.
+
+**Comando de verificación:**
+```bash
+git show LB-PROD-v0.3.0 --no-patch
+```
+
+---
+
 ## 4. Gestión de cambios respecto de la línea base
 
 Una vez establecida una LB, todo cambio en el alcance debe pasar por un proceso formal
@@ -148,7 +177,6 @@ Una vez establecida una LB, todo cambio en el alcance debe pasar por un proceso 
 
 | Tag | Hito | Momento esperado | Contenido |
 |---|---|---|---|
-| `LB-PROD-v0.3.0` | 04 — Organización y UX | Agosto 2026 | Carpetas por materia, búsqueda, dark mode |
 | `LB-PROD-v1.0.0` | 05 — Testing y Distribución | Septiembre 2026 | APK firmado, tests, release pública |
 
 ---
