@@ -73,6 +73,19 @@
 
 ---
 
+## Ideas retenidas con criterio — mediano plazo
+
+Estas ideas se registran porque aportan a Lumapse como app offline-first para estudiantes o a la mantenibilidad del proyecto. No bloquean Hito 05. Si el cambio es mediano o grande, primero debe tener plan operativo breve antes de implementarse.
+
+- [ ] Agregar ESLint para archivos `.ts`, alineado con la migracion gradual a TypeScript; cambio chico de tooling, sin tocar comportamiento.
+- [ ] Medir coverage incluyendo archivos `.ts` con reporte no bloqueante; decidir umbrales solo despues de tener una linea base real.
+- [ ] Plan previo: evaluar busqueda Full-Text Search (`FTS5`) en SQLite para mejorar busqueda por relevancia y textos largos, validando compatibilidad Android real + web/sql.js antes de migrar el flujo actual.
+- [ ] Plan previo: exportar notas por materia/seccion como ZIP o Markdown legible, reutilizando la base de backup sin mezclarlo con restauracion completa de workspace.
+- [ ] Plan previo: estadisticas academicas minimas post-release (total de notas, notas por materia, racha simple, proximas fechas) solo si no agrega dashboard pesado ni ruido al flujo de captura.
+- [ ] Evaluar scroll-to-top al crear nota como pulido menor cuando exista feed largo; no requiere plan si se resuelve con cambio pequeno y test focalizado.
+
+---
+
 ## Mantenibilidad y arquitectura gradual
 
 Objetivo: sostener alta cohesion, bajo acoplamiento, responsabilidad unica y una base facil de revisar por humanos e IA. Estas tareas no son una reescritura ni bloquean el release; se incorporan solo cuando el costo-beneficio aporte claridad real.
@@ -108,3 +121,4 @@ Objetivo: sostener alta cohesion, bajo acoplamiento, responsabilidad unica y una
 - No agregar agenda completa, notificaciones, recurrencias ni sincronizacion.
 - No reabrir Hito 04 salvo correccion critica de documentacion historica.
 - No sumar tutoriales o coach marks sin evidencia de uso real.
+- No reabrir Quick-Link `[[nota]]` antes del release; fue explorado y retirado por UX. Reconsiderar solo post-release con feedback claro y plan separado.
