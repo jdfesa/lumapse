@@ -77,7 +77,7 @@
 
 Estas ideas se registran porque aportan a Lumapse como app offline-first para estudiantes o a la mantenibilidad del proyecto. No bloquean Hito 05. Si el cambio es mediano o grande, primero debe tener plan operativo breve antes de implementarse.
 
-- [ ] Agregar ESLint para archivos `.ts`, alineado con la migracion gradual a TypeScript; cambio chico de tooling, sin tocar comportamiento.
+- [x] Agregar ESLint para archivos `.ts`, alineado con la migracion gradual a TypeScript; cambio chico de tooling, sin tocar comportamiento.
 - [ ] Medir coverage incluyendo archivos `.ts` con reporte no bloqueante; decidir umbrales solo despues de tener una linea base real.
 - [ ] Plan previo: evaluar busqueda Full-Text Search (`FTS5`) en SQLite para mejorar busqueda por relevancia y textos largos, validando compatibilidad Android real + web/sql.js antes de migrar el flujo actual.
 - [ ] Plan previo: exportar notas por materia/seccion como ZIP o Markdown legible, reutilizando la base de backup sin mezclarlo con restauracion completa de workspace.
