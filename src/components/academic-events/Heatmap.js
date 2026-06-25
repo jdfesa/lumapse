@@ -8,7 +8,7 @@ import { bindAcademicEventActions } from './AcademicEventActions.js'
 import {
   renderAcademicEventDot,
   renderAcademicEventListItem,
-} from './AcademicEventTypes.js'
+} from './AcademicEventTypes.ts'
 import {
   createAcademicEventSubjectCatalog,
   getAcademicEventSubjectColor,

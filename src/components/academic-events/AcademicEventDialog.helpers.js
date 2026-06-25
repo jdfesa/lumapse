@@ -2,7 +2,7 @@
 // Helpers puros/DOM para AcademicEventDialog
 // =============================================================
 
-import { getAcademicEventType } from './AcademicEventTypes.js'
+import { getAcademicEventType } from './AcademicEventTypes.ts'
 import { ACADEMIC_EVENT_TITLE_MAX_LENGTH } from '../../services/AcademicEventRules.ts'
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/

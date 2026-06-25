@@ -18,7 +18,7 @@ import {
   ACADEMIC_EVENT_TYPE_ORDER,
   getAcademicEventType,
   renderAcademicEventIcon,
-} from './AcademicEventTypes.js'
+} from './AcademicEventTypes.ts'
 
 const DIALOG_EXIT_MS = 120
 const FOCUSABLE_SELECTOR = 'button:not([disabled]):not([tabindex="-1"]), input:not([disabled]):not([type="hidden"])'

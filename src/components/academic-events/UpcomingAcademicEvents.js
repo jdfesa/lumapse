@@ -13,7 +13,7 @@ import {
   getAcademicEventSubjectLabel,
   isAcademicEventSubjectArchived,
 } from './AcademicEventSubjects.js'
-import { renderAcademicEventListItem } from './AcademicEventTypes.js'
+import { renderAcademicEventListItem } from './AcademicEventTypes.ts'
 
 const MAX_UPCOMING_EVENTS = 5
 
