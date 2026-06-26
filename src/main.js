@@ -10,7 +10,7 @@
 import './styles/main.css'
 import { initDatabase } from './services/sqlite/connection.js'
 import * as NoteStore from './store/NoteStore.js'
-import * as ThemeService from './services/ThemeService.js'
+import * as ThemeService from './services/ThemeService.ts'
 import { SUBJECT_COLORS, autoPurge } from './services/SubjectService.js'
 import { NoteList as Feed } from './components/feed/NoteList.js'
 import { NoteEditor as Composer } from './components/note-editor/NoteEditor.js'

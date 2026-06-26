@@ -17,7 +17,7 @@ function mockMatchMedia(matches = false) {
 async function loadThemeService({ prefersLight = false } = {}) {
   vi.resetModules()
   mockMatchMedia(prefersLight)
-  ThemeService = await import('../../../src/services/ThemeService.js')
+  ThemeService = await import('../../../src/services/ThemeService.ts')
   return ThemeService
 }
 

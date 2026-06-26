@@ -5,10 +5,17 @@
 // =============================================================
 
 const STORAGE_KEY = 'lumapse-theme'
-const THEMES = Object.freeze({ DARK: 'dark', LIGHT: 'light' })
 
-/** @type {Set<(theme: string) => void>} */
-const listeners = new Set()
+export type Theme = 'dark' | 'light'
+
+export const THEMES = Object.freeze({
+  DARK: 'dark',
+  LIGHT: 'light',
+} as const)
+
+type ThemeListener = (theme: Theme) => void
+
+const listeners = new Set<ThemeListener>()
 
 /**
  * Determina el tema inicial:
@@ -16,7 +23,7 @@ const listeners = new Set()
  * 2. Preferencia del sistema operativo (prefers-color-scheme)
  * 3. Fallback: dark (default del proyecto)
  */
-function resolveInitialTheme() {
+function resolveInitialTheme(): Theme {
   const stored = localStorage.getItem(STORAGE_KEY)
   if (stored === THEMES.LIGHT || stored === THEMES.DARK) {
     return stored
@@ -31,7 +38,7 @@ function resolveInitialTheme() {
 }
 
 /** Aplica el tema al DOM (atributo data-theme en <html>) y actualiza meta theme-color */
-function applyTheme(theme) {
+function applyTheme(theme: Theme): void {
   const metaThemeColor = document.querySelector('meta[name="theme-color"]')
 
   if (theme === THEMES.LIGHT) {
@@ -46,14 +53,14 @@ function applyTheme(theme) {
 // --- API pública ---
 
 /** Retorna el tema actual ('dark' | 'light') */
-export function getTheme() {
+export function getTheme(): Theme {
   return document.documentElement.getAttribute('data-theme') === 'light'
     ? THEMES.LIGHT
     : THEMES.DARK
 }
 
 /** Establece un tema específico y lo persiste */
-export function setTheme(theme) {
+export function setTheme(theme: unknown): void {
   const validTheme = theme === THEMES.LIGHT ? THEMES.LIGHT : THEMES.DARK
   applyTheme(validTheme)
   localStorage.setItem(STORAGE_KEY, validTheme)
@@ -61,7 +68,7 @@ export function setTheme(theme) {
 }
 
 /** Alterna entre dark y light */
-export function toggle() {
+export function toggle(): void {
   const next = getTheme() === THEMES.DARK ? THEMES.LIGHT : THEMES.DARK
   setTheme(next)
 }
@@ -70,7 +77,7 @@ export function toggle() {
  * Suscribe un callback que se ejecuta al cambiar el tema.
  * Retorna una función para desuscribirse.
  */
-export function onThemeChange(callback) {
+export function onThemeChange(callback: ThemeListener): () => boolean {
   listeners.add(callback)
   return () => listeners.delete(callback)
 }
@@ -79,10 +86,8 @@ export function onThemeChange(callback) {
  * Inicializa el tema al cargar la app.
  * Debe llamarse una sola vez desde main.js.
  */
-export function init() {
+export function init(): void {
   const theme = resolveInitialTheme()
   applyTheme(theme)
   // No persiste en init para respetar el valor existente o la detección del OS
 }
-
-export { THEMES }
