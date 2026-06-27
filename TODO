@@ -104,6 +104,7 @@ Objetivo: sostener alta cohesion, bajo acoplamiento, responsabilidad unica y una
 - [x] Migrar CRUD/arbol activo de materias a TypeScript: `SubjectService.crud.ts`, manteniendo el barrel `SubjectService.js`.
 - [x] Migrar papelera avanzada de materias a TypeScript: `SubjectService.trash.ts`, preservando cascadas, restauracion navegable y salida `getTrashItems`.
 - [x] Migrar escritor ZIP liviano a TypeScript: `BackupZipArchive.ts`, con test directo de ArrayBuffer, base64, Blob y rutas UTF-8.
+- [x] Migrar persistencia liviana de recordatorios de backup a TypeScript: `BackupStorageService.ts`, con contrato de storage inyectable y tests directos.
 - [x] Migrar helper puro del editor enriquecido a TypeScript: `editorTextTransforms.ts`, con tests directos para continuacion Markdown y comandos inline.
 - [x] Migrar helper visual de fechas academicas a TypeScript: `AcademicEventTypes.ts`, fijando contratos para tipos, colores y opciones de render.
 - [x] Agregar tests menores para `moveNote()` en `NoteStore.data.test.js` y verificar que el mock vigente no conserva `deleteSection` duplicado.

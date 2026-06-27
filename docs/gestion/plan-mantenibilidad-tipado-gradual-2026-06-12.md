@@ -199,10 +199,11 @@ Migrar servicios donde los contratos reducen errores reales:
 - [x] `BackupService.ts`.
 - [x] `BackupZipService.ts`.
 - [x] `BackupZipArchive.ts`.
+- [x] `BackupStorageService.ts`.
 - [x] Auditorias auxiliares y binario Rust actualizados para incluir `.ts`.
 - [x] `SubjectService.crud.ts`.
 - [x] `SubjectService.trash.ts`.
-- Servicios de backup que transforman datos, sin mezclar flujo nativo/share/storage en la misma tanda.
+- Bordes nativos/share de backup solo si el contrato queda chico, testeable y sin depender de dispositivo real.
 - Capa SQLite por tabla, solo si los tipos ya estan claros.
 
 Criterio de cierre:
