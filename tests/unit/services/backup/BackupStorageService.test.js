@@ -4,7 +4,7 @@ import {
   getBackupReminderTimestamps,
   setLastBackupCreatedAt,
   setLastBackupReminderDismissedAt,
-} from '../../../../src/services/backup/BackupStorageService.js'
+} from '../../../../src/services/backup/BackupStorageService.ts'
 
 describe('BackupStorageService', () => {
   beforeEach(() => {

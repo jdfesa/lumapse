@@ -14,7 +14,7 @@ import {
   getBackupReminderTimestamps,
   setLastBackupCreatedAt,
   setLastBackupReminderDismissedAt,
-} from './BackupStorageService.js'
+} from './BackupStorageService.ts'
 
 export const BACKUP_FLOW_STATUS = Object.freeze({
   READY: 'ready',

@@ -5,14 +5,31 @@
 // para recordatorios locales. No guarda datos de usuario.
 // =============================================================
 
-import { createBackupTimestamp } from './BackupReminderService.ts'
+import { createBackupTimestamp } from './BackupReminderService'
 
 export const BACKUP_STORAGE_KEYS = Object.freeze({
   LAST_BACKUP_CREATED_AT: 'lumapse-backup-last-created-at',
   LAST_BACKUP_REMINDER_DISMISSED_AT: 'lumapse-backup-reminder-dismissed-at',
-})
+} as const)
 
-function resolveStorage(storage) {
+type BackupStorageKey = typeof BACKUP_STORAGE_KEYS[keyof typeof BACKUP_STORAGE_KEYS]
+type BackupTimestampInput = Parameters<typeof createBackupTimestamp>[0]
+
+interface BackupTimestampStorage {
+  getItem(key: string): string | null
+  setItem(key: string, value: string): void
+}
+
+export interface BackupStorageOptions {
+  storage?: BackupTimestampStorage | null
+}
+
+export interface BackupReminderTimestamps {
+  lastBackupCreatedAt: string | null
+  lastBackupReminderDismissedAt: string | null
+}
+
+function resolveStorage(storage?: BackupTimestampStorage | null): BackupTimestampStorage | null {
   if (storage) return storage
 
   try {
@@ -22,7 +39,7 @@ function resolveStorage(storage) {
   }
 }
 
-function getItem(storage, key) {
+function getItem(storage: BackupTimestampStorage | null, key: BackupStorageKey): string | null {
   if (!storage) return null
 
   try {
@@ -32,7 +49,11 @@ function getItem(storage, key) {
   }
 }
 
-function setTimestamp(key, date, options = {}) {
+function setTimestamp(
+  key: BackupStorageKey,
+  date: BackupTimestampInput,
+  options: BackupStorageOptions = {}
+): string {
   const value = createBackupTimestamp(date)
   const storage = resolveStorage(options.storage)
   if (!storage) return value
@@ -41,7 +62,7 @@ function setTimestamp(key, date, options = {}) {
   return value
 }
 
-export function getBackupReminderTimestamps(options = {}) {
+export function getBackupReminderTimestamps(options: BackupStorageOptions = {}): BackupReminderTimestamps {
   const storage = resolveStorage(options.storage)
 
   return {
@@ -50,10 +71,16 @@ export function getBackupReminderTimestamps(options = {}) {
   }
 }
 
-export function setLastBackupCreatedAt(date = new Date(), options = {}) {
+export function setLastBackupCreatedAt(
+  date: BackupTimestampInput = new Date(),
+  options: BackupStorageOptions = {}
+): string {
   return setTimestamp(BACKUP_STORAGE_KEYS.LAST_BACKUP_CREATED_AT, date, options)
 }
 
-export function setLastBackupReminderDismissedAt(date = new Date(), options = {}) {
+export function setLastBackupReminderDismissedAt(
+  date: BackupTimestampInput = new Date(),
+  options: BackupStorageOptions = {}
+): string {
   return setTimestamp(BACKUP_STORAGE_KEYS.LAST_BACKUP_REMINDER_DISMISSED_AT, date, options)
 }
