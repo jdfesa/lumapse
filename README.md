@@ -267,8 +267,8 @@ El historial de commits sigue el estándar **Conventional Commits**.
 ## Información Académica
 
 - **Materia:** Práctica Profesionalizante III
-- **Alumno:** José David Sandoval
-- **Profesor:** Ing. Mauricio Parada
+- **Alumno:** Sandoval, José David Fernando
+- **Profesor:** Ing. Parada, Mauricio
 - **Tutora:** Prof. Jaquet, Melina Daiana
 - **Institución:** IES 6023 'Dr. Alfredo Loutaif'
 - **Año:** 2026
