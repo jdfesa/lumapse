@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
+export LC_NUMERIC=C
 
 # ==============================================================================
 # Lumapse — Bundle Budget
