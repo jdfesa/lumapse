@@ -200,6 +200,7 @@ Migrar servicios donde los contratos reducen errores reales:
 - [x] `BackupZipService.ts`.
 - [x] `BackupZipArchive.ts`.
 - [x] `BackupStorageService.ts`.
+- [x] `BackupFlowService.ts`.
 - [x] Auditorias auxiliares y binario Rust actualizados para incluir `.ts`.
 - [x] `SubjectService.crud.ts`.
 - [x] `SubjectService.trash.ts`.

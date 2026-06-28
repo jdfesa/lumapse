@@ -15,7 +15,7 @@ import {
   dismissCurrentBackupReminder,
   getCurrentBackupReminder,
   getExternalBackupReadiness,
-} from '../../services/backup/BackupFlowService.js'
+} from '../../services/backup/BackupFlowService.ts'
 import { confirmDialog } from '../common/ConfirmDialog.js'
 import { showErrorToast } from '../common/Toast.js'
 import {

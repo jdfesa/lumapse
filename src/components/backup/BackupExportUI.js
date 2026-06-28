@@ -1,4 +1,4 @@
-import { BACKUP_FLOW_STATUS } from '../../services/backup/BackupFlowService.js'
+import { BACKUP_FLOW_STATUS } from '../../services/backup/BackupFlowService.ts'
 import { BACKUP_REMINDER_REASONS } from '../../services/backup/BackupReminderService.ts'
 
 export const UI_STATE = Object.freeze({

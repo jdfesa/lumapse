@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('../../../../src/services/backup/BackupFlowService.js', () => ({
+vi.mock('../../../../src/services/backup/BackupFlowService.ts', () => ({
   BACKUP_FLOW_STATUS: {
     READY: 'ready',
     BLOCKED_OFFLINE: 'blocked-offline',
@@ -33,7 +33,7 @@ import {
   dismissCurrentBackupReminder,
   getCurrentBackupReminder,
   getExternalBackupReadiness,
-} from '../../../../src/services/backup/BackupFlowService.js'
+} from '../../../../src/services/backup/BackupFlowService.ts'
 import { confirmDialog } from '../../../../src/components/common/ConfirmDialog.js'
 import { showErrorToast } from '../../../../src/components/common/Toast.js'
 import { BackupView } from '../../../../src/components/backup/BackupView.js'
