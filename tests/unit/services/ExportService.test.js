@@ -8,7 +8,7 @@ import { createCurrentBackupZip } from '../../../src/services/backup/BackupServi
 import {
   exportAllNotesToZip,
   triggerBrowserDownload,
-} from '../../../src/services/ExportService.js'
+} from '../../../src/services/ExportService.ts'
 
 const BACKUP = {
   content: new Blob(['zip']),
