@@ -106,6 +106,7 @@ Objetivo: sostener alta cohesion, bajo acoplamiento, responsabilidad unica y una
 - [x] Migrar escritor ZIP liviano a TypeScript: `BackupZipArchive.ts`, con test directo de ArrayBuffer, base64, Blob y rutas UTF-8.
 - [x] Migrar persistencia liviana de recordatorios de backup a TypeScript: `BackupStorageService.ts`, con contrato de storage inyectable y tests directos.
 - [x] Migrar orquestacion del flujo manual de backup a TypeScript: `BackupFlowService.ts`, fijando contratos para readiness, recordatorios y share externo.
+- [x] Migrar fachada web/legada de exportacion a TypeScript: `ExportService.ts`, fijando contrato de descarga `Blob` y delegacion al backup canonico.
 - [x] Migrar helper puro del editor enriquecido a TypeScript: `editorTextTransforms.ts`, con tests directos para continuacion Markdown y comandos inline.
 - [x] Migrar helper visual de fechas academicas a TypeScript: `AcademicEventTypes.ts`, fijando contratos para tipos, colores y opciones de render.
 - [x] Agregar tests menores para `moveNote()` en `NoteStore.data.test.js` y verificar que el mock vigente no conserva `deleteSection` duplicado.

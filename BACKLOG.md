@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 05 — Testing, Calidad y Distribución
 > **Hito 04:** Cerrado formalmente el 2026-06-01
-> **Última actualización:** 2026-06-28 — orquestacion del flujo manual de backup migrada a TypeScript
+> **Última actualización:** 2026-06-29 — fachada web/legada de exportacion migrada a TypeScript
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -23,7 +23,7 @@ El benchmark visual contra Notion mobile derivó en `RF-028`: controles opcional
 
 La revisión de `RF-005` reemplazó el auto-guardado final silencioso por borradores persistentes del editor. Lumapse conserva localmente el trabajo en curso al crear o editar, lo restaura al volver de otra app o vista, y lo limpia solo al guardar/actualizar con éxito o al descartar explícitamente. El plan cerrado queda archivado en [`docs/gestion/historico/plan-borradores-persistentes-2026-06-06.md`](docs/gestion/historico/plan-borradores-persistentes-2026-06-06.md).
 
-La estrategia de mantenibilidad y tipado gradual queda documentada en [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md). Las primeras fases operativas ya quedaron aplicadas: `tests/unit/components/` espeja la organizacion por feature de `src/components/`, `NoteStore.*` dejo de importar feedback visual, el proyecto ya tiene `typecheck` y contratos de dominio iniciales en `src/domain/`, los primeros modulos puros migrados son `AcademicEventRules`, `NoteTitleService`, `SubjectService.validation`, `BackupFormat`, `noteFilters` y `AcademicEventTypes`, el primer servicio de dominio migrado es `AcademicEventService`, la capa pura de backup ya tipa decisiones, datos, transformacion ZIP, escritura ZIP, persistencia liviana de recordatorios y flujo manual de share externo, y `SubjectService.crud`/`SubjectService.trash` ya declaran contratos sobre materias, arbol activo y papelera avanzada manteniendo el barrel publico. Las auditorias auxiliares y el binario Rust tambien escanean `.ts`. El siguiente paso recomendado es seguir archivo por archivo con servicios donde el contrato aporte seguridad real, dejando store y componentes DOM grandes para fases posteriores.
+La estrategia de mantenibilidad y tipado gradual queda documentada en [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md). Las primeras fases operativas ya quedaron aplicadas: `tests/unit/components/` espeja la organizacion por feature de `src/components/`, `NoteStore.*` dejo de importar feedback visual, el proyecto ya tiene `typecheck` y contratos de dominio iniciales en `src/domain/`, los primeros modulos puros migrados son `AcademicEventRules`, `NoteTitleService`, `SubjectService.validation`, `BackupFormat`, `noteFilters` y `AcademicEventTypes`, el primer servicio de dominio migrado es `AcademicEventService`, la capa pura de backup ya tipa decisiones, datos, transformacion ZIP, escritura ZIP, persistencia liviana de recordatorios y flujo manual de share externo, `ExportService` ya quedo tipado como fachada web/legada del backup canonico, y `SubjectService.crud`/`SubjectService.trash` ya declaran contratos sobre materias, arbol activo y papelera avanzada manteniendo el barrel publico. Las auditorias auxiliares y el binario Rust tambien escanean `.ts`. El siguiente paso recomendado es seguir archivo por archivo con servicios donde el contrato aporte seguridad real, dejando store y componentes DOM grandes para fases posteriores.
 
 ---
 
@@ -71,7 +71,7 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Área | Tarea | Prioridad | Notas |
 |---|---|---|---|
 | Arquitectura UI | Separar responsabilidades restantes en componentes grandes | Media | Priorizar `NoteEditor`, `NoteList`, `Heatmap` y `BackupView` solo cuando haya cambios funcionales relacionados |
-| Tipado gradual | Aplicar estrategia JS/TS por fases | Media | Plan definido en [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md): typecheck, contratos, primera tanda de modulos puros, `AcademicEventTypes`, `AcademicEventService`, capa pura de backup, `BackupZipArchive`, `BackupStorageService`, `BackupFlowService`, `SubjectService.crud`, `SubjectService.trash` y auditorias `.ts` completadas |
+| Tipado gradual | Aplicar estrategia JS/TS por fases | Media | Plan definido en [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md): typecheck, contratos, primera tanda de modulos puros, `AcademicEventTypes`, `AcademicEventService`, capa pura de backup, `BackupZipArchive`, `BackupStorageService`, `BackupFlowService`, `ExportService`, `SubjectService.crud`, `SubjectService.trash` y auditorias `.ts` completadas |
 | Tipado gradual | Continuar servicios de dominio/backup archivo por archivo | Baja/Media | No avanzar en bloque; proximos candidatos requieren evaluar bordes nativos/share/storage o store con contratos mas claros |
 | Framework UI | No incorporar Svelte por ahora | Baja | Costo de migracion alto vs beneficio actual; reabrir solo si DOM manual se vuelve una carga clara |
 | Documentación | Revisar documentos generados antes del corte final | Media | Informe completo y cheatsheet deben reflejar la versión de release |
@@ -118,6 +118,7 @@ No incorporar en Hito 05 salvo decisión explícita:
 - [x] Escritor ZIP liviano migrado a TypeScript: `BackupZipArchive`, con test directo sobre formatos de salida y rutas UTF-8.
 - [x] Persistencia liviana de recordatorios de backup migrada a TypeScript: `BackupStorageService`, con contrato de storage inyectable y tests directos.
 - [x] Orquestacion del flujo manual de backup migrada a TypeScript: `BackupFlowService`, con contratos para readiness, recordatorios y resultado de share externo.
+- [x] Fachada web/legada de exportacion migrada a TypeScript: `ExportService`, delegando en el backup canonico v1 y validando descarga `Blob`.
 - [x] Helper puro del editor enriquecido migrado a TypeScript: `editorTextTransforms`, con pruebas directas de continuacion Markdown y comandos inline.
 - [x] Helper visual de fechas academicas migrado a TypeScript: `AcademicEventTypes`, fijando contratos de tipos, colores, acciones y opciones de render.
 - [x] Deuda menor de tests cerrada: `moveNote()` cubierto en `NoteStore.data.test.js`; no queda una clave `deleteSection` duplicada en el mock vigente.

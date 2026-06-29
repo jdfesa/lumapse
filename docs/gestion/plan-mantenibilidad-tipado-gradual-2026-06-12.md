@@ -201,6 +201,7 @@ Migrar servicios donde los contratos reducen errores reales:
 - [x] `BackupZipArchive.ts`.
 - [x] `BackupStorageService.ts`.
 - [x] `BackupFlowService.ts`.
+- [x] `ExportService.ts`.
 - [x] Auditorias auxiliares y binario Rust actualizados para incluir `.ts`.
 - [x] `SubjectService.crud.ts`.
 - [x] `SubjectService.trash.ts`.
@@ -307,4 +308,4 @@ No hace falta levantar servidor local como parte de estas fases. La validacion v
 2. Pausar migraciones de backup que toquen bordes nativos/share/storage hasta tener contratos mas claros.
 3. Dejar store y componentes grandes para fases posteriores.
 
-El mapa de tests por feature ya quedo alineado, el store ya no depende de feedback visual, el typecheck ya es parte del gate, la primera tanda de modulos puros esta migrada, `AcademicEventService` ya quedo tipado como primer servicio de dominio, la capa pura de backup ya cubre decisiones, datos, ZIP, escritura ZIP y orquestacion, `SubjectService.crud` ya cubre materias/arbol activo, `SubjectService.trash` ya cubre papelera avanzada, y las auditorias automaticas ya escanean `.ts`. El proximo paso debe seguir siendo pequeno: tipar servicios con tests existentes, sin arrastrar componentes grandes ni mezclar capas.
+El mapa de tests por feature ya quedo alineado, el store ya no depende de feedback visual, el typecheck ya es parte del gate, la primera tanda de modulos puros esta migrada, `AcademicEventService` ya quedo tipado como primer servicio de dominio, la capa pura de backup ya cubre decisiones, datos, ZIP, escritura ZIP, orquestacion y fachada web/legada de exportacion, `SubjectService.crud` ya cubre materias/arbol activo, `SubjectService.trash` ya cubre papelera avanzada, y las auditorias automaticas ya escanean `.ts`. El proximo paso debe seguir siendo pequeno: tipar servicios con tests existentes, sin arrastrar componentes grandes ni mezclar capas.
