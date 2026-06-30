@@ -23,14 +23,31 @@
 
 ## Precondiciones
 
-- [ ] `python3 scripts/release-helper.py --type patch --dry-run` ejecutado sin bloqueos.
-- [ ] `npm run verify` ejecutado sin fallos.
-- [ ] APK candidato generado.
+- [x] `python3 scripts/release-helper.py --type patch --dry-run` ejecutado sin bloqueos.
+- [x] `npm run verify` ejecutado sin fallos.
+- [x] APK candidato unsigned generado.
 - [ ] Dispositivo Android real disponible.
 - [ ] Instalacion desde fuentes desconocidas habilitada, si aplica.
 - [ ] Version anterior desinstalada antes de instalar el APK candidato.
 
 > Para una validacion nativa real, no usar el servidor Vite como evidencia principal. El flujo debe probar el APK instalado.
+
+## Generacion de APK candidata
+
+| Campo | Valor |
+|---|---|
+| Fase | 2A — APK release unsigned |
+| Version candidata | 0.4.8 |
+| Android `versionName` | 0.4.8 |
+| Android `versionCode` | 408 |
+| Comandos previstos | `npm run build`, `npx cap sync android`, `./gradlew assembleRelease` |
+| Artefacto Gradle esperado | `android/app/build/outputs/apk/release/app-release-unsigned.apk` |
+| Copia local esperada | `releases/v0.4.8/lumapse-v0.4.8-unsigned.apk` |
+| Estado | Generada el 2026-06-30 |
+| Resultado Gradle | `./gradlew assembleRelease` exitoso |
+| SHA-256 | `f53442d79d3e1b5f077b43e0df62737ad4529857be05c0dba48b622e83e6fb4a` |
+
+> La APK unsigned no es el artefacto final de distribucion. Antes de publicarla en GitHub Releases debe firmarse con un keystore de release.
 
 ---
 

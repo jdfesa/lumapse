@@ -33,6 +33,8 @@ Durante esta etapa también se aceptaron mejoras funcionales controladas que ele
 | Testing en dispositivo real | ⏳ Pendiente | Validación manual formal |
 | Release dry-run | ✅ Completado | `scripts/release-helper.py --type patch --dry-run` propone `0.4.8` sin bloqueos |
 | Release candidata `0.4.8` | ✅ Preparada | `package.json`, `package-lock.json` y `CHANGELOG.md` actualizados con `scripts/release-helper.py --type patch --skip-build --yes` |
+| Versionado Android `0.4.8` | ✅ Preparado | `android/app/build.gradle` alineado con `versionName "0.4.8"` y `versionCode 408` |
+| APK release unsigned | ✅ Generada | `releases/v0.4.8/lumapse-v0.4.8-unsigned.apk`, SHA-256 `f53442d79d3e1b5f077b43e0df62737ad4529857be05c0dba48b622e83e6fb4a` |
 | Borradores persistentes del editor | ✅ Verificado | `RF-005 / HU-005`, plan histórico archivado y validación manual con cambio de app/PDF |
 | Backup manual externo | ✅ Implementado | `RF-017 / HU-030`, plan histórico archivado |
 | Importación de backup ZIP | ✅ Implementado | `RF-018 / HU-031`, preview, importación no destructiva y validación Android real |
@@ -47,6 +49,10 @@ Durante esta etapa también se aceptaron mejoras funcionales controladas que ele
 El corte `0.4.8` se toma como **release candidata funcional** para validacion controlada, no como cierre final del producto ni como apertura de nuevas funcionalidades. Su objetivo es demostrar que el nucleo de Lumapse ya puede probarse como APK: captura de notas, organizacion por materias/secciones, busqueda, Markdown, estados academicos, papelera, fechas academicas discretas, backup ZIP manual, persistencia local SQLite y funcionamiento offline.
 
 El 2026-06-30 se congelo la Fase 1 del flujo operativo de release: el dry-run no reporto bloqueos, `npm run verify` paso completo y la version candidata `0.4.8` quedo reflejada en `package.json`, `package-lock.json` y `CHANGELOG.md`. La generacion del APK queda separada como Fase 2 para conservar evidencia clara entre corte candidato, artefacto Android y validacion manual.
+
+La Fase 2 se divide en dos subpasos: primero generar una APK release unsigned para confirmar que el paquete Android compila con los assets finales; despues firmar el artefacto con un keystore de distribucion antes de subirlo a GitHub Releases. La APK unsigned no se considera publicable: sirve como evidencia tecnica previa a la firma.
+
+La Fase 2A se completo el 2026-06-30 con `npm run build`, `npx cap sync android` y `./gradlew assembleRelease`. El build Gradle fue exitoso y genero `app-release-unsigned.apk` con `applicationId` `com.lumapse.app`, `versionName` `0.4.8` y `versionCode` `408`. La copia local se guardo en `releases/v0.4.8/lumapse-v0.4.8-unsigned.apk`; la Fase 2B queda pendiente para crear/usar keystore y producir la APK firmada distribuible.
 
 Cualquier feedback recibido durante esta etapa debe clasificarse en tres grupos:
 
