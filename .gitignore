@@ -42,9 +42,13 @@ android/app/build/
 android/.gradle/
 android/build/
 android/app/release/
+android/keystores/
 android/*.iml
 android/local.properties
 android/hs_err_pid*.log
+*.jks
+*.keystore
+*.p12
 
 # SQLite WASM simulation files
 public/assets/sql-wasm.wasm

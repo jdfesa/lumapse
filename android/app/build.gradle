@@ -1,5 +1,16 @@
 apply plugin: 'com.android.application'
 
+def releaseStoreFile = System.getenv("LUMAPSE_RELEASE_STORE_FILE")
+def releaseStorePassword = System.getenv("LUMAPSE_RELEASE_STORE_PASSWORD")
+def releaseKeyAlias = System.getenv("LUMAPSE_RELEASE_KEY_ALIAS")
+def releaseKeyPassword = System.getenv("LUMAPSE_RELEASE_KEY_PASSWORD")
+def hasReleaseSigning = [
+    releaseStoreFile,
+    releaseStorePassword,
+    releaseKeyAlias,
+    releaseKeyPassword
+].every { value -> value != null && value.trim() }
+
 android {
     namespace = "com.lumapse.app"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -16,8 +27,21 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        if (hasReleaseSigning) {
+            release {
+                storeFile file(releaseStoreFile)
+                storePassword releaseStorePassword
+                keyAlias releaseKeyAlias
+                keyPassword releaseKeyPassword
+            }
+        }
+    }
     buildTypes {
         release {
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.release
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
