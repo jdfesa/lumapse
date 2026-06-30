@@ -10,6 +10,46 @@
 
 ---
 
+## Fase operativa actual
+
+**Fase actual:** 1 — Congelar release candidata `0.4.8`.
+
+**Objetivo de la fase:** dejar preparado el corte candidato con version, changelog y quality gate documentados antes de generar el APK.
+
+**Criterio de cierre:** `package.json` y `package-lock.json` quedan en `0.4.8`, `CHANGELOG.md` incorpora la entrada de release, `npm run verify` queda registrado como OK y no aparecen cambios funcionales fuera de alcance.
+
+### Plan por fases — Hito 05
+
+| Fase | Objetivo | Estado | Registro principal |
+|---|---|---|---|
+| 1 | Congelar release candidata `0.4.8` | Lista para revision | `TODO`, `CHANGELOG.md`, `docs/hitos/hito-05-septiembre.md` |
+| 2 | Generar APK candidato | Pendiente | `TODO`, `docs/gestion/checklist-validacion-android.md` |
+| 3 | Validar en Android real | Pendiente | `docs/gestion/checklist-validacion-android.md`, `docs/hitos/hito-05-septiembre.md` |
+| 4 | Publicar o documentar distribucion | Pendiente | `README.md`, `CHANGELOG.md`, `TODO` |
+| 5 | Cierre documental | Pendiente | `docs/gestion/lineas-base.md`, `docs/gestion/cheatsheet-defensa.md`, `docs/informe-final/` |
+
+### Tareas de Fase 1
+
+- [x] Ejecutar release dry-run con `python3 scripts/release-helper.py --type patch --dry-run`.
+- [x] Ejecutar `npm run verify` como gate local previo.
+- [x] Preparar release real `0.4.8` con `python3 scripts/release-helper.py --type patch --skip-build --yes --allow-dirty`.
+- [x] Revisar `package.json`, `package-lock.json` y `CHANGELOG.md`.
+- [x] Registrar en `docs/hitos/hito-05-septiembre.md` que la release candidata queda congelada.
+- [x] Confirmar `git status`: cambios de Fase 1 listos para revisar/commit.
+
+### Registro de cambios por documento
+
+- `TODO`: tablero operativo, fase actual y pendientes inmediatos.
+- `CHANGELOG.md`: historia versionada del release.
+- `docs/hitos/hito-05-septiembre.md`: relato formal academico del avance.
+- `docs/gestion/checklist-validacion-android.md`: evidencia de prueba manual en APK real.
+- `BACKLOG.md`: estado general del hito, deuda viva y decisiones postergadas.
+- `README.md`: instrucciones de instalacion/distribucion cuando exista el artefacto.
+- `docs/gestion/lineas-base.md`: linea base/tag cuando el producto quede congelado.
+- `docs/gestion/cheatsheet-defensa.md`: metricas y argumentos actualizados para defensa.
+
+---
+
 ## Proxima sesion
 
 - [x] Ejecutar release dry-run con `python3 scripts/release-helper.py --type patch --dry-run`.

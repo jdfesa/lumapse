@@ -4,7 +4,7 @@
 **Hito:** 05 — Testing, Calidad y Distribución
 **Proyecto:** Lumapse
 **Estado:** Activo formalmente tras el cierre del Hito 04
-**Última actualización:** 2026-06-19
+**Última actualización:** 2026-06-30
 
 ---
 
@@ -22,8 +22,8 @@ Durante esta etapa también se aceptaron mejoras funcionales controladas que ele
 
 | Área | Estado | Evidencia |
 |---|---|---|
-| Suite Vitest | ✅ Implementada | `npm run test` con 766 tests |
-| Quality gate local | ✅ Verificado | `npm run verify` ejecutado sin fallos el 2026-06-02 |
+| Suite Vitest | ✅ Implementada | `npm run verify` con 773 tests unitarios pasando el 2026-06-30 |
+| Quality gate local | ✅ Verificado | `npm run verify` ejecutado sin fallos el 2026-06-30 |
 | GitHub Actions | ✅ Implementado | Workflow `CI — Quality Gate` |
 | Auditorías documentales/schema | ✅ Implementadas | `check:traceability`, `check:docs`, `check:schema`, `check:dbml`, `check:subjects` |
 | Guardia de diálogos nativos | ✅ Implementada | `npm run check:native-dialogs` |
@@ -32,6 +32,7 @@ Durante esta etapa también se aceptaron mejoras funcionales controladas que ele
 | Distribución APK | ⏳ Pendiente | APK firmado y GitHub Releases |
 | Testing en dispositivo real | ⏳ Pendiente | Validación manual formal |
 | Release dry-run | ✅ Completado | `scripts/release-helper.py --type patch --dry-run` propone `0.4.8` sin bloqueos |
+| Release candidata `0.4.8` | ✅ Preparada | `package.json`, `package-lock.json` y `CHANGELOG.md` actualizados con `scripts/release-helper.py --type patch --skip-build --yes` |
 | Borradores persistentes del editor | ✅ Verificado | `RF-005 / HU-005`, plan histórico archivado y validación manual con cambio de app/PDF |
 | Backup manual externo | ✅ Implementado | `RF-017 / HU-030`, plan histórico archivado |
 | Importación de backup ZIP | ✅ Implementado | `RF-018 / HU-031`, preview, importación no destructiva y validación Android real |
@@ -44,6 +45,8 @@ Durante esta etapa también se aceptaron mejoras funcionales controladas que ele
 ## Estrategia de Release Candidata
 
 El corte `0.4.8` se toma como **release candidata funcional** para validacion controlada, no como cierre final del producto ni como apertura de nuevas funcionalidades. Su objetivo es demostrar que el nucleo de Lumapse ya puede probarse como APK: captura de notas, organizacion por materias/secciones, busqueda, Markdown, estados academicos, papelera, fechas academicas discretas, backup ZIP manual, persistencia local SQLite y funcionamiento offline.
+
+El 2026-06-30 se congelo la Fase 1 del flujo operativo de release: el dry-run no reporto bloqueos, `npm run verify` paso completo y la version candidata `0.4.8` quedo reflejada en `package.json`, `package-lock.json` y `CHANGELOG.md`. La generacion del APK queda separada como Fase 2 para conservar evidencia clara entre corte candidato, artefacto Android y validacion manual.
 
 Cualquier feedback recibido durante esta etapa debe clasificarse en tres grupos:
 
