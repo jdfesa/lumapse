@@ -7,6 +7,21 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ---
 
+## [0.4.8] — 2026-06-30 — Release
+
+### Changed
+- Preparación de release v0.4.8 mediante `scripts/release-helper.py`.
+
+### Commits recientes
+- 8e89167 docs: mark ExportService migration to TypeScript as complete
+- cab9b1b refactor(services): migrate ExportService to TypeScript
+- c876eb9 docs: update academic info in README.md
+- e923f80 fix(tooling): set LC_NUMERIC=C in bundle-budget.sh
+- 9847132 refactor(backup): migrate BackupFlowService to TypeScript
+- 44c94be docs: update task tracking and changelog for BackupStorageService migration
+- 4f3e478 refactor(backup): migrate BackupStorageService to TypeScript
+- ff5ca09 refactor(theme): migrate ThemeService to TypeScript
+
 ## Próximo — Hito 05: Testing, Calidad y Distribución (Preparación iniciada)
 
 > Hito 05 queda activo desde el cierre formal del Hito 04 (2026-06-01). El foco es estabilizar, preparar distribución y revisar decisiones de alcance antes de la primera release.
