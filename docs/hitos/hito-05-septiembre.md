@@ -29,12 +29,13 @@ Durante esta etapa también se aceptaron mejoras funcionales controladas que ele
 | Guardia de diálogos nativos | ✅ Implementada | `npm run check:native-dialogs` |
 | Smoke tests Android | ✅ Corregidos | Tests bajo `com.lumapse.app` |
 | Checklist Android | ✅ Preparado | [`checklist-validacion-android.md`](../gestion/checklist-validacion-android.md) |
-| Distribución APK | ⏳ Pendiente | APK firmado y GitHub Releases |
+| Distribución APK | 🔄 En curso | APK firmada generada; GitHub Releases pendiente |
 | Testing en dispositivo real | ⏳ Pendiente | Validación manual formal |
 | Release dry-run | ✅ Completado | `scripts/release-helper.py --type patch --dry-run` propone `0.4.8` sin bloqueos |
 | Release candidata `0.4.8` | ✅ Preparada | `package.json`, `package-lock.json` y `CHANGELOG.md` actualizados con `scripts/release-helper.py --type patch --skip-build --yes` |
 | Versionado Android `0.4.8` | ✅ Preparado | `android/app/build.gradle` alineado con `versionName "0.4.8"` y `versionCode 408` |
 | APK release unsigned | ✅ Generada | `releases/v0.4.8/lumapse-v0.4.8-unsigned.apk`, SHA-256 `f53442d79d3e1b5f077b43e0df62737ad4529857be05c0dba48b622e83e6fb4a` |
+| Firma de APK | ✅ Verificada | `releases/v0.4.8/lumapse-v0.4.8.apk`, SHA-256 `cad122d0329e1761816ac7ad07938673389c859a252d9cc63504359355db3d10`; `apksigner` verifica esquema v2 |
 | Borradores persistentes del editor | ✅ Verificado | `RF-005 / HU-005`, plan histórico archivado y validación manual con cambio de app/PDF |
 | Backup manual externo | ✅ Implementado | `RF-017 / HU-030`, plan histórico archivado |
 | Importación de backup ZIP | ✅ Implementado | `RF-018 / HU-031`, preview, importación no destructiva y validación Android real |
@@ -53,6 +54,10 @@ El 2026-06-30 se congelo la Fase 1 del flujo operativo de release: el dry-run no
 La Fase 2 se divide en dos subpasos: primero generar una APK release unsigned para confirmar que el paquete Android compila con los assets finales; despues firmar el artefacto con un keystore de distribucion antes de subirlo a GitHub Releases. La APK unsigned no se considera publicable: sirve como evidencia tecnica previa a la firma.
 
 La Fase 2A se completo el 2026-06-30 con `npm run build`, `npx cap sync android` y `./gradlew assembleRelease`. El build Gradle fue exitoso y genero `app-release-unsigned.apk` con `applicationId` `com.lumapse.app`, `versionName` `0.4.8` y `versionCode` `408`. La copia local se guardo en `releases/v0.4.8/lumapse-v0.4.8-unsigned.apk`; la Fase 2B queda pendiente para crear/usar keystore y producir la APK firmada distribuible.
+
+Para la Fase 2B se adopta una politica de firma segura: `build.gradle` no contiene secretos y solo firma si recibe `LUMAPSE_RELEASE_STORE_FILE`, `LUMAPSE_RELEASE_STORE_PASSWORD`, `LUMAPSE_RELEASE_KEY_ALIAS` y `LUMAPSE_RELEASE_KEY_PASSWORD` desde el entorno. La keystore queda fuera de Git y debe respaldarse como activo sensible del proyecto.
+
+La Fase 2B quedo completada el 2026-06-30: se genero una keystore local ignorada por Git, Gradle produjo `app-release.apk`, el artefacto firmado se copio a `releases/v0.4.8/lumapse-v0.4.8.apk` y `apksigner` confirmo la firma con APK Signature Scheme v2. El siguiente paso operativo es la Fase 3: instalar esa APK firmada en Android real y completar la checklist manual.
 
 Cualquier feedback recibido durante esta etapa debe clasificarse en tres grupos:
 

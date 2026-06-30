@@ -26,6 +26,7 @@
 - [x] `python3 scripts/release-helper.py --type patch --dry-run` ejecutado sin bloqueos.
 - [x] `npm run verify` ejecutado sin fallos.
 - [x] APK candidato unsigned generado.
+- [x] APK candidato firmado generado.
 - [ ] Dispositivo Android real disponible.
 - [ ] Instalacion desde fuentes desconocidas habilitada, si aplica.
 - [ ] Version anterior desinstalada antes de instalar el APK candidato.
@@ -48,6 +49,24 @@
 | SHA-256 | `f53442d79d3e1b5f077b43e0df62737ad4529857be05c0dba48b622e83e6fb4a` |
 
 > La APK unsigned no es el artefacto final de distribucion. Antes de publicarla en GitHub Releases debe firmarse con un keystore de release.
+
+## Firma de APK candidata
+
+| Campo | Valor |
+|---|---|
+| Fase | 2B — APK release firmada |
+| Politica | Keystore local ignorada por Git y secretos por variables de entorno |
+| Documento de referencia | `docs/gestion/firma-apk-android.md` |
+| Gradle signing config | Preparado en `android/app/build.gradle` |
+| APK firmada esperada | `releases/v0.4.8/lumapse-v0.4.8.apk` |
+| Estado | Generada y verificada el 2026-06-30 |
+| Resultado Gradle | `./gradlew assembleRelease` exitoso con keystore local |
+| Resultado `apksigner` | Verifies; APK Signature Scheme v2 = true |
+| SHA-256 APK | `cad122d0329e1761816ac7ad07938673389c859a252d9cc63504359355db3d10` |
+| Certificado | `CN=Jose David Sandoval, OU=Lumapse, O=Lumapse, L=Salta, ST=Salta, C=AR` |
+| Respaldo externo | `/Users/jd/Library/CloudStorage/Dropbox/99_Archive/lumapse/release-0.4.8/` |
+
+> La keystore local se genero bajo `android/keystores/`, ruta ignorada por Git. Debe respaldarse fuera del repo para poder firmar futuras actualizaciones instalables sobre esta misma APK.
 
 ---
 

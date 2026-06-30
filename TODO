@@ -12,19 +12,19 @@
 
 ## Fase operativa actual
 
-**Fase actual:** 2 — Generar APK candidato.
+**Fase actual:** 3 — Validar en Android real.
 
-**Objetivo de la fase:** producir un artefacto Android verificable para la version `0.4.8`, separando la prueba tecnica de build unsigned de la firma final para distribucion.
+**Objetivo de la fase:** instalar y probar la APK firmada `0.4.8` en un dispositivo Android real, registrando evidencia por caso de validacion antes de publicar.
 
-**Criterio de cierre:** Android queda alineado con `versionName "0.4.8"` y `versionCode 408`, se genera un APK release unsigned como candidato tecnico, y queda documentado que la firma final es el siguiente subpaso antes de publicar.
+**Criterio de cierre:** la checklist Android registra instalacion, apertura offline, flujos principales y resultado general; cualquier bloqueo queda documentado antes de avanzar a GitHub Releases.
 
 ### Plan por fases — Hito 05
 
 | Fase | Objetivo | Estado | Registro principal |
 |---|---|---|---|
 | 1 | Congelar release candidata `0.4.8` | Completada | `TODO`, `CHANGELOG.md`, `docs/hitos/hito-05-septiembre.md` |
-| 2 | Generar APK candidato | APK unsigned generada; firma pendiente | `TODO`, `docs/gestion/checklist-validacion-android.md` |
-| 3 | Validar en Android real | Pendiente | `docs/gestion/checklist-validacion-android.md`, `docs/hitos/hito-05-septiembre.md` |
+| 2 | Generar APK candidato | Completada | `TODO`, `docs/gestion/checklist-validacion-android.md` |
+| 3 | Validar en Android real | En curso | `docs/gestion/checklist-validacion-android.md`, `docs/hitos/hito-05-septiembre.md` |
 | 4 | Publicar o documentar distribucion | Pendiente | `README.md`, `CHANGELOG.md`, `TODO` |
 | 5 | Cierre documental | Pendiente | `docs/gestion/lineas-base.md`, `docs/gestion/cheatsheet-defensa.md`, `docs/informe-final/` |
 
@@ -45,11 +45,28 @@
 - [x] Ejecutar `./gradlew assembleRelease` desde `android/`.
 - [x] Copiar APK unsigned a `releases/v0.4.8/lumapse-v0.4.8-unsigned.apk` como artefacto tecnico local.
 - [x] Registrar ruta, tipo de firma y resultado en `docs/gestion/checklist-validacion-android.md`.
-- [ ] Definir/generar keystore y APK firmada para distribucion.
+- [x] Preparar configuracion Gradle para firma por variables de entorno.
+- [x] Documentar politica de keystore en `docs/gestion/firma-apk-android.md`.
+- [x] Generar keystore local ignorada por Git.
+- [x] Generar APK firmada para distribucion.
+- [x] Verificar firma con `apksigner`.
+- [x] Registrar APK firmada, hash y resultado en `docs/gestion/checklist-validacion-android.md`.
 
 **Artefacto Fase 2A:** `releases/v0.4.8/lumapse-v0.4.8-unsigned.apk`  
 **SHA-256:** `f53442d79d3e1b5f077b43e0df62737ad4529857be05c0dba48b622e83e6fb4a`  
 **Nota:** APK release unsigned generada para verificar compilacion; no publicar en GitHub Releases hasta firmarla.
+
+**Artefacto Fase 2B:** `releases/v0.4.8/lumapse-v0.4.8.apk`  
+**SHA-256:** `cad122d0329e1761816ac7ad07938673389c859a252d9cc63504359355db3d10`  
+**Firma:** verificada con `apksigner`, esquema v2 OK, certificado `CN=Jose David Sandoval, OU=Lumapse, O=Lumapse, L=Salta, ST=Salta, C=AR`.
+
+### Tareas de Fase 3
+
+- [ ] Instalar `releases/v0.4.8/lumapse-v0.4.8.apk` en dispositivo Android real.
+- [ ] Completar datos de prueba en `docs/gestion/checklist-validacion-android.md`.
+- [ ] Ejecutar casos VM-01 a VM-14.
+- [ ] Registrar observaciones, capturas o bloqueos.
+- [ ] Decidir resultado: apto para release, apto con observaciones o bloqueado.
 
 ### Registro de cambios por documento
 
