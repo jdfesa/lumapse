@@ -12,11 +12,11 @@
 
 ## Fase operativa actual
 
-**Fase actual:** 3 — Validar en Android real.
+**Fase actual:** 4 — Publicar o documentar distribucion.
 
-**Objetivo de la fase:** instalar y probar la APK firmada `0.4.8` en un dispositivo Android real, registrando evidencia por caso de validacion antes de publicar.
+**Objetivo de la fase:** publicar la APK firmada `0.4.8` en GitHub Releases o dejar documentado un mecanismo equivalente de distribucion controlada.
 
-**Criterio de cierre:** la checklist Android registra instalacion, apertura offline, flujos principales y resultado general; cualquier bloqueo queda documentado antes de avanzar a GitHub Releases.
+**Criterio de cierre:** la release queda creada con APK firmada, hash SHA-256, notas de version y estado de beta controlada; los documentos finales quedan sincronizados.
 
 ### Plan por fases — Hito 05
 
@@ -24,8 +24,8 @@
 |---|---|---|---|
 | 1 | Congelar release candidata `0.4.8` | Completada | `TODO`, `CHANGELOG.md`, `docs/hitos/hito-05-septiembre.md` |
 | 2 | Generar APK candidato | Completada | `TODO`, `docs/gestion/checklist-validacion-android.md` |
-| 3 | Validar en Android real | En curso | `docs/gestion/checklist-validacion-android.md`, `docs/hitos/hito-05-septiembre.md` |
-| 4 | Publicar o documentar distribucion | Pendiente | `README.md`, `CHANGELOG.md`, `TODO` |
+| 3 | Validar en Android real | Completada con observaciones menores | `docs/gestion/checklist-validacion-android.md`, `docs/hitos/hito-05-septiembre.md` |
+| 4 | Publicar o documentar distribucion | En curso | `README.md`, `CHANGELOG.md`, `TODO` |
 | 5 | Cierre documental | Pendiente | `docs/gestion/lineas-base.md`, `docs/gestion/cheatsheet-defensa.md`, `docs/informe-final/` |
 
 ### Tareas de Fase 1
@@ -62,11 +62,21 @@
 
 ### Tareas de Fase 3
 
-- [ ] Instalar `releases/v0.4.8/lumapse-v0.4.8.apk` en dispositivo Android real.
-- [ ] Completar datos de prueba en `docs/gestion/checklist-validacion-android.md`.
-- [ ] Ejecutar casos VM-01 a VM-14.
-- [ ] Registrar observaciones, capturas o bloqueos.
-- [ ] Decidir resultado: apto para release, apto con observaciones o bloqueado.
+- [x] Instalar `releases/v0.4.8/lumapse-v0.4.8.apk` en dispositivo Android real.
+- [x] Completar datos de prueba en `docs/gestion/checklist-validacion-android.md`.
+- [x] Ejecutar casos VM-01 a VM-14.
+- [x] Registrar observaciones, capturas o bloqueos.
+- [x] Decidir resultado: apto para beta controlada con observaciones UX menores.
+
+**Resultado Fase 3:** validacion inicial aprobada el 2026-07-01 en Samsung Galaxy S20 FE (`SM-G780G`) con Android 13. No se observaron crashes ni perdida de datos. Quedan como seguimiento no bloqueante la friccion del boton `Mover a` y el comportamiento con mayor volumen de notas.
+
+### Tareas de Fase 4
+
+- [ ] Ejecutar un ultimo `npm run verify` antes de publicar.
+- [ ] Confirmar que la APK firmada y su SHA-256 son los artefactos finales.
+- [ ] Crear tag `v0.4.8`.
+- [ ] Publicar GitHub Release como beta/pre-release controlada o documentar mecanismo alternativo.
+- [ ] Registrar URL o decision de distribucion en `README.md`, `CHANGELOG.md`, `docs/hitos/hito-05-septiembre.md` y `TODO`.
 
 ### Registro de cambios por documento
 
@@ -96,8 +106,9 @@
 
 ## Pendientes de Hito 05
 
-- [ ] Generar APK firmado para distribucion.
-- [ ] Registrar prueba manual en dispositivo Android real.
+- [x] Generar APK firmado para distribucion.
+- [x] Respaldar keystore, variables de firma y artefactos `0.4.8` fuera del repo.
+- [x] Registrar prueba manual en dispositivo Android real.
 - [ ] Publicar artefacto en GitHub Releases o documentar el mecanismo elegido.
 - [x] Implementar `RF-023 — Acerca de` con version, autor, licencia y alcance offline/local sin saturar la UI.
 - [ ] Revisar documentos generados cuando el corte de release este definido.
