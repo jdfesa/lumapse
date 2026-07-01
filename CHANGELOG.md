@@ -7,10 +7,13 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ---
 
-## [0.4.8] — 2026-06-30 — Release
+## [0.4.8] — 2026-07-01 — Beta controlada
 
 ### Changed
 - Preparación de release v0.4.8 mediante `scripts/release-helper.py`.
+- Publicación de [`Lumapse v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8) como pre-release/beta controlada en GitHub Releases.
+- APK firmada `lumapse-v0.4.8.apk` validada en Samsung Galaxy S20 FE (`SM-G780G`) con Android 13.
+- SHA-256 del APK publicado: `cad122d0329e1761816ac7ad07938673389c859a252d9cc63504359355db3d10`.
 
 ### Commits recientes
 - 8e89167 docs: mark ExportService migration to TypeScript as complete

@@ -29,7 +29,7 @@ Durante esta etapa también se aceptaron mejoras funcionales controladas que ele
 | Guardia de diálogos nativos | ✅ Implementada | `npm run check:native-dialogs` |
 | Smoke tests Android | ✅ Corregidos | Tests bajo `com.lumapse.app` |
 | Checklist Android | ✅ Preparado | [`checklist-validacion-android.md`](../gestion/checklist-validacion-android.md) |
-| Distribución APK | 🔄 En curso | APK firmada generada y validada; GitHub Releases pendiente |
+| Distribución APK | ✅ Publicada | [`v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8) publicada en GitHub Releases como pre-release/beta controlada |
 | Testing en dispositivo real | ✅ Validación inicial aprobada | Samsung Galaxy S20 FE (`SM-G780G`), Android 13; apto para beta controlada con observaciones UX menores |
 | Release dry-run | ✅ Completado | `scripts/release-helper.py --type patch --dry-run` propone `0.4.8` sin bloqueos |
 | Release candidata `0.4.8` | ✅ Preparada | `package.json`, `package-lock.json` y `CHANGELOG.md` actualizados con `scripts/release-helper.py --type patch --skip-build --yes` |
@@ -60,6 +60,8 @@ Para la Fase 2B se adopta una politica de firma segura: `build.gradle` no contie
 La Fase 2B quedo completada el 2026-06-30: se genero una keystore local ignorada por Git, Gradle produjo `app-release.apk`, el artefacto firmado se copio a `releases/v0.4.8/lumapse-v0.4.8.apk` y `apksigner` confirmo la firma con APK Signature Scheme v2. El siguiente paso operativo es la Fase 3: instalar esa APK firmada en Android real y completar la checklist manual.
 
 La Fase 3 quedo completada inicialmente el 2026-07-01 sobre un Samsung Galaxy S20 FE (`SM-G780G`) con Android 13. La APK firmada `0.4.8` se instalo correctamente, la app abrio y los flujos principales funcionaron segun lo esperado. No se registraron crashes ni perdida de datos. Como observaciones no bloqueantes quedan revisar la friccion del boton `Mover a`, que puede requerir una pulsacion prolongada, y monitorear el rendimiento cuando el volumen real de notas crezca con el uso.
+
+La Fase 4 quedo completada el 2026-07-01 con la publicacion de [`Lumapse v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8) como pre-release/beta controlada en GitHub Releases. El artefacto publicado es `lumapse-v0.4.8.apk`, con SHA-256 `cad122d0329e1761816ac7ad07938673389c859a252d9cc63504359355db3d10`, y corresponde al commit `a808de7`.
 
 Cualquier feedback recibido durante esta etapa debe clasificarse en tres grupos:
 

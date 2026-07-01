@@ -12,11 +12,11 @@
 
 ## Fase operativa actual
 
-**Fase actual:** 4 — Publicar o documentar distribucion.
+**Fase actual:** 5 — Cierre documental.
 
-**Objetivo de la fase:** publicar la APK firmada `0.4.8` en GitHub Releases o dejar documentado un mecanismo equivalente de distribucion controlada.
+**Objetivo de la fase:** cerrar la documentacion final del hito con la release publicada, linea base, evidencia de validacion y materiales de defensa sincronizados.
 
-**Criterio de cierre:** la release queda creada con APK firmada, hash SHA-256, notas de version y estado de beta controlada; los documentos finales quedan sincronizados.
+**Criterio de cierre:** README, CHANGELOG, Hito 05, lineas base, cheatsheet e informe final reflejan `v0.4.8` como beta controlada publicada.
 
 ### Plan por fases — Hito 05
 
@@ -25,8 +25,8 @@
 | 1 | Congelar release candidata `0.4.8` | Completada | `TODO`, `CHANGELOG.md`, `docs/hitos/hito-05-septiembre.md` |
 | 2 | Generar APK candidato | Completada | `TODO`, `docs/gestion/checklist-validacion-android.md` |
 | 3 | Validar en Android real | Completada con observaciones menores | `docs/gestion/checklist-validacion-android.md`, `docs/hitos/hito-05-septiembre.md` |
-| 4 | Publicar o documentar distribucion | En curso | `README.md`, `CHANGELOG.md`, `TODO` |
-| 5 | Cierre documental | Pendiente | `docs/gestion/lineas-base.md`, `docs/gestion/cheatsheet-defensa.md`, `docs/informe-final/` |
+| 4 | Publicar o documentar distribucion | Completada | `README.md`, `CHANGELOG.md`, `TODO` |
+| 5 | Cierre documental | En curso | `docs/gestion/lineas-base.md`, `docs/gestion/cheatsheet-defensa.md`, `docs/informe-final/` |
 
 ### Tareas de Fase 1
 
@@ -73,12 +73,21 @@
 ### Tareas de Fase 4
 
 - [x] Ejecutar un ultimo `npm run verify` antes de publicar.
-- [ ] Confirmar que la APK firmada y su SHA-256 son los artefactos finales.
-- [ ] Crear tag `v0.4.8`.
-- [ ] Publicar GitHub Release como beta/pre-release controlada o documentar mecanismo alternativo.
-- [ ] Registrar URL o decision de distribucion en `README.md`, `CHANGELOG.md`, `docs/hitos/hito-05-septiembre.md` y `TODO`.
+- [x] Confirmar que la APK firmada y su SHA-256 son los artefactos finales.
+- [x] Crear tag `v0.4.8`.
+- [x] Publicar GitHub Release como beta/pre-release controlada o documentar mecanismo alternativo.
+- [x] Registrar URL o decision de distribucion en `README.md`, `CHANGELOG.md`, `docs/hitos/hito-05-septiembre.md` y `TODO`.
 
 **Gate final:** `npm run verify` paso completo el 2026-07-01 con tests, build, typecheck, auditorias, bundle budget y a11y sin fallos bloqueantes.
+
+**Release publicada:** [`Lumapse v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8) como pre-release/beta controlada con APK firmada `lumapse-v0.4.8.apk`.
+
+### Tareas de Fase 5
+
+- [ ] Actualizar `docs/gestion/lineas-base.md` con la linea base de producto `v0.4.8`.
+- [ ] Actualizar `docs/gestion/cheatsheet-defensa.md` con version, release, validacion Android y hash.
+- [ ] Revisar `docs/informe-final/` para reflejar distribucion, validacion y alcance final.
+- [ ] Regenerar o revisar diagramas/documentos finales que dependan del modelo congelado.
 
 ### Registro de cambios por documento
 
@@ -111,7 +120,7 @@
 - [x] Generar APK firmado para distribucion.
 - [x] Respaldar keystore, variables de firma y artefactos `0.4.8` fuera del repo.
 - [x] Registrar prueba manual en dispositivo Android real.
-- [ ] Publicar artefacto en GitHub Releases o documentar el mecanismo elegido.
+- [x] Publicar artefacto en GitHub Releases o documentar el mecanismo elegido.
 - [x] Implementar `RF-023 — Acerca de` con version, autor, licencia y alcance offline/local sin saturar la UI.
 - [ ] Revisar documentos generados cuando el corte de release este definido.
 

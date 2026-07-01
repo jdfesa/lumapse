@@ -42,6 +42,20 @@ El problema que resuelve: las aplicaciones de notas existentes requieren cuenta,
 
 ## Levantar el entorno de desarrollo
 
+### Descargar beta Android
+
+La beta controlada actual esta publicada en GitHub Releases:
+
+> [`Lumapse v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8)
+
+Descargar el asset firmado `lumapse-v0.4.8.apk`. No usar el artefacto `unsigned`, que solo se conserva como evidencia tecnica local.
+
+SHA-256 del APK publicado:
+
+```text
+cad122d0329e1761816ac7ad07938673389c859a252d9cc63504359355db3d10
+```
+
 ### Requisitos previos — Web (desarrollo y contribución)
 
 | Herramienta | Versión mínima | Verificar con |

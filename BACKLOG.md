@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 05 — Testing, Calidad y Distribución
 > **Hito 04:** Cerrado formalmente el 2026-06-01
-> **Última actualización:** 2026-07-01 — validación inicial Android aprobada; Fase 4 de distribución activa
+> **Última actualización:** 2026-07-01 — `v0.4.8` publicada como beta controlada; Fase 5 documental activa
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -13,7 +13,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 Hito 04 quedó cerrado formalmente como bloque de Organización y UX. El cierre combinó implementación mínima de pulido UX (empty states) y decisiones explícitas de postergación/descarte para funcionalidades opcionales que podían agregar ruido visual o sugerir capacidades no presentes todavía.
 
-Hito 05 queda activo con foco en estabilización, calidad y distribución. Durante la preparación de release se aprobaron mejoras funcionales acotadas y ya implementadas: borradores persistentes del editor (`RF-005`), backup manual externo (`RF-017`), importación de backup ZIP (`RF-018`), sección Acerca de (`RF-023`), fechas académicas discretas (`RF-027`) y editor enriquecido (`RF-028`). La release candidata `0.4.8` ya quedó preparada, firmada, respaldada y validada inicialmente en un Samsung Galaxy S20 FE con Android 13; desde este punto, la prioridad pasa a publicar o documentar la distribución controlada y cerrar los artefactos finales.
+Hito 05 queda activo con foco en estabilización, calidad y distribución. Durante la preparación de release se aprobaron mejoras funcionales acotadas y ya implementadas: borradores persistentes del editor (`RF-005`), backup manual externo (`RF-017`), importación de backup ZIP (`RF-018`), sección Acerca de (`RF-023`), fechas académicas discretas (`RF-027`) y editor enriquecido (`RF-028`). La beta controlada [`v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8) ya quedó preparada, firmada, respaldada, validada inicialmente en un Samsung Galaxy S20 FE con Android 13 y publicada en GitHub Releases; desde este punto, la prioridad pasa al cierre documental final.
 
 La revisión de exportación/importación corrige una sobrepromesa documental del Hito 03: los servicios base de Markdown no equivalían a un flujo de usuario validado. La opción "Compartir" para una nota individual (`RF-016`) solo tendría sentido si abre el share sheet nativo de Android y ofrece apps como WhatsApp; si termina copiando contenido, duplica una acción existente y agrega ruido. La portabilidad de workspace sí quedó resuelta de forma acotada con exportación e importación de backup `.zip` desde la vista Backup.
 
@@ -31,10 +31,10 @@ La estrategia de mantenibilidad y tipado gradual queda documentada en [`docs/ges
 
 | Orden | Tarea | Criterio de cierre |
 |---|---|---|
-| 1 | Último gate local | `npm run verify` ejecutado antes de publicar |
-| 2 | Distribución | APK firmada publicada en GitHub Releases como beta/pre-release o mecanismo de entrega controlada documentado |
-| 3 | Release notes | SHA-256, alcance, estado beta y observaciones menores registradas |
-| 4 | Cierre documental | README, CHANGELOG, Hito 05, líneas base, cheatsheet e informe final sincronizados con el corte `0.4.8` |
+| 1 | Línea base de producto | `docs/gestion/lineas-base.md` registra tag `v0.4.8`, commit `a808de7`, release y SHA-256 |
+| 2 | Cheatsheet de defensa | `docs/gestion/cheatsheet-defensa.md` refleja APK publicada, validación Android y alcance beta |
+| 3 | Informe final | `docs/informe-final/` sincronizado con release, validación, calidad y distribución |
+| 4 | Diagramas/documentos finales | Artefactos de modelo y documentación técnica revisados con el modelo congelado |
 | 5 | Seguimiento post-release | Fricción de `Mover a` y rendimiento con mayor volumen de notas clasificados como observaciones no bloqueantes |
 
 ---
@@ -75,7 +75,7 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Framework UI | No incorporar Svelte por ahora | Baja | Costo de migracion alto vs beneficio actual; reabrir solo si DOM manual se vuelve una carga clara |
 | Documentación | Revisar documentos generados antes del corte final | Media | Informe completo y cheatsheet deben reflejar la versión de release |
 | Diagramas | Actualizar gráficos DB exportados | Media | Regenerar al cierre documental final con modelo congelado |
-| Release | Publicar la candidata `0.4.8` | Alta | Versión, APK unsigned, APK firmada, hash, respaldo externo y validación Android inicial ya están documentados; falta distribución |
+| Release | Cerrar documentación de `v0.4.8` | Alta | GitHub Release publicada como beta controlada; falta sincronizar líneas base, cheatsheet e informe final |
 | UX menor | Revisar interacción de `Mover a` | Baja | En S20 FE se observó que puede requerir pulsación prolongada; no bloquea beta porque la acción se completa |
 | Rendimiento | Monitorear crecimiento real de notas | Media | Validación inicial con pocas notas fue correcta; observar comportamiento con mayor volumen post-release |
 | Adjuntos | Planificar adjuntos de imagen post-release | Media | Valor alto para fotos de pizarrón; debe implementarse sin cargar SQLite ni saturar el feed |

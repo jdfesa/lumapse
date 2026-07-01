@@ -16,8 +16,9 @@
 | Version Android | 13 |
 | Version Lumapse | `0.4.8` (`versionCode 408`) |
 | APK probado | `releases/v0.4.8/lumapse-v0.4.8.apk` |
-| Commit / tag | `5d0f1f9` / tag pendiente |
+| Commit / tag | `a808de7` / `v0.4.8` |
 | Resultado general | Apto para beta controlada con observaciones UX menores |
+| Release | [`Lumapse v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8) |
 
 ---
 
@@ -102,6 +103,7 @@
 | Version Android | 13 |
 | Version Lumapse | `0.4.8` (`versionCode 408`) |
 | APK | `releases/v0.4.8/lumapse-v0.4.8.apk` |
+| GitHub Release | [`v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8) |
 | Instalacion | `adb install -r` exitoso |
 | Resultado general | Apto para beta controlada |
 
