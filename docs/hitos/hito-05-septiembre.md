@@ -23,7 +23,7 @@ Durante esta etapa también se aceptaron mejoras funcionales controladas que ele
 | Área | Estado | Evidencia |
 |---|---|---|
 | Suite Vitest | ✅ Implementada | `npm run verify` con 773 tests unitarios pasando el 2026-06-30 |
-| Quality gate local | ✅ Verificado | `npm run verify` ejecutado sin fallos el 2026-06-30 |
+| Quality gate local | ✅ Verificado | `npm run verify` ejecutado sin fallos el 2026-06-30 y repetido como gate final el 2026-07-01 |
 | GitHub Actions | ✅ Implementado | Workflow `CI — Quality Gate` |
 | Auditorías documentales/schema | ✅ Implementadas | `check:traceability`, `check:docs`, `check:schema`, `check:dbml`, `check:subjects` |
 | Guardia de diálogos nativos | ✅ Implementada | `npm run check:native-dialogs` |

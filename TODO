@@ -72,11 +72,13 @@
 
 ### Tareas de Fase 4
 
-- [ ] Ejecutar un ultimo `npm run verify` antes de publicar.
+- [x] Ejecutar un ultimo `npm run verify` antes de publicar.
 - [ ] Confirmar que la APK firmada y su SHA-256 son los artefactos finales.
 - [ ] Crear tag `v0.4.8`.
 - [ ] Publicar GitHub Release como beta/pre-release controlada o documentar mecanismo alternativo.
 - [ ] Registrar URL o decision de distribucion en `README.md`, `CHANGELOG.md`, `docs/hitos/hito-05-septiembre.md` y `TODO`.
+
+**Gate final:** `npm run verify` paso completo el 2026-07-01 con tests, build, typecheck, auditorias, bundle budget y a11y sin fallos bloqueantes.
 
 ### Registro de cambios por documento
 
