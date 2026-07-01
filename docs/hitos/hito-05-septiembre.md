@@ -4,7 +4,7 @@
 **Hito:** 05 — Testing, Calidad y Distribución
 **Proyecto:** Lumapse
 **Estado:** Activo formalmente tras el cierre del Hito 04
-**Última actualización:** 2026-06-30
+**Última actualización:** 2026-07-01
 
 ---
 
@@ -29,8 +29,8 @@ Durante esta etapa también se aceptaron mejoras funcionales controladas que ele
 | Guardia de diálogos nativos | ✅ Implementada | `npm run check:native-dialogs` |
 | Smoke tests Android | ✅ Corregidos | Tests bajo `com.lumapse.app` |
 | Checklist Android | ✅ Preparado | [`checklist-validacion-android.md`](../gestion/checklist-validacion-android.md) |
-| Distribución APK | 🔄 En curso | APK firmada generada; GitHub Releases pendiente |
-| Testing en dispositivo real | ⏳ Pendiente | Validación manual formal |
+| Distribución APK | 🔄 En curso | APK firmada generada y validada; GitHub Releases pendiente |
+| Testing en dispositivo real | ✅ Validación inicial aprobada | Samsung Galaxy S20 FE (`SM-G780G`), Android 13; apto para beta controlada con observaciones UX menores |
 | Release dry-run | ✅ Completado | `scripts/release-helper.py --type patch --dry-run` propone `0.4.8` sin bloqueos |
 | Release candidata `0.4.8` | ✅ Preparada | `package.json`, `package-lock.json` y `CHANGELOG.md` actualizados con `scripts/release-helper.py --type patch --skip-build --yes` |
 | Versionado Android `0.4.8` | ✅ Preparado | `android/app/build.gradle` alineado con `versionName "0.4.8"` y `versionCode 408` |
@@ -58,6 +58,8 @@ La Fase 2A se completo el 2026-06-30 con `npm run build`, `npx cap sync android`
 Para la Fase 2B se adopta una politica de firma segura: `build.gradle` no contiene secretos y solo firma si recibe `LUMAPSE_RELEASE_STORE_FILE`, `LUMAPSE_RELEASE_STORE_PASSWORD`, `LUMAPSE_RELEASE_KEY_ALIAS` y `LUMAPSE_RELEASE_KEY_PASSWORD` desde el entorno. La keystore queda fuera de Git y debe respaldarse como activo sensible del proyecto.
 
 La Fase 2B quedo completada el 2026-06-30: se genero una keystore local ignorada por Git, Gradle produjo `app-release.apk`, el artefacto firmado se copio a `releases/v0.4.8/lumapse-v0.4.8.apk` y `apksigner` confirmo la firma con APK Signature Scheme v2. El siguiente paso operativo es la Fase 3: instalar esa APK firmada en Android real y completar la checklist manual.
+
+La Fase 3 quedo completada inicialmente el 2026-07-01 sobre un Samsung Galaxy S20 FE (`SM-G780G`) con Android 13. La APK firmada `0.4.8` se instalo correctamente, la app abrio y los flujos principales funcionaron segun lo esperado. No se registraron crashes ni perdida de datos. Como observaciones no bloqueantes quedan revisar la friccion del boton `Mover a`, que puede requerir una pulsacion prolongada, y monitorear el rendimiento cuando el volumen real de notas crezca con el uso.
 
 Cualquier feedback recibido durante esta etapa debe clasificarse en tres grupos:
 

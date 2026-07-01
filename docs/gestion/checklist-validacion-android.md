@@ -2,7 +2,7 @@
 
 **Hito:** 05 — Testing, Calidad y Distribucion  
 **Objetivo:** registrar una prueba manual reproducible en dispositivo Android real antes de distribuir el APK.  
-**Estado:** preparado, pendiente de ejecucion en dispositivo real.
+**Estado:** validacion inicial aprobada en dispositivo Android real; apto con observaciones menores.
 
 ---
 
@@ -10,14 +10,14 @@
 
 | Campo | Valor |
 |---|---|
-| Fecha | Pendiente |
+| Fecha | 2026-07-01 |
 | Tester | Jose David Sandoval |
-| Dispositivo | Pendiente |
-| Version Android | Pendiente |
-| Version Lumapse | Pendiente |
-| APK probado | Pendiente |
-| Commit / tag | Pendiente |
-| Resultado general | Pendiente |
+| Dispositivo | Samsung Galaxy S20 FE (`SM-G780G`) |
+| Version Android | 13 |
+| Version Lumapse | `0.4.8` (`versionCode 408`) |
+| APK probado | `releases/v0.4.8/lumapse-v0.4.8.apk` |
+| Commit / tag | `5d0f1f9` / tag pendiente |
+| Resultado general | Apto para beta controlada con observaciones UX menores |
 
 ---
 
@@ -27,9 +27,9 @@
 - [x] `npm run verify` ejecutado sin fallos.
 - [x] APK candidato unsigned generado.
 - [x] APK candidato firmado generado.
-- [ ] Dispositivo Android real disponible.
-- [ ] Instalacion desde fuentes desconocidas habilitada, si aplica.
-- [ ] Version anterior desinstalada antes de instalar el APK candidato.
+- [x] Dispositivo Android real disponible.
+- [x] Instalacion desde fuentes desconocidas habilitada, si aplica.
+- [x] Version anterior desinstalada o ausente antes de instalar el APK candidato.
 
 > Para una validacion nativa real, no usar el servidor Vite como evidencia principal. El flujo debe probar el APK instalado.
 
@@ -74,23 +74,43 @@
 
 | ID | Caso | Pasos | Resultado esperado | Estado |
 |---|---|---|---|---|
-| VM-01 | Instalacion limpia | Desinstalar version previa, instalar APK candidato y abrir Lumapse | La app instala y abre sin crash | Pendiente |
-| VM-02 | Primer uso offline | Activar modo avion y abrir la app instalada | La app abre sin depender de internet | Pendiente |
-| VM-03 | Crear nota | Crear una nota con titulo, texto, lista y Markdown basico | La nota aparece en el feed y conserva formato esperado | Pendiente |
-| VM-04 | Persistencia | Cerrar la app, volver a abrirla y revisar la nota creada | La nota sigue disponible | Pendiente |
-| VM-05 | Editar nota | Editar contenido y materia de una nota existente | Los cambios se guardan y el feed se actualiza | Pendiente |
-| VM-06 | Materias y secciones | Crear una materia, crear una seccion y mover/asociar una nota | La jerarquia Materia > Seccion funciona y filtra correctamente | Pendiente |
-| VM-07 | Busqueda | Buscar por titulo y por una palabra del contenido | El feed filtra las notas correctas | Pendiente |
-| VM-08 | Pin y archivo | Fijar una nota, archivar otra y revisar el drawer de archivadas | La nota fijada queda arriba y la archivada sale del feed activo | Pendiente |
-| VM-09 | Estado academico | Asignar y quitar un marcador de estado a una nota | El marcador visual cambia y puede limpiarse | Pendiente |
-| VM-10 | Fechas academicas | Crear, editar y eliminar una fecha academica discreta | El Heatmap/proximas fechas reflejan los cambios | Pendiente |
-| VM-11 | Papelera | Eliminar nota/materia, restaurar y luego vaciar papelera | Soft-delete, restauracion y borrado definitivo funcionan | Pendiente |
-| VM-12 | Tema | Alternar modo claro/oscuro y reiniciar la app | El tema se aplica y persiste | Pendiente |
-| VM-13 | Rotacion/responsivo | Probar vertical y horizontal, si el dispositivo lo permite | No hay solapamientos ni controles inaccesibles | Pendiente |
-| VM-14 | Rendimiento percibido | Navegar feed, drawer, editor y heatmap con varias notas | La app responde sin bloqueos perceptibles | Pendiente |
+| VM-01 | Instalacion limpia | Desinstalar version previa, instalar APK candidato y abrir Lumapse | La app instala y abre sin crash | OK 2026-07-01 |
+| VM-02 | Primer uso offline | Activar modo avion y abrir la app instalada | La app abre sin depender de internet | OK 2026-07-01 |
+| VM-03 | Crear nota | Crear una nota con titulo, texto, lista y Markdown basico | La nota aparece en el feed y conserva formato esperado | OK 2026-07-01 |
+| VM-04 | Persistencia | Cerrar la app, volver a abrirla y revisar la nota creada | La nota sigue disponible | OK 2026-07-01 |
+| VM-05 | Editar nota | Editar contenido y materia de una nota existente | Los cambios se guardan y el feed se actualiza | OK 2026-07-01 |
+| VM-06 | Materias y secciones | Crear una materia, crear una seccion y mover/asociar una nota | La jerarquia Materia > Seccion funciona y filtra correctamente | OK con observacion UX 2026-07-01 |
+| VM-07 | Busqueda | Buscar por titulo y por una palabra del contenido | El feed filtra las notas correctas | OK 2026-07-01 |
+| VM-08 | Pin y archivo | Fijar una nota, archivar otra y revisar el drawer de archivadas | La nota fijada queda arriba y la archivada sale del feed activo | OK 2026-07-01 |
+| VM-09 | Estado academico | Asignar y quitar un marcador de estado a una nota | El marcador visual cambia y puede limpiarse | OK 2026-07-01 |
+| VM-10 | Fechas academicas | Crear, editar y eliminar una fecha academica discreta | El Heatmap/proximas fechas reflejan los cambios | OK 2026-07-01 |
+| VM-11 | Papelera | Eliminar nota/materia, restaurar y luego vaciar papelera | Soft-delete, restauracion y borrado definitivo funcionan | OK 2026-07-01 |
+| VM-12 | Tema | Alternar modo claro/oscuro y reiniciar la app | El tema se aplica y persiste | OK 2026-07-01 |
+| VM-13 | Rotacion/responsivo | Probar vertical y horizontal, si el dispositivo lo permite | No hay solapamientos ni controles inaccesibles | OK inicial 2026-07-01 |
+| VM-14 | Rendimiento percibido | Navegar feed, drawer, editor y heatmap con varias notas | La app responde sin bloqueos perceptibles | OK inicial 2026-07-01 |
 | VM-15 | Exportar/importar ZIP | Exportar ZIP, guardarlo, reinstalar limpio, importar ZIP y repetir importacion | El ZIP se restaura y la segunda importacion omite duplicados | OK 2026-06-18 |
 
 ---
+
+## Ejecucion Manual — Release candidata 0.4.8
+
+| Campo | Valor |
+|---|---|
+| Fecha | 2026-07-01 |
+| Tester | Jose David Sandoval |
+| Dispositivo | Samsung Galaxy S20 FE (`SM-G780G`) |
+| Version Android | 13 |
+| Version Lumapse | `0.4.8` (`versionCode 408`) |
+| APK | `releases/v0.4.8/lumapse-v0.4.8.apk` |
+| Instalacion | `adb install -r` exitoso |
+| Resultado general | Apto para beta controlada |
+
+### Observaciones
+
+- No se observaron crashes ni perdida de datos durante la validacion inicial.
+- El patron general de la app se percibe coherente con el alcance offline-first propuesto.
+- Observacion UX menor: el boton `Mover a` puede requerir una pulsacion prolongada para activarse; con un toque breve el control/menu puede desaparecer. No bloquea el flujo porque la accion se puede completar, pero conviene revisarlo como friccion de interaccion si se repite.
+- Rendimiento percibido correcto con pocas notas. El comportamiento con mayor volumen de notas queda como seguimiento natural post-release, no como bloqueo para publicar la beta controlada.
 
 ## Ejecucion Parcial — Exportar/Importar ZIP
 
