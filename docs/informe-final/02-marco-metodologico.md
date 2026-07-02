@@ -135,8 +135,11 @@ El núcleo del MVP ya implementado incluye:
 - Renderizado Markdown y modos de lectura/escritura.
 - Organización por materias, secciones, archivo y papelera.
 - Tema claro/oscuro y marcadores visuales de estado académico.
+- Fechas académicas discretas.
+- Backup manual `.zip` e importación no destructiva de backups generados por Lumapse.
+- Sección "Acerca de" y ayudas opcionales de formato dentro del editor.
 
-Al cierre formal del Hito 04 (2026-06-01), los pendientes opcionales de UX se reclasificaron con justificación de producto: contador de palabras/caracteres, onboarding e indicador offline/online pasan a estado postergado para evitar ruido visual o falsas expectativas de sincronización. La exportación/importación local también se revisa: existen servicios base, pero no un flujo visible actual. Compartir una nota individual se posterga hasta contar con share sheet nativo de Android validado; backup `.zip` e importación quedan postergados por complejidad. La sección "Acerca de" queda prevista para Hito 05.
+Al cierre formal del Hito 04 (2026-06-01), los pendientes opcionales de UX se reclasificaron con justificación de producto: contador de palabras/caracteres, onboarding e indicador offline/online pasan a estado postergado para evitar ruido visual o falsas expectativas de sincronización. Durante Hito 05 se resolvió la portabilidad de workspace con backup manual `.zip` e importación no destructiva de backups generados por Lumapse, además de incorporar la sección "Acerca de". Compartir/exportar una nota individual sigue postergado hasta contar con share sheet nativo de Android validado y evidencia de que no duplica la acción existente de copiar.
 
 ### 2.6.2. Requisitos No Funcionales
 
@@ -152,4 +155,4 @@ Entre los RNF centrales del proyecto se destacan:
 - Estructura modular mantenible.
 - Verificación automatizada mediante tests, build, lint y auditorías documentales.
 
-Varios RNF todavía requieren evidencia final de validación en dispositivo real, especialmente rendimiento percibido, accesibilidad con auditorías completas, funcionamiento offline en escenarios de usuario y métricas de usabilidad. Esos puntos se abordan en el Capítulo 6 como parte de la estrategia de pruebas y validación.
+La beta `v0.4.8` aporta evidencia inicial de validación en dispositivo real: instalación de APK firmada, apertura offline, persistencia, navegación principal y flujos críticos sin crashes. La validación final de defensa debe completar esa evidencia con feedback de estudiantes, contraste visual y comportamiento con mayor volumen real de notas. Esos puntos se abordan en el Capítulo 6 como parte de la estrategia de pruebas y validación.

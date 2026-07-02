@@ -4,7 +4,7 @@
 **Institución:** IES 6023 "Dr. Alfredo Loutaif"  
 **Materia:** Prácticas Profesionalizantes III  
 **Año:** 2026  
-**Generado automáticamente:** 2026-05-20
+**Generado automáticamente:** 2026-07-02
 
 ---
 
@@ -45,6 +45,9 @@
   - [4.7.3. Entidades del dominio](#473-entidades-del-dominio)
   - [4.7.4. Estructura de información opinionada (DP-004)](#474-estructura-de-información-opinionada-dp-004)
   - [4.7.5. Normalización y desnormalización intencional](#475-normalización-y-desnormalización-intencional)
+- [4.8. Patrones de Arquitectura y Diseño de Software](#48-patrones-de-arquitectura-y-diseño-de-software)
+  - [Patrones Arquitectónicos](#patrones-arquitectónicos)
+  - [Patrones de Diseño (GoF y UI)](#patrones-de-diseño-gof-y-ui)
 - [5.1. Estructura del Repositorio y Entorno](#51-estructura-del-repositorio-y-entorno)
 - [5.2. Capa de Presentación (Componentes UI)](#52-capa-de-presentación-componentes-ui)
 - [5.3. Gestión de Estado Reactivo](#53-gestión-de-estado-reactivo)
@@ -106,7 +109,7 @@ Desarrollar y documentar una aplicación móvil offline-first para que estudiant
 - Analizar los datos obtenidos para validar o ajustar las hipótesis iniciales del producto.
 - Definir personas de usuario, requisitos funcionales, requisitos no funcionales, historias de usuario y decisiones de producto trazables.
 - Diseñar una arquitectura local-first que priorice funcionamiento offline, privacidad y persistencia robusta.
-- Implementar un editor de notas con soporte Markdown, auto-guardado, búsqueda, importación/exportación y organización por materias y secciones.
+- Implementar un editor de notas con soporte Markdown, borradores persistentes, búsqueda y organización por materias y secciones, dejando la portabilidad local de notas como decisión explícita de alcance.
 - Migrar la persistencia desde IndexedDB hacia SQLite, de acuerdo con la evidencia recolectada y las decisiones arquitectónicas aprobadas.
 - Empaquetar la aplicación como APK Android mediante Capacitor.
 - Incorporar pruebas unitarias, validaciones documentales y un quality gate automatizado para sostener la calidad del código y la documentación.
@@ -118,7 +121,7 @@ La justificación académica del proyecto reside en que Lumapse permite integrar
 
 La justificación social y de producto se relaciona con el contexto de uso. El público objetivo no necesita una plataforma de productividad empresarial ni una base de conocimiento compleja; necesita una herramienta que abra rápido, funcione sin conexión, no exija una cuenta y respete la forma en que los estudiantes ya organizan su vida académica. Por eso, el alcance funcional prioriza la captura y recuperación de notas, la organización por materias, el guardado local y la simplicidad de uso.
 
-El alcance actual incluye una app Android empaquetada con Capacitor, persistencia SQLite, editor Markdown, preview seguro, importación/exportación de archivos Markdown, búsqueda, materias y secciones, archivo, papelera, tema claro/oscuro y automatización de calidad. Quedan fuera del alcance del MVP la sincronización en la nube, la colaboración en tiempo real, el backend multiusuario, la inteligencia artificial generativa y la publicación formal en tiendas de aplicaciones. Estas posibilidades se consideran trabajo futuro y solo deberían incorporarse si nueva evidencia de uso justifica ampliar el alcance.
+El alcance actual incluye una app Android empaquetada con Capacitor, persistencia SQLite, editor Markdown, preview seguro, búsqueda, materias y secciones, archivo, papelera, tema claro/oscuro y automatización de calidad. La exportación/importación local conserva servicios base, pero no está expuesta como flujo de usuario en la UI actual. Compartir una nota individual solo se retomará si usa share sheet nativo de Android y no duplica la acción Copiar; backup `.zip` e importación quedan como trabajo futuro. Quedan fuera del alcance del MVP la sincronización en la nube, la colaboración en tiempo real, el backend multiusuario, la inteligencia artificial generativa y la publicación formal en tiendas de aplicaciones. Estas posibilidades se consideran trabajo futuro y solo deberían incorporarse si nueva evidencia de uso justifica ampliar el alcance.
 
 ---
 
@@ -249,19 +252,21 @@ Los requisitos del sistema se documentan como artefactos vivos, separados en req
 
 ### 2.6.1. Requisitos Funcionales
 
-Los requisitos funcionales cubren los módulos principales del producto: gestión de notas, persistencia local, Markdown, organización, importación/exportación, experiencia de usuario e información del sistema. En el estado actual del proyecto, el documento [requisitos-funcionales.md](../producto/requisitos-funcionales.md) registra 27 requisitos.
+Los requisitos funcionales cubren los módulos principales del producto: gestión de notas, persistencia local, Markdown, organización, portabilidad local, experiencia de usuario e información del sistema. En el estado actual del proyecto, el documento [requisitos-funcionales.md](../producto/requisitos-funcionales.md) registra 28 requisitos.
 
 El núcleo del MVP ya implementado incluye:
 
 - Creación, edición, listado, búsqueda y eliminación de notas.
-- Auto-guardado.
+- Borradores persistentes del editor.
 - Persistencia local.
 - Renderizado Markdown y modos de lectura/escritura.
-- Exportación e importación de archivos Markdown.
 - Organización por materias, secciones, archivo y papelera.
 - Tema claro/oscuro y marcadores visuales de estado académico.
+- Fechas académicas discretas.
+- Backup manual `.zip` e importación no destructiva de backups generados por Lumapse.
+- Sección "Acerca de" y ayudas opcionales de formato dentro del editor.
 
-Al cierre formal del Hito 04 (2026-06-01), los pendientes opcionales de UX se reclasificaron con justificación de producto: contador de palabras/caracteres, onboarding e indicador offline/online pasan a estado postergado para evitar ruido visual o falsas expectativas de sincronización. La sección "Acerca de" queda prevista para Hito 05.
+Al cierre formal del Hito 04 (2026-06-01), los pendientes opcionales de UX se reclasificaron con justificación de producto: contador de palabras/caracteres, onboarding e indicador offline/online pasan a estado postergado para evitar ruido visual o falsas expectativas de sincronización. Durante Hito 05 se resolvió la portabilidad de workspace con backup manual `.zip` e importación no destructiva de backups generados por Lumapse, además de incorporar la sección "Acerca de". Compartir/exportar una nota individual sigue postergado hasta contar con share sheet nativo de Android validado y evidencia de que no duplica la acción existente de copiar.
 
 ### 2.6.2. Requisitos No Funcionales
 
@@ -277,7 +282,7 @@ Entre los RNF centrales del proyecto se destacan:
 - Estructura modular mantenible.
 - Verificación automatizada mediante tests, build, lint y auditorías documentales.
 
-Varios RNF todavía requieren evidencia final de validación en dispositivo real, especialmente rendimiento percibido, accesibilidad con auditorías completas, funcionamiento offline en escenarios de usuario y métricas de usabilidad. Esos puntos se abordan en el Capítulo 6 como parte de la estrategia de pruebas y validación.
+La beta `v0.4.8` aporta evidencia inicial de validación en dispositivo real: instalación de APK firmada, apertura offline, persistencia, navegación principal y flujos críticos sin crashes. La validación final de defensa debe completar esa evidencia con feedback de estudiantes, contraste visual y comportamiento con mayor volumen real de notas. Esos puntos se abordan en el Capítulo 6 como parte de la estrategia de pruebas y validación.
 
 ---
 
@@ -432,6 +437,7 @@ Los ADRs vigentes cubren:
 | [ADR-004](../adr/ADR-004-estructura-carpetas.md) | Estructura de carpetas del proyecto. | Aceptado |
 | [ADR-005](../adr/ADR-005-pivote-app-nativa.md) | Pivote de PWA a aplicación móvil nativa con Capacitor. | Aceptado |
 | [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md) | Arquitectura SQLite para web de desarrollo y entorno nativo. | Aceptado |
+| [ADR-007](../adr/ADR-007-organizacion-componentes-por-feature.md) | Organización de componentes UI por feature folders. | Aceptado |
 
 La evolución más importante fue el pivote desde una PWA con IndexedDB hacia una app Android empaquetada con Capacitor y persistencia SQLite. Este cambio no elimina el valor de las decisiones iniciales: las conserva como antecedentes y muestra cómo el proyecto respondió a evidencia empírica nueva.
 
@@ -463,7 +469,7 @@ El modelo completo se documenta en [modelo-dominio.md](../diagramas/modelo-domin
 
 ## 4.4. Diagramas de Casos de Uso
 
-Los casos de uso describen el sistema desde la perspectiva del estudiante. El actor principal puede crear, editar, buscar, eliminar, fijar, archivar, exportar, importar y previsualizar notas. Además, interactúa con funciones de organización, tema visual y papelera.
+Los casos de uso describen el sistema desde la perspectiva del estudiante. El actor principal puede crear, editar, buscar, eliminar, fijar, archivar y previsualizar notas. Además, interactúa con funciones de organización, tema visual y papelera. Los casos de portabilidad local quedan documentados como trabajo futuro porque requieren share sheet nativo, formato de backup o política de importación antes de exponerse en la UI.
 
 El diagrama documentado en [casos-de-uso.md](../diagramas/casos-de-uso.md) agrupa las funcionalidades en cinco áreas:
 
@@ -473,15 +479,15 @@ El diagrama documentado en [casos-de-uso.md](../diagramas/casos-de-uso.md) agrup
 - Datos y portabilidad.
 - Sistema y personalización.
 
-La relación `include` se usa para expresar que crear o editar una nota incluye siempre el auto-guardado. La relación `extend` se utiliza para acciones opcionales, como exportar todas las notas o gestionar la papelera después de una eliminación.
+La relación `include` se usa para expresar que crear o editar una nota incluye siempre la protección del borrador persistente del editor. La relación `extend` se utiliza para acciones opcionales, como gestionar la papelera después de una eliminación. En portabilidad local, el backup `.zip` ya está integrado como salida manual, mientras que compartir notas individuales e importar contenido quedan como deuda posterior.
 
 ## 4.5. Diagramas de Secuencia
 
-Los diagramas de secuencia permiten representar el flujo temporal entre UI, estado y persistencia. El flujo más importante del producto es crear una nota y auto-guardarla mientras el estudiante escribe.
+Los diagramas de secuencia permiten representar el flujo temporal entre UI, estado y persistencia. El flujo más importante del producto es crear una nota protegida por borrador persistente mientras el estudiante escribe.
 
-El diagrama inicial documentado en [secuencia-crear-nota.md](../diagramas/secuencia-crear-nota.md) modela el comportamiento base: el usuario crea una nota, la UI delega en el store, el store crea el objeto de dominio, se persiste y luego la UI se actualiza. La misma lógica conceptual se mantiene tras la migración a SQLite, aunque la capa de persistencia concreta evolucionó desde IndexedDB hacia los servicios SQLite.
+El diagrama documentado en [secuencia-crear-nota.md](../diagramas/secuencia-crear-nota.md) modela el comportamiento vigente: el usuario abre el editor, la UI conserva el borrador localmente mientras escribe, el store persiste la nota definitiva solo cuando el usuario confirma con `Guardar` o `Actualizar`, y el borrador se limpia después del éxito.
 
-Como criterio de documentación viva, los diagramas deben actualizarse cuando el flujo técnico cambie de manera sustancial. En el estado actual, el diagrama conserva valor conceptual, pero queda pendiente ajustar sus participantes para reflejar completamente `src/services/sqlite/`.
+Como criterio de documentación viva, los diagramas deben actualizarse cuando el flujo técnico cambie de manera sustancial. En el estado actual, el diagrama ya refleja la separación entre borrador local y persistencia definitiva en SQLite.
 
 ## 4.6. Diseño de Interfaz (UI/UX y Mobile-First)
 
@@ -553,6 +559,33 @@ Sin embargo, se decidió mantenerlo como **campo calculado desnormalizado** por 
 
 Esta desnormalización está documentada en el análisis de normalización y es defendible ante el tribunal como una **decisión técnica fundamentada** en las restricciones del entorno de ejecución.
 
+## 4.8. Patrones de Arquitectura y Diseño de Software
+
+Lumapse no utiliza un único patrón de diseño, sino una combinación de **patrones arquitectónicos** y **patrones de diseño de software (GoF)** para mantener la base de código en Vanilla JS estructurada, escalable y mantenible.
+
+### Patrones Arquitectónicos
+
+*   **Arquitectura en Capas (Layered Architecture):**
+    El proyecto aplica una separación estricta de responsabilidades a través de su estructura de directorios:
+    *   **Capa de Presentación (UI):** (`src/components/`, `src/layout/`) Encargada de manipular el DOM y gestionar eventos de usuario de forma aislada. Dentro de `src/components/`, los archivos se agrupan por feature (`note-editor/`, `feed/`, `academic-events/`, `backup/`, `markdown/`, `common/`) para sostener la mantenibilidad a medida que crece la UI.
+    *   **Capa de Negocio / Lógica:** (`src/services/`) Contiene la lógica de aplicación pura (e.g., `MarkdownService`, `ExportService`), completamente agnóstica de la interfaz gráfica.
+    *   **Capa de Datos:** (`src/store/`, `src/services/sqlite/`) Responsable del estado global de la aplicación y la persistencia local.
+*   **Arquitectura Offline-First:**
+    La fuente de verdad primaria es la base de datos local (SQLite). Esto garantiza resiliencia, disponibilidad sin conexión y rendimiento óptimo, alineándose con las necesidades de gestión de conocimiento personal (PKM).
+
+### Patrones de Diseño (GoF y UI)
+
+Al carecer de un framework reactivo como React o Vue, la aplicación implementa patrones manuales para la reactividad y la estructura de componentes:
+
+*   **Patrón Observer (Publicador/Suscriptor):**
+    Utilizado extensamente para el manejo del estado global. El almacén central (`NoteStore`) actúa como publicador, permitiendo que múltiples componentes de la UI (suscriptores) reaccionen automáticamente a los cambios de estado (mediante `NoteStore.subscribe`) sin acoplar fuertemente la lógica de presentación con la de negocio.
+*   **Patrón Component (UI Components):**
+    La interfaz gráfica se descompone en clases encapsuladas. Cada componente (e.g., `NoteEditor`) recibe un contenedor del DOM, renderiza su propia plantilla HTML, gestiona sus *event listeners* internamente y expone un método de limpieza (`destroy()`), imitando el ciclo de vida de componentes de frameworks modernos.
+*   **Patrón Command (y Command Registry):**
+    Implementado en la interacción del editor (e.g., `editorCommandRegistry.js`, `SlashCommandHandler.js`). Encapsula acciones del usuario como comandos independientes registrados centralmente. Esto desacopla a quien invoca la acción (un atajo de teclado o botón) del receptor (la lógica del editor), facilitando agregar nuevas funciones sin modificar el código base del componente.
+*   **Patrón Singleton / Module:**
+    Aplicado en servicios esenciales (como `MarkdownService`) que exportan funciones puras o instancias únicas a lo largo del ciclo de vida de la aplicación, optimizando la huella de memoria y asegurando un comportamiento consistente en todo el sistema.
+
 ---
 
 # Capítulo 5: Desarrollo e Implementación
@@ -566,8 +599,8 @@ Las carpetas principales son:
 | Carpeta | Propósito |
 |---|---|
 | `src/` | Código fuente de la aplicación web empaquetada. |
-| `src/components/` | Componentes de interfaz: editor, listado, tarjetas, diálogos, papelera y preview Markdown. |
-| `src/services/` | Servicios de negocio: Markdown, importación/exportación, temas, materias y persistencia SQLite. |
+| `src/components/` | Componentes de interfaz organizados por feature: editor, feed, fechas académicas, backup, Markdown y piezas comunes. |
+| `src/services/` | Servicios de negocio: Markdown, temas, materias, persistencia SQLite y base técnica de portabilidad local en revisión. |
 | `src/store/` | Estado de aplicación, filtros y coordinación entre datos y UI. |
 | `android/` | Proyecto Android generado y mantenido por Capacitor. |
 | `docs/` | Documentación técnica, producto, gestión, hitos e informe final. |
@@ -585,16 +618,18 @@ Los componentes principales son:
 
 | Componente | Responsabilidad |
 |---|---|
-| `NoteEditor` | Edición de contenido Markdown, auto-guardado y modos de trabajo. |
-| `MarkdownPreview` | Renderizado seguro del Markdown. |
-| `NoteList` y `NoteCardRenderer` | Listado y representación visual de notas. |
-| `TrashView` | Papelera, restauración y eliminación definitiva. |
-| `ConfirmDialog` | Confirmaciones personalizadas para reemplazar diálogos nativos. |
-| `Toast` | Mensajes breves de estado y feedback. |
+| `note-editor/NoteEditor` | Edición de contenido Markdown, borradores persistentes y modos de trabajo. |
+| `markdown/MarkdownPreview` | Renderizado seguro del Markdown. |
+| `feed/NoteList` y `feed/NoteCardRenderer` | Listado y representación visual de notas. |
+| `feed/TrashView` | Papelera, restauración y eliminación definitiva. |
+| `academic-events/Heatmap` y `academic-events/UpcomingAcademicEvents` | Calendario, fechas académicas discretas y recordatorios próximos. |
+| `backup/BackupView` | Vista del flujo manual de backup externo. |
+| `common/ConfirmDialog` | Confirmaciones personalizadas para reemplazar diálogos nativos. |
+| `common/Toast` | Mensajes breves de estado y feedback. |
 | `drawerSubjects` | Navegación por materias y secciones. |
 | `drawerController` | Coordinación del drawer lateral. |
 
-La capa de presentación no accede directamente a la base de datos. Interactúa con el store y los servicios, respetando una separación entre UI, estado y persistencia.
+La capa de presentación no accede directamente a la base de datos. Interactúa con el store y los servicios, respetando una separación entre UI, estado y persistencia. La organización por carpetas de feature se documenta en [ADR-007](../adr/ADR-007-organizacion-componentes-por-feature.md) y evita que `src/components/` se convierta en una carpeta plana difícil de mantener.
 
 ## 5.3. Gestión de Estado Reactivo
 
@@ -613,7 +648,7 @@ Esta división permite testear reglas de negocio sin renderizar toda la interfaz
 
 ## 5.4. Capa de Persistencia (Evolución de IndexedDB a SQLite)
 
-La persistencia tuvo dos etapas. En la fase inicial del MVP se implementó almacenamiento local con IndexedDB, suficiente para validar el editor, el auto-guardado y el funcionamiento offline en navegador. Luego, tras el relevamiento de datos y el pivote a app nativa, se decidió migrar a SQLite.
+La persistencia tuvo dos etapas. En la fase inicial del MVP se implementó almacenamiento local con IndexedDB, suficiente para validar el editor y el funcionamiento offline en navegador. Luego, tras el relevamiento de datos y el pivote a app nativa, se decidió migrar a SQLite. La protección actual del trabajo en curso se resuelve con borradores persistentes locales del editor, separados del guardado definitivo de notas.
 
 La motivación del cambio fue doble:
 
@@ -802,6 +837,8 @@ El enfoque se organiza en capas:
 
 El comando principal de verificación local es `npm run verify`, que encadena el quality gate y auditorías adicionales. En CI, GitHub Actions ejecuta el workflow `CI — Quality Gate` ante cada push o pull request sobre `main`.
 
+Para la beta controlada `v0.4.8`, el gate final se ejecutó sin fallos bloqueantes antes de publicar el APK firmado en GitHub Releases. La evidencia operativa queda registrada en `CHANGELOG.md`, `TODO`, `docs/hitos/hito-05-septiembre.md` y `docs/gestion/checklist-validacion-android.md`.
+
 ## 6.2. Pruebas Unitarias
 
 Las pruebas unitarias se implementan con Vitest. Cubren principalmente lógica de negocio y reglas de estado, porque son las zonas donde un error puede afectar datos del usuario o romper flujos centrales.
@@ -818,6 +855,8 @@ Los módulos actualmente cubiertos incluyen:
 
 La suite unitaria permite sostener cambios internos sin depender exclusivamente de pruebas manuales. Esto fue especialmente importante durante la migración a SQLite, la implementación de papelera y la consolidación de materias/secciones, porque esas áreas afectan persistencia, visibilidad y recuperación de datos.
 
+Al corte `v0.4.8`, la suite local registra 773 tests unitarios pasando dentro del flujo `npm run verify`.
+
 ## 6.3. Pruebas de Integración y Funcionamiento Offline
 
 El funcionamiento offline se valida desde varias perspectivas:
@@ -833,6 +872,8 @@ Además, los scripts `check:schema`, `check:dbml` y `check:subjects` cumplen una
 
 Las pruebas manuales en dispositivo siguen siendo necesarias para validar escenarios que no se capturan completamente en Node o en CI: instalación del APK, primer uso, modo avión, persistencia tras cerrar la app, restauración desde papelera, archivado, navegación táctil y rendimiento percibido.
 
+La beta `v0.4.8` fue validada inicialmente el 2026-07-01 en un Samsung Galaxy S20 FE (`SM-G780G`) con Android 13. La checklist cubrió instalación limpia, apertura offline, creación/edición/persistencia de notas, materias y secciones, búsqueda, pin/archivo, estados académicos, fechas discretas, papelera, tema, rotación/responsivo, rendimiento percibido y exportación/importación ZIP. El resultado fue apto para beta controlada, con observaciones UX menores.
+
 ## 6.4. Validación de Rendimiento y UX
 
 La validación de rendimiento y UX se apoya en métricas objetivas y revisión manual. En el estado actual del proyecto se verifican automáticamente el build de producción y el presupuesto de bundle, ya que el tamaño final impacta directamente en una app orientada a celulares con recursos limitados.
@@ -844,8 +885,9 @@ Las validaciones actuales incluyen:
 - `npm run check:a11y`: ejecuta auditoría estática de accesibilidad.
 - `npm run check:native-dialogs`: bloquea `alert`, `confirm` y `prompt` nativos fuera del seeder.
 - Revisión manual de flujos mobile-first en dispositivo Android.
+- Publicación de `v0.4.8` como beta controlada con APK firmada y SHA-256 documentado.
 
-Quedan pendientes para el cierre del Hito 05 y el Hito 06 pruebas más cercanas al usuario final: medición de tiempo hasta crear la primera nota, prueba de uso en modo avión, revisión de contraste y navegación táctil en dispositivo real, y feedback de estudiantes sobre el prototipo instalado.
+Quedan pendientes para el cierre documental final y Hito 06 pruebas más cercanas al usuario final: medición de tiempo hasta crear la primera nota, revisión fina de contraste y navegación táctil, comportamiento con mayor volumen real de notas y feedback de estudiantes sobre el prototipo instalado.
 
 La validación final no debe limitarse a que el código compile. Para que Lumapse cumpla su objetivo, debe demostrar que una persona puede instalarla, abrirla sin conexión, crear una nota rápidamente, encontrarla después, organizarla por materia y confiar en que no se pierde.
 

@@ -18,6 +18,8 @@ El enfoque se organiza en capas:
 
 El comando principal de verificación local es `npm run verify`, que encadena el quality gate y auditorías adicionales. En CI, GitHub Actions ejecuta el workflow `CI — Quality Gate` ante cada push o pull request sobre `main`.
 
+Para la beta controlada `v0.4.8`, el gate final se ejecutó sin fallos bloqueantes antes de publicar el APK firmado en GitHub Releases. La evidencia operativa queda registrada en `CHANGELOG.md`, `TODO`, `docs/hitos/hito-05-septiembre.md` y `docs/gestion/checklist-validacion-android.md`.
+
 ## 6.2. Pruebas Unitarias
 
 Las pruebas unitarias se implementan con Vitest. Cubren principalmente lógica de negocio y reglas de estado, porque son las zonas donde un error puede afectar datos del usuario o romper flujos centrales.
@@ -34,6 +36,8 @@ Los módulos actualmente cubiertos incluyen:
 
 La suite unitaria permite sostener cambios internos sin depender exclusivamente de pruebas manuales. Esto fue especialmente importante durante la migración a SQLite, la implementación de papelera y la consolidación de materias/secciones, porque esas áreas afectan persistencia, visibilidad y recuperación de datos.
 
+Al corte `v0.4.8`, la suite local registra 773 tests unitarios pasando dentro del flujo `npm run verify`.
+
 ## 6.3. Pruebas de Integración y Funcionamiento Offline
 
 El funcionamiento offline se valida desde varias perspectivas:
@@ -49,6 +53,8 @@ Además, los scripts `check:schema`, `check:dbml` y `check:subjects` cumplen una
 
 Las pruebas manuales en dispositivo siguen siendo necesarias para validar escenarios que no se capturan completamente en Node o en CI: instalación del APK, primer uso, modo avión, persistencia tras cerrar la app, restauración desde papelera, archivado, navegación táctil y rendimiento percibido.
 
+La beta `v0.4.8` fue validada inicialmente el 2026-07-01 en un Samsung Galaxy S20 FE (`SM-G780G`) con Android 13. La checklist cubrió instalación limpia, apertura offline, creación/edición/persistencia de notas, materias y secciones, búsqueda, pin/archivo, estados académicos, fechas discretas, papelera, tema, rotación/responsivo, rendimiento percibido y exportación/importación ZIP. El resultado fue apto para beta controlada, con observaciones UX menores.
+
 ## 6.4. Validación de Rendimiento y UX
 
 La validación de rendimiento y UX se apoya en métricas objetivas y revisión manual. En el estado actual del proyecto se verifican automáticamente el build de producción y el presupuesto de bundle, ya que el tamaño final impacta directamente en una app orientada a celulares con recursos limitados.
@@ -60,7 +66,8 @@ Las validaciones actuales incluyen:
 - `npm run check:a11y`: ejecuta auditoría estática de accesibilidad.
 - `npm run check:native-dialogs`: bloquea `alert`, `confirm` y `prompt` nativos fuera del seeder.
 - Revisión manual de flujos mobile-first en dispositivo Android.
+- Publicación de `v0.4.8` como beta controlada con APK firmada y SHA-256 documentado.
 
-Quedan pendientes para el cierre del Hito 05 y el Hito 06 pruebas más cercanas al usuario final: medición de tiempo hasta crear la primera nota, prueba de uso en modo avión, revisión de contraste y navegación táctil en dispositivo real, y feedback de estudiantes sobre el prototipo instalado.
+Quedan pendientes para el cierre documental final y Hito 06 pruebas más cercanas al usuario final: medición de tiempo hasta crear la primera nota, revisión fina de contraste y navegación táctil, comportamiento con mayor volumen real de notas y feedback de estudiantes sobre el prototipo instalado.
 
 La validación final no debe limitarse a que el código compile. Para que Lumapse cumpla su objetivo, debe demostrar que una persona puede instalarla, abrirla sin conexión, crear una nota rápidamente, encontrarla después, organizarla por materia y confiar en que no se pierde.
