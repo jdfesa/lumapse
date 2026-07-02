@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 05 — Testing, Calidad y Distribución
 > **Hito 04:** Cerrado formalmente el 2026-06-01
-> **Última actualización:** 2026-07-01 — `v0.4.8` publicada como beta controlada; Fase 5 documental activa
+> **Última actualización:** 2026-07-02 — sincronizacion documental inicial de `v0.4.8`; diagramas reservados para el cierre cercano
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -13,7 +13,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 Hito 04 quedó cerrado formalmente como bloque de Organización y UX. El cierre combinó implementación mínima de pulido UX (empty states) y decisiones explícitas de postergación/descarte para funcionalidades opcionales que podían agregar ruido visual o sugerir capacidades no presentes todavía.
 
-Hito 05 queda activo con foco en estabilización, calidad y distribución. Durante la preparación de release se aprobaron mejoras funcionales acotadas y ya implementadas: borradores persistentes del editor (`RF-005`), backup manual externo (`RF-017`), importación de backup ZIP (`RF-018`), sección Acerca de (`RF-023`), fechas académicas discretas (`RF-027`) y editor enriquecido (`RF-028`). La beta controlada [`v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8) ya quedó preparada, firmada, respaldada, validada inicialmente en un Samsung Galaxy S20 FE con Android 13 y publicada en GitHub Releases; desde este punto, la prioridad pasa al cierre documental final.
+Hito 05 queda activo con foco en estabilización, calidad y distribución. Durante la preparación de release se aprobaron mejoras funcionales acotadas y ya implementadas: borradores persistentes del editor (`RF-005`), backup manual externo (`RF-017`), importación de backup ZIP (`RF-018`), sección Acerca de (`RF-023`), fechas académicas discretas (`RF-027`) y editor enriquecido (`RF-028`). La beta controlada [`v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8) ya quedó preparada, firmada, respaldada, validada inicialmente en un Samsung Galaxy S20 FE con Android 13 y publicada en GitHub Releases; desde este punto, la prioridad pasa a sincronizar documentación viva sin adelantar el cierre fino del Hito 06.
 
 La revisión de exportación/importación corrige una sobrepromesa documental del Hito 03: los servicios base de Markdown no equivalían a un flujo de usuario validado. La opción "Compartir" para una nota individual (`RF-016`) solo tendría sentido si abre el share sheet nativo de Android y ofrece apps como WhatsApp; si termina copiando contenido, duplica una acción existente y agrega ruido. La portabilidad de workspace sí quedó resuelta de forma acotada con exportación e importación de backup `.zip` desde la vista Backup.
 
@@ -25,17 +25,19 @@ La revisión de `RF-005` reemplazó el auto-guardado final silencioso por borrad
 
 La estrategia de mantenibilidad y tipado gradual queda documentada en [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md). Las primeras fases operativas ya quedaron aplicadas: `tests/unit/components/` espeja la organizacion por feature de `src/components/`, `NoteStore.*` dejo de importar feedback visual, el proyecto ya tiene `typecheck` y contratos de dominio iniciales en `src/domain/`, los primeros modulos puros migrados son `AcademicEventRules`, `NoteTitleService`, `SubjectService.validation`, `BackupFormat`, `noteFilters` y `AcademicEventTypes`, el primer servicio de dominio migrado es `AcademicEventService`, la capa pura de backup ya tipa decisiones, datos, transformacion ZIP, escritura ZIP, persistencia liviana de recordatorios y flujo manual de share externo, `ExportService` ya quedo tipado como fachada web/legada del backup canonico, y `SubjectService.crud`/`SubjectService.trash` ya declaran contratos sobre materias, arbol activo y papelera avanzada manteniendo el barrel publico. Las auditorias auxiliares y el binario Rust tambien escanean `.ts`. El siguiente paso recomendado es seguir archivo por archivo con servicios donde el contrato aporte seguridad real, dejando store y componentes DOM grandes para fases posteriores.
 
+El 2026-07-02 se actualizan los documentos de gestion para que la beta `v0.4.8` quede trazable sin adelantar el cierre final de defensa. `docs/gestion/lineas-base.md` registra la linea base operativa asociada al tag de release y `docs/gestion/cheatsheet-defensa.md` incorpora version, APK, validacion Android y hash. La revision fina del informe final, los materiales de defensa y los diagramas se mantienen como trabajo de Hito 06 o cierre cercano, porque todavia conviene conservar margen para ajustes de producto y evidencia adicional.
+
 ---
 
 ## Prioridad Inmediata — Hito 05
 
 | Orden | Tarea | Criterio de cierre |
 |---|---|---|
-| 1 | Línea base de producto | `docs/gestion/lineas-base.md` registra tag `v0.4.8`, commit `a808de7`, release y SHA-256 |
-| 2 | Cheatsheet de defensa | `docs/gestion/cheatsheet-defensa.md` refleja APK publicada, validación Android y alcance beta |
-| 3 | Informe final | `docs/informe-final/` sincronizado con release, validación, calidad y distribución |
-| 4 | Diagramas/documentos finales | Artefactos de modelo y documentación técnica revisados con el modelo congelado |
-| 5 | Seguimiento post-release | Fricción de `Mover a` y rendimiento con mayor volumen de notas clasificados como observaciones no bloqueantes |
+| 1 | Diagramas finales | Revisar primero modelo de base de datos; luego casos de uso y secuencia antes de cerrar la documentación de defensa |
+| 2 | Seguimiento post-release | Fricción de `Mover a` y rendimiento con mayor volumen de notas clasificados como observaciones no bloqueantes |
+| 3 | Revisión editorial final | Dejar informe final y materiales de defensa listos en Hito 06, sin adelantar ese cierre ahora |
+| 4 | Línea base/cheatsheet | Mantener `lineas-base.md` y `cheatsheet-defensa.md` sincronizados si cambia el corte de release |
+| 5 | Refactors graduales | Solo cambios chicos y verificables; no abrir reescrituras antes del cierre documental |
 
 ---
 
@@ -74,8 +76,9 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Tipado gradual | Continuar servicios de dominio/backup archivo por archivo | Baja/Media | No avanzar en bloque; proximos candidatos requieren evaluar bordes nativos/share/storage o store con contratos mas claros |
 | Framework UI | No incorporar Svelte por ahora | Baja | Costo de migracion alto vs beneficio actual; reabrir solo si DOM manual se vuelve una carga clara |
 | Documentación | Revisar documentos generados antes del corte final | Media | Informe completo y cheatsheet deben reflejar la versión de release |
-| Diagramas | Actualizar gráficos DB exportados | Media | Regenerar al cierre documental final con modelo congelado |
-| Release | Cerrar documentación de `v0.4.8` | Alta | GitHub Release publicada como beta controlada; falta sincronizar líneas base, cheatsheet e informe final |
+| Diagramas | Actualizar gráficos DB exportados | Media | Regenerar al cierre documental final con modelo congelado; es el diagrama con mayor probabilidad de cambio |
+| Diagramas | Revisar casos de uso y secuencia | Media | Probablemente requieren menos cambios, pero deben revisarse esta semana o en la ultima parte de la etapa documental |
+| Release | Cerrar documentación operativa de `v0.4.8` | Alta | GitHub Release publicada como beta controlada; lineas base, cheatsheet e informe final ya tienen sincronizacion parcial |
 | UX menor | Revisar interacción de `Mover a` | Baja | En S20 FE se observó que puede requerir pulsación prolongada; no bloquea beta porque la acción se completa |
 | Rendimiento | Monitorear crecimiento real de notas | Media | Validación inicial con pocas notas fue correcta; observar comportamiento con mayor volumen post-release |
 | Adjuntos | Planificar adjuntos de imagen post-release | Media | Valor alto para fotos de pizarrón; debe implementarse sin cargar SQLite ni saturar el feed |

@@ -5,18 +5,18 @@
 ## Hito actual: 05 — Testing, calidad y distribucion
 
 **Estado:** Hito 04 cerrado formalmente el 2026-06-01.
-**Objetivo:** preparar la primera release distribuible con quality gate, APK firmado, validacion manual y documentacion final.
+**Objetivo:** preparar la primera release distribuible con quality gate, APK firmado, validacion manual y documentacion viva sincronizada.
 **Criterio:** no sumar features nuevas salvo cambios funcionales acotados y documentados. Quedan registrados como parte de Hito 05 `RF-005`, `RF-017`, `RF-018`, `RF-023`, `RF-027` y `RF-028`; desde este punto, estabilizar, empaquetar y validar.
 
 ---
 
 ## Fase operativa actual
 
-**Fase actual:** 5 — Cierre documental.
+**Fase actual:** 5 — Sincronizacion documental de beta.
 
-**Objetivo de la fase:** cerrar la documentacion final del hito con la release publicada, linea base, evidencia de validacion y materiales de defensa sincronizados.
+**Objetivo de la fase:** mantener la documentacion viva alineada con la beta `v0.4.8` publicada, sin convertir todavia esta etapa en el cierre fino del informe final.
 
-**Criterio de cierre:** README, CHANGELOG, Hito 05, lineas base, cheatsheet e informe final reflejan `v0.4.8` como beta controlada publicada.
+**Criterio de cierre:** README, CHANGELOG, Hito 05, lineas base y cheatsheet reflejan `v0.4.8` como beta controlada publicada. El informe final, la redaccion de defensa y los diagramas quedan reservados para el Hito 06, con pendientes explicitos para no perderlos.
 
 ### Plan por fases — Hito 05
 
@@ -26,7 +26,7 @@
 | 2 | Generar APK candidato | Completada | `TODO`, `docs/gestion/checklist-validacion-android.md` |
 | 3 | Validar en Android real | Completada con observaciones menores | `docs/gestion/checklist-validacion-android.md`, `docs/hitos/hito-05-septiembre.md` |
 | 4 | Publicar o documentar distribucion | Completada | `README.md`, `CHANGELOG.md`, `TODO` |
-| 5 | Cierre documental | En curso | `docs/gestion/lineas-base.md`, `docs/gestion/cheatsheet-defensa.md`, `docs/informe-final/` |
+| 5 | Sincronizacion documental de beta | En curso | `docs/gestion/lineas-base.md`, `docs/gestion/cheatsheet-defensa.md`, `docs/informe-final/` |
 
 ### Tareas de Fase 1
 
@@ -84,10 +84,12 @@
 
 ### Tareas de Fase 5
 
-- [ ] Actualizar `docs/gestion/lineas-base.md` con la linea base de producto `v0.4.8`.
-- [ ] Actualizar `docs/gestion/cheatsheet-defensa.md` con version, release, validacion Android y hash.
-- [ ] Revisar `docs/informe-final/` para reflejar distribucion, validacion y alcance final.
-- [ ] Regenerar o revisar diagramas/documentos finales que dependan del modelo congelado.
+- [x] Actualizar `docs/gestion/lineas-base.md` con la linea base operativa de beta `v0.4.8`.
+- [x] Actualizar `docs/gestion/cheatsheet-defensa.md` con version, release, validacion Android y hash.
+- [x] Revisar `docs/informe-final/` para reflejar distribucion y validacion de `v0.4.8` sin cerrar todavia la redaccion final de Hito 06.
+- [ ] Hacer revision editorial final del informe y materiales de defensa en Hito 06.
+- [ ] Revisar diagramas al final de la etapa documental: priorizar modelo de base de datos, luego casos de uso y secuencia.
+- [ ] Definir si la revision de diagramas se hace en la ultima parte de esta sesion o en una sesion cercana durante esta semana.
 
 ### Registro de cambios por documento
 
@@ -97,7 +99,7 @@
 - `docs/gestion/checklist-validacion-android.md`: evidencia de prueba manual en APK real.
 - `BACKLOG.md`: estado general del hito, deuda viva y decisiones postergadas.
 - `README.md`: instrucciones de instalacion/distribucion cuando exista el artefacto.
-- `docs/gestion/lineas-base.md`: linea base/tag cuando el producto quede congelado.
+- `docs/gestion/lineas-base.md`: linea base operativa de beta y futuro corte final.
 - `docs/gestion/cheatsheet-defensa.md`: metricas y argumentos actualizados para defensa.
 
 ---
@@ -122,7 +124,7 @@
 - [x] Registrar prueba manual en dispositivo Android real.
 - [x] Publicar artefacto en GitHub Releases o documentar el mecanismo elegido.
 - [x] Implementar `RF-023 — Acerca de` con version, autor, licencia y alcance offline/local sin saturar la UI.
-- [ ] Revisar documentos generados cuando el corte de release este definido.
+- [x] Sincronizar documentos generados con el corte `v0.4.8`, dejando la version final de defensa para Hito 06.
 
 ---
 
@@ -160,6 +162,8 @@
 - [x] Convertir `RF-017` en feature post-release prioritaria: backup `.zip` local + salida a almacenamiento elegido por el usuario. Plan cerrado en [`docs/gestion/historico/plan-backup-google-drive-2026-06-03.md`](docs/gestion/historico/plan-backup-google-drive-2026-06-03.md).
 - [ ] Reabrir `RF-024` como indicador online/offline acotado a backup externo, sin prometer sincronizacion automatica.
 - [ ] Actualizar graficos de base de datos al cierre documental final, con el modelo congelado.
+- [ ] Revisar diagrama de casos de uso contra el alcance `v0.4.8`; probablemente requiera menos cambios que el modelo de base de datos.
+- [ ] Revisar diagrama de secuencia de creacion/edicion de nota contra borradores persistentes y backup/importacion solo si el flujo representado cambio.
 - [ ] Evaluar manual de usuario solo si la primera release evidencia friccion real.
 - [ ] Considerar contador de palabras/caracteres (`RF-006`) solo con feedback estudiantil.
 - [ ] Considerar onboarding (`RF-022`) solo si los empty states no alcanzan.
