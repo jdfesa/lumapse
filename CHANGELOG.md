@@ -71,6 +71,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **CRUD de materias tipado:** `SubjectService.crud` pasa a `.ts`, declarando contratos de creación, actualización, archivo/desarchivo y árbol activo sobre `Subject`/`SubjectTree`, mientras `SubjectService.js` sigue como barrel público.
 - **Papelera avanzada tipada:** `SubjectService.trash` pasa a `.ts`, fijando contratos de cascada, restauración navegable, notas sueltas, secciones huérfanas y salida `getTrashItems` sin cambiar el barrel público.
 - **Tipos visuales de fechas académicas tipados:** `AcademicEventTypes` pasa a `.ts`, fijando contratos para tipos visuales, colores, opciones de dots/listas y acciones sin tocar los componentes grandes que lo consumen.
+- **Registro de comandos del editor tipado:** `editorCommandRegistry` y `editorInlineCommands` pasan a `.ts`, declarando contratos para superficies (`slash`, `insert`, `inline`), grupos, snippets y metadatos visuales sin tocar la UI del editor.
 - **ESLint cubre TypeScript gradual:** `eslint.config.js` incorpora `typescript-eslint` para analizar `src/**/*.ts` con reglas recomendadas y las guardas locales de complejidad/tamaño, detectando deuda real en servicios tipados sin activar reglas type-aware agresivas.
 - **Trazabilidad preparada para JS/TS:** El checker de trazabilidad escanea comentarios en archivos `.js` y `.ts`, evitando que futuras migraciones queden fuera del control documental.
 

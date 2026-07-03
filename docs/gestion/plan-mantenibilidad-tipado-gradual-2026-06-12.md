@@ -168,7 +168,7 @@ Criterio de cierre:
 
 ### Fase 4 - Migrar Modulos Puros
 
-Estado: completada el 2026-06-12 para la primera tanda; `editorTextTransforms` se migro el 2026-06-22 con tests directos y `AcademicEventTypes` el 2026-06-25 con contratos visuales.
+Estado: completada el 2026-06-12 para la primera tanda; `editorTextTransforms` se migro el 2026-06-22 con tests directos, `AcademicEventTypes` el 2026-06-25 con contratos visuales y el registro de comandos del editor el 2026-07-03.
 
 Migrar archivos pequenos donde TypeScript aporta claridad inmediata:
 
@@ -179,6 +179,8 @@ Migrar archivos pequenos donde TypeScript aporta claridad inmediata:
 5. [x] `src/store/noteFilters.ts`
 6. [x] `src/components/academic-events/AcademicEventTypes.ts`
 7. [x] `src/components/note-editor/editorTextTransforms.ts`
+8. [x] `src/components/note-editor/editorCommandRegistry.ts`
+9. [x] `src/components/note-editor/editorInlineCommands.ts`
 
 Criterio de cierre por archivo:
 
@@ -308,4 +310,4 @@ No hace falta levantar servidor local como parte de estas fases. La validacion v
 2. Pausar migraciones de backup que toquen bordes nativos/share/storage hasta tener contratos mas claros.
 3. Dejar store y componentes grandes para fases posteriores.
 
-El mapa de tests por feature ya quedo alineado, el store ya no depende de feedback visual, el typecheck ya es parte del gate, la primera tanda de modulos puros esta migrada, `AcademicEventService` ya quedo tipado como primer servicio de dominio, la capa pura de backup ya cubre decisiones, datos, ZIP, escritura ZIP, orquestacion y fachada web/legada de exportacion, `SubjectService.crud` ya cubre materias/arbol activo, `SubjectService.trash` ya cubre papelera avanzada, y las auditorias automaticas ya escanean `.ts`. El proximo paso debe seguir siendo pequeno: tipar servicios con tests existentes, sin arrastrar componentes grandes ni mezclar capas.
+El mapa de tests por feature ya quedo alineado, el store ya no depende de feedback visual, el typecheck ya es parte del gate, la primera tanda de modulos puros esta migrada, el registro de comandos del editor ya tiene contratos TS, `AcademicEventService` ya quedo tipado como primer servicio de dominio, la capa pura de backup ya cubre decisiones, datos, ZIP, escritura ZIP, orquestacion y fachada web/legada de exportacion, `SubjectService.crud` ya cubre materias/arbol activo, `SubjectService.trash` ya cubre papelera avanzada, y las auditorias automaticas ya escanean `.ts`. El proximo paso debe seguir siendo pequeno: tipar servicios con tests existentes, sin arrastrar componentes grandes ni mezclar capas.
