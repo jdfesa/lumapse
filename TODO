@@ -88,7 +88,8 @@
 - [x] Actualizar `docs/gestion/cheatsheet-defensa.md` con version, release, validacion Android y hash.
 - [x] Revisar `docs/informe-final/` para reflejar distribucion y validacion de `v0.4.8` sin cerrar todavia la redaccion final de Hito 06.
 - [ ] Hacer revision editorial final del informe y materiales de defensa en Hito 06.
-- [ ] Revisar diagramas al final de la etapa documental: priorizar modelo de base de datos, luego casos de uso y secuencia.
+- [ ] Revisar y actualizar diagramas de base de datos al final de la etapa documental: modelo conceptual Chen (`.dot` + PNG), modelo logico relacional (`.dbml` + PNG) y modelo fisico DDL, siguiendo herramientas externas documentadas en `docs/diagramas/database/README.md`.
+- [ ] Revisar diagramas Mermaid (`casos-de-uso.md`, `secuencia-crear-nota.md`, `modelo-dominio.md`) solo si el alcance `v0.4.8` o los flujos documentados cambiaron; GitHub los renderiza desde Markdown y la exportacion final queda para PDF/LaTeX.
 - [ ] Definir si la revision de diagramas se hace en la ultima parte de esta sesion o en una sesion cercana durante esta semana.
 
 ### Registro de cambios por documento
@@ -161,9 +162,9 @@
 
 - [x] Convertir `RF-017` en feature post-release prioritaria: backup `.zip` local + salida a almacenamiento elegido por el usuario. Plan cerrado en [`docs/gestion/historico/plan-backup-google-drive-2026-06-03.md`](docs/gestion/historico/plan-backup-google-drive-2026-06-03.md).
 - [ ] Reabrir `RF-024` como indicador online/offline acotado a backup externo, sin prometer sincronizacion automatica.
-- [ ] Actualizar graficos de base de datos al cierre documental final, con el modelo congelado.
-- [ ] Revisar diagrama de casos de uso contra el alcance `v0.4.8`; probablemente requiera menos cambios que el modelo de base de datos.
-- [ ] Revisar diagrama de secuencia de creacion/edicion de nota contra borradores persistentes y backup/importacion solo si el flujo representado cambio.
+- [ ] Actualizar graficos de base de datos al cierre documental final, con el modelo SQL congelado salvo correccion critica: regenerar PNG conceptual desde DOT/Graphviz y PNG logico desde DBML/dbdiagram.io.
+- [ ] Revisar diagrama de casos de uso contra el alcance `v0.4.8`; actualizar Mermaid solo si faltan casos ya implementados o sobran casos fuera del MVP.
+- [ ] Revisar diagrama de secuencia de creacion/edicion de nota contra borradores persistentes y backup/importacion solo si el flujo representado cambio; al ser Mermaid, mantenerlo en Markdown hasta la exportacion final.
 - [ ] Evaluar manual de usuario solo si la primera release evidencia friccion real.
 - [ ] Considerar contador de palabras/caracteres (`RF-006`) solo con feedback estudiantil.
 - [ ] Considerar onboarding (`RF-022`) solo si los empty states no alcanzan.
