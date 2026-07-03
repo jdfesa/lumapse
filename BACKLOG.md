@@ -78,6 +78,7 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Documentación | Revisar documentos generados antes del corte final | Media | Informe completo y cheatsheet deben reflejar la versión de release |
 | Diagramas | Actualizar gráficos DB exportados | Media | Regenerar al cierre documental final con modelo SQL congelado salvo correccion critica: conceptual Chen desde DOT/Graphviz y logico relacional desde DBML/dbdiagram.io; validar DDL contra schema real |
 | Diagramas | Revisar Mermaid de casos de uso, secuencia y dominio | Baja | Completado el 2026-07-03 contra `v0.4.8`; reabrir solo si cambia el alcance o durante la exportacion final a PDF/LaTeX |
+| Informe final | Preparar conversion LaTeX/PDF | Media | Consideraciones registradas en `docs/informe-final/README.md`; mantener Markdown como fuente de verdad y abrir pipeline LaTeX solo cuando el contenido este congelado |
 | Release | Cerrar documentación operativa de `v0.4.8` | Alta | GitHub Release publicada como beta controlada; lineas base, cheatsheet e informe final ya tienen sincronizacion parcial |
 | UX menor | Revisar interacción de `Mover a` | Baja | En S20 FE se observó que puede requerir pulsación prolongada; no bloquea beta porque la acción se completa |
 | Rendimiento | Monitorear crecimiento real de notas | Media | Validación inicial con pocas notas fue correcta; observar comportamiento con mayor volumen post-release |

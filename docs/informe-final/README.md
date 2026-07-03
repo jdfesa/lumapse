@@ -35,3 +35,17 @@ Como último paso, cuando el informe ya esté estructurado, revisado y listo par
 La edición diaria seguirá realizándose en Markdown dentro de este directorio. LaTeX no reemplaza a las secciones fuente durante el desarrollo del informe; se reserva como capa final de presentación para maquetar índice, numeración, figuras, tablas, anexos y referencias con formato académico.
 
 La generación final podrá automatizarse mediante un script específico cuando el contenido esté consolidado.
+
+### Consideraciones para la conversión a LaTeX
+
+La conversión a LaTeX debe tratarse como una fase de presentación final, no como una reescritura del contenido. El objetivo es producir un PDF académico prolijo, manteniendo Markdown como fuente de verdad y evitando divergencias entre versiones.
+
+- Usar preferentemente `xelatex` o `lualatex` para manejar correctamente acentos, comillas, símbolos y posibles caracteres especiales presentes en nombres, tablas o evidencia.
+- Exportar previamente los diagramas Mermaid a formato apto para LaTeX (`.pdf`, `.svg` o `.png`) y referenciarlos como figuras con numeración, caption y mención en el texto.
+- Mantener los diagramas de base de datos con su flujo propio: DOT/Graphviz para el conceptual Chen y DBML/dbdiagram.io para el modelo lógico relacional, exportando imágenes finales antes de componer el PDF.
+- Revisar manualmente tablas largas de requisitos, historias de usuario, métricas y validación, porque una tabla legible en Markdown puede desbordar márgenes en LaTeX.
+- Convertir enlaces internos tipo Markdown en referencias académicas cuando corresponda: "ver Figura X", "ver Tabla Y" o "ver Sección Z".
+- Definir un criterio único para bloques de código y comandos (`verbatim`, `listings` o equivalente), evitando estilos mezclados dentro del informe.
+- Consolidar bibliografía y citas bajo un criterio APA consistente; si se automatiza, evaluar BibTeX/BibLaTeX en la etapa final.
+- Revisar captions, numeración de figuras/tablas, portada, índice, anexos y saltos de página como parte de la corrección editorial final.
+- No incorporar LaTeX al flujo diario ni al quality gate del proyecto hasta que el contenido esté congelado; si se automatiza, hacerlo con un script separado y documentado.

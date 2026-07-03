@@ -90,6 +90,7 @@
 - [ ] Hacer revision editorial final del informe y materiales de defensa en Hito 06.
 - [ ] Revisar y actualizar diagramas de base de datos al final de la etapa documental: modelo conceptual Chen (`.dot` + PNG), modelo logico relacional (`.dbml` + PNG) y modelo fisico DDL, siguiendo herramientas externas documentadas en `docs/diagramas/database/README.md`.
 - [x] Revisar y actualizar diagramas Mermaid (`casos-de-uso.md`, `secuencia-crear-nota.md`, `modelo-dominio.md`) contra el alcance `v0.4.8`; GitHub los renderiza desde Markdown y la exportacion final queda para PDF/LaTeX.
+- [x] Dejar asentadas consideraciones profesionales para conversion final Markdown -> LaTeX/PDF en `docs/informe-final/README.md`, manteniendo Markdown como fuente de verdad.
 - [ ] Definir si la revision de diagramas se hace en la ultima parte de esta sesion o en una sesion cercana durante esta semana.
 
 ### Registro de cambios por documento
