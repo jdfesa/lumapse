@@ -10,7 +10,7 @@
 // =============================================================
 
 import { EditorPopup } from './EditorPopup.js';
-import { getCommandSnippet, getEditorCommandsForSurface } from './editorCommandRegistry.js';
+import { getCommandSnippet, getEditorCommandsForSurface } from './editorCommandRegistry.ts';
 import './EditorPopup.css';
 
 const SLASH_COMMANDS = getEditorCommandsForSurface('slash');

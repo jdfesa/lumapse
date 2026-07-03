@@ -1,4 +1,39 @@
-function createInlineCommand({ id, label, aliases, description, before, after, placeholder, selectTarget }) {
+export type InlineCommandId = 'bold' | 'italic' | 'strike' | 'code' | 'link'
+
+export type InlineCommand = {
+  id: `inline-${InlineCommandId}`
+  group: 'inline'
+  label: string
+  aliases: string[]
+  description: string
+  before: string
+  after: string
+  placeholder: string
+  selectTarget?: string
+  surfaces: ['inline']
+}
+
+type InlineCommandConfig = {
+  id: InlineCommandId
+  label: string
+  aliases: string[]
+  description: string
+  before: string
+  after: string
+  placeholder: string
+  selectTarget?: string
+}
+
+function createInlineCommand({
+  id,
+  label,
+  aliases,
+  description,
+  before,
+  after,
+  placeholder,
+  selectTarget,
+}: InlineCommandConfig): InlineCommand {
   return {
     id: `inline-${id}`,
     group: 'inline',
@@ -13,7 +48,7 @@ function createInlineCommand({ id, label, aliases, description, before, after, p
   }
 }
 
-export const INLINE_COMMANDS = [
+export const INLINE_COMMANDS: InlineCommand[] = [
   createInlineCommand({
     id: 'bold',
     label: 'Negrita',

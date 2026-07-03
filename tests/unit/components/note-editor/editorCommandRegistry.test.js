@@ -4,7 +4,7 @@ import {
   EDITOR_COMMANDS,
   getCommandSnippet,
   getEditorCommandsForSurface,
-} from '../../../../src/components/note-editor/editorCommandRegistry.js'
+} from '../../../../src/components/note-editor/editorCommandRegistry.ts'
 
 describe('editorCommandRegistry', () => {
   it('mantiene ids unicos para todos los comandos', () => {

@@ -1,5 +1,5 @@
 import { EditorPopup } from './EditorPopup.js';
-import { getCommandSnippet, getEditorCommandsForSurface } from './editorCommandRegistry.js';
+import { getCommandSnippet, getEditorCommandsForSurface } from './editorCommandRegistry.ts';
 import { applyInlineCommand } from './editorTextTransforms.ts';
 
 export function setupEditorPopups(editor, textarea, composer) {

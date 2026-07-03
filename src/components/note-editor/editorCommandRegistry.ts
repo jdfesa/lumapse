@@ -1,6 +1,29 @@
-import { INLINE_COMMANDS } from './editorInlineCommands.js'
+import { INLINE_COMMANDS, type InlineCommand } from './editorInlineCommands'
 
-export const EDITOR_COMMAND_GROUPS = [
+export type EditorCommandSurface = 'slash' | 'insert' | 'inline'
+export type EditorCommandGroup = 'basic' | 'structure' | 'callout' | 'inline' | 'utility'
+export type EditorCommandSnippet = string | (() => string)
+export type EditorCommandGroupDefinition = { id: EditorCommandGroup, label: string }
+type EditorCommandVisual = { icon: string, hint?: string }
+
+type BaseEditorCommand = {
+  id: string
+  group: Exclude<EditorCommandGroup, 'inline'>
+  label: string
+  aliases: string[]
+  description: string
+  snippet: EditorCommandSnippet
+  cursorOffset?: number
+  selectLength?: number
+  surfaces: EditorCommandSurface[]
+}
+
+type CalloutCommandConfig = { id: string, label: string, type: string, aliases: string[], description: string }
+
+export type EditorCommand = BaseEditorCommand | InlineCommand
+export type EditorCommandWithMetadata = EditorCommand & { groupLabel: string, icon: string, hint?: string }
+
+export const EDITOR_COMMAND_GROUPS: EditorCommandGroupDefinition[] = [
   { id: 'basic', label: 'Bloques basicos' },
   { id: 'structure', label: 'Estructura' },
   { id: 'callout', label: 'Callouts' },
@@ -8,14 +31,20 @@ export const EDITOR_COMMAND_GROUPS = [
   { id: 'utility', label: 'Utiles' },
 ]
 
-function formatLocalDate(date = new Date()) {
+function formatLocalDate(date = new Date()): string {
   const year = date.getFullYear()
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')
   return `${year}-${month}-${day}`
 }
 
-function createCalloutCommand({ id, label, type, aliases, description }) {
+function createCalloutCommand({
+  id,
+  label,
+  type,
+  aliases,
+  description,
+}: CalloutCommandConfig): BaseEditorCommand {
   const snippet = `> [!${type}]\n> `
   return {
     id: `callout-${id}`,
@@ -29,7 +58,7 @@ function createCalloutCommand({ id, label, type, aliases, description }) {
   }
 }
 
-const COMMAND_VISUALS = {
+const COMMAND_VISUALS: Record<string, EditorCommandVisual> = {
   text: { icon: 'text' },
   'heading-1': { icon: 'heading-1', hint: '#' },
   'heading-2': { icon: 'heading-2', hint: '##' },
@@ -46,7 +75,7 @@ const COMMAND_VISUALS = {
   today: { icon: 'today' },
 }
 
-export const EDITOR_COMMANDS = [
+export const EDITOR_COMMANDS: EditorCommand[] = [
   {
     id: 'text',
     group: 'basic',
@@ -247,13 +276,13 @@ export const EDITOR_COMMANDS = [
   ...INLINE_COMMANDS,
 ]
 
-export function getCommandGroupLabel(groupId) {
+export function getCommandGroupLabel(groupId: EditorCommandGroup): string {
   return EDITOR_COMMAND_GROUPS.find(group => group.id === groupId)?.label || ''
 }
 
-export function getEditorCommandsForSurface(surface) {
+export function getEditorCommandsForSurface(surface: EditorCommandSurface): EditorCommandWithMetadata[] {
   return EDITOR_COMMANDS
-    .filter(command => command.surfaces.includes(surface))
+    .filter(command => (command.surfaces as readonly EditorCommandSurface[]).includes(surface))
     .map(command => ({
       ...command,
       groupLabel: getCommandGroupLabel(command.group),
@@ -261,12 +290,13 @@ export function getEditorCommandsForSurface(surface) {
     }))
 }
 
-export function getCommandSnippet(command) {
+export function getCommandSnippet(command?: EditorCommand | null): string {
   if (!command) return ''
+  if (!('snippet' in command)) return ''
   return typeof command.snippet === 'function' ? command.snippet() : (command.snippet || '')
 }
 
-function getCommandVisual(command) {
+function getCommandVisual(command: EditorCommand): EditorCommandVisual {
   if (command.group === 'callout') {
     return { icon: command.id, hint: '>' }
   }
