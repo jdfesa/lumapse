@@ -1,14 +1,16 @@
-# Diagrama de Secuencia — Crear Nota con Borrador Persistente
+# Diagrama de Secuencia — Crear/Editar Nota con Borrador Persistente
 
 **Tipo:** Diagrama UML de Comportamiento (Secuencia)  
-**Última actualización:** 2026-06-07  
+**Última actualización:** 2026-07-03  
 **Autor:** José David Sandoval
 
 ---
 
 ## Objetivo del diagrama
 
-Modelar la interacción entre los componentes del sistema durante el flujo principal de **crear una nueva nota protegida por borrador persistente**. Este flujo evita pérdida de texto si el estudiante sale de Lumapse, consulta un PDF, copia contenido o vuelve más tarde, sin crear una nota final hasta que toca `Guardar`.
+Modelar la interacción entre los componentes del sistema durante el flujo principal de **crear o editar una nota protegida por borrador persistente**. Este flujo evita pérdida de texto si el estudiante sale de Lumapse, consulta un PDF, copia contenido o vuelve más tarde, sin crear ni actualizar una nota final hasta que toca `Guardar` o `Actualizar`.
+
+> **Alcance:** Este diagrama se mantiene enfocado en `RF-005` (borradores persistentes). Los flujos de backup/importación ZIP, fechas académicas y Acerca de pertenecen a otros casos de uso del Hito 05 y no forman parte de esta secuencia.
 
 ---
 
@@ -61,7 +63,7 @@ sequenceDiagram
     participant DRAFT as EditorDraftService
 
     EST ->>+ UI: Toca "Guardar"
-    UI ->>+ STORE: createNote({title, content, subjectId})
+    UI ->>+ STORE: createNote(title, content, subjectId)
     STORE ->>+ DB: INSERT note
     DB -->>- STORE: OK - nota persistida
     STORE -->>- UI: notaCreada(note)
@@ -110,7 +112,7 @@ sequenceDiagram
 | **Estudiante** | Actor principal. Inicia las acciones de crear, editar, cambiar de app y confirmar guardado. | — |
 | **Interfaz (UI)** | Capa de presentación. Maneja eventos del DOM, renderiza el listado, el editor, indicadores y confirmaciones. | `src/components/` |
 | **Estado (Store)** | Gestión del estado de la aplicación. Coordina las operaciones CRUD definitivas y mantiene notas/materias en memoria. | `src/store/` |
-| **EditorDraftService** | Persistencia local del borrador en curso, con payload versionado y tolerancia a datos corruptos o fallos de storage. | `src/services/EditorDraftService.js` |
+| **EditorDraftService** | Persistencia local del borrador en curso, con payload versionado y tolerancia a datos corruptos o fallos de storage. | `src/services/EditorDraftService.ts` |
 | **Debounce Timer** | Mecanismo de temporización que evita escrituras excesivas del borrador mientras el usuario escribe. | `src/components/note-editor/NoteEditorDrafts.js` |
 | **SQLite** | Capa de persistencia local definitiva para notas guardadas. | `src/services/sqlite/` |
 
@@ -138,7 +140,7 @@ sequenceDiagram
     participant DRAFT as EditorDraftService
 
     EST ->>+ UI: Toca "Guardar"
-    UI ->>+ STORE: createNote({title, content, subjectId})
+    UI ->>+ STORE: createNote(title, content, subjectId)
     STORE ->>+ DB: INSERT note
     DB -->>- STORE: ERROR
     STORE -->>- UI: errorGuardado(error)

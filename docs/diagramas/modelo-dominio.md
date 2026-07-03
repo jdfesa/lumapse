@@ -1,16 +1,16 @@
 # Modelo de Dominio — Lumapse
 
 **Tipo:** Diagrama UML de Estructura (Clases)  
-**Última actualización:** Mayo 2026 (post Papelera, Materias, SQLite)  
+**Última actualización:** 2026-07-03 (`v0.4.8`)  
 **Autor:** José David Sandoval
 
 ---
 
 ## Objetivo del diagrama
 
-Modelar las **entidades principales** del dominio de Lumapse y sus relaciones. Este diagrama representa la estructura conceptual de los datos que el sistema maneja, independientemente de cómo se implementan internamente. Es el punto de partida para el diseño de la capa de persistencia (SQLite vía `@capacitor-community/sqlite`, [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md)) y del estado de la aplicación (Store).
+Modelar las entidades principales, servicios de dominio y límites de persistencia que componen Lumapse en el corte `v0.4.8`. Este diagrama describe el modelo conceptual de la app y su relación con la persistencia local SQLite, sin reemplazar el detalle físico documentado en [`database/04-modelo-fisico-ddl.md`](./database/04-modelo-fisico-ddl.md).
 
-> **Nota de evolución:** En versiones anteriores (Hito 00), el modelo incluía una entidad `Tag` para clasificar notas con etiquetas. Esta entidad fue descartada a favor de una organización por carpetas/materias ([DP-002](../producto/decisiones-producto.md)). La persistencia migró de IndexedDB ([ADR-002](../adr/ADR-002-persistencia-indexeddb.md)) a SQLite ([ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md)) en el Hito 04. El modelo actual refleja el código en producción.
+> **Nota de evolución:** El modelo original incluía `Tag` y persistencia IndexedDB. Tras el pivote mobile-first se adoptó SQLite ([ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md)) y organización por Materia/Sección. En Hito 05 se agregan `AcademicEvent`, borradores persistentes del editor y portabilidad por backup ZIP (`RF-017` / `RF-018`).
 
 ---
 
@@ -31,10 +31,6 @@ classDiagram
         +DateTime deletedAt
         +DateTime createdAt
         +DateTime updatedAt
-        +getExcerpt(maxLength) String
-        +getWordCount() Number
-        +getCharCount() Number
-        +toMarkdownFile() Blob
     }
 
     class Subject {
@@ -47,261 +43,282 @@ classDiagram
         +DateTime createdAt
     }
 
-    class AppState {
-        +Note[] notes
-        +Subject[] subjects
-        +String activeNoteId
-        +String activeSubjectId
-        +String searchQuery
-        +String viewMode
-        +Number trashCount
-        +Boolean showTrashWarning
-        +String sortOrder
-        +getActiveNote() Note
-        +getFilteredNotes() Note[]
+    class AcademicEvent {
+        +String id
+        +AcademicEventType type
+        +String title
+        +Date date
+        +String subjectId
+        +DateTime createdAt
+        +DateTime updatedAt
     }
 
-    class NoteService {
-        +create(title, content, subjectId) Note
-        +update(id, changes) Note
-        +delete(id) void
-        +getAll() Note[]
-        +getById(id) Note
-        +search(query) Note[]
-        +togglePin(id) Note
-        +toggleArchive(id) Note
-        +getTrashNotes() Note[]
-        +restoreNote(id) void
-        +permanentlyDeleteNote(id) void
-        +exportAsMarkdown(id) Blob
-        +exportAllAsZip() Blob
-        +importFromMarkdown(file) Note
+    class EditorDraft {
+        +Number version
+        +EditorDraftMode mode
+        +String noteId
+        +String title
+        +String content
+        +String subjectId
+        +DateTime baseUpdatedAt
+        +DateTime savedAt
+    }
+
+    class AppState {
+        +Note[] notes
+        +SubjectTree subjects
+        +String activeNoteId
+        +String activeSubjectId
+        +String viewMode
+        +String backupPanel
+        +String searchQuery
+        +Date dateFilter
+        +AcademicEvent[] academicEvents
+        +AcademicEvent[] upcomingAcademicEvents
+        +Number trashCount
+    }
+
+    class BackupData {
+        +Subject[] subjects
+        +Note[] notes
+        +AcademicEvent[] academicEvents
+    }
+
+    class BackupManifest {
+        +String app
+        +Number backupFormatVersion
+        +DateTime createdAt
+        +String filename
+        +String exportMode
+        +BackupCounts counts
+        +String[] files
+    }
+
+    class NoteStore {
+        +loadNotes()
+        +createNote()
+        +updateNote()
+        +deleteNote()
+        +moveNote()
+        +getFilteredNotes()
     }
 
     class SubjectService {
-        +create(name, color, parentId) Subject
-        +update(id, changes) Subject
-        +delete(id) void
-        +getSubjectTree() Subject[]
-        +archive(id) void
-        +getTrashSubjects() Subject[]
-        +restoreSubject(id) void
-        +emptyTrash() void
-        +countTrashItems() Number
+        +createSubject()
+        +updateSubject()
+        +archiveSubject()
+        +deleteSubject()
+        +restoreSubject()
+        +getSubjectTree()
     }
 
-    class SqliteService {
-        +init() void
-        +execute(sql, params) void
-        +query(sql, params) Object[]
-        +runMigrations() void
+    class AcademicEventService {
+        +createAcademicEvent()
+        +updateAcademicEvent()
+        +deleteAcademicEvent()
+        +getEventsByMonth()
+        +getUpcomingEvents()
     }
 
-    class ThemeService {
-        +init() void
-        +getTheme() String
-        +setTheme(theme) void
-        +toggle() String
-        +onThemeChange(callback) Function
+    class BackupService {
+        +createCurrentBackupZip()
     }
 
-    AppState "1" --> "*" Note : contiene
-    AppState "1" --> "*" Subject : contiene
+    class BackupImportService {
+        +prepareBackupImport()
+        +confirmBackupImport()
+    }
+
+    class EditorDraftService {
+        +saveDraft()
+        +loadDraft()
+        +clearDraft()
+    }
+
+    class MarkdownService {
+        +renderMarkdown()
+        +sanitizeHtml()
+    }
+
+    class SQLite {
+        +initDatabase()
+        +runTransaction()
+        +persistWeb()
+    }
+
+    class LocalStorage {
+        +getItem()
+        +setItem()
+        +removeItem()
+    }
+
+    Subject "0..1" --> "*" Subject : contiene secciones
     Subject "1" --> "*" Note : agrupa
-    Subject "0..1" --> "*" Subject : padre de
-    NoteService --> SqliteService : persiste vía
-    SubjectService --> SqliteService : persiste vía
-    NoteService --> AppState : actualiza
+    Subject "0..1" --> "*" AcademicEvent : referencia opcional
+
+    AppState "1" --> "*" Note : mantiene
+    AppState "1" --> "*" Subject : mantiene
+    AppState "1" --> "*" AcademicEvent : mantiene
+
+    EditorDraft ..> Note : protege creación/edición
+    BackupData "1" --> "*" Note : exporta/importa
+    BackupData "1" --> "*" Subject : exporta/importa
+    BackupData "1" --> "*" AcademicEvent : exporta/importa
+    BackupManifest ..> BackupData : describe
+
+    NoteStore --> SQLite : persiste notas
+    NoteStore --> AppState : actualiza
+    SubjectService --> SQLite : persiste materias
     SubjectService --> AppState : actualiza
-    ThemeService ..> AppState : preferencia visual
+    AcademicEventService --> SQLite : persiste fechas
+    AcademicEventService --> AppState : actualiza
+    BackupService ..> BackupData : serializa
+    BackupImportService ..> BackupData : valida y aplica
+    BackupImportService --> SQLite : escribe transaccionalmente
+    EditorDraftService --> LocalStorage : persiste borrador
+    MarkdownService ..> Note : renderiza contenido
 ```
 
 ---
 
-## Descripción de Entidades
+## Entidades del dominio
 
 ### Note (Nota)
 
-Entidad principal del dominio. Representa una unidad de contenido creada por el usuario.
+Entidad central de captura. Representa una nota local, escrita como texto plano o Markdown.
 
 | Atributo | Tipo | Descripción |
 |---|---|---|
-| `id` | `String` | Identificador único (UUID v4 generado con `crypto.randomUUID()`). |
-| `title` | `String` | Título de la nota. Se extrae automáticamente de la primera línea `# ` del contenido Markdown ([DP-001](../producto/decisiones-producto.md)). Campo calculado desnormalizado por rendimiento. |
-| `content` | `String` | Contenido de la nota en formato Markdown (texto plano). Sin límite de tamaño. |
-| `pinned` | `Boolean` | Indica si la nota está fijada al tope del listado. Default: `false` (INTEGER 0 en SQLite). |
-| `archived` | `Boolean` | Indica si la nota está archivada (oculta del feed principal). Default: `false` (INTEGER 0 en SQLite). |
-| `subjectId` | `String \| null` | Referencia a la materia o sección a la que pertenece. `NULL` = Entrada (sin materia asignada). FK → `subjects(id)` con `ON DELETE SET NULL`. |
-| `statusEmoji` | `String \| null` | Emoji curado de estado académico (`📖`, `❓`, `🔥`, `✅`). `NULL` = sin marcador. ([DP-005](../producto/decisiones-producto.md), [RF-025](../producto/requisitos-funcionales.md)). |
-| `deletedAt` | `DateTime \| null` | Fecha y hora de eliminación lógica (ISO 8601). `NULL` = nota activa. Cuando se asigna un timestamp, la nota se mueve a la papelera de reciclaje ([RF-026](../producto/requisitos-funcionales.md)). |
-| `createdAt` | `DateTime` | Fecha y hora de creación (ISO 8601). Inmutable. |
-| `updatedAt` | `DateTime` | Fecha y hora de última modificación. Se actualiza en cada guardado. |
-
-| Método | Retorno | Descripción |
-|---|---|---|
-| `getExcerpt(maxLength)` | `String` | Primeros `n` caracteres del contenido, para mostrar en el listado. |
-| `getWordCount()` | `Number` | Operación postergada; el conteo de palabras ([RF-006](../producto/requisitos-funcionales.md)) queda fuera del MVP para evitar ruido visual. |
-| `getCharCount()` | `Number` | Conteo de caracteres del contenido. |
-| `toMarkdownFile()` | `Blob` | Genera un archivo `.md` descargable con el contenido de la nota. |
-
----
+| `id` | `String` | Identificador UUID v4 generado en cliente. |
+| `title` | `String` | Título calculado/desnormalizado a partir de la primera línea significativa del contenido. |
+| `content` | `String` | Contenido de la nota en texto plano/Markdown. |
+| `pinned` | `Boolean` | Indica si la nota se fija al inicio del feed. |
+| `archived` | `Boolean` | Indica si la nota se oculta del feed principal y aparece en Archivo. |
+| `subjectId` | `String \| null` | Materia o sección asociada. `NULL` representa Entrada. |
+| `statusEmoji` | `String \| null` | Marcador académico curado (`📖`, `❓`, `🔥`, `✅`). |
+| `deletedAt` | `DateTime \| null` | Fecha de eliminación lógica; `NULL` significa nota activa. |
+| `createdAt` / `updatedAt` | `DateTime` | Fechas de creación y última modificación. |
 
 ### Subject (Materia / Sección)
 
-Entidad de organización que modela carpetas jerárquicas. Una Materia es un `Subject` raíz (`parentSubjectId = NULL`); una Sección es un `Subject` hijo (`parentSubjectId = UUID`). Profundidad máxima: 2 niveles ([DP-004](../producto/decisiones-producto.md)).
+Entidad de organización jerárquica. Una materia raíz puede contener secciones hijas; la profundidad máxima permitida es de dos niveles ([DP-004](../producto/decisiones-producto.md)).
 
 | Atributo | Tipo | Descripción |
 |---|---|---|
-| `id` | `String` | Identificador único (UUID v4). |
-| `name` | `String` | Nombre de la materia o sección. Requerido, único por nivel jerárquico. |
-| `parentSubjectId` | `String \| null` | `NULL` = Materia raíz. UUID = Sección hija de la materia referenciada. FK auto-referencial → `subjects(id)` con `ON DELETE CASCADE`. |
-| `archived` | `Boolean` | Indica si la materia está archivada. Default: `false` (INTEGER 0 en SQLite). |
-| `color` | `String \| null` | Color hexadecimal opcional (ej. `#a3e635`). Las secciones hijas heredan el color del padre. |
-| `deletedAt` | `DateTime \| null` | Fecha de eliminación lógica. `NULL` = activa. Al eliminar una materia, la cascada marca también sus secciones y notas. |
-| `createdAt` | `DateTime` | Fecha y hora de creación (ISO 8601). Inmutable. |
+| `id` | `String` | Identificador UUID v4. |
+| `name` | `String` | Nombre visible de la materia o sección. |
+| `parentSubjectId` | `String \| null` | `NULL` para materia raíz; UUID del padre para sección. |
+| `archived` | `Boolean` | Indica si la materia queda fuera del árbol principal. |
+| `color` | `String \| null` | Color de identificación visual. |
+| `deletedAt` | `DateTime \| null` | Fecha de eliminación lógica usada por Papelera. |
+| `createdAt` | `DateTime` | Fecha de creación. |
 
----
+### AcademicEvent (Fecha académica)
 
-### AppState (Estado de la Aplicación)
-
-Objeto centralizado que mantiene el estado en memoria de la aplicación. No se persiste directamente — se reconstruye a partir de los datos en SQLite al iniciar la app. Implementa el patrón Observer para notificar a la UI de los cambios.
+Recordatorio visual pasivo asociado al calendario/Heatmap. No es una agenda completa: no maneja horarios, recurrencias, notificaciones ni sincronización.
 
 | Atributo | Tipo | Descripción |
 |---|---|---|
-| `notes` | `Note[]` | Todas las notas activas (`deletedAt IS NULL`) cargadas desde SQLite. |
-| `subjects` | `Subject[]` | Árbol de materias y secciones activas (`deletedAt IS NULL`, `archived = 0`). |
-| `activeNoteId` | `String \| null` | ID de la nota actualmente abierta en el editor. |
-| `activeSubjectId` | `String \| null` | ID de la materia o sección seleccionada en el drawer. |
-| `searchQuery` | `String` | Texto de búsqueda activo. Vacío = sin filtro. |
-| `viewMode` | `String` | Vista activa del feed: `"inbox"` (default), `"subject"`, `"archived"`, `"trash"`, `"all"`. |
-| `trashCount` | `Number` | Cantidad total de items en la papelera (notas + materias). |
-| `showTrashWarning` | `Boolean` | `true` si `trashCount >= 50`. Dispara un toast de advertencia. |
-| `sortOrder` | `String` | Orden del listado: `"updatedAt:desc"` (default), `"title:asc"`. |
+| `id` | `String` | Identificador UUID v4. |
+| `type` | `AcademicEventType` | `parcial`, `final`, `tp` o `exposicion`. |
+| `title` | `String \| null` | Nota breve opcional. |
+| `date` | `Date` | Fecha obligatoria en formato `YYYY-MM-DD`. |
+| `subjectId` | `String \| null` | Materia/sección asociada opcional. |
+| `createdAt` / `updatedAt` | `DateTime` | Fechas de creación y modificación. |
 
-| Método | Retorno | Descripción |
+### EditorDraft (Borrador del editor)
+
+Entidad técnica local que protege trabajo en curso. Vive en `localStorage`, no en SQLite, y se elimina al guardar/actualizar con éxito o al descartar explícitamente.
+
+| Atributo | Tipo | Descripción |
 |---|---|---|
-| `getActiveNote()` | `Note` | Retorna la nota que corresponde a `activeNoteId`. |
-| `getFilteredNotes()` | `Note[]` | Retorna las notas filtradas por `viewMode`, `searchQuery`, `activeSubjectId` y `dateFilter`. Las notas fijadas (`pinned`) aparecen siempre al tope. |
+| `version` | `Number` | Versión del formato de borrador. |
+| `mode` | `EditorDraftMode` | `create` o `edit`. |
+| `noteId` | `String \| null` | Nota original cuando el borrador corresponde a edición. |
+| `title` / `content` | `String` | Texto pendiente. |
+| `subjectId` | `String \| null` | Materia/sección seleccionada en el editor. |
+| `baseUpdatedAt` | `DateTime \| null` | Marca temporal de la nota original para restaurar contexto de edición. |
+| `savedAt` | `DateTime` | Última persistencia local del borrador. |
+
+### BackupData y BackupManifest
+
+Modelo de portabilidad local del workspace. Un backup incluye datos estructurados y notas Markdown legibles, sin sincronización automática ni dependencia de nube.
+
+| Entidad | Descripción |
+|---|---|
+| `BackupData` | Agrupa materias, notas y fechas académicas que se exportan/importan. |
+| `BackupManifest` | Describe formato, fecha, nombre de archivo, política de datos, conteos y archivos incluidos. |
 
 ---
 
-### NoteService (Servicio de Notas)
+## Servicios y límites
 
-Capa de lógica de negocio para operaciones sobre notas. Delega la persistencia al `SqliteService`.
-
-| Método | Retorno | Descripción |
+| Servicio / límite | Responsabilidad | Persistencia |
 |---|---|---|
-| `create(title, content, subjectId)` | `Note` | Crea una nueva nota con `pinned: false`, `archived: false`, `deletedAt: null`, la persiste en SQLite y la agrega al estado. |
-| `update(id, changes)` | `Note` | Actualiza una nota existente, persiste los cambios y actualiza `updatedAt`. |
-| `delete(id)` | `void` | Eliminación lógica: marca `deletedAt` con la fecha actual. La nota permanece en la BD pero desaparece del feed. |
-| `getAll()` | `Note[]` | Recupera todas las notas activas (`deletedAt IS NULL`) desde SQLite. |
-| `getById(id)` | `Note` | Recupera una nota específica por ID. |
-| `search(query)` | `Note[]` | Búsqueda por texto en título y contenido. |
-| `togglePin(id)` | `Note` | Alterna el estado `pinned` de una nota. |
-| `toggleArchive(id)` | `Note` | Alterna el estado `archived` de una nota. Si la nota estaba activa en el editor, se deselecciona. |
-| `getTrashNotes()` | `Note[]` | Recupera las notas eliminadas lógicamente (`deletedAt IS NOT NULL`), ordenadas por fecha de eliminación. |
-| `restoreNote(id)` | `void` | Restaura una nota desde la papelera: `deletedAt = NULL`. |
-| `permanentlyDeleteNote(id)` | `void` | Elimina una nota físicamente de la BD (DELETE). |
-| `exportAsMarkdown(id)` | `Blob` | Futuro: generaría un archivo `.md` o flujo de compartir nativo para una nota individual. |
-| `exportAllAsZip()` | `Blob` | Futuro: generaría un `.zip` local con notas y metadatos mínimos. |
-| `importFromMarkdown(file)` | `Note` | Futuro: importaría una nota hacia `Entrada`; requiere política de duplicados antes de exponerse en UI. |
+| `NoteStore` | Estado reactivo y operaciones de aplicación: crear, editar, mover, eliminar, filtrar y seleccionar notas. | Memoria + delegación a SQLite |
+| `SubjectService` | Reglas de materias/secciones: unicidad, profundidad máxima, archivo, papelera y restauración. | SQLite |
+| `AcademicEventService` | CRUD de fechas académicas, consultas por mes y próximas fechas. | SQLite |
+| `BackupService` | Reúne datos actuales y genera el ZIP restaurable/legible. | Lectura SQLite + ZIP |
+| `BackupImportService` | Valida ZIP, prepara preview y aplica importación no destructiva/transaccional. | ZIP + SQLite |
+| `EditorDraftService` | Guarda, carga y limpia el borrador local del editor. | `localStorage` |
+| `MarkdownService` | Renderiza Markdown y sanitiza HTML para lectura segura. | Sin persistencia |
+| `SQLite` | Inicializa schema, ejecuta migraciones idempotentes y transacciones. | `@capacitor-community/sqlite` / `sql.js` web |
 
 ---
 
-### SubjectService (Servicio de Materias)
-
-Capa de lógica de negocio para operaciones sobre materias y secciones. Valida reglas de negocio (nombre único, profundidad máxima 2 niveles) y delega la persistencia al `SqliteService`.
-
-| Método | Retorno | Descripción |
-|---|---|---|
-| `create(name, color, parentId)` | `Subject` | Crea una nueva materia o sección. Valida nombre requerido, unicidad y profundidad. |
-| `update(id, changes)` | `Subject` | Actualiza nombre, color o archivado de una materia. |
-| `delete(id)` | `void` | Eliminación lógica con cascada: marca `deletedAt` en la materia, sus secciones hijas y las notas asociadas. |
-| `getSubjectTree()` | `Subject[]` | Retorna el árbol jerárquico de materias y secciones activas. |
-| `archive(id)` | `void` | Archiva una materia (la oculta del drawer principal). |
-| `getTrashSubjects()` | `Subject[]` | Recupera las materias/secciones eliminadas lógicamente. |
-| `restoreSubject(id)` | `void` | Restaura una materia y sus secciones/notas asociadas desde la papelera. |
-| `emptyTrash()` | `void` | Elimina permanentemente todos los items de la papelera (DELETE físico de notas y materias). |
-| `countTrashItems()` | `Number` | Retorna la suma total de notas y materias en la papelera. |
-
----
-
-### SqliteService (Servicio de Almacenamiento)
-
-Abstracción sobre SQLite vía `@capacitor-community/sqlite` (nativo en Android) y `sql.js`/`jeep-sqlite` (WebAssembly en desarrollo web). Encapsula la conexión, la ejecución de queries y las migraciones de schema.
-
-| Método | Retorno | Descripción |
-|---|---|---|
-| `init()` | `void` | Inicializa la base de datos, crea las tablas (`subjects`, `notes`, `metadata`) y ejecuta las migraciones idempotentes. |
-| `execute(sql, params)` | `void` | Ejecuta una sentencia SQL de escritura (INSERT, UPDATE, DELETE). |
-| `query(sql, params)` | `Object[]` | Ejecuta una consulta SQL de lectura (SELECT) y retorna los resultados. |
-| `runMigrations()` | `void` | Ejecuta `ALTER TABLE` idempotentes para agregar columnas nuevas (`subjectId`, `statusEmoji`, `deletedAt`, etc.) sin romper instalaciones existentes. |
-
-> Esta capa reemplaza al antiguo `StorageService` basado en IndexedDB (`idb`), que fue desinstalado tras la migración a SQLite ([ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md)). La migración one-time de datos legacy de IndexedDB a SQLite se ejecuta automáticamente al primer arranque post-actualización.
-
----
-
-### ThemeService (Servicio de Tema Visual)
-
-Servicio modular para la gestión del modo oscuro/claro. No persiste datos de dominio — maneja una preferencia de UI.
-
-| Método | Retorno | Descripción |
-|---|---|---|
-| `init()` | `void` | Carga la preferencia desde `localStorage`. Si no existe, detecta la preferencia del OS (`prefers-color-scheme`). Aplica el atributo `data-theme` al `<html>`. |
-| `getTheme()` | `String` | Retorna el tema activo (`"dark"` o `"light"`). |
-| `setTheme(theme)` | `void` | Aplica un tema, lo persiste en `localStorage` y actualiza el `meta[name="theme-color"]`. |
-| `toggle()` | `String` | Alterna entre oscuro y claro. Retorna el nuevo tema aplicado. |
-| `onThemeChange(callback)` | `Function` | Registra un listener que se ejecuta al cambiar de tema. Retorna una función para desuscribirse. |
-
----
-
-## Relaciones
+## Relaciones principales
 
 | Relación | Cardinalidad | Descripción |
 |---|---|---|
-| AppState → Note | 1 a muchos | El estado contiene todas las notas activas de la app. |
-| AppState → Subject | 1 a muchos | El estado contiene el árbol de materias y secciones. |
-| Subject → Note | 1 a muchos | Una materia/sección agrupa 0 o más notas (`notes.subjectId`). |
-| Subject → Subject | 0..1 a muchos | Auto-referencial: una materia puede contener secciones hijas (`subjects.parentSubjectId`). Máx. 2 niveles. |
-| NoteService → SqliteService | Dependencia | NoteService delega la persistencia al SqliteService. |
-| SubjectService → SqliteService | Dependencia | SubjectService delega la persistencia al SqliteService. |
-| NoteService → AppState | Dependencia | NoteService actualiza el estado en memoria después de cada operación. |
-| SubjectService → AppState | Dependencia | SubjectService actualiza el estado en memoria después de cada operación. |
-| ThemeService ↔ AppState | Preferencia visual | ThemeService gestiona una preferencia de interfaz independiente del estado de dominio. |
+| Subject → Subject | 0..1 a muchos | Una materia puede contener secciones; una sección no puede contener subsecciones. |
+| Subject → Note | 1 a muchos | Una materia o sección agrupa notas mediante `notes.subjectId`; `NULL` significa Entrada. |
+| Subject → AcademicEvent | 0..1 a muchos | Una fecha académica puede asociarse opcionalmente a una materia o sección. |
+| AppState → Note / Subject / AcademicEvent | 1 a muchos | El store mantiene en memoria datos cargados desde SQLite y estados derivados de UI. |
+| EditorDraft → Note | Dependencia | Un borrador puede representar una nota nueva o cambios pendientes sobre una nota existente. |
+| BackupData → Note / Subject / AcademicEvent | 1 a muchos | El backup ZIP serializa el workspace local relevante para restauración. |
 
 ---
 
-## Esquema de SQLite
+## Esquema SQLite resumido
 
-```
-Database: "lumapse" (SQLite vía @capacitor-community/sqlite)
-├── Table: subjects
-│   ├── PK: id (TEXT, UUID v4)
-│   ├── name (TEXT NOT NULL)
-│   ├── parentSubjectId (TEXT, FK → subjects.id ON DELETE CASCADE)
-│   ├── archived (INTEGER DEFAULT 0)
-│   ├── color (TEXT, nullable)
-│   ├── deletedAt (TEXT, nullable — ISO 8601 para soft-delete)
-│   └── createdAt (TEXT NOT NULL — ISO 8601)
+```text
+Database: "lumapse-db" (SQLite via @capacitor-community/sqlite)
+├── subjects
+│   ├── id TEXT PRIMARY KEY
+│   ├── name TEXT NOT NULL
+│   ├── parentSubjectId TEXT REFERENCES subjects(id) ON DELETE CASCADE
+│   ├── archived INTEGER DEFAULT 0
+│   ├── color TEXT
+│   ├── deletedAt TEXT
+│   └── createdAt TEXT NOT NULL
 │
-├── Table: notes
-│   ├── PK: id (TEXT, UUID v4)
-│   ├── title (TEXT)
-│   ├── content (TEXT)
-│   ├── pinned (INTEGER DEFAULT 0)
-│   ├── archived (INTEGER DEFAULT 0)
-│   ├── subjectId (TEXT, FK → subjects.id ON DELETE SET NULL)
-│   ├── statusEmoji (TEXT, nullable)
-│   ├── deletedAt (TEXT, nullable — ISO 8601 para soft-delete)
-│   ├── createdAt (TEXT NOT NULL — ISO 8601)
-│   └── updatedAt (TEXT NOT NULL — ISO 8601)
+├── notes
+│   ├── id TEXT PRIMARY KEY
+│   ├── title TEXT
+│   ├── content TEXT
+│   ├── pinned INTEGER DEFAULT 0
+│   ├── archived INTEGER DEFAULT 0
+│   ├── subjectId TEXT REFERENCES subjects(id) ON DELETE SET NULL
+│   ├── statusEmoji TEXT
+│   ├── deletedAt TEXT
+│   ├── createdAt TEXT NOT NULL
+│   └── updatedAt TEXT NOT NULL
 │
-└── Table: metadata
-    ├── PK: key (TEXT)
-    └── value (TEXT)
+├── academic_events
+│   ├── id TEXT PRIMARY KEY
+│   ├── type TEXT NOT NULL CHECK(type IN ...)
+│   ├── title TEXT
+│   ├── date TEXT NOT NULL
+│   ├── subjectId TEXT REFERENCES subjects(id) ON DELETE SET NULL
+│   ├── createdAt TEXT NOT NULL
+│   └── updatedAt TEXT NOT NULL
+│
+└── metadata
+    ├── key TEXT PRIMARY KEY
+    └── value TEXT
 ```
 
-> **Historial de migraciones:** El schema evolucionó desde IndexedDB v1 (Hito 02) → IndexedDB v2 con `pinned`/`archived` (Hito 04) → SQLite con `subjects`, `subjectId`, `statusEmoji` y `deletedAt` (Hito 04, Paso 8-9). Las migraciones `ALTER TABLE` son idempotentes y se ejecutan en cada arranque.
+> El detalle físico completo, reglas de negocio, migraciones idempotentes e índices está en [`database/04-modelo-fisico-ddl.md`](./database/04-modelo-fisico-ddl.md). Los diagramas de base de datos se actualizan en la fase documental específica porque usan DOT/DBML e imágenes exportadas.
 
 ---
 
