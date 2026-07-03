@@ -98,6 +98,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 #### Changed
 - **Backlog/TODO actualizados:** El `TODO` raíz y `BACKLOG.md` registran como completada la capa de automatización, cierran formalmente Hito 04 y clasifican esta tanda como preparación de Hito 05 con cambios funcionales controlados.
+- **Diagramas Mermaid sincronizados con `v0.4.8`:** Se actualizaron casos de uso, modelo de dominio y secuencia de creación/edición de nota para reflejar backup/importación ZIP, fechas académicas, Acerca de, editor enriquecido y borradores persistentes, manteniendo compartir/importar nota individual como post-release.
 - **Seguimiento de velocidad actualizado:** `docs/gestion/seguimiento-velocidad.md` registra 22 HU formalizadas, 104 SP totales, 65 SP cerrados en Hitos 02 a 04 y 36 SP formalizados en curso para Hito 05.
 - **Reclasificación RF-016 y cierre de RF-017/RF-018:** La revisión documental mantiene compartir/exportar nota individual e importación `.md` como decisiones futuras, pero `RF-017` y `RF-018` dejan de ser deuda abierta porque la exportación e importación manual de backups ZIP ya quedaron integradas y validadas en Android real.
 - **Plan de backup archivado:** El plan operativo de backup `.zip` y Google Drive se movió desde la raíz a `docs/gestion/historico/plan-backup-google-drive-2026-06-03.md` para conservar evidencia sin ensuciar el directorio principal.

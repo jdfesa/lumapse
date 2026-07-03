@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 05 — Testing, Calidad y Distribución
 > **Hito 04:** Cerrado formalmente el 2026-06-01
-> **Última actualización:** 2026-07-03 — migracion TS pequeña del registro de comandos del editor; alcance de revision de diagramas precisado para el cierre cercano
+> **Última actualización:** 2026-07-03 — Mermaid de casos de uso, dominio y secuencia actualizado contra `v0.4.8`; diagramas DB externos siguen pendientes
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -33,7 +33,7 @@ El 2026-07-02 se actualizan los documentos de gestion para que la beta `v0.4.8` 
 
 | Orden | Tarea | Criterio de cierre |
 |---|---|---|
-| 1 | Diagramas finales | Revisar primero base de datos con herramientas externas documentadas (`docs/diagramas/database/README.md`); luego revisar Mermaid de casos de uso, secuencia y dominio solo si el alcance `v0.4.8` lo exige |
+| 1 | Diagramas finales | Pendiente principal: base de datos con herramientas externas documentadas (`docs/diagramas/database/README.md`). Mermaid de casos de uso, secuencia y dominio ya fue revisado contra `v0.4.8` |
 | 2 | Seguimiento post-release | Fricción de `Mover a` y rendimiento con mayor volumen de notas clasificados como observaciones no bloqueantes |
 | 3 | Revisión editorial final | Dejar informe final y materiales de defensa listos en Hito 06, sin adelantar ese cierre ahora |
 | 4 | Línea base/cheatsheet | Mantener `lineas-base.md` y `cheatsheet-defensa.md` sincronizados si cambia el corte de release |
@@ -77,7 +77,7 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Framework UI | No incorporar Svelte por ahora | Baja | Costo de migracion alto vs beneficio actual; reabrir solo si DOM manual se vuelve una carga clara |
 | Documentación | Revisar documentos generados antes del corte final | Media | Informe completo y cheatsheet deben reflejar la versión de release |
 | Diagramas | Actualizar gráficos DB exportados | Media | Regenerar al cierre documental final con modelo SQL congelado salvo correccion critica: conceptual Chen desde DOT/Graphviz y logico relacional desde DBML/dbdiagram.io; validar DDL contra schema real |
-| Diagramas | Revisar Mermaid de casos de uso, secuencia y dominio | Media | Actualizar solo si hay desfasaje con `v0.4.8`; GitHub renderiza los `.md` y la exportacion final a PDF/LaTeX queda para el cierre academico |
+| Diagramas | Revisar Mermaid de casos de uso, secuencia y dominio | Baja | Completado el 2026-07-03 contra `v0.4.8`; reabrir solo si cambia el alcance o durante la exportacion final a PDF/LaTeX |
 | Release | Cerrar documentación operativa de `v0.4.8` | Alta | GitHub Release publicada como beta controlada; lineas base, cheatsheet e informe final ya tienen sincronizacion parcial |
 | UX menor | Revisar interacción de `Mover a` | Baja | En S20 FE se observó que puede requerir pulsación prolongada; no bloquea beta porque la acción se completa |
 | Rendimiento | Monitorear crecimiento real de notas | Media | Validación inicial con pocas notas fue correcta; observar comportamiento con mayor volumen post-release |
