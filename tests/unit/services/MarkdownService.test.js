@@ -4,7 +4,7 @@ let MarkdownService
 
 beforeEach(async () => {
   vi.resetModules()
-  MarkdownService = await import('../../../src/services/MarkdownService.js')
+  MarkdownService = await import('../../../src/services/MarkdownService.ts')
 })
 
 describe('renderMarkdown()', () => {

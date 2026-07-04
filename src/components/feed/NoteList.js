@@ -4,7 +4,7 @@
 // =============================================================
 
 import * as NoteStore from '../../store/NoteStore.js';
-import * as MarkdownService from '../../services/MarkdownService.js';
+import * as MarkdownService from '../../services/MarkdownService.ts';
 import { getNoteContentPresentation } from '../../services/NoteTitleService.ts';
 import { formatRelativeDate, escapeHtml, findSubject, buildMoveMenu } from './NoteCardRenderer.js';
 import { createFeedActionRouter } from './FeedActionRouter.js';

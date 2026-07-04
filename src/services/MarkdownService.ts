@@ -10,7 +10,7 @@
 //   - DOMPurify (v3) → Sanitizador de HTML contra XSS
 //
 // Uso:
-//   import { renderMarkdown } from './services/MarkdownService.js'
+//   import { renderMarkdown } from './services/MarkdownService.ts'
 //   const html = renderMarkdown('# Hola **mundo**')
 //
 // RFs cubiertos: RF-010 (renderizado en tiempo real),
@@ -49,12 +49,27 @@ const CALLOUT_TYPES = {
   failure: 'Error',
   danger: 'Peligro',
   bug: 'Bug',
+} as const
+
+type CalloutType = keyof typeof CALLOUT_TYPES
+
+interface MarkdownRenderOptions {
+  lineOffset?: number
 }
 
-function getTaskLineNumbers(markdown) {
+interface ParsedCallout {
+  type: CalloutType
+  title: string
+}
+
+function isCalloutType(type: string): type is CalloutType {
+  return Object.prototype.hasOwnProperty.call(CALLOUT_TYPES, type)
+}
+
+function getTaskLineNumbers(markdown: string): number[] {
   return markdown
     .split('\n')
-    .reduce((lineNumbers, line, index) => {
+    .reduce<number[]>((lineNumbers, line, index) => {
       if (TASK_LINE_REGEX.test(line)) {
         lineNumbers.push(index)
       }
@@ -62,7 +77,7 @@ function getTaskLineNumbers(markdown) {
     }, [])
 }
 
-function escapeHtml(text) {
+function escapeHtml(text: unknown): string {
   return String(text || '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -71,11 +86,11 @@ function escapeHtml(text) {
     .replace(/'/g, '&#039;')
 }
 
-function stripBlockquotePrefix(line) {
+function stripBlockquotePrefix(line: string): string {
   return line.replace(/^>\s?/, '')
 }
 
-function parseCalloutStart(line) {
+function parseCalloutStart(line: string): ParsedCallout | null {
   if (!line.startsWith('>')) return null
 
   const content = stripBlockquotePrefix(line).trim()
@@ -83,15 +98,16 @@ function parseCalloutStart(line) {
   if (!match) return null
 
   const type = match[1].toLowerCase()
-  const safeType = CALLOUT_TYPES[type] ? type : 'note'
-  const title = match[3]?.trim() || CALLOUT_TYPES[type] || type
+  const knownType = isCalloutType(type)
+  const safeType = knownType ? type : 'note'
+  const title = match[3]?.trim() || (knownType ? CALLOUT_TYPES[type] : type)
 
   return { type: safeType, title }
 }
 
-function renderCalloutHtml(callout, bodyLines) {
+function renderCalloutHtml(callout: ParsedCallout, bodyLines: string[]): string {
   const bodyMarkdown = bodyLines.join('\n').trim()
-  const bodyHtml = bodyMarkdown ? marked.parse(bodyMarkdown) : ''
+  const bodyHtml = bodyMarkdown ? marked.parse(bodyMarkdown) as string : ''
 
   return `
 <blockquote class="md-callout md-callout--${callout.type}">
@@ -100,9 +116,9 @@ ${bodyHtml}
 </blockquote>`
 }
 
-function renderCallouts(markdown) {
+function renderCallouts(markdown: string): string {
   const lines = markdown.split('\n')
-  const output = []
+  const output: string[] = []
 
   for (let index = 0; index < lines.length; index++) {
     const callout = parseCalloutStart(lines[index])
@@ -155,14 +171,16 @@ function renderCallouts(markdown) {
  *   renderMarkdown('**negrita** y *cursiva*')
  *   // → '<p><strong>negrita</strong> y <em>cursiva</em></p>'
  */
-export function renderMarkdown(markdown, options = {}) {
+export function renderMarkdown(markdown: unknown, options: MarkdownRenderOptions = {}): string {
   if (!markdown || typeof markdown !== 'string') {
     return ''
   }
-  const lineOffset = Number.isInteger(options.lineOffset) ? options.lineOffset : 0
+  const lineOffset = typeof options.lineOffset === 'number' && Number.isInteger(options.lineOffset)
+    ? options.lineOffset
+    : 0
 
   // 1. Parsear Markdown → HTML crudo
-  const rawHtml = marked.parse(renderCallouts(markdown))
+  const rawHtml = marked.parse(renderCallouts(markdown)) as string
 
   // 2. Sanitizar HTML para prevenir XSS
   //    DOMPurify elimina scripts, event handlers y cualquier
@@ -234,7 +252,7 @@ export function renderMarkdown(markdown, options = {}) {
   let checkboxIndex = 0
   const processedHtml = cleanHtml.replace(
     /<input\b([^>]*\btype=["']?checkbox["']?[^>]*)>/gi,
-    (_match, attrs) => {
+    (_match: string, attrs: string) => {
       const lineNumber = (taskLineNumbers[checkboxIndex] ?? checkboxIndex) + lineOffset
       checkboxIndex++
       const isChecked = attrs.includes('checked')
@@ -275,7 +293,7 @@ DOMPurify.addHook('afterSanitizeAttributes', (node) => {
   // Defensa para <img>: permitir solo src local (data:, blob:, relativo)
   // Bloquear cualquier src externo (http/https) para prevenir tracking
   if (node.tagName === 'IMG' && node.hasAttribute('src')) {
-    const src = node.getAttribute('src')
+    const src = node.getAttribute('src') || ''
     if (src.startsWith('http://') || src.startsWith('https://')) {
       node.removeAttribute('src')
     }
@@ -299,13 +317,13 @@ DOMPurify.addHook('afterSanitizeAttributes', (node) => {
  * @param {string} text — Texto a evaluar
  * @returns {boolean} — true si contiene sintaxis Markdown reconocible
  */
-export function hasMarkdownSyntax(text) {
+export function hasMarkdownSyntax(text: unknown): boolean {
   if (!text || typeof text !== 'string') {
     return false
   }
 
   // Patrones básicos de Markdown
-  const markdownPatterns = [
+  const markdownPatterns: RegExp[] = [
     /^#{1,6}\s/m,           // Encabezados
     /\*\*.+\*\*/,           // Negritas
     /\*.+\*/,               // Cursivas
