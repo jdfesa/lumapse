@@ -70,7 +70,7 @@ Compara el schema SQLite real contra el DDL documentado.
 - Parsea `CREATE TABLE IF NOT EXISTS` y `ALTER TABLE ... ADD COLUMN`.
 - Reporta tablas, columnas y tipos desincronizados.
 
-Nota historica: el script Python original apunta a `src/services/SqliteService.js`, archivo que fue refactorizado. El modulo Rust usa la ruta actual.
+Nota histórica: una versión anterior del script Python apuntaba a `src/services/SqliteService.js`; esa ruta fue corregida a `src/services/sqlite/connection.js`. El módulo Rust también usa la ruta actual.
 
 ### `doc_links.rs`
 

@@ -1,0 +1,9 @@
+{
+  "status": "Checkpoint documental — Hito 06 activo",
+  "document_cutoff_date": "2026-07-15",
+  "functional_scope": "v0.4.8",
+  "functional_tag": "v0.4.8",
+  "functional_commit": "a808de7",
+  "technical_ref": "main",
+  "technical_commit": "5db64de"
+}

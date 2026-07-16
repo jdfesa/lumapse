@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Lumapse — Sincronización Schema ↔ Documentación
-Compara el DDL real en SqliteService.js contra 04-modelo-fisico-ddl.md.
+Compara el DDL real en src/services/sqlite/connection.js contra 04-modelo-fisico-ddl.md.
 Uso: python3 scripts/check-schema-sync.py
 """
 

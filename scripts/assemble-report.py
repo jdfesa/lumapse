@@ -5,6 +5,7 @@ Ensambla los capítulos de docs/informe-final/ en un Markdown unificado.
 Uso: python3 scripts/assemble-report.py
 """
 
+import json
 import os
 import re
 import sys
@@ -15,6 +16,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 REPORT_DIR = PROJECT_ROOT / "docs" / "informe-final"
 OUTPUT_PATH = REPORT_DIR / "INFORME-FINAL-COMPLETO.md"
+METADATA_PATH = REPORT_DIR / "report-metadata.json"
 CHAPTER_FILENAMES = [
     "01-introduccion.md",
     "02-marco-metodologico.md",
@@ -23,15 +25,12 @@ CHAPTER_FILENAMES = [
     "05-desarrollo-implementacion.md",
     "06-pruebas-validacion.md",
     "07-conclusiones.md",
+    "08-referencias.md",
 ]
 
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*#*\s*$")
 FENCE_RE = re.compile(r"^\s*```")
 MARKDOWN_LINK_RE = re.compile(r"(\[[^\]]+\]\()([^)]+)(\))")
-GENERATED_DATE_RE = re.compile(
-    r"^\*\*Generado automáticamente:\*\*\s+(\d{4}-\d{2}-\d{2})\s*$",
-    re.MULTILINE,
-)
 
 
 def relative_path(path):
@@ -59,6 +58,34 @@ def write_text(path, content):
         )
 
 
+def read_metadata():
+    try:
+        metadata = json.loads(read_text(METADATA_PATH))
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(
+            "Metadatos inválidos en {0}: {1}".format(relative_path(METADATA_PATH), exc)
+        ) from exc
+
+    required = (
+        "status",
+        "document_cutoff_date",
+        "functional_scope",
+        "functional_tag",
+        "functional_commit",
+        "technical_ref",
+        "technical_commit",
+    )
+    missing = [key for key in required if not metadata.get(key)]
+    if missing:
+        raise RuntimeError(
+            "Faltan metadatos requeridos en {0}: {1}".format(
+                relative_path(METADATA_PATH), ", ".join(missing)
+            )
+        )
+
+    return metadata
+
+
 def read_chapters():
     chapters = []
 
@@ -66,7 +93,14 @@ def read_chapters():
         path = REPORT_DIR / filename
         content = read_text(path)
         size = len(content.encode("utf-8"))
-        print("   [{0}/7] {1} ({2} bytes)".format(index, filename, size))
+        print(
+            "   [{0}/{1}] {2} ({3} bytes)".format(
+                index,
+                len(CHAPTER_FILENAMES),
+                filename,
+                size,
+            )
+        )
         chapters.append({
             "filename": filename,
             "path": path,
@@ -144,7 +178,7 @@ def collect_anchors(chapters):
             if level == 1 and chapter["filename"] not in chapter_anchors:
                 chapter_anchors[chapter["filename"]] = anchor
 
-            if level in (2, 3):
+            if level in (1, 2, 3):
                 toc_entries.append({
                     "level": level,
                     "title": title,
@@ -199,7 +233,7 @@ def generate_toc(toc_entries):
     lines = []
 
     for entry in toc_entries:
-        indent = "  " if entry["level"] == 3 else ""
+        indent = "  " * (entry["level"] - 1)
         lines.append(
             "{0}- [{1}](#{2})".format(
                 indent,
@@ -211,36 +245,40 @@ def generate_toc(toc_entries):
     return "\n".join(lines)
 
 
-def build_header(generated_date):
+def build_header(metadata, assembled_date):
     return "\n".join([
         "# Informe Final — Lumapse",
-        "**Alumno:** José David Sandoval  ",
-        "**Carrera:** Tecnicatura en Análisis de Sistemas y Desarrollo de Software  ",
-        '**Institución:** IES 6023 "Dr. Alfredo Loutaif"  ',
-        "**Materia:** Prácticas Profesionalizantes III  ",
-        "**Año:** 2026  ",
-        "**Generado automáticamente:** {0}".format(generated_date),
+        "",
+        "| Campo | Valor |",
+        "|---|---|",
+        "| Alumno | José David Sandoval |",
+        "| Carrera | Tecnicatura en Análisis de Sistemas y Desarrollo de Software |",
+        '| Institución | IES 6023 "Dr. Alfredo Loutaif" |',
+        "| Materia | Prácticas Profesionalizantes III |",
+        "| Año | 2026 |",
+        "| Estado | {0} |".format(metadata["status"]),
+        "| Alcance funcional | {0} (`{1}` / `{2}`) |".format(
+            metadata["functional_scope"],
+            metadata["functional_tag"],
+            metadata["functional_commit"],
+        ),
+        "| Fuente técnica auditada | `{0}` @ `{1}` |".format(
+            metadata["technical_ref"],
+            metadata["technical_commit"],
+        ),
+        "| Corte documental | {0} |".format(metadata["document_cutoff_date"]),
+        "| Ensamblado automáticamente | {0} |".format(assembled_date),
     ])
 
 
-def get_generated_date():
-    if OUTPUT_PATH.exists():
-        existing_content = read_text(OUTPUT_PATH)
-        match = GENERATED_DATE_RE.search(existing_content)
-        if match:
-            return match.group(1)
-
-    return date.today().isoformat()
-
-
-def assemble_document(chapters, toc_entries, chapter_anchors):
+def assemble_document(chapters, toc_entries, chapter_anchors, metadata):
     fixed_chapters = [
         fix_chapter_links(chapter["content"], chapter_anchors).strip()
         for chapter in chapters
     ]
 
     parts = [
-        build_header(get_generated_date()),
+        build_header(metadata, date.today().isoformat()),
         "---",
         "## Tabla de Contenidos\n\n{0}".format(generate_toc(toc_entries)),
         "---",
@@ -260,6 +298,7 @@ def main():
 
     try:
         print("📥 Leyendo capítulos...")
+        metadata = read_metadata()
         chapters = read_chapters()
 
         toc_entries, chapter_anchors = collect_anchors(chapters)
@@ -270,7 +309,7 @@ def main():
         )
 
         print("🔗 Corrigiendo links inter-capítulo...")
-        content = assemble_document(chapters, toc_entries, chapter_anchors)
+        content = assemble_document(chapters, toc_entries, chapter_anchors, metadata)
 
         print("💾 Escribiendo: {0}".format(relative_path(OUTPUT_PATH)))
         write_text(OUTPUT_PATH, content)

@@ -66,7 +66,7 @@ COLUMN_NOTES = {
     ("subjects", "color"): "Hex opcional (ej: #a3e635)",
     ("subjects", "createdAt"): "ISO 8601 UTC",
     ("notes", "id"): "UUID v4 generado en cliente",
-    ("notes", "title"): "Campo calculado desnormalizado (DP-001) — extraído del primer H1 del Markdown",
+    ("notes", "title"): "Título explícito opcional; el H1 inicial se usa solo como fallback y “Sin título” como valor final",
     ("notes", "content"): "Markdown puro, sin límite de tamaño",
     ("notes", "pinned"): "0 = normal | 1 = fijada al tope",
     ("notes", "archived"): "0 = activa | 1 = archivada",

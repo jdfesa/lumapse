@@ -2,9 +2,11 @@
 
 Esta carpeta contiene scripts de shell (`.sh`) y Python (`.py`) diseñados para automatizar y estandarizar flujos de trabajo repetitivos o propensos a errores durante el desarrollo local de Lumapse.
 
+> **Criterio de uso:** Los comandos expuestos en `package.json` son el flujo operativo vigente. El catálogo también conserva utilidades experimentales o históricas; cada una debe contrastarse con el esquema y los requisitos actuales antes de utilizar su salida como evidencia de defensa.
+
 ## Por qué usamos scripts
 
-Dado que la arquitectura de Lumapse combina tecnologías web (Vite) con frameworks nativos (Capacitor/Android), existen procesos que requieren interactuar tanto con el ecosistema de Node (`npm`) como con herramientas del sistema operativo (`adb`, `gradle`). Los scripts bash permiten centralizar esta lógica de forma segura y consistente.
+Dado que la arquitectura de Lumapse combina una UI web (Vite) con un runtime Android híbrido (Capacitor/Android), existen procesos que requieren interactuar tanto con el ecosistema de Node (`npm`) como con herramientas Android (`adb`, Gradle). Los scripts Bash centralizan esa lógica operativa.
 
 ---
 
@@ -93,7 +95,7 @@ Ejecuta todos los chequeos de calidad del proyecto en un solo comando. Actúa co
 
 - **Qué ejecuta (en orden):**
   1. `npm run lint` (ESLint).
-  2. `npm run test` (suite Vitest — 294 tests unitarios).
+  2. `npm run test` (suite Vitest — 773 tests unitarios en el corte `0.4.8`).
   3. `npm run build` (compilación de producción con Vite).
   4. Auditoría de código (con fallback cross-platform — ver abajo).
 - **Estrategia de compatibilidad (Paso 4):** Intenta ejecutar `./scripts/lumapse-audit-bin --all` (Rust, ~2ms). Si el binario no existe o es incompatible con el OS actual (ej. profesor en Windows/Linux), **cae automáticamente** a los scripts Python/Shell originales:
@@ -140,7 +142,7 @@ Escanea el código fuente y los assets del proyecto en busca de referencias a UR
 ### 7. `check-doc-links.py` _(Superseded por `lumapse-audit` #35: `--doc-links`)_
 Valida todos los enlaces internos dentro de la documentación Markdown del proyecto.
 
-- **Problema que resuelve:** Con más de 45 documentos Markdown interconectados, renombrar o mover archivos puede romper enlaces relativos silenciosamente.
+- **Problema que resuelve:** La documentación Markdown está ampliamente interconectada; renombrar o mover archivos puede romper enlaces relativos silenciosamente.
 - **Qué verifica:**
   - Enlaces a otros archivos `.md`.
   - Rutas a imágenes locales.
@@ -179,12 +181,13 @@ Instala hooks locales de Git para ejecutar automáticamente los chequeos mínimo
   ./scripts/install-hooks.sh
   ```
 
-### 10. `generate-migration.sh`
-Genera el archivo base para una migración SQLite versionada.
+### 10. `generate-migration.sh` _(Legacy / prototipo no consumido por el runtime)_
+Genera el formato experimental de una migración SQLite versionada.
 
-- **Problema que resuelve:** La futura integración con `@capacitor-community/sqlite` necesita una forma ordenada de registrar cambios de esquema. Este script estandariza nombres, timestamps y estructura mínima de migraciones.
-- **Qué genera:** Un archivo `.sql` en `src/store/migrations/` con secciones `UP` y `DOWN` listas para completar.
-- **Cuándo usarlo:** Cada vez que se agregue, modifique o elimine estructura persistente de SQLite: tablas, índices, columnas, constraints o datos iniciales necesarios para el esquema.
+- **Estado actual:** No forma parte del flujo de persistencia ni del quality gate vigente. El runtime no consume archivos de `src/store/migrations/`.
+- **Qué genera:** Un archivo `.sql` de prototipo en `src/store/migrations/`, con secciones `UP` y `DOWN`.
+- **Migraciones reales:** El esquema y las migraciones idempotentes que ejecuta la aplicación viven inline en `src/services/sqlite/connection.js`.
+- **Cuándo usarlo:** Solo para estudiar el formato legacy o experimentar fuera del flujo real. No usarlo para documentar ni implementar una migración de producción vigente.
 - **Uso:**
   ```bash
   ./scripts/generate-migration.sh create_notes_table
@@ -206,15 +209,16 @@ Calcula métricas cuantitativas del proyecto para el informe final académico.
   python3 scripts/project-metrics.py
   ```
 
-### 12. `check-sql-migrations.py`
-Audita las migraciones SQLite antes de que formen parte del flujo de persistencia local.
+### 12. `check-sql-migrations.py` _(Legacy / prototipo no consumido por el runtime)_
+Audita el formato experimental generado en `src/store/migrations/`.
 
-- **Problema que resuelve:** La base de datos local será una pieza crítica de Lumapse cuando se integre SQLite. Una migración mal nombrada, incompleta o destructiva puede dificultar upgrades, romper datos del usuario o dejar cambios sin posibilidad clara de reversión.
+- **Estado actual:** No valida las migraciones que ejecuta la aplicación ni integra el quality gate vigente; solo inspecciona el formato legacy de archivos `.sql`.
+- **Límite:** Las migraciones reales son bloques inline e idempotentes de `src/services/sqlite/connection.js`; se controlan mediante la auditoría de schema y el smoke test de base de datos.
 - **Qué verifica:**
   - Que los archivos `.sql` en `src/store/migrations/` sigan el formato `YYYYMMDD_HHMMSS_nombre.sql`.
   - Que cada migración tenga secciones `-- UP` y `-- DOWN`.
   - Que no aparezca `DROP TABLE` dentro del bloque `UP`, porque sería una operación destructiva durante la aplicación normal de cambios.
-- **Cuándo usarlo:** Antes de probar migraciones SQLite, antes de un commit que agregue archivos `.sql` y como parte de un quality gate cuando la persistencia SQLite esté activa.
+- **Cuándo usarlo:** Solo para revisar ejemplos legacy o experimentar con ese prototipo. Su resultado no es evidencia de que el schema runtime esté actualizado.
 - **Uso:**
   ```bash
   python3 scripts/check-sql-migrations.py
@@ -245,9 +249,9 @@ Ensambla los capítulos del informe final PP3 en un único documento Markdown.
 - **Problema que resuelve:** El informe final se redacta por capítulos en `docs/informe-final/` para facilitar mantenimiento y revisión incremental, pero la entrega universitaria requiere un documento unificado. Ensamblarlo manualmente es repetitivo y puede introducir índices desactualizados, links inter-capítulo rotos o separadores inconsistentes.
 - **Qué hace:**
   - Ignora `00-indice.md`, porque genera una tabla de contenidos nueva.
-  - Lee en orden los capítulos `01-introduccion.md` a `07-conclusiones.md`.
-  - Genera el encabezado institucional del informe completo.
-  - Construye una tabla de contenidos automática desde headings `##` y `###`.
+  - Lee en orden las secciones `01-introduccion.md` a `08-referencias.md`.
+  - Genera el encabezado institucional desde `report-metadata.json` y la fecha real de ensamblado. La referencia técnica es un commit auditado explícito, no el `HEAD` mutable del momento; el script no reutiliza metadatos del artefacto anterior.
+  - Construye una tabla de contenidos automática desde headings `#`, `##` y `###`.
   - Concatena capítulos con separadores horizontales `---`.
   - Convierte links inter-capítulo como `04-arquitectura-diseno.md` en anclas internas.
   - Conserva links relativos externos como `../adr/...`, `../gestion/...` o `../diagramas/...`, porque el archivo final vive en la misma carpeta que los capítulos.
@@ -331,23 +335,24 @@ Audita las dependencias del proyecto y documenta el resultado automáticamente.
   ./scripts/generate-security-report.sh
   ```
 
-### 21. `generate-mock-data.py`
-Generador de semillas de base de datos (Seed Data) para SQLite.
+### 21. `generate-mock-data.py` _(Legacy / prototipo; nunca seed de producción)_
+Generador experimental de datos ficticios en formato SQL.
 
-- **Problema que resuelve:** Cuando la base de datos se ponga en producción, se necesitan cientos de registros para probar el rendimiento, paginación y carga de la UI sin tener que crearlos a mano.
-- **Qué hace:** Escribe el archivo `src/store/migrations/99999999_999999_seed_mock_data.sql` lleno de sentencias `INSERT` ficticias de aspecto realista (títulos, fechas, contenido markdown, UUIDs).
-- **Cuándo usarlo:** Antes de realizar pruebas de estrés de la UI (Load testing). ¡NO ejecutar en producción!
+- **Estado actual:** El runtime no consume el archivo generado y Lumapse no tiene un mecanismo de seed de producción.
+- **Qué hace:** Escribe `src/store/migrations/99999999_999999_seed_mock_data.sql` con sentencias `INSERT` ficticias (títulos, fechas, contenido Markdown y UUIDs).
+- **Cuándo usarlo:** Solo en experimentos aislados sobre bases descartables. No ejecutar ni presentar como seed, migración o carga de producción; para evidencia de rendimiento se necesita un protocolo que use el runtime/dispositivo real.
 - **Uso:**
   ```bash
   python3 scripts/generate-mock-data.py
   ```
 
 ### 22. `check-seo-metadata.py`
-Analizador estático simple para validar atributos SEO y metadatos de Progressive Web App (PWA).
+Analizador estático de metadatos del shell web empaquetado.
 
-- **Problema que resuelve:** Asegura que la aplicación cumple con los estándares mínimos para ser indexada y comportarse correctamente en dispositivos móviles.
+- **Problema que resuelve:** Detecta omisiones básicas en `index.html` que afectan idioma, viewport, identidad y presentación dentro del WebView o durante desarrollo web.
 - **Qué mide:** Escanea `index.html` verificando atributos como `lang`, `viewport`, `theme-color`, `description`, y etiquetas táctiles de iOS.
-- **Cuándo usarlo:** Antes de lanzar una versión de producción, para asegurar que la app no perderá puntuación en herramientas de auditoría como Google Lighthouse.
+- **Límite:** No valida PWA, Service Worker, manifest, SEO real ni una puntuación Lighthouse. Lumapse no ofrece actualmente un canal PWA.
+- **Cuándo usarlo:** Al modificar el shell HTML o preparar una compilación Android.
 - **Uso:**
   ```bash
   python3 scripts/check-seo-metadata.py
@@ -379,8 +384,8 @@ Valida la integridad de la jerarquía de materias y secciones de acuerdo a la de
 ### 25. `generate-dbml-from-code.py`
 Generador de diagramas DBML a partir del DDL real implementado en JavaScript.
 
-- **Problema que resuelve:** Garantiza la coherencia absoluta entre el código de base de datos (`src/services/sqlite/connection.js`) y el diagrama lógico de base de datos (`03-modelo-logico-relacional.dbml`), eliminando errores humanos de transcripción.
-- **Qué hace:** Parsea y extrae la estructura SQL del servicio de persistencia, inyecta las notas de tablas/columnas y las relaciones configuradas, y exporta el archivo DBML válido para renderizar en dbdiagram.io.
+- **Problema que resuelve:** Reduce divergencias de transcripción entre las tablas y columnas declaradas en `src/services/sqlite/connection.js` y el modelo lógico `03-modelo-logico-relacional.dbml`.
+- **Qué hace:** Parsea la estructura principal del DDL, inyecta notas semánticas mantenidas en el propio generador y las relaciones configuradas, y exporta DBML válido para dbdiagram.io. El chequeo cubre tablas, columnas y relaciones configuradas; no proyecta índices ni restricciones `CHECK`, y conserva `ON DELETE` como nota de la relación. Por eso debe complementarse con el DDL documentado, `check:schema` y revisión manual antes de exportar el gráfico.
 - **Uso:**
   ```bash
   python3 scripts/generate-dbml-from-code.py
@@ -393,17 +398,18 @@ Genera una hoja de trucos consolidada (Cheat Sheet) de cara a la defensa del pro
 
 - **Problema que resuelve:** Automatiza la recopilación de estadísticas del producto (líneas de código, requisitos, hitos, etc.) y sintetiza las justificaciones y preguntas difíciles más frecuentes del jurado en un único lugar de consulta rápida.
 - **Qué hace:** Escanea el código fuente y las carpetas de documentación, calcula estadísticas en tiempo de ejecución, y escribe el resultado en `docs/gestion/cheatsheet-defensa.md`.
+- **Estado al 2026-07-15:** No regenerar todavía. El cheat sheet fue curado para reflejar Hito 06 y la política de título vigente, mientras el generador conserva respuestas hardcodeadas anteriores. La plantilla debe sincronizarse en una tarea de tooling antes del congelamiento final.
 - **Uso:**
   ```bash
   python3 scripts/generate-defense-cheatsheet.py
   ```
 
 ### 27. `export-database-bundle.py`
-Simula y valida la exportación integral de datos de Lumapse en un paquete ZIP de respaldo.
+Utilidad histórica que simula un bundle SQLite genérico.
 
-- **Problema que resuelve:** Permite comprobar el flujo de backup de HU-011 sin depender de un dispositivo Android real ni de una base generada por la app. Además, deja evidencia de integridad mediante hash SHA-256 del archivo SQLite exportado.
-- **Qué hace:** Busca una base SQLite indicada por argumento o detectada en el workspace; si no encuentra una, crea una base mock temporal con `subjects`, `notes` y `metadata`. Luego copia la base como `lumapse.sqlite`, genera `metadata.json`, exporta cada nota como Markdown en `notes_markdown/`, empaqueta todo en `lumapse_backup_YYYYMMDD_HHMMSS.zip` y limpia los temporales.
-- **Cuándo usarlo:** Antes de auditar la funcionalidad de exportación, al preparar evidencia de integridad de backups, o cuando se necesite un ZIP de prueba con la estructura esperada por Lumapse.
+- **Alcance:** Busca una base SQLite o crea una mock con `subjects`, `notes` y `metadata`, genera un hash y empaqueta una copia junto con notas Markdown.
+- **Límite:** No implementa ni valida `RF-017`/`RF-018`, no incluye `academic_events` y su formato no es el contrato ZIP vigente de la aplicación. El flujo de producto vive en `src/services/backup/` y se verifica con su suite de tests y en Android.
+- **Cuándo usarlo:** Solo para experimentar con una copia SQLite o estudiar integridad de archivos, nunca como backup importable ni como evidencia del caso de uso actual.
 - **Uso:**
   ```bash
   python3 scripts/export-database-bundle.py
@@ -411,11 +417,12 @@ Simula y valida la exportación integral de datos de Lumapse en un paquete ZIP d
   ```
 
 ### 28. `run-load-tests.py`
-Ejecuta una prueba de carga en SQLite para validar la decisión DP-001 sobre el título desnormalizado.
+Ejecuta una comparación sintética entre lectura de `title` y extracción de un H1 desde Markdown.
 
-- **Problema que resuelve:** Aporta una métrica empírica para justificar por qué Lumapse guarda el campo `title` en la base de datos en vez de parsear el Markdown completo cada vez que se listan muchas notas.
+- **Problema que resuelve:** Ilustra el costo relativo de dos operaciones aisladas sobre una base SQLite en memoria.
 - **Qué hace:** Crea una base SQLite en memoria, inserta miles de notas con contenido Markdown realista, mide el tiempo de listado extrayendo el título desde `content`, mide el tiempo de listado leyendo directamente el campo `title`, y calcula la mejora relativa de rendimiento.
-- **Cuándo usarlo:** Antes de la defensa, al armar anexos de rendimiento, o después de cambios en el modelo de datos/listado de notas que puedan afectar la validez de DP-001.
+- **Límite:** Corre en Python sobre el equipo de desarrollo, no mide CPU, batería, renderizado ni SQLite del dispositivo Android. Los porcentajes varían entre ejecuciones y no validan un RNF. La implementación actual admite título explícito y carga contenido para la búsqueda, por lo que la prueba no reproduce el flujo completo.
+- **Cuándo usarlo:** Como experimento auxiliar, acompañado por sus límites. Para evidencia final de rendimiento se requiere un protocolo reproducible en Android.
 - **Uso:**
   ```bash
   python3 scripts/run-load-tests.py
@@ -663,8 +670,9 @@ Auditoría del propio sistema de scripts.
 ### 41. `db-smoke-test.py`
 Smoke test temporal del schema SQLite real.
 
-- **Problema que resuelve:** `check-schema-sync.py` compara código contra documentación, pero no ejecuta el DDL real en SQLite. Este script crea una base temporal, ejecuta el schema de `src/services/sqlite/connection.js`, aplica migraciones idempotentes y valida relaciones principales.
-- **Por qué existe:** Aporta una prueba rápida y reproducible para detectar errores de DDL, columnas faltantes o relaciones rotas antes de probar en Android.
+- **Problema que resuelve:** `check-schema-sync.py` compara código contra documentación, pero no ejecuta el DDL real en SQLite. Este script crea una base temporal, ejecuta todos los bloques `CREATE` de `src/services/sqlite/connection.js`, aplica migraciones idempotentes y valida explícitamente la estructura de `subjects`, `notes` y `metadata`, además de las relaciones principales entre materias, secciones y notas.
+- **Por qué existe:** Aporta una prueba rápida y reproducible para detectar errores ejecutables de DDL y regresiones en el núcleo de notas/materias antes de probar en Android.
+- **Límite vigente:** `academic_events` se crea al ejecutar el DDL, pero todavía no integra `EXPECTED_TABLES`, `EXPECTED_COLUMNS` ni las aserciones relacionales específicas. El resultado exitoso no debe presentarse como cobertura exhaustiva de cada tabla o constraint.
 - **No usa datos reales:** La base se crea dentro de un directorio temporal y se elimina al terminar.
 - **Uso:**
   ```bash
