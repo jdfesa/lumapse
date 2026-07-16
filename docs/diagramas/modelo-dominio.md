@@ -1,7 +1,7 @@
 # Modelo de Dominio — Lumapse
 
 **Tipo:** Diagrama UML de Estructura (Clases)  
-**Última actualización:** 2026-07-03 (`v0.4.8`)  
+**Última actualización:** 2026-07-15 (dominio funcional `v0.4.8`; referencias técnicas de `main`)<br>
 **Autor:** José David Sandoval
 
 ---
@@ -9,6 +9,8 @@
 ## Objetivo del diagrama
 
 Modelar las entidades principales, servicios de dominio y límites de persistencia que componen Lumapse en el corte `v0.4.8`. Este diagrama describe el modelo conceptual de la app y su relación con la persistencia local SQLite, sin reemplazar el detalle físico documentado en [`database/04-modelo-fisico-ddl.md`](./database/04-modelo-fisico-ddl.md).
+
+> **Frontera de versión:** Las entidades y relaciones corresponden al comportamiento publicado en `v0.4.8`. Cuando se menciona una ruta o tipo técnico se utiliza su equivalente vigente en `main` al 2026-07-15; las migraciones JS→TS posteriores al tag no forman parte de la APK.
 
 > **Nota de evolución:** El modelo original incluía `Tag` y persistencia IndexedDB. Tras el pivote mobile-first se adoptó SQLite ([ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md)) y organización por Materia/Sección. En Hito 05 se agregan `AcademicEvent`, borradores persistentes del editor y portabilidad por backup ZIP (`RF-017` / `RF-018`).
 
@@ -116,8 +118,8 @@ classDiagram
         +createAcademicEvent()
         +updateAcademicEvent()
         +deleteAcademicEvent()
-        +getEventsByMonth()
-        +getUpcomingEvents()
+        +getAcademicEventsByMonth()
+        +getUpcomingAcademicEvents()
     }
 
     class BackupService {
@@ -137,7 +139,7 @@ classDiagram
 
     class MarkdownService {
         +renderMarkdown()
-        +sanitizeHtml()
+        +hasMarkdownSyntax()
     }
 
     class SQLite {
@@ -153,7 +155,7 @@ classDiagram
     }
 
     Subject "0..1" --> "*" Subject : contiene secciones
-    Subject "1" --> "*" Note : agrupa
+    Subject "0..1" --> "*" Note : agrupa opcionalmente
     Subject "0..1" --> "*" AcademicEvent : referencia opcional
 
     AppState "1" --> "*" Note : mantiene
@@ -166,12 +168,12 @@ classDiagram
     BackupData "1" --> "*" AcademicEvent : exporta/importa
     BackupManifest ..> BackupData : describe
 
-    NoteStore --> SQLite : persiste notas
+    NoteStore --> SQLite : acceso directo a datos
+    NoteStore --> SubjectService : coordina materias
+    NoteStore --> AcademicEventService : coordina fechas
     NoteStore --> AppState : actualiza
     SubjectService --> SQLite : persiste materias
-    SubjectService --> AppState : actualiza
     AcademicEventService --> SQLite : persiste fechas
-    AcademicEventService --> AppState : actualiza
     BackupService ..> BackupData : serializa
     BackupImportService ..> BackupData : valida y aplica
     BackupImportService --> SQLite : escribe transaccionalmente
@@ -190,7 +192,7 @@ Entidad central de captura. Representa una nota local, escrita como texto plano 
 | Atributo | Tipo | Descripción |
 |---|---|---|
 | `id` | `String` | Identificador UUID v4 generado en cliente. |
-| `title` | `String` | Título calculado/desnormalizado a partir de la primera línea significativa del contenido. |
+| `title` | `String` | Título explícito normalizado; si está vacío, puede resolverse desde un H1 inicial o como `Sin título`. No depende obligatoriamente de `content`. |
 | `content` | `String` | Contenido de la nota en texto plano/Markdown. |
 | `pinned` | `Boolean` | Indica si la nota se fija al inicio del feed. |
 | `archived` | `Boolean` | Indica si la nota se oculta del feed principal y aparece en Archivo. |
@@ -255,13 +257,13 @@ Modelo de portabilidad local del workspace. Un backup incluye datos estructurado
 
 | Servicio / límite | Responsabilidad | Persistencia |
 |---|---|---|
-| `NoteStore` | Estado reactivo y operaciones de aplicación: crear, editar, mover, eliminar, filtrar y seleccionar notas. | Memoria + delegación a SQLite |
+| `NoteStore` | Estado reactivo y operaciones de aplicación: crear, editar, mover, eliminar, filtrar y seleccionar notas. Depende de módulos SQLite y coordina `SubjectService` y `AcademicEventService`; las operaciones del store actualizan `AppState`. | Memoria + acceso directo/delegación a SQLite |
 | `SubjectService` | Reglas de materias/secciones: unicidad, profundidad máxima, archivo, papelera y restauración. | SQLite |
 | `AcademicEventService` | CRUD de fechas académicas, consultas por mes y próximas fechas. | SQLite |
 | `BackupService` | Reúne datos actuales y genera el ZIP restaurable/legible. | Lectura SQLite + ZIP |
 | `BackupImportService` | Valida ZIP, prepara preview y aplica importación no destructiva/transaccional. | ZIP + SQLite |
 | `EditorDraftService` | Guarda, carga y limpia el borrador local del editor. | `localStorage` |
-| `MarkdownService` | Renderiza Markdown y sanitiza HTML para lectura segura. | Sin persistencia |
+| `MarkdownService` | Expone `renderMarkdown` y `hasMarkdownSyntax`; la sanitización del HTML ocurre internamente durante el renderizado. | Sin persistencia |
 | `SQLite` | Inicializa schema, ejecuta migraciones idempotentes y transacciones. | `@capacitor-community/sqlite` / `sql.js` web |
 
 ---
@@ -271,9 +273,11 @@ Modelo de portabilidad local del workspace. Un backup incluye datos estructurado
 | Relación | Cardinalidad | Descripción |
 |---|---|---|
 | Subject → Subject | 0..1 a muchos | Una materia puede contener secciones; una sección no puede contener subsecciones. |
-| Subject → Note | 1 a muchos | Una materia o sección agrupa notas mediante `notes.subjectId`; `NULL` significa Entrada. |
+| Subject → Note | 0..1 a muchos | Una materia o sección puede agrupar notas mediante `notes.subjectId`; cada nota puede no tener materia (`NULL`, Entrada) o pertenecer a una. |
 | Subject → AcademicEvent | 0..1 a muchos | Una fecha académica puede asociarse opcionalmente a una materia o sección. |
 | AppState → Note / Subject / AcademicEvent | 1 a muchos | El store mantiene en memoria datos cargados desde SQLite y estados derivados de UI. |
+| NoteStore → AppState | Dependencia | Las operaciones del store actualizan el estado observable de la aplicación. |
+| NoteStore → SQLite / SubjectService / AcademicEventService | Dependencia | El store combina acceso directo a módulos SQLite con coordinación mediante servicios de materias y fechas académicas. |
 | EditorDraft → Note | Dependencia | Un borrador puede representar una nota nueva o cambios pendientes sobre una nota existente. |
 | BackupData → Note / Subject / AcademicEvent | 1 a muchos | El backup ZIP serializa el workspace local relevante para restauración. |
 
@@ -318,7 +322,7 @@ Database: "lumapse-db" (SQLite via @capacitor-community/sqlite)
     └── value TEXT
 ```
 
-> El detalle físico completo, reglas de negocio, migraciones idempotentes e índices está en [`database/04-modelo-fisico-ddl.md`](./database/04-modelo-fisico-ddl.md). Los diagramas de base de datos se actualizan en la fase documental específica porque usan DOT/DBML e imágenes exportadas.
+> El detalle físico completo, reglas de negocio, migraciones idempotentes e índices está en [`database/04-modelo-fisico-ddl.md`](./database/04-modelo-fisico-ddl.md). Las fuentes DOT/DBML y sus imágenes exportadas fueron actualizadas y verificadas en la fase documental del 2026-07-15.
 
 ---
 

@@ -3,7 +3,7 @@
 // Generado automáticamente desde src/services/sqlite/connection.js
 // PP3 · IES 6023 "Dr. Alfredo Loutaif" · 2026
 // Motor: SQLite · Herramienta: dbdiagram.io
-// Fecha de generación: 2026-05-22
+// Fecha de generación: 2026-07-15
 // ═══════════════════════════════════════════════════
 //
 // Instrucciones para regenerar:
@@ -32,7 +32,7 @@ Table subjects {
 
 Table notes {
   id          TEXT    [pk, note: "UUID v4 generado en cliente"]
-  title       TEXT    [note: "Campo calculado desnormalizado (DP-001) — extraído del primer H1 del Markdown"]
+  title       TEXT    [note: "Título explícito opcional; el H1 inicial se usa solo como fallback y “Sin título” como valor final"]
   content     TEXT    [note: "Markdown puro, sin límite de tamaño"]
   pinned      INTEGER [default: 0, note: "0 = normal | 1 = fijada al tope"]
   archived    INTEGER [default: 0, note: "0 = activa | 1 = archivada"]

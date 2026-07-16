@@ -2,13 +2,13 @@
 
 **Motor:** SQLite (vía `@capacitor-community/sqlite`)  
 **Implementación:** [`src/services/sqlite/connection.js`](../../../src/services/sqlite/connection.js)  
-**Última actualización:** Mayo 2026  
+**Última revisión:** 2026-07-15 (`0.4.8`)
 
 ---
 
-## 1. Creación de tablas (nuevas instalaciones)
+## 1. Esquema efectivo consolidado
 
-Las siguientes sentencias DDL se ejecutan en la inicialización de la base de datos. El orden es importante: `subjects` se crea antes que `notes` y `academic_events` porque ambas tablas tienen claves foráneas que referencian a `subjects(id)`.
+El siguiente DDL representa el **resultado efectivo** después de crear una instalación y ejecutar las migraciones idempotentes. `connection.js` conserva algunas columnas históricas como migraciones separadas, por lo que este bloque es una vista consolidada para análisis y no una copia literal de una única cadena SQL. El orden es importante: `subjects` se crea antes que `notes` y `academic_events` porque ambas tablas la referencian.
 
 ```sql
 -- Materias y Secciones (estructura jerárquica auto-referencial, máx. 2 niveles)
@@ -104,15 +104,15 @@ CREATE INDEX IF NOT EXISTS idx_academic_events_subject
 
 ## 3. Reglas de Negocio (validadas en código)
 
-Las siguientes restricciones **no pueden modelarse en SQL puro** y deben validarse en la capa de lógica de negocio (`SubjectService.js` y servicios SQLite):
+Las siguientes restricciones no quedan resueltas únicamente por el DDL y se validan o coordinan en `SubjectService.crud.ts`, `SubjectService.validation.ts`, `SubjectService.trash.ts` y los módulos SQLite:
 
 1. **Profundidad máxima de 2 niveles:** Al crear una Sección (`parentSubjectId NOT NULL`), verificar que el padre no sea ya una Sección (es decir, que `parent.parentSubjectId IS NULL`). Si el padre ya tiene padre, rechazar la operación con un error descriptivo.
 
-2. **Archivar en cascada (UI):** Al archivar una Materia, la UI debe mostrar todas sus Secciones y Notas como archivadas en la vista de Archivo, aunque a nivel de base de datos solo se marca `subjects.archived = 1` en la Materia.
+2. **Archivar materia y secciones:** Al archivar una Materia, `SubjectService.crud.ts` marca `subjects.archived = 1` tanto en la materia como en sus secciones hijas, dentro de una transacción. Las notas conservan su propio valor `notes.archived`; el filtro de estado las incluye en Archivo mientras su `subjectId` pertenezca a una materia o sección archivada. La restauración invierte la cascada sobre materia y secciones, sin reescribir las notas.
 
 3. **Notas en Entrada por defecto:** Toda nota nueva se crea con `subjectId = NULL`. El usuario debe mover explícitamente la nota a una Materia o Sección.
 
-4. **ON DELETE — comportamiento referencial:**
+4. **ON DELETE — comportamiento ante eliminación física:** Estas acciones se ejecutan con `DELETE`; enviar una materia a Papelera solo asigna `deletedAt` y conserva las claves foráneas hasta la purga definitiva.
    - `subjects.parentSubjectId → ON DELETE CASCADE`: Si se elimina una Materia, todas sus Secciones hijas se eliminan automáticamente.
    - `notes.subjectId → ON DELETE SET NULL`: Si se elimina una Materia o Sección, las notas asociadas no se eliminan, sino que vuelven a **Entrada** (`subjectId = NULL`).
    - `academic_events.subjectId → ON DELETE SET NULL`: Si se elimina una Materia o Sección, las fechas académicas asociadas sobreviven como eventos sin materia (`subjectId = NULL`).
@@ -129,19 +129,19 @@ Las cláusulas de integridad referencial en SQL admiten dos eventos: `ON DELETE`
 
 ### ¿Por qué no se usa ON UPDATE?
 
-`ON UPDATE CASCADE` es necesario cuando la **clave primaria referenciada** puede cambiar de valor en algún momento del ciclo de vida del registro. En Lumapse, todas las claves primarias son **UUID v4** generados en el cliente al momento de la creación. Un UUID es un identificador opaco, aleatorio e **inmutable por diseño**: una vez asignado, no existe ningún escenario de negocio ni de mantenimiento que requiera modificar su valor.
+`ON UPDATE CASCADE` solo resulta pertinente cuando la **clave primaria referenciada** es mutable y el modelo permite cambiarla durante el ciclo de vida del registro. En Lumapse, las claves referenciadas por FKs son **UUID v4** generados en el cliente. Son identificadores surrogate opacos e **inmutables por diseño**: una vez asignados no se corrigen, reciclan ni renumeran.
 
 ### Comparación con otros tipos de clave primaria
 
 | Tipo de PK | ¿Puede cambiar? | ¿Requiere ON UPDATE? | Ejemplo |
 |---|---|---|---|
-| Auto-increment (`1, 2, 3...`) | Sí (reindexación) | Potencialmente | Compactar IDs tras eliminar registros |
-| Clave natural (`DNI`, `legajo`) | Sí | **Sí** | Corrección de un número de legajo erróneo |
-| **UUID v4** (nuestro caso) | **No** | **No** | `"a1b2c3d4-..."` nunca se modifica |
+| Surrogate entera auto-incremental (`1, 2, 3...`) | **No** | **No** | El ID asignado permanece estable; los huecos no se compactan ni reindexan |
+| Clave natural mutable (`legajo`, código corregible) | Puede cambiar si el dominio lo permite | **Sí, si existen FKs y se admite actualizarla** | Corrección controlada del valor de negocio |
+| **Surrogate UUID v4** (nuestro caso) | **No** | **No** | `"a1b2c3d4-..."` nunca se modifica |
 
 ### Conclusión
 
-La ausencia de `ON UPDATE` en las sentencias DDL **no es una omisión**, sino una decisión técnica consciente derivada de la elección de UUID v4 como tipo de clave primaria. Si en el futuro se migrara a claves naturales o secuenciales, sería necesario agregar `ON UPDATE CASCADE` a ambas relaciones FK.
+La ausencia de `ON UPDATE` en las sentencias DDL **no es una omisión**, sino una decisión técnica consciente derivada de usar claves surrogate inmutables. Migrar de UUID a una surrogate entera no cambiaría ese principio. `ON UPDATE CASCADE` solo debería evaluarse si una relación futura referencia una clave natural mutable y el dominio autoriza modificarla.
 
 ---
 

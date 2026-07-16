@@ -1,7 +1,7 @@
 # Diagrama de Casos de Uso — Lumapse
 
 **Tipo:** Diagrama UML de Comportamiento  
-**Última actualización:** 2026-07-03  
+**Última actualización:** 2026-07-15<br>
 **Autor:** José David Sandoval
 
 ---
@@ -10,7 +10,9 @@
 
 Representar las funcionalidades principales del sistema desde la perspectiva del usuario, identificando los **actores** que interactúan con la aplicación y los **casos de uso** que Lumapse ofrece en el corte `v0.4.8`. Este diagrama muestra **qué hace el producto**, separando el alcance implementado de las funcionalidades post-release.
 
-> **Nota de evolución:** Desde el pivote a app nativa ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)), se eliminaron los casos de uso relacionados con PWA y Service Worker. En Hito 05 se incorporan borradores persistentes (`RF-005`), backup manual `.zip` (`RF-017`), importación de backups ZIP (`RF-018`), sección Acerca de (`RF-023`), fechas académicas discretas (`RF-027`) y editor enriquecido (`RF-028`). Compartir/exportar una nota individual e importar una nota `.md` quedan explícitamente como post-release.
+> **Nota de evolución:** Desde el pivote a aplicación Android híbrida ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)), se eliminaron los casos de uso relacionados con PWA y Service Worker. En Hito 05 se incorporan borradores persistentes (`RF-005`), backup manual `.zip` (`RF-017`), importación de backups ZIP (`RF-018`), sección Acerca de (`RF-023`), fechas académicas discretas (`RF-027`) y editor enriquecido (`RF-028`). Compartir/exportar una nota individual e importar una nota `.md` quedan explícitamente como post-release.
+
+> **Frontera de versión:** Este documento afirma capacidades de la APK `v0.4.8`; sus enlaces apuntan a la documentación vigente en `main` y no convierten los cambios posteriores al tag en una release nueva.
 
 ---
 
@@ -121,7 +123,7 @@ flowchart LR
 |---|---|---|
 | **Estudiante** | Principal | Usuario final de la aplicación. Representa a las personas [Lucía](../producto/personas.md#persona-1--lucía-la-estudiante-organizada) y [Martín](../producto/personas.md#persona-2--martín-el-estudiante-práctico). Interactúa directamente con las funcionalidades de captura, organización, búsqueda, backup y consulta académica. |
 | **Docente evaluador** | Principal secundario | Actor académico que consulta información institucional y técnica mínima desde la sección Acerca de, sin depender de documentación externa. |
-| **Capacitor Runtime** | Sistema | Framework que empaqueta la web app como APK nativo para Android y permite distribuir Lumapse como aplicación instalable ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)). |
+| **Capacitor Runtime** | Sistema | Framework que ejecuta la UI web en una WebView, genera el paquete Android y expone plugins nativos para distribuir Lumapse como aplicación instalable ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)). |
 | **Sistema de Archivos / Share Sheet** | Sistema | Interfaz del sistema operativo usada por la portabilidad local: exportar backups `.zip`, importar backups generados por Lumapse y, en el futuro, compartir/importar notas individuales. |
 
 ---
@@ -169,13 +171,13 @@ flowchart LR
 | UC-12 | Exportar Backup .zip | El estudiante genera un respaldo local `.zip` del workspace, con manifiesto, datos estructurados, notas Markdown legibles y salida externa por share sheet o gestor de archivos. | [RF-017](../producto/requisitos-funcionales.md) |
 | UC-20 | Importar Backup .zip | El estudiante selecciona un backup ZIP generado por Lumapse, revisa una vista previa e importa notas, materias, secciones y fechas académicas de forma no destructiva y transaccional. | [RF-018](../producto/requisitos-funcionales.md) |
 | UC-10 | Compartir/Exportar Nota .md | Post-release. El estudiante comparte o guarda una nota individual como Markdown usando share sheet nativo validado. | [RF-016](../producto/requisitos-funcionales.md) |
-| UC-11 | Importar Nota .md | Post-release. El estudiante importa una nota individual hacia `Entrada`, sin recrear materias o secciones de origen. | [RF-018](../producto/requisitos-funcionales.md) |
+| UC-11 | Importar Nota .md | Post-release. El estudiante importa una nota individual hacia `Entrada`, sin recrear materias o secciones de origen. | — Sin RF formal vigente |
 
 ### Sistema e Información
 
 | ID | Caso de Uso | Descripción | RF asociado |
 |---|---|---|---|
-| UC-13 | Instalar como APK | El estudiante instala Lumapse en Android como APK nativo empaquetado mediante Capacitor. | [RF-020](../producto/requisitos-funcionales.md) |
+| UC-13 | Instalar como APK | El estudiante instala Lumapse como APK Android híbrida empaquetada mediante Capacitor. | Sin RF funcional independiente; decisión de canal en [ADR-005](../adr/ADR-005-pivote-app-nativa.md) |
 | UC-14 | Conservar Borrador | El sistema conserva localmente el borrador del editor mientras el usuario crea o edita, lo restaura al volver y lo limpia al guardar, actualizar o descartar. | [RF-005](../producto/requisitos-funcionales.md) |
 | UC-15 | Alternar Modo Oscuro/Claro | El estudiante alterna entre modo oscuro y claro desde el drawer. La preferencia se persiste localmente y puede respetar la configuración del sistema operativo. | [RF-019](../producto/requisitos-funcionales.md) |
 | UC-22 | Consultar Acerca de | El docente evaluador o estudiante consulta versión, autor, licencia, propósito y alcance offline/local de la app. | [RF-023](../producto/requisitos-funcionales.md) |

@@ -1,18 +1,27 @@
 // =============================================================
 // Lumapse — Modelo Conceptual DER (Notación Chen)
 // Código fuente Graphviz DOT
+// Corte: v0.4.8 · Revisión: 2026-07-15
 // =============================================================
 //
 // Herramienta: Graphviz (lenguaje DOT)
 // Renderizado en: https://edotor.net
-// Imagen generada: 01-modelo-conceptual-der-chen.png
+// Imagen derivada: 01-modelo-conceptual-der-chen.png
 //
-// Instrucciones para regenerar:
+// Alcance conceptual:
+//   - MATERIA y SECCIÓN se modelan como una única entidad Subject
+//     autorreferenciada.
+//   - metadata se excluye deliberadamente: es una tabla técnica de
+//     migraciones/flags, no una entidad del dominio académico.
+//   - Las claves foráneas se expresan como relaciones conceptuales;
+//     sus columnas se detallan en el DBML y en el modelo físico.
+//
+// Instrucciones para regenerar la imagen derivada:
 //   1. Copiar todo el contenido de este archivo.
 //   2. Abrir https://edotor.net en el navegador.
 //   3. Pegar el código en el editor de la izquierda.
 //   4. El diagrama se renderiza automáticamente a la derecha.
-//   5. Exportar como PNG o SVG.
+//   5. Exportar como PNG o SVG y revisar legibilidad.
 // =============================================================
 
 graph LumapseChen {
@@ -22,99 +31,103 @@ graph LumapseChen {
     fontsize=13
     bgcolor="white"
     pad="0.6,0.4"
-    nodesep=0.6
+    nodesep=0.55
     ranksep=0.9
     label=""
   ]
   node [fontname="Helvetica Neue, Helvetica, Arial" fontsize=11]
   edge [fontname="Helvetica Neue, Helvetica, Arial" fontsize=11 color="#475569"]
 
-  // ── ENTIDADES ─────────────────────────────────────
+  // ── ENTIDADES DEL DOMINIO ─────────────────────────
   node [shape=rectangle style="filled,bold" penwidth=2]
 
-  MATERIA [label="MATERIA" fillcolor="#dbeafe" color="#2563eb"]
-  NOTA    [label="NOTA"    fillcolor="#dbeafe" color="#2563eb"]
+  SUBJECT          [label="MATERIA / SECCIÓN\n(Subject)" fillcolor="#dbeafe" color="#2563eb"]
+  NOTA             [label="NOTA"                         fillcolor="#dbeafe" color="#2563eb"]
+  EVENTO_ACADEMICO [label="EVENTO ACADÉMICO"            fillcolor="#dbeafe" color="#2563eb"]
 
   // ── RELACIONES ────────────────────────────────────
   node [shape=diamond style="filled,bold" penwidth=1.5]
 
-  contiene    [label="contiene"      fillcolor="#fef3c7" color="#b45309"]
-  es_padre_de [label="es padre de"   fillcolor="#fef3c7" color="#b45309"]
+  jerarquia_subject [label="es padre de" fillcolor="#fef3c7" color="#b45309"]
+  agrupa_notas      [label="agrupa"       fillcolor="#fef3c7" color="#b45309"]
+  asocia_eventos    [label="asocia"       fillcolor="#fef3c7" color="#b45309"]
 
   // ── ATRIBUTOS PK (subrayados) ─────────────────────
   node [shape=ellipse style=filled penwidth=1.5]
 
-  mat_id  [label=<<U>id</U>>  fillcolor="#dcfce7" color="#166534"]
-  nota_id [label=<<U>id</U>>  fillcolor="#dcfce7" color="#166534"]
+  subject_id [label=<<U>id</U>> fillcolor="#dcfce7" color="#166534"]
+  nota_id    [label=<<U>id</U>> fillcolor="#dcfce7" color="#166534"]
+  evento_id  [label=<<U>id</U>> fillcolor="#dcfce7" color="#166534"]
 
-  // ── ATRIBUTOS COMUNES ─────────────────────────────
+  // ── ATRIBUTOS DE DOMINIO ──────────────────────────
   node [shape=ellipse style=filled fillcolor="#f1f5f9" color="#64748b" penwidth=1]
 
-  // MATERIA — izquierda
-  mat_nombre    [label="nombre"]
-  mat_archivada [label="archivada"]
-  mat_color     [label="color"]
-  // MATERIA — derecha
-  mat_parent    [label="parentSubjectId"]
-  mat_creacion  [label="fechaCreación"]
+  // MATERIA / SECCIÓN (Subject)
+  subject_name       [label="nombre"]
+  subject_archived   [label="archivada"]
+  subject_color      [label="color (opcional)"]
+  subject_created_at [label="fechaCreación"]
+  subject_deleted_at [label="deletedAt (opcional)"]
 
-  // NOTA — izquierda
-  nota_titulo    [label="título"]
-  nota_contenido [label="contenido"]
-  nota_fijada    [label="fijada"]
-  nota_archivada [label="archivada"]
-  // NOTA — derecha
-  nota_subjectId     [label="subjectId"]
-  nota_creacion      [label="fechaCreación"]
-  nota_actualizacion [label="fechaActualización"]
+  // NOTA
+  nota_titulo        [label="título (opcional)"]
+  nota_contenido     [label="contenido"]
+  nota_fijada        [label="fijada"]
+  nota_archivada     [label="archivada"]
+  nota_status_emoji  [label="statusEmoji (opcional)"]
+  nota_deleted_at    [label="deletedAt (opcional)"]
+  nota_created_at    [label="fechaCreación"]
+  nota_updated_at    [label="fechaActualización"]
 
-  // ── LAYOUT — Filas ────────────────────────────────
+  // EVENTO ACADÉMICO
+  evento_tipo        [label="tipo"]
+  evento_titulo      [label="título (opcional)"]
+  evento_fecha       [label="fecha"]
+  evento_created_at  [label="fechaCreación"]
+  evento_updated_at  [label="fechaActualización"]
 
-  // Fila 1: Atributos de MATERIA (izquierda)
-  { rank=same; mat_nombre; mat_archivada; mat_color }
-  // Fila 1b: Atributos de MATERIA (derecha)
-  { rank=same; mat_id; mat_parent; mat_creacion }
+  // ── LAYOUT BASE ───────────────────────────────────
+  { rank=same; SUBJECT; jerarquia_subject }
+  { rank=same; agrupa_notas; asocia_eventos }
+  { rank=same; NOTA; EVENTO_ACADEMICO }
 
-  // Fila 2: MATERIA + auto-referencia
-  { rank=same; MATERIA; es_padre_de }
-
-  // Fila 3: Relación contiene
-  { rank=same; contiene }
-
-  // Fila 4: NOTA
-  { rank=same; NOTA }
-
-  // Fila 5: Atributos de NOTA (izquierda)
-  { rank=same; nota_titulo; nota_contenido; nota_fijada; nota_archivada }
-  // Fila 5b: Atributos de NOTA (derecha)
-  { rank=same; nota_id; nota_subjectId; nota_creacion; nota_actualizacion }
-
-  // ── CONEXIONES — Atributos ────────────────────────
-
-  MATERIA -- mat_id
-  MATERIA -- mat_nombre
-  MATERIA -- mat_parent
-  MATERIA -- mat_archivada
-  MATERIA -- mat_color
-  MATERIA -- mat_creacion
+  // ── CONEXIONES DE ATRIBUTOS ───────────────────────
+  SUBJECT -- subject_id
+  SUBJECT -- subject_name
+  SUBJECT -- subject_archived
+  SUBJECT -- subject_color
+  SUBJECT -- subject_created_at
+  SUBJECT -- subject_deleted_at
 
   NOTA -- nota_id
   NOTA -- nota_titulo
   NOTA -- nota_contenido
   NOTA -- nota_fijada
   NOTA -- nota_archivada
-  NOTA -- nota_subjectId
-  NOTA -- nota_creacion
-  NOTA -- nota_actualizacion
+  NOTA -- nota_status_emoji
+  NOTA -- nota_deleted_at
+  NOTA -- nota_created_at
+  NOTA -- nota_updated_at
 
-  // ── CONEXIONES — Relaciones ───────────────────────
+  EVENTO_ACADEMICO -- evento_id
+  EVENTO_ACADEMICO -- evento_tipo
+  EVENTO_ACADEMICO -- evento_titulo
+  EVENTO_ACADEMICO -- evento_fecha
+  EVENTO_ACADEMICO -- evento_created_at
+  EVENTO_ACADEMICO -- evento_updated_at
 
-  // MATERIA contiene NOTA (1:N)
-  MATERIA  -- contiene [label="  1  " fontsize=13 penwidth=2]
-  contiene -- NOTA     [label="  N  " fontsize=13 penwidth=2]
+  // ── CONEXIONES DE RELACIONES ──────────────────────
 
-  // MATERIA es_padre_de MATERIA (1:N auto-referencial)
-  // Líneas SÓLIDAS — en Chen no existe el punteado
-  MATERIA     -- es_padre_de [label="  1  " fontsize=13 penwidth=2]
-  es_padre_de -- MATERIA     [label="  N  " fontsize=13 penwidth=2]
+  // Un Subject puede contener 0..N secciones; cada sección tiene 0..1 padre.
+  SUBJECT           -- jerarquia_subject [label="  0..N (padre)  " fontsize=13 penwidth=2]
+  jerarquia_subject -- SUBJECT           [label="  0..1 (hija)  " fontsize=13 penwidth=2]
+
+  // Un Subject agrupa 0..N notas; cada nota pertenece a 0..1 Subject.
+  // La participación opcional de NOTA representa Entrada (subjectId = NULL).
+  SUBJECT      -- agrupa_notas [label="  0..N  " fontsize=13 penwidth=2]
+  agrupa_notas -- NOTA        [label="  0..1  " fontsize=13 penwidth=2]
+
+  // Un Subject se vincula con 0..N eventos; cada evento usa 0..1 Subject.
+  asocia_eventos    -- EVENTO_ACADEMICO [label="  0..1  " fontsize=13 penwidth=2]
+  SUBJECT           -- asocia_eventos    [label="  0..N  " fontsize=13 penwidth=2]
 }
