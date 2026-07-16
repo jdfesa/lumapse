@@ -7,105 +7,103 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ---
 
-## [0.4.8] — 2026-07-01 — Beta controlada
+## [Unreleased] — Trabajo posterior a `v0.4.8`
+
+> `main` conserva la versión declarada `0.4.8`, pero contiene trabajo posterior al tag. No existe una release `0.4.9` ni un APK posterior publicado. El corte auditado previo al cierre documental de Hito 05 comprende exactamente 12 commits.
 
 ### Changed
-- Preparación de release v0.4.8 mediante `scripts/release-helper.py`.
-- Publicación de [`Lumapse v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8) como pre-release/beta controlada en GitHub Releases.
-- APK firmada `lumapse-v0.4.8.apk` validada en Samsung Galaxy S20 FE (`SM-G780G`) con Android 13.
-- SHA-256 del APK publicado: `cad122d0329e1761816ac7ad07938673389c859a252d9cc63504359355db3d10`.
 
-### Commits recientes
-- 8e89167 docs: mark ExportService migration to TypeScript as complete
-- cab9b1b refactor(services): migrate ExportService to TypeScript
-- c876eb9 docs: update academic info in README.md
-- e923f80 fix(tooling): set LC_NUMERIC=C in bundle-budget.sh
-- 9847132 refactor(backup): migrate BackupFlowService to TypeScript
-- 44c94be docs: update task tracking and changelog for BackupStorageService migration
-- 4f3e478 refactor(backup): migrate BackupStorageService to TypeScript
-- ff5ca09 refactor(theme): migrate ThemeService to TypeScript
+- **Trazabilidad de la beta:** Se documentaron la publicación, la línea base operativa, el material de defensa y la sincronización parcial del informe final (`59e7011`, `8306765`, `8cc658a`, `c65d8b3`).
+- **Registro de comandos del editor tipado:** `editorCommandRegistry` y `editorInlineCommands` pasan a TypeScript sin alterar la interfaz ni el comportamiento publicado (`ced74c7`, `27d6f84`).
+- **Diagramas Mermaid sincronizados:** Se definió el alcance y se actualizaron casos de uso, modelo de dominio y secuencia de creación/edición contra `v0.4.8` (`25a675c`, `2cb7218`, `3904641`).
+- **Preparación editorial:** Se registraron consideraciones para la conversión final Markdown → LaTeX/PDF (`4a84b03`).
+- **Render Markdown seguro tipado:** `MarkdownService` pasa a TypeScript conservando sanitización, callouts y salida renderizada (`30e2dce`, `5db64de`).
+- **Reconciliación documental de Hito 06:** README, backlog, TODO, hitos, requisitos, investigación e informe adoptan una narrativa única para `v0.4.8`, el trabajo posterior no publicado y el alcance real de la evidencia.
+- **Arquitectura y patrones formalizados:** ADR-008 y el diagrama de componentes clasifican Lumapse como monolito modular cliente offline-first, con capas pragmáticas y patrones respaldados por puntos concretos del código.
+- **Modelos de datos sincronizados:** Las fuentes conceptual DOT, lógica DBML y física DDL reflejan el schema vigente; las exportaciones conceptual y lógica fueron reemplazadas, revisadas e incorporadas al informe el 2026-07-15.
+- **Checkpoint académico ensamblado:** `INFORME-FINAL-COMPLETO.md` se regeneró desde sus ocho secciones fuente —incluida la bibliografía— después de la revisión transversal del 2026-07-15; la portada separa alcance funcional, fuente técnica, corte documental y fecha de ensamblado.
+- **Relevamiento reconciliado con el CSV:** Se restauraron los textos efectivamente aplicados en P5b/P7, se documentó que los máximos multirrespuesta no quedaron asegurados, y se corrigieron demografía, P10, P11 y cruces contra la salida reproducible de los scripts.
 
-## Próximo — Hito 05: Testing, Calidad y Distribución (Preparación iniciada)
+### Commits posteriores al tag
 
-> Hito 05 queda activo desde el cierre formal del Hito 04 (2026-06-01). El foco es estabilizar, preparar distribución y revisar decisiones de alcance antes de la primera release.
+- `59e7011` docs(release): document published v0.4.8 beta
+- `8306765` docs(project): update backlog and task tracking for v0.4.8 beta
+- `8cc658a` docs(release): document baseline and defense cheatsheet for v0.4.8
+- `c65d8b3` docs(report): synchronize final report with v0.4.8 beta updates
+- `ced74c7` refactor(editor): migrate editorCommandRegistry and editorInlineCommands to TypeScript
+- `27d6f84` docs(project): update task tracking and plan for editor commands TS migration
+- `25a675c` docs(project): define explicit scope and tools for diagram updates
+- `2cb7218` docs(diagrams): update Mermaid diagrams to align with current app features
+- `3904641` docs(project): update backlog, changelog, and todo for diagram updates
+- `4a84b03` docs(report): add LaTeX conversion considerations to final report guidelines
+- `30e2dce` refactor(markdown): migrate MarkdownService to TypeScript
+- `5db64de` docs: update backlog, changelog and TODO for MarkdownService migration
 
 ---
 
-## [Unreleased] — Preparación Hito 05 — Quality Gate, Release y Mejoras Funcionales Controladas
+## [0.4.8] — 2026-07-01 — Beta controlada
 
-> Esta entrada se agrupa por bloques de trabajo para mantener el Hito 05 legible mientras sigue abierto. El corte final puede convertirse luego en una o más versiones formales si corresponde.
+> Primer artefacto Android firmado y publicado para validación controlada. El tag `v0.4.8` fija el commit `a808de7`; los cambios listados en `[Unreleased]` no forman parte de esa APK.
 
-### Bloque 1 — Quality Gate, Release y Auditorías
+### Added
 
-#### Added
+#### Quality gate y auditorías
+
 - **Scripts npm operativos:** Se expusieron `quality`, `verify`, `check:session`, `check:health`, `check:size`, `check:a11y`, `check:native-dialogs`, `check:traceability`, `check:docs`, `check:schema`, `check:dbml`, `check:subjects` y `deploy:android` para unificar el flujo local y CI.
 - **Check contra diálogos nativos:** Nuevo `scripts/check-native-dialogs.js`, que bloquea `alert()`, `confirm()` y `prompt()` en `src/`, con excepción explícita para `src/utils/seeder.js`.
 - **Entrypoint estable de trazabilidad:** Nuevo `scripts/check-traceability.py` como wrapper compatible para el checker preservado en `check-traceability.py.replaced`.
+- **Typecheck gradual:** Se agregó TypeScript como dependencia de desarrollo, `tsconfig.json`, contratos iniciales en `src/domain/` y el script `typecheck` dentro de `npm run verify`.
 
-#### Changed
-- **GitHub Actions ampliado:** El workflow existente pasó a ser `CI — Quality Gate` y ahora ejecuta lint, tests, build, bundle budget, check de diálogos nativos, trazabilidad, links internos, schema sync, DBML, jerarquía de materias y auditoría a11y estática.
-- **Tests nativos Android corregidos:** Se reemplazaron los tests generados por template que referenciaban paquetes de Capacitor por tests bajo `com.lumapse.app`.
-- **Versionado de paquete alineado:** `package.json` y `package-lock.json` pasan de `0.1.0` a `0.4.7`, manteniendo el paquete sincronizado con la última versión cerrada documentada antes de preparar un release/APK.
-- **CSP web ajustada para SQLite WASM:** `index.html` permite el runtime WASM local necesario para `jeep-sqlite`/`sql.js`, manteniendo los recursos restringidos a orígenes locales.
-- **Accesibilidad de controles secundarios:** Los tabs de Backup, el descarte de borrador y las opciones del selector de materia declaran etiquetas accesibles/tooltip, dejando `npm run check:a11y` sin advertencias.
+#### Mejoras funcionales controladas
 
-### Bloque 2 — Mantenibilidad y TypeScript Gradual
+- **Editor enriquecido y slash commands (RF-028 / HU-028):** Registro compartido para `/`, botón `+` y botón `Aa`; encabezados, listas, checkboxes, citas, tablas, separadores, código, callouts, formato inline, continuidad inteligente y Modo Enfoque dedicado.
+- **Borradores persistentes (RF-005 / HU-005):** Conservación local de notas nuevas o en edición, restauración al volver a la app, indicador de cambios y descarte explícito sin crear ni actualizar la nota final hasta confirmar el guardado.
+- **Fechas académicas discretas (RF-027 / HU-027 / DP-007):** CRUD, tabla SQLite, dots en Heatmap, mini-card por día, diálogo accesible y lista de próximas fechas para parciales, finales, trabajos prácticos y exposiciones.
+- **Backup manual externo (RF-017 / HU-030):** Generación de `.zip` restaurable y legible, con manifiesto, JSON, notas Markdown, recordatorio local, detección de conectividad y salida por share sheet/gestor de archivos.
+- **Importación de backup ZIP (RF-018 / HU-031):** Validación de manifiesto, preview, escritura transaccional y política no destructiva de duplicados. El flujo tuvo una ejecución Android satisfactoria en un build previo; su repetición sobre el artefacto final queda exigida por Hito 06.
+- **Sección Acerca de (RF-023 / HU-023):** Vista con versión, autor, licencia, propósito y alcance offline/local.
 
-#### Added
-- **Plan de mantenibilidad y tipado gradual:** Se documentó en `docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md` una estrategia por fases para ordenar tests por feature, desacoplar store/UI, introducir contratos de dominio y migrar gradualmente módulos puros a TypeScript/JSDoc sin reescritura completa.
-- **Typecheck gradual:** Se agregó TypeScript como dependencia de desarrollo, `tsconfig.json`, script `typecheck`, contratos iniciales en `src/domain/` y el typecheck dentro de `npm run verify`.
+### Changed
 
-#### Changed
-- **Componentes UI organizados por feature folders:** `src/components/` deja de ser una carpeta plana y pasa a agrupar editor, feed, fechas académicas, backup, Markdown y componentes comunes en subcarpetas explícitas. La decisión queda documentada en `docs/adr/ADR-007-organizacion-componentes-por-feature.md` y fue verificada con la suite unitaria.
-- **Tests de componentes organizados por feature folders:** `tests/unit/components/` ahora espeja la estructura de `src/components/` con carpetas `academic-events`, `backup`, `common`, `feed` y `note-editor`, manteniendo más cerca el mapa mental de código y pruebas.
-- **Store desacoplado del feedback visual:** `NoteStore.*` deja de importar `Toast`; ahora emite eventos de error de dominio mediante `NoteStore.errors.js` y `main.js` decide cómo comunicarlos en la UI.
-- **Primera tanda de módulos puros migrada a TypeScript:** `AcademicEventRules`, `NoteTitleService`, `SubjectService.validation`, `BackupFormat` y `noteFilters` pasan a `.ts` con contratos mínimos y tests enfocados.
-- **Primer servicio de dominio migrado a TypeScript:** `AcademicEventService` pasa a `.ts`, declara entradas/salidas publicas sobre contratos de `src/domain/academicEvents.ts` y mantiene aislado el CRUD SQLite bajo nivel.
-- **Servicios puros de backup migrados a TypeScript:** `BackupNetworkService` y `BackupReminderService` pasan a `.ts` para fijar contratos de estado de red, decisiones de backup externo y recordatorios locales sin tocar Capacitor, storage ni UI.
-- **Contrato de backup tipado:** `BackupDataSource` y `BackupService` pasan a `.ts`, agregando `BackupData`, `BackupItemCounts`, `BackupZipOptions` y `CurrentBackupZip` como contratos compartidos entre SQLite, ZIP, exportacion web y flujo de backup.
-- **ZIP de backup y auditorias alineadas con TypeScript:** `BackupZipService` pasa a `.ts` y el auditor Rust/binario junto con scripts auxiliares de tamaño, offline, a11y, health y metricas ahora incluyen archivos `.ts`.
-- **Escritor ZIP liviano tipado:** `BackupZipArchive` pasa a `.ts`, fijando contratos para archivos ZIP, opciones de salida y retorno `Blob`/`ArrayBuffer`/base64, con test directo de rutas UTF-8 y contenido binario.
-- **Persistencia liviana de recordatorios de backup tipada:** `BackupStorageService` pasa a `.ts`, fijando contrato de storage inyectable, timestamps persistidos y retornos usados por el flujo de backup manual.
-- **Flujo manual de backup tipado:** `BackupFlowService` pasa a `.ts`, declarando contratos para readiness de red, recordatorios locales, cancelacion del share sheet y resultado compartido sin tocar UI ni plugins nativos.
-- **Fachada web de exportacion tipada:** `ExportService` pasa a `.ts`, fija el contrato de descarga `Blob` y conserva la delegacion al backup canonico v1 para compatibilidad web/legada.
-- **Render Markdown seguro tipado:** `MarkdownService` pasa a `.ts`, fijando contratos para opciones de render, callouts, deteccion de sintaxis y postproceso de checkboxes sin cambiar la sanitizacion ni la UI.
-- **CRUD de materias tipado:** `SubjectService.crud` pasa a `.ts`, declarando contratos de creación, actualización, archivo/desarchivo y árbol activo sobre `Subject`/`SubjectTree`, mientras `SubjectService.js` sigue como barrel público.
-- **Papelera avanzada tipada:** `SubjectService.trash` pasa a `.ts`, fijando contratos de cascada, restauración navegable, notas sueltas, secciones huérfanas y salida `getTrashItems` sin cambiar el barrel público.
-- **Tipos visuales de fechas académicas tipados:** `AcademicEventTypes` pasa a `.ts`, fijando contratos para tipos visuales, colores, opciones de dots/listas y acciones sin tocar los componentes grandes que lo consumen.
-- **Registro de comandos del editor tipado:** `editorCommandRegistry` y `editorInlineCommands` pasan a `.ts`, declarando contratos para superficies (`slash`, `insert`, `inline`), grupos, snippets y metadatos visuales sin tocar la UI del editor.
-- **ESLint cubre TypeScript gradual:** `eslint.config.js` incorpora `typescript-eslint` para analizar `src/**/*.ts` con reglas recomendadas y las guardas locales de complejidad/tamaño, detectando deuda real en servicios tipados sin activar reglas type-aware agresivas.
-- **Trazabilidad preparada para JS/TS:** El checker de trazabilidad escanea comentarios en archivos `.js` y `.ts`, evitando que futuras migraciones queden fuera del control documental.
+#### Distribución y validación
 
-### Bloque 3 — Mejoras Funcionales Controladas
+- **Preparación de release:** `package.json`, `package-lock.json` y Android quedaron alineados con `0.4.8` / `versionCode 408` mediante `scripts/release-helper.py` y configuración Gradle.
+- **APK firmada:** `lumapse-v0.4.8.apk` fue firmada fuera del repositorio, verificada con esquema v2 e instalada en un Samsung Galaxy S20 FE (`SM-G780G`) con Android 13.
+- **Publicación:** [`Lumapse v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8) se publicó como pre-release/beta controlada. SHA-256: `cad122d0329e1761816ac7ad07938673389c859a252d9cc63504359355db3d10`.
+- **Gate final:** `npm run verify` y la validación manual concluyeron sin fallos bloqueantes, crashes ni pérdida de datos.
 
-#### Added
-- **Editor enriquecido y slash commands (RF-028 / HU-028):** El editor incorpora un registro compartido de comandos para `/`, botón `+` y botón `Aa`, con inserción de encabezados, listas, checkboxes, citas, tablas, separadores, código y callouts. Incluye formato inline sobre selección, botón dedicado de Modo Enfoque en el composer, continuidad inteligente con Enter para listas/citas/callouts, salida con línea vacía y popup visual con iconos/pistas compactas.
-- **Borradores persistentes del editor (RF-005 / HU-005):** El editor conserva localmente el trabajo en curso al crear o editar notas, restaura el borrador al volver a la app o a una vista con editor, muestra un indicador sutil de cambios pendientes y permite descartarlo con confirmación. La nota final solo se crea o actualiza cuando el usuario toca `Guardar` o `Actualizar`; los borradores se limpian tras guardado exitoso o descarte explícito.
-- **Fechas Académicas discretas (RF-027 / HU-027 / DP-007):** Implementación completa de marcadores académicos puntuales para parciales, finales, trabajos prácticos y exposiciones dentro del calendario existente. Incluye tabla SQLite `academic_events`, CRUD bajo nivel, servicio de dominio, store reactivo, dots en Heatmap, mini-card por día, modal accesible de creación/edición, lista colapsable de próximas fechas, acciones de editar/eliminar con confirmación accesible y tests unitarios de datos, store y UI.
-- **Backup manual externo (RF-017 / HU-030):** Nueva vista `Backup` accesible desde el drawer para crear un `.zip` manual restaurable y legible, con `manifest.json`, JSON estructurado, notas Markdown por materia/sección, recordatorio local de 30 días, detección WiFi/datos móviles/offline y salida por share sheet/gestor de archivos. Validado en Android real; si Google Drive está instalado puede aparecer como destino, y si no, funciona el fallback de almacenamiento elegido por el usuario.
-- **Importación de backup ZIP (RF-018 / HU-031):** La vista `Backup` permite seleccionar un `.zip` generado por Lumapse, validar `manifest.json`, previsualizar notas/materias/secciones/fechas académicas, importar de forma transaccional y omitir duplicados sin sobrescribir datos existentes. Validado en Android real sobre workspace existente e instalación limpia.
-- **Sección Acerca de (RF-023 / HU-023):** Nueva vista accesible desde el menú de la app con versión tomada de `package.json`, autor, licencia, propósito y alcance offline/local, evitando convertirla en onboarding o guía Markdown.
+#### Calidad y mantenibilidad
 
-#### Changed
-- **Contador de materias corregido:** el badge de una materia raíz ahora suma notas directas y notas de sus secciones, mientras cada sección mantiene su contador propio.
-- **Búsqueda RF-015 más útil:** La lupa ahora busca globalmente entre notas activas aunque el usuario esté ubicado en Entrada o en una materia, y normaliza tildes para que `algebra` encuentre `Álgebra`.
-- **Título implícito más claro:** Las tarjetas destacan suavemente la primera línea no vacía como título cuando la nota no usa `#`, manteniendo el editor de un solo campo y reduciendo fricción para usuarios nuevos.
-- **Render Markdown enriquecido:** Callouts principales se renderizan con icono, color y título por tipo; blockquotes simples, tablas, separadores, código y checkboxes tienen estilos más estables en preview y tarjetas de nota.
-- **Tipografía de escritura más amable:** La interfaz conserva JetBrains Mono como identidad visual, pero el área de escritura y lectura de notas usa una pila serif nativa del sistema para una experiencia offline-first más cómoda en móvil.
-- **Menú de app ampliado:** Las opciones de Lumapse ahora incluyen `Acerca de` junto a Exportar ZIP, Importar ZIP y cambio de tema; el editor se oculta en vistas informativas o de mantenimiento.
-- **Reclasificación RF-005:** El auto-guardado final silencioso queda reemplazado por borradores persistentes del editor, preservando texto, título y materia/sección sin crear duplicados ni actualizar notas definitivas sin confirmación.
+- **GitHub Actions ampliado:** `CI — Quality Gate` ejecuta lint, tests, build, bundle budget, diálogos nativos, trazabilidad, links internos, schema sync, DBML, jerarquía de materias y auditoría a11y estática.
+- **Tests nativos Android corregidos:** Los tests generados por template fueron reemplazados por tests bajo `com.lumapse.app`.
+- **CSP web ajustada:** `index.html` permite el runtime WASM local requerido por `jeep-sqlite`/`sql.js` sin abrir recursos remotos.
+- **Accesibilidad secundaria:** Tabs de Backup, descarte de borrador y opciones del selector de materia incorporaron etiquetas accesibles y tooltips.
+- **Componentes y tests por feature:** `src/components/` y `tests/unit/components/` se organizaron por áreas funcionales; la decisión quedó registrada en ADR-007.
+- **Store desacoplado de la UI:** `NoteStore.*` emite errores de dominio y `main.js` decide su presentación visual.
+- **TypeScript gradual:** Se migraron contratos, módulos puros y servicios donde el tipado aportaba seguridad: reglas y tipos académicos, títulos, filtros, validación y CRUD/papelera de materias, formato/datos/ZIP/recordatorios/flujo de backup, `ExportService`, `editorTextTransforms` y `ThemeService`.
+- **Auditorías JS/TS:** Los checkers y el auditor auxiliar incluyen archivos `.ts`.
+- **Plan de mantenibilidad:** La estrategia incremental quedó documentada en `docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`.
 
-### Bloque 4 — Documentación, Trazabilidad y Planes Cerrados
+#### Experiencia de uso
 
-#### Changed
-- **Backlog/TODO actualizados:** El `TODO` raíz y `BACKLOG.md` registran como completada la capa de automatización, cierran formalmente Hito 04 y clasifican esta tanda como preparación de Hito 05 con cambios funcionales controlados.
-- **Diagramas Mermaid sincronizados con `v0.4.8`:** Se actualizaron casos de uso, modelo de dominio y secuencia de creación/edición de nota para reflejar backup/importación ZIP, fechas académicas, Acerca de, editor enriquecido y borradores persistentes, manteniendo compartir/importar nota individual como post-release.
-- **Seguimiento de velocidad actualizado:** `docs/gestion/seguimiento-velocidad.md` registra 22 HU formalizadas, 104 SP totales, 65 SP cerrados en Hitos 02 a 04 y 36 SP formalizados en curso para Hito 05.
-- **Reclasificación RF-016 y cierre de RF-017/RF-018:** La revisión documental mantiene compartir/exportar nota individual e importación `.md` como decisiones futuras, pero `RF-017` y `RF-018` dejan de ser deuda abierta porque la exportación e importación manual de backups ZIP ya quedaron integradas y validadas en Android real.
-- **Plan de backup archivado:** El plan operativo de backup `.zip` y Google Drive se movió desde la raíz a `docs/gestion/historico/plan-backup-google-drive-2026-06-03.md` para conservar evidencia sin ensuciar el directorio principal.
-- **Plan de importación ZIP archivado:** El plan operativo de importación de backups `.zip` se conserva en `docs/gestion/historico/plan-importacion-backup-zip-2026-06-18.md` como evidencia de alcance, fases, pruebas y validación Android.
-- **Plan de editor enriquecido archivado:** El plan operativo de editor enriquecido y slash commands se movió desde la raíz a `docs/gestion/historico/plan-editor-enriquecido-2026-06-05.md` tras completar sus fases.
-- **Plan de borradores persistentes archivado:** El plan operativo de `RF-005 / HU-005` se movió desde la raíz a `docs/gestion/historico/plan-borradores-persistentes-2026-06-06.md` tras completar implementación, tests y validación manual.
+- **Contador de materias:** El badge de una materia raíz suma notas directas y notas de sus secciones.
+- **Búsqueda global:** La lupa busca entre notas activas desde cualquier ubicación y normaliza tildes.
+- **Política de título flexible:** La beta admite un título explícito opcional, usa un H1 inicial como fallback cuando el campo queda vacío y evita duplicar la misma línea en la presentación. Esta evolución revisa la formulación original de DP-001 sin eliminar su registro histórico.
+- **Markdown enriquecido:** Callouts, blockquotes, tablas, separadores, código y checkboxes tienen render y estilos estables.
+- **Tipografía de escritura:** Editor y lectura usan una pila serif nativa del sistema, manteniendo JetBrains Mono como identidad visual.
+- **Menú ampliado:** Se incorporó `Acerca de` junto a Exportar ZIP, Importar ZIP y cambio de tema.
+- **RF-005 reclasificado:** El auto-guardado final silencioso fue reemplazado por borradores persistentes bajo control explícito del usuario.
+
+#### Documentación y trazabilidad
+
+- **Backlog y planes operativos:** Se actualizaron los tableros vivos y se archivaron los planes cerrados de backup, importación ZIP, editor enriquecido y borradores persistentes en `docs/gestion/historico/`.
+- **Seguimiento de velocidad:** Hito 05 formalizó y entregó 36 SP; el total entregado en Hitos 02 a 05 asciende a 101 SP.
+- **Portabilidad aclarada:** `RF-017` y `RF-018` cubren backup e importación ZIP de workspace; compartir una nota individual (`RF-016`) e importar un `.md` aislado permanecen como decisiones futuras separadas.
+
+### Cierre del Hito 05
+
+- El hito se cerró documentalmente el 2026-07-15 con la beta `v0.4.8` como línea base operativa, sin crear una versión `0.4.9`.
+- La fricción menor de `Mover a` y el rendimiento con volúmenes mayores de notas permanecen como observaciones no bloqueantes para la validación final de Hito 06.
 
 ---
 
@@ -114,15 +112,17 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 > Las versiones 0.4.0 a 0.4.7 componen el Hito 04. Cada sub-versión agrupa un lote
 > lógico de trabajo entregado de forma incremental siguiendo la metodología Kanban (ADR-003).
 > El hito queda cerrado formalmente el 2026-06-01. El cierre se realiza con empty states pulidos y decisiones explícitas de postergación/descarte para las funcionalidades que podían agregar fricción o sugerir capacidades no presentes todavía.
+>
+> **Nota de versionado:** `0.4.0` a `0.4.7` son cortes documentales de trabajo, no tags ni GitHub Releases independientes. `v0.4.8` es el primer artefacto publicado de esta serie. Los meses de `0.1.0` a `0.3.0` conservan el calendario académico planificado y no deben interpretarse como fechas de publicación Git.
 
 ### Cierre formal — 2026-06-01
 
 #### Changed
 - **Empty states de cierre UX:** Se pulieron los mensajes de feed vacío, búsqueda sin resultados, materia sin notas, archivo vacío y fecha sin notas para orientar sin agregar onboarding obligatorio.
 - **RF-006 postergado:** El contador de palabras/caracteres no se incorpora al MVP para preservar un editor liviano. Queda como posible mejora futura si estudiantes reales lo solicitan.
-- **RF-024 postergado:** El indicador online/offline se posterga hasta que exista sincronización, backup o integración externa. En el producto actual, todas las acciones centrales funcionan offline.
+- **RF-024 postergado:** El indicador global online/offline se posterga porque las acciones centrales funcionan con datos locales y un chip permanente podría sugerir una sincronización inexistente. El backup incorporado después en `0.4.8` comunica la conectividad dentro de su propio flujo, donde sí modifica una decisión concreta.
 - **RF-022 postergado:** El onboarding carousel se posterga para no bloquear la primera nota con una experiencia previa. Se evaluará con feedback post-release.
-- **DP-006 consolidada:** La ayuda Markdown y coach marks quedan fuera del Hito 04; cualquier ayuda ampliada deberá integrarse con la futura sección "Acerca de" de Hito 05 sin saturar la interfaz.
+- **DP-006 consolidada:** La ayuda Markdown y coach marks quedan fuera del Hito 04; la sección `Acerca de` incorporada posteriormente en Hito 05 mantiene ese alcance acotado sin convertirse en tutorial obligatorio.
 
 ---
 
@@ -257,14 +257,14 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - P12 agregada a la encuesta de relevamiento: preferencia de organización (carpetas vs tags).
 
 ### Changed
-- **DP-001: Título unificado (estilo Typora).** Se eliminó el campo de título separado del editor. El título se extrae automáticamente de la primera línea `# ` del contenido Markdown.
+- **DP-001: Título unificado (estilo Typora).** En este corte se eliminó el campo de título separado y se extrajo el título de la primera línea `# `; `0.4.8` revisó después esta política y restauró un título explícito opcional.
 - **Rediseño UI a estética Notion/Obsidian:** Interfaz minimalista con paleta oscura suave, tipografía monospace y micro-animaciones.
 - **Jerarquía de Markdown en feed:** Encabezados H1-H3 con tamaños y pesos corregidos para legibilidad.
 - **Layout mobile-first (RF-020):** Arquitectura responsive con drawer lateral, sin sidebar fija.
 - **Migración de colores hardcodeados a tokens CSS:** Todos los valores `rgba()` en `NoteList.css`, `NoteEditor.css` y `Heatmap.css` reemplazados por variables semánticas (`var(--color-*)`) para compatibilidad con el sistema de temas.
 
 ### Removed
-- **`vite-plugin-pwa` y artefactos PWA (ADR-005):** Se eliminó `vite-plugin-pwa` (289 paquetes), `public/manifest.json`, `VitePWA()` de `vite.config.js` y `<link rel="manifest">` de `index.html`. La arquitectura es Capacitor nativa; los assets son locales por diseño.
+- **`vite-plugin-pwa` y artefactos PWA (ADR-005):** Se eliminó `vite-plugin-pwa` (289 paquetes), `public/manifest.json`, `VitePWA()` de `vite.config.js` y `<link rel="manifest">` de `index.html`. La aplicación se empaqueta como APK Android híbrida con Capacitor; los assets son locales por diseño.
 - `@import` remoto de Google Fonts en `main.css` — reemplazado por `@font-face` locales.
 
 ### Fixed

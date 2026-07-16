@@ -1,8 +1,11 @@
 # Plan de Mantenibilidad y Tipado Gradual
 
-> Estado: activo desde 2026-06-12.  
+> Estado: linea base historica y referencia de la migracion gradual iniciada el 2026-06-12.
 > Alcance: mejorar mantenibilidad, cohesion y escalabilidad del codigo sin reescrituras grandes.  
-> Relacion: Hito 05, `TODO`, `BACKLOG.md`, ADR-007.
+> Cierre operativo: Hito 05 cerrado documentalmente el 2026-07-15.
+> Relacion: Hito 05, `TODO`, `BACKLOG.md`, ADR-007. No constituye un compromiso activo de version `0.4.9`.
+
+> **Lectura vigente:** Este plan documenta la estrategia y la primera ola ya realizada. Las fases de store y componentes grandes son deuda opcional futura, posterior a la presentacion, y solo deben retomarse si existe un beneficio concreto; no forman parte del cierre obligatorio de Hito 06.
 
 ---
 
@@ -10,15 +13,15 @@
 
 Preparar Lumapse para crecer de forma ordenada, legible para humanos y facil de asistir por IA. La meta no es "pasar todo a TypeScript" de una vez, sino introducir contratos y limites de modulo que reduzcan errores al refactorizar.
 
-El trabajo debe preservar la prioridad del Hito 05: estabilizar, validar en Android real y preparar distribucion. Las mejoras estructurales entran solo cuando son pequenas, verificables y no agregan features nuevas.
+Durante Hito 05, el trabajo preservo la prioridad de estabilizar, validar en Android real y preparar distribucion. Esa etapa ya cerro; el documento queda como registro de la estrategia aplicada y referencia para mejoras futuras pequenas y verificables.
 
 ---
 
 ## 2. Lectura Actual
 
-- `src/components/` ya esta organizado por feature folders, pero `tests/unit/components/` todavia esta plano.
-- El proyecto usa JavaScript ES modules, Vite, Vitest, ESLint y TypeScript gradual con `npm run typecheck`.
-- Hay buenos candidatos de bajo riesgo para tipado o migracion gradual: `noteFilters`, `NoteTitleService`, `AcademicEventRules`, validaciones de materias y formato de backup.
+- `src/components/` y `tests/unit/components/` ya estan organizados por feature folders equivalentes.
+- El proyecto usa JavaScript ES modules, Vite, Vitest, ESLint y TypeScript gradual; el toolchain y `npm run typecheck` ya estan instalados e integrados al gate.
+- La primera ola de modulos puros y servicios de dominio ya fue migrada; los candidatos restantes deben evaluarse por beneficio y no por completar una conversion masiva.
 - El store ya no conoce feedback visual mediante imports a `Toast`; emite eventos de error de dominio y la UI decide como mostrarlos.
 - Los componentes grandes (`NoteEditor`, `NoteList`, `Heatmap`, `BackupView`) conviene dejarlos para el final, despues de separar responsabilidades internas y estabilizar contratos.
 
@@ -60,12 +63,12 @@ Cuando se introduzca TypeScript, la convivencia debe ser gradual:
 - Los componentes JS pueden consumir modulos TS a traves de imports ESM normales.
 - No se debe renombrar un archivo a `.ts` si antes no hay tests que cubran su comportamiento central.
 
-Toolchain sugerido cuando se ejecute la fase:
+Toolchain instalado durante la fase:
 
-- Agregar `typescript` como dependencia de desarrollo.
-- Crear `tsconfig.json` con `allowJs: true`, `noEmit: true`, `strict: true` y `checkJs: false` al inicio.
-- Agregar script `typecheck`.
-- Ampliar ESLint/Vitest para incluir `.ts` solo despues de tener el primer modulo migrado.
+- [x] `typescript` agregado como dependencia de desarrollo.
+- [x] `tsconfig.json` creado para convivencia gradual y emision deshabilitada.
+- [x] Script `typecheck` agregado.
+- [x] ESLint, build y auditorias ampliados para reconocer `.ts`. La cobertura Vitest de TypeScript se revisa por separado en `RNF-024`.
 
 ---
 
@@ -190,7 +193,7 @@ Criterio de cierre por archivo:
 
 ### Fase 5 - Servicios de Dominio
 
-Estado: iniciada el 2026-06-12.
+Estado: primera ola completada. No se mantiene una cola obligatoria de conversion antes de la presentacion.
 
 Migrar servicios donde los contratos reducen errores reales:
 
@@ -218,6 +221,8 @@ Criterio de cierre:
 
 ### Fase 6 - Store
 
+Estado: deuda opcional futura, posterior a la presentacion.
+
 Migrar el store despues de tener servicios tipados.
 
 Tareas:
@@ -234,6 +239,8 @@ Criterio de cierre:
 - Los tests de store cubren errores y estados derivados.
 
 ### Fase 7 - Componentes Grandes
+
+Estado: deuda opcional futura, posterior a la presentacion.
 
 Dejar para el final:
 
@@ -304,10 +311,10 @@ No hace falta levantar servidor local como parte de estas fases. La validacion v
 
 ---
 
-## 10. Orden Recomendado Inmediato
+## 10. Estado al cierre y continuacion opcional
 
-1. Continuar servicios de dominio/backup con contratos de entrada/salida solo cuando el beneficio sea claro.
-2. Pausar migraciones de backup que toquen bordes nativos/share/storage hasta tener contratos mas claros.
-3. Dejar store y componentes grandes para fases posteriores.
+1. Conservar la primera ola completada como linea base estable durante el cierre y la presentacion.
+2. No crear `0.4.9` ni ampliar el alcance de Hito 06 para “terminar” este plan.
+3. Evaluar store, componentes grandes o servicios restantes solo despues de la presentacion y con un beneficio concreto, tests existentes y alcance pequeno.
 
-El mapa de tests por feature ya quedo alineado, el store ya no depende de feedback visual, el typecheck ya es parte del gate, la primera tanda de modulos puros esta migrada, el registro de comandos del editor ya tiene contratos TS, `AcademicEventService` ya quedo tipado como primer servicio de dominio, la capa pura de backup ya cubre decisiones, datos, ZIP, escritura ZIP, orquestacion y fachada web/legada de exportacion, `SubjectService.crud` ya cubre materias/arbol activo, `SubjectService.trash` ya cubre papelera avanzada, y las auditorias automaticas ya escanean `.ts`. El proximo paso debe seguir siendo pequeno: tipar servicios con tests existentes, sin arrastrar componentes grandes ni mezclar capas.
+El mapa de tests por feature quedo alineado, el store ya no depende de feedback visual, el typecheck forma parte del gate, la primera tanda de modulos puros esta migrada, el registro de comandos del editor tiene contratos TS, `AcademicEventService` quedo tipado como primer servicio de dominio, la capa pura de backup cubre decisiones, datos, ZIP, escritura ZIP, orquestacion y fachada web/legada de exportacion, `SubjectService.crud` cubre materias/arbol activo, `SubjectService.trash` cubre papelera avanzada y las auditorias automaticas escanean `.ts`. Ese resultado cierra la primera ola; no obliga a migrar store o componentes grandes antes de entregar el proyecto.

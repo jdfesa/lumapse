@@ -89,7 +89,9 @@
 | VM-12 | Tema | Alternar modo claro/oscuro y reiniciar la app | El tema se aplica y persiste | OK 2026-07-01 |
 | VM-13 | Rotacion/responsivo | Probar vertical y horizontal, si el dispositivo lo permite | No hay solapamientos ni controles inaccesibles | OK inicial 2026-07-01 |
 | VM-14 | Rendimiento percibido | Navegar feed, drawer, editor y heatmap con varias notas | La app responde sin bloqueos perceptibles | OK inicial 2026-07-01 |
-| VM-15 | Exportar/importar ZIP | Exportar ZIP, guardarlo, reinstalar limpio, importar ZIP y repetir importacion | El ZIP se restaura y la segunda importacion omite duplicados | OK 2026-06-18 |
+| VM-15 | Exportar/importar ZIP | Exportar ZIP, guardarlo, reinstalar limpio, importar ZIP y repetir importación | El ZIP se restaura y la segunda importación omite duplicados | Evidencia parcial previa: OK 2026-06-18; repetir sobre el artefacto final |
+
+> VM-01 a VM-14 corresponden a la ejecución de `v0.4.8` del 2026-07-01 en el S20 FE. VM-15 conserva una evidencia separada sobre un build anterior; sus datos de dispositivo, versión, rama y commit se detallan más abajo y no deben atribuirse a la APK firmada `v0.4.8`.
 
 ---
 

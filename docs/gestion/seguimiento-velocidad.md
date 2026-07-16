@@ -4,7 +4,7 @@
 > **Referencia:** Gómez, J. (2014), Secciones 5 y 7. Guía de Estudio PP3 (Ing. Mauricio Parada, 2026).  
 > **Fecha de creación:** 2026-05-15  
 > **Autor:** José David Sandoval  
-> **Actualización:** 2026-06-19 — incorporación de RF-018/HU-031 como importación ZIP y RF-023/HU-023 como sección Acerca de mínima en Hito 05.
+> **Actualización:** 2026-07-15 — cierre de Hito 05 con 36 SP entregados y activación de Hito 06 como etapa documental sin HU nuevas.
 
 ---
 
@@ -85,9 +85,9 @@ Story Points entregados según las HU formalizadas:
 
 El Hito 04 registra 37 SP entregados y queda **cerrado formalmente el 2026-06-01**. Los pendientes menores de UX fueron resueltos con una combinación de pulido mínimo (empty states) y decisiones explícitas de postergación/descarte para proteger la filosofía del producto: captura rápida, offline-first, mobile-first y sin sincronización todavía.
 
-### Hito 05 — Testing, Calidad y Distribución (Septiembre 2026, en curso)
+### Hito 05 — Testing, Calidad y Distribución (planificado para Septiembre 2026, cerrado)
 
-Story Points formalizados hasta el 2026-06-19:
+Story Points entregados al cierre documental del 2026-07-15:
 
 | HU | Funcionalidad | SP |
 |---|---|---|
@@ -97,9 +97,13 @@ Story Points formalizados hasta el 2026-06-19:
 | HU-023 | Sección Acerca de | 2 |
 | HU-030 | Backup manual externo | 8 |
 | HU-031 | Importación de backup ZIP | 8 |
-| | **Total Hito 05 formalizado** | **36** |
+| | **Total Hito 05 entregado** | **36** |
 
-El Hito 05 mantiene su objetivo principal de testing, calidad y distribución, pero incorpora mejoras funcionales acotadas aprobadas durante la preparación de release. Se registran como cambios de alcance controlados porque ya quedaron implementados, probados y documentados, sin reabrir el Hito 04.
+Hito 05 mantuvo su objetivo principal de testing, calidad y distribución e incorporó mejoras funcionales acotadas aprobadas durante la preparación de release. Los 36 SP quedaron implementados, probados y documentados; el hito se cerró sobre la beta operativa `v0.4.8` sin reabrir Hito 04.
+
+### Hito 06 — Entrega Final (planificado para Octubre 2026, activo)
+
+Hito 06 no tiene HU funcionales ni SP asignados al 2026-07-15. Sus entregables son de cierre: revisión editorial, gráficos de base de datos, validación final, línea base y presentación. Si apareciera un cambio funcional bloqueante, deberá estimarse y aprobarse antes de alterar esta línea.
 
 ---
 
@@ -111,16 +115,16 @@ El Hito 05 mantiene su objetivo principal de testing, calidad y distribución, p
 | 02 | Junio 2026 | 15 | 15 | 15 SP/mes | 0 | ✅ Completado | Core CRUD y persistencia local; RF-005 reclasificado a Hito 05 |
 | 03 | Julio 2026 | 13 | 13 | 13 SP/mes | 0 | ✅ Completado | Markdown, lectura/escritura y offline; portabilidad local reclasificada |
 | 04 | Agosto 2026 | 37 | 37 | 37 SP/mes | 0 | ✅ Completado | Organización por materias + UX mobile cerrado formalmente |
-| 05 | Septiembre 2026 | 36 | 36 | 36 SP/mes parcial | 0 | 🔄 En curso | Testing + APK firmado, export/import ZIP, fechas discretas, editor enriquecido, borradores persistentes y Acerca de |
-| 06 | Octubre 2026 | *por definir* | — | — | — | ⏳ Futuro | Informe final + entrega |
+| 05 | Septiembre 2026 | 36 | 36 | 36 SP/hito | 0 | ✅ Completado | Testing + APK firmado, export/import ZIP, fechas discretas, editor enriquecido, borradores persistentes y Acerca de |
+| 06 | Octubre 2026 | — | — | No aplica todavía | — | 🔄 En curso | Documentación, gráficos DB, validación final, línea base y presentación; sin HU nuevas |
 
 ### Velocidad promedio (datos disponibles)
 
 ```
-Velocidad promedio = (15 + 13 + 37) / 3 = 21.7 SP/hito
+Velocidad promedio cerrada = (15 + 13 + 37 + 36) / 4 = 25.25 SP/hito
 ```
 
-> El script `python3 scripts/generate-velocity-report.py` permite auditar los SP formalizados por hito desde la tabla de HU. Para velocidad real cerrada se consideran solo los hitos formalmente completados (02 a 04). Al 2026-06-19, el proyecto registra **22 HU formalizadas**, **104 SP totales planificados/formalizados**, **65 SP cerrados** en Hitos 02 a 04 y **36 SP formalizados en curso** para Hito 05.
+> El script `python3 scripts/generate-velocity-report.py` permite auditar los SP desde la tabla de HU. Al 2026-07-15 registra **22 HU**, **104 SP formalizados**, **101 SP entregados** en Hitos 02 a 05 y **3 SP postergados** a Futuro (`HU-008`). Para velocidad real cerrada se promedian solo los cuatro hitos funcionales completados; el valor `20.8` del reporte automático usa además el bucket Futuro como agrupación y no representa velocidad entregada.
 
 ---
 
@@ -158,16 +162,27 @@ El Hito 04 concentra el mayor volumen de SP del proyecto porque absorbió tanto 
 
 > **Lección aprendida:** cerrar un hito no significa implementar toda idea opcional. En un producto minimalista, también es cierre declarar qué no se incorpora todavía y por qué.
 
+### Hito 05 — Sin desvío en las HU formalizadas y cierre operativo de beta
+
+| Métrica | Valor |
+|---|---|
+| SP planificados/formalizados | 36 |
+| SP entregados | 36 |
+| Desvío | 0 respecto de las HU formalizadas |
+
+Hito 05 adelantó trabajo respecto del mes planificado y cerró un volumen amplio: calidad, distribución y seis HU controladas. La principal lección es separar el artefacto publicado de la evolución posterior de `main`: `v0.4.8` identifica la APK validada, mientras los commits posteriores todavía no constituyen otra release.
+
 ---
 
-## 6. Factores que podrían generar desvíos en el cierre del Hito 04
+## 6. Factores que podrían generar desvíos en el cierre del proyecto
 
 | Factor de riesgo | Probabilidad | Impacto | Mitigación |
 |---|---|---|---|
-| Mezclar cierre de Hito 04 con preparación de Hito 05 | Mitigado | Medio | Hito 04 cerrado; Hito 05 activo desde 2026-06-01 |
-| Pendientes UX pequeños crecen de alcance | Mitigado | Medio | RF-006, RF-022 y RF-024 postergados con justificación |
-| Documentación generada queda desfasada | Media | Alto | Regenerar informe/cheatsheet solo en puntos de control |
-| Gráficos de base de datos requieren herramientas externas | Media | Bajo | Dejarlos para el cierre final, como ya se acordó |
+| Confundir `main` posterior con la APK `v0.4.8` | Mitigado | Alto | Changelog y líneas base separan tag, artefacto y el checkpoint inicial de 12 commits; el conteo posterior puede crecer |
+| Pendientes UX pequeños crecen de alcance | Media | Medio | `Mover a` y rendimiento se validan con severidad explícita; no habilitan features nuevas |
+| Documentación generada queda desfasada | Media | Alto | Congelar fuente Markdown y regenerar salidas solo en puntos de control |
+| Gráficos de base de datos requieren herramientas externas | Mitigado | Medio | Fuentes y exportaciones contrastadas con el schema e incorporadas el 2026-07-15; resta verificar legibilidad en la maquetación final |
+| Preparación de defensa desplaza la validación final | Media | Alto | Mantener WIP máximo de dos frentes y cerrar validación antes del corte/tag final |
 
 ---
 

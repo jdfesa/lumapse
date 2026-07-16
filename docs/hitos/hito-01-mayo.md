@@ -10,6 +10,8 @@
 
 ---
 
+> **Lectura histórica:** “Lumapse PWA” identifica la línea base de mayo, no el producto vigente. Manifest, IndexedDB y la instalación PWA fueron reemplazados durante el pivote a Android con Capacitor y SQLite. Las decisiones actuales están en [ADR-005](../adr/ADR-005-pivote-app-nativa.md) y [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md).
+
 ## Resumen Ejecutivo
 
 Durante el primer hito del proyecto se estableció la estructura completa del repositorio, se tomaron y documentaron las decisiones técnicas fundamentales, y se configuró el entorno de desarrollo. El proyecto cuenta con cimientos sólidos para avanzar hacia el desarrollo del producto en los hitos siguientes.
@@ -82,6 +84,4 @@ Objetivos principales:
 
 ---
 
-*Documento generado al cierre del Hito 01 — Mayo 2026*
-
-> **Nota de evolución (mayo 2026):** Este hito se desarrolló bajo la arquitectura PWA/IndexedDB original. Al final del período, el [relevamiento de datos](../producto/resultados-relevamiento.md) (n=120) y el [ADR-005](../adr/ADR-005-pivote-app-nativa.md) fundamentaron el pivote a app nativa con Capacitor + SQLite. Los documentos de este hito reflejan el estado vigente al momento de su cierre.
+*Documento generado al cierre del Hito 01 — Mayo 2026. El [relevamiento de datos](../producto/resultados-relevamiento.md) (n=120) y ADR-005 explican la evolución posterior.*

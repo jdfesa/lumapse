@@ -4,6 +4,8 @@ Esta carpeta contiene los artefactos de **estimación, planificación y control 
 del proyecto, según los lineamientos de la cátedra PP3 (Ing. Mauricio Parada) y la bibliografía
 de Gómez (2014).
 
+> **Estado actual:** Hito 05 cerrado documentalmente el 2026-07-15. Hito 06 — Entrega Final está activo; los gráficos de base de datos ya fueron incorporados y el foco continúa en congelamiento documental, validación final y presentación. Ver [`../hitos/hito-06-octubre.md`](../hitos/hito-06-octubre.md).
+
 ---
 
 ## Índice
@@ -11,10 +13,12 @@ de Gómez (2014).
 | Documento | Contenido | Estado |
 |---|---|---|
 | [`estimacion-pert.md`](./estimacion-pert.md) | Estimación de 3 puntos (PERT) para los módulos de mayor riesgo | ✅ Completado |
-| [`lineas-base.md`](./lineas-base.md) | Registro de líneas base (tags Git) y releases formales | ✅ Completado |
-| [`seguimiento-velocidad.md`](./seguimiento-velocidad.md) | Tabla de velocidad: SP planificados vs. entregados por hito | ✅ Completado |
-| [`checklist-validacion-android.md`](./checklist-validacion-android.md) | Checklist de validacion manual en dispositivo Android real para Hito 05 | 🔄 Preparado |
-| [`plan-mantenibilidad-tipado-gradual-2026-06-12.md`](./plan-mantenibilidad-tipado-gradual-2026-06-12.md) | Estrategia por fases para modularidad, bajo acoplamiento y tipado gradual JS/TS | 🔄 Activo |
+| [`lineas-base.md`](./lineas-base.md) | Registro de líneas base, release `v0.4.8` y futuro corte final | 🔄 Activo en Hito 06 |
+| [`seguimiento-velocidad.md`](./seguimiento-velocidad.md) | SP planificados y entregados por hito; Hito 05 cerrado con 36 SP | ✅ Actualizado |
+| [`checklist-validacion-android.md`](./checklist-validacion-android.md) | Evidencia de validación Android de `v0.4.8`; base para la repetición final | ✅ Beta validada |
+| [`cheatsheet-defensa.md`](./cheatsheet-defensa.md) | Métricas, decisiones y respuestas breves para la defensa | 🔄 Revisión final pendiente |
+| [`firma-apk-android.md`](./firma-apk-android.md) | Política de firma, secretos y resguardo del artefacto Android | ✅ Completado |
+| [`plan-mantenibilidad-tipado-gradual-2026-06-12.md`](./plan-mantenibilidad-tipado-gradual-2026-06-12.md) | Estrategia incremental de modularidad y tipado; no habilita refactors amplios durante el cierre | 📌 Referencia |
 | [`historico/`](./historico/) | Snapshots operativos cerrados preservados como evidencia de proceso | 📦 Archivo |
 
 ---

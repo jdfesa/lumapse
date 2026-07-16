@@ -1,20 +1,23 @@
-# Ideas UX/UI y Arquitectura — Roadmap de Inspiración
+# Ideas UX/UI y Arquitectura — Snapshot Histórico de Inspiración
 
 > **Origen principal:** análisis de usememos/memos (ver [`memos-benchmark.md`](./memos-benchmark.md))  
 > **Contexto comparativo:** benchmark general de apps open-source (ver [`benchmark-open-source-notes-2026.md`](./benchmark-open-source-notes-2026.md))  
 > **Criterio de prioridad:** realismo académico — memos es una app madura, Lumapse es un MVP enfocado.  
 > **Fecha:** 2026-05-15
 
+> **Estado documental:** Snapshot histórico del corte indicado. No es el backlog vigente ni compromete hitos, versiones o funcionalidades actuales. Los estados y horizontes de cada idea solo son válidos para el análisis del 2026-05-15; la prioridad canónica se consulta en [`BACKLOG.md`](../../BACKLOG.md) y [`TODO`](../../TODO).
+
 ---
 
 ## Rol de este documento
 
-Este archivo no es un benchmark independiente. Es la **capa accionable**: toma ideas estudiadas en la
-carpeta de inspiración y las traduce a posibles mejoras para Lumapse, con horizonte temporal,
-riesgo e implementación tentativa.
+Este archivo no es un benchmark independiente. En su corte original fue una **capa accionable** que
+tradujo ideas estudiadas en la carpeta de inspiración a posibles mejoras para Lumapse, con horizonte
+temporal, riesgo e implementación tentativa. Hoy se conserva como evidencia del proceso de ideación.
 
 Memos fue el origen inicial del roadmap, pero el benchmark general permite revisar estas ideas contra
-otras referencias como Joplin, Markor, Notesnook o Logseq antes de convertirlas en backlog real.
+otras referencias como Joplin, Markor, Notesnook o Logseq. Cualquier idea que se retome debe evaluarse
+de nuevo y registrarse en el backlog vigente; su presencia o estado en este snapshot no basta.
 
 ---
 
@@ -25,7 +28,7 @@ Antes de aplicar cualquier idea externa, toda propuesta debe validarse contra es
 1. **"Open, write, done"** — captura sin fricción, en segundos.
 2. **Opinionado y estructurado** — estructura base de carpetas por materia, sin negociación; el estudiante no debe pensar dónde guardar una nota.
 3. **Offline-first estricto** — funciona sin red; los datos viven en SQLite local del dispositivo.
-4. **Mobile-first nativo** — APK Android; no es una web adaptada.
+4. **Mobile-first en Android** — APK híbrida con UI web en WebView y acceso a plugins nativos mediante Capacitor.
 5. **Ligero por diseño** — límite de caracteres por nota (a definir); la atomicidad de las notas es un valor, no una limitación.
 6. **Español primero** — interfaz en español como idioma principal.
 

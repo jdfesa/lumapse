@@ -138,7 +138,7 @@ Rango de confianza (68%): [4.0 días — 6.7 días]
 
 | Riesgo | Impacto | Mitigación |
 |---|---|---|
-| Pérdida de datos de notas existentes durante la migración | Crítico | Implementar export a `.zip` ANTES de migrar (ya disponible en Hito 03) |
+| Pérdida de datos de notas existentes durante la migración | Crítico | Prever e implementar un respaldo antes de migrar. En Hito 03 el ZIP era una mitigación planificada, no una capacidad existente; el backup `.zip` de producto se incorporó posteriormente en Hito 05. |
 | API del plugin de SQLite cambia entre versiones | Alto | Fijar versión exacta en `package.json` y documentar |
 | Esquema SQL necesita evolucionar (agregar campos a futuro) | Medio | Diseñar el esquema con columnas opcionales desde el inicio |
 

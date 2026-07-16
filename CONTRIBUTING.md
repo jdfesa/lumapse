@@ -1,56 +1,84 @@
 # Guía de Contribución — Lumapse
 
-¡Gracias por tu interés en contribuir a Lumapse! 
+Lumapse es un proyecto académico mantenido con prácticas de ingeniería verificables. Una contribución debe preservar el alcance offline-first, la privacidad local, la trazabilidad y la documentación que se utilizará en la defensa.
 
-Aunque este es un proyecto nacido en el marco académico (Prácticas Profesionalizantes III - IES 6023), está estructurado bajo estándares profesionales de la industria. Para mantener la calidad, consistencia y trazabilidad del código, te pedimos que sigas estas directrices.
+## 1. Antes de cambiar el proyecto
 
-## 1. Trazabilidad Estricta (El "Por qué")
+- Una funcionalidad debe responder a un requisito funcional o una historia de usuario de [`docs/producto/`](./docs/producto/).
+- Una decisión que cambie arquitectura, persistencia, plataforma o tooling requiere un ADR en [`docs/adr/`](./docs/adr/).
+- Los defectos y refactors deben identificar el riesgo que corrigen, sin ampliar silenciosamente el alcance.
+- La documentación actual distingue estado vigente e historia. No se debe presentar PWA/IndexedDB como arquitectura actual ni reescribir los hitos que explican su evolución.
 
-Lumapse no acepta código que no tenga justificación en la documentación. Todo cambio significativo debe trazarse hacia un requisito o decisión:
+La arquitectura vigente se resume en [ADR-008](./docs/adr/ADR-008-arquitectura-modular-y-patrones.md): monolito modular cliente, Android/Capacitor, SQLite, módulos ES y TypeScript gradual.
 
-- Si agregás una funcionalidad, debe responder a un **Requisito Funcional (RF)** o **Historia de Usuario (HU)** definidos en `docs/producto/`.
-- Si cambiás la arquitectura o herramientas, debe existir un **Architecture Decision Record (ADR)** previo en `docs/adr/`.
-- Antes de escribir código, asegurate de que la documentación refleje el cambio. Si no es así, tu contribución debe incluir primero la actualización de los `.md`.
+## 2. Flujo de trabajo
 
-## 2. Flujo de Trabajo (Ramas)
+1. Partir de `main` actualizado.
+2. Crear una rama acotada y descriptiva, por ejemplo `feat/...`, `fix/...`, `docs/...`, `refactor/...` o `test/...`.
+3. Mantener un solo objetivo por cambio.
+4. Actualizar requisitos, ADR, backlog o changelog solo cuando el cambio realmente los afecte.
+5. Ejecutar la verificación proporcional al riesgo antes de solicitar revisión.
 
-No hacemos commits directamente a la rama `main`. El flujo esperado es:
+No deben incluirse credenciales, keystores, contraseñas, bases de datos personales, artefactos temporales ni dependencias instaladas.
 
-1. Basate siempre en la rama `main` actualizada.
-2. Creá una rama descriptiva para tu tarea:
-   - Funcionalidades: `feat/nombre-de-la-tarea`
-   - Correcciones de errores: `fix/nombre-del-error`
-   - Cambios de documentación: `docs/nombre-del-documento`
-3. Desarrollá y probá localmente.
+## 3. Commits
 
-## 3. Estándar de Commits (Conventional Commits)
+Se utiliza Conventional Commits con el formato:
 
-Utilizamos [Conventional Commits](https://www.conventionalcommits.org/) para mantener un historial legible que permita automatizar el versionado.
+```text
+<tipo>: <descripción breve en minúsculas>
+```
 
-**Formato requerido:**
-`<tipo>: <descripción breve en minúsculas>`
+Tipos habituales:
 
-**Tipos permitidos:**
-- `feat:` Nueva funcionalidad para el usuario.
-- `fix:` Solución a un error (bug).
-- `docs:` Cambios exclusivos en la documentación (ej: `docs: actualizar adr-005`).
-- `style:` Formateo, punto y coma faltante, etc. (sin cambios lógicos).
-- `refactor:` Refactorización de código que no agrega funcionalidad ni arregla bugs.
-- `test:` Agregar o corregir tests.
-- `chore:` Tareas de mantenimiento (actualizar dependencias, `.gitignore`, etc.).
+- `feat`: funcionalidad visible nueva;
+- `fix`: corrección de comportamiento;
+- `docs`: cambio exclusivamente documental;
+- `refactor`: cambio interno sin alterar funcionalidad;
+- `test`: pruebas nuevas o corregidas;
+- `style`: formato sin cambio lógico;
+- `chore`: mantenimiento de tooling o dependencias.
 
-## 4. Estilo de Código y Arquitectura
+El mensaje debe explicar el cambio concreto. La motivación y las consecuencias relevantes pertenecen al cuerpo del commit, al PR o al ADR.
 
-- **Vanilla JS:** Lumapse está construido intencionalmente sin frameworks pesados (React, Vue) para garantizar velocidad y bajo peso. No incluyas librerías a menos que estén rigurosamente justificadas en un ADR.
-- **Offline-first:** Cualquier funcionalidad nueva debe contemplar cómo se comporta sin conexión a internet. Los datos del usuario nunca deben salir del dispositivo (solo SQLite local).
+## 4. Reglas técnicas
 
-## 5. Proceso de Pull Request (PR)
+- La UI no usa un framework: se implementa con módulos ES, JavaScript y TypeScript gradual sobre Vite.
+- Una conversión a TypeScript debe reducir un riesgo real y conservar comportamiento; no se migra un módulo solo para aumentar una métrica.
+- Los componentes se agrupan por feature según [ADR-007](./docs/adr/ADR-007-organizacion-componentes-por-feature.md).
+- La presentación no ejecuta SQL. Persistencia y migraciones permanecen en `src/services/sqlite/`.
+- Las funcionalidades principales deben operar sin red. Ningún dato se transmite automáticamente; el usuario puede iniciar de forma explícita la exportación y compartición de un backup.
+- Las APIs nativas se aíslan mediante servicios/adaptadores y deben ofrecer dependencias reemplazables cuando el flujo requiera pruebas deterministas.
+- No se agrega una dependencia sin justificar costo, seguridad, mantenimiento y comportamiento offline.
 
-Antes de abrir o fusionar un Pull Request, verificá:
-- [ ] Tu código no rompe la compilación (`npm run build`).
-- [ ] Actualizaste el archivo `CHANGELOG.md` con tus cambios bajo la sección *[Unreleased]*.
-- [ ] Resolviste los posibles conflictos con `main`.
-- [ ] El título del PR utiliza Conventional Commits.
+## 5. Verificación
+
+Para un cambio completo, ejecutar:
+
+```bash
+npm run verify
+```
+
+Para documentación pura, como mínimo:
+
+```bash
+npm run check:docs
+npm run check:traceability
+```
+
+Los cambios Android o de persistencia requieren además pruebas en el entorno correspondiente y evidencia en los checklists de gestión. Un test web no sustituye una validación nativa cuando intervienen SQLite, Filesystem, Network o Share.
+
+## 6. Pull Request
+
+Antes de abrir o fusionar un PR, comprobar:
+
+- [ ] El alcance está trazado a RF, HU, ADR o deuda documentada cuando corresponde.
+- [ ] Los cambios de comportamiento tienen pruebas o una justificación explícita de la evidencia manual.
+- [ ] `npm run verify` pasa, o el PR registra con precisión cualquier limitación del entorno.
+- [ ] La documentación y el changelog reflejan únicamente cambios reales.
+- [ ] No se incorporaron datos personales, secretos ni artefactos generados por accidente.
+- [ ] El título sigue Conventional Commits.
 
 ---
+
 *Lumapse: Tus notas. En tu equipo. Sin cuenta. Sin internet.*

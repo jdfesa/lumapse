@@ -7,12 +7,14 @@
 
 ---
 
+> **Lectura histórica:** Este hito cerró el MVP web original. Service Worker, manifiesto PWA y `vite-plugin-pwa` se completaron en ese corte, pero fueron retirados en Hito 04 al adoptarse Capacitor + SQLite. “Completado” en las tablas siguientes significa completado en la línea base histórica, no disponible en la beta Android actual.
+
 ## Resumen Ejecutivo
 
 En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo Viable (MVP) real. Se incorpora la renderización de Markdown en tiempo real, modos de lectura/escritura y la infraestructura necesaria para que la aplicación funcione offline bajo la arquitectura PWA original.
 
 > **Nota de revisión 2026-06-01:** Durante el pivote mobile-first a Capacitor/SQLite se conservaron servicios base de exportación/importación, pero los flujos dejaron de estar expuestos en la UI actual. Por trazabilidad, `RF-016`, `RF-017` y `RF-018` pasan a deuda posterior; compartir solo vuelve si se implementa con share sheet nativo y se valida en Android real.
-> **Nota de evolución 2026-06-05:** `RF-017` fue reabierto y completado posteriormente en Hito 05 como backup manual `.zip`; `RF-016` y `RF-018` siguen postergados.
+> **Nota de evolución 2026-07-15:** `RF-017` y `RF-018` fueron reabiertos y completados posteriormente en Hito 05 como exportación e importación de backups `.zip`. `RF-016` (compartir una nota individual) sigue postergado.
 
 ---
 
@@ -21,14 +23,14 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 | RF | Descripción | Prioridad | Estado |
 |---|---|---|---|
 | RF-008 | Funcionamiento completamente offline | MUST | ✅ Completado |
-| RF-009 | Service Worker para caché de assets | MUST | ✅ Completado |
+| RF-009 | Service Worker para caché de assets | MUST | ✅ Completado en el corte PWA; obsoleto después de ADR-005 |
 | RF-010 | Renderizado de Markdown en tiempo real | MUST | ✅ Completado |
 | RF-011 | Soporte de sintaxis Markdown básica | MUST | ✅ Completado |
 | RF-012 | Modo edición / modo lectura (toggle) | SHOULD | ✅ Completado |
 | RF-016 | Exportar/compartir nota individual | SHOULD | ⏸️ Postergado |
 | RF-017 | Exportar respaldo local `.zip` | SHOULD | ✅ Implementado posteriormente en Hito 05 |
-| RF-018 | Importar archivos o respaldos locales | COULD | ⏸️ Postergado |
-| RF-021 | PWA instalable desde el navegador | MUST | ✅ Completado |
+| RF-018 | Importar archivos o respaldos locales | COULD | ✅ Implementado posteriormente en Hito 05 para backups Lumapse `.zip` |
+| RF-021 | PWA instalable desde el navegador | MUST | ✅ Completado en el corte PWA; obsoleto después de ADR-005 |
 
 ---
 
@@ -40,10 +42,10 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 | Componente `MarkdownPreview` (Vista previa en tiempo real) | ✅ Completado |
 | Toggle edición/lectura en `NoteEditor` | ✅ Completado |
 | Exportar/compartir nota individual | ⏸️ Postergado |
-| Exportar respaldo local `.zip` | ⏸️ Postergado |
-| Importar archivos o respaldos locales | ⏸️ Postergado |
-| Service Worker para funcionamiento offline | ✅ Completado |
-| PWA instalable + auditoría Lighthouse | ✅ Completado |
+| Exportar respaldo local `.zip` | ✅ Implementado posteriormente en Hito 05 |
+| Importar backups Lumapse `.zip` | ✅ Implementado posteriormente en Hito 05 |
+| Service Worker para funcionamiento offline | ✅ Completado en el corte histórico; retirado en Hito 04 |
+| PWA instalable + auditoría Lighthouse | ✅ Completado en el corte histórico; retirado en Hito 04 |
 
 ---
 
@@ -85,17 +87,19 @@ En este hito convertimos el editor funcional del Hito 02 en un Producto Mínimo 
 
 ### 4. Base técnica de exportación/importación
 - Se incorporó `jszip` y quedaron servicios base para exportación/importación local.
-- La revisión posterior al pivote Android/SQLite confirma que estos servicios no son flujos visibles en la UI actual.
+- La revisión posterior al pivote Android/SQLite retiró esos primeros flujos de la UI; Hito 05 implementó luego un caso de uso nuevo y controlado para backup/importación ZIP.
 - `RF-016` queda como deuda posterior: compartir/exportar una nota individual solo si se implementa con share sheet nativo de Android y no duplica Copiar.
-- `RF-017` se reabre después en Hito 05 como backup manual externo; `RF-018` queda como deuda posterior por complejidad de importación, duplicados y materias/secciones.
+- `RF-017` y `RF-018` se reabren después en Hito 05 como backup manual e importación no destructiva con manejo de duplicados y materias/secciones.
 
 ### 5. PWA y Soporte Offline (Service Worker)
+
+> Esta sección documenta la implementación histórica del Hito 03. `vite-plugin-pwa`, el Service Worker y el manifiesto fueron eliminados al ejecutar ADR-005; la disponibilidad offline vigente proviene de assets empaquetados y SQLite local dentro del APK.
 - Se instaló la dependencia de desarrollo `vite-plugin-pwa` para habilitar el soporte PWA de forma profesional y mantenible.
 - Se configuró `vite.config.js` inyectando el plugin `VitePWA` con registro automático (`injectRegister: 'auto'`).
 - Se definió el modo `autoUpdate` para actualizar el Service Worker automáticamente sin interrumpir al usuario.
-- Workbox se configuró para cachear todos los assets (`js, css, html, ico, png, svg, json`) garantizando que Lumapse pueda cargarse completamente sin conexión a internet (RF-008, RF-009).
+- Workbox se configuró para precachear los assets declarados (`js, css, html, ico, png, svg, json`) con el objetivo de permitir la carga sin conexión (RF-008, RF-009). Ese comportamiento correspondía al corte PWA y dependía de una instalación previa y de las políticas del navegador; no constituye evidencia del mecanismo offline vigente.
 - La aplicación ahora es reconocible como PWA instalable por los navegadores (RF-021) al unir el Service Worker con el `manifest.json` existente.
 
 ---
 
-*Documento vivo — Actualizado durante el desarrollo del Hito 03*
+*Documento histórico — Hito 03 cerrado; revisado el 2026-07-15 para señalar la evolución posterior.*

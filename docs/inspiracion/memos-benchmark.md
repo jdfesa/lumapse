@@ -68,7 +68,7 @@ Sus principios fundacionales:
 | **App nativa Android** | ❌ No existe | ✅ Objetivo central (ADR-005, Hito 05) |
 | **Organización** | Timeline + tags (sin carpetas obligatorias) | Carpetas por materia (opinionado) + tags a futuro |
 | **Audiencia** | Usuario general, hobbistas, diarios, microblogs | Estudiantes terciarios/universitarios argentinos |
-| **Conectividad** | Requiere servidor accesible | Offline-first estricto (81.7% conectividad deficiente) |
+| **Conectividad** | Requiere servidor accesible | Offline-first como prioridad (81.7% no respondió disponibilidad estable permanente en P6) |
 | **Idioma** | Multi-idioma (i18n completo) | Español primero, inglés en fase posterior |
 | **Complejidad** | App madura con 59k ⭐, 91 releases, multi-feature | MVP académico enfocado, ligero por diseño |
 

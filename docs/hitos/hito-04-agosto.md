@@ -1,6 +1,6 @@
 # Informe de Hito 04 — Organización y UX
 
-**Período:** Agosto 2026 (Cerrado formalmente)
+**Período:** Agosto 2026 (cerrado formalmente)
 **Hito:** 04 — Organización y UX
 **Proyecto:** Lumapse
 **Estado:** Cerrado formalmente
@@ -12,7 +12,7 @@
 
 Este hito se enfoca en mejorar la experiencia de uso general, incorporar herramientas de organización de notas, y pulir detalles visuales y de interacción. Durante el inicio de este hito, se introdujo un cambio importante de UX inspirado en Typora: la unificación del título con el contenido Markdown. 
 
-Adicionalmente, los resultados de la [encuesta de validación](../producto/resultados-relevamiento.md) (n=120) ya están disponibles y han confirmado las decisiones de producto [DP-002](../producto/decisiones-producto.md) (organización por materia, 69.2% de preferencia) y [DP-003](../producto/decisiones-producto.md) (mobile-first, 72.5% prefiere celular).
+Adicionalmente, los resultados del [relevamiento](../producto/resultados-relevamiento.md) (n=120) respaldaron [DP-002](../producto/decisiones-producto.md): 73.3% priorizó organizar por materia como funcionalidad y 69.2% prefirió carpetas por materia como estructura. También respaldaron [DP-003](../producto/decisiones-producto.md): 72.5% eligió el celular como dispositivo de uso.
 
 **Estado de cierre 2026-06-01:** El núcleo funcional del Hito 04 queda cerrado: Capacitor/Android, SQLite, materias/secciones, papelera, archivado/restauración en cascada, seguridad Markdown, modo claro/oscuro, focus mode, diálogos personalizados y empty states pulidos. Los pendientes opcionales se resolvieron por decisión de diseño: se postergan o descartan para MVP las piezas que podían agregar ruido visual o sugerir capacidades no presentes (sincronización, onboarding guiado o editor con métricas permanentes).
 
@@ -22,11 +22,11 @@ Adicionalmente, los resultados de la [encuesta de validación](../producto/resul
 
 | RF / UX | Descripción | Estado | Commit / Ref |
 |---|---|---|---|
-| DP-001 | Título unificado (estilo Typora) | ✅ Completado | HU-002, NoteEditor.js |
+| DP-001 | Ensayo de título unificado, revisado después como política de título flexible | ✅ Completado y revisado | `HU-002`, `NoteEditor.js`, `NoteTitleService.ts` |
 | Fix | Exportación segura de notas vacías | ✅ Completado | NoteEditor.js |
-| RF-013 | Pin y Archivar notas (reemplaza sistema de tags, ver [DP-002](../producto/decisiones-producto.md)) | ✅ Completado | `HU-009`, NoteStore.js, NoteService.js (v2) |
+| RF-013 | Pin y Archivar notas (reemplaza sistema de tags, ver [DP-002](../producto/decisiones-producto.md)) | ✅ Completado | `HU-009`, `NoteStore.data.js`, `sqlite/notes.js` |
 | RF-015 | Búsqueda por texto en tiempo real | ✅ Completado | `HU-010`, NoteStore.js (debounce 200ms) |
-| RF-019 | Toggle modo oscuro / modo claro | ✅ Completado | `HU-011`, ThemeService.js, main.css |
+| RF-019 | Toggle modo oscuro / modo claro | ✅ Completado | `HU-011`, `ThemeService.ts`, `main.css` |
 | RF-020 | Layout mobile-first con drawer | ✅ Completado | main.js, main.css |
 | UX | Rediseño estética Notion/Obsidian | ✅ Completado | main.css, componentes CSS |
 | UX | Menú contextual (tres puntos) | ✅ Completado | NoteList.js |
@@ -49,15 +49,16 @@ Adicionalmente, los resultados de la [encuesta de validación](../producto/resul
 
 ## Avance Detallado
 
-### 1. Título Unificado (DP-001)
-- Se eliminó el campo explícito de título en la interfaz de edición (`NoteEditor`).
-- El título se deriva automáticamente de la primera línea que contenga un encabezado Markdown (`# `).
-- Si una nota nueva se crea, el editor pre-carga `# ` para guiar al usuario.
-- En la persistencia local, el título se guarda como un valor derivado para optimizar el listado y facilitar la exportación.
+### 1. Evolución del título (DP-001)
 
-### 2. Corrección en la exportación de notas (Bugfix)
+- La primera iteración unificó título y contenido al estilo Typora.
+- Las iteraciones posteriores recuperaron un campo de título explícito para reducir ambigüedad durante la edición.
+- En `v0.4.8`, si el título explícito queda vacío, `NoteTitleService.ts` acepta como fallback un encabezado `# ` inicial; en caso contrario usa `Sin título`.
+- La presentación evita duplicar visualmente un título que ya aparece como primera línea del contenido.
+
+### 2. Corrección histórica en la base de exportación (Bugfix)
 - **Problema original:** Al exportar notas sin contenido, se generaba un archivo `.md` vacío.
-- **Solución:** Validación en `NoteEditor.js` que verifica contenido real (ignorando `# ` inicial y espacios en blanco). Si la nota está vacía, se alerta al usuario.
+- **Solución del corte:** Se agregó una validación de contenido antes de exportar. El flujo visible de nota individual se retiró después del pivote; la beta presenta backup ZIP como mecanismo de portabilidad y mantiene compartir una nota individual fuera del alcance actual.
 
 ### 3. Pin y Archivar (RF-013)
 - En la primera iteración se hizo upgrade de IndexedDB a v2 con backfill automático de campos `pinned` y `archived`; luego la persistencia fue migrada a SQLite dentro del mismo hito.
@@ -76,7 +77,7 @@ Adicionalmente, los resultados de la [encuesta de validación](../producto/resul
 - Actualización dinámica de `meta[name="theme-color"]` para la barra de estado de Android.
 
 ### 6. Infraestructura y DevOps
-- Remoción de `vite-plugin-pwa` y migración a Capacitor nativo ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)).
+- Remoción de `vite-plugin-pwa` y migración a una aplicación Android híbrida con Capacitor ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)).
 - Fuentes JetBrains Mono auto-alojadas en `public/fonts/` (offline estricto).
 - Scripts de automatización: `deploy-android.sh`, `clean.sh`, `check-docs.sh`.
 - Flujo de despliegue Android actualizado con desinstalación limpia obligatoria (problema de caché de WebView documentado).
@@ -100,4 +101,4 @@ Adicionalmente, los resultados de la [encuesta de validación](../producto/resul
 7. **Gráficos DB:** diferidos al cierre documental final, cuando el modelo de datos quede congelado.
 
 ---
-*Documento vivo — Hito 04 cerrado formalmente; Hito 05 queda activo para testing, calidad y distribución.*
+*Documento histórico — Hito 04 cerrado formalmente. Hito 05 también está cerrado y [Hito 06](hito-06-octubre.md) concentra el cierre documental, la validación final y la presentación.*

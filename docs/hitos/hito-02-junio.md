@@ -7,6 +7,8 @@
 
 ---
 
+> **Lectura histórica:** Este informe registra la primera implementación del editor. Las rutas planas de componentes, IndexedDB, `NoteService` y el auto-guardado final pertenecen a ese corte. La beta vigente usa componentes por feature, SQLite y borradores locales con guardado final explícito.
+
 ## Resumen Ejecutivo
 
 En este hito nos enfocamos en el corazón de la aplicación: el editor de notas y la persistencia de datos. El objetivo principal es lograr un CRUD completo (Crear, Leer, Actualizar, Eliminar) de notas almacenadas localmente usando IndexedDB, sin depender de servidores externos.
@@ -79,4 +81,4 @@ El desarrollo continúa en el **Hito 03 — MVP Completo**, donde se integrará 
 
 *Documento finalizado — Hito 02 completado exitosamente*
 
-> **Nota de evolución (mayo 2026):** Este hito se implementó con IndexedDB como capa de persistencia inicial. La migración a SQLite con Capacitor fue decidida posteriormente en el [ADR-005](../adr/ADR-005-pivote-app-nativa.md), fundamentada en el [relevamiento de datos](../producto/resultados-relevamiento.md). El código de este hito sigue funcionando con IndexedDB hasta que se ejecute la migración en el Hito 03.
+> **Nota de evolución:** La migración decidida en [ADR-005](../adr/ADR-005-pivote-app-nativa.md) se completó posteriormente durante el Hito 04. IndexedDB y `NoteService` ya no son la persistencia vigente; el historial se conserva para mostrar la evolución del MVP.

@@ -18,7 +18,7 @@ Los documentos se organizan en tres niveles:
 
 1. **Benchmark general:** mapa comparativo de proyectos open-source.
 2. **Deep dives:** análisis individual de proyectos especialmente relevantes.
-3. **Roadmap de inspiración:** ideas accionables derivadas del benchmark.
+3. **Roadmap histórico de inspiración:** ideas que se evaluaron en el corte original; no reemplaza al backlog vigente.
 
 | Documento | Rol | Proyecto(s) analizado(s) | Fecha |
 |---|---|---|---|
@@ -38,8 +38,10 @@ traducir sus ideas al producto.
 porque Memos fue la referencia inicial de captura rápida, timeline, tags y simplicidad UX. El benchmark
 general lo mantiene dentro del mapa comparativo junto con las demás apps.
 
-[`ideas-ux-roadmap.md`](./ideas-ux-roadmap.md) es la capa accionable: toma ideas de los benchmarks y
-las ordena por horizonte temporal para decidir qué puede entrar en Lumapse sin saturarla.
+[`ideas-ux-roadmap.md`](./ideas-ux-roadmap.md) conserva la capa accionable del corte en que se escribió:
+toma ideas de los benchmarks y las ordena por horizonte temporal. Sus rótulos de corto/mediano/largo
+plazo son históricos; una idea solo vuelve a ser trabajo comprometido si aparece en el `BACKLOG.md` o
+en el `TODO` vigente.
 
 ---
 

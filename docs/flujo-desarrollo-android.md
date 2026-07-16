@@ -1,14 +1,14 @@
 # Flujo de Desarrollo Android — Lumapse
 
 > **Documento:** Guía operativa de desarrollo, compilación y testing en dispositivos Android.  
-> **Última actualización:** Mayo 2026 (flujo de despliegue limpio — Hito 04)  
+> **Última actualización:** 2026-07-15 (`0.4.8`, despliegue seguro con conservación de datos)
 > **Autor:** José David Sandoval
 
 ---
 
 ## 1. Visión general
 
-Lumapse es una aplicación web (HTML/CSS/JS) empaquetada como app Android nativa
+Lumapse es una aplicación cliente (HTML/CSS/JavaScript y TypeScript gradual) empaquetada como app Android
 mediante **Capacitor**. El desarrollo se realiza en macOS y las pruebas se ejecutan
 en dispositivos Android físicos conectados por USB.
 
@@ -18,7 +18,7 @@ en dispositivos Android físicos conectados por USB.
 ┌──────────────────────────────────────────────────────────────┐
 │  DESARROLLO (macOS)                                          │
 │                                                              │
-│  Código JS/CSS/HTML  →  npm run build  →  dist/             │
+│  Código JS/TS/CSS/HTML → npm run build → dist/              │
 │                                              │               │
 │                                     npx cap sync android     │
 │                                              │               │
@@ -57,15 +57,15 @@ seguí estos pasos en orden.
 Estas herramientas son necesarias para **cualquier** contribución al proyecto (web o nativa):
 
 ```bash
-# Node.js (v18+) y npm (v9+)
+# Node.js 22+ y npm
 brew install node
 
 # Git
 brew install git
 
 # Verificar
-node --version    # v18+
-npm --version     # v9+
+node --version    # v22+
+npm --version
 git --version     # v2+
 ```
 
@@ -77,8 +77,8 @@ compilación. Es el único instalador que se necesita para la parte nativa:
 1. **Descargar** desde [developer.android.com/studio](https://developer.android.com/studio)
 2. **Instalar** arrastrando a `/Applications/`
 3. **Abrir** Android Studio → SDK Manager → instalar:
-   - SDK Platform: **API 34** (mínimo)
-   - Build Tools: **34.0.0** (mínimo)
+   - SDK Platform: **API 36**
+   - Build Tools compatibles con API 36
    - Command-line Tools (latest)
    - Platform-Tools (incluye ADB)
 
@@ -88,7 +88,7 @@ compilación. Es el único instalador que se necesita para la parte nativa:
 
 ### 2.3 JDK (Java Development Kit)
 
-Android requiere JDK 17 o superior. En este proyecto se usa OpenJDK 21:
+El proyecto Android actual compila con compatibilidad Java 21. Se usa OpenJDK 21:
 
 ```bash
 # Instalar OpenJDK 21 vía Homebrew
@@ -151,7 +151,7 @@ npx cap sync android
 npx cap run android
 ```
 
-### 2.7 Verificación final
+### 2.7 Verificación del entorno
 
 Para verificar que todo está configurado correctamente:
 
@@ -166,14 +166,15 @@ echo "=== Dispositivos ===" && adb devices
 
 | Herramienta | Versión mínima | Versión utilizada en este proyecto |
 |---|---|---|
-| Node.js | v18+ | v22 |
-| npm | v9+ | v10 |
-| JDK | 17+ | OpenJDK 21 |
-| Android SDK (Platform) | API 34+ | API 34 y 36 |
-| Build Tools | 34.0.0+ | 34.0.0, 35.0.0, 36.0.0 |
+| Node.js | v22+ | v22 |
+| npm | Incluido con Node 22 | v10 |
+| JDK | 21 | OpenJDK 21 |
+| Android SDK (compile/target) | API 36 | API 36 |
+| Android mínimo de ejecución | API 24 | Configurado en `android/variables.gradle` |
+| Build Tools | Compatible con API 36 | Verificar con Android Studio/SDK Manager |
 | ADB | 30+ | 36.0.2 |
 | scrcpy | 2.0+ | 3.3.4 |
-| Capacitor | 7+ | *(ver `package.json`)* |
+| Capacitor | 8.x | 8.3.x *(ver `package.json`)* |
 
 ---
 
@@ -183,20 +184,21 @@ echo "=== Dispositivos ===" && adb devices
 |---|---|---|
 | **Android** | 10 | 13 |
 | **Root** | Sí (Magisk) | No |
-| **Rol** | Desarrollo y debugging diario | Validación final y demos |
+| **Rol** | Desarrollo y debugging diario | Validación inicial de la beta, controles de referencia y demos |
 | **Conexión** | Micro USB | USB-C |
 | **Pantalla** | ⚠️ Módulo dañado (no se ve) — se usa scrcpy | Funcional |
 | **ADB** | Configurado y autorizado | Disponible |
-| **Notas** | Soporta nativamente hasta Android 8; actualizado a Android 10 mediante ROM custom (root previo). Al tener el módulo de pantalla dañado, **toda la interacción se realiza remotamente desde macOS usando scrcpy**. | Teléfono de uso diario. Se usa para verificar que la app funcione correctamente en un dispositivo estándar (sin root, Android actualizado), simulando la experiencia del usuario final. |
+| **Notas** | Soporta nativamente hasta Android 8; actualizado a Android 10 mediante ROM custom (root previo). Al tener el módulo de pantalla dañado, **toda la interacción se realiza remotamente desde macOS usando scrcpy**. | Teléfono de uso diario y sin root. Aporta evidencia sobre una configuración Android concreta; no sustituye la validación final ni una prueba con estudiantes. |
 
 ### ¿Por qué dos dispositivos?
 
 - **S7 Edge (desarrollo):** Al estar rooteado y ser un dispositivo dedicado (no de uso personal),
   permite debugging profundo (logcat, inspección de bases de datos, reinstalación frecuente)
   sin riesgo de afectar datos personales.
-- **S20 FE (validación):** Representa al usuario real. Si la app funciona bien en un dispositivo
-  sin root, con Android 13 y sin configuración especial, es evidencia de que funcionará para
-  los estudiantes del IES 6023.
+- **S20 FE (referencia de beta):** Permite comprobar instalación y flujos en un dispositivo
+  sin root con Android 13. El resultado solo evidencia compatibilidad con esa configuración;
+  no se generaliza a otros dispositivos ni demuestra comprensión o aceptación por estudiantes.
+  La validación final permanece en Hito 06.
 
 ---
 
@@ -293,41 +295,26 @@ npm run dev
 # 4. Los cambios se reflejan en tiempo real (HMR)
 ```
 
-> **Limitación:** Este modo NO tiene acceso a plugins nativos de Capacitor
-> (SQLite, filesystem, etc.). Solo sirve para UI.
+> **Limitación:** El modo web usa SQLite/WASM mediante `jeep-sqlite`, pero no reproduce de forma completa los plugins y condiciones del dispositivo. Es apropiado para UI y pruebas rápidas; Filesystem/Share y la validación SQLite nativa deben probarse dentro de Android.
 
 ### 5.2 Compilación y despliegue en dispositivo (ciclo completo)
 
 Cuando se necesita probar funcionalidades nativas o validar la app como APK.
 
-> **Importante:** Siempre se desinstala la app antes de reinstalar. El WebView de
-> Android cachea agresivamente los assets web (HTML/CSS/JS) del paquete anterior,
-> y una actualización in-place con `cap run` puede seguir sirviendo archivos viejos
-> aunque el APK sea nuevo. La desinstalación limpia elimina ese caché y garantiza
-> que los cambios se reflejen correctamente. Este comportamiento se detectó durante
-> el desarrollo del Hito 04 (mayo 2026) y es consistente con issues reportados en
-> el repositorio de Capacitor.
+> **Protección de datos:** El despliegue normal conserva SQLite y las preferencias. Usar `--clean` solo cuando se necesite una instalación fresca o se hayan detectado assets viejos; esa opción desinstala la app y borra todos sus datos locales. Antes de usarla sobre información relevante, exportar un backup.
 
 ```bash
-# 1. Desinstalar la versión anterior (limpia caché del WebView)
-adb uninstall com.lumapse.app
+# Flujo recomendado: build, sync e instalación conservando los datos
+npm run deploy:android
 
-# 2. Compilar la web app
-npm run build
+# Selección explícita cuando hay más de un dispositivo
+npm run deploy:android -- --target <DEVICE_ID>
 
-# 3. Sincronizar los assets con el proyecto Android
-npx cap sync android
-
-# 4. Compilar el APK e instalar en el dispositivo conectado
-npx cap run android
-
-# Si hay un solo dispositivo conectado, se instala automáticamente.
-# Si hay varios, se puede especificar:
-npx cap run android --target <DEVICE_ID>
+# Instalación fresca: BORRA SQLite y preferencias
+npm run deploy:android -- --target <DEVICE_ID> --clean
 ```
 
-> **Nota:** Si la app no estaba instalada, `adb uninstall` mostrará un error
-> `Failure [DELETE_FAILED_INTERNAL_ERROR]` que puede ignorarse sin problema.
+El script rechaza estados ambiguos de ADB, exige `--target` cuando hay varios dispositivos y muestra si el despliegue preservará o borrará datos.
 
 ### 5.3 Interacción con el S7 Edge (pantalla dañada)
 
@@ -348,13 +335,12 @@ scrcpy --turn-screen-off -K
 ### 5.4 Ciclo completo resumido
 
 ```bash
-# Desinstalar → Build → Sync → Run → Verificar en scrcpy
-adb uninstall com.lumapse.app; npm run build && npx cap sync android && npx cap run android
+# Build → Sync → Run conservando datos
+npm run deploy:android
+
+# Verificar en el dispositivo de desarrollo
 scrcpy --turn-screen-off -K
 ```
-
-> Se usa `;` (no `&&`) después de `adb uninstall` porque el comando falla si la
-> app no estaba instalada, y eso no debe detener el resto del flujo.
 
 ---
 
@@ -365,7 +351,7 @@ scrcpy --turn-screen-off -K
 | `adb devices` no muestra el celular | Cable USB o depuración USB desactivada | Verificar que "Depuración USB" esté activada en Opciones de Desarrollador |
 | `npx cap run android` falla con error de Gradle | Primera ejecución o caché corrupto | Ejecutar `cd android && ./gradlew clean && cd ..` y reintentar |
 | La app muestra pantalla en blanco | `dist/` no está generado o desactualizado | Ejecutar `npm run build` antes de `npx cap sync` |
-| La app muestra una versión vieja después de `cap run` | El WebView de Android cachea los assets web del paquete anterior y una actualización in-place no siempre los refresca | Desinstalar la app antes de reinstalar: `adb uninstall com.lumapse.app` y luego `npx cap run android` |
+| La app muestra una versión vieja después del deploy | El WebView conserva assets del paquete anterior | Exportar datos relevantes y ejecutar `npm run deploy:android -- --target <DEVICE_ID> --clean` |
 | scrcpy no conecta | ADB no autorizado en el dispositivo | Verificar el popup de autorización en el celular (o usar `adb kill-server && adb start-server`) |
 | El APK no se instala en el S20 FE | "Fuentes desconocidas" deshabilitado | Habilitar instalación de apps de fuentes desconocidas en Configuración |
 
@@ -379,6 +365,8 @@ scrcpy --turn-screen-off -K
 | Proyecto Android | `android/` | Generado por Capacitor (se commitea) |
 | APK debug | `android/app/build/outputs/apk/debug/app-debug.apk` | APK para testing (no se commitea) |
 | Config de Capacitor | `capacitor.config.json` | AppId, webDir y plugins |
+
+La firma y publicación de un artefacto de release siguen un flujo separado, documentado en [`gestion/firma-apk-android.md`](./gestion/firma-apk-android.md). No debe confundirse un APK debug con la beta firmada publicada.
 
 ---
 

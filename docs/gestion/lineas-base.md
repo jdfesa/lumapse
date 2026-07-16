@@ -3,6 +3,7 @@
 > **Proyecto:** Lumapse  
 > **Referencia:** Gómez, J. (2014), Sección 6. Guía de Estudio PP3 (Ing. Mauricio Parada, 2026).  
 > **Fecha de creación:** 2026-05-15  
+> **Última actualización:** 2026-07-15 — cierre documental de Hito 05 y activación de Hito 06.
 > **Autor:** José David Sandoval
 
 ---
@@ -15,9 +16,11 @@ gestionar los cambios (Gómez, 2014, §6.1).
 
 > Establecer una línea base es el acto que convierte un borrador en un compromiso.
 
-En Git, las líneas base se implementan mediante **tags anotados**: punteros permanentes
-a un commit específico que marca un hito del proyecto. A diferencia de una rama, un tag
-no avanza: siempre apunta al mismo commit.
+En Git, las líneas base se implementan preferentemente mediante **tags anotados**: punteros
+permanentes a un commit específico que marca un hito del proyecto. A diferencia de una rama,
+un tag no avanza: siempre apunta al mismo commit. La release `v0.4.8` conserva una diferencia
+de metadata entre el tag local anotado y el tag remoto lightweight, pero ambos resuelven al
+mismo commit `a808de7`; el artefacto se identifica además por su SHA-256.
 
 ---
 
@@ -115,7 +118,7 @@ git show LBREQ-v1.0 --no-patch
 
 **RF completados acumulados según línea base original:** RF-001 a RF-005, RF-007 a RF-012, RF-016 a RF-018, RF-021 (15 de 24)
 
-> **Nota de revisión 2026-06-01:** tras el pivote mobile-first/SQLite, `RF-016`, `RF-017` y `RF-018` dejaron de contarse como implementados visibles porque la UI actual no exponía exportación/importación. `RF-017` fue reabierto y completado luego en Hito 05 como backup manual `.zip`; `RF-016` y `RF-018` siguen como deuda posterior.
+> **Nota de revisión actualizada 2026-07-15:** tras el pivote mobile-first/SQLite, `RF-016`, `RF-017` y `RF-018` dejaron temporalmente de contarse como flujos visibles. Hito 05 completó `RF-017` como backup manual `.zip` y `RF-018` como importación de backups Lumapse. Solo `RF-016` y la importación de una nota `.md` aislada permanecen como deuda futura.
 
 ---
 
@@ -132,7 +135,7 @@ git show LBREQ-v1.0 --no-patch
 
 **Funcionalidades añadidas respecto de LB-PROD-v0.2.0:**
 
-- Pivote formal a app nativa con Capacitor + SQLite, fundamentado en `ADR-005` y `ADR-006`.
+- Pivote formal a aplicación Android híbrida con Capacitor + SQLite, fundamentado en `ADR-005` y `ADR-006`.
 - Organización por materias y secciones, con navegación mobile-first en drawer.
 - Búsqueda global normalizada, notas fijadas/archivadas y estados académicos.
 - Tema claro/oscuro persistente con tokens CSS.
@@ -157,9 +160,11 @@ git show LB-PROD-v0.3.0 --no-patch
 | **Fecha del commit** | 2026-07-01 |
 | **Fecha del tag** | 2026-07-01 |
 | **Hito** | 05 — Testing, Calidad y Distribución |
+| **Estado del hito** | Cerrado documentalmente el 2026-07-15 |
 | **Release** | [`Lumapse v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8) |
 | **Artefacto** | `lumapse-v0.4.8.apk` |
 | **SHA-256 APK** | `cad122d0329e1761816ac7ad07938673389c859a252d9cc63504359355db3d10` |
+| **Metadata del tag** | Local anotado y remoto lightweight; ambos apuntan a `a808de7` |
 | **Descripción** | Beta controlada firmada, publicada y validada inicialmente en Android real. |
 
 **Funcionalidades y evidencia incluidas respecto de LB-PROD-v0.3.0:**
@@ -171,7 +176,9 @@ git show LB-PROD-v0.3.0 --no-patch
 - Quality gate local final: `npm run verify` sin fallos bloqueantes.
 - Borradores persistentes del editor (`RF-005`), backup manual ZIP (`RF-017`), importación ZIP (`RF-018`), sección Acerca de (`RF-023`), fechas académicas discretas (`RF-027`) y editor enriquecido (`RF-028`).
 
-> Esta línea base se registra como corte operativo de beta, no como cierre definitivo del producto. El cierre narrativo, los materiales finales de defensa y la revisión completa de diagramas se reservan para el Hito 06 o para la etapa documental final cercana.
+> Esta línea base es el corte operativo de beta y el artefacto de salida de Hito 05, no el cierre definitivo del producto. Hito 06 concentra el cierre narrativo, los gráficos DB, la validación final y la presentación.
+
+**Estado posterior al tag al iniciar la revisión de Hito 06:** el checkpoint registró 12 commits, limitados a documentación y refactors de TypeScript. El conteo puede aumentar con esta revisión y no define una versión. Ninguno forma parte de la APK publicada ni altera esta línea base; cualquier nuevo artefacto requerirá una decisión explícita de versión, nuevo `versionCode`, hash y línea base.
 
 **Comandos de verificación:**
 ```bash
@@ -196,14 +203,16 @@ Una vez establecida una LB, todo cambio en el alcance debe pasar por un proceso 
 
 | Fecha | Cambio | Impacto | Línea base afectada | Referencia |
 |---|---|---|---|---|
-| 2026-05-14 | Pivote de PWA a app nativa (Capacitor + SQLite) | Alto — cambia la arquitectura de persistencia y distribución | LB-REQ-v1.0 (RF-007, RF-008, RF-009 impactados) | [ADR-005](../adr/ADR-005-pivote-app-nativa.md) |
+| 2026-05-14 | Pivote de PWA a aplicación Android híbrida (Capacitor + SQLite) | Alto — cambia la arquitectura de persistencia y distribución | LB-REQ-v1.0 (RF-007, RF-008, RF-009 impactados) | [ADR-005](../adr/ADR-005-pivote-app-nativa.md) |
 | 2026-06-05 | Normalización de mejoras funcionales de Hito 05 (`RF-017`, `RF-027`, `RF-028`) | Medio — registra backup manual, fechas discretas y editor enriquecido como alcance aprobado antes de release | LB-REQ-v1.0 (alcance extendido y trazabilidad actualizada) | [CHANGELOG](../../CHANGELOG.md), [Hito 05](../hitos/hito-05-septiembre.md) |
 | 2026-06-07 | Reclasificación de `RF-005 / HU-005` como borradores persistentes del editor | Medio — reemplaza auto-guardado final silencioso por protección local del trabajo en curso, sin crear ni actualizar notas finales sin confirmación | LB-REQ-v1.0 (criterio funcional refinado y trazabilidad actualizada) | [CHANGELOG](../../CHANGELOG.md), [Requisitos funcionales](../producto/requisitos-funcionales.md) |
 | 2026-07-01 | Publicación de beta controlada `v0.4.8` | Alto — congela un artefacto APK firmado y validado para distribución controlada | LB-PROD-v0.4.8 | [Release v0.4.8](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8), [Checklist Android](checklist-validacion-android.md) |
+| 2026-07-15 | Cierre documental de Hito 05 y activación de Hito 06 | Medio — conserva `v0.4.8` como beta operativa y separa los 12 commits posteriores del futuro corte final | LB-PROD-v0.4.8 | [Hito 05](../hitos/hito-05-septiembre.md), [Hito 06](../hitos/hito-06-octubre.md) |
 
-> **Nota:** El pivote a app nativa fue el cambio más significativo respecto de la LB de
-> requerimientos original. Fue documentado como ADR-005, fundamentado en evidencia
-> empírica de 120 estudiantes, y aprobado formalmente antes de la implementación.
+> **Nota:** El pivote a aplicación Android híbrida fue el cambio más significativo respecto de la LB de
+> requerimientos original. El relevamiento con 120 respuestas válidas respaldó las
+> prioridades mobile-first y offline-first; la selección de Capacitor, APK y SQLite se
+> justificó mediante el análisis técnico de ADR-005 y ADR-006 y se aprobó antes de la implementación.
 
 ---
 
@@ -211,7 +220,9 @@ Una vez establecida una LB, todo cambio en el alcance debe pasar por un proceso 
 
 | Tag | Hito | Momento esperado | Contenido |
 |---|---|---|---|
-| `LB-PROD-v1.0.0` o tag final equivalente | 06 — Entrega Final | Octubre 2026 | APK estable, documentación final, diagramas revisados y materiales de defensa |
+| `LB-PROD-v1.0.0` o tag final equivalente | 06 — Entrega Final | Al completar validación y documentación | Artefacto final decidido, documentación congelada, diagramas revisados y materiales de defensa |
+
+No se planifica una línea base `0.4.9` en esta transición. El nombre y número del corte final se decidirán con evidencia completa, sin modificar ni reutilizar `v0.4.8`.
 
 ---
 

@@ -10,6 +10,8 @@
 
 ---
 
+> **Lectura histórica:** Este informe conserva el alcance y las expectativas del cierre de abril. Las referencias a la PWA describen la hipótesis inicial y fueron reemplazadas después por Capacitor + SQLite según [ADR-005](../adr/ADR-005-pivote-app-nativa.md) y [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md).
+
 ## Resumen Ejecutivo
 
 El hito cero comprende la etapa de investigación previa al desarrollo: la concepción del problema, la documentación académica inicial, el anteproyecto formal, el diseño de la encuesta de relevamiento y la producción de los primeros artefactos de análisis (historias de usuario, diagramas UML, personas, lean canvas). Este trabajo estableció las bases de producto que fundamentaron todas las decisiones técnicas del Hito 01 en adelante.
@@ -48,8 +50,8 @@ El hito cero comprende la etapa de investigación previa al desarrollo: la conce
 - `docs/diagramas/` — Casos de uso, secuencia y modelo de dominio (UML).
 
 ### Investigación
-- `docs/producto/plan-recoleccion-datos.md` — Plan de recolección y metodología estadística.
-- `docs/producto/encuesta.md` — Diseño de la encuesta (refinada para evitar sesgos, commit `2db3eab`).
+- `docs/producto/relevamiento-datos.md` — Plan de recolección, instrumento y metodología.
+- `docs/producto/encuesta/` — Recursos de la encuesta (refinada para evitar sesgos, commit `2db3eab`).
 
 ---
 
