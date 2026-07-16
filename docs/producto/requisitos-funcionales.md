@@ -1,8 +1,10 @@
 # Requisitos Funcionales — Lumapse
 
 **Fase Design Thinking:** Idear / Prototipar  
-**Última actualización:** 2026-06-19 (importación ZIP y sección Acerca de)
+**Última actualización:** 2026-07-15 (reconciliación con Capacitor/SQLite y beta `v0.4.8`)
 **Autor:** José David Sandoval
+
+> **Nota de evolución:** La línea base inicial se formuló para una PWA con IndexedDB. El estado vigente del producto es una aplicación Android empaquetada con Capacitor, con persistencia SQLite y distribución mediante APK, según [ADR-005](../adr/ADR-005-pivote-app-nativa.md) y [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md). Los requisitos obsoletos se conservan tachados para mantener trazabilidad histórica.
 
 ---
 
@@ -33,9 +35,9 @@
 
 | ID | Requisito | Prioridad | Persona | Hito | Estado |
 |---|---|---|---|---|---|
-| RF-007 | El sistema debe almacenar todas las notas de forma **local en el dispositivo**, sin enviar datos a ningún servidor. Actualmente implementado con IndexedDB; la migración a SQLite está aprobada en [ADR-005](../adr/ADR-005-pivote-app-nativa.md). | MUST | Lucía, Martín | 02 | Implementado |
-| RF-008 | El sistema debe funcionar **completamente offline** después de la instalación. Los assets (HTML, CSS, JS, fuentes) se empaquetan dentro del APK nativo. | MUST | Lucía | 03 | Implementado |
-| RF-009 | ~~El sistema debe registrar **Service Workers** para cachear los assets.~~ Obsoleto: la arquitectura migró a APK nativa con Capacitor ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)). Los assets son locales por diseño; `vite-plugin-pwa` fue removido en `ee90559`. | MUST | Lucía | 03 | Obsoleto (ADR-005) |
+| RF-007 | El sistema debe almacenar todas las notas de forma **local en el dispositivo**, sin enviar datos automáticamente a ningún servidor. La primera implementación utilizó IndexedDB; el producto vigente persiste en SQLite mediante Capacitor, según [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md). | MUST | Lucía, Martín | 02 / 04 | Implementado |
+| RF-008 | El sistema debe disponer de un **mecanismo offline** después de la instalación: los assets (HTML, CSS, JS, fuentes) se empaquetan dentro del APK Android y el núcleo persiste localmente. El mecanismo está implementado; la verificación integral de todos los flujos sin red corresponde a `RNF-009` y continúa pendiente de cierre. | MUST | Lucía | 03 | Implementado |
+| RF-009 | ~~El sistema debe registrar **Service Workers** para cachear los assets.~~ Obsoleto: la arquitectura migró a una APK Android híbrida con Capacitor ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)). Los assets son locales por diseño; `vite-plugin-pwa` fue removido en `ee90559`. | MUST | Lucía | 03 | Obsoleto (ADR-005) |
 
 ---
 
@@ -85,7 +87,7 @@
 |---|---|---|---|---|---|
 | RF-019 | El sistema debe ofrecer un **modo oscuro** y un modo claro, con toggle visible. | SHOULD | Martín | 04 | Implementado |
 | RF-020 | El sistema debe ser **responsive**, adaptándose a pantallas desde 320px (móvil) hasta 1920px (desktop). | MUST | Lucía | 04 | Implementado |
-| RF-021 | ~~El sistema debe ser **instalable como PWA** desde el navegador.~~ Obsoleto: la distribución será como APK nativa con Capacitor ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)). | MUST | Lucía | 03 | Obsoleto (ADR-005) |
+| RF-021 | ~~El sistema debe ser **instalable como PWA** desde el navegador.~~ Obsoleto: la distribución vigente es una APK Android híbrida con Capacitor ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)). | MUST | Lucía | 03 | Obsoleto (ADR-005) |
 | RF-022 | El sistema debe mostrar una **pantalla de bienvenida** (onboarding) solo en el primer uso, explicando las funcionalidades principales. | COULD | Lucía | Futuro | Postergado |
 | RF-025 | El sistema debe permitir al usuario asignar un **marcador de estado visual** (emoji curado) a cada nota, eligiendo entre un set de 4 opciones con significado académico (📖 ❓ 🔥 ✅). *(DP-005)* | SHOULD | Lucía | 04 | Implementado |
 
@@ -112,7 +114,7 @@ Validación manual: el flujo fue probado saliendo de Lumapse para consultar un P
 
 ## Decisión de revisión — Exportación/importación local
 
-La revisión del 2026-06-01 detectó que `src/services/ExportService.js` e `src/services/ImportService.js` conservaban una base técnica parcial de exportación/importación, pero la funcionalidad no estaba conectada a la interfaz actual ni cubierta como flujo verificable de usuario. Por lo tanto, `RF-016`, `RF-017` y `RF-018` dejaron de contarse temporalmente como requisitos implementados del producto actual.
+La revisión del 2026-06-01 detectó que las fachadas entonces existentes `src/services/ExportService.js` y `src/services/ImportService.js` conservaban una base técnica parcial de exportación/importación, pero la funcionalidad no estaba conectada a la interfaz ni cubierta como flujo verificable de usuario. Por lo tanto, `RF-016`, `RF-017` y `RF-018` dejaron de contarse temporalmente como requisitos implementados en ese corte. Posteriormente `ExportService` migró a TypeScript y la portabilidad del workspace se resolvió mediante los flujos específicos de backup ZIP.
 
 La decisión protege la filosofía de Lumapse: tomador de notas sin fricción, offline-first, mobile-first y sin sincronización todavía. Compartir una nota individual puede aportar portabilidad real solo si abre el share sheet nativo de Android y permite elegir apps instaladas como WhatsApp. Si termina copiando contenido, duplica la acción existente de Copiar y agrega ruido. La portabilidad completa se resolvió en dos pasos acotados: exportación manual de backup `.zip` (`RF-017`) e importación no destructiva de backups generados por Lumapse (`RF-018`). Quedan para futuro la importación individual `.md`, estrategias avanzadas de merge/reemplazo y Drive API directa.
 
@@ -125,8 +127,8 @@ La decisión protege la filosofía de Lumapse: tomador de notas sin fricción, o
 El cierre formal del Hito 04 (2026-06-01) reclasifica `RF-006`, `RF-022` y `RF-024` como requisitos postergados. La decisión responde a la filosofía de Lumapse: tomador de notas sin fricción, offline-first y mobile-first. Las funcionalidades que agregan ruido visual o sugieren capacidades no disponibles todavía (por ejemplo sincronización) se conservan para evaluación post-release, cuando exista feedback real de estudiantes.
 
 - `RF-006` puede volver si la comunidad estudiantil pide métricas de escritura; debe implementarse como metadato sutil calculado en UI, sin persistencia adicional.
-- `RF-022` puede volver si la primera release evidencia que los empty states y affordances actuales no alcanzan para explicar la app.
-- `RF-024` debe esperar a que exista sincronización, backup o integración externa; antes de eso no modifica el comportamiento del producto.
+- `RF-022` puede volver si la validación con usuarios de la beta `v0.4.8` en Hito 06 evidencia que los empty states y affordances actuales no alcanzan para explicar la app.
+- `RF-024` permanece postergado como indicador **global**: el núcleo local no depende de la red y un chip permanente sugeriría sincronización. El backup ya presenta feedback contextual de conectividad dentro de su propio flujo cuando corresponde.
 
 ---
 
@@ -139,6 +141,16 @@ El cierre formal del Hito 04 (2026-06-01) reclasifica `RF-006`, `RF-022` y `RF-0
 | **COULD** | 4 | Funcionalidades opcionales si hay tiempo disponible |
 | **Total** | **28** | |
 
+## Resumen de requisitos por estado
+
+| Estado | Cantidad | IDs |
+|---|---:|---|
+| Implementado | 21 | RF-001 a RF-004, RF-007, RF-008, RF-010 a RF-015, RF-017 a RF-020, RF-023, RF-025 a RF-028 |
+| Verificado | 1 | RF-005 |
+| Postergado | 4 | RF-006, RF-016, RF-022, RF-024 |
+| Obsoleto por pivote arquitectónico | 2 | RF-009, RF-021 |
+| Pendiente / En desarrollo | 0 | — |
+
 ---
 
 ## Trazabilidad: Requisitos → Hitos
@@ -148,8 +160,8 @@ El cierre formal del Hito 04 (2026-06-01) reclasifica `RF-006`, `RF-022` y `RF-0
 | **02** (Junio) | RF-001 a RF-004, RF-007 | 5 |
 | **03** (Julio) | RF-008 a RF-012, RF-021 | 6 |
 | **04** (Agosto) | RF-013 a RF-015, RF-019, RF-020, RF-025, RF-026 | 7 |
-| **05** (Septiembre) | RF-005, RF-017, RF-018, RF-023, RF-027, RF-028 | 6 |
-| **06** (Octubre) | — | 0 |
+| **05** (plan: Septiembre; cierre operativo: 2026-07-15) | RF-005, RF-017, RF-018, RF-023, RF-027, RF-028 | 6 |
+| **06** (plan: Octubre; activo desde 2026-07-15) | — | 0 |
 | **Futuro / Post-release** | RF-006, RF-016, RF-022, RF-024 | 4 |
 
 ---

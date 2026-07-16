@@ -1,17 +1,17 @@
 # Análisis Competitivo — Lumapse
 
-**Fase Design Thinking:** Definir / Idear  
-**Última actualización:** Mayo 2026  
-**Versión:** 1.1 — Actualizado post-relevamiento  
+**Fase Design Thinking:** Definir / Idear
+**Última actualización:** 2026-07-15
+**Versión:** 1.1 — Actualizado post-relevamiento
 **Autor:** José David Sandoval
 
-> **Nota (mayo 2026):** La fila de Lumapse fue actualizada para reflejar el pivote a app nativa con Capacitor ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)). El análisis de competidores sigue vigente.
+> **Nota de lectura temporal:** La fila de Lumapse se revisó para reflejar el pivote a Capacitor + SQLite ([ADR-005](../adr/ADR-005-pivote-app-nativa.md), [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md)). Las cifras y apreciaciones sobre terceros corresponden al relevamiento competitivo original y no fueron revalidadas en julio de 2026.
 
 ---
 
 ## Objetivo del análisis
 
-Evaluar las herramientas de notas existentes contra los criterios que importan al público objetivo de Lumapse — estudiantes terciarios y universitarios hispanohablantes, particularmente aquellos con conectividad limitada y recursos económicos acotados — para demostrar que el espacio del problema no está resuelto por las alternativas actuales.
+Comparar un conjunto de herramientas de notas contra criterios relevantes para el público objetivo inicial de Lumapse —estudiantes terciarios y universitarios del contexto local, con conectividad irregular y recursos acotados— para identificar oportunidades y riesgos de posicionamiento. El análisis no pretende demostrar que ninguna alternativa resuelva el problema ni sustituye una revalidación actual de los productos comparados.
 
 ---
 
@@ -44,7 +44,7 @@ Los criterios se derivan directamente de las necesidades identificadas en las [p
 | **Evernote** | ⚠️ Parcial | ❌ Email | ~150 MB | ❌ | ❌ Freemium | ✅ | ❌ Lenta |
 | **Standard Notes** | ✅ | ❌ Email | ~30 MB | ✅ Ext. paga | ⚠️ Freemium | ✅ | ✅ Rápida |
 | **Joplin** | ✅ | ✅ | ~80 MB | ✅ | ✅ | ✅ | ⚠️ Media |
-| **Lumapse** | ✅ | ✅ | **< 10 MB** | ✅ | ✅ | ✅ (APK nativa) | ✅ **Instantánea** |
+| **Lumapse** | ⚠️ Evidencia parcial | ✅ | Presupuesto de bundle verificado | ✅ | ✅ | ⚠️ Android actual | ⚠️ Pendiente medir en dispositivo |
 
 > **Leyenda:** ✅ Cumple · ⚠️ Cumple parcialmente · ❌ No cumple
 
@@ -107,7 +107,7 @@ Los criterios se derivan directamente de las necesidades identificadas en las [p
          COMPLEJIDAD BAJA
 ```
 
-**Lumapse ocupa el cuadrante inferior-derecho:** baja complejidad + no requiere conexión. Este es el cuadrante desatendido por el mercado actual.
+**Hipótesis de posicionamiento original:** Lumapse busca el cuadrante inferior-derecho —baja complejidad y núcleo sin conexión—. El gráfico sintetiza una lectura cualitativa del corte competitivo original; no demuestra por sí solo que el cuadrante esté desatendido en el mercado vigente.
 
 ---
 
@@ -116,11 +116,11 @@ Los criterios se derivan directamente de las necesidades identificadas en las [p
 | Diferenciador | Detalle |
 |---|---|
 | **Zero-account** | No hay registro, login, ni recuperación de contraseña. Abrís la app y escribís. |
-| **True offline** | No es "offline con sync pendiente". Es offline por diseño. Los datos nunca salen del dispositivo. |
-| **Peso pluma** | APK nativa liviana (< 10 MB estimado). Se instala directamente, sin depender del navegador. |
-| **Arranque instantáneo** | Sin splash screens, sin carga de workspace, sin sincronización inicial. |
+| **Arquitectura offline-first** | El núcleo no depende de sincronización ni backend. No hay transmisión automática; los datos solo salen por una exportación o acción de compartir iniciada explícitamente por la persona usuaria. La verificación integral de todos los flujos sin red permanece registrada como evidencia parcial en `RNF-009`. |
+| **Peso pluma** | Vanilla JS sin framework y presupuesto automatizado del bundle web. El tamaño final del APK no se da por validado sin medir el artefacto publicado. |
+| **Inicio sin sincronización** | No carga un workspace remoto ni ejecuta sincronización inicial. El tiempo de arranque en dispositivo queda pendiente de medición formal. |
 | **Markdown nativo** | No es un add-on o extensión. Es el formato base de todas las notas. |
-| **Sin vendor lock-in** | Portabilidad local sobre Markdown puro. Compartir/exportar nota individual se posterga hasta validar share sheet nativo; el backup manual `.zip` ya cubre una primera salida externa y la importación queda como deuda posterior. |
+| **Sin vendor lock-in** | Portabilidad local sobre Markdown: el backup manual `.zip` permite exportar e importar el conjunto de notas. Compartir una nota individual sigue separado de ese flujo de respaldo. |
 
 ---
 
@@ -131,7 +131,7 @@ El mercado de aplicaciones de notas es amplio pero está polarizado:
 - **Herramientas simples** (Google Keep, Apple Notes) que requieren cuenta y no soportan Markdown.
 - **Herramientas potentes** (Notion, Obsidian, Joplin) que son pesadas, complejas, o requieren pago para funcionalidad completa.
 
-**No existe una herramienta que combine:** offline real + sin cuenta + Markdown + ligera + gratuita + cross-platform. Ese es el espacio que Lumapse ocupa.
+El análisis original identificó una oportunidad en la combinación de offline real + sin cuenta + Markdown + ligereza + gratuidad. Lumapse cubre hoy ese núcleo en Android; el alcance cross-platform continúa como dirección futura y no se presenta como capacidad terminada.
 
 ---
 

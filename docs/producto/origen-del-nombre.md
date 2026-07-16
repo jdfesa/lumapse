@@ -1,6 +1,6 @@
 # Origen del Nombre — Lumapse
 
-**Última actualización:** 2026-05-25
+**Última actualización:** 2026-07-15
 
 > **Resumen:** El nombre *Lumapse* es un neologismo que fusiona **Lumen** (luz, claridad) y **Synapse** (sinapsis, conexión neuronal). Representa las dos promesas centrales de la aplicación: captura sin fricción y conocimiento interconectado.
 
@@ -42,7 +42,7 @@ El último paso fue unificar ambos conceptos ganadores y llevarlos al inglés pa
 
 El nombre no es solo una etiqueta de marketing: tiene una **correspondencia directa con la arquitectura** de la aplicación.
 
-- **Lum- → Offline-first, captura instantánea.** La app se abre y funciona sin conexión, sin cuenta, sin espera. El usuario escribe inmediatamente — como encender una luz.
+- **Lum- → Offline-first, captura directa.** La app está diseñada para operar sin conexión ni cuenta y no depende de cargar o sincronizar un workspace remoto antes de escribir — como encender una luz.
 - **-apse → Organización por materias, secciones y vínculos.** Las notas se organizan jerárquicamente (materias → secciones) y están diseñadas para evolucionar hacia conexiones semánticas entre conceptos — como una red de sinapsis neuronales.
 
 Esta dualidad permite defender todo el diseño de la aplicación desde su propio nombre: Lumapse es, simultáneamente, la promesa de simplicidad y la promesa de profundidad.

@@ -1,8 +1,8 @@
 # Análisis del Relevamiento de Datos — Lumapse
 
 > **Fase Design Thinking:** Empatizar (validación cuantitativa)  
-> **Dataset:** 121 respuestas · IES 6023 "Dr. Alfredo Loutaif" · Mayo 2026  
-> **Nivel estadístico:** Confianza 95%, margen de error ~8.5%
+> **Dataset:** 121 respuestas recolectadas; 120 válidas · IES 6023 "Dr. Alfredo Loutaif" · Mayo 2026
+> **Alcance estadístico:** análisis descriptivo de una muestra por conveniencia. El 95% y ~8.5% se conservan únicamente como referencia nominal bajo supuesto de muestreo aleatorio simple.
 
 ---
 
@@ -43,9 +43,9 @@ analisis-relevamiento/
 | **pandas** | 2.2.3 | Lectura, limpieza, frecuencias y tablas cruzadas | Librería de referencia para datos tabulares. Permite operaciones complejas (crosstab, groupby) en pocas líneas |
 | **matplotlib** | 3.9.4 | Generación de gráficos estáticos | Librería base de visualización en Python. Gráficos de calidad para informes sin dependencias adicionales |
 
-**¿Por qué Python y no JavaScript?** Si bien el proyecto Lumapse está desarrollado en JavaScript, el análisis de datos es una tarea distinta que requiere herramientas especializadas. Python con pandas es el estándar reconocido para este tipo de trabajo; JavaScript no posee equivalentes maduros para análisis estadístico tabular.
+**¿Por qué Python y no JavaScript?** Aunque Lumapse está desarrollado principalmente con JavaScript y TypeScript, el análisis es un proceso separado. Python, pandas y matplotlib ofrecen una ruta directa y conocida para limpiar datos tabulares, calcular frecuencias y regenerar los gráficos con pocas dependencias.
 
-**¿Por qué un entorno virtual?** El entorno virtual (`.venv/`) aísla las dependencias del análisis del sistema operativo. Esto garantiza reproducibilidad: cualquier persona puede recrear el entorno exacto ejecutando los pasos de instalación.
+**¿Por qué un entorno virtual?** El entorno virtual (`.venv/`) aísla las dependencias del análisis. Junto con las versiones fijadas en `scripts/requirements.txt`, facilita reproducir el proceso; la equivalencia exacta también depende de la versión de Python y del sistema operativo utilizados.
 
 **¿Por qué scripts modulares y no un solo archivo?** Siguiendo el principio de responsabilidad única (SRP), cada módulo encapsula una fase específica del análisis. Esto facilita la lectura, el mantenimiento y la extensión futura del código. El orquestador (`analizar.py`) importa y ejecuta cada módulo en orden, manteniéndose en ~75 líneas frente a las 600+ que tendría un archivo monolítico.
 

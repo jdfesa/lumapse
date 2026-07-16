@@ -56,12 +56,12 @@ Esta carpeta contiene los materiales utilizados durante la ejecución:
 |---|---|
 | Respuestas obtenidas | 121 |
 | Duración de la recolección | 48 horas (2 días naturales) |
-| Objetivo mínimo (confianza 95%, margen ±10%) | 90 |
+| Objetivo mínimo nominal (95%, margen ±10% bajo muestreo aleatorio) | 90 |
 | Objetivo deseable (confianza 90%, margen ±7%) | 125 |
 | Escenario aplicado | **A** — Cierre anticipado por alcanzar meta |
-| Nivel estadístico alcanzado | Confianza 95%, margen de error ~8.5% |
+| Referencia nominal por tamaño | 95%, margen ~8.5% bajo muestreo aleatorio simple; no inferencial para la muestra por conveniencia |
 
-> Con 121 respuestas sobre una población de 1.239 estudiantes, la muestra supera el umbral mínimo de 90 respuestas (confianza 95%, margen ±10%) y se aproxima al objetivo deseable de 125 (confianza 90%, margen ±7%). Los resultados permiten **inferencia estadística** sobre la población del IES 6023.
+> Se recolectaron 121 respuestas y se analizaron 120 válidas. El tamaño supera el objetivo operativo de 90 y se aproxima al escenario de 125, pero la selección fue por conveniencia. Por lo tanto, los porcentajes describen la muestra y orientan decisiones de producto; no constituyen inferencia probabilística formal sobre toda la población del IES 6023.
 
 ---
 

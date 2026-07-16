@@ -1,8 +1,11 @@
 # Personas de Usuario — Lumapse
 
-**Fase Design Thinking:** Empatizar  
-**Última actualización:** Abril 2026  
+**Fase Design Thinking:** Empatizar
+**Formulación inicial:** Abril 2026
+**Última revisión:** 2026-07-15
 **Autor:** José David Sandoval
+
+> **Nota de evolución:** Las personas se formularon antes del relevamiento y del pivote técnico. Sus necesidades centrales —captura rápida, uso offline, privacidad, portabilidad y facilidad de evaluación— siguen vigentes. Las referencias originales a PWA/IndexedDB se reinterpretan en el producto actual como APK Android con Capacitor, SQLite local y backup ZIP. La validación directa de estas personas con usuarios del prototipo queda para el Hito 06.
 
 ---
 
@@ -41,7 +44,7 @@ Lucía cursa 3° año de la tecnicatura. Toma apuntes en el celular durante las 
 - Organizar por materia o tema sin que sea complicado.
 - Que funcione en su celular sin consumir mucho espacio ni datos.
 
-### Cita representativa
+### Cita sintética del arquetipo
 
 > *"Necesito algo que abra rápido, que me deje escribir, y que cuando llegue a casa las notas sigan ahí. No necesito inteligencia artificial, ni bases de datos relacionales, ni dashboards. Solo necesito que funcione."*
 
@@ -73,10 +76,10 @@ Martín ya probó Obsidian, Logseq y Notion. Le gusta Obsidian pero le molesta q
 
 - Una herramienta que use **Markdown nativo** (no un editor WYSIWYG forzado).
 - Que los datos se queden **en su dispositivo** (no en la nube de otro).
-- Que funcione **en el navegador** (cross-platform, sin instalar nada pesado).
+- En la formulación original, que funcionara **en el navegador**; tras el pivote, esta necesidad se cubre primero en Android y la expansión cross-platform queda como posibilidad futura.
 - Poder exportar sus notas y eventualmente importar contenido local (no quedar atrapado en un formato propietario).
 
-### Cita representativa
+### Cita sintética del arquetipo
 
 > *"Solo quiero un lugar donde escribir en Markdown que funcione offline y no me pida crear una cuenta. ¿Es mucho pedir?"*
 
@@ -94,7 +97,7 @@ Martín ya probó Obsidian, Logseq y Notion. Le gusta Obsidian pero le molesta q
 
 ### Contexto
 
-El Prof. Ramos evalúa proyectos de alumnos como parte de materias de práctica profesional. Necesita entender rápidamente qué hace el proyecto, poder probarlo sin instalar nada, y verificar que el alumno documentó sus decisiones.
+El Prof. Ramos evalúa proyectos de alumnos como parte de materias de práctica profesional. Necesita entender rápidamente qué hace el proyecto, acceder a un artefacto instalable con instrucciones claras y verificar que el alumno documentó sus decisiones.
 
 ### Frustraciones
 
@@ -104,11 +107,11 @@ El Prof. Ramos evalúa proyectos de alumnos como parte de materias de práctica 
 
 ### Necesidades
 
-- Poder probar la app **con un solo click** (URL de deploy, o PWA instalable).
+- Poder obtener y probar la app desde un **artefacto publicado**, con instalación e integridad documentadas.
 - Documentación clara que demuestre **proceso de ingeniería**, no solo código.
 - Evidencia de que el alumno **pensó en el usuario**, no solo en la tecnología.
 
-### Cita representativa
+### Cita sintética del arquetipo
 
 > *"No me importa si usaste React o Vanilla JS. Lo que quiero ver es que pensaste en quién va a usar esto y por qué tu solución es la adecuada."*
 
@@ -129,16 +132,16 @@ El Prof. Ramos evalúa proyectos de alumnos como parte de materias de práctica 
 
 | Necesidad detectada | Decisión de diseño en Lumapse | ADR relacionado |
 |---|---|---|
-| Funcionar sin internet | PWA offline-first con IndexedDB | [ADR-002](../adr/ADR-002-persistencia-indexeddb.md) |
-| No requerir cuenta | Almacenamiento 100% local, sin backend | [ADR-002](../adr/ADR-002-persistencia-indexeddb.md) |
-| Ser liviana (< 5 MB) | Vanilla JS sin framework, bundle mínimo | [ADR-001](../adr/ADR-001-stack-tecnologico.md) |
-| Soporte Markdown | Editor Markdown nativo como feature core | Roadmap Hito 03 |
-| Cross-platform | PWA funciona en cualquier navegador y es instalable | [ADR-001](../adr/ADR-001-stack-tecnologico.md) |
-| Fácil de probar/evaluar | Deploy en GitHub Pages con URL pública | Roadmap Hito 03 |
+| Funcionar sin internet | Assets dentro del APK y persistencia SQLite local | [ADR-005](../adr/ADR-005-pivote-app-nativa.md), [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md) |
+| No requerir cuenta | Almacenamiento local sin backend ni sincronización automática | [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md) |
+| Ser liviana y responder en dispositivos modestos | Vanilla JS sin framework y presupuesto automatizado de bundle | [ADR-001](../adr/ADR-001-stack-tecnologico.md) |
+| Soporte Markdown | Editor Markdown, preview seguro y herramientas opcionales de formato | [RF-010, RF-011 y RF-028](./requisitos-funcionales.md) |
+| Priorizar el dispositivo principal del público | Interfaz mobile-first y distribución como APK Android | [ADR-005](../adr/ADR-005-pivote-app-nativa.md) |
+| Fácil de probar/evaluar | APK firmada publicada con versión, hash y checklist de validación | [Informe del Hito 05](../hitos/hito-05-septiembre.md) |
 
 ---
 
-> **Nota metodológica:** Estas personas fueron construidas a partir de la experiencia directa del autor como estudiante de la misma institución, observación del comportamiento de compañeros, y conversaciones informales sobre hábitos de estudio. En fases posteriores del proyecto (Hito 05) se buscará validar y ajustar estas personas con feedback real de usuarios.
+> **Nota metodológica:** Estas personas fueron construidas a partir de la experiencia directa del autor como estudiante de la misma institución, observación y conversaciones informales. El relevamiento posterior de 120 respuestas respaldó el contexto mobile-first y offline-first, pero no reemplaza una validación directa de los arquetipos usando el prototipo. Esa instancia y los ajustes resultantes quedan registrados como trabajo del Hito 06.
 
 ---
 

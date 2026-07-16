@@ -1,8 +1,11 @@
 # Problem Statement — Lumapse
 
-**Fase Design Thinking:** Definir  
-**Última actualización:** Abril 2026  
+**Fase Design Thinking:** Definir
+**Formulación inicial:** Abril 2026
+**Última revisión:** 2026-07-15
 **Autor:** José David Sandoval
+
+> **Nota de evolución:** El problema se conserva como una hipótesis fundamentada en el contexto local del IES 6023. Su extrapolación a otras instituciones o regiones requiere relevamiento propio. La solución técnica evolucionó después de la encuesta: Lumapse dejó de ser una PWA con IndexedDB y pasó a ser una aplicación Android empaquetada con Capacitor, con persistencia SQLite y distribución por APK ([ADR-005](../adr/ADR-005-pivote-app-nativa.md), [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md)).
 
 ---
 
@@ -10,40 +13,42 @@
 
 ### Formato POV (Point of View)
 
-> **[Estudiantes de nivel terciario y universitario hispanohablantes]**  
-> necesitan **[una herramienta de captura y organización de notas de estudio que funcione offline, sin cuenta, y sin fricción]**  
-> porque **[las herramientas existentes requieren conexión permanente, cuentas obligatorias, y están diseñadas para un público con necesidades y recursos diferentes a los suyos.]**
+> **[Estudiantes del IES 6023 y de contextos de uso equivalentes que todavía deben validarse]**
+>
+> necesitan **[una herramienta de captura y organización de notas de estudio que funcione offline, sin cuenta y con baja fricción]**
+>
+> porque **[las alternativas disponibles cubren partes del problema, pero pueden introducir cuentas, dependencia de sincronización, complejidad o flujos que no se ajustan simultáneamente a las restricciones observadas en el contexto local.]**
 
 ---
 
 ## Contexto del problema
 
-### Realidad del estudiante terciario/universitario hispanohablante
+### Contexto local relevado
 
-Si bien las personas de usuario fueron construidas desde el contexto local (Salta, Argentina), las restricciones que se describen a continuación son comunes a estudiantes de instituciones terciarias y universitarias en toda Latinoamérica y otras regiones hispanohablantes:
+La evidencia disponible proviene de observación, conversaciones exploratorias y una muestra no probabilística de estudiantes del IES 6023, en Salta. Permite orientar el producto para ese contexto; no demuestra que las mismas restricciones se presenten con igual intensidad en toda Latinoamérica ni en todas las instituciones de nivel superior.
 
-El contexto de uso de Lumapse no es el de un estudiante con MacBook y WiFi ilimitado en una universidad del primer mundo. El contexto real es:
+Las restricciones consideradas son:
 
-1. **Conectividad limitada.** Muchos estudiantes dependen de datos móviles prepagos con paquetes de 3-5 GB mensuales. Las instituciones terciarias en ciudades intermedias no siempre tienen WiFi estable o con cobertura completa.
+1. **Conectividad institucional limitada.** El 81.7% de la muestra calificó la conectividad del instituto dentro de las opciones agrupadas como deficiente. La encuesta no midió planes de datos ni cobertura fuera de la institución.
 
-2. **Dispositivos de gama media-baja.** El smartphone es el dispositivo principal de estudio. Las notebooks son compartidas, prestadas o de generaciones anteriores. El almacenamiento disponible es limitado.
+2. **Prioridad de uso móvil.** El 72.5% eligió el celular como dispositivo preferido para una futura app de notas. Esto respalda un diseño mobile-first, pero no describe por sí solo el hardware disponible ni el canal de instalación preferido.
 
-3. **Fragmentación de notas.** Sin una herramienta adecuada, los apuntes terminan dispersos en: WhatsApp (mensajes a uno mismo), galería de fotos (fotos de pizarra), Google Docs (si hay conexión), papel suelto, y archivos de texto sin organización.
+3. **Fragmentación de notas.** La observación y las conversaciones preliminares identificaron apuntes dispersos entre papel, mensajería, fotografías y archivos. Esta evidencia cualitativa es exploratoria y no se cuantificó como pregunta independiente de la encuesta.
 
-4. **Sin presupuesto para herramientas premium.** Obsidian Sync ($8 USD/mes), Notion Teams ($8 USD/mes), Evernote Premium ($8 USD/mes) — estas opciones no son viables para un estudiante con presupuesto limitado.
+4. **Bajo costo como restricción de diseño.** Lumapse adopta gratuidad y ausencia de cuenta como premisas de producto. La encuesta no midió presupuesto disponible ni disposición a pagar, por lo que no corresponde atribuir un umbral económico a toda la población.
 
 ### El problema no es "tomar notas"
 
-Existen cientos de aplicaciones de notas. El problema real es que **ninguna resuelve la combinación específica** de restricciones del público objetivo:
+Existen numerosas aplicaciones de notas y varias funcionan offline o sin cuenta. La oportunidad de Lumapse no se basa en afirmar que todas las alternativas fallan, sino en evaluar si una combinación acotada de simplicidad, organización académica, almacenamiento local y uso móvil reduce fricciones para la muestra local.
 
-| Restricción | Estado actual |
-|---|---|
-| Funcionar sin internet | La mayoría requiere sync online, o el modo offline es limitado |
-| Sin cuenta obligatoria | Casi todas requieren email/Google/Apple/Microsoft |
-| Liviana (< 5 MB instalada) | Notion: ~80 MB, OneNote: ~120 MB, Evernote: ~150 MB |
-| Markdown nativo | Solo Obsidian y herramientas de nicho |
-| Gratuita y sin ads | Pocas opciones realmente gratuitas sin freemium invasivo |
-| Cross-platform real | Las mejoras siempre priorizan iOS/macOS |
+| Necesidad del producto | Fricción posible en alternativas | Alcance de la evidencia |
+|---|---|---|
+| Funcionar sin internet | Algunas suites dependen de sincronización o limitan ciertas funciones offline; otras herramientas sí ofrecen uso local completo. | La encuesta respalda la necesidad offline, no una evaluación exhaustiva de competidores. |
+| No exigir cuenta | Varias plataformas generales usan una cuenta; también existen alternativas locales que no la requieren. | Que solo el 10.8% la eligiera entre varias features indica prioridad relativa, no aceptación de autenticación. |
+| Ser simple y liviana | Las suites generalistas pueden incorporar flujos que exceden la captura académica; el impacto real en rendimiento requiere comparación técnica. | La simplicidad surge de la propuesta y de señales cualitativas, no de un benchmark de mercado. |
+| Admitir Markdown | Diferentes herramientas ya soportan Markdown con distintos alcances. | Es una decisión de formato y portabilidad de Lumapse, no una ventaja exclusiva demostrada por la encuesta. |
+| Ser gratuita y sin publicidad | Los planes y condiciones varían entre productos y en el tiempo. | Es una restricción ética y académica del proyecto; la disposición a pagar no fue medida. |
+| Priorizar celular sin perder portabilidad | El soporte móvil y de escritorio varía según cada producto. | El 72.5% respalda mobile-first y el 53.3% valoró celular + PC; no se evaluó un canal de distribución. |
 
 ---
 
@@ -51,20 +56,18 @@ Existen cientos de aplicaciones de notas. El problema real es que **ninguna resu
 
 ### Evidencia directa
 
-- **Observación personal:** Como estudiante del IES 6023, el autor vive diariamente las mismas restricciones que el público objetivo. Los compañeros de cursada recurren a WhatsApp como herramienta de "notas" porque es lo que siempre tienen abierto.
+- **Observación personal:** Como estudiante del IES 6023, el autor identificó restricciones y usos que sirvieron para formular las hipótesis iniciales. Esta observación aporta contexto, pero no sustituye evidencia sistemática.
 
-- **Conversaciones informales:** Al consultar a compañeros de cursada sobre cómo organizan sus apuntes, las respuestas más comunes fueron:
-  - *"No los organizo, después los busco en el WhatsApp"*
-  - *"Los tengo en Google Keep pero a veces no carga"*
-  - *"Saco fotos de la pizarra y después no las encuentro"*
+- **Conversaciones informales:** Al consultar a compañeros de cursada sobre cómo organizan sus apuntes, se registraron estas paráfrasis ilustrativas —no transcripciones literales ni frecuencias cuantificadas—:
+  - Apuntes sin organización que luego se buscan en conversaciones de mensajería.
+  - Notas almacenadas en servicios en línea que no siempre están disponibles en el momento de uso.
+  - Fotografías de la pizarra que después resultan difíciles de localizar.
 
-### Evidencia de mercado
+### Contraste con alternativas
 
-- **Obsidian** ha crecido exponencialmente, demostrando demanda de herramientas Markdown-first y local-first. Sin embargo, su modelo de negocio ($8/mes por sync) excluye al público de bajos recursos.
+El [análisis competitivo](./analisis-competitivo.md) distingue dos grupos generales. Las suites de productividad y notas sincronizadas cubren captura, organización y acceso multidispositivo, aunque pueden agregar cuentas, ecosistemas o complejidad innecesaria para este alcance. Las herramientas local-first cubren mejor el control de datos y el uso offline, pero algunas exigen una configuración o un modelo mental más técnico. Son tendencias comparativas, no reglas universales para cada producto.
 
-- **Simplenote** (de Automattic) se acerca a la propuesta, pero no tiene soporte Markdown avanzado y su diferenciación es limitada.
-
-- El movimiento **local-first software** (liderado por investigadores como Martin Kleppmann) refleja una tendencia creciente hacia aplicaciones que priorizan el almacenamiento local y la privacidad.
+Este contraste permite formular una oportunidad de diseño, pero no demuestra por sí solo una demanda de mercado. La validación disponible corresponde a la muestra del IES 6023 y debe complementarse con pruebas de uso del prototipo.
 
 ---
 
@@ -77,12 +80,12 @@ Lumapse **no pretende** reemplazar a Notion, Obsidian o cualquier herramienta en
 │                  LO QUE LUMAPSE SÍ ES               │
 │                                                     │
 │  ✓ Captura rápida de notas en Markdown              │
-│  ✓ Organización simple por etiquetas                │
-│  ✓ Búsqueda local instantánea                       │
-│  ✓ Funcionamiento 100% offline                      │
-│  ✓ Sin cuenta, sin servidores, sin tracking         │
-│  ✓ Instalable como PWA en cualquier dispositivo     │
-│  ✓ Portabilidad local planificada                    │
+│  ✓ Organización por Materia / Sección / Nota         │
+│  ✓ Búsqueda local sin depender de red               │
+│  ✓ Arquitectura offline-first, sin backend          │
+│  ✓ Sin cuenta ni backend propio                     │
+│  ✓ Aplicación Android distribuida como APK           │
+│  ✓ Backup ZIP exportable e importable                │
 └─────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────┐
@@ -92,7 +95,7 @@ Lumapse **no pretende** reemplazar a Notion, Obsidian o cualquier herramienta en
 │  ✗ Un editor colaborativo en tiempo real            │
 │  ✗ Un gestor de proyectos                           │
 │  ✗ Un reemplazo de Google Docs                      │
-│  ✗ Una plataforma con backend o cloud storage       │
+│  ✗ Una plataforma con backend o sync cloud automát. │
 └─────────────────────────────────────────────────────┘
 ```
 

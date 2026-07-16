@@ -1,8 +1,10 @@
 # Documentación de Producto — Lumapse
 
-**Última actualización:** 2026-06-07
+**Última actualización:** 2026-07-15
 
 Esta carpeta contiene la documentación centrada en el **usuario y el producto**, siguiendo los principios de **Design Thinking** como marco metodológico de diseño.
+
+> **Lectura temporal:** Algunos artefactos conservan deliberadamente la formulación inicial PWA/IndexedDB como evidencia del proceso. Cada documento que fue afectado por el pivote distingue esa línea base del estado vigente: Capacitor, SQLite y APK Android.
 
 > **¿Por qué Design Thinking?**
 > Los documentos técnicos (ADRs, roadmap, metodología) responden al *cómo* se construye Lumapse.
@@ -46,17 +48,16 @@ La subcarpeta [`encuesta/`](./encuesta/) contiene los materiales para la distrib
 ┌─────────────┐   ┌─────────────┐   ┌─────────────┐   ┌─────────────┐   ┌─────────────┐
 │  EMPATIZAR  │──▶│   DEFINIR   │──▶│    IDEAR    │──▶│ PROTOTIPAR  │──▶│   TESTEAR   │
 │             │   │             │   │             │   │             │   │             │
-│  Personas   │   │  Problem    │   │  Lean       │   │  PWA funcio-│   │  Feedback   │
-│  Relevamien-│   │  Statement  │   │  Canvas     │   │  nal (Hitos │   │  real de    │
-│  to de Datos│   │  Análisis   │   │  Requisitos │   │  02-05)     │   │  usuarios   │
-│  Metodología│   │  Competitivo│   │  RF / RNF   │   │             │   │  (Hito 05)  │
+│  Personas   │   │  Problem    │   │  Lean       │   │  Prototipo  │   │  Beta real  │
+│  Relevamien-│   │  Statement  │   │  Canvas     │   │  evolutivo  │   │  + feedback │
+│  to de Datos│   │  Análisis   │   │  Requisitos │   │  APK (Hitos │   │  final de   │
+│  Metodología│   │  Competitivo│   │  RF / RNF   │   │  02-05)     │   │  Hito 06    │
 │  Muestral   │   │             │   │  Historias  │   │             │   │             │
 │             │   │             │   │  de Usuario │   │             │   │             │
 └─────────────┘   └─────────────┘   └─────────────┘   └─────────────┘   └─────────────┘
 ```
 
-> **Nota:** Las fases de Prototipar y Testear se materializan durante el desarrollo (Hitos 02-06).
-> Los documentos de esta carpeta cubren las tres primeras fases (Empatizar, Definir, Idear) y serán actualizados con los hallazgos de las fases posteriores.
+> **Nota:** Prototipar se materializó incrementalmente entre los Hitos 02 y 05. Hito 05 aportó una primera validación técnica y manual de la beta `v0.4.8`; la validación directa con usuarios, la revisión final de RNF y los ajustes de cierre pertenecen al Hito 06.
 
 ---
 

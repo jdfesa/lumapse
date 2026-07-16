@@ -1,7 +1,7 @@
 # Decisiones de Producto — Lumapse
 
 > **Documento vivo** — Se actualiza a medida que se toman decisiones de producto y se incorporan datos del relevamiento.  
-> **Última actualización:** 2026-05-31
+> **Última actualización:** 2026-07-15
 
 ---
 
@@ -25,40 +25,48 @@ Cada decisión sigue esta estructura:
 - **Justificación:** ¿Por qué se tomó esta decisión y no otra?
 - **Datos de soporte:** ¿Qué evidencia la respalda? (puede ser datos ya recopilados, investigación de mercado, o datos pendientes de la encuesta)
 - **Condición de pivote:** ¿Bajo qué resultado de la encuesta revisaríamos esta decisión?
-- **Estado:** `Confirmada` | `Pendiente de validación` | `Revisada`
+- **Estado:** distingue si la decisión está propuesta, implementada, revisada o postergada; el grado de evidencia se declara por separado para no confundir implementación con validación de uso.
 
 ---
 
-## DP-001: Título unificado al estilo Typora
+## DP-001: Política de título flexible
 
 **Fecha:** 2026-05-05  
-**Actualización:** 2026-05-30
-**Estado:** ✅ Implementada
+**Actualización:** 2026-07-15
+**Estado:** ✅ Implementada y revisada
 
 ### Contexto
 
-Lumapse tenía un campo de título separado (un `<input>` en la cabecera del editor) y el contenido Markdown en un `<textarea>` debajo. Esto generaba una experiencia donde el usuario debía mantener dos cosas: el "nombre" de la nota y su contenido, sin relación directa entre ambos. En Markdown puro, el título de un documento puede expresarse con `# Título`, pero exigir esa sintaxis desde el primer uso contradice el objetivo de captura rápida.
+Durante Hito 04 se ensayó un editor al estilo Typora en el que el título se obtenía del contenido. La evolución posterior mostró que esa formulación era demasiado rígida: un usuario puede querer un título claro sin escribir sintaxis Markdown, mientras que otro puede comenzar directamente con un encabezado `#`.
 
 ### Decisión
 
-Eliminar el campo de título separado. Si la nota contiene una línea `# Título`, se usa como título explícito. Si no contiene encabezado Markdown, Lumapse toma la primera línea no vacía como título implícito, la muestra con jerarquía visual en la tarjeta y conserva el resto como cuerpo. Si no hay contenido útil, se usa el título por defecto ("Sin título").
+Mantener un campo de título visible pero opcional y aplicar una política de resolución única al guardar:
+
+1. si existe título explícito, se normaliza y se conserva;
+2. si está vacío y la primera línea no vacía del contenido es un encabezado `# `, se usa ese texto;
+3. en cualquier otro caso, se guarda `Sin título`;
+4. si el contenido comienza repitiendo el título resuelto, la presentación evita mostrarlo dos veces.
+
+El atributo `title` se persiste en SQLite como un dato propio de la nota. No se modela como un valor obligatoriamente derivado de `content`.
 
 ### Justificación
 
-- **Reduce la fricción:** El usuario escribe en un solo lugar, no tiene que decidir qué va en el título y qué va en el contenido.
-- **Consistencia progresiva con Markdown:** El estándar Markdown ya define `# ` como encabezado principal. Lumapse respeta esa convención para quien la conozca, pero no la exige para empezar.
-- **Señal visual sin fricción:** La primera línea se diferencia en la tarjeta como título implícito, evitando un segundo campo y evitando instrucciones obligatorias.
-- **Precedente:** Aplicaciones exitosas como Typora, Bear y iA Writer siguen este patrón.
-- **Público objetivo:** Estudiantes universitarios que buscan velocidad y mínima fricción al tomar notas. Un campo extra es un paso extra.
+- **Uso inmediato:** Se puede escribir un título común sin conocer Markdown.
+- **Compatibilidad con Markdown:** Quien empieza con `# Título` obtiene el mismo resultado sin completar dos veces la información.
+- **Separación semántica:** El listado puede mostrar `title` sin interpretar el cuerpo Markdown para descubrir un nombre.
+- **Portabilidad:** El contenido sigue siendo Markdown legible y el backup conserva ambos campos de forma explícita.
+- **Presentación sin duplicados:** La política reconoce una primera línea redundante cuando coincide con el título.
 
 ### Datos de soporte
 
-- Observación directa durante el desarrollo: el campo de título generaba confusión sobre su relación con el contenido.
-- **Pendiente:** P8 de la encuesta ("Que sea rápida" como característica prioritaria) reforzaría esta decisión si aparece entre las 3 más votadas.
+- La implementación está centralizada en `NoteTitleService.ts` y cubierta por pruebas unitarias.
+- El relevamiento mostró que 45% seleccionó “Que sea rápida” en P8. Ese dato respalda reducir fricción en general, pero no valida directamente una política de título.
+- `scripts/run-load-tests.py` compara de forma sintética parsear encabezados con leer una columna, pero no mide CPU Android ni demuestra un porcentaje universal de mejora.
 
 ### Condición de pivote
 
-Si la encuesta revela que los usuarios valoran la organización manual más que la velocidad (P8: "Organizar por materia" >> "Que sea rápida"), podría reconsiderarse mantener un campo de título explícito para facilitar la nomenclatura manual.
+La decisión ya fue revisada y la beta restauró el título explícito opcional. Su comprensión y velocidad de uso deben validarse con usuarios durante Hito 06; si el campo provoca fricción observable, podrá ajustarse la presentación sin cambiar el contrato persistido.
 
 ---
 
@@ -66,11 +74,11 @@ Si la encuesta revela que los usuarios valoran la organización manual más que 
 
 **Fecha:** 2026-05-05  
 **Actualización:** 2026-05-14  
-**Estado:** ✅ Confirmada (con datos del relevamiento)
+**Estado:** ✅ Implementada; respaldada exploratoriamente; prueba de uso pendiente
 
 ### Contexto
 
-La versión actual de Lumapse presenta una lista plana de notas sin ninguna jerarquía. A medida que un estudiante acumula notas de múltiples materias a lo largo del cuatrimestre, esta lista se vuelve inmanejable. Necesitamos una estructura que organice sin abrumar.
+En el momento de esta decisión, Lumapse presentaba una lista plana de notas sin ninguna jerarquía. A medida que un estudiante acumula notas de múltiples materias a lo largo del cuatrimestre, esa lista se vuelve inmanejable. Se necesitaba una estructura que organizara sin abrumar.
 
 ### Decisión
 
@@ -85,21 +93,21 @@ Implementar una navegación con tres secciones predefinidas, con nomenclatura en
 - **Opinionada pero no rígida:** La app le da al estudiante una estructura predefinida que tiene sentido para su contexto (materias → parciales → aprobadas → archivadas), sin obligarlo a diseñarla desde cero como en Notion u Obsidian.
 - **Reduce la parálisis de decisión:** "¿Dónde guardo esta nota?" → En Entrada. Siempre. Después la organizás.
 - **Flujo natural:** Captura rápida → Organización cuando hay tiempo → Archivo cuando ya no se necesita.
-- **Nomenclatura en español:** Los usuarios son estudiantes de un instituto argentino. Términos como "Inbox" o "Subjects" no aportan claridad; "Entrada", "Materias" y "Archivo" son palabras familiares que cualquier estudiante entiende sin explicación.
+- **Nomenclatura en español:** El público inicial pertenece a un instituto argentino. Usar "Entrada", "Materias" y "Archivo" mantiene la interfaz consistente con su idioma; su comprensión deberá confirmarse en pruebas de uso.
 
 ### Datos de soporte (validación empírica)
 
 Resultados del [relevamiento de datos](resultados-relevamiento.md) (n=120):
 
-- **P11:** El **69.2% prefiere carpetas por materia** como modelo de organización → **decisión validada directamente**.
-- **P8:** El **73.3% prioriza "organizar por materia"** como feature → refuerza la estructura de Materias.
+- **P11:** El **69.2% prefiere carpetas por materia** como modelo de organización → **decisión respaldada directamente dentro de la muestra**.
+- **P8:** El **73.3% selecciona "organizar por materia"** → refuerza la estructura de Materias, con la limitación documentada de que el máximo de tres opciones no quedó aplicado en todas las respuestas.
 - **P5b:** El **58.9% reporta desorganización rápida** como dificultad → refuerza la necesidad de estructura predefinida.
-- **Cruce P9×P11:** Quienes prefieren celular eligen carpetas por materia en el 71% de los casos → el modelo funciona para mobile.
+- **Cruce P9×P11:** Entre quienes prefieren celular, 59 de 87 (67.8%) eligen carpetas por materia → el resultado respalda ensayar este modelo en la interfaz móvil.
 - **Tags (20%):** Una minoría significativa prefiere etiquetas. Se evaluará como sistema complementario (ver DP-004).
 
 ### Condición de pivote
 
-No aplica — la decisión fue validada empíricamente. Si en futuras iteraciones el feedback de uso real muestra que los usuarios no utilizan la estructura, se simplificará.
+La estructura se mantiene en el corte vigente porque la encuesta exploratoria respalda organizar por materias. Se revisará si las pruebas de uso muestran que la nomenclatura, la ubicación inicial o el flujo de archivo generan confusión.
 
 ---
 
@@ -107,7 +115,7 @@ No aplica — la decisión fue validada empíricamente. Si en futuras iteracione
 
 **Fecha:** 2026-05-05  
 **Actualización:** 2026-05-14  
-**Estado:** ✅ Confirmada (con datos del relevamiento)
+**Estado:** ✅ Implementada; respaldada exploratoriamente; prueba de uso pendiente
 
 ### Contexto
 
@@ -117,92 +125,41 @@ Lumapse debe funcionar bien en múltiples dispositivos. Sin embargo, el enfoque 
 
 **Mobile-first.** La interfaz se diseña y optimiza primero para pantallas de celular, con adaptación posterior a pantallas más grandes si el tiempo lo permite.
 
-Esta decisión se complementa con el [ADR-005](../adr/ADR-005-pivote-app-nativa.md) que documenta el pivote de PWA a app nativa empaquetada con Capacitor.
+Esta decisión se complementa con el [ADR-005](../adr/ADR-005-pivote-app-nativa.md), que documenta el pivote de PWA a aplicación Android híbrida empaquetada con Capacitor.
 
 ### Justificación
 
 - El **72.5%** de los encuestados usaría la app desde el celular (P9).
 - Sumando "Cualquiera por igual", el **95%** incluye celular como dispositivo de uso.
-- El celular domina en **todas las carreras** sin excepción, incluso en Sistemas (70%).
-- El **88.3%** toma notas en cuaderno/papel — la migración a digital requiere mínima fricción, y el celular es el dispositivo que ya llevan al aula.
+- El celular fue la opción individual más frecuente en las seis carreras observadas; Física no quedó representada, los tamaños de los subgrupos son desiguales y el resultado se limita a la muestra.
+- El **88.3%** toma notas en cuaderno/papel. Esto refuerza la conveniencia de reducir la fricción de captura, aunque la encuesta no identifica por sí sola sus causas ni demuestra que el celular reemplace ese hábito.
 
 ### Datos de soporte (validación empírica)
 
 Resultados del [relevamiento de datos](resultados-relevamiento.md) (n=120):
 
 - **P9:** Celular 72.5%, Cualquiera 22.5%, Notebook/PC 4.2%, Tablet 0.8%.
-- **P4:** El 88.3% usa cuaderno/papel → el celular no compite con otra app sino con el cuaderno.
-- **Cruce P4×P9:** De los 106 que usan cuaderno, el 74.5% elegiría celular → brecha entre hábito actual y aspiración tecnológica.
-- **Cruce P2×P9:** El celular domina en todas las carreras → no hay segmento que requiera desktop-first.
+- **P4:** El 88.3% usa cuaderno/papel → describe el hábito predominante de la muestra, pero no permite atribuir por qué se elegiría o no una aplicación.
+- **Cruce P4×P9:** De los 106 que usan cuaderno, el 74.5% declaró que elegiría celular para Lumapse → diferencia entre el hábito observado y la preferencia declarada para el prototipo, sin inferir causalidad.
+- **Cruce P2×P9:** En la muestra no aparece evidencia suficiente para justificar que el primer diseño sea desktop-first.
 
 ### Condición de pivote
 
-No aplica — la evidencia es inequívoca. Mobile-first es la dirección correcta.
-
----
-
-## Decisiones futuras por registrar
-
-Las siguientes decisiones se documentarán formalmente a medida que avance el desarrollo:
-
-| ID | Tema | Disparador |
-|---|---|---|
-| DP-008 | Ayuda ampliada o tutoriales | Feedback post-release que demuestre fricción real de uso |
-
----
-
-## DP-006: Ayuda Contextual sin Fricción
-
-**Fecha:** 2026-06-01
-**Estado:** ✅ Confirmada para cierre de Hito 04
-**Refs:** RF-006, RF-022, RF-024, RF-023, Hito 04
-
-### Contexto
-
-Al cerrar el Hito 04 quedaron pendientes varias ideas de ayuda o información secundaria: contador de palabras/caracteres, onboarding, indicador offline/online, coach marks y guía Markdown. Todas podían aportar valor en escenarios puntuales, pero también podían sumar ruido visual o sugerir capacidades que Lumapse todavía no ofrece, especialmente sincronización.
-
-Lumapse se define como un tomador de notas mobile-first, offline-first y sin fricción. En esta etapa no busca competir como editor académico avanzado ni como plataforma sincronizada. La primera release debe validar si estudiantes reales entienden la app a partir de su interfaz actual.
-
-### Decisión
-
-Cerrar Hito 04 sin agregar onboarding obligatorio, contador permanente, chip online/offline ni guía Markdown dedicada.
-
-En su lugar:
-
-- Mantener la interfaz principal enfocada en escribir, organizar y recuperar notas.
-- Pulir los empty states para orientar sin interrumpir.
-- Postergar la ayuda ampliada hasta contar con feedback real post-release.
-- Integrar información institucional mínima en `RF-023 — Acerca de` durante Hito 05 sin comprometer la simplicidad.
-
-### Justificación
-
-- **Sin fricción:** cualquier elemento que el usuario deba leer antes de escribir retrasa la captura.
-- **Offline-first:** mostrar “online/offline” sin sincronización o backup puede crear una expectativa falsa.
-- **Mobile-first:** tooltips y coach marks consumen espacio y atención en pantallas pequeñas.
-- **Markdown opcional:** Lumapse permite escribir texto plano; no debe insinuar que aprender Markdown es requisito.
-- **Evidencia futura:** si la comunidad estudiantil adopta el producto y pide métricas, ayuda o sincronización, esas mejoras podrán priorizarse con datos reales.
-
-### Consecuencias
-
-- `RF-006`, `RF-022` y `RF-024` pasan a estado **Postergado**.
-- `RF-023` se implementa como sección informativa mínima: versión, autor, licencia, propósito y alcance offline/local.
-- Los coach marks se descartan para Hito 04.
-- La guía Markdown se fusiona conceptualmente con una futura sección `Acerca de/Ayuda` si el feedback la justifica.
-- El cierre de Hito 04 se considera coherente con la propuesta de producto, no una omisión funcional.
+Mobile-first se mantiene como hipótesis de diseño respaldada para el prototipo. Se revisará si las pruebas de uso muestran fricción en pantallas pequeñas o si una ampliación del público introduce necesidades desktop-first.
 
 ---
 
 ## DP-004: Estructura de Información Opinionada — Materia › Sección › Nota
 
 **Fecha:** 2026-05-20  
-**Estado:** ✅ Confirmada  
+**Estado:** ✅ Implementada; validación de uso pendiente
 **Refs:** [database/](../diagramas/database/), RF-013, RF-014  
 
 ### Contexto
 
-Las aplicaciones de notas existentes en el mercado (Notion, Obsidian, Bear, Joplin) adoptan una filosofía de "lienzo en blanco": el usuario define su propia arquitectura de información desde cero. Para un estudiante que llega a una clase de 2 horas con 20 minutos libres, esta flexibilidad es en realidad un obstáculo: necesita decidir cómo organizar, dónde crear la nota, qué jerarquía usar.
+Varias herramientas generalistas de notas —entre ellas Notion, Obsidian, Bear y Joplin— ofrecen estructuras muy flexibles que la persona usuaria debe configurar. Esa flexibilidad puede resultar valiosa, pero también agrega decisiones antes de capturar una nota. Lumapse ensaya una alternativa más acotada para el uso académico: ofrecer una estructura inicial comprensible sin impedir la organización por materias y secciones.
 
-Lumapse está diseñada para un público concreto (estudiantes de nivel superior, 17-35 años, con celular como dispositivo principal) con un contexto de uso muy específico: **capturar conocimiento académico durante o después de una clase**.
+Lumapse está diseñada para estudiantes de nivel superior del contexto relevado, con prioridad mobile-first y un caso de uso específico: **capturar conocimiento académico durante o después de una clase**. La muestra orienta esta decisión, pero no limita el producto a un rango etario rígido.
 
 ### Decisión
 
@@ -220,13 +177,13 @@ Materia (ej. "Base de Datos")        ← Nivel 1 — creado por el usuario
         └── Nota                      ← Nivel 3 — el contenido
 ```
 
-**Regla de profundidad máxima:** Una Sección no puede contener sub-secciones. Esta restricción se valida en código (`SqliteService.js`) y en la interfaz de usuario.
+**Regla de profundidad máxima:** Una Sección no puede contener sub-secciones. La validación vigente reside en `src/services/SubjectService.validation.ts`, se aplica desde el servicio de materias y está cubierta por tests específicos; la interfaz solo ofrece crear secciones bajo materias raíz.
 
 ### Justificación
 
-- **Elimina la parálisis de decisión:** El estudiante sabe exactamente dónde irá su nota sin pensar. Si no tiene tiempo de organizar, va a Entrada. Si quiere organizar, arrastra a su Materia.
-- **Refleja el modelo mental real:** El árbol `Materia → Sección → Nota` replica el sistema de organización que los estudiantes ya usan en herramientas de archivo digital (Dropbox, Google Drive) con estructura `Materia → Subcarpeta → Archivo`.
-- **Mobile-first:** Más de 3 interacciones para llegar a una nota en pantalla de celular genera fricción y abandono. La profundidad máxima de 3 niveles garantiza que el usuario nunca necesita más de 2 taps para llegar a cualquier nota desde la pantalla principal.
+- **Reduce decisiones iniciales:** Entrada ofrece un destino por defecto y Materias permite clasificar después. La reducción efectiva de fricción debe comprobarse en pruebas de uso.
+- **Se aproxima a una organización académica reconocible:** El árbol `Materia → Sección → Nota` adapta una estructura frecuente de archivos (`Materia → Subcarpeta → Archivo`) sin asumir que sea el único modelo mental posible.
+- **Mobile-first:** Limitar la jerarquía reduce navegación y carga de decisión en pantallas pequeñas. El criterio cuantitativo de máximo 2 taps se conserva en RNF-006, pero su verificación completa sobre la interfaz vigente continúa pendiente.
 - **Diferenciación de producto:** La estructura opinionada es la característica definitoria de Lumapse. Es la respuesta directa a "¿por qué no usar Notion?" que el tribunal evaluador puede plantear en la defensa académica.
 
 ### Implementación en base de datos
@@ -244,9 +201,9 @@ Ver [docs/diagramas/database/](../diagramas/database/) para el DER completo, la 
 
 ### Datos de soporte
 
-- **P11 del relevamiento (n=120):** El 69.2% prefiere organizar por carpetas por materia → valida la estructura de Materias como nivel raíz.
-- **Análisis del sistema de archivos académico real del autor:** La jerarquía observada en `Dropbox/20_Academic/` refleja exactamente el patrón `Institución → Materia → [Subcarpeta tipo: teoria/, tps/, U1/]` — confirmando que 2 niveles de carpetas son suficientes y naturales para el contexto académico.
-- **Principio de diseño mobile-first (DP-003):** El 72.5% usará la app desde celular, donde la navegación profunda (>3 niveles) es incómoda e incompatible con patrones de UX móvil modernos.
+- **P11 del relevamiento (n=120):** El 69.2% prefiere organizar por carpetas por materia → respalda Materias como nivel raíz dentro de la muestra.
+- **Referencia cualitativa del autor:** La jerarquía observada en su sistema de archivos académico (`Institución → Materia → [Subcarpeta temática]`) sirvió como ejemplo de dominio. No demuestra que dos niveles sean universales ni suficientes para todos los usuarios.
+- **Principio de diseño mobile-first (DP-003):** El 72.5% declaró que elegiría el celular. Limitar inicialmente la profundidad es una hipótesis de diseño orientada a reducir pasos de navegación y deberá comprobarse mediante pruebas de uso.
 
 ### Condición de pivote
 
@@ -262,7 +219,7 @@ Si el feedback de uso real (post-lanzamiento) muestra que los usuarios crean con
 
 ### Contexto
 
-Las aplicaciones de notas colaborativas (Google Keep, Memos) permiten "reacciones" con emojis sobre las notas. En un contexto personal y offline como Lumapse, las reacciones no tienen destinatario — el estudiante reacciona a sus propias notas sin propósito funcional claro.
+Algunas aplicaciones colaborativas permiten reacciones con emojis sobre el contenido. En un contexto personal y offline como Lumapse, esa semántica social no aporta por sí sola un propósito funcional claro.
 
 Sin embargo, la idea de un marcador visual rápido tiene valor si se reorienta: en lugar de reacciones sociales, un **set curado de emojis con significado académico** permite al estudiante clasificar el estado de comprensión de cada nota de un vistazo.
 
@@ -278,14 +235,14 @@ Implementar un sistema de **marcado rápido por estado académico** con 4 emojis
 | ✅ | Repasado | "Ya lo entendí" |
 
 **Se descartó** un sistema Kanban clásico (Pendiente → En proceso → Terminado) porque:
-- Los emojis curados ya actúan como un Kanban implícito (📖 → ❓ → 🔥 → ✅) sin la rigidez de columnas.
+- Los emojis curados ofrecen un vocabulario liviano de estado sin introducir columnas ni un flujo Kanban obligatorio.
 - Agregar ambos sistemas crearía redundancia y confusión.
 - Lumapse es una app de notas, no un gestor de tareas.
 
 ### Justificación
 
 - **1 toque:** Seleccionar un emoji es más rápido que elegir un estado de un dropdown.
-- **Visualmente instantáneo:** El estudiante abre el feed y sabe qué necesita atención antes de un parcial.
+- **Lectura de un vistazo:** El estudiante abre el feed y puede distinguir qué necesita atención antes de un parcial.
 - **Minimalista:** 4 opciones curadas evitan la parálisis de un picker de emojis libre.
 - **Toggle natural:** Tocar el mismo emoji lo quita, sin necesidad de un botón "Quitar" separado.
 
@@ -298,6 +255,50 @@ Implementar un sistema de **marcado rápido por estado académico** con 4 emojis
 ### Condición de pivote
 
 Si el testing con usuarios reales muestra que los marcadores no se usan o generan confusión, se evaluará reemplazarlos por un sistema de etiquetas de texto. La columna de base de datos es reutilizable para cualquier variante.
+
+---
+
+## DP-006: Ayuda Contextual sin Fricción
+
+**Fecha:** 2026-06-01
+**Estado:** ✅ Confirmada para cierre de Hito 04
+**Refs:** RF-006, RF-022, RF-024, RF-023, Hito 04
+
+### Contexto
+
+Al cerrar el Hito 04 quedaron pendientes varias ideas de ayuda o información secundaria: contador de palabras/caracteres, onboarding, indicador offline/online, coach marks y guía Markdown. Todas podían aportar valor en escenarios puntuales, pero también podían sumar ruido visual o sugerir capacidades que Lumapse todavía no ofrece, especialmente sincronización.
+
+Lumapse se define como un tomador de notas mobile-first, offline-first y sin fricción. En el corte de esta decisión no buscaba competir como editor académico avanzado ni como plataforma sincronizada. La entonces futura beta debía permitir validar si estudiantes reales entendían la app a partir de su interfaz.
+
+### Decisión
+
+Cerrar Hito 04 sin agregar onboarding obligatorio, contador permanente, chip online/offline ni guía Markdown dedicada.
+
+En su lugar:
+
+- Mantener la interfaz principal enfocada en escribir, organizar y recuperar notas.
+- Pulir los empty states para orientar sin interrumpir.
+- Postergar la ayuda ampliada hasta contar con feedback real post-release.
+- Integrar información institucional mínima en `RF-023 — Acerca de` durante Hito 05 sin comprometer la simplicidad.
+
+### Justificación
+
+- **Sin fricción:** cualquier elemento que el usuario deba leer antes de escribir retrasa la captura.
+- **Offline-first:** el núcleo local no cambia de comportamiento según la red. Un chip global “online/offline” sugeriría una sincronización inexistente; el backup comunica la conectividad de forma contextual solo cuando ese flujo la necesita.
+- **Mobile-first:** tooltips y coach marks consumen espacio y atención en pantallas pequeñas.
+- **Markdown opcional:** Lumapse permite escribir texto plano; no debe insinuar que aprender Markdown es requisito.
+- **Evidencia futura:** si la comunidad estudiantil adopta el producto y pide métricas, ayuda o sincronización, esas mejoras podrán priorizarse con datos reales.
+
+### Consecuencias
+
+- `RF-006`, `RF-022` y `RF-024` pasan a estado **Postergado**.
+- `RF-023` se implementa como sección informativa mínima: versión, autor, licencia, propósito y alcance offline/local.
+- El backup ofrece feedback contextual de conectividad dentro de su vista; esto no convierte el estado de red en información global del producto ni reactiva `RF-024`.
+- Los coach marks se descartan para Hito 04.
+- La guía Markdown se fusiona conceptualmente con una futura sección `Acerca de/Ayuda` si el feedback la justifica.
+- El cierre de Hito 04 se considera coherente con la propuesta de producto, no una omisión funcional.
+
+> **Resultado al 2026-07-15:** La beta `v0.4.8` ya fue publicada y validada técnicamente en Android. La prueba directa con estudiantes sigue pendiente para Hito 06, por lo que `RF-006`, `RF-022` y `RF-024` permanecen postergados.
 
 ---
 
@@ -348,7 +349,7 @@ Lumapse **no** se convierte en Google Calendar ni en una agenda semanal. Para pr
 
 ### Justificación
 
-- **Contexto natural:** El estudiante que toma notas de una materia también necesita recordar cuándo rinde, entrega o expone en esa materia.
+- **Contexto relacionado:** Una persona que toma notas de una materia puede necesitar registrar cuándo rinde, entrega o expone en esa misma materia.
 - **Bajo cambio de contexto:** La fecha vive junto a las notas académicas, no en una app separada.
 - **Infraestructura existente:** El Heatmap ya ofrece una base visual mensual; agregar dots o indicadores es evolución, no reescritura.
 - **Asociación con materias:** Las fechas académicas se vinculan naturalmente con `subjects`, entidad ya implementada.
@@ -368,6 +369,16 @@ Si durante testing con usuarios reales la funcionalidad desplaza la atención de
 ### Resultado de implementación
 
 La v1 se implementó como una capa discreta sobre el Heatmap existente: dots por día, detalle compacto al seleccionar fecha, modal accesible para crear/editar, lista colapsable de próximas fechas y eliminación con confirmación accesible. Las fechas se persisten en SQLite local (`academic_events`) y se integran al store sin agregar notificaciones, recurrencias, horarios ni dependencias externas.
+
+---
+
+## Decisiones futuras por registrar
+
+Las siguientes decisiones se documentarán formalmente solo cuando exista evidencia que justifique reabrirlas:
+
+| ID | Tema | Disparador |
+|---|---|---|
+| DP-008 | Ayuda ampliada o tutoriales | Feedback post-release que demuestre fricción real de uso |
 
 ---
 

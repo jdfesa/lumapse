@@ -1,8 +1,10 @@
 # Historias de Usuario — Lumapse
 
 **Fase Design Thinking:** Idear / Prototipar  
-**Última actualización:** 2026-06-19
+**Última actualización:** 2026-07-15
 **Autor:** José David Sandoval
+
+> **Nota de evolución:** Las HU preservan los criterios con los que se cerró cada línea base histórica. Por eso las HU del Hito 02 mencionan IndexedDB y eliminación definitiva, aunque el producto vigente use SQLite y papelera con soft-delete. Las revisiones posteriores se trazan mediante RF/HU nuevos y ADRs, sin reescribir retroactivamente la evidencia del alcance original.
 
 ---
 
@@ -18,6 +20,8 @@
 ---
 
 ## Hito 02 — Core del Editor (Junio 2026)
+
+> **Corte histórico:** Los criterios de esta sección describen la primera implementación web/IndexedDB. La persistencia vigente y la eliminación mediante papelera se consolidaron después en Hito 04 mediante ADR-006, RF-026 y HU-016.
 
 ### HU-001 — Crear nota rápida
 
@@ -376,7 +380,9 @@
 
 ---
 
-## Hito 05 — Preparación de Release y Mejoras Funcionales Controladas (Septiembre 2026)
+## Hito 05 — Preparación de Release y Mejoras Funcionales Controladas
+
+> **Lectura temporal:** Fue planificado originalmente para septiembre de 2026 y se cerró operativamente el 2026-07-15.
 
 ### HU-005 — Borradores persistentes del editor
 
@@ -523,9 +529,11 @@
 
 ---
 
-## Hito 06 — Entrega Final (Octubre 2026)
+## Hito 06 — Entrega Final
 
-No hay HU funcionales nuevas asignadas a Hito 06 en este corte. El foco previsto es cierre documental, validación final y presentación académica.
+> **Lectura temporal:** Fue planificado originalmente para octubre de 2026 y está activo desde el cierre documental de Hito 05, realizado el 2026-07-15.
+
+No hay HU funcionales nuevas asignadas a Hito 06 en este corte. El foco vigente es cierre documental, validación final y presentación académica.
 
 ---
 

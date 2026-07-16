@@ -1,11 +1,12 @@
 # Lean Canvas — Lumapse
 
-**Fase Design Thinking:** Idear  
-**Última actualización:** Abril 2026  
-**Versión:** 1.0 — Pre-relevamiento  
+**Fase Design Thinking:** Idear
+**Elaboración inicial:** Abril 2026
+**Última revisión:** 2026-07-15
+**Versión:** 1.0 — Pre-relevamiento
 **Autor:** José David Sandoval
 
-> **⚠️ Nota de evolución (mayo 2026):** Este canvas fue elaborado **antes** del [relevamiento de datos](resultados-relevamiento.md) (n=120) y del pivote arquitectónico documentado en [ADR-005](../adr/ADR-005-pivote-app-nativa.md). Las referencias a PWA, TWA e IndexedDB reflejan la arquitectura original. La dirección actual del proyecto es **app nativa con Capacitor + SQLite**, distribuida como APK. El modelo de negocio y los canales se mantienen vigentes; la implementación técnica cambia.
+> **⚠️ Nota de evolución (revisada en julio de 2026):** Este canvas fue elaborado **antes** del [relevamiento de datos](resultados-relevamiento.md) (n=120) y del pivote arquitectónico documentado en [ADR-005](../adr/ADR-005-pivote-app-nativa.md). Las referencias a PWA, TWA e IndexedDB reflejan la formulación original y se conservan como evidencia del proceso. La dirección técnica actual es **Capacitor + SQLite**, con beta Android distribuida como APK mediante GitHub Releases. Los canales, precios y métricas del canvas son hipótesis iniciales de producto, no compromisos ni resultados vigentes.
 
 ---
 
@@ -68,13 +69,13 @@ El Lean Canvas es una adaptación del Business Model Canvas (Osterwalder) orient
 
 ### 1. Problema
 
-Los tres problemas principales identificados a partir del análisis de [personas](./personas.md) y del [análisis competitivo](./analisis-competitivo.md):
+Los tres problemas formulados inicialmente a partir del análisis de [personas](./personas.md) y del [análisis competitivo](./analisis-competitivo.md) fueron:
 
-1. **Dependencia de conexión:** La mayoría de apps de notas requieren acceso a internet para funcionar correctamente, algo que no está garantizado en el contexto del público objetivo.
+1. **Dependencia de conexión o sincronización:** Algunas alternativas degradan parte de su experiencia sin red o priorizan flujos sincronizados, algo que no está garantizado en el contexto local. Otras herramientas sí ofrecen funcionamiento offline; por eso este punto se entiende como hipótesis de diferenciación, no como propiedad universal del mercado.
 2. **Fricción de registro:** Crear una cuenta es una barrera de entrada. Para un estudiante que solo quiere tomar apuntes en clase, tener que registrarse con email, verificar, y recordar una contraseña más, es innecesario.
 3. **Peso y rendimiento:** Las apps mainstream (Notion, OneNote, Evernote) consumen entre 80-150 MB y son lentas en dispositivos de gama media. En un celular con 32 GB totales, cada MB cuenta.
 
-### 2. Solución
+### 2. Solución (formulación inicial)
 
 Lumapse resuelve los tres problemas con un enfoque técnico específico:
 
@@ -103,9 +104,9 @@ El segmento de clientes se define en círculos concéntricos, desde la validaci�
 | **Secundario (alcanzable)** | Estudiantes terciarios y universitarios hispanohablantes con conectividad limitada y recursos acotados | Mercado natural si se publica en Play Store |
 | **Terciario (aspiracional)** | Cualquier estudiante a nivel global | Alcanzable con internacionalización (i18n) futura |
 
-Las restricciones que definen al público (conectividad limitada, dispositivos modestos, sin presupuesto para herramientas premium) son comunes en toda Latinoamérica y otras regiones hispanohablantes, no son exclusivas de Argentina.
+La posible extensión hacia otros contextos latinoamericanos o hispanohablantes es una **hipótesis de mercado**. El relevamiento realizado solo aporta evidencia directa sobre la muestra del IES 6023; ampliar el segmento exigiría investigación adicional en otras instituciones y regiones.
 
-### 6. Canales de distribución
+### 6. Canales de distribución (hipótesis inicial)
 
 | Canal | Tipo | Costo | Alcance |
 |---|---|---|---|
@@ -114,15 +115,15 @@ Las restricciones que definen al público (conectividad limitada, dispositivos m
 | **Boca a boca académico** | Orgánico | $0 | Compañeros e instituciones locales |
 | **Defensa de PP3** | Demo en vivo | $0 | Profesores y evaluadores |
 
-**Sobre la distribución móvil (Play Store):**
+**Hipótesis original de distribución móvil (descartada tras ADR-005):**
 
-La PWA puede empaquetarse como APK mediante **TWA (Trusted Web Activity)** utilizando herramientas como [Bubblewrap](https://github.com/niceferrari/niceferrari.github.io) de Google. Este proceso:
+La propuesta inicial contemplaba empaquetar la PWA como APK mediante **TWA (Trusted Web Activity)** y Bubblewrap. En ese planteo:
 - No requiere reescribir la app en Java/Kotlin.
 - El APK resultante es una capa nativa mínima que abre la PWA.
-- El tamaño del APK resultante es < 5 MB.
-- Permite cobrar en la Play Store como cualquier app nativa.
+- El tamaño del APK se estimaba en menos de 5 MB; esa estimación no se verificó y no corresponde al artefacto Capacitor vigente.
+- Permitía publicar el envoltorio en Play Store y definir un precio; esa posibilidad comercial no lo convertía en una interfaz nativa ni fue validada para el producto vigente.
 
-Esto valida la decisión técnica de construir una PWA en lugar de una app nativa: **una sola base de código cubre web + móvil + desktop.**
+Ese razonamiento sustentó la decisión PWA original, posteriormente reemplazada por ADR-005. No describe el canal de distribución actual.
 
 ### 7. Métricas clave
 
@@ -146,7 +147,7 @@ En un escenario de producto real, las métricas se medirían con analytics respe
 | Backend / infraestructura | $0 | No aplica (no hay backend) |
 | **Total primer año** | **~$37 USD** | |
 
-### 9. Flujo de ingresos
+### 9. Flujo de ingresos (hipótesis inicial)
 
 **Modelo híbrido: Gratuito en web + Pago mínimo en Store.**
 
@@ -166,13 +167,13 @@ En un escenario de producto real, las métricas se medirían con analytics respe
 
 ## Relación con las decisiones técnicas
 
-Este canvas valida retroactivamente varias decisiones técnicas ya tomadas:
+Este canvas permite relacionar las hipótesis iniciales con las decisiones técnicas posteriores:
 
 | Decisión técnica | Validación original | Estado post-pivote |
 |---|---|---|
-| PWA en vez de app nativa | ✅ Una base de código → web + móvil (via TWA) | ↪️ Pivotado a Capacitor/APK nativa ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)) |
+| PWA en vez de desarrollo móvil nativo | ✅ Una base de código → web + móvil (vía TWA) | ↪️ Pivotado a aplicación Android híbrida con Capacitor ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)) |
 | Vanilla JS sin framework | ✅ Bundle mínimo → descarga rápida en 3G | ✅ Vigente |
-| IndexedDB local | ✅ No necesita backend → costos de operación = $0 | ↪️ Migrar a SQLite para mayor robustez |
+| IndexedDB local | ✅ No necesita backend → costos de operación = $0 | ↪️ Migrado a SQLite ([ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md)) |
 | No requiere cuenta | ✅ Elimina fricción → conversión más alta | ✅ Vigente |
 | Markdown como formato | ✅ Sin vendor lock-in → portabilidad total | ✅ Vigente |
 

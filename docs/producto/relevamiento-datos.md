@@ -2,9 +2,12 @@
 
 > **Fase Design Thinking:** Empatizar  
 > **Fecha de diseño:** 2026-04-28  
+> **Última revisión contextual:** 2026-07-15
 > **Estado:** Finalizado — recolección de respuestas completada  
 > **Instrumento:** Encuesta autoadministrada (Google Forms + código QR)  
 > **Vigencia:** 2026-05-11 → 2026-05-13 (2 días naturales)
+
+> **Lectura temporal:** Las instrucciones y verbos en presente de este documento registran el corte operativo de abril-mayo de 2026. La recolección ya finalizó y sus resultados están en [resultados-relevamiento.md](./resultados-relevamiento.md).
 
 ---
 
@@ -51,6 +54,8 @@ El IES 6023 ofrece carreras de formación docente (profesorados, 4 años) y carr
 
 ## 3. Muestra
 
+> **Revisión posterior:** El cálculo de población finita definió metas nominales, pero la distribución real fue no probabilística por conveniencia. Alcanzar el tamaño objetivo no habilita por sí solo inferencia formal ni un margen de error efectivo; véase [`metodologia-muestral.md`](./metodologia-muestral.md).
+
 ### Fórmula utilizada (poblaciones finitas)
 
 Se utiliza la fórmula estándar para el cálculo de muestras en **poblaciones finitas**, dado que el tamaño de la población es conocido y acotado (N = 1.239). La fundamentación completa de por qué se eligió esta fórmula, la explicación detallada de cada variable, el cálculo paso a paso y el análisis de contingencia se encuentran en [`metodologia-muestral.md`](./metodologia-muestral.md).
@@ -78,11 +83,11 @@ Donde:
 | 95% | 1.96 | 7% | 170 |
 | 95% | 1.96 | 10% | 90 |
 | 90% | 1.645 | 7% | 125 |
-| 90% | 1.645 | 10% | 68 |
+| 90% | 1.645 | 10% | 65 |
 
 ### Objetivo y contingencia
 
-- **Objetivo:** alcanzar al menos **90 respuestas** (confianza 95%, margen 10%).
+- **Objetivo operativo:** alcanzar al menos **90 respuestas**, equivalente nominalmente a 95% y 10% bajo muestreo aleatorio simple.
 - **Deseable:** 125+ respuestas (confianza 90%, margen 7%).
 - **Si no se alcanza el mínimo:** los resultados se reportan como **exploratorios** (sin inferencia estadística), indicando el tamaño logrado y sus limitaciones. El proyecto no se detiene.
 
@@ -114,7 +119,7 @@ El formulario es anónimo, autoadministrado y no requiere cuenta de Google para 
 **Protocolo de cierre:**
 
 **Escenario A — Se alcanzan 90+ respuestas antes del plazo:**  
-Se cierra la encuesta anticipadamente, se registra la fecha real de cierre en esta sección y se procede al análisis con inferencia estadística (confianza 95%, margen ±10% o mejor según el n logrado).
+Se cierra la encuesta anticipadamente, se registra la fecha real de cierre y se procede al análisis descriptivo. El nivel de confianza y margen calculados se informan solo como referencia nominal, junto con la limitación del muestreo por conveniencia.
 
 **Escenario B — Se cumple el plazo sin alcanzar el mínimo (< 90):**  
 Se cierra la encuesta el 2026-05-25. Los datos **no se descartan**: se reportan como **exploratorios** (ver §3, "Objetivo y contingencia"). Esto significa que:
@@ -230,10 +235,13 @@ Opciones: Sí · No
 #### Sección 3 — Detalle de dificultades (condicional)
 
 **P5b. ¿Cuáles son las principales dificultades? (elegí hasta 3)**  
-Tipo: Casillas (máximo 3)  
+Tipo: Casillas; la consigna declaraba máximo 3
+
 Condición: Solo se muestra si P5 = "Sí"  
 Opciones: No encuentro lo que busco · Se desorganizan rápido · No puedo acceder sin internet · Me cuesta organizar el formato (títulos, listas, tablas, fórmulas) · Pierdo notas con frecuencia · Otra  
 *Valida: `problem-statement.md`, `requisitos-funcionales.md` — identifica los pain points específicos para priorizar funcionalidades*
+
+> **Control observado al auditar el CSV:** Una respuesta válida contiene cuatro marcas. La consigna existió, pero el formulario no aseguró el límite de manera efectiva; los resultados lo informan como limitación.
 
 #### Sección 4 — Conectividad, interés y preferencias (P6–P12)
 
@@ -248,14 +256,17 @@ Opciones: Nada útil · Poco útil · Algo útil · Útil · Muy útil
 *Valida: `lean-canvas.md` (propuesta de valor)*
 
 **P8. ¿Qué características te importan más en una app de notas? (elegí hasta 3)**  
-Tipo: Casillas (máximo 3)  
+Tipo: Casillas; la consigna declaraba máximo 3
+
 Opciones: Que funcione sin internet · Que sea rápida · Que no pida cuenta · Que permita organizar por materia · Que guarde automáticamente · Que funcione en celular y PC  
 *Valida: priorización MoSCoW en `requisitos-funcionales.md`*
+
+> **Control observado al auditar el CSV:** El máximo no quedó aplicado: 37 de las 120 respuestas válidas contienen entre 4 y 6 selecciones; hay 371 marcas totales. P8 se interpreta como frecuencia descriptiva de selección, no como ranking de elección forzada uniforme.
 
 **P9. ¿Desde qué dispositivo usarías más una app de notas?**  
 Tipo: Opción múltiple  
 Opciones: Celular · Notebook/PC · Tablet · Cualquiera por igual  
-*Valida: decisión PWA, diseño responsive*
+*Informa: prioridad mobile-first y diseño responsive. Esta respuesta no decide por sí sola PWA vs. APK; el pivote posterior quedó documentado en `ADR-005`.*
 
 **P10. ¿Probarías un prototipo de la app cuando esté disponible?**  
 Tipo: Opción múltiple  
@@ -323,7 +334,7 @@ Una vez recolectadas las respuestas:
 | Dificultades principales | Ranking de P5b (solo respondentes con P5 = "Sí"), gráfico de Pareto |
 | Validación offline-first | Distribución de P6 |
 | Interés en la propuesta | Media y distribución de P7 |
-| Priorización de features | Ranking ponderado de P8 |
+| Priorización de features | Frecuencias descriptivas de selección en P8; no se interpreta como ranking forzado uniforme |
 | Dispositivo principal | Distribución de P9 |
 | Interés en beta testing | Distribución de P10 (Sí/Tal vez/No), porcentaje — identifica potenciales testers para el Hito 04 |
 | Modelo de organización preferido | Distribución de P11 |
