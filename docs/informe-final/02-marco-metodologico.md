@@ -4,6 +4,8 @@
 
 El desarrollo de Lumapse se organizó de manera incremental por hitos mensuales, combinando prácticas ágiles, tablero Kanban, control de versiones y documentación viva. Cada hito agrupa un objetivo funcional o técnico claro: investigación inicial, fundación del proyecto, editor principal, MVP con Markdown y offline, organización/UX móvil, calidad/distribución y cierre final.
 
+El Hito 05 quedó cerrado con la beta controlada `v0.4.8` firmada, validada inicialmente y publicada. El Hito 06 se encuentra activo para completar el cierre académico, revisar evidencias y preparar los materiales de defensa sin reabrir por defecto el alcance funcional de la beta.
+
 El enfoque Kanban se eligió por su adecuación a un proyecto individual con alcance académico y evolución progresiva. En lugar de trabajar con iteraciones cerradas de equipo, el proyecto mantiene un flujo continuo de tareas visibles en `TODO`, [BACKLOG.md](../../BACKLOG.md), [CHANGELOG.md](../../CHANGELOG.md) e informes de hito. Esta forma de trabajo permite priorizar tareas según valor, riesgo y dependencia técnica, sin perder trazabilidad histórica.
 
 Las prácticas de gestión aplicadas son:
@@ -15,7 +17,7 @@ Las prácticas de gestión aplicadas son:
 - Actualización del changelog y backlog para reflejar el estado real del proyecto.
 - Validaciones automatizadas antes de cerrar cambios relevantes.
 
-La estimación se complementó con Story Points para historias de usuario y estimación PERT para riesgos técnicos mayores, como la migración hacia Capacitor y SQLite. Esta combinación permitió diferenciar tareas rutinarias de decisiones con mayor incertidumbre.
+La estimación se complementó con Story Points para historias de usuario y estimación PERT para riesgos técnicos mayores, como la migración hacia Capacitor y SQLite, siguiendo el material de consulta de la cátedra (Gómez, 2014; Parada, 2026). Esta combinación permitió diferenciar tareas rutinarias de decisiones con mayor incertidumbre.
 
 ## 2.2. Análisis de Personas de Usuario
 
@@ -29,13 +31,13 @@ Las tres personas principales documentadas en [personas.md](../producto/personas
 | Martín, estudiante práctico | Usuario técnico / early adopter | Usar Markdown, controlar sus datos y evitar vendor lock-in. |
 | Prof. Ramos, docente evaluador | Stakeholder académico | Ver evidencia de proceso, documentación y decisiones justificadas. |
 
-El relevamiento validó varios atributos centrales de estas personas: predominio del celular como dispositivo de uso, conectividad deficiente, necesidad de organización por materia y valoración de una herramienta simple. En consecuencia, las personas funcionan como puente entre la observación inicial y las decisiones de diseño implementadas.
+El relevamiento respaldó varios atributos centrales de estas personas dentro del contexto estudiado: preferencia declarada por el celular, disponibilidad de red no permanente, organización por materia y valoración de una propuesta simple. En consecuencia, las personas funcionan como puente entre la observación inicial y las decisiones de diseño implementadas, sin reemplazar una validación directa de los arquetipos con el prototipo.
 
 ## 2.3. Análisis Competitivo
 
 El análisis competitivo comparó a Lumapse con herramientas de notas existentes como Google Keep, Notion, Obsidian, OneNote, Simplenote, Evernote, Standard Notes y Joplin. Los criterios de comparación surgieron de las necesidades detectadas en las personas: funcionamiento offline real, ausencia de cuenta obligatoria, tamaño liviano, soporte Markdown, gratuidad, uso multiplataforma y velocidad de arranque.
 
-La conclusión principal del análisis es que el mercado está polarizado. Por un lado, existen herramientas simples pero dependientes de cuentas o ecosistemas propietarios; por otro, herramientas potentes pero más pesadas, complejas o con barreras económicas. Lumapse busca ocupar un espacio específico: baja complejidad, almacenamiento local, sin cuenta, offline real, Markdown y foco académico.
+El análisis competitivo original propuso una lectura cualitativa: algunas herramientas simples dependen de cuentas o ecosistemas propietarios, mientras otras ofrecen más potencia con mayor complejidad, peso o costo. No demuestra que el mercado esté vacío ni sustituye una revisión actual de cada producto. Lumapse busca diferenciarse mediante baja complejidad, almacenamiento local, ausencia de cuenta, núcleo offline-first, Markdown y foco académico.
 
 Este análisis no se utiliza para afirmar que Lumapse compite con plataformas maduras en amplitud funcional, sino para justificar una estrategia de diferenciación: resolver muy bien un problema acotado y real antes que replicar suites generales de productividad.
 
@@ -76,10 +78,14 @@ Para transformar los supuestos en decisiones fundamentadas, se diseñó y ejecut
 
 | Hipótesis | Pregunta de validación | Resultado | Decisión |
 |---|---|---|---|
-| Los estudiantes necesitan una app que funcione sin internet en el aula. | P6: calidad de conectividad en el instituto. | 81.7% reporta conectividad deficiente. | Hipótesis validada: se mantiene offline-first. |
-| Los estudiantes prefieren usar el celular para tomar notas. | P9: dispositivo preferido para una app de notas. | 72.5% elige celular. | Hipótesis validada: se prioriza mobile-first y APK. |
-| Los estudiantes organizarían sus notas con etiquetas. | P11: modelo de organización preferido. | 69.2% prefiere carpetas por materia. | Hipótesis refutada: pivote a materias y secciones. |
-| Los estudiantes valoran offline por encima de otras características. | P8: funcionalidades más valoradas. | 74.2% prioriza offline. | Hipótesis validada: persistencia local robusta. |
+| Los estudiantes necesitan una app que funcione sin internet en el aula. | P6: frecuencia declarada de acceso estable; P8: prioridades. | 81.7% responde "A veces", "Raramente" o "Nunca"; 74.2% selecciona offline. | Hipótesis respaldada en la muestra: se mantiene y debe probarse offline-first. |
+| Los estudiantes prefieren usar el celular para una app de notas. | P9: dispositivo preferido para una app de notas. | 72.5% elige celular. | Hipótesis respaldada en la muestra: se prioriza el diseño mobile-first. |
+| Los estudiantes organizarían sus notas con etiquetas. | P11: modelo de organización preferido. | 69.2% prefiere carpetas por materia. | Hipótesis contradicha en la muestra: pivote a materias y secciones. |
+| Offline aparece entre las características más seleccionadas. | P8: frecuencia de selección de funcionalidades. | 74.2% selecciona offline. | Hipótesis respaldada de forma descriptiva: persistencia local robusta. |
+
+P8 declaraba un máximo de tres opciones, pero el CSV contiene 371 marcas y 37 respuestas con cuatro a seis. Por ello sus porcentajes se usan como frecuencias descriptivas, no como un ranking de elección forzada uniforme ni como evidencia inferencial.
+
+La encuesta respaldó las restricciones **mobile-first** y **offline-first**, pero no comparó PWA frente a APK, no preguntó por instalación desde fuentes externas y tampoco evaluó motores de persistencia. La elección de Capacitor/APK y SQLite se realizó posteriormente mediante el análisis técnico documentado en [ADR-005](../adr/ADR-005-pivote-app-nativa.md) y [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md).
 
 ### 2.5.3. Fase 3 — El pivote fundamentado en datos
 

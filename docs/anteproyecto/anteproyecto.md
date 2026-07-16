@@ -6,7 +6,7 @@
 **Autor:** José David Sandoval  
 **Año:** 2026
 
-> **Nota:** Este documento es la versión en Markdown del anteproyecto formal presentado. El documento original (PDF) se encuentra en la [carpeta de Dropbox del proyecto](https://www.dropbox.com/scl/fo/efl03t0ywteggi6dk3mvu/AGodfqlsy7t68P7atK_NqPg?rlkey=mk50fjx0wwb58jpn92ygqbrwp&st=jtv5846&dl=0), dentro de `02-definiendo-anteproyecto/`.
+> **Estado histórico:** Este documento reproduce el anteproyecto formal presentado y no se reescribe retroactivamente. PWA, IndexedDB, auto-guardado y el formato de backup describen la hipótesis inicial. El producto vigente evolucionó a una aplicación Android con Capacitor, SQLite, guardado final explícito con borradores y backup ZIP; la justificación está en [ADR-005](../adr/ADR-005-pivote-app-nativa.md), [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md) y la [documentación de producto](../producto/README.md). El PDF presentado se conserva en la [carpeta de Dropbox del proyecto](https://www.dropbox.com/scl/fo/efl03t0ywteggi6dk3mvu/AGodfqlsy7t68P7atK_NqPg?rlkey=mk50fjx0wwb58jpn92ygqbrwp&st=jtv5846&dl=0), dentro de `02-definiendo-anteproyecto/`.
 
 ---
 

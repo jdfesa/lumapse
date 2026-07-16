@@ -10,7 +10,7 @@ Las carpetas principales son:
 |---|---|
 | `src/` | Código fuente de la aplicación web empaquetada. |
 | `src/components/` | Componentes de interfaz organizados por feature: editor, feed, fechas académicas, backup, Markdown y piezas comunes. |
-| `src/services/` | Servicios de negocio: Markdown, temas, materias, persistencia SQLite y base técnica de portabilidad local en revisión. |
+| `src/services/` | Servicios de dominio y aplicación: Markdown, temas, materias, eventos académicos, persistencia SQLite, respaldo e importación local. Parte de la lógica pura adopta TypeScript de forma gradual. |
 | `src/store/` | Estado de aplicación, filtros y coordinación entre datos y UI. |
 | `android/` | Proyecto Android generado y mantenido por Capacitor. |
 | `docs/` | Documentación técnica, producto, gestión, hitos e informe final. |
@@ -22,24 +22,24 @@ El entorno de desarrollo usa Node.js, npm y Vite para levantar la aplicación en
 
 ## 5.2. Capa de Presentación (Componentes UI)
 
-La interfaz está implementada con componentes propios en JavaScript y CSS, sin framework de UI. Esta decisión exige más trabajo manual que una solución basada en React o Vue, pero mantiene el bundle liviano y hace explícito el flujo de eventos, renderizado y estado.
+La interfaz está implementada con componentes propios en JavaScript, algunos auxiliares tipados en TypeScript y CSS, sin framework de UI. Esta decisión exige más trabajo manual que una solución basada en React o Vue, pero mantiene el bundle liviano y hace explícito el flujo de eventos, renderizado y estado.
 
 Los componentes principales son:
 
 | Componente | Responsabilidad |
 |---|---|
-| `note-editor/NoteEditor` | Edición de contenido Markdown, borradores persistentes y modos de trabajo. |
-| `markdown/MarkdownPreview` | Renderizado seguro del Markdown. |
+| `note-editor/NoteEditor` y auxiliares | Edición de título y contenido Markdown, borradores persistentes, comandos opcionales y modos de trabajo. |
 | `feed/NoteList` y `feed/NoteCardRenderer` | Listado y representación visual de notas. |
 | `feed/TrashView` | Papelera, restauración y eliminación definitiva. |
 | `academic-events/Heatmap` y `academic-events/UpcomingAcademicEvents` | Calendario, fechas académicas discretas y recordatorios próximos. |
-| `backup/BackupView` | Vista del flujo manual de backup externo. |
+| `backup/BackupView` y controladores auxiliares | Exportación manual e importación no destructiva de respaldos `.zip`. |
+| `about/AboutView` | Información mínima de versión, autoría, licencia y alcance local/offline. |
 | `common/ConfirmDialog` | Confirmaciones personalizadas para reemplazar diálogos nativos. |
 | `common/Toast` | Mensajes breves de estado y feedback. |
 | `drawerSubjects` | Navegación por materias y secciones. |
 | `drawerController` | Coordinación del drawer lateral. |
 
-La capa de presentación no accede directamente a la base de datos. Interactúa con el store y los servicios, respetando una separación entre UI, estado y persistencia. La organización por carpetas de feature se documenta en [ADR-007](../adr/ADR-007-organizacion-componentes-por-feature.md) y evita que `src/components/` se convierta en una carpeta plana difícil de mantener.
+La capa de presentación no emite sentencias SQL. Interactúa principalmente con el store para el dominio central y, en features autocontenidas como backup, con servicios de aplicación explícitos. Esta separación mantiene fuera de los componentes los detalles de SQLite y de los plugins nativos, aunque no constituye un sistema de capas rígidas. La organización por carpetas de feature se documenta en [ADR-007](../adr/ADR-007-organizacion-componentes-por-feature.md) y evita que `src/components/` se convierta en una carpeta plana difícil de mantener.
 
 ## 5.3. Gestión de Estado Reactivo
 
@@ -50,24 +50,25 @@ El store se dividió en módulos para reducir acoplamiento:
 | Archivo | Responsabilidad |
 |---|---|
 | `NoteStore.state.js` | Estado base y suscripciones. |
+| `NoteStore.errors.js` | Canal de errores de dominio desacoplado del mecanismo visual de feedback. |
 | `NoteStore.data.js` | Carga, creación, actualización y eliminación de datos. |
 | `NoteStore.ui.js` | Acciones de UI y coordinación de vistas. |
 | `noteFilters.ts` | Reglas de filtrado y visibilidad de notas. |
 
-Esta división permite testear reglas de negocio sin renderizar toda la interfaz. También facilita mantener invariantes importantes, como ocultar notas eliminadas del feed, mostrar notas fijadas al tope y respetar el filtro por materia o sección.
+Esta división permite testear reglas de negocio sin renderizar toda la interfaz. También facilita mantener invariantes importantes, como ocultar notas eliminadas del feed, mostrar notas fijadas al tope y respetar el filtro por materia o sección. El canal separado de errores permite que el store comunique el problema y que la capa de presentación decida si corresponde mostrar un toast, un diálogo u otra respuesta.
 
 ## 5.4. Capa de Persistencia (Evolución de IndexedDB a SQLite)
 
-La persistencia tuvo dos etapas. En la fase inicial del MVP se implementó almacenamiento local con IndexedDB, suficiente para validar el editor y el funcionamiento offline en navegador. Luego, tras el relevamiento de datos y el pivote a app nativa, se decidió migrar a SQLite. La protección actual del trabajo en curso se resuelve con borradores persistentes locales del editor, separados del guardado definitivo de notas.
+La persistencia tuvo dos etapas. En la fase inicial del MVP se implementó almacenamiento local con IndexedDB, suficiente para validar el editor y el funcionamiento offline en navegador. Luego, tras el relevamiento de datos y el pivote a aplicación Android híbrida, se decidió migrar a SQLite. La protección actual del trabajo en curso se resuelve con borradores persistentes locales del editor, separados del guardado definitivo de notas.
 
 La motivación del cambio fue doble:
 
-- El público objetivo usará principalmente celular, por lo que la distribución como APK resulta más familiar.
-- SQLite ofrece persistencia local más robusta que IndexedDB en el contexto de una app Android instalada.
+- El relevamiento respaldó una experiencia mobile-first y offline-first; no comparó PWA, APK ni canales de instalación.
+- El análisis técnico seleccionó Capacitor y SQLite para reutilizar la base web, disponer de persistencia local fuera de la política de almacenamiento del navegador e integrar capacidades nativas en Android. La aceptación de instalar un APK por parte del público objetivo se valida por separado.
 
 La arquitectura actual utiliza `@capacitor-community/sqlite` en Android. Para desarrollo web local se incorporó `sql.js` y `jeep-sqlite`, permitiendo simular SQLite en navegador sin modificar los componentes ni el store. La configuración se automatiza con el script `copy-wasm`, ejecutado antes de `npm run dev`, `npm run build` y después de instalar dependencias.
 
-La capa SQLite se encuentra en `src/services/sqlite/` y separa conexión, manejo de errores, operaciones de notas y operaciones de materias. Esta separación permite auditar el schema, generar DBML desde código y validar la jerarquía de materias con scripts automatizados.
+La capa SQLite se encuentra en `src/services/sqlite/` y separa conexión, manejo de errores y operaciones de notas, materias y eventos académicos. Estos módulos cumplen una función de acceso a datos orientada a SQLite: ejecutan consultas y traducen filas, sin pretender una interfaz Repository genérica. Por encima, servicios como `SubjectService` aplican validaciones y coordinan transacciones; en los límites nativos, servicios específicos adaptan Filesystem, Share y Network de Capacitor. Esta separación permite auditar el schema, generar DBML desde código y validar la jerarquía de materias con scripts automatizados.
 
 ## 5.5. Procesamiento de Markdown y Seguridad (XSS)
 
@@ -80,9 +81,9 @@ Para resolverlo, Lumapse usa:
 
 La responsabilidad está encapsulada en `MarkdownService`, con tests unitarios que verifican comportamiento esperado y prevención de inyección básica. De esta forma, la UI consume HTML ya procesado y no replica lógica de sanitización en múltiples componentes.
 
-## 5.6. Empaquetado Nativo (Capacitor)
+## 5.6. Empaquetado Android Híbrido (Capacitor)
 
-Capacitor permite empaquetar la aplicación web como una app Android nativa, reutilizando el código existente en `src/` y generando un proyecto Android en `android/`. Esta estrategia evita reescribir la aplicación en Kotlin o React Native, y conserva la inversión realizada en la arquitectura web.
+Capacitor permite empaquetar la aplicación web como una aplicación Android híbrida, reutilizando el código existente en `src/` y generando un proyecto Android en `android/`. La UI continúa ejecutándose en una WebView y accede a capacidades de plataforma mediante el puente y los plugins de Capacitor (Ionic, s. f.). Esta estrategia evita reescribir la interfaz en Kotlin o React Native y conserva la inversión realizada en la arquitectura web.
 
 El flujo general es:
 
@@ -101,13 +102,13 @@ APK instalable en dispositivo
 
 El script [deploy-android.sh](../../scripts/deploy-android.sh) automatiza este proceso. En su modo normal conserva los datos locales de la app para no borrar SQLite durante pruebas; y con `--clean` permite una instalación limpia cuando se necesita simular el primer uso o descartar estado local.
 
-La decisión de usar Capacitor se fundamenta en [ADR-005](../adr/ADR-005-pivote-app-nativa.md): el relevamiento mostró preferencia clara por celular, necesidad offline y baja tolerancia a fricción técnica.
+La decisión de usar Capacitor se fundamenta en [ADR-005](../adr/ADR-005-pivote-app-nativa.md): el relevamiento respaldó las prioridades mobile-first y offline-first, mientras el ADR comparó las alternativas técnicas. La encuesta no midió tolerancia al *sideload* ni familiaridad con la instalación de APK.
 
 ## 5.7. Licenciamiento de Software y Filosofía Open Source
 
 Lumapse se publica bajo licencia GNU GPLv3. Esta elección responde a una decisión ética y académica: el proyecto nace en un entorno educativo público y se desarrolla como evidencia de aprendizaje profesionalizante. Por lo tanto, el código no solo cumple una función de producto, sino también de material de estudio, referencia y posible punto de partida para futuras cohortes.
 
-La GPLv3 garantiza que las obras derivadas mantengan la misma libertad de uso, estudio, modificación y redistribución. En términos prácticos, si otra persona toma Lumapse como base para continuar el proyecto, debe preservar el carácter abierto del código. Esto evita que conocimiento producido dentro de una institución educativa sea privatizado sin devolver mejoras a la comunidad.
+La GPLv3 permite usar, estudiar y modificar el programa. Cuando una persona distribuye copias o una obra derivada cubierta por la licencia, debe ofrecer el código fuente correspondiente bajo GPLv3 y conservar los avisos aplicables; las modificaciones de uso estrictamente privado no activan por sí solas esa obligación de distribución. En el contexto del proyecto, esta elección favorece que las versiones redistribuidas continúen siendo auditables y que las mejoras compartidas regresen a la comunidad bajo las mismas libertades.
 
 La licencia también refuerza la transparencia del proyecto: cualquier evaluador puede revisar cómo se implementó la aplicación, cómo se tomaron decisiones y cómo evolucionó la solución.
 
@@ -117,7 +118,7 @@ La licencia también refuerza la transparencia del proyecto: cualquier evaluador
 
 La **Integración Continua** (CI, del inglés *Continuous Integration*) es una práctica de ingeniería de software mediante la cual cada modificación del código fuente se verifica automáticamente mediante una serie de comprobaciones definidas por el equipo de desarrollo. El objetivo es detectar problemas lo antes posible en el ciclo de vida del software, reduciendo el costo de corrección y aumentando la confianza en el código que se entrega.
 
-En entornos profesionales, un pipeline de CI suele incluir: análisis estático de código, ejecución de tests unitarios, compilación del proyecto y, eventualmente, despliegue automático. Para Lumapse, el workflow evolucionó desde un chequeo inicial de lint hacia un **Quality Gate** integral que combina lint, tests, build, presupuestos de bundle y auditorías documentales/técnicas.
+En entornos profesionales, un pipeline de CI suele incluir análisis estático de código, ejecución de tests unitarios, compilación del proyecto y, eventualmente, despliegue automático. Para Lumapse, el workflow evolucionó desde un chequeo inicial de lint hacia una verificación remota que combina lint, tests, build, presupuesto de bundle y auditorías documentales/técnicas. El comando local `npm run verify` amplía ese conjunto con typecheck, revisión de toolchain y smoke test de base de datos, entre otras guardias.
 
 ### 5.8.2. Herramientas utilizadas
 
@@ -135,7 +136,7 @@ Un linter es una herramienta que lee el código fuente de forma estática —sin
 - **Errores:** uso de variables no definidas, imports duplicados, construcciones inválidas.
 - **Advertencias:** uso de `var` en lugar de `const`/`let`, comparaciones con `==` en vez de `===`, variables declaradas pero nunca utilizadas.
 
-El linter **nunca modifica el código ni afecta la ejecución de la aplicación**. Su único efecto es generar un reporte que el desarrollador puede consultar para mejorar la calidad del código.
+En Lumapse, `npm run lint` se ejecuta sin la opción `--fix`: no modifica el código ni afecta la ejecución de la aplicación, sino que genera un reporte para revisar la calidad del código.
 
 ### 5.8.3. Implementación en Lumapse
 
@@ -184,11 +185,13 @@ jobs:
       - run: npm run check:a11y
 ```
 
-**`package.json`:** Expone los mismos entrypoints para uso local y CI. El comando principal de verificación local es:
+**`package.json`:** Expone comandos reutilizables tanto localmente como desde CI. El comando principal de verificación local es:
 
 ```bash
 npm run verify
 ```
+
+El workflow remoto no ejecuta literalmente `npm run verify`: invoca de manera explícita el subconjunto portable que figura en el YAML. En el corte actual, `typecheck`, `check:toolchain` y `check:db-smoke` pertenecen al gate local, por lo que CI y verificación local son complementarios, pero todavía no equivalentes.
 
 ### 5.8.4. Flujo de trabajo resultante
 
@@ -211,15 +214,15 @@ GitHub Actions activa el workflow "CI — Quality Gate"
                └─ Con problemas → ❌ Badge rojo + reporte con archivo, línea y descripción
 ```
 
-> **Nota importante:** el workflow es una verificación remota de calidad. Localmente, los hooks de Git ejecutan un quality gate antes de commit/push para reducir la probabilidad de enviar cambios rotos.
+> **Nota importante:** el workflow es una verificación remota de calidad. Localmente, `npm run verify` se ejecuta de manera explícita antes de cortes y publicaciones; el repositorio ofrece scripts para instalar hooks, pero su presencia debe verificarse en cada entorno y no puede darse por supuesta.
 
 ### 5.8.5. Resultado actual
 
-Al cierre de la preparación técnica inicial del Hito 05, el quality gate local verifica lint, 371 tests unitarios, build de producción, bundle budget, trazabilidad, links internos, schema SQLite, DBML, jerarquía de materias, accesibilidad estática y ausencia de diálogos nativos fuera del seeder.
+Al corte documental actual, `npm run verify` completa lint, typecheck, 773 tests unitarios distribuidos en 53 archivos, build de producción, smoke test de base de datos, presupuesto de bundle, trazabilidad, links internos, schema SQLite, jerarquía de materias, accesibilidad estática y ausencia de diálogos nativos fuera del seeder. El workflow remoto verifica además el DBML mediante un paso explícito. Esta evidencia automatizada es amplia, pero no reemplaza las pruebas manuales en Android ni implica que ambos recorridos cubran exactamente los mismos pasos.
 
 ### 5.8.6. Justificación de la práctica
 
-Incorporar CI desde las etapas tempranas del proyecto responde a uno de los principios fundamentales de la ingeniería de software moderna: **"fail fast"** (detectar y corregir problemas cuanto antes). El costo de corregir un error aumenta exponencialmente a medida que avanza el ciclo de desarrollo; un linter que detecta una variable mal declarada en el momento del commit es incomparablemente más barato que encontrarla en producción.
+Incorporar CI desde las etapas tempranas del proyecto responde a uno de los principios fundamentales de la ingeniería de software moderna: **"fail fast"** (detectar y corregir problemas cuanto antes). El costo de corregir un error suele aumentar a medida que avanza el ciclo de desarrollo; un linter que detecta una variable mal declarada antes de integrar un cambio reduce el costo frente a encontrarla después de distribuir la aplicación.
 
 Adicionalmente, la presencia de un workflow de CI en el repositorio es una señal de madurez técnica reconocible por cualquier evaluador externo: indica que el proyecto no depende exclusivamente del criterio subjetivo del desarrollador, sino que cuenta con comprobaciones objetivas y automatizadas sobre la calidad del código.
 
