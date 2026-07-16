@@ -18,6 +18,7 @@ Organizar `src/components/` por **feature folders**. Cada carpeta agrupa compone
 
 ```txt
 src/components/
+├── about/             # Información de versión, alcance y proyecto
 ├── academic-events/   # Calendario, heatmap y fechas académicas
 ├── backup/            # Vista UI del backup manual
 ├── common/            # Componentes reutilizables transversales
@@ -28,7 +29,7 @@ src/components/
 
 Reglas de organización:
 
-1. **Agrupar por funcionalidad, no por tipo técnico.** Por ejemplo, `NoteEditor.js`, `NoteEditorDrafts.js`, `SubjectPicker.js` y `editorCommandRegistry.js` viven juntos porque todos sostienen el flujo de edición.
+1. **Agrupar por funcionalidad, no por tipo técnico.** Por ejemplo, `NoteEditor.js`, `NoteEditorDrafts.js`, `SubjectPicker.js` y `editorCommandRegistry.ts` viven juntos porque todos sostienen el flujo de edición.
 2. **Colocar CSS junto a la feature que estiliza.** El CSS compartido de Markdown queda en `markdown/` y puede ser importado desde otras features.
 3. **Usar `common/` solo para piezas realmente transversales.** `ConfirmDialog` y `Toast` son compartidos por varios flujos; componentes específicos no deben moverse ahí por comodidad.
 4. **Mantener imports explícitos entre features.** No se introduce un barrel global de componentes para evitar ocultar dependencias y generar acoplamiento accidental.
@@ -53,6 +54,7 @@ Reglas de organización:
 Cuando se agregue una nueva pieza de UI:
 
 - Si pertenece al editor, usar `src/components/note-editor/`.
+- Si presenta información institucional o de versión, usar `src/components/about/`.
 - Si renderiza o acciona sobre notas del feed, usar `src/components/feed/`.
 - Si pertenece a fechas académicas, usar `src/components/academic-events/`.
 - Si pertenece al backup manual, usar `src/components/backup/`.

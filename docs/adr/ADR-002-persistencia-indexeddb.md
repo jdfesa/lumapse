@@ -4,7 +4,7 @@
 **Estado:** Superseded por [ADR-005](ADR-005-pivote-app-nativa.md)  
 **Autor:** Jose David Sandoval
 
-> ⚠️ **Esta decisión fue reemplazada** tras el análisis del relevamiento de datos (Mayo 2026). IndexedDB se reemplaza por SQLite en una app nativa empaquetada con Capacitor. Ver [ADR-005](ADR-005-pivote-app-nativa.md) para la decisión vigente.
+> ⚠️ **Esta decisión fue reemplazada** tras el análisis del relevamiento de datos (Mayo 2026). IndexedDB se reemplaza por SQLite en una aplicación Android híbrida empaquetada con Capacitor. Ver [ADR-005](ADR-005-pivote-app-nativa.md) para la decisión vigente.
 
 ---
 
@@ -26,7 +26,7 @@ Lumapse es una aplicación offline-first: el usuario debe poder crear y acceder 
 
 **IndexedDB** con la librería [`idb`](https://github.com/jakearchibald/idb) (wrapper Promise-based de la API nativa).
 
-IndexedDB es el único mecanismo de almacenamiento en el browser que ofrece: alta capacidad de datos, operaciones transaccionales, queries sobre índices, y persistencia garantizada. Es el estándar recomendado para aplicaciones offline-first.
+IndexedDB ofrecía para este caso mayor capacidad que Web Storage, operaciones transaccionales y consultas mediante índices. La permanencia seguía sujeta a cuotas y políticas de almacenamiento del navegador, por lo que no constituía una garantía absoluta; aun así, era la alternativa web estándar más adecuada entre las evaluadas para un enfoque offline-first.
 
 La librería `idb` simplifica la API sin agregar abstracción innecesaria.
 

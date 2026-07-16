@@ -1,48 +1,62 @@
-# ADR-006: Arquitectura de Persistencia y Tooling SQLite para Desarrollo Web y Native
+# ADR-006: Arquitectura de Persistencia y Tooling SQLite para Web y Android
 
 **Fecha:** 2026-05-20  
-**Estado:** Aceptado  
-**Autor:** Jose David Sandoval  
+**Estado:** Aceptado — validado el 2026-07-15
+**Autor:** Jose David Sandoval
 
 ## Contexto
 
-Tras el pivote de arquitectura de PWA a App Móvil Nativa formalizado en [ADR-005](ADR-005-pivote-app-nativa.md), es necesario migrar la persistencia desde IndexedDB a SQLite utilizando el plugin `@capacitor-community/sqlite`.
+Tras el pivote formalizado en [ADR-005](ADR-005-pivote-app-nativa.md), la persistencia debía migrar de IndexedDB a SQLite mediante `@capacitor-community/sqlite`. Al mismo tiempo, el desarrollo cotidiano requería conservar Vite en navegador para iterar sobre UI y ejecutar pruebas sin desplegar cada cambio en Android.
 
-Sin embargo, el flujo de desarrollo diario de Lumapse se realiza primordialmente en navegadores web (`npm run dev`) para agilizar el diseño, depuración de CSS y tests rápidos. El plugin nativo de SQLite no corre directamente sobre el motor del navegador ordinario sin configuraciones adicionales.
+La solución debía cumplir tres condiciones:
 
-Necesitamos un tooling y diseño de dependencias que:
-1. Permita continuar usando el servidor de desarrollo Vite (`npm run dev`) sin cambiar el código de los componentes.
-2. Soporte compilación nativa Android sin penalizaciones de tamaño excesivas ni dependencias innecesarias en el binario final.
-3. Asegure la persistencia asíncrona robusta en ambos entornos.
+1. mantener una API asíncrona común para componentes y store;
+2. usar SQLite nativo en Android como persistencia del producto;
+3. ofrecer SQLite/WASM en web como soporte de desarrollo, sin convertir ese entorno en el canal principal.
 
 ## Decisión
 
-Adoptar una arquitectura híbrida de persistencia y automatización de assets para desarrollo local y producción nativa:
+Adoptar una arquitectura de persistencia común para desarrollo web local y ejecución Android.
 
-1. **Dependencias del Proyecto:**
-   - `@capacitor-community/sqlite` como interfaz unificada de persistencia.
-   - `sql.js` (WebAssembly de SQLite) para soporte en navegador.
-   - `jeep-sqlite` (componente web Stencil) para simular la base de datos en memoria en la web.
-   
-2. **Automatización de Assets WebAssembly (WASM):**
-   - El componente `jeep-sqlite` requiere el motor compilado en WASM (`sql-wasm.wasm`). Para automatizar su copia sin intervención manual, se crearon scripts específicos en `package.json` (`copy-wasm`, `predev`, `prebuild`, `postinstall`) para que el build-tool copie este archivo desde `node_modules/sql.js/dist/sql-wasm.wasm` a `public/assets/sql-wasm.wasm`.
-   - Se excluyó `jeep-sqlite/loader` en `vite.config.js` (`optimizeDeps.exclude`) para prevenir errores de pre-bundling en Vite.
+### Dependencias de plataforma
 
-3. **Servicio Unificado de Base de Datos (`SqliteService.js`):**
-   - En plataformas nativas, consume la base de datos de manera directa y optimizada.
-   - En plataforma web, inyecta dinámicamente el componente custom `<jeep-sqlite>` en el DOM, inicializa el almacén web y sincroniza de forma explícita mediante `saveToStore` después de cada operación CRUD de escritura (INSERT, UPDATE, DELETE).
-   - Realiza una migración automática asíncrona y transparente desde la IndexedDB legacy (`lumapse-db`) del MVP.
+- `@capacitor-community/sqlite` expone la integración SQLite de Capacitor.
+- `sql.js` proporciona el motor SQLite compilado a WebAssembly.
+- `jeep-sqlite` integra ese motor durante la ejecución web local.
 
-4. **Remoción de Legacy Store:**
-   - Desinstalación de la biblioteca `idb` y eliminación del antiguo `NoteService.js`.
+El asset `sql-wasm.wasm` se copia automáticamente a `public/assets/` mediante scripts de `package.json`; Vite excluye el loader correspondiente del pre-bundling cuando es necesario.
+
+### Módulos especializados
+
+- [`src/services/sqlite/connection.js`](../../src/services/sqlite/connection.js) detecta la plataforma, abre la conexión, crea el esquema, ejecuta migraciones idempotentes y ofrece transacciones compartidas.
+- `notes.js`, `subjects.js` y `academicEvents.js` encapsulan el SQL y el mapeo de filas de cada área.
+- Los servicios de aplicación validan y normalizan entradas antes de delegar en esos módulos; la UI no ejecuta SQL.
+- En web, `connection.js` registra `<jeep-sqlite>`, inicializa el almacén y persiste escrituras mediante `saveToStore`.
+- La migración one-time desde IndexedDB legacy (`lumapse-db`) se conserva para instalaciones de desarrollo anteriores al pivote.
+
+### Autoridad de plataforma
+
+SQLite nativo en Android es la persistencia del producto presentado. SQLite/WASM sostiene desarrollo y pruebas de compatibilidad en navegador, pero no convierte la aplicación actual en PWA.
+
+La dependencia `idb` y el antiguo servicio de persistencia fueron retirados; el acceso de compatibilidad a IndexedDB utiliza la API nativa solo durante la migración legacy.
 
 ## Consecuencias
 
-- **Positivas:**
-  - El servidor de desarrollo web local (`npm run dev`) funciona de manera transparente con el mismo motor relacional SQLite (simulado en WebAssembly).
-  - La sincronización asíncrona a nivel de base de datos en web (`saveToStore`) evita pérdidas accidentales de datos en recargas del navegador.
-  - La migración de IndexedDB a SQLite es automática y no requiere librerías adicionales (hecha con IndexedDB nativo).
-  - Clean codebase: los stores y la interfaz no necesitan saber sobre las diferencias de plataforma.
-- **Negativas / Riesgos:**
-  - Se incrementa ligeramente el tamaño del proyecto local debido a las dependencias de simulación web (`sql.js`, `jeep-sqlite`), aunque estas son eliminadas del APK nativo compilado.
-  - La simulación web requiere que las operaciones de persistencia llamen a `saveToStore`, lo que añade un pequeño delay de escritura en disco en navegador (imperceptible para el usuario).
+**Positivas:**
+
+- La UI y el store no necesitan conocer el mecanismo de conexión de cada plataforma.
+- Desarrollo web y Android ejecutan el mismo modelo relacional.
+- La división por entidad evita concentrar conexión, migraciones y todo el CRUD en una única clase.
+- Las transacciones y migraciones quedan centralizadas.
+- El modo web mantiene un ciclo de desarrollo rápido.
+
+**Negativas y riesgos:**
+
+- `sql.js` y `jeep-sqlite` aumentan las dependencias del entorno de desarrollo.
+- La simulación web requiere `saveToStore` y no reproduce todas las condiciones de un dispositivo Android.
+- Las migraciones residen en una lista idempotente dentro de `connection.js`; cada cambio de esquema obliga a revisar también DDL, DBML y diagramas.
+- La compatibilidad con datos IndexedDB anteriores agrega una ruta histórica que debe mantenerse acotada.
+
+## Validación
+
+La arquitectura está operativa en `0.4.8`. El esquema ejecutable en `connection.js` es la fuente de verdad final; su correspondencia con DBML y DDL documentado se valida mediante los scripts del repositorio. La estructura por capas y la clasificación prudente de los módulos de acceso a datos se detallan en [ADR-008](ADR-008-arquitectura-modular-y-patrones.md).
