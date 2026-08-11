@@ -4,14 +4,18 @@ Este capítulo consolida las fuentes citadas o utilizadas como fundamento metodo
 
 ## 8.1. Bibliografía metodológica
 
+- Anderson, D. J. (2010). *Kanban: Successful evolutionary change for your technology business*. Blue Hole Press.
 - Gómez, J. (2014). *Guía práctica de estimación y medición de proyectos software* [Material de consulta provisto por la cátedra].
 - Gothelf, J., & Seiden, J. (2013). *Lean UX: Applying Lean Principles to Improve User Experience*. O’Reilly Media. https://www.oreilly.com/library/view/lean-ux/9781449366834/
+- Kanban Guides. (2025). *The Kanban Guide*. https://kanbanguides.org/the-kanban-guide/
 - Parada, M. (2026). *Guía de estudio de Prácticas Profesionalizantes III* [Material de cátedra]. IES 6023 “Dr. Alfredo Loutaif”.
+- Schwaber, K., & Sutherland, J. (2020). *The Scrum Guide*. https://scrumguides.org/docs/scrumguide/v2020/2020-Scrum-Guide-US.pdf
 
 > **Control bibliográfico pendiente:** Antes del congelamiento final deben contrastarse autoría, título, edición y entidad editora de Gómez (2014) y del material de Parada (2026) contra los originales conservados por la cátedra. El repositorio no contiene metadatos suficientes para completar esos campos sin inventarlos.
 
 ## 8.2. Normas y documentación técnica oficial
 
+- IBM. (s. f.). *Project planning: Phases and iterations in Rational Unified Process*. Recuperado el 11 de agosto de 2026, de https://www.ibm.com/docs/en/rational-clearquest/10.0.9?topic=settings-project-planning
 - Ionic. (s. f.). *Capacitor documentation*. Recuperado el 15 de julio de 2026, de https://capacitorjs.com/docs
 - SQLite Project. (s. f.). *SQLite foreign key support*. Recuperado el 15 de julio de 2026, de https://www.sqlite.org/foreignkeys.html
 - World Wide Web Consortium. (2024, 12 de diciembre). *Web Content Accessibility Guidelines (WCAG) 2.2* (W3C Recommendation). https://www.w3.org/TR/WCAG22/

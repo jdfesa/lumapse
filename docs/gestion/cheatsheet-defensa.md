@@ -1,5 +1,5 @@
 # Cheat Sheet de Defensa — Lumapse
-**Última actualización:** 2026-07-15
+**Última actualización:** 2026-08-11 — revisión metodológica y frontera de backend
 
 > Hito 05 está cerrado y Hito 06 activo. Este documento refleja el corte operativo `v0.4.8`; las métricas de código, capturas y argumentos deben recibir una última verificación al congelar la entrega.
 
@@ -42,7 +42,7 @@
 |---|---|---|
 | ADR-001 | Elección del Stack Tecnológico | Aceptado |
 | ADR-002 | Estrategia de Persistencia Offline (IndexedDB) | Superseded por ADR-005 |
-| ADR-003 | Metodología de Desarrollo — Kanban | Aceptado |
+| ADR-003 | Enfoque de Desarrollo y Gestión del Flujo — Kanban Adaptado | Aceptado, revisado |
 | ADR-004 | Estructura de Carpetas del Proyecto | Aceptado |
 | ADR-005 | Pivote de PWA a Aplicación Android Híbrida con Capacitor (APK) | Aceptado |
 | ADR-006 | Arquitectura de Persistencia y Tooling SQLite para Desarrollo Web y Native | Aceptado |
@@ -63,7 +63,13 @@ Los meses de Hitos 02 a 06 son etiquetas del calendario académico planificado; 
 
 ## Preguntas Frecuentes del Tribunal
 
+- **¿Qué metodología o enfoque usa Lumapse?** → Un enfoque ágil, iterativo e incremental con gestión del flujo basada en Kanban y adaptada a un proyecto individual. El flujo es `Backlog → En Curso → En Revisión → Hecho`, con sistema pull y WIP máximo de dos elementos activos entre `En Curso` y `En Revisión`. Los hitos son cortes académicos y de entrega, no Sprints.
+- **¿Una sola persona podría utilizar Scrum?** → La Scrum Guide 2020 no fija un mínimo numérico y dice que el Scrum Team tiene típicamente diez personas o menos. Por eso no se descarta Scrum mediante una prohibición por tamaño. Sin embargo, aplicar Scrum exige su framework completo: responsabilidades, Sprints, eventos, artefactos y compromisos. Lumapse no trabajó así; adoptar algunas técnicas o simular roles no lo convertiría en Scrum.
+- **¿De dónde salió el rango de 3 a 9?** → De la Scrum Guide 2017, que lo discutía para el *Development Team*; Product Owner y Scrum Master no se incluían en ese conteo salvo que también ejecutaran trabajo del Sprint Backlog. La edición 2020 reorganizó el concepto alrededor de un Scrum Team típicamente de diez personas o menos. El argumento vigente no depende de ninguno de esos números.
+- **¿Por qué no RUP si hay requisitos, casos de uso y UML?** → Porque esos artefactos también pueden usarse fuera de RUP. El proyecto no se gestionó mediante las fases Inicio, Elaboración, Construcción y Transición ni mediante sus disciplinas y roles formales.
+- **¿Se aplicó Kanban de forma completa?** → Se aplicaron durante el desarrollo visualización, priorización continua, WIP e inspección por hitos. No existe un conjunto histórico completo de tiempos de ciclo y *throughput*, por lo que se dice “Kanban adaptado” y no se inventa conformidad retroactiva. Hito 06 formalizó la Definition of Workflow, SLE y métricas mínimas.
 - **¿Qué arquitectura usa Lumapse?** → Un monolito modular cliente, offline-first, con capas pragmáticas y UI organizada por feature. Se entrega como una unidad Android híbrida; no es MVC estricto, Clean Architecture completa ni microservicios.
+- **¿Lumapse tiene backend?** → No tiene backend remoto o server-side: no existe API propia, servidor desplegado ni base remota. Sí tiene lógica de aplicación, servicios, store y acceso a datos, pero todo corre dentro del cliente Android. SQLite es una base embebida, Capacitor es el contenedor/puente nativo y Vite solo sirve el entorno de desarrollo.
 - **¿Qué patrones pueden demostrarse?** → Aplicados: Composition Root, Observer/Publish-Subscribe, Service Layer, Adapter e inyección explícita en servicios seleccionados. Parciales o inspirados: fachada modular/barrel, Data Access similar a Repository, Command Registry, Strategy/Policy funcional y enfoque Component. ADR-008 contiene el inventario canónico y sus límites.
 - **¿Los patrones aparecieron por el refactor a TypeScript?** → No. El refactor hizo más explícitos contratos y dependencias que ya eran observables; los patrones se justifican por responsabilidades y relaciones reales, no por la extensión del archivo.
 - **¿Por qué no usás tags como eje principal?** → DP-002 y DP-004: el 69.2% prefiere carpetas por materia (P11), y la estructura Materia › Sección › Nota reduce decisiones en mobile.
@@ -87,6 +93,7 @@ Los meses de Hitos 02 a 06 son etiquetas del calendario académico planificado; 
 - `docs/adr/`
 - `CHANGELOG.md`
 - `docs/gestion/checklist-validacion-android.md`
+- `docs/gestion/definicion-flujo-kanban.md`
 - `docs/gestion/lineas-base.md`
 - `docs/diagramas/database/04-modelo-fisico-ddl.md`
 - `src/`

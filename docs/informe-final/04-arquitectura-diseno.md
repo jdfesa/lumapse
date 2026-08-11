@@ -10,7 +10,7 @@ Los ADRs vigentes cubren:
 |---|---|---|
 | [ADR-001](../adr/ADR-001-stack-tecnologico.md) | Elección del stack tecnológico: Vanilla JS + Vite. | Aceptado |
 | [ADR-002](../adr/ADR-002-persistencia-indexeddb.md) | Persistencia inicial con IndexedDB. | Superado por ADR-005 |
-| [ADR-003](../adr/ADR-003-metodologia-kanban.md) | Metodología Kanban para gestión del trabajo. | Aceptado |
+| [ADR-003](../adr/ADR-003-metodologia-kanban.md) | Enfoque incremental y gestión del flujo con Kanban adaptado. | Aceptado, revisado |
 | [ADR-004](../adr/ADR-004-estructura-carpetas.md) | Estructura de carpetas del proyecto. | Aceptado |
 | [ADR-005](../adr/ADR-005-pivote-app-nativa.md) | Pivote de PWA a aplicación Android híbrida con Capacitor. | Aceptado |
 | [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md) | Arquitectura SQLite para web de desarrollo y entorno nativo. | Aceptado |
@@ -200,3 +200,11 @@ Los refactors no crearon estos patrones: hicieron más explícitos contratos, de
 Lumapse **no implementa un MVC de libro**. No existen clases formales `Model`, `View` y `Controller`, ni controladores que concentren todo el flujo de entrada. La UI cumple el rol de presentación; `NoteStore` mantiene estado y coordina parte de los casos de uso; los servicios contienen reglas; y los módulos SQLite realizan acceso a datos. Esta distribución puede recordar responsabilidades de MVC, pero describirla como MVC completo ocultaría sus dependencias reales.
 
 Tampoco corresponde presentar cada módulo ES como un Singleton. Los módulos garantizan una instancia de evaluación por grafo de imports, pero muchos servicios exportan funciones puras y no mantienen identidad ni estado global. La arquitectura se defiende mejor por la separación observable de responsabilidades, las fronteras de efectos y las pruebas de cada módulo que por asignar etiquetas de patrones donde el código no las implementa de forma completa.
+
+### 4.8.4. Frontera cliente y ausencia de backend remoto
+
+Lumapse **no posee un backend remoto o de servidor**. No existe un servicio desplegado por separado, una API HTTP propia, una base de datos remota, autenticación centralizada ni un proceso en la nube que ejecute reglas del producto. El núcleo funcional puede crear, editar, buscar y organizar notas sin red.
+
+Esta afirmación no significa que la aplicación carezca de lógica “detrás” de la interfaz. Los módulos de estado, servicios, dominio y acceso a datos cumplen responsabilidades que en una arquitectura cliente–servidor podrían ubicarse parcialmente en un backend, pero en Lumapse se ejecutan dentro de la misma unidad cliente Android. SQLite es una base de datos embebida en el dispositivo; no es un servidor independiente.
+
+Capacitor actúa como contenedor Android y puente hacia capacidades nativas. Vite sirve los recursos y ofrece recarga durante el desarrollo, pero su servidor de desarrollo no procesa los casos de uso ni persiste los datos del producto y, por lo tanto, no constituye el backend de Lumapse. La formulación técnica precisa es: **monolito modular cliente, offline-first, con lógica y persistencia locales, sin backend server-side**.

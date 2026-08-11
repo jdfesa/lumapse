@@ -1,23 +1,46 @@
 # Capítulo 2: Marco Metodológico y Modelo de Negocio
 
-## 2.1. Metodología de Desarrollo (Agile/Kanban)
+## 2.1. Enfoque de Desarrollo y Gestión del Flujo (Kanban Adaptado)
 
-El desarrollo de Lumapse se organizó de manera incremental por hitos mensuales, combinando prácticas ágiles, tablero Kanban, control de versiones y documentación viva. Cada hito agrupa un objetivo funcional o técnico claro: investigación inicial, fundación del proyecto, editor principal, MVP con Markdown y offline, organización/UX móvil, calidad/distribución y cierre final.
+El desarrollo de Lumapse se organizó mediante un **enfoque ágil, iterativo e incremental**, con gestión del trabajo basada en Kanban y adaptada a un proyecto individual. La expresión distingue dos niveles: el enfoque general describe cómo evoluciona el producto mediante incrementos y aprendizaje; Kanban aporta la estrategia para visualizar, limitar y mejorar el flujo. No se presenta Kanban como un proceso prescriptivo equivalente a Scrum o RUP.
 
-El Hito 05 quedó cerrado con la beta controlada `v0.4.8` firmada, validada inicialmente y publicada. El Hito 06 se encuentra activo para completar el cierre académico, revisar evidencias y preparar los materiales de defensa sin reabrir por defecto el alcance funcional de la beta.
+Cada hito agrupa un objetivo funcional o técnico —investigación, fundación, editor, MVP offline, organización/UX, calidad/distribución y cierre— y funciona como punto de revisión, entrega y línea base. Los hitos no son Sprints: el trabajo no se selecciona en Sprint Planning, no se compromete contra Sprint Goals ni se cierra mediante los eventos definidos por Scrum. El Hito 05 quedó cerrado con la beta controlada `v0.4.8` firmada, validada inicialmente y publicada; Hito 06 concentra el cierre académico sin reabrir por defecto el alcance funcional.
 
-El enfoque Kanban se eligió por su adecuación a un proyecto individual con alcance académico y evolución progresiva. En lugar de trabajar con iteraciones cerradas de equipo, el proyecto mantiene un flujo continuo de tareas visibles en `TODO`, [BACKLOG.md](../../BACKLOG.md), [CHANGELOG.md](../../CHANGELOG.md) e informes de hito. Esta forma de trabajo permite priorizar tareas según valor, riesgo y dependencia técnica, sin perder trazabilidad histórica.
+### 2.1.1. Justificación frente a Scrum y RUP
 
-Las prácticas de gestión aplicadas son:
+La elección de Kanban no se fundamenta en una supuesta prohibición numérica de Scrum. La Scrum Guide 2020 indica que un Scrum Team tiene típicamente diez personas o menos y no fija un mínimo explícito. Una persona podría adoptar prácticas inspiradas en Scrum o asumir más de una responsabilidad; sin embargo, la guía define Scrum como un framework integral con Developers, Product Owner, Scrum Master, Sprints, eventos, artefactos y compromisos. Aplicar solo una parte no basta para afirmar que se utiliza Scrum (Schwaber & Sutherland, 2020). Lumapse no implementó ese conjunto ni organizó el trabajo mediante Sprints, por lo que clasificarlo como Scrum describiría incorrectamente el proceso real.
 
-- Descomposición del trabajo por hitos y tareas pequeñas.
-- Priorización de tareas según impacto en el MVP, riesgo técnico y valor académico.
-- Registro de decisiones significativas mediante ADRs.
-- Commits atómicos con convención semántica.
-- Actualización del changelog y backlog para reflejar el estado real del proyecto.
-- Validaciones automatizadas antes de cerrar cambios relevantes.
+Tampoco se aplicó Rational Unified Process. RUP es iterativo e incremental, pero organiza el ciclo de vida en Inicio, Elaboración, Construcción y Transición, con disciplinas, roles y artefactos adaptables (IBM, s. f.). Lumapse contiene requisitos, casos de uso, UML y documentación de arquitectura porque son evidencia académica y técnica útil; su existencia aislada no demuestra que el proyecto haya seguido las fases y disciplinas de RUP.
 
-La estimación se complementó con Story Points para historias de usuario y estimación PERT para riesgos técnicos mayores, como la migración hacia Capacitor y SQLite, siguiendo el material de consulta de la cátedra (Gómez, 2014; Parada, 2026). Esta combinación permitió diferenciar tareas rutinarias de decisiones con mayor incertidumbre.
+Kanban resultó proporcional al contexto porque no exige roles ni iteraciones fijas. La referencia vigente lo define como una estrategia para optimizar el flujo de valor mediante la definición y visualización del flujo, la gestión activa de los elementos y su mejora continua (Kanban Guides, 2025).
+
+| Criterio observable | Scrum | RUP | Lumapse |
+|---|---|---|---|
+| Cadencia principal | Sprints de un mes o menos | Fases e iteraciones | Flujo continuo con hitos académicos |
+| Estructura de responsabilidades | Product Owner, Scrum Master y Developers | Roles y disciplinas adaptadas | Responsable individual y stakeholders docentes/usuarios |
+| Control del trabajo | Sprint Goal y Sprint Backlog | Plan por fases/iteraciones | Tablero, prioridad y límite WIP |
+| Evidencia presente en Lumapse | Algunas técnicas compatibles, no el framework completo | Algunos artefactos, no el proceso | Prácticas centrales aplicadas y formalizadas |
+
+### 2.1.2. Sistema de trabajo aplicado
+
+La [Definition of Workflow](../gestion/definicion-flujo-kanban.md) vigente explicita el sistema:
+
+`Backlog → En Curso → En Revisión → Hecho`
+
+- Un elemento comienza al pasar a `En Curso` y termina cuando cumple su criterio de cierre y pasa a `Hecho`.
+- `En Curso` y `En Revisión` forman parte del trabajo en curso.
+- El WIP máximo vigente es de dos elementos activos en total.
+- El trabajo nuevo se selecciona mediante *pull* solo cuando existe capacidad.
+- La revisión y el cierre tienen prioridad sobre abrir tareas nuevas.
+- `TODO`, [BACKLOG.md](../../BACKLOG.md), [CHANGELOG.md](../../CHANGELOG.md), los informes de hito, los ADR y Git aportan evidencia versionada complementaria al tablero.
+
+Las prácticas de soporte incluyen descomposición en tareas pequeñas, prioridad por valor/riesgo/dependencia, criterios de aceptación, commits atómicos, decisiones mediante ADR y verificaciones automatizadas o manuales proporcionales al cambio.
+
+### 2.1.3. Medición y límite de la evidencia
+
+La planificación se complementó con Story Points para historias de usuario y PERT para riesgos técnicos mayores, siguiendo el material de la cátedra (Gómez, 2014; Parada, 2026). Los SP entregados por hito expresan alcance/capacidad académica: no son una práctica exclusiva de Scrum ni sustituyen las métricas de flujo de Kanban.
+
+Durante las etapas anteriores se aplicaron visualización, priorización continua y límite WIP, pero no se conservaron fechas completas para calcular WIP histórico, *throughput*, edad y tiempo de ciclo de todos los elementos. No se reconstruyen esos valores de manera retroactiva. Desde Hito 06 se formalizaron las cuatro métricas y una expectativa de nivel de servicio provisional. Por ello, la formulación rigurosa es **“sistema basado en Kanban y adaptado al contexto académico individual”**, sin afirmar conformidad histórica completa con cada requisito de la Kanban Guide 2025.
 
 ## 2.2. Análisis de Personas de Usuario
 

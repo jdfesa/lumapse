@@ -13,6 +13,8 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ### Changed
 
+- **Marco metodológico reforzado:** ADR-003, el informe final y el material de defensa distinguen Scrum, RUP y Kanban con fuentes oficiales; se corrige la mezcla entre Scrum Guide 2017/2020, se elimina la equivalencia hito–Sprint y se formaliza una Definition of Workflow para Hito 06 sin inventar métricas históricas.
+- **Frontera de backend explicitada:** El informe diferencia la ausencia de backend remoto de las capas locales de aplicación, dominio y datos; SQLite, Capacitor y el servidor de desarrollo Vite quedan clasificados según su función real.
 - **Trazabilidad de la beta:** Se documentaron la publicación, la línea base operativa, el material de defensa y la sincronización parcial del informe final (`59e7011`, `8306765`, `8cc658a`, `c65d8b3`).
 - **Registro de comandos del editor tipado:** `editorCommandRegistry` y `editorInlineCommands` pasan a TypeScript sin alterar la interfaz ni el comportamiento publicado (`ced74c7`, `27d6f84`).
 - **Diagramas Mermaid sincronizados:** Se definió el alcance y se actualizaron casos de uso, modelo de dominio y secuencia de creación/edición contra `v0.4.8` (`25a675c`, `2cb7218`, `3904641`).
@@ -110,7 +112,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 ## Hito 04: Organización y UX (Cerrado formalmente)
 
 > Las versiones 0.4.0 a 0.4.7 componen el Hito 04. Cada sub-versión agrupa un lote
-> lógico de trabajo entregado de forma incremental siguiendo la metodología Kanban (ADR-003).
+> lógico de trabajo entregado de forma incremental siguiendo el sistema basado en Kanban documentado en ADR-003.
 > El hito queda cerrado formalmente el 2026-06-01. El cierre se realiza con empty states pulidos y decisiones explícitas de postergación/descarte para las funcionalidades que podían agregar fricción o sugerir capacidades no presentes todavía.
 >
 > **Nota de versionado:** `0.4.0` a `0.4.7` son cortes documentales de trabajo, no tags ni GitHub Releases independientes. `v0.4.8` es el primer artefacto publicado de esta serie. Los meses de `0.1.0` a `0.3.0` conservan el calendario académico planificado y no deben interpretarse como fechas de publicación Git.
