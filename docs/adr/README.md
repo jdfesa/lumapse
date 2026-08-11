@@ -8,7 +8,7 @@ Los ADR conservan decisiones importantes, sus alternativas y consecuencias. Un A
 |---|---|---|
 | [ADR-001](./ADR-001-stack-tecnologico.md) | Stack base web y Vite | Aceptado, revisado |
 | [ADR-002](./ADR-002-persistencia-indexeddb.md) | Persistencia IndexedDB original | Reemplazado por ADR-005 y ADR-006 |
-| [ADR-003](./ADR-003-metodologia-kanban.md) | Gestión del trabajo con Kanban | Aceptado |
+| [ADR-003](./ADR-003-metodologia-kanban.md) | Enfoque incremental y gestión del flujo con Kanban adaptado | Aceptado, revisado |
 | [ADR-004](./ADR-004-estructura-carpetas.md) | Estructura del repositorio | Aceptado, revisado |
 | [ADR-005](./ADR-005-pivote-app-nativa.md) | Pivote a aplicación Android híbrida con Capacitor | Aceptado y validado técnicamente |
 | [ADR-006](./ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md) | Persistencia SQLite multiplataforma | Aceptado y validado |

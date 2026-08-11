@@ -28,6 +28,8 @@
 - [x] Sincronizar las fuentes DOT, DBML y DDL con el schema vigente.
 - [x] Ensamblar un checkpoint coherente de `INFORME-FINAL-COMPLETO.md` desde los capítulos fuente.
 - [x] Exportar externamente, reemplazar, revisar visualmente e incorporar los gráficos de base de datos (2026-07-15).
+- [x] Revisar el marco metodológico y la defensa: corregir Scrum 2017/2020, distinguir RUP y formalizar el flujo Kanban (2026-08-11).
+- [ ] Alinear el tablero de GitHub Projects con la Definition of Workflow: WIP global 2, bloqueos y fechas `startedAt`/`finishedAt`; recalibrar la SLE al completar cinco elementos confiables.
 - [ ] Contrastar los metadatos bibliográficos de Gómez (2014) y Parada (2026) contra los originales de cátedra y cerrar la sección de referencias.
 - [ ] Ejecutar el gate final sobre el commit candidato y guardar la evidencia.
 - [ ] Repetir la validación Android con un conjunto de datos más representativo.

@@ -277,11 +277,14 @@ Paralelamente al desarrollo se realizó un relevamiento con potenciales usuarios
 
 ## Metodología
 
-El proyecto se gestiona con **Kanban** (sin sprints fijos), usando el tablero de GitHub Projects como herramienta de seguimiento. El flujo de trabajo es:
+Lumapse sigue un **enfoque ágil, iterativo e incremental**, con gestión del flujo basada en **Kanban adaptado** a un proyecto individual. No se presenta como Scrum —no utiliza Sprints ni su conjunto completo de responsabilidades, eventos y artefactos— ni como RUP —no organiza el ciclo según sus fases y disciplinas—.
 
-`Backlog → En Curso (WIP: máx. 2) → En Revisión → Hecho`
+GitHub Projects visualiza el flujo:
 
-Cada tarea se registra como un Issue con la etiqueta correspondiente.  
+`Backlog → En Curso → En Revisión → Hecho`
+
+El WIP vigente es de **dos elementos activos en total** entre `En Curso` y `En Revisión`. Cada elemento debe tener objetivo, criterio de cierre y evidencia trazable; puede estar respaldado por un issue de GitHub, un ítem del proyecto o una tarea versionada. Los hitos son cortes académicos y de entrega, no Sprints. Ver [ADR-003](./docs/adr/ADR-003-metodologia-kanban.md) y la [Definition of Workflow](./docs/gestion/definicion-flujo-kanban.md).
+
 El historial de commits sigue el estándar **Conventional Commits**.
 
 ---

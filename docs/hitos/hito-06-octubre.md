@@ -10,7 +10,7 @@
 
 **Estado:** Activo
 
-**Última actualización:** 2026-07-15
+**Última actualización:** 2026-08-11
 
 ---
 
@@ -36,6 +36,8 @@ Cerrar Lumapse con documentación coherente, evidencia técnica reproducible, di
 - [x] Eliminar contradicciones entre versión, hitos, requisitos, métricas y evidencias.
 - [x] Mantener Markdown como fuente de verdad y documentar la salida LaTeX/PDF para después del congelamiento.
 - [x] Incorporar una sección de referencias y metadatos de portada reproducibles, sin leer información desde el artefacto generado.
+- [x] Revisar el marco metodológico: corregir la comparación con Scrum, distinguir RUP de sus artefactos y formalizar el flujo Kanban sin inventar métricas históricas.
+- [ ] Alinear el tablero con la Definition of Workflow y registrar fechas de inicio/fin de los elementos restantes para recalibrar la SLE con evidencia.
 - [ ] Verificar contra los originales los datos bibliográficos incompletos de los materiales de cátedra.
 - [ ] Consolidar la evidencia final; luego verificar referencias, tablas, terminología, legibilidad de las figuras y congelar el contenido. Las exportaciones gráficas DB ya fueron incorporadas.
 
@@ -97,7 +99,7 @@ Las ideas conservadas siguen en [`../../BACKLOG.md`](../../BACKLOG.md) y no comp
 | 4 | Presentación | Deck, demo, guion y contingencia listos |
 | 5 | Línea base | Artefacto, versión, hash y tag inequívocos |
 
-Se mantiene WIP máximo de dos frentes para evitar que documentación, validación y presentación queden abiertas al mismo tiempo.
+Se mantiene WIP máximo de dos elementos activos en total entre `En Curso` y `En Revisión`, según la [`Definition of Workflow`](../gestion/definicion-flujo-kanban.md), para evitar que documentación, validación y presentación queden abiertas al mismo tiempo.
 
 ## Observaciones Bajo Seguimiento
 
@@ -127,5 +129,6 @@ Se mantiene WIP máximo de dos frentes para evitar que documentación, validaci�
 - [`../../BACKLOG.md`](../../BACKLOG.md) — deuda, políticas e ideas postergadas.
 - [`../gestion/lineas-base.md`](../gestion/lineas-base.md) — cortes congelados y futura línea base final.
 - [`../gestion/seguimiento-velocidad.md`](../gestion/seguimiento-velocidad.md) — SP entregados por hito.
+- [`../gestion/definicion-flujo-kanban.md`](../gestion/definicion-flujo-kanban.md) — estados, políticas, WIP y métricas de flujo.
 - [`../gestion/cheatsheet-defensa.md`](../gestion/cheatsheet-defensa.md) — argumentos y métricas de defensa.
 - [`hito-05-septiembre.md`](hito-05-septiembre.md) — cierre del hito anterior.

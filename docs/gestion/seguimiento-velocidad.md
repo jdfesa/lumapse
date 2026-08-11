@@ -4,19 +4,21 @@
 > **Referencia:** Gómez, J. (2014), Secciones 5 y 7. Guía de Estudio PP3 (Ing. Mauricio Parada, 2026).  
 > **Fecha de creación:** 2026-05-15  
 > **Autor:** José David Sandoval  
-> **Actualización:** 2026-07-15 — cierre de Hito 05 con 36 SP entregados y activación de Hito 06 como etapa documental sin HU nuevas.
+> **Actualización:** 2026-08-11 — se conserva la medición académica por SP y se separa explícitamente de las métricas de flujo Kanban.
 
 ---
 
-## 1. ¿Qué es la velocidad del equipo?
+## 1. ¿Qué significa velocidad por hito?
 
-La **velocidad** es la cantidad de Story Points que el equipo completa en un período
-(sprint o hito). Es el puente entre los SP del backlog y el tiempo calendario.
-Medir la velocidad real permite:
+En este documento, **velocidad por hito** es la cantidad de Story Points asociados a historias de usuario entregadas en un período académico. Se conserva el término utilizado por el material de cátedra, pero no se lo presenta como una métrica oficial de Scrum ni de Kanban. En Lumapse no existen Sprints.
+
+La medición permite:
 
 - Detectar atrasos antes de que sean críticos.
 - Ajustar la planificación de hitos futuros con datos reales.
 - Dejar un historial institucional para futuros estudiantes (Gómez, 2014, §7.4).
+
+Los SP expresan tamaño relativo y alcance entregado; no equivalen a cantidad de tareas ni a tiempo real. Las métricas de flujo —WIP, *throughput*, edad y tiempo de ciclo— se definen por separado en [`definicion-flujo-kanban.md`](./definicion-flujo-kanban.md). No se reconstruyen retroactivamente cuando faltan fechas confiables.
 
 ---
 
@@ -26,7 +28,7 @@ Medir la velocidad real permite:
 |---|---|
 | **Tamaño del equipo** | 1 persona (proyecto individual) |
 | **Duración de cada hito** | ~1 mes calendario (~22 días hábiles) |
-| **Equivalencia** | 1 Hito ≈ 2 sprints de 2 semanas |
+| **Cadencia** | Hitos académicos de revisión/entrega; no son Sprints |
 
 ---
 
@@ -182,7 +184,7 @@ Hito 05 adelantó trabajo respecto del mes planificado y cerró un volumen ampli
 | Pendientes UX pequeños crecen de alcance | Media | Medio | `Mover a` y rendimiento se validan con severidad explícita; no habilitan features nuevas |
 | Documentación generada queda desfasada | Media | Alto | Congelar fuente Markdown y regenerar salidas solo en puntos de control |
 | Gráficos de base de datos requieren herramientas externas | Mitigado | Medio | Fuentes y exportaciones contrastadas con el schema e incorporadas el 2026-07-15; resta verificar legibilidad en la maquetación final |
-| Preparación de defensa desplaza la validación final | Media | Alto | Mantener WIP máximo de dos frentes y cerrar validación antes del corte/tag final |
+| Preparación de defensa desplaza la validación final | Media | Alto | Mantener WIP máximo de dos elementos activos y cerrar validación antes del corte/tag final |
 
 ---
 

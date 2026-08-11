@@ -29,7 +29,7 @@ Durante el primer hito del proyecto se estableció la estructura completa del re
 | `CHANGELOG.md` inicial | ✅ Completado |
 | ADR-001 — Stack tecnológico | ✅ Completado |
 | ADR-002 — Persistencia offline | ✅ Completado |
-| ADR-003 — Metodología Kanban | ✅ Completado |
+| ADR-003 — Enfoque incremental y Kanban adaptado | ✅ Completado; revisado en Hito 06 |
 | ADR-004 — Estructura de carpetas | ✅ Completado |
 | Templates de GitHub Issues | ✅ Completado |
 | `manifest.json` (PWA shell) | ✅ Completado |
@@ -46,7 +46,7 @@ Todas las decisiones de este hito están documentadas en los ADRs correspondient
 
 - **Stack:** Vanilla JS + Vite 6 → [ADR-001](../adr/ADR-001-stack-tecnologico.md)
 - **Persistencia:** IndexedDB via `idb` → [ADR-002](../adr/ADR-002-persistencia-indexeddb.md)
-- **Metodología:** Kanban con hitos mensuales → [ADR-003](../adr/ADR-003-metodologia-kanban.md)
+- **Enfoque de desarrollo:** incremental, con gestión del flujo basada en Kanban y hitos académicos → [ADR-003](../adr/ADR-003-metodologia-kanban.md)
 - **Estructura:** `src/` + `docs/` + `public/` → [ADR-004](../adr/ADR-004-estructura-carpetas.md)
 
 ---

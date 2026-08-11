@@ -12,9 +12,10 @@ de Gómez (2014).
 
 | Documento | Contenido | Estado |
 |---|---|---|
+| [`definicion-flujo-kanban.md`](./definicion-flujo-kanban.md) | Definition of Workflow, WIP, políticas, SLE y métricas de flujo desde Hito 06 | ✅ Vigente |
 | [`estimacion-pert.md`](./estimacion-pert.md) | Estimación de 3 puntos (PERT) para los módulos de mayor riesgo | ✅ Completado |
 | [`lineas-base.md`](./lineas-base.md) | Registro de líneas base, release `v0.4.8` y futuro corte final | 🔄 Activo en Hito 06 |
-| [`seguimiento-velocidad.md`](./seguimiento-velocidad.md) | SP planificados y entregados por hito; Hito 05 cerrado con 36 SP | ✅ Actualizado |
+| [`seguimiento-velocidad.md`](./seguimiento-velocidad.md) | SP planificados y entregados por hito como métrica académica separada del flujo Kanban | ✅ Actualizado |
 | [`checklist-validacion-android.md`](./checklist-validacion-android.md) | Evidencia de validación Android de `v0.4.8`; base para la repetición final | ✅ Beta validada |
 | [`cheatsheet-defensa.md`](./cheatsheet-defensa.md) | Métricas, decisiones y respuestas breves para la defensa | 🔄 Revisión final pendiente |
 | [`firma-apk-android.md`](./firma-apk-android.md) | Política de firma, secretos y resguardo del artefacto Android | ✅ Completado |
