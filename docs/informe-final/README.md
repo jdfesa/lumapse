@@ -26,7 +26,7 @@ La fecha de ensamblado se calcula en cada ejecución. El estado, alcance funcion
 
 ## Estado actual
 
-El Hito 05 quedó cerrado con la beta controlada `v0.4.8` firmada, validada inicialmente, publicada y documentada. El Hito 06 se encuentra activo para el cierre académico. Los capítulos fuente describen el alcance funcional vigente, la distribución Android, la suite de 773 tests y los límites actuales de validación.
+El Hito 05 quedó cerrado con la beta controlada `v0.4.8` firmada, validada inicialmente, publicada y documentada. El Hito 06 se encuentra activo para el cierre académico. Los capítulos fuente describen el alcance funcional vigente, la distribución Android, la suite actual de 775 tests y los límites de validación restantes.
 
 `INFORME-FINAL-COMPLETO.md` fue regenerado como checkpoint el 2026-07-15 después de la reconciliación transversal y se volvió a ensamblar al incorporar las figuras externas de base de datos. Los capítulos siguen siendo la fuente de verdad y el artefacto deberá ensamblarse otra vez cuando se consolide la evidencia final.
 

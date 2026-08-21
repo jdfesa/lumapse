@@ -97,7 +97,7 @@
 | ID | Requisito | Métrica | Estado actual | Evidencia / siguiente paso |
 |---|---|---|---|---|
 | RNF-023 | El código debe seguir una **estructura modular** con separación clara entre componentes, servicios y estilos. | Fronteras de módulo explícitas y responsabilidades acotadas | Verificado | La estructura por feature y la estrategia gradual están documentadas en ADR-007; servicios, store, UI y estilos mantienen carpetas diferenciadas. |
-| RNF-024 | Los tests unitarios deben cubrir al menos el **70%** de la lógica de negocio de servicios. | Coverage de servicios ≥ 70% | Pendiente | La cobertura histórica superó el umbral sobre el scope JavaScript, pero la configuración vigente no incluye `src/**/*.ts`. Debe medirse una nueva línea base antes del cierre final. |
+| RNF-024 | Los tests unitarios deben cubrir al menos el **70%** de la lógica de negocio de servicios. | Coverage de servicios ≥ 70% | Verificado | `npm run test:coverage` incluye `src/**/*.{js,ts}`. La medición del 2026-08-21 sobre la fuente actual registró 92,43% de statements (1538/1664) en los 31 archivos de `src/services/**`; debe repetirse en el commit candidato para la matriz final. |
 | RNF-025 | El proyecto debe construirse sin errores con `npm run build`. | Exit code = 0 | Verificado | Build y gate local pasaron para el corte `v0.4.8`; el comando también forma parte de CI. |
 | RNF-026 | Toda decisión arquitectónica significativa debe documentarse mediante ADR. | ADR trazable por decisión significativa | Evidencia parcial | Existe un conjunto trazable de ADRs y la auditoría valida sus referencias, pero el cierre final debe revisar que no haya decisiones significativas sin ADR y distinguir los ADRs retrospectivos. |
 
@@ -120,9 +120,9 @@
 
 | Estado | Cantidad | IDs |
 |---|---:|---|
-| Verificado | 4 | RNF-003, RNF-018, RNF-023, RNF-025 |
+| Verificado | 5 | RNF-003, RNF-018, RNF-023 a RNF-025 |
 | Evidencia parcial | 7 | RNF-009, RNF-010, RNF-012, RNF-013, RNF-020, RNF-022, RNF-026 |
-| Pendiente | 9 | RNF-002, RNF-004 a RNF-008, RNF-019, RNF-021, RNF-024 |
+| Pendiente | 8 | RNF-002, RNF-004 a RNF-008, RNF-019, RNF-021 |
 | Obsoleto por pivote | 3 | RNF-001, RNF-011, RNF-017 |
 | No aplica al APK | 3 | RNF-014 a RNF-016 |
 | **Total** | **26** | |
@@ -147,7 +147,7 @@ La planificación inicial asignaba grupos de RNF a los Hitos 03, 04 y 05. El piv
 3. Auditar tipografía, touch targets, contraste y navegación accesible (RNF-007, RNF-008, RNF-019 a RNF-022).
 4. Repetir los flujos principales en modo avión y cubrir bloqueo/terminación inesperada del editor (RNF-009, RNF-010).
 5. Registrar tráfico de red y un reporte específico de dependencias/trackers para completar RNF-012 y RNF-013.
-6. Incorporar archivos TypeScript al reporte de coverage y volver a medir RNF-024.
+6. [Completado 2026-08-21] Incorporar archivos TypeScript al reporte de coverage y volver a medir RNF-024; repetir la medición en el commit candidato para incorporarla a la matriz final.
 7. Confirmar o reformular formalmente los RNF obsoletos/no aplicables, sin reutilizar evidencia PWA como si perteneciera al APK.
 8. Emitir una matriz final de cumplimiento con comando, dispositivo, fecha y artefacto para cada verificación realizada.
 

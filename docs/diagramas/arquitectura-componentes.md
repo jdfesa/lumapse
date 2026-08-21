@@ -52,7 +52,7 @@ flowchart TB
 | Estado | `src/store/` | Mantener estado observable y coordinar operaciones de la UI | Servicios, contratos de dominio y módulos SQLite de acceso a datos |
 | Aplicación/dominio | `src/services/`, `src/domain/` | Validaciones, reglas, flujos y tipos compartidos | Acceso a datos y adaptadores de infraestructura |
 | Persistencia | `src/services/sqlite/` | Conexión, esquema, migraciones, transacciones y CRUD de bajo nivel | SQLite/Capacitor; no depende de la UI |
-| Integraciones | `src/services/backup/*Native*`, `BackupShareService.js` | Traducir APIs de Capacitor a conceptos del producto | Plugins nativos |
+| Integraciones | `src/services/backup/*Native*`, `BackupShareService.ts` | Traducir APIs de Capacitor a conceptos del producto | Plugins nativos |
 
 La regla principal es que la infraestructura no conoce a la presentación. Algunos componentes consumen servicios directamente y otros lo hacen a través del store. A su vez, el store usa dos recorridos válidos: delega en servicios cuando hay reglas u orquestación de dominio y accede directamente a módulos SQLite para operaciones de datos acotadas. Por eso la arquitectura es **por capas pragmática**, no una Clean Architecture estricta ni una cadena obligatoria UI → store → servicio → datos.
 
@@ -63,7 +63,7 @@ La regla principal es que la infraestructura no conoce a la presentación. Algun
 | **Composition Root** | Aplicado | [`src/main.js`](../../src/main.js) | Centraliza el arranque y el cableado de dependencias principales. |
 | **Observer / Publish-Subscribe** | Aplicado | [`src/store/NoteStore.state.js`](../../src/store/NoteStore.state.js) | El store registra suscriptores, notifica cambios y devuelve una función de desuscripción. |
 | **Service Layer** | Aplicado | [`src/services/AcademicEventService.ts`](../../src/services/AcademicEventService.ts), [`src/services/backup/BackupFlowService.ts`](../../src/services/backup/BackupFlowService.ts) | Encapsula reglas, validación y orquestación fuera de la UI y del SQL. |
-| **Adapter** | Aplicado | [`src/services/backup/BackupNativeNetworkService.js`](../../src/services/backup/BackupNativeNetworkService.js), [`src/services/backup/BackupShareService.js`](../../src/services/backup/BackupShareService.js) | Traduce plugins nativos y fallbacks web a operaciones entendibles por la aplicación. |
+| **Adapter** | Aplicado | [`src/services/backup/BackupNativeNetworkService.ts`](../../src/services/backup/BackupNativeNetworkService.ts), [`src/services/backup/BackupShareService.ts`](../../src/services/backup/BackupShareService.ts) | Traduce plugins nativos y fallbacks web a operaciones entendibles por la aplicación. |
 | **Dependency Injection explícita** | Aplicada en servicios seleccionados | [`src/services/backup/BackupFlowService.ts`](../../src/services/backup/BackupFlowService.ts) | Recibe funciones reemplazables para red, creación, almacenamiento y compartición; facilita pruebas deterministas. |
 | **Fachada modular / barrel** | Analogía parcial | [`src/store/NoteStore.js`](../../src/store/NoteStore.js), [`src/services/SubjectService.js`](../../src/services/SubjectService.js), [`src/services/ExportService.ts`](../../src/services/ExportService.ts) | Expone puntos de entrada estables sobre módulos especializados sin afirmar una fachada GoF completa. |
 | **Data Access similar a Repository** | Analogía parcial | [`src/services/sqlite/`](../../src/services/sqlite/) | Aísla SQL y mapeo de filas sin definir repositorios intercambiables entre motores. |

@@ -39,7 +39,7 @@
 - [ ] Completar la auditoría manual de tipografía, touch targets, contraste y navegación accesible (`RNF-007`, `RNF-008`, `RNF-019` a `RNF-022`).
 - [ ] Repetir flujos principales en modo avión y comprobar recuperación ante cierre/terminación inesperada (`RNF-009`, `RNF-010`).
 - [ ] Registrar tráfico de red y revisar dependencias/trackers (`RNF-012`, `RNF-013`).
-- [ ] Incorporar TypeScript al reporte de coverage y volver a medir `RNF-024`.
+- [x] Incorporar TypeScript al reporte de coverage y volver a medir `RNF-024`: 92,43% de statements en `src/services/**` sobre la fuente actual (2026-08-21).
 - [ ] Emitir la matriz RNF final con requisito, método, comando, dispositivo, fecha, artefacto, resultado y evidencia.
 - [ ] Preparar presentación, guion de demo, respuestas de defensa y checklist de contingencia.
 - [ ] Medir el factor de ajuste real y redactar recomendaciones para futuros equipos.

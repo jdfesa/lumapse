@@ -36,9 +36,9 @@ Los módulos actualmente cubiertos incluyen:
 
 La suite unitaria permite sostener cambios internos sin depender exclusivamente de pruebas manuales. Esto fue especialmente importante durante la migración a SQLite, la implementación de papelera y la consolidación de materias/secciones, porque esas áreas afectan persistencia, visibilidad y recuperación de datos.
 
-Al corte `v0.4.8`, y nuevamente sobre la fuente documental actual, la suite local registra 773 tests unitarios distribuidos en 53 archivos y pasando dentro del flujo `npm run verify`.
+El corte `v0.4.8` registró 773 tests unitarios. Sobre la fuente documental actual, la suite local registra 775 tests distribuidos en 53 archivos y pasando dentro del flujo `npm run verify`; los casos adicionales cubren el fallback web del adaptador nativo de red y la conversión de vistas tipadas en el adaptador de share migrado a TypeScript.
 
-El repositorio dispone de `npm run test:coverage`, pero la configuración vigente toma como línea base únicamente archivos `src/**/*.js` y no define umbrales bloqueantes. Por ello, el número de tests aporta evidencia de amplitud y regresión, pero no debe confundirse con una cobertura completa de la migración gradual a TypeScript. Incorporar archivos `.ts`, registrar una línea base estable y recién después decidir umbrales permanece como mejora de calidad.
+El repositorio dispone de `npm run test:coverage` con alcance `src/**/*.{js,ts}` y reportes de texto, HTML y resumen JSON. La medición del 2026-08-21 sobre la fuente actual registró 93,21% de statements en el scope configurado y 92,43% (1538/1664) al agregar los 31 archivos de `src/services/**`; por lo tanto, `RNF-024` supera el mínimo de 70%. La configuración todavía no fija umbrales bloqueantes: la línea base debe repetirse sobre el commit candidato antes de decidir si conviene convertirla en gate.
 
 ## 6.3. Pruebas de Integración y Funcionamiento Offline
 

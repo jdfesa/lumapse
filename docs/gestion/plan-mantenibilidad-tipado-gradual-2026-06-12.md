@@ -68,7 +68,7 @@ Toolchain instalado durante la fase:
 - [x] `typescript` agregado como dependencia de desarrollo.
 - [x] `tsconfig.json` creado para convivencia gradual y emision deshabilitada.
 - [x] Script `typecheck` agregado.
-- [x] ESLint, build y auditorias ampliados para reconocer `.ts`. La cobertura Vitest de TypeScript se revisa por separado en `RNF-024`.
+- [x] ESLint, build, auditorias y coverage ampliados para reconocer `.ts`; la medicion del 2026-08-21 registra 92,43% de statements en `src/services/**` y cierra la linea base de `RNF-024`.
 
 ---
 
@@ -210,7 +210,7 @@ Migrar servicios donde los contratos reducen errores reales:
 - [x] Auditorias auxiliares y binario Rust actualizados para incluir `.ts`.
 - [x] `SubjectService.crud.ts`.
 - [x] `SubjectService.trash.ts`.
-- Bordes nativos/share de backup solo si el contrato queda chico, testeable y sin depender de dispositivo real.
+- [x] Bordes nativos/share de backup: `BackupNativeNetworkService.ts` y `BackupShareService.ts` declaran contratos chicos y testeables para Capacitor, conservando fallbacks web y sin depender de dispositivo real en la suite.
 - Capa SQLite por tabla, solo si los tipos ya estan claros.
 
 Criterio de cierre:
@@ -221,7 +221,7 @@ Criterio de cierre:
 
 ### Fase 6 - Store
 
-Estado: deuda opcional futura, posterior a la presentacion.
+Estado: deuda opcional futura, posterior a la presentacion. Solo se completo un saneamiento puntual de imports redundantes el 2026-08-21, motivado por advertencias concretas del build.
 
 Migrar el store despues de tener servicios tipados.
 
@@ -229,7 +229,7 @@ Tareas:
 
 - Tipar `AppState`.
 - Separar mejor acciones, selectores y efectos.
-- Evitar imports dinamicos innecesarios si ya existen limites claros.
+- [x] Evitar imports dinamicos innecesarios si ya existen limites claros; se reemplazaron cinco imports que Vite confirmaba como inefectivos para separar chunks.
 - Mantener `NoteStore.js` como barrel si ayuda a preservar API publica.
 
 Criterio de cierre:
@@ -317,4 +317,4 @@ No hace falta levantar servidor local como parte de estas fases. La validacion v
 2. No crear `0.4.9` ni ampliar el alcance de Hito 06 para “terminar” este plan.
 3. Evaluar store, componentes grandes o servicios restantes solo despues de la presentacion y con un beneficio concreto, tests existentes y alcance pequeno.
 
-El mapa de tests por feature quedo alineado, el store ya no depende de feedback visual, el typecheck forma parte del gate, la primera tanda de modulos puros esta migrada, el registro de comandos del editor tiene contratos TS, `AcademicEventService` quedo tipado como primer servicio de dominio, la capa pura de backup cubre decisiones, datos, ZIP, escritura ZIP, orquestacion y fachada web/legada de exportacion, `SubjectService.crud` cubre materias/arbol activo, `SubjectService.trash` cubre papelera avanzada y las auditorias automaticas escanean `.ts`. Ese resultado cierra la primera ola; no obliga a migrar store o componentes grandes antes de entregar el proyecto.
+El mapa de tests por feature quedo alineado, el store ya no depende de feedback visual, el typecheck forma parte del gate, la primera tanda de modulos puros esta migrada, el registro de comandos del editor tiene contratos TS, `AcademicEventService` quedo tipado como primer servicio de dominio, la capa de backup cubre decisiones, datos, ZIP, escritura ZIP, orquestacion, adaptadores nativos y fachada web/legada de exportacion, `SubjectService.crud` cubre materias/arbol activo, `SubjectService.trash` cubre papelera avanzada y las auditorias automaticas escanean `.ts`. Ese resultado cierra la primera ola; no obliga a migrar store o componentes grandes antes de entregar el proyecto.
