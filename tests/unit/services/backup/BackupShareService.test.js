@@ -17,7 +17,7 @@ import {
   shareBackupFile,
   shareBackupZip,
   writeBackupToCache,
-} from '../../../../src/services/backup/BackupShareService.js'
+} from '../../../../src/services/backup/BackupShareService.ts'
 
 vi.mock('@capacitor/core', () => ({
   registerPlugin: vi.fn((name) => ({
@@ -42,6 +42,13 @@ describe('BackupShareService', () => {
   describe('backupContentToBase64()', () => {
     it('convierte ArrayBuffer a base64', async () => {
       await expect(backupContentToBase64(arrayBufferFromText('Lumapse'))).resolves.toBe('THVtYXBzZQ==')
+    })
+
+    it('respeta offset y longitud al convertir una vista tipada', async () => {
+      const bytes = new TextEncoder().encode('_Lumapse_')
+      const view = bytes.subarray(1, bytes.length - 1)
+
+      await expect(backupContentToBase64(view)).resolves.toBe('THVtYXBzZQ==')
     })
 
     it('acepta strings base64 sin modificarlos', async () => {

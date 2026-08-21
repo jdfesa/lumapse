@@ -9,24 +9,56 @@ import { registerPlugin } from '@capacitor/core'
 import {
   getBackupNetworkState,
   resolveBackupNetworkState,
-} from './BackupNetworkService.ts'
+  type BackupConnectionType,
+  type BackupNetworkState,
+} from './BackupNetworkService'
 
-const Network = registerPlugin('Network')
+interface NetworkStatus {
+  connected: boolean
+  connectionType?: string | null
+}
 
-function getWebConnectionType() {
-  const connection = globalThis.navigator?.connection ||
-    globalThis.navigator?.mozConnection ||
-    globalThis.navigator?.webkitConnection
+interface PluginListenerHandle {
+  remove: () => Promise<void>
+}
+
+interface NetworkPlugin {
+  getStatus: () => Promise<NetworkStatus>
+  addListener: (
+    eventName: 'networkStatusChange',
+    listener: (status: NetworkStatus) => void,
+  ) => Promise<PluginListenerHandle>
+}
+
+interface BrowserConnection {
+  type?: string | null
+}
+
+type NavigatorWithConnection = Navigator & {
+  connection?: BrowserConnection
+  mozConnection?: BrowserConnection
+  webkitConnection?: BrowserConnection
+}
+
+export type BackupNetworkStateListener = (state: BackupNetworkState) => void
+
+const Network = registerPlugin<NetworkPlugin>('Network')
+
+function getWebConnectionType(): BackupConnectionType {
+  const navigator = globalThis.navigator as NavigatorWithConnection | undefined
+  const connection = navigator?.connection ||
+    navigator?.mozConnection ||
+    navigator?.webkitConnection
   const type = connection?.type
 
-  if (['bluetooth', 'cellular'].includes(type)) return 'cellular'
-  if (['ethernet', 'wifi', 'wimax'].includes(type)) return 'wifi'
+  if (type && ['bluetooth', 'cellular'].includes(type)) return 'cellular'
+  if (type && ['ethernet', 'wifi', 'wimax'].includes(type)) return 'wifi'
   if (type === 'none') return 'none'
 
   return 'unknown'
 }
 
-async function readNetworkStatus() {
+async function readNetworkStatus(): Promise<NetworkStatus> {
   try {
     return await Network.getStatus()
   } catch {
@@ -38,11 +70,13 @@ async function readNetworkStatus() {
   }
 }
 
-export async function getCurrentBackupNetworkState() {
+export async function getCurrentBackupNetworkState(): Promise<BackupNetworkState> {
   return resolveBackupNetworkState(readNetworkStatus)
 }
 
-export async function onBackupNetworkStateChange(listener) {
+export async function onBackupNetworkStateChange(
+  listener: BackupNetworkStateListener,
+): Promise<PluginListenerHandle> {
   if (typeof listener !== 'function') {
     throw new Error('Se requiere un listener para observar cambios de red.')
   }

@@ -5,11 +5,11 @@
 // conectividad -> ZIP actual -> cache -> share sheet.
 // =============================================================
 
-import { getCurrentBackupNetworkState } from './BackupNativeNetworkService.js'
+import { getCurrentBackupNetworkState } from './BackupNativeNetworkService'
 import { collectBackupData, hasBackupData } from './BackupDataSource'
 import { getBackupReminderState, type BackupReminderState } from './BackupReminderService'
 import { createCurrentBackupZip } from './BackupService'
-import { shareBackupZip } from './BackupShareService.js'
+import { shareBackupZip } from './BackupShareService'
 import {
   getBackupReminderTimestamps,
   setLastBackupCreatedAt,
@@ -45,9 +45,7 @@ interface BackupShareResult {
   cancelled?: boolean
   shareResult?: {
     cancelled?: boolean
-    [key: string]: unknown
   }
-  [key: string]: unknown
 }
 
 interface SharedBackupResult {

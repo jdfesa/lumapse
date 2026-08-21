@@ -10,7 +10,7 @@ const { Network } = vi.hoisted(() => ({
 import {
   getCurrentBackupNetworkState,
   onBackupNetworkStateChange,
-} from '../../../../src/services/backup/BackupNativeNetworkService.js'
+} from '../../../../src/services/backup/BackupNativeNetworkService.ts'
 
 vi.mock('@capacitor/core', () => ({
   registerPlugin: vi.fn(() => Network),
@@ -81,6 +81,32 @@ describe('BackupNativeNetworkService', () => {
         externalBackupAllowed: true,
         requiresWarning: true,
       }))
+    })
+
+    it('usa eventos web y permite removerlos si el listener nativo falla', async () => {
+      const listener = vi.fn()
+      Network.addListener.mockRejectedValue(new Error('plugin no disponible'))
+      Object.defineProperty(globalThis.navigator, 'connection', {
+        value: { type: 'wifi' },
+        configurable: true,
+      })
+
+      const handle = await onBackupNetworkStateChange(listener)
+
+      globalThis.window.dispatchEvent(new Event('offline'))
+      globalThis.window.dispatchEvent(new Event('online'))
+
+      expect(listener).toHaveBeenNthCalledWith(1, expect.objectContaining({
+        connected: false,
+        connectionType: 'none',
+      }))
+      expect(listener).toHaveBeenNthCalledWith(2, expect.objectContaining({
+        connected: true,
+        connectionType: 'wifi',
+        recommended: true,
+      }))
+
+      await expect(handle.remove()).resolves.toBeUndefined()
     })
 
     it('rechaza si no recibe listener', async () => {
