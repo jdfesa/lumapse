@@ -58,7 +58,7 @@ Cerrar Lumapse con documentación coherente, evidencia técnica reproducible, di
 - [ ] Auditar tipografía, touch targets, contraste y navegación accesible (`RNF-007`, `RNF-008`, `RNF-019` a `RNF-022`).
 - [ ] Repetir los flujos principales en modo avión y cubrir cierre o terminación inesperada del editor (`RNF-009`, `RNF-010`).
 - [ ] Registrar tráfico de red y revisar dependencias/trackers (`RNF-012`, `RNF-013`).
-- [ ] Incorporar TypeScript al reporte de coverage y volver a medir `RNF-024`.
+- [x] Incorporar TypeScript al reporte de coverage y volver a medir `RNF-024`: 92,43% de statements en `src/services/**` sobre la fuente actual (2026-08-21); repetir en el commit candidato para la matriz final.
 - [ ] Confirmar o reformular los RNF obsoletos/no aplicables sin reutilizar evidencia PWA para el APK.
 - [ ] Emitir una matriz final con RNF, método, comando, dispositivo, fecha, artefacto, resultado y evidencia.
 - [ ] Clasificar cada hallazgo como bloqueante, mejora menor aceptada o trabajo post-defensa.

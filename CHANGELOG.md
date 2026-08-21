@@ -25,6 +25,9 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Modelos de datos sincronizados:** Las fuentes conceptual DOT, lógica DBML y física DDL reflejan el schema vigente; las exportaciones conceptual y lógica fueron reemplazadas, revisadas e incorporadas al informe el 2026-07-15.
 - **Checkpoint académico ensamblado:** `INFORME-FINAL-COMPLETO.md` se regeneró desde sus ocho secciones fuente —incluida la bibliografía— después de la revisión transversal del 2026-07-15; la portada separa alcance funcional, fuente técnica, corte documental y fecha de ensamblado.
 - **Relevamiento reconciliado con el CSV:** Se restauraron los textos efectivamente aplicados en P5b/P7, se documentó que los máximos multirrespuesta no quedaron asegurados, y se corrigieron demografía, P10, P11 y cruces contra la salida reproducible de los scripts.
+- **Adaptadores nativos de backup tipados:** `BackupNativeNetworkService` y `BackupShareService` pasan a TypeScript con contratos locales para Network, Filesystem y Share, y cobertura directa del fallback web de conectividad.
+- **Coverage JS/TS medible:** Vitest incorpora `src/**/*.{js,ts}` y genera un resumen JSON; la nueva línea base registra 92,43% de statements en `src/services/**`, cerrando la medición pendiente de `RNF-024` sin fijar todavía umbrales bloqueantes.
+- **Dependencias estáticas explícitas:** Se retiraron cinco imports dinámicos que Vite no podía separar en chunks porque los mismos módulos ya formaban parte del grafo estático; el comportamiento y las APIs públicas permanecen sin cambios.
 
 ### Commits posteriores al tag
 

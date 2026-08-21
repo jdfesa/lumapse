@@ -11,7 +11,7 @@
 | Alcance funcional | v0.4.8 (`v0.4.8` / `a808de7`) |
 | Fuente técnica auditada | `main` @ `5db64de` |
 | Corte documental | 2026-08-11 |
-| Ensamblado automáticamente | 2026-08-11 |
+| Ensamblado automáticamente | 2026-08-21 |
 
 ---
 
@@ -674,7 +674,7 @@ La cualidad **offline-first** atraviesa estas áreas: SQLite es la fuente persis
 | Composition Root | Aplicado | `src/main.js` | Inicializa persistencia, construye vistas y conecta dependencias principales; centraliza el arranque, no todas las decisiones posteriores. |
 | Observer / publicador-suscriptor | Aplicado | `NoteStore.state.js` y `NoteStore.errors.js` | Notifica estado y errores mediante suscripción/desuscripción manual dentro del proceso; no es un bus distribuido. |
 | Service Layer | Aplicado | `SubjectService.crud.ts`, `BackupService.ts`, `MarkdownService.ts` | Centraliza validaciones, reglas y orquestación fuera de componentes y SQL; combina servicios puros con coordinadores de efectos. |
-| Adapter | Aplicado | `BackupNativeNetworkService.js`, `BackupShareService.js` | Traduce APIs de Capacitor a contratos propios, con alternativas web donde corresponde; no toda dependencia externa tiene adaptador formal. |
+| Adapter | Aplicado | `BackupNativeNetworkService.ts`, `BackupShareService.ts` | Traduce APIs de Capacitor a contratos propios, con alternativas web donde corresponde; no toda dependencia externa tiene adaptador formal. |
 | Inyección de dependencias explícita | Aplicada en servicios seleccionados | `BackupFlowService.ts` | Sustituye funciones de red, creación, almacenamiento y compartición en pruebas, sin contenedor global. |
 | Fachada modular / *barrel* | Analogía parcial | `NoteStore.js`, `SubjectService.js`, `ExportService.ts` | Ofrece entradas estables sobre módulos especializados; un *barrel* no oculta por sí solo toda la complejidad de una fachada GoF. |
 | Data Access similar a Repository | Analogía parcial | módulos de `src/services/sqlite/` | Encapsula consultas y mapeo de filas, sin interfaz Repository genérica ni intercambio transparente entre motores. |
@@ -920,7 +920,7 @@ GitHub Actions activa el workflow "CI — Quality Gate"
 
 ### 5.8.5. Resultado actual
 
-Al corte documental actual, `npm run verify` completa lint, typecheck, 773 tests unitarios distribuidos en 53 archivos, build de producción, smoke test de base de datos, presupuesto de bundle, trazabilidad, links internos, schema SQLite, jerarquía de materias, accesibilidad estática y ausencia de diálogos nativos fuera del seeder. El workflow remoto verifica además el DBML mediante un paso explícito. Esta evidencia automatizada es amplia, pero no reemplaza las pruebas manuales en Android ni implica que ambos recorridos cubran exactamente los mismos pasos.
+Al corte documental actual, `npm run verify` completa lint, typecheck, 775 tests unitarios distribuidos en 53 archivos, build de producción, smoke test de base de datos, presupuesto de bundle, trazabilidad, links internos, schema SQLite, jerarquía de materias, accesibilidad estática y ausencia de diálogos nativos fuera del seeder. El workflow remoto verifica además el DBML mediante un paso explícito. Esta evidencia automatizada es amplia, pero no reemplaza las pruebas manuales en Android ni implica que ambos recorridos cubran exactamente los mismos pasos.
 
 ### 5.8.6. Justificación de la práctica
 
@@ -970,9 +970,9 @@ Los módulos actualmente cubiertos incluyen:
 
 La suite unitaria permite sostener cambios internos sin depender exclusivamente de pruebas manuales. Esto fue especialmente importante durante la migración a SQLite, la implementación de papelera y la consolidación de materias/secciones, porque esas áreas afectan persistencia, visibilidad y recuperación de datos.
 
-Al corte `v0.4.8`, y nuevamente sobre la fuente documental actual, la suite local registra 773 tests unitarios distribuidos en 53 archivos y pasando dentro del flujo `npm run verify`.
+El corte `v0.4.8` registró 773 tests unitarios. Sobre la fuente documental actual, la suite local registra 775 tests distribuidos en 53 archivos y pasando dentro del flujo `npm run verify`; los casos adicionales cubren el fallback web del adaptador nativo de red y la conversión de vistas tipadas en el adaptador de share migrado a TypeScript.
 
-El repositorio dispone de `npm run test:coverage`, pero la configuración vigente toma como línea base únicamente archivos `src/**/*.js` y no define umbrales bloqueantes. Por ello, el número de tests aporta evidencia de amplitud y regresión, pero no debe confundirse con una cobertura completa de la migración gradual a TypeScript. Incorporar archivos `.ts`, registrar una línea base estable y recién después decidir umbrales permanece como mejora de calidad.
+El repositorio dispone de `npm run test:coverage` con alcance `src/**/*.{js,ts}` y reportes de texto, HTML y resumen JSON. La medición del 2026-08-21 sobre la fuente actual registró 93,21% de statements en el scope configurado y 92,43% (1538/1664) al agregar los 31 archivos de `src/services/**`; por lo tanto, `RNF-024` supera el mínimo de 70%. La configuración todavía no fija umbrales bloqueantes: la línea base debe repetirse sobre el commit candidato antes de decidir si conviene convertirla en gate.
 
 ## 6.3. Pruebas de Integración y Funcionamiento Offline
 
@@ -1043,7 +1043,7 @@ El objetivo general se considera **cumplido para el alcance de una beta controla
 | Diseñar una solución offline y orientada al uso móvil. | Arquitectura Capacitor + SQLite, UI mobile-first, persistencia local y funcionamiento sin red para los flujos principales. | Cumplido para el dispositivo y los escenarios validados. |
 | Implementar el núcleo de captura y organización académica. | Editor Markdown, borradores persistentes, búsqueda, materias/secciones, archivo, papelera, fechas académicas, tema, Acerca de y portabilidad manual mediante backup/importación `.zip`. | Cumplido para `v0.4.8`. |
 | Preparar una distribución Android verificable. | APK firmado, hash SHA-256, pre-release publicada y validación inicial en un Samsung Galaxy S20 FE con Android 13. | Cumplido como beta controlada. |
-| Incorporar calidad automatizada y validación reproducible. | `npm run verify`, 773 tests unitarios, typecheck, build, auditorías técnicas/documentales y checklist manual Android. | Cumplido parcialmente: quedan límites de cobertura, accesibilidad, rendimiento, seguridad y equivalencia CI/local explicitados en el Capítulo 6. |
+| Incorporar calidad automatizada y validación reproducible. | `npm run verify`, 775 tests unitarios, typecheck, build, auditorías técnicas/documentales y checklist manual Android. | Cumplido parcialmente: quedan límites de accesibilidad, rendimiento, seguridad y equivalencia CI/local explicitados en el Capítulo 6; `RNF-024` ya dispone de línea base JS/TS. |
 | Producir documentación académica defendible. | Documentación viva por capítulos, diagramas fuente y trazabilidad dentro del repositorio. | Cumplido como corpus versionado, con gráficos DB incorporados; el Hito 06 completa revisión editorial, consolidación de evidencias y maquetación. |
 
 En términos del Hito 05, las fases de congelamiento de la versión, generación y firma del APK, validación en Android, publicación y sincronización documental de la beta quedaron completadas. El hito se considera cerrado. En Hito 06 ya se incorporaron los gráficos finales de base de datos; el hito continúa activo para la revisión editorial y de maquetación, la consolidación de evidencias no funcionales y la preparación de la defensa, sin reabrir por defecto el alcance funcional de `v0.4.8`.
@@ -1145,7 +1145,7 @@ Las tareas inmediatas corresponden al cierre del trabajo ya realizado:
 
 - Tras la reconciliación transversal y la incorporación de las figuras DB completadas el 2026-07-15, consolidar la evidencia final, verificar los metadatos pendientes de los materiales de cátedra, ejecutar la revisión de congelamiento y regenerar el informe ensamblado.
 - Confirmar en la maquetación PDF y en las diapositivas que las imágenes conceptual y lógica ya verificadas sean legibles, especialmente el formato panorámico del modelo conceptual; el DDL y la representación del campo `title` ya coinciden con la implementación vigente.
-- Alinear los requisitos no funcionales con evidencia reproducible: revisar las advertencias no bloqueantes del build como deuda separada de `RNF-025`, ampliar coverage a TypeScript antes de fijar umbrales, verificar la portabilidad del auditor local y acercar el workflow remoto al alcance de `npm run verify`.
+- Alinear los requisitos no funcionales con evidencia reproducible: la medición JS/TS de `RNF-024` y las advertencias por imports dinámicos redundantes quedaron resueltas el 2026-08-21; resta repetir la línea base en el commit candidato antes de fijar umbrales, verificar la portabilidad del auditor local y acercar el workflow remoto al alcance de `npm run verify`.
 - Mantener evidencia de revisión de dependencias y seguridad, y completar pruebas de accesibilidad, rendimiento con volumen realista y uso con estudiantes. Estas pruebas deben distinguir resultados automáticos, sintéticos y manuales.
 - Preparar materiales de defensa y, cuando el contenido quede congelado, convertir Markdown a LaTeX/PDF como capa de presentación, sin crear una segunda fuente de verdad.
 - Calcular el factor de ajuste real entre estimación y esfuerzo registrado, y convertir sus desvíos en recomendaciones concretas para futuros proyectos individuales; esta medición permanece pendiente hasta consolidar la evidencia temporal del cierre.
