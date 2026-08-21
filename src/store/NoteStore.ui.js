@@ -3,6 +3,7 @@
 // =============================================================
 
 import * as NoteService from '../services/sqlite/notes.js'
+import { loadArchivedSubjects } from './NoteStore.data.js'
 import { state, notify } from './NoteStore.state.js'
 
 export function selectNote(id) {
@@ -56,7 +57,6 @@ export async function setNoteStatus(id, emoji) {
 export async function setShowArchived(show) {
   if (show) {
     state.viewMode = 'archived'
-    const { loadArchivedSubjects } = await import('./NoteStore.data.js')
     await loadArchivedSubjects()
   } else {
     state.viewMode = state.activeSubjectId ? 'subject' : 'inbox'

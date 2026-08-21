@@ -4,6 +4,11 @@
 
 import * as NoteService from '../services/sqlite/notes.js'
 import * as SubjectService from '../services/SubjectService.js'
+import {
+  countTrashItems,
+  getArchivedSubjectIds,
+  getArchivedSubjectTree,
+} from '../services/sqlite/subjects.js'
 import { DatabaseError } from '../services/sqlite/errors.js'
 import { emitStoreError, runStoreAction } from './NoteStore.errors.js'
 import { getFilteredNotes as applyFilters } from './noteFilters.ts'
@@ -20,7 +25,6 @@ export async function loadNotes() {
 
 export async function loadSubjects() {
   state.subjects = await SubjectService.getSubjectTree()
-  const { getArchivedSubjectIds } = await import('../services/sqlite/subjects.js')
   state.archivedSubjectIds = await getArchivedSubjectIds()
   notify()
 }
@@ -29,7 +33,6 @@ export async function loadSubjects() {
  * Carga el árbol de materias archivadas para mostrar en el drawer.
  */
 export async function loadArchivedSubjects() {
-  const { getArchivedSubjectTree } = await import('../services/sqlite/subjects.js')
   state.archivedSubjects = await getArchivedSubjectTree()
   notify()
 }
@@ -38,7 +41,6 @@ export async function loadArchivedSubjects() {
  * Carga el conteo de items en la papelera y actualiza el flag de alerta.
  */
 export async function loadTrashCount() {
-  const { countTrashItems } = await import('../services/sqlite/subjects.js')
   state.trashCount = await countTrashItems()
   state.showTrashWarning = state.trashCount >= TRASH_WARNING_THRESHOLD
   notify()
