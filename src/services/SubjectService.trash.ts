@@ -21,9 +21,11 @@ import {
   softDeleteNotesBySubject,
   restoreNotesBySubject,
   getDeletedNotes,
+  getNoteById,
   purgeOldDeletedNotes,
   emptyTrashNotes,
-  restoreNote as restoreNoteRow
+  restoreNote as restoreNoteRow,
+  updateNote
 } from './sqlite/notes.js'
 import { runTransaction } from './sqlite/connection.js'
 import type { EntityId, HexColor } from '../domain/primitives'
@@ -224,7 +226,6 @@ export async function restoreSection(id: EntityId): Promise<void> {
  */
 export async function restoreNoteFromTrash(noteId: EntityId): Promise<void> {
   // Primero necesitamos leer la nota para saber si su materia sigue viva
-  const { getNoteById, updateNote } = await import('./sqlite/notes.js')
   const note = (await getNoteById(noteId)) as Note | undefined
   if (!note) return
 
