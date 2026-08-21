@@ -1,4 +1,4 @@
-# Lumapse
+# <img src="./public/icons/icon-144x144.png" alt="Icono de Lumapse" width="48" height="48"> Lumapse
 
 > App móvil minimalista de captura de notas y gestión del conocimiento personal.  
 > Offline-first · Markdown · SQLite · Sin fricción.
