@@ -7,14 +7,13 @@ export default defineConfig({
     include: ['tests/unit/**/*.test.js'],
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'html'],
-      include: ['src/**/*.js'],
+      reporter: ['text', 'html', 'json-summary'],
+      include: ['src/**/*.{js,ts}'],
       exclude: [
         'src/main.js',
         'src/components/**',
         'src/layout/**',
         'src/utils/**',
-        'src/services/ExportService.js',
         'src/services/ImportService.js',
         'src/store/NoteStore.js',
       ],
