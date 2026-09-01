@@ -5,11 +5,15 @@
 // Lumapse, sin tocar SQLite ni UI.
 // =============================================================
 
-import JSZip from 'jszip'
 import {
   BACKUP_APP_NAME,
   BACKUP_FORMAT_VERSION,
 } from './BackupFormat'
+import { readBackupZipText } from './BackupZipEntryReader'
+import {
+  preflightBackupZip,
+  type PreflightedBackupZip,
+} from './BackupZipPreflight'
 import {
   BackupImportError,
   type BackupImportAcademicEvent,
@@ -269,59 +273,10 @@ function addManifestWarnings(manifest: BackupManifest, warnings: string[]): void
   }
 }
 
-function normalizeSource(source: BackupImportSource | Blob | ArrayBuffer | Uint8Array | string): Blob | ArrayBuffer | Uint8Array | string {
-  if (isRecord(source) && 'content' in source) {
-    const content = source.content
-    if (
-      typeof content === 'string' ||
-      content instanceof ArrayBuffer ||
-      content instanceof Uint8Array ||
-      (typeof Blob !== 'undefined' && content instanceof Blob)
-    ) {
-      return content
-    }
-  }
-
-  return source as Blob | ArrayBuffer | Uint8Array | string
-}
-
-function normalizeStringSource(content: string): { content: string, base64: boolean } {
-  if (content.startsWith('data:') && content.includes(',')) {
-    return {
-      content: content.slice(content.indexOf(',') + 1),
-      base64: true,
-    }
-  }
-
-  return {
-    content,
-    base64: true,
-  }
-}
-
-async function loadZip(source: BackupImportSource | Blob | ArrayBuffer | Uint8Array | string): Promise<JSZip> {
-  const content = normalizeSource(source)
-
+async function readJsonFile(zip: PreflightedBackupZip, path: string): Promise<unknown> {
+  const content = await readBackupZipText(zip, path)
   try {
-    if (typeof content === 'string') {
-      const normalized = normalizeStringSource(content)
-      return await JSZip.loadAsync(normalized.content, { base64: normalized.base64 })
-    }
-
-    return await JSZip.loadAsync(content)
-  } catch {
-    throw new BackupImportError('No se pudo leer el ZIP de backup seleccionado.')
-  }
-}
-
-async function readJsonFile(zip: JSZip, path: string): Promise<unknown> {
-  const file = zip.file(path)
-  if (!file) {
-    throw new BackupImportError(`Backup invalido: falta ${path}.`)
-  }
-
-  try {
-    return JSON.parse(await file.async('string'))
+    return JSON.parse(content)
   } catch {
     throw new BackupImportError(`Backup invalido: ${path} no contiene JSON valido.`)
   }
@@ -330,17 +285,15 @@ async function readJsonFile(zip: JSZip, path: string): Promise<unknown> {
 export async function parseBackupImportZip(
   source: BackupImportSource | Blob | ArrayBuffer | Uint8Array | string,
 ): Promise<ParsedBackupImport> {
-  const zip = await loadZip(source)
+  const zip = await preflightBackupZip(source)
   const warnings: string[] = []
   const manifest = validateManifest(await readJsonFile(zip, MANIFEST_PATH))
 
   addManifestWarnings(manifest, warnings)
 
-  const [subjectsJson, notesJson, academicEventsJson] = await Promise.all([
-    readJsonFile(zip, SUBJECTS_PATH),
-    readJsonFile(zip, NOTES_PATH),
-    readJsonFile(zip, ACADEMIC_EVENTS_PATH),
-  ])
+  const subjectsJson = await readJsonFile(zip, SUBJECTS_PATH)
+  const notesJson = await readJsonFile(zip, NOTES_PATH)
+  const academicEventsJson = await readJsonFile(zip, ACADEMIC_EVENTS_PATH)
   const data: BackupData = {
     subjects: normalizeSubjects(subjectsJson, manifest.createdAt, warnings),
     notes: normalizeNotes(notesJson, manifest.createdAt, warnings),

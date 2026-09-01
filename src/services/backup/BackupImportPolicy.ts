@@ -41,7 +41,7 @@ export function getBackupZipEntryLimit(path: string, policy: BackupZipPolicy): n
     return policy.jsonBytes[path as BackupJsonPath]
   }
   if (path === 'README.txt') return policy.maxReadmeBytes
-  if (/^notes\/[^/]+\.md$/u.test(path)) return policy.maxMarkdownBytes
-  if (path === 'data/' || path === 'notes/') return 0
+  if (/^notes\/(?:[^/]+\/)*[^/]+\.md$/u.test(path)) return policy.maxMarkdownBytes
+  if (path === 'data/' || /^notes\/(?:[^/]+\/)*$/u.test(path)) return 0
   return null
 }
