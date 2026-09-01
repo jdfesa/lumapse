@@ -300,4 +300,25 @@ describe('Backup import regression - ZIP exportado por Lumapse', () => {
     expect(insertValues('academic_events')[0][5]).toBe(CREATED_AT_ISO)
     expect(insertValues('academic_events')[0][6]).toBe(CREATED_AT_ISO)
   })
+
+  it('rechaza JSON no confiable antes de crear el plan o iniciar persistencia SQLite', async () => {
+    const backup = await createBackup({
+      subjects: [subject({ name: { markup: '<img src=x>' } })],
+      notes: [],
+      academicEvents: [],
+    })
+    const createPlan = vi.fn()
+    const applyPlan = vi.fn()
+
+    await expect(importBackupZip({
+      content: backup.content,
+      filename: backup.filename,
+    }, { createPlan, applyPlan })).rejects.toThrow('data/subjects.json[0].name')
+
+    expect(createPlan).not.toHaveBeenCalled()
+    expect(applyPlan).not.toHaveBeenCalled()
+    expect(backupDataSourceMocks.collectBackupData).not.toHaveBeenCalled()
+    expect(sqliteMocks.runTransaction).not.toHaveBeenCalled()
+    expect(sqliteMocks.db.run).not.toHaveBeenCalled()
+  })
 })

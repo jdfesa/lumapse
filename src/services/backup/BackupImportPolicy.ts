@@ -1,3 +1,5 @@
+import { ACADEMIC_EVENT_TITLE_MAX_LENGTH } from '../AcademicEventRules'
+
 const MEBIBYTE = 1024 * 1024
 
 export const BACKUP_JSON_PATHS = Object.freeze([
@@ -20,6 +22,20 @@ export interface BackupZipPolicy {
   jsonBytes: Readonly<Record<BackupJsonPath, number>>
 }
 
+export interface BackupImportDataPolicy {
+  maxSubjects: number
+  maxNotes: number
+  maxAcademicEvents: number
+  maxSubjectNameCodePoints: number
+  maxNoteTitleCodePoints: number
+  maxNoteContentBytes: number
+  maxNoteStatusCodePoints: number
+  maxAcademicEventTitleCodePoints: number
+  maxManifestFilenameCodePoints: number
+  maxIdAsciiCharacters: number
+  maxManifestFiles: number
+}
+
 export const BACKUP_IMPORT_ZIP_POLICY: BackupZipPolicy = Object.freeze({
   maxSourceBytes: 64 * MEBIBYTE,
   maxEntries: 5_100,
@@ -34,6 +50,20 @@ export const BACKUP_IMPORT_ZIP_POLICY: BackupZipPolicy = Object.freeze({
     'data/notes.json': 24 * MEBIBYTE,
     'data/academic-events.json': 8 * MEBIBYTE,
   }),
+})
+
+export const BACKUP_IMPORT_DATA_POLICY: BackupImportDataPolicy = Object.freeze({
+  maxSubjects: 1_000,
+  maxNotes: 5_000,
+  maxAcademicEvents: 5_000,
+  maxSubjectNameCodePoints: 120,
+  maxNoteTitleCodePoints: 4_096,
+  maxNoteContentBytes: BACKUP_IMPORT_ZIP_POLICY.maxMarkdownBytes,
+  maxNoteStatusCodePoints: 16,
+  maxAcademicEventTitleCodePoints: ACADEMIC_EVENT_TITLE_MAX_LENGTH,
+  maxManifestFilenameCodePoints: 255,
+  maxIdAsciiCharacters: 128,
+  maxManifestFiles: BACKUP_IMPORT_ZIP_POLICY.maxEntries,
 })
 
 export function getBackupZipEntryLimit(path: string, policy: BackupZipPolicy): number | null {
