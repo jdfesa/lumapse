@@ -43,8 +43,8 @@ export function renderNoteEditorTemplate() {
         <button id="btn-save-note" class="composer__save-btn" title="Guardar nota" disabled>Guardar</button>
       </div>
       <div id="composer-draft-actions" class="composer__draft-actions" hidden>
-        <p id="composer-draft-status" class="composer__draft-status"></p>
-        <button id="btn-discard-draft" class="composer__discard-btn" type="button" aria-label="Descartar borrador" title="Descartar borrador">Descartar</button>
+        <p id="composer-draft-status" class="composer__draft-status" role="status" aria-live="polite"></p>
+        <button id="btn-discard-draft" class="composer__discard-btn" type="button" aria-label="Descartar borrador" aria-describedby="composer-draft-status" title="Descartar borrador">Descartar</button>
       </div>
     </div>
   `;

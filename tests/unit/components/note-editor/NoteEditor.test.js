@@ -79,6 +79,18 @@ describe('NoteEditor title extraction', () => {
 })
 
 describe('NoteEditor separate title UX', () => {
+  it('diferencia semanticamente el estado del borrador de la accion de descarte', () => {
+    const editor = createEditor()
+    const draftStatus = editor.container.querySelector('#composer-draft-status')
+    const discardBtn = editor.container.querySelector('#btn-discard-draft')
+
+    expect(draftStatus.getAttribute('role')).toBe('status')
+    expect(draftStatus.getAttribute('aria-live')).toBe('polite')
+    expect(discardBtn.getAttribute('aria-describedby')).toBe('composer-draft-status')
+
+    editor.destroy()
+  })
+
   it('muestra un titulo opcional separado del cuerpo', () => {
     const editor = createEditor()
 
