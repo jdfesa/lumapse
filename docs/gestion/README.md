@@ -21,6 +21,7 @@ de Gómez (2014).
 | [`firma-apk-android.md`](./firma-apk-android.md) | Política de firma, secretos y resguardo del artefacto Android | ✅ Completado |
 | [`plan-mantenibilidad-tipado-gradual-2026-06-12.md`](./plan-mantenibilidad-tipado-gradual-2026-06-12.md) | Estrategia incremental de modularidad y tipado; no habilita refactors amplios durante el cierre | 📌 Referencia |
 | [`revision-tecnica-priorizada-2026-09-01.md`](./revision-tecnica-priorizada-2026-09-01.md) | Auditoría vigente de arquitectura, seguridad, persistencia, escalabilidad y tooling con backlog priorizado | 🔄 Remediación activa |
+| [`analisis-aud-003-seguridad-importacion-backups-2026-09-01.md`](./analisis-aud-003-seguridad-importacion-backups-2026-09-01.md) | Revalidación de AUD-003, trazado ZIP/JSON a DOM, contratos, límites y plan de remediación | 🔄 Implementación pendiente |
 | [`historico/`](./historico/) | Snapshots operativos cerrados preservados como evidencia de proceso | 📦 Archivo |
 
 ---
