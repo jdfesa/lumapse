@@ -134,6 +134,13 @@ describe('NoteStore.data', () => {
       expect(state.notes.map(n => n.id)).toEqual(['new', 'old'])
     })
 
+    it('retorna la nota persistida para confirmar el guardado', async () => {
+      const createdNote = makeNote({ id: 'new' })
+      NoteService.createNote.mockResolvedValue(createdNote)
+
+      await expect(NoteStoreData.createNote('T', 'C')).resolves.toBe(createdNote)
+    })
+
     it('limpia state.searchQuery después de crear', async () => {
       state.searchQuery = 'busqueda'
 
@@ -226,6 +233,13 @@ describe('NoteStore.data', () => {
       await NoteStoreData.updateNote('note-1', { title: 'Nueva' })
 
       expect(state.notes[0].title).toBe('Nueva')
+    })
+
+    it('retorna la nota persistida para confirmar la actualizacion', async () => {
+      const updatedNote = makeNote({ id: 'note-1', title: 'Nueva' })
+      NoteService.updateNote.mockResolvedValue(updatedNote)
+
+      await expect(NoteStoreData.updateNote('note-1', { title: 'Nueva' })).resolves.toBe(updatedNote)
     })
 
     it('mueve la nota actualizada al inicio del array', async () => {

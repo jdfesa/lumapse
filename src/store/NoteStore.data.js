@@ -62,6 +62,7 @@ export async function createNote(title = 'Sin título', content = '', subjectId 
     state.dateFilter = null
     await loadSubjects()
     notify()
+    return newNote
   })
 }
 
@@ -78,6 +79,7 @@ export async function updateNote(id, changes) {
     }
 
     notify()
+    return updatedNote
   })
 }
 
