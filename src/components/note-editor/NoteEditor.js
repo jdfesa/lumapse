@@ -201,7 +201,7 @@ export class NoteEditor {
     const input = this.container.querySelector('#composer-input');
     const saveBtn = this.container.querySelector('#btn-save-note');
 
-    saveBtn.disabled = !titleInput.value.trim() && !input.value.trim();
+    saveBtn.disabled = this.isSaving || (!titleInput.value.trim() && !input.value.trim());
   }
 
   handleKeyDown(e) {
@@ -239,8 +239,11 @@ export class NoteEditor {
   }
 
   async handleSave() {
+    if (this.isSaving) return;
+
     const titleInput = this.container.querySelector('#composer-title-input');
     const input = this.container.querySelector('#composer-input');
+    const saveBtn = this.container.querySelector('#btn-save-note');
     const rawTitle = titleInput.value.trim();
     const rawContent = input.value.trim();
     
@@ -254,20 +257,21 @@ export class NoteEditor {
 
     let persistedNote;
     const editingNoteId = this.currentEditId;
+    const idleSaveLabel = editingNoteId ? 'Actualizar' : 'Guardar';
 
     this.isSaving = true;
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Guardando...';
     try {
       if (editingNoteId) {
-        persistedNote = await NoteStore.updateNote(editingNoteId, {
-          content: content,
-          title,
-          subjectId: subjectId
-        });
+        persistedNote = await NoteStore.updateNote(editingNoteId, { content, title, subjectId });
       } else {
         persistedNote = await NoteStore.createNote(title, content, subjectId);
       }
     } finally {
       this.isSaving = false;
+      saveBtn.textContent = idleSaveLabel;
+      this.updateSaveState();
     }
 
     if (!persistedNote) return;
@@ -281,9 +285,8 @@ export class NoteEditor {
     titleInput.value = '';
     input.value = '';
     input.style.height = 'auto';
-    const btnSave = this.container.querySelector('#btn-save-note');
-    btnSave.textContent = 'Guardar';
-    btnSave.disabled = true;
+    saveBtn.textContent = 'Guardar';
+    saveBtn.disabled = true;
     this.currentEditId = null;
     this.currentEditBaseUpdatedAt = null;
     this.restoredDraftActive = false;

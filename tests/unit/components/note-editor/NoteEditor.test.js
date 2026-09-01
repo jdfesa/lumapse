@@ -726,6 +726,7 @@ describe('NoteEditor draft cleanup on save', () => {
   it('conserva el borrador si el store absorbe un error SQLite al crear', async () => {
     const editor = createEditor()
     const input = editor.container.querySelector('#composer-input')
+    const saveBtn = editor.container.querySelector('#btn-save-note')
     NoteStore.createNote.mockResolvedValueOnce(undefined)
 
     input.value = 'Apuntes recuperables'
@@ -744,6 +745,8 @@ describe('NoteEditor draft cleanup on save', () => {
     })
     expect(EditorDraftService.clearDraft).not.toHaveBeenCalled()
     expect(input.value).toBe('Apuntes recuperables')
+    expect(saveBtn.textContent).toBe('Guardar')
+    expect(saveBtn.disabled).toBe(false)
     expect(editor.container.querySelector('.composer').classList.contains('composer--focus')).toBe(true)
 
     editor.destroy()
@@ -810,6 +813,7 @@ describe('NoteEditor draft cleanup on save', () => {
     })
 
     const input = editor.container.querySelector('#composer-input')
+    const saveBtn = editor.container.querySelector('#btn-save-note')
     input.value = 'Cuerpo no guardado'
     input.dispatchEvent(new window.Event('input'))
 
@@ -825,6 +829,8 @@ describe('NoteEditor draft cleanup on save', () => {
     })
     expect(EditorDraftService.clearDraft).not.toHaveBeenCalled()
     expect(input.value).toBe('Cuerpo no guardado')
+    expect(saveBtn.textContent).toBe('Actualizar')
+    expect(saveBtn.disabled).toBe(false)
     expect(editor.container.querySelector('#composer-draft-actions').hidden).toBe(false)
 
     editor.destroy()
@@ -853,6 +859,7 @@ describe('NoteEditor draft cleanup on save', () => {
     })
 
     const input = editor.container.querySelector('#composer-input')
+    const saveBtn = editor.container.querySelector('#btn-save-note')
     input.value = 'Cuerpo no guardado'
     input.dispatchEvent(new window.Event('input'))
     editor.enterFocusMode()
@@ -863,7 +870,42 @@ describe('NoteEditor draft cleanup on save', () => {
     expect(NoteStore.selectNote).not.toHaveBeenCalled()
     expect(editor.currentEditId).toBe('note-1')
     expect(input.value).toBe('Cuerpo no guardado')
+    expect(saveBtn.textContent).toBe('Actualizar')
+    expect(saveBtn.disabled).toBe(false)
     expect(editor.container.querySelector('.composer').classList.contains('composer--focus')).toBe(true)
+
+    editor.destroy()
+  })
+})
+
+describe('NoteEditor save concurrency', () => {
+  it('mantiene un unico guardado en curso y bloquea el boton hasta resolver', async () => {
+    let resolveSave
+    NoteStore.createNote.mockReturnValueOnce(new Promise((resolve) => {
+      resolveSave = resolve
+    }))
+
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+    const saveBtn = editor.container.querySelector('#btn-save-note')
+
+    input.value = 'Una sola nota'
+    input.dispatchEvent(new window.Event('input'))
+
+    const firstSave = editor.handleSave()
+    const concurrentSave = editor.handleSave()
+
+    expect(NoteStore.createNote).toHaveBeenCalledTimes(1)
+    expect(saveBtn.textContent).toBe('Guardando...')
+    expect(saveBtn.disabled).toBe(true)
+
+    resolveSave({ id: 'created-note' })
+    await Promise.all([firstSave, concurrentSave])
+
+    expect(NoteStore.createNote).toHaveBeenCalledTimes(1)
+    expect(saveBtn.textContent).toBe('Guardar')
+    expect(saveBtn.disabled).toBe(true)
+    expect(input.value).toBe('')
 
     editor.destroy()
   })
