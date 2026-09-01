@@ -5,10 +5,11 @@
 // archivos de texto del backup. Evita cargar dependencias pesadas.
 // =============================================================
 
+import { crc32 } from './BackupZipCrc32'
+
 const ZIP_UTF8_FLAG = 0x0800
 const ZIP_STORE_METHOD = 0
 const ZIP_VERSION = 20
-const CRC32_TABLE = createCrc32Table()
 const encoder = new globalThis.TextEncoder()
 
 export interface ZipArchiveFile {
@@ -27,32 +28,6 @@ export type ZipArchiveContent = Blob | ArrayBuffer | string
 interface DosDateParts {
   time: number
   date: number
-}
-
-function createCrc32Table(): Uint32Array {
-  const table = new Uint32Array(256)
-
-  for (let index = 0; index < 256; index += 1) {
-    let value = index
-    for (let bit = 0; bit < 8; bit += 1) {
-      value = value & 1
-        ? 0xedb88320 ^ (value >>> 1)
-        : value >>> 1
-    }
-    table[index] = value >>> 0
-  }
-
-  return table
-}
-
-function crc32(bytes: Uint8Array): number {
-  let crc = 0xffffffff
-
-  for (const byte of bytes) {
-    crc = CRC32_TABLE[(crc ^ byte) & 0xff] ^ (crc >>> 8)
-  }
-
-  return (crc ^ 0xffffffff) >>> 0
 }
 
 function dateToDosParts(value: Date | string | number): DosDateParts {
