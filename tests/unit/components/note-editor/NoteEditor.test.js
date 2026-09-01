@@ -48,6 +48,8 @@ beforeEach(() => {
   vi.clearAllMocks()
   confirmDialog.mockResolvedValue(true)
   EditorDraftService.loadDraft.mockReturnValue(null)
+  NoteStore.createNote.mockResolvedValue({ id: 'created-note' })
+  NoteStore.updateNote.mockResolvedValue({ id: 'updated-note' })
 })
 
 describe('NoteEditor title extraction', () => {
@@ -721,6 +723,32 @@ describe('NoteEditor draft cleanup on save', () => {
     editor.destroy()
   })
 
+  it('conserva el borrador si el store absorbe un error SQLite al crear', async () => {
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+    NoteStore.createNote.mockResolvedValueOnce(undefined)
+
+    input.value = 'Apuntes recuperables'
+    input.dispatchEvent(new window.Event('input'))
+    editor.enterFocusMode()
+
+    await editor.handleSave()
+
+    expect(EditorDraftService.saveDraft).toHaveBeenCalledWith({
+      mode: 'create',
+      noteId: null,
+      title: '',
+      content: 'Apuntes recuperables',
+      subjectId: null,
+      baseUpdatedAt: null,
+    })
+    expect(EditorDraftService.clearDraft).not.toHaveBeenCalled()
+    expect(input.value).toBe('Apuntes recuperables')
+    expect(editor.container.querySelector('.composer').classList.contains('composer--focus')).toBe(true)
+
+    editor.destroy()
+  })
+
   it('limpia el borrador despues de actualizar una nota con exito', async () => {
     let subscriber
     NoteStore.subscribe.mockImplementationOnce((callback) => {
@@ -798,6 +826,44 @@ describe('NoteEditor draft cleanup on save', () => {
     expect(EditorDraftService.clearDraft).not.toHaveBeenCalled()
     expect(input.value).toBe('Cuerpo no guardado')
     expect(editor.container.querySelector('#composer-draft-actions').hidden).toBe(false)
+
+    editor.destroy()
+  })
+
+  it('conserva la edicion si el store absorbe un error SQLite al actualizar', async () => {
+    let subscriber
+    NoteStore.updateNote.mockResolvedValueOnce(undefined)
+    NoteStore.subscribe.mockImplementationOnce((callback) => {
+      subscriber = callback
+      return vi.fn()
+    })
+
+    const editor = createEditor()
+    subscriber({
+      activeNoteId: 'note-1',
+      notes: [{
+        id: 'note-1',
+        title: 'Resumen',
+        content: 'Resumen\n\nCuerpo',
+        subjectId: null,
+        updatedAt: '2026-06-06T10:00:00.000Z',
+      }],
+      subjects: { tree: [] },
+      viewMode: 'inbox',
+    })
+
+    const input = editor.container.querySelector('#composer-input')
+    input.value = 'Cuerpo no guardado'
+    input.dispatchEvent(new window.Event('input'))
+    editor.enterFocusMode()
+
+    await editor.handleSave()
+
+    expect(EditorDraftService.clearDraft).not.toHaveBeenCalled()
+    expect(NoteStore.selectNote).not.toHaveBeenCalled()
+    expect(editor.currentEditId).toBe('note-1')
+    expect(input.value).toBe('Cuerpo no guardado')
+    expect(editor.container.querySelector('.composer').classList.contains('composer--focus')).toBe(true)
 
     editor.destroy()
   })

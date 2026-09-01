@@ -252,20 +252,28 @@ export class NoteEditor {
     const content = stripRedundantTitleFromContent(rawContent, title);
     const subjectId = this.subjectPicker?.getValue() || null;
 
+    let persistedNote;
+    const editingNoteId = this.currentEditId;
+
     this.isSaving = true;
     try {
-      if (this.currentEditId) {
-        await NoteStore.updateNote(this.currentEditId, {
+      if (editingNoteId) {
+        persistedNote = await NoteStore.updateNote(editingNoteId, {
           content: content,
           title,
           subjectId: subjectId
         });
-        NoteStore.selectNote(null); 
       } else {
-        await NoteStore.createNote(title, content, subjectId);
+        persistedNote = await NoteStore.createNote(title, content, subjectId);
       }
     } finally {
       this.isSaving = false;
+    }
+
+    if (!persistedNote) return;
+
+    if (editingNoteId) {
+      NoteStore.selectNote(null);
     }
 
     this.draftCapture.discard();
