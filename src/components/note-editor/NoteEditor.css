@@ -165,21 +165,30 @@
 }
 
 .composer__discard-btn {
-  background: transparent;
-  border: none;
-  color: var(--color-text-muted);
+  min-height: 32px;
+  padding: 0 var(--space-2);
+  color: var(--color-danger);
+  background: var(--color-danger-dim);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-sm);
   cursor: pointer;
   font-family: var(--font-mono);
   font-size: 0.78rem;
-  padding: var(--space-1) 0;
+  font-weight: 600;
+  transition: all var(--transition);
 }
 
-.composer__discard-btn:hover,
+.composer__discard-btn:hover {
+  color: var(--color-text-bright);
+  background: var(--color-danger);
+  transform: translateY(-1px);
+}
+
 .composer__discard-btn:focus-visible {
   color: var(--color-text-bright);
-  outline: none;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  background: var(--color-danger);
+  outline: 2px solid var(--color-danger);
+  outline-offset: 2px;
 }
 
 /* Subject selector in composer toolbar (Paso 9) */
