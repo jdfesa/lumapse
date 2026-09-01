@@ -94,7 +94,7 @@ store, no como métrica integral de toda la aplicación.
 |---|---|---|---|---|
 | AUD-001 | P0 | Pérdida de borrador ante error SQLite | Bug confirmado | Seleccionado para el primer PR |
 | AUD-002 | P0 | Guardados duplicados por taps concurrentes | Bug confirmado | Seleccionado para el primer PR |
-| AUD-003 | P0 | Inyección HTML persistente desde campos de backup | Seguridad confirmada | Pendiente |
+| AUD-003 | P0 | Inyección HTML persistente desde campos de backup | Seguridad confirmada | Análisis revalidado; implementación pendiente |
 | AUD-004 | P0 | Dependencias vulnerables, incluida DOMPurify en producción | Seguridad/tooling | Pendiente |
 | AUD-005 | P1 | Propiedad global de transacciones y migraciones permisivas | Confiabilidad | Pendiente |
 | AUD-006 | P1 | Resultados async obsoletos sobrescriben vista/cache reciente | Bug de concurrencia | Pendiente |
@@ -156,6 +156,12 @@ botón y crear notas duplicadas o actualizaciones fuera de orden.
 - Probar con una promesa controlada que dos invocaciones concurrentes producen una sola mutación.
 
 ### AUD-003 — Inyección HTML persistente desde backups
+
+> **Revalidación vigente:** el hallazgo se volvió a comprobar sobre `main` en `376f7b6` y quedó
+> desarrollado en [AUD-003 — Análisis de seguridad de importación de backups](./analisis-aud-003-seguridad-importacion-backups-2026-09-01.md).
+> La evidencia confirma inyección DOM, atributos, CSS y consumo no acotado; no demostró ejecución
+> JavaScript. También refuta inyección SQL, Markdown crudo y ZIP Slip con escritura arbitraria en
+> el flujo actual. La implementación permanece pendiente en `fix/backup-import-security`.
 
 **Evidencia**
 
