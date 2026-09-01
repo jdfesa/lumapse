@@ -1,8 +1,8 @@
 # Revisión Técnica Priorizada — 2026-09-01
 
 **Estado:** Vigente — línea de base para remediación incremental  
-**Rama de trabajo:** `fix/note-save-integrity`  
-**Commit base revisado:** `cd60c0e` (`main`)  
+**Rama original de auditoría:** `fix/note-save-integrity`  
+**Commit base original revisado:** `cd60c0e` (`main`)  
 **Versión de producto documentada:** `0.4.8` (Beta)  
 **Alcance:** arquitectura, modularidad, seguridad, persistencia, estado, asincronía, pruebas, dependencias y tooling
 
@@ -92,8 +92,8 @@ store, no como métrica integral de toda la aplicación.
 
 | ID | Prioridad | Hallazgo | Naturaleza | Estado |
 |---|---|---|---|---|
-| AUD-001 | P0 | Pérdida de borrador ante error SQLite | Bug confirmado | Seleccionado para el primer PR |
-| AUD-002 | P0 | Guardados duplicados por taps concurrentes | Bug confirmado | Seleccionado para el primer PR |
+| AUD-001 | P0 | Pérdida de borrador ante error SQLite | Bug confirmado | Resuelto en PR #2 |
+| AUD-002 | P0 | Guardados duplicados por taps concurrentes | Bug confirmado | Resuelto en PR #2 |
 | AUD-003 | P0 | Inyección HTML persistente desde campos de backup | Seguridad confirmada | Análisis revalidado; implementación pendiente |
 | AUD-004 | P0 | Dependencias vulnerables, incluida DOMPurify en producción | Seguridad/tooling | Pendiente |
 | AUD-005 | P1 | Propiedad global de transacciones y migraciones permisivas | Confiabilidad | Pendiente |
@@ -395,8 +395,8 @@ test(editor): cover failed and concurrent note saves
 
 | Orden | Rama sugerida | Resultado esperado |
 |---:|---|---|
-| 1 | `fix/note-save-integrity` | Cerrar AUD-001 y AUD-002 |
-| 2 | `fix/backup-input-hardening` | Validar importación, limitar ZIP y escapar atributos |
+| 1 | `fix/note-save-integrity` | Cerrado en PR #2: AUD-001 y AUD-002 |
+| 2 | `fix/backup-import-security` | Revalidar y corregir AUD-003 con checkpoints aprobados |
 | 3 | `fix/dependency-security` | Actualizar DOMPurify y dependencias auditadas |
 | 4 | `fix/store-action-contract` | Unificar semántica de errores de mutaciones |
 | 5 | `fix/sqlite-write-coordination` | Aislar transacciones y endurecer migraciones/arranque |
@@ -457,5 +457,8 @@ Lumapse no necesita una nueva arquitectura base. Necesita cerrar primero integri
 límites de confianza y coordinación de persistencia; después puede optimizar reactividad, queries y
 cohesión de features con cambios pequeños y medidos.
 
-La rama actual queda vinculada al primer fix porque AUD-001 y AUD-002 afectan el flujo central del
-producto y presentan la mejor relación entre impacto, riesgo y tamaño de cambio.
+La revisión inicial quedó vinculada al primer fix porque AUD-001 y AUD-002 afectaban el flujo
+central del producto y presentaban la mejor relación entre impacto, riesgo y tamaño de cambio.
+Ambos hallazgos se cerraron posteriormente en la PR #2. La remediación activa continúa con la
+revalidación de AUD-003 en `fix/backup-import-security`; su implementación permanece pendiente de
+aprobación.

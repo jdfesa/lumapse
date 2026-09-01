@@ -18,6 +18,10 @@ Lumapse.
 Este documento versiona la fase de análisis. No modifica código de producción ni autoriza por sí
 solo cambios fuera del alcance descrito.
 
+La rama y el primer commit se publicaron durante la fase de análisis, antes del checkpoint de
+aprobación previsto. Ese desvío queda limitado a documentación: la implementación de producción
+continúa expresamente pendiente y requiere autorización antes de comenzar.
+
 ### Incluido
 
 - Lectura de fuentes `Blob`, `ArrayBuffer`, `Uint8Array` y base64.
@@ -384,6 +388,26 @@ La extracción de los JSON canónicos debe ser secuencial y acotada por bytes re
 JSZip se pausa y rechaza cuando la salida supera el presupuesto, aun si el directorio central
 declara un tamaño menor.
 
+#### Checkpoint obligatorio de diseño
+
+`BackupZipPreflight.ts` no debe implementarse directamente a partir de este documento. Antes de
+escribir el lector binario se debe presentar y aprobar un diseño focalizado que especifique:
+
+- métodos y flags ZIP admitidos para backups actuales `STORE` e históricos `DEFLATE`;
+- tratamiento de data descriptors, nombres UTF-8, comentarios y campos extra;
+- búsqueda acotada del EOCD y rechazo de truncamiento, multidisk y ZIP64;
+- validación de offsets, tamaños y conteos sin overflow;
+- coherencia entre directorio central y headers locales;
+- rechazo de cifrado, métodos desconocidos, rutas inseguras y nombres canónicos duplicados;
+- responsabilidad de CRC y manejo de archivos corruptos;
+- aborto por bytes reales descomprimidos aunque la metadata declare un valor menor;
+- interacción exacta con JSZip sin depender de propiedades privadas.
+
+El checkpoint también debe comparar esta alternativa con una solución más pequeña basada en APIs
+públicas existentes. Solo se conserva el parser ZIP32 propio si reduce el riesgo total y puede
+probarse como una unidad aislada; la ausencia de dependencias nuevas no justifica introducir un
+parser ambiguo o insuficientemente verificable.
+
 ### 8.4 Validación de manifest y entidades
 
 Crear `src/services/backup/BackupImportValidation.ts`. Debe:
@@ -571,16 +595,28 @@ con backups reales antes del merge.
 
 ### Evidencia de la fase de análisis
 
-Se ejecutaron los tests existentes directamente relacionados con parser, plan, datasource,
-servicio, regresión y renderizadores:
+Una revalidación independiente ejecutó el siguiente conjunto existente directamente relacionado
+con parser, plan, datasource, servicio, regresión y renderizadores:
 
-```text
-10 archivos de test
-71 tests aprobados
+```bash
+npm test -- \
+  tests/unit/services/backup/BackupImportZipService.test.js \
+  tests/unit/services/backup/BackupImportPlanService.test.js \
+  tests/unit/services/backup/BackupImportDataSource.test.js \
+  tests/unit/services/backup/BackupImportService.test.js \
+  tests/unit/services/backup/BackupImportRegression.test.js \
+  tests/unit/components/feed/NoteList.test.js \
+  tests/unit/components/feed/TrashView.test.js \
+  tests/unit/components/academic-events/AcademicEventTypes.test.js \
+  tests/unit/components/academic-events/Heatmap.test.js \
+  tests/unit/layout/drawerSubjects.test.js
 ```
 
-Se ejecutaron además cuatro pruebas temporales fuera del repositorio para evitar modificar la
-base durante la fase de análisis. Confirmaron:
+Resultado reproducido: **10 archivos y 69 tests aprobados**.
+
+El análisis original reportó pruebas exploratorias temporales fuera del repositorio. Esos
+artefactos no se conservaron y, por tanto, sus resultados no constituyen todavía un gate
+reproducible. Los seis escenarios reportados fueron:
 
 1. ZIP manipulado -> parser -> nodo DOM controlado.
 2. Inyección de atributo mediante valores persistidos.
@@ -588,6 +624,10 @@ base durante la fase de análisis. Confirmaron:
 4. Timestamp inválido -> `RangeError` en Heatmap.
 5. Expansión ZIP sin límite.
 6. Eliminación de `script` y `onerror` por DOMPurify.
+
+Cada escenario que fundamente la remediación debe convertirse en una regresión permanente,
+revisable y fallida antes del fix correspondiente, sin conservar payloads ejecutables en datos de
+producción ni depender de evidencia temporal.
 
 ### Unitarias requeridas
 
@@ -626,6 +666,7 @@ La fase final debe ejecutar `npm run verify` y validación manual Android.
 
 ### Fase 1 — frontera y límites
 
+- Checkpoint de diseño de `BackupZipPreflight.ts` y decisión explícita de proceder o simplificar.
 - Validadores de primitivas.
 - Política central.
 - Preflight ZIP.
@@ -638,8 +679,9 @@ Commit propuesto:
 fix(backup): validate and bound imported archives
 ```
 
-Esta fase cambia el contrato observable de rechazo y debe presentarse para revisión antes de
-continuar si los límites o compatibilidad difieren de este documento.
+No se inicia el código de esta fase hasta aprobar el checkpoint de preflight. Después, cualquier
+cambio en límites, compatibilidad o contrato observable de rechazo debe presentarse para revisión
+antes de continuar.
 
 ### Fase 2 — integridad estructural
 
@@ -678,12 +720,17 @@ fix(ui): harden imported data render contexts
 
 ## 15. Recomendación
 
-Proceder con **un único PR de AUD-003**, dividido internamente en fases y commits revisables.
+Mantener por ahora **una única rama de AUD-003** y tratar el objetivo de un solo PR como
+provisional. La decisión se confirma después del checkpoint de preflight y de estimar el diff real.
 
 Separar frontera y renderizadores en PRs independientes dejaría una ventana incompleta:
 
 - solo frontera no neutraliza registros contaminados ya persistidos;
 - solo presentación no limita ZIP bombs ni estructuras inválidas.
+
+Si el lector ZIP32 o la defensa de presentación no pueden revisarse de forma independiente, se
+deben usar PRs apilados o secuenciales con trazabilidad común. Ningún PR parcial se considera cierre
+de AUD-003 ni se fusiona sin evaluar la cobertura completa de frontera y sinks.
 
 El alcance debe mantenerse sin dependencias nuevas, sin cambios estéticos y sin incorporar
 AUD-004. Cualquier modificación a límites, compatibilidad o comportamiento observable debe
