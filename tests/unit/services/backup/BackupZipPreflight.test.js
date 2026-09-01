@@ -50,7 +50,7 @@ describe('BackupZipPreflight', () => {
   it('acepta ZIPs DEFLATE historicos con carpetas y rutas UTF-8', async () => {
     const bytes = await legacyBackupBytes([
       ...CANONICAL_BACKUP_FILES,
-      { path: 'notes/álgebra.md', content: '# Álgebra\n' },
+      { path: 'notes/matematica/álgebra.md', content: '# Álgebra\n' },
     ])
 
     const archive = await preflightBackupZip(bytes)
@@ -60,7 +60,8 @@ describe('BackupZipPreflight', () => {
     expect(archive.entries.map(entry => entry.path)).toEqual(expect.arrayContaining([
       'data/',
       'notes/',
-      'notes/álgebra.md',
+      'notes/matematica/',
+      'notes/matematica/álgebra.md',
     ]))
   })
 

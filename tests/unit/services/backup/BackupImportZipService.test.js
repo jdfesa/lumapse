@@ -6,6 +6,11 @@ import {
   parseBackupImportZip,
 } from '../../../../src/services/backup/BackupImportZipService.ts'
 import { BackupImportError } from '../../../../src/domain/backupImport.ts'
+import { preflightBackupZip } from '../../../../src/services/backup/BackupZipPreflight.ts'
+import {
+  currentBackupBytes,
+  legacyBackupBytes,
+} from './BackupZipSecurityTestUtils.js'
 
 const CREATED_AT = new Date('2026-06-03T12:30:00.000Z')
 
@@ -73,14 +78,14 @@ function manifest(overrides = {}) {
   }
 }
 
-async function createZip(files) {
+async function createZip(files, options = {}) {
   const zip = new JSZip()
 
   for (const [path, content] of Object.entries(files)) {
     zip.file(path, typeof content === 'string' ? content : JSON.stringify(content, null, 2))
   }
 
-  return zip.generateAsync({ type: 'arraybuffer' })
+  return zip.generateAsync({ type: 'arraybuffer', ...options })
 }
 
 async function createValidZip(overrides = {}) {
@@ -89,7 +94,7 @@ async function createValidZip(overrides = {}) {
     'data/subjects.json': overrides.subjects || [subject()],
     'data/notes.json': overrides.notes || [note()],
     'data/academic-events.json': overrides.academicEvents || [academicEvent()],
-  })
+  }, overrides.zipOptions)
 }
 
 describe('BackupImportZipService', () => {
@@ -129,6 +134,39 @@ describe('BackupImportZipService', () => {
       type: 'parcial',
     })
     expect(parsed.warnings).toEqual([])
+  })
+
+  it('mantiene compatibilidad con backups historicos DEFLATE', async () => {
+    const content = await createValidZip({
+      zipOptions: {
+        compression: 'DEFLATE',
+        compressionOptions: { level: 9 },
+      },
+    })
+
+    const parsed = await parseBackupImportZip(content)
+
+    expect(parsed.counts).toEqual({
+      subjects: 1,
+      notes: 1,
+      academicEvents: 1,
+    })
+    expect(parsed.data.notes[0].id).toBe('note-1')
+  })
+
+  it('preserva los errores de integridad del lector acotado', async () => {
+    const content = currentBackupBytes([
+      { path: 'manifest.json', content: JSON.stringify(manifest()) },
+      { path: 'data/subjects.json', content: JSON.stringify([subject()]) },
+      { path: 'data/notes.json', content: JSON.stringify([note()]) },
+      { path: 'data/academic-events.json', content: JSON.stringify([academicEvent()]) },
+    ])
+    const archive = await preflightBackupZip(content)
+    const manifestEntry = archive.entries.find(entry => entry.path === 'manifest.json')
+    content[manifestEntry.dataOffset] ^= 0xff
+
+    await expect(parseBackupImportZip(content)).rejects
+      .toThrow('verificacion CRC32')
   })
 
   it('rechaza un ZIP que no contiene manifest.json', async () => {
