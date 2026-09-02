@@ -79,6 +79,32 @@ function parsedBackup(overrides = {}) {
   }
 }
 
+function subjectParentsById(plan) {
+  return Object.fromEntries(plan.data.subjects.map(item => [item.id, item.parentSubjectId]))
+}
+
+function normalizedSubjectRepairs(plan) {
+  return plan.relationshipRepairs
+    .filter(repair => repair.entity === 'subject')
+    .map(({ id, from, to, reason }) => ({ id, from, to, reason }))
+    .sort((left, right) => left.id.localeCompare(right.id))
+}
+
+function expectValidTwoLevelHierarchy(plan, localSubjects = []) {
+  const subjectsById = new Map([
+    ...localSubjects.map(item => [item.id, item]),
+    ...plan.data.subjects.map(item => [item.id, item]),
+  ])
+
+  for (const item of plan.data.subjects) {
+    if (!item.parentSubjectId) continue
+
+    const parent = subjectsById.get(item.parentSubjectId)
+    expect(parent).toBeDefined()
+    expect(parent.parentSubjectId).toBeNull()
+  }
+}
+
 describe('BackupImportPlanService', () => {
   it('crea un plan importable completo cuando no hay datos locales', () => {
     const plan = createBackupImportPlan(parsedBackup())
@@ -107,6 +133,196 @@ describe('BackupImportPlanService', () => {
 
     expect(plan.data.subjects.map(item => item.id)).toEqual(['subj-root', 'sec-1'])
     expect(plan.data.subjects[1].parentSubjectId).toBe('subj-root')
+  })
+
+  it('repara cada nivel profundo y conserva referencias a subjects planificados', () => {
+    const plan = createBackupImportPlan(parsedBackup({
+      data: {
+        subjects: [
+          subject({ id: 'level-5', name: 'Nivel 5', parentSubjectId: 'level-4' }),
+          subject({ id: 'level-3', name: 'Nivel 3', parentSubjectId: 'level-2' }),
+          subject({ id: 'level-1', name: 'Nivel 1' }),
+          subject({ id: 'level-4', name: 'Nivel 4', parentSubjectId: 'level-3' }),
+          subject({ id: 'level-2', name: 'Nivel 2', parentSubjectId: 'level-1' }),
+        ],
+        notes: [note({ id: 'note-deep', subjectId: 'level-5' })],
+        academicEvents: [academicEvent({ id: 'event-deep', subjectId: 'level-3' })],
+      },
+    }))
+
+    expect(plan.data.subjects).toHaveLength(5)
+    expect(subjectParentsById(plan)).toEqual({
+      'level-1': null,
+      'level-2': 'level-1',
+      'level-3': null,
+      'level-4': 'level-3',
+      'level-5': null,
+    })
+    expect(normalizedSubjectRepairs(plan)).toEqual([
+      {
+        id: 'level-3',
+        from: 'level-2',
+        to: null,
+        reason: 'La materia padre ya es una seccion; no se permiten mas de 2 niveles.',
+      },
+      {
+        id: 'level-5',
+        from: 'level-4',
+        to: null,
+        reason: 'La materia padre ya es una seccion; no se permiten mas de 2 niveles.',
+      },
+    ])
+    expect(plan.counts.relationshipRepairs).toBe(2)
+    expect(plan.data.notes[0].subjectId).toBe('level-5')
+    expect(plan.data.academicEvents[0].subjectId).toBe('level-3')
+    expectValidTwoLevelHierarchy(plan)
+  })
+
+  it('repara un padre local que ya es una seccion', () => {
+    const localSubjects = [
+      subject({ id: 'local-root', name: 'Local' }),
+      subject({ id: 'local-section', name: 'Seccion local', parentSubjectId: 'local-root' }),
+    ]
+    const plan = createBackupImportPlan(parsedBackup({
+      data: {
+        subjects: [
+          subject({ id: 'imported-child', name: 'Hija', parentSubjectId: 'local-section' }),
+        ],
+        notes: [],
+        academicEvents: [],
+      },
+    }), {
+      localData: { subjects: localSubjects },
+    })
+
+    expect(plan.data.subjects[0].parentSubjectId).toBeNull()
+    expect(normalizedSubjectRepairs(plan)).toEqual([
+      {
+        id: 'imported-child',
+        from: 'local-section',
+        to: null,
+        reason: 'La materia padre ya es una seccion; no se permiten mas de 2 niveles.',
+      },
+    ])
+    expectValidTwoLevelHierarchy(plan, localSubjects)
+  })
+
+  it('repara un autociclo una sola vez sin omitir el subject', () => {
+    const plan = createBackupImportPlan(parsedBackup({
+      data: {
+        subjects: [subject({ id: 'self-cycle', name: 'Autociclo', parentSubjectId: 'self-cycle' })],
+        notes: [],
+        academicEvents: [],
+      },
+    }))
+
+    expect(subjectParentsById(plan)).toEqual({ 'self-cycle': null })
+    expect(normalizedSubjectRepairs(plan)).toEqual([
+      {
+        id: 'self-cycle',
+        from: 'self-cycle',
+        to: null,
+        reason: 'Se detecto una relacion circular entre materias/secciones.',
+      },
+    ])
+    expect(plan.counts.subjects).toEqual({ source: 1, importable: 1, skipped: 0 })
+    expect(plan.counts.relationshipRepairs).toBe(1)
+  })
+
+  it('repara ambos lados de un ciclo de dos nodos', () => {
+    const plan = createBackupImportPlan(parsedBackup({
+      data: {
+        subjects: [
+          subject({ id: 'cycle-b', name: 'B', parentSubjectId: 'cycle-a' }),
+          subject({ id: 'cycle-a', name: 'A', parentSubjectId: 'cycle-b' }),
+        ],
+        notes: [],
+        academicEvents: [],
+      },
+    }))
+
+    expect(subjectParentsById(plan)).toEqual({ 'cycle-a': null, 'cycle-b': null })
+    expect(normalizedSubjectRepairs(plan).map(repair => repair.id)).toEqual(['cycle-a', 'cycle-b'])
+    expect(plan.counts.relationshipRepairs).toBe(2)
+    expect(plan.data.subjects).toHaveLength(2)
+    expectValidTwoLevelHierarchy(plan)
+  })
+
+  it('normaliza ciclos largos con entrada de forma independiente del orden', () => {
+    const subjectsById = {
+      'cycle-a': subject({ id: 'cycle-a', name: 'A', parentSubjectId: 'cycle-b' }),
+      'cycle-b': subject({ id: 'cycle-b', name: 'B', parentSubjectId: 'cycle-c' }),
+      'cycle-c': subject({ id: 'cycle-c', name: 'C', parentSubjectId: 'cycle-a' }),
+      entry: subject({ id: 'entry', name: 'Entrada', parentSubjectId: 'cycle-a' }),
+      tail: subject({ id: 'tail', name: 'Cola', parentSubjectId: 'entry' }),
+    }
+    const planForOrder = order => createBackupImportPlan(parsedBackup({
+      data: {
+        subjects: order.map(id => subjectsById[id]),
+        notes: [],
+        academicEvents: [],
+      },
+    }))
+
+    const firstPlan = planForOrder(['tail', 'entry', 'cycle-b', 'cycle-a', 'cycle-c'])
+    const reversedPlan = planForOrder(['cycle-c', 'cycle-a', 'cycle-b', 'entry', 'tail'])
+    const expectedParents = {
+      'cycle-a': null,
+      'cycle-b': null,
+      'cycle-c': null,
+      entry: 'cycle-a',
+      tail: null,
+    }
+
+    expect(subjectParentsById(firstPlan)).toEqual(expectedParents)
+    expect(subjectParentsById(reversedPlan)).toEqual(expectedParents)
+    expect(normalizedSubjectRepairs(firstPlan)).toEqual(normalizedSubjectRepairs(reversedPlan))
+    expect(normalizedSubjectRepairs(firstPlan).map(repair => repair.id)).toEqual([
+      'cycle-a',
+      'cycle-b',
+      'cycle-c',
+      'tail',
+    ])
+    expect(firstPlan.data.subjects).toHaveLength(5)
+    expect(reversedPlan.data.subjects).toHaveLength(5)
+    expectValidTwoLevelHierarchy(firstPlan)
+    expectValidTwoLevelHierarchy(reversedPlan)
+  })
+
+  it('resuelve nombres en el nivel raiz despues de reparar el parent', () => {
+    const plan = createBackupImportPlan(parsedBackup({
+      data: {
+        subjects: [
+          subject({ id: 'deep-history', name: 'Historia', parentSubjectId: 'section-a' }),
+          subject({ id: 'root-history', name: 'Historia' }),
+          subject({ id: 'section-a', name: 'Unidad I', parentSubjectId: 'root-a' }),
+          subject({ id: 'root-a', name: 'Quimica' }),
+        ],
+        notes: [],
+        academicEvents: [],
+      },
+    }), {
+      localData: {
+        subjects: [subject({ id: 'local-history', name: 'Historia' })],
+      },
+    })
+    const namesById = Object.fromEntries(plan.data.subjects.map(item => [item.id, item.name]))
+
+    expect(subjectParentsById(plan)['deep-history']).toBeNull()
+    expect(namesById['root-history']).toBe('Historia (importada)')
+    expect(namesById['deep-history']).toBe('Historia (importada 2)')
+    expect(plan.renamedSubjects).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        id: 'root-history',
+        to: 'Historia (importada)',
+        parentSubjectId: null,
+      }),
+      expect.objectContaining({
+        id: 'deep-history',
+        to: 'Historia (importada 2)',
+        parentSubjectId: null,
+      }),
+    ]))
   })
 
   it('omite registros que ya existen por ID local sin modificarlos', () => {

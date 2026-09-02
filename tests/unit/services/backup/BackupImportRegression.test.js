@@ -280,6 +280,39 @@ describe('Backup import regression - ZIP exportado por Lumapse', () => {
     expect(insertValues('academic_events')[0][4]).toBeNull()
   })
 
+  it('persiste una jerarquia de dos niveles y conserva referencias al subject reparado', async () => {
+    const backup = await createBackup({
+      subjects: [
+        subject({ id: 'deep-section', name: 'Tema', parentSubjectId: 'section-a' }),
+        subject({ id: 'root-a', name: 'Materia' }),
+        subject({ id: 'section-a', name: 'Unidad', parentSubjectId: 'root-a' }),
+      ],
+      notes: [note({ id: 'note-deep', subjectId: 'deep-section' })],
+      academicEvents: [academicEvent({ id: 'event-deep', subjectId: 'deep-section' })],
+    })
+
+    const flow = await importBackupZip({ content: backup.content, filename: backup.filename })
+    const deepSubject = flow.plan.data.subjects.find(item => item.id === 'deep-section')
+
+    expect(deepSubject.parentSubjectId).toBeNull()
+    expect(flow.plan.relationshipRepairs).toEqual([
+      expect.objectContaining({
+        entity: 'subject',
+        id: 'deep-section',
+        field: 'parentSubjectId',
+        from: 'section-a',
+        to: null,
+        reason: 'La materia padre ya es una seccion; no se permiten mas de 2 niveles.',
+      }),
+    ])
+    expect(flow.plan.counts.relationshipRepairs).toBe(1)
+    expect(flow.plan.data.notes[0].subjectId).toBe('deep-section')
+    expect(flow.plan.data.academicEvents[0].subjectId).toBe('deep-section')
+    expect(insertValues('subjects').find(values => values[0] === 'deep-section')[2]).toBeNull()
+    expect(insertValues('notes')[0][6]).toBe('deep-section')
+    expect(insertValues('academic_events')[0][4]).toBe('deep-section')
+  })
+
   it('usa la fecha del manifest como fallback si faltan timestamps opcionales', async () => {
     const backup = await createBackup({
       subjects: [subject({ createdAt: null })],
