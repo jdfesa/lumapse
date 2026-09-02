@@ -1,8 +1,8 @@
 # Revisión Técnica Priorizada — 2026-09-01
 
-**Estado:** Vigente — línea de base para remediación incremental  
-**Rama original de auditoría:** `fix/note-save-integrity`  
-**Commit base original revisado:** `cd60c0e` (`main`)  
+**Estado:** Vigente — AUD-003 completo en rama; Android final, PR y merge pendientes
+**Rama original de auditoría:** `fix/note-save-integrity`
+**Commit base original revisado:** `cd60c0e` (`main`)
 **Versión de producto documentada:** `0.4.8` (Beta)  
 **Alcance:** arquitectura, modularidad, seguridad, persistencia, estado, asincronía, pruebas, dependencias y tooling
 
@@ -94,7 +94,7 @@ store, no como métrica integral de toda la aplicación.
 |---|---|---|---|---|
 | AUD-001 | P0 | Pérdida de borrador ante error SQLite | Bug confirmado | Resuelto en PR #2 |
 | AUD-002 | P0 | Guardados duplicados por taps concurrentes | Bug confirmado | Resuelto en PR #2 |
-| AUD-003 | P0 | Inyección HTML persistente desde campos de backup | Seguridad confirmada | Análisis revalidado; implementación pendiente |
+| AUD-003 | P0 | Inyección HTML persistente desde campos de backup | Seguridad confirmada | Implementación completa en rama; Android final/PR/merge pendientes |
 | AUD-004 | P0 | Dependencias vulnerables, incluida DOMPurify en producción | Seguridad/tooling | Pendiente |
 | AUD-005 | P1 | Propiedad global de transacciones y migraciones permisivas | Confiabilidad | Pendiente |
 | AUD-006 | P1 | Resultados async obsoletos sobrescriben vista/cache reciente | Bug de concurrencia | Pendiente |
@@ -161,9 +161,13 @@ botón y crear notas duplicadas o actualizaciones fuera de orden.
 > desarrollado en [AUD-003 — Análisis de seguridad de importación de backups](./analisis-aud-003-seguridad-importacion-backups-2026-09-01.md).
 > La evidencia confirma inyección DOM, atributos, CSS y consumo no acotado; no demostró ejecución
 > JavaScript. También refuta inyección SQL, Markdown crudo y ZIP Slip con escritura arbitraria en
-> el flujo actual. La implementación permanece pendiente en `fix/backup-import-security`.
+> el flujo auditado.
+>
+> **Estado 2026-09-02:** la remediación está completa en `fix/backup-import-security` mediante
+> `405b4dd`, `34224bb`, `e8f0023`, `1246864` y `587da3f`. Quedan la validación Android final, la
+> creación del PR por el coordinador y el merge posterior.
 
-**Evidencia**
+**Evidencia original en la base auditada**
 
 - `src/domain/primitives.ts` define `EntityId`, `HexColor` y fechas como alias directos de
   `string`; los tipos no agregan validación en runtime.
@@ -176,21 +180,22 @@ botón y crear notas duplicadas o actualizaciones fuera de orden.
 
 **Impacto**
 
-Existe inyección HTML almacenada y XSS potencial. El CSP actual reduce algunos mecanismos de
-ejecución inline, pero no sustituye validación ni escape contextual. También son posibles
-alteraciones visuales o del árbol DOM.
+En la base auditada existía inyección HTML almacenada y XSS potencial. El CSP actual reduce algunos
+mecanismos de ejecución inline, pero no sustituye validación ni escape contextual. También son
+posibles alteraciones visuales o del árbol DOM.
 
-El importador carga ZIP y JSON completos en memoria sin límites de tamaño, entradas, entidades o
-longitud, lo que habilita consumo excesivo de memoria mediante archivos especialmente preparados.
+El importador auditado cargaba ZIP y JSON completos en memoria sin límites de tamaño, entradas,
+entidades o longitud, lo que habilita consumo excesivo de memoria mediante archivos especialmente
+preparados.
 
-**Recomendación**
+**Remediación implementada en rama**
 
-- Validar formato y longitud de IDs.
-- Aceptar únicamente colores hexadecimales soportados.
-- Validar fechas reales y longitudes de texto.
-- Definir límites explícitos para archivo, tamaño descomprimido, entradas y entidades.
-- Escapar todas las interpolaciones según contexto HTML/atributo/CSS.
-- Agregar pruebas de seguridad en el parser y renderizadores.
+- ZIP32 con límites explícitos, CRC32 y compatibilidad `STORE`/`DEFLATE`.
+- Validación runtime estricta antes del plan o la persistencia.
+- Jerarquía importada de dos niveles con reparaciones visibles en preview.
+- Escape HTML por contexto, allowlist de color y selectores sin IDs interpolados.
+- Regresiones permanentes para parser, plan, feed normal/virtualizado, drawer, papelera, pickers,
+  eventos académicos y timestamps inválidos.
 
 ### AUD-004 — Dependencias vulnerables
 
@@ -324,8 +329,8 @@ Antes de modificar schema:
 ### AUD-012 — Cohesión y fronteras de features
 
 - `NoteList` funciona como renderer del feed y como router/lifecycle owner de trash, backup y about.
-- `AboutView` importa `escapeHtml` desde `feed/NoteCardRenderer`.
-- Existen al menos seis implementaciones de escape HTML.
+- Fase 3 de AUD-003 eliminó el import cruzado de `AboutView` y centralizó el escape en los sinks
+  afectados; el routing y duplicaciones ajenas al hallazgo permanecen dentro de AUD-012.
 - `src/services/ImportService.js` no tiene consumidor activo, está excluido de coverage e importa el
   store desde servicios, dirección contraria a la responsabilidad esperada.
 - Las reglas de imports están documentadas pero no tienen verificación automatizada.
@@ -396,7 +401,7 @@ test(editor): cover failed and concurrent note saves
 | Orden | Rama sugerida | Resultado esperado |
 |---:|---|---|
 | 1 | `fix/note-save-integrity` | Cerrado en PR #2: AUD-001 y AUD-002 |
-| 2 | `fix/backup-import-security` | Revalidar y corregir AUD-003 con checkpoints aprobados |
+| 2 | `fix/backup-import-security` | Implementado; checkpoint Android final, PR y merge pendientes |
 | 3 | `fix/dependency-security` | Actualizar DOMPurify y dependencias auditadas |
 | 4 | `fix/store-action-contract` | Unificar semántica de errores de mutaciones |
 | 5 | `fix/sqlite-write-coordination` | Aislar transacciones y endurecer migraciones/arranque |
@@ -441,9 +446,21 @@ Resultado consolidado:
 - la rama `fix/note-save-integrity` fue publicada inicialmente en el mismo commit que `main` y este
   documento constituye su primer cambio representativo.
 
+### Cierre automático y manual de AUD-003 — 2026-09-02
+
+- Suites focalizadas de presentación: **11 archivos/75 tests**; suite completa con workaround de
+  Node 26: **60 archivos/955 tests**.
+- Typecheck, lint (**0 errores/3 warnings basales**), build (**117 módulos**) y checks individuales
+  pasan. Bundle gzip total: **189,83 kB / 250 kB**.
+- El agregado `npm run verify` queda no verde solo por los dos localhost del fallback CSP; el fallo
+  normal de Web Storage y esos falsos positivos pertenecen a AUD-009/AUD-008.
+- Android Fase 1C aprobado: `STORE`, `DEFLATE`, 500 notas y rechazo de `pinned` inválido. La defensa
+  de presentación requiere el checkpoint Android final antes del PR/merge.
+
 ## 11. Limitaciones de la revisión
 
-- No se ejecutó benchmark en dispositivo Android ni medición FPS con 500 notas.
+- Se aprobó el escenario funcional Android con 500 notas; no se ejecutó benchmark instrumentado ni
+  medición FPS.
 - No se realizó una auditoría de seguridad externa o pentest completo.
 - La prueba de inyección fue un caso jsdom focalizado, no una explotación end-to-end en WebView.
 - Las carreras async y transaccionales se derivaron del flujo de control y necesitan regresiones
@@ -459,6 +476,6 @@ cohesión de features con cambios pequeños y medidos.
 
 La revisión inicial quedó vinculada al primer fix porque AUD-001 y AUD-002 afectaban el flujo
 central del producto y presentaban la mejor relación entre impacto, riesgo y tamaño de cambio.
-Ambos hallazgos se cerraron posteriormente en la PR #2. La remediación activa continúa con la
-revalidación de AUD-003 en `fix/backup-import-security`; su implementación permanece pendiente de
-aprobación.
+Ambos hallazgos se cerraron posteriormente en la PR #2. AUD-003 quedó implementado y verificado en
+`fix/backup-import-security`; resta el checkpoint Android final antes de que el coordinador cree el
+PR y evalúe su merge. AUD-004 y los demás hallazgos conservan alcance y seguimiento independientes.

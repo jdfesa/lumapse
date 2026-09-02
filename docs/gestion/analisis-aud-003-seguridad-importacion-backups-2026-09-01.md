@@ -1,10 +1,11 @@
 # AUD-003 — Análisis de seguridad de importación de backups
 
-**Estado:** Análisis revalidado; implementación pendiente  
-**Rama:** `fix/backup-import-security`  
-**Commit base revisado:** `376f7b6` (`main`)  
-**Fecha:** 2026-09-01  
-**Prioridad:** P0  
+**Estado:** Implementación completa en `fix/backup-import-security`; validación Android final, PR y merge pendientes
+**Rama:** `fix/backup-import-security`
+**Commit base revisado:** `376f7b6` (`main`)
+**Fecha:** 2026-09-01
+**Última verificación:** 2026-09-02
+**Prioridad:** P0
 **Alcance:** frontera ZIP/JSON, validación runtime, integridad estructural, consumo de recursos y renderizado de datos importados
 
 ---
@@ -19,8 +20,8 @@ Este documento versiona la fase de análisis. No modifica código de producción
 solo cambios fuera del alcance descrito.
 
 La rama y el primer commit se publicaron durante la fase de análisis, antes del checkpoint de
-aprobación previsto. Ese desvío queda limitado a documentación: la implementación de producción
-continúa expresamente pendiente y requiere autorización antes de comenzar.
+aprobación previsto. Ese desvío quedó limitado a documentación. La implementación comenzó después
+de los checkpoints explícitos y se completó en la misma rama sin crear PR ni tocar `main`.
 
 ### Incluido
 
@@ -658,80 +659,59 @@ producción ni depender de evidencia temporal.
 - Markdown legítimo y payloads de saneamiento actuales.
 - Heatmap resistente a timestamps ya persistidos inválidos.
 
-La fase final debe ejecutar `npm run verify` y validación manual Android.
+### Evidencia de implementación y cierre — 2026-09-02
+
+- Suites focalizadas de presentación: **11 archivos y 75 tests aprobados**.
+- Suite completa con `NODE_OPTIONS=--no-experimental-webstorage`: **60 archivos y 955 tests
+  aprobados**. Sin el workaround de Node 26, el baseline falla en **5 archivos y 51 tests** por la
+  colisión conocida de Web Storage; pasan 55 archivos y 904 tests.
+- Typecheck y lint aprobados; lint conserva **0 errores y 3 warnings basales** en `NoteEditor` y
+  `BackupImportPlanService`.
+- Build Vite aprobado con **117 módulos**. Presupuesto gzip: JS **178,57 kB**, CSS **10,42 kB**,
+  HTML **0,84 kB** y total **189,83 kB / 250 kB**.
+- Toolchain, smoke SQLite (**2 CREATE y 7 ALTER**), diálogos nativos y accesibilidad
+  (**0 problemas**) aprobados. La guardia de archivos conserva **20 avisos no bloqueantes**.
+- `npm run verify` queda no verde únicamente por los dos falsos positivos ya documentados de
+  `http://localhost` en el fallback CSP; no se modificó CSP ni tooling de AUD-008/AUD-009.
+- `npm run check:docs` y `npm run check:traceability` pasan sin errores ni advertencias de
+  trazabilidad.
+
+La validación manual Android de Fase 1C fue aprobada para backup actual `STORE`, backup histórico
+`DEFLATE`, fixture de 500 notas y rechazo de `pinned` inválido antes de persistir. La defensa de
+presentación está implementada y automatizada, pero requiere un checkpoint Android final antes de
+crear/fusionar el PR.
 
 ---
 
-## 14. Fases de implementación propuestas
+## 14. Fases y checkpoints implementados
 
-### Fase 1 — frontera y límites
+| Etapa | Commit(s) | Resultado |
+|---|---|---|
+| Análisis | `a766d6a`, `a9baaae` | Revalidación, alcance, contratos y checkpoints documentados. |
+| Fase 1A/1B | `405b4dd`, `34224bb` | Preflight ZIP32, límites, CRC32 y lectura acotada `STORE`/`DEFLATE`. |
+| Fase 1C | `e8f0023` | Validación runtime estricta antes del plan/persistencia. |
+| Fase 2 | `1246864` | Jerarquía máxima de dos niveles y `relationshipRepairs` visibles en preview. |
+| Fase 3 | `587da3f` | Escape por contexto, allowlist de color, selectores seguros y tolerancia a datos antiguos contaminados. |
+| Fase 4 | `docs(audit): record AUD-003 remediation status` | Verificación acumulativa y cierre documental en este checkpoint. |
 
-- Checkpoint de diseño de `BackupZipPreflight.ts` y decisión explícita de proceder o simplificar.
-- Validadores de primitivas.
-- Política central.
-- Preflight ZIP.
-- Extracción secuencial acotada.
-- Regresiones del parser.
-
-Commit propuesto:
-
-```text
-fix(backup): validate and bound imported archives
-```
-
-No se inicia el código de esta fase hasta aprobar el checkpoint de preflight. Después, cualquier
-cambio en límites, compatibilidad o contrato observable de rechazo debe presentarse para revisión
-antes de continuar.
-
-### Fase 2 — integridad estructural
-
-- Profundidad máxima de materias/secciones.
-- Ciclos y padres inválidos.
-- Preview de reparaciones.
-
-Commit propuesto:
-
-```text
-fix(backup): enforce imported subject hierarchy
-```
-
-### Fase 3 — defensa en presentación
-
-- Escape contextual.
-- Allowlist de colores en todos los sinks.
-- Selectores seguros.
-- Resistencia ante registros contaminados previamente.
-
-Commit propuesto:
-
-```text
-fix(ui): harden imported data render contexts
-```
-
-### Fase 4 — cierre
-
-- Tests específicos y `npm run verify`.
-- Revisión de diff y commits.
-- Push de `fix/backup-import-security`.
-- PR limpio y documentado.
-- Sin merge a `main`.
+La implementación técnica está completa en la rama. Solo quedan el checkpoint Android final, la
+creación del PR por el coordinador y el merge posterior a su aprobación.
 
 ---
 
 ## 15. Recomendación
 
-Mantener por ahora **una única rama de AUD-003** y tratar el objetivo de un solo PR como
-provisional. La decisión se confirma después del checkpoint de preflight y de estimar el diff real.
+Se mantuvo **una única rama de AUD-003** y los checkpoints permitieron revisar cada capa antes del
+cierre acumulativo.
 
 Separar frontera y renderizadores en PRs independientes dejaría una ventana incompleta:
 
 - solo frontera no neutraliza registros contaminados ya persistidos;
 - solo presentación no limita ZIP bombs ni estructuras inválidas.
 
-Si el lector ZIP32 o la defensa de presentación no pueden revisarse de forma independiente, se
-deben usar PRs apilados o secuenciales con trazabilidad común. Ningún PR parcial se considera cierre
-de AUD-003 ni se fusiona sin evaluar la cobertura completa de frontera y sinks.
+Ningún PR parcial se considera cierre de AUD-003 ni se fusiona sin evaluar la cobertura completa
+de frontera y sinks.
 
-El alcance debe mantenerse sin dependencias nuevas, sin cambios estéticos y sin incorporar
-AUD-004. Cualquier modificación a límites, compatibilidad o comportamiento observable debe
-presentarse antes de ampliar la implementación.
+El alcance se cerró sin dependencias nuevas, sin cambios estéticos y sin incorporar AUD-004,
+AUD-006, AUD-008 ni AUD-009. Esos hallazgos conservan su prioridad y ramas propias. No se crea ni
+fusiona un PR hasta completar la validación Android final.
