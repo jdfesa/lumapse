@@ -106,8 +106,54 @@ describe('AcademicEventTypes', () => {
   })
 
   it('permite usar color de materia como override visual', () => {
-    expect(getAcademicEventColor({ type: 'parcial' }, '#818cf8')).toBe('#818cf8')
-    expect(renderAcademicEventDot({ type: 'parcial' }, { color: '#818cf8' })).toContain('#818cf8')
+    expect(getAcademicEventColor({ type: 'parcial' }, '#38bdf8')).toBe('#38bdf8')
+    expect(renderAcademicEventDot({ type: 'parcial' }, { color: '#38bdf8' })).toContain('#38bdf8')
+  })
+
+  it('codifica atributos, ignora fechas invalidas y rechaza declaraciones CSS adicionales', () => {
+    const eventId = 'event-id"] data-injected="true # [odd'
+    const title = 'Parcial "A" <B> & 😀'
+    const wrapper = render(renderAcademicEventListItem(
+      {
+        id: eventId,
+        type: 'parcial',
+        title,
+        date: '2026-06-14" data-date-injected="true',
+      },
+      {
+        color: '#38bdf8; position: fixed',
+        subjectLabel: 'Materia "segura" <2026> & 🧪',
+        actions: true,
+      },
+    ))
+    const item = wrapper.querySelector('.academic-event-item')
+    const time = wrapper.querySelector('time')
+
+    expect(wrapper.querySelector('[data-injected]')).toBeNull()
+    expect(wrapper.querySelector('[data-date-injected]')).toBeNull()
+    expect(item?.dataset.eventId).toBe(eventId)
+    expect(item?.style.getPropertyValue('--academic-event-color')).toBe('#b45309')
+    expect(item?.style.position).toBe('')
+    expect(time?.getAttribute('datetime')).toBe('')
+    expect(time?.textContent).toBe('')
+    expect(wrapper.querySelector('.academic-event-item__title')?.textContent).toBe(title)
+    expect(wrapper.querySelector('[data-event-action="edit"]')?.getAttribute('title'))
+      .toBe(`Editar ${title}`)
+  })
+
+  it('aplica la misma allowlist a dots y usa el color semantico como fallback', () => {
+    const wrapper = render(renderAcademicEventDot(
+      { type: 'final' },
+      {
+        color: '#dc2626; inset: 0',
+        label: 'Final "especial" < > & 😀',
+      },
+    ))
+    const dot = wrapper.querySelector('.academic-event-dot')
+
+    expect(dot?.style.getPropertyValue('--academic-event-color')).toBe('#dc2626')
+    expect(dot?.style.inset).toBe('')
+    expect(dot?.getAttribute('aria-label')).toBe('Final "especial" < > & 😀')
   })
 
   it('mantiene contraste minimo contra superficies dark y light', () => {

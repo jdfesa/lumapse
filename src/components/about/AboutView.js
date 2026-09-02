@@ -1,5 +1,5 @@
 import { APP_METADATA } from '../../config/appMetadata.js'
-import { escapeHtml } from '../feed/NoteCardRenderer.js'
+import { escapeHtmlText as escapeHtml } from '../common/htmlEscaping.js'
 import './AboutView.css'
 
 function renderMetadataItem(label, value) {

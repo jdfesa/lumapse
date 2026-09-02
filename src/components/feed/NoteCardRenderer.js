@@ -3,9 +3,21 @@
 // Extraído de NoteList.js para reducir LOC.
 // =============================================================
 
+import { escapeHtmlAttribute, escapeHtmlText } from '../common/htmlEscaping.js'
+import { getSafeHexColor } from '../common/presentationValidation.js'
+
+export { escapeHtmlAttribute as escapeHtml }
+
 // UX-03: Timestamps relativos
 export function formatRelativeDate(isoString) {
-  const date = new Date(isoString);
+  let date
+  try {
+    date = new Date(isoString)
+  } catch {
+    return ''
+  }
+  if (!Number.isFinite(date.getTime())) return ''
+
   const now = new Date();
   const diffMs = now - date;
   const diffMins = Math.floor(diffMs / 60000);
@@ -20,17 +32,6 @@ export function formatRelativeDate(isoString) {
     
   // Fallback: ej. "16 may 2026"
   return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
-}
-
-// Prevenir inyección de HTML en campos de texto puro
-export function escapeHtml(unsafe) {
-  if (!unsafe) return '';
-  return unsafe
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
 }
 
 /**
@@ -65,18 +66,21 @@ export function findSubject(subjectId, subjectsData) {
 export function renderMoveItem(noteId, subjectId, label, color, isCurrent, isChild = false) {
   const currentClass = isCurrent ? ' note-card__dropdown-btn--current' : ''
   const childClass = isChild ? ' note-card__dropdown-btn--child' : ''
-  const colorDot = color
-    ? `<span class="note-card__move-color" style="background-color: ${color}"></span>`
-    : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>`
+  const safeColor = getSafeHexColor(color)
+  const colorDot = safeColor
+    ? `<span class="note-card__move-color" style="background-color: ${safeColor}"></span>`
+    : subjectId
+      ? '<span class="note-card__move-color"></span>'
+      : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>`
   const check = isCurrent ? ' ✓' : ''
 
   return `
-    <button class="note-card__dropdown-btn${childClass} js-btn-move-to${currentClass}" title="Mover a ${escapeHtml(label)}"
-            data-note-id="${noteId}"
-            data-subject-id="${subjectId}"
+    <button class="note-card__dropdown-btn${childClass} js-btn-move-to${currentClass}" title="Mover a ${escapeHtmlAttribute(label)}"
+            data-note-id="${escapeHtmlAttribute(noteId)}"
+            data-subject-id="${escapeHtmlAttribute(subjectId)}"
             ${isCurrent ? 'disabled' : ''}>
       ${colorDot}
-      ${escapeHtml(label)}${check}
+      ${escapeHtmlText(label)}${check}
     </button>
   `
 }
@@ -98,9 +102,11 @@ export function buildMoveMenu(noteId, currentSubjectId, subjectsData) {
   // Materias del árbol
   if (subjectsData && subjectsData.tree) {
     for (const subject of subjectsData.tree) {
-      items.push(renderMoveItem(noteId, subject.id, subject.name, subject.color, currentSubjectId === subject.id))
+      const subjectColor = getSafeHexColor(subject.color)
+      items.push(renderMoveItem(noteId, subject.id, subject.name, subjectColor, currentSubjectId === subject.id))
       for (const child of (subject.children || [])) {
-        items.push(renderMoveItem(noteId, child.id, child.name, child.color || subject.color, currentSubjectId === child.id, true))
+        const childColor = getSafeHexColor(child.color) || subjectColor
+        items.push(renderMoveItem(noteId, child.id, child.name, childColor, currentSubjectId === child.id, true))
       }
     }
   }

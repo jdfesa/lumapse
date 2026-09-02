@@ -4,6 +4,8 @@
 // =============================================================
 
 import * as NoteStore from '../../store/NoteStore.js'
+import { escapeHtmlText } from '../common/htmlEscaping.js'
+import { getSafeISODate } from '../common/presentationValidation.js'
 import { bindAcademicEventActions } from './AcademicEventActions.js'
 import {
   renderAcademicEventDot,
@@ -17,15 +19,6 @@ import {
 } from './AcademicEventSubjects.js'
 import { openAcademicEventDialog } from './AcademicEventDialog.js'
 import './Heatmap.css'
-
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;')
-}
 
 export class Heatmap {
   constructor(containerId) {
@@ -60,7 +53,15 @@ export class Heatmap {
     this.activityMap = {}
     notes.forEach(note => {
       if (!note.updatedAt) return
-      const dateStr = new Date(note.updatedAt).toISOString().split('T')[0]
+      let date
+      try {
+        date = new Date(note.updatedAt)
+      } catch {
+        return
+      }
+      if (!Number.isFinite(date.getTime())) return
+
+      const dateStr = date.toISOString().split('T')[0]
       this.activityMap[dateStr] = (this.activityMap[dateStr] || 0) + 1
     })
   }
@@ -71,8 +72,9 @@ export class Heatmap {
   calculateEventMap(events) {
     this.eventMap = {}
     events.forEach(event => {
-      if (!event.date) return
-      this.eventMap[event.date] = [...(this.eventMap[event.date] || []), event]
+      const date = getSafeISODate(event.date)
+      if (!date) return
+      this.eventMap[date] = [...(this.eventMap[date] || []), event]
     })
 
     Object.keys(this.eventMap).forEach(date => {
@@ -255,7 +257,7 @@ export class Heatmap {
     html += this.renderSelectedDateActions()
 
     if (this.selectedDate) {
-      html += `<button class="heatmap-clear" id="hm-clear" title="Limpiar filtro de fecha">Limpiar filtro: ${escapeHtml(this.selectedDate)}</button>`
+      html += `<button class="heatmap-clear" id="hm-clear" title="Limpiar filtro de fecha">Limpiar filtro: ${escapeHtmlText(this.selectedDate)}</button>`
     }
 
     html += `</div>` // close container

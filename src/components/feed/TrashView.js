@@ -4,7 +4,14 @@
 // =============================================================
 
 import * as SubjectService from '../../services/SubjectService.js';
-import { escapeHtml } from './NoteCardRenderer.js';
+import { escapeHtmlAttribute, escapeHtmlText } from '../common/htmlEscaping.js';
+import { getSafeHexColor } from '../common/presentationValidation.js';
+
+function renderSubjectColor(color, fallbackColor = null) {
+  const safeColor = getSafeHexColor(color) || getSafeHexColor(fallbackColor);
+  const style = safeColor ? ` style="background-color: ${safeColor}"` : '';
+  return `<span class="drawer__subject-color"${style}></span>`;
+}
 
 function createDuplicateLabeler(getBaseName) {
   const seen = new Map();
@@ -50,7 +57,7 @@ function renderTrashHeader(totalCount) {
       <h2 class="trash-header__title">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
         Papelera de reciclaje
-        <span class="trash-header__count">${totalCount}</span>
+        <span class="trash-header__count">${escapeHtmlText(totalCount)}</span>
       </h2>
       <button class="trash-header__empty js-btn-empty-trash" title="Vaciar papelera">Vaciar papelera</button>
     </div>
@@ -61,10 +68,10 @@ function renderDeletedSubjectChild(child, subject) {
   return `
     <div class="trash-item trash-item--section trash-item--nested">
       <div class="trash-item__info">
-        <span class="drawer__subject-color" style="background-color: ${child.color || subject.color}"></span>
-        <span class="trash-item__name">${escapeHtml(child.name)}</span>
-        <span class="trash-item__meta">${child.noteCount || 0} nota(s) · incluida en la materia eliminada</span>
-        <span class="trash-item__date">${formatDeletedAgo(child.deletedAt)}</span>
+        ${renderSubjectColor(child.color, subject.color)}
+        <span class="trash-item__name">${escapeHtmlText(child.name)}</span>
+        <span class="trash-item__meta">${escapeHtmlText(child.noteCount || 0)} nota(s) · incluida en la materia eliminada</span>
+        <span class="trash-item__date">${escapeHtmlText(formatDeletedAgo(child.deletedAt))}</span>
       </div>
     </div>
   `;
@@ -78,13 +85,13 @@ function renderDeletedSubject(subject) {
   const subjectRow = `
     <div class="trash-item trash-item--subject">
       <div class="trash-item__info">
-        <span class="drawer__subject-color" style="background-color: ${subject.color}"></span>
-        <span class="trash-item__name">${escapeHtml(subject.name)}</span>
-        <span class="trash-item__meta">${totalNotes} nota(s)${sectionsInfo}</span>
-        <span class="trash-item__date">${formatDeletedAgo(subject.deletedAt)}</span>
+        ${renderSubjectColor(subject.color)}
+        <span class="trash-item__name">${escapeHtmlText(subject.name)}</span>
+        <span class="trash-item__meta">${escapeHtmlText(totalNotes)} nota(s)${escapeHtmlText(sectionsInfo)}</span>
+        <span class="trash-item__date">${escapeHtmlText(formatDeletedAgo(subject.deletedAt))}</span>
       </div>
       <div class="trash-item__actions">
-        <button class="trash-item__btn trash-item__btn--restore js-btn-restore-subject" data-id="${subject.id}" title="Restaurar materia completa">
+        <button class="trash-item__btn trash-item__btn--restore js-btn-restore-subject" data-id="${escapeHtmlAttribute(subject.id)}" title="Restaurar materia completa">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
           Restaurar
         </button>
@@ -106,13 +113,13 @@ function renderDeletedSection(section) {
   return `
     <div class="trash-item trash-item--section">
       <div class="trash-item__info">
-        <span class="drawer__subject-color" style="background-color: ${section.color || section.parentColor}"></span>
-        <span class="trash-item__name">${escapeHtml(section.name)}</span>
-        <span class="trash-item__meta">${section.noteCount || 0} nota(s) · ${escapeHtml(section.parentName)}</span>
-        <span class="trash-item__date">${formatDeletedAgo(section.deletedAt)}</span>
+        ${renderSubjectColor(section.color, section.parentColor)}
+        <span class="trash-item__name">${escapeHtmlText(section.name)}</span>
+        <span class="trash-item__meta">${escapeHtmlText(section.noteCount || 0)} nota(s) · ${escapeHtmlText(section.parentName)}</span>
+        <span class="trash-item__date">${escapeHtmlText(formatDeletedAgo(section.deletedAt))}</span>
       </div>
       <div class="trash-item__actions">
-        <button class="trash-item__btn trash-item__btn--restore js-btn-restore-section" data-id="${section.id}" title="Restaurar sección">
+        <button class="trash-item__btn trash-item__btn--restore js-btn-restore-section" data-id="${escapeHtmlAttribute(section.id)}" title="Restaurar sección">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
           Restaurar
         </button>
@@ -133,15 +140,15 @@ function renderDeletedNote(note, getDisplayName) {
   return `
     <div class="trash-item">
       <div class="trash-item__info">
-        <span class="trash-item__name">${escapeHtml(getDisplayName(note))}</span>
-        <span class="trash-item__preview">${escapeHtml(preview)}</span>
-        <span class="trash-item__date">${formatDeletedAgo(note.deletedAt)}</span>
+        <span class="trash-item__name">${escapeHtmlText(getDisplayName(note))}</span>
+        <span class="trash-item__preview">${escapeHtmlText(preview)}</span>
+        <span class="trash-item__date">${escapeHtmlText(formatDeletedAgo(note.deletedAt))}</span>
       </div>
       <div class="trash-item__actions">
-        <button class="trash-item__btn trash-item__btn--restore js-btn-restore" data-id="${note.id}" title="Restaurar nota">
+        <button class="trash-item__btn trash-item__btn--restore js-btn-restore" data-id="${escapeHtmlAttribute(note.id)}" title="Restaurar nota">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
         </button>
-        <button class="trash-item__btn trash-item__btn--danger js-btn-permanent-delete" data-id="${note.id}" title="Eliminar permanentemente">
+        <button class="trash-item__btn trash-item__btn--danger js-btn-permanent-delete" data-id="${escapeHtmlAttribute(note.id)}" title="Eliminar permanentemente">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>

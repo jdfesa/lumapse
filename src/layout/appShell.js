@@ -165,14 +165,4 @@ export function renderAppShell() {
   `
 }
 
-/**
- * Escapa HTML para prevenir XSS en textos renderizados dinámicamente.
- * @param {string} text Texto a escapar
- * @returns {string} Texto con entidades HTML escapadas
- */
-export function escapeHtml(text) {
-  if (!text) return ''
-  const div = document.createElement('div')
-  div.textContent = text
-  return div.innerHTML
-}
+export { escapeHtmlText as escapeHtml } from '../components/common/htmlEscaping.js'

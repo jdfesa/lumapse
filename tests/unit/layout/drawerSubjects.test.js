@@ -6,6 +6,9 @@ import { initSubjects } from '../../../src/layout/drawerSubjects.js'
 import { DRAWER_SUBJECT_COLLAPSE_STORAGE_KEY } from '../../../src/layout/drawerSubjectCollapseState.js'
 
 const SUBJECT_COLORS = ['#818cf8', '#22c55e']
+const ADVERSARIAL_SUBJECT_ID = 'subject-id"] # odd[data-injected="true'
+const LEGITIMATE_SUBJECT_NAME = 'Álgebra "A" <B> & 😀'
+const INVALID_CSS_COLOR = '#38bdf8; position: fixed'
 
 function makeSubjectsData() {
   return {
@@ -199,5 +202,110 @@ describe('drawerSubjects collapse', () => {
 
     expect(NoteStore.createSubject).toHaveBeenCalledWith('Practica', '#818cf8', 'subj-1')
     expect(getStoredCollapsedIds()).toBeNull()
+  })
+})
+
+describe('drawerSubjects presentation hardening', () => {
+  it('codifica IDs y nombres, rechaza CSS arbitrario y conserva hex historico', () => {
+    const subjectsData = {
+      inboxCount: 1,
+      tree: [{
+        id: ADVERSARIAL_SUBJECT_ID,
+        name: LEGITIMATE_SUBJECT_NAME,
+        color: INVALID_CSS_COLOR,
+        noteCount: 1,
+        children: [{
+          id: 'section-id"] [data-injected="child',
+          name: 'Sección "1" <práctica> & 🧪',
+          color: '#38bdf8',
+          noteCount: 1,
+        }],
+      }],
+    }
+
+    const { subjectsList } = setupSubjectsDrawer({ subjectsData })
+    const subjectButton = subjectsList.querySelector('.js-subject-nav:not(.drawer__subject-btn--child)')
+    const colorDots = subjectsList.querySelectorAll('.drawer__subject-color')
+
+    expect(subjectsList.querySelectorAll('.drawer__subject-group')).toHaveLength(1)
+    expect(subjectsList.querySelector('[data-injected]')).toBeNull()
+    expect(subjectButton?.dataset.subject).toBe(ADVERSARIAL_SUBJECT_ID)
+    expect(subjectButton?.dataset.subjectName).toBe(LEGITIMATE_SUBJECT_NAME)
+    expect(subjectButton?.querySelector('.drawer__subject-name')?.textContent).toBe(LEGITIMATE_SUBJECT_NAME)
+    expect(colorDots[0].style.backgroundColor).toBe('')
+    expect(colorDots[0].style.position).toBe('')
+    expect(colorDots[1].getAttribute('style')).toContain('background-color: #38bdf8')
+  })
+
+  it('mantiene navegacion, formularios y renombrado con IDs adversariales sin SyntaxError', async () => {
+    const subjectsData = {
+      inboxCount: 0,
+      tree: [{
+        id: ADVERSARIAL_SUBJECT_ID,
+        name: LEGITIMATE_SUBJECT_NAME,
+        color: '#38bdf8',
+        noteCount: 0,
+        children: [],
+      }],
+    }
+    const { NoteStore, subjectsList } = setupSubjectsDrawer({ subjectsData })
+    const subjectButton = subjectsList.querySelector('.js-subject-nav')
+    const addButton = subjectsList.querySelector('.js-btn-add-section')
+
+    expect(() => addButton.click()).not.toThrow()
+    const form = subjectsList.querySelector('.drawer__section-form')
+    expect(form?.dataset.parentId).toBe(ADVERSARIAL_SUBJECT_ID)
+    expect(form?.style.display).toBe('block')
+
+    form.querySelector('.js-section-name-input').value = 'Práctica "A" & 😀'
+    expect(() => form.querySelector('.js-btn-section-save').click()).not.toThrow()
+    await Promise.resolve()
+    await Promise.resolve()
+    expect(NoteStore.createSubject).toHaveBeenCalledWith(
+      'Práctica "A" & 😀',
+      '#38bdf8',
+      ADVERSARIAL_SUBJECT_ID,
+    )
+
+    expect(() => subjectButton.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true }))).not.toThrow()
+    expect(() => document.querySelector('#subject-context-menu .js-ctx-rename').click()).not.toThrow()
+    const renameInput = subjectsList.querySelector('.js-rename-input')
+    expect(renameInput?.dataset.subjectId).toBe(ADVERSARIAL_SUBJECT_ID)
+    expect(() => renameInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))).not.toThrow()
+    expect(subjectsList.querySelector('.js-rename-input')).toBeNull()
+
+    expect(() => subjectButton.click()).not.toThrow()
+    expect(NoteStore.setActiveSubject).toHaveBeenCalledWith(ADVERSARIAL_SUBJECT_ID)
+  })
+
+  it('protege materias archivadas contaminadas sin perder colores validos', () => {
+    const archivedSubjects = {
+      tree: [{
+        id: ADVERSARIAL_SUBJECT_ID,
+        name: LEGITIMATE_SUBJECT_NAME,
+        color: INVALID_CSS_COLOR,
+        archived: true,
+        noteCount: 1,
+        children: [{
+          id: 'archived-child"] data-injected="true',
+          name: 'Histórica <2025> & 😀',
+          color: '#38bdf8',
+          noteCount: 1,
+        }],
+      }],
+    }
+
+    const { subjectsList } = setupSubjectsDrawer({
+      stateOverrides: { viewMode: 'archived', archivedSubjects },
+    })
+    const restoreButtons = subjectsList.querySelectorAll('.js-btn-unarchive-subject')
+    const colorDots = subjectsList.querySelectorAll('.drawer__subject-color')
+
+    expect(subjectsList.querySelector('[data-injected]')).toBeNull()
+    expect(restoreButtons[0].dataset.subjectId).toBe(ADVERSARIAL_SUBJECT_ID)
+    expect(restoreButtons[0].dataset.subjectName).toBe(LEGITIMATE_SUBJECT_NAME)
+    expect(colorDots[0].style.backgroundColor).toBe('')
+    expect(colorDots[0].style.position).toBe('')
+    expect(colorDots[1].getAttribute('style')).toContain('background-color: #38bdf8')
   })
 })
