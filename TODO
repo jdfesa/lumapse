@@ -4,11 +4,11 @@
 
 ## Hito actual: 06 — Entrega Final
 
-**Estado:** activo desde el cierre documental de Hito 05, realizado el 2026-07-15.
+**Estado:** activo; AUD-001, AUD-002 y AUD-003 quedaron integrados y validados al 2026-09-02.
 
 **Corte operativo vigente:** beta/candidata [`v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8), publicada y validada inicialmente en Android real.
 
-**Versión:** `v0.4.8`; el trabajo posterior al tag permanece no publicado y no existe una release `0.4.9`. El número exacto de commits se registrará al congelar el próximo corte, no como dato vivo de este tablero.
+**Versión:** `v0.4.8`; el trabajo posterior al tag permanece no publicado y no existe una release `0.4.9`. El rango técnico auditado llega hasta `ba16777`, pero la versión del próximo artefacto solo se decidirá después de cerrar sus bloqueos y validaciones.
 
 **Objetivo:** cerrar documentación, gráficos de base de datos, validación final y materiales de presentación sin ampliar el producto.
 
@@ -16,11 +16,12 @@
 
 | Orden | Frente | Criterio de cierre |
 |---|---|---|
-| 1 | Congelamiento editorial final | La reconciliación transversal y la incorporación de los gráficos DB quedaron completadas el 2026-07-15; resta consolidar evidencia y revisar la maquetación final antes de congelar |
-| 2 | Gráficos de base de datos | Fuentes e imágenes conceptual/lógica sincronizadas e incorporadas; resta confirmar su legibilidad en la salida PDF y las diapositivas |
-| 3 | Validación final | Quality gate, checklist Android y matriz RNF cerrados sobre el mismo artefacto, con evidencia y observaciones clasificadas |
-| 4 | Defensa y presentación | Guion, cheatsheet, demo y material visual preparados y ensayados |
-| 5 | Línea base final | Decisión explícita sobre artefacto, versión y tag final solo después de completar los puntos anteriores |
+| 1 | Sincronización documental | `CHANGELOG.md`, backlog, este tablero e Hito 06 reflejan el cierre de AUD-001/002/003 y la frontera no publicada posterior a `v0.4.8` |
+| 2 | Seguridad del próximo corte | AUD-004 resuelto en un PR independiente, con dependencias, sanitización, lockfile, suite y build verificados |
+| 3 | Congelamiento editorial y visual | Evidencia y bibliografía consolidadas; gráficos DB legibles en PDF y diapositivas |
+| 4 | Validación final | Quality gate, checklist Android y matriz RNF cerrados sobre el mismo artefacto versionado, con observaciones clasificadas |
+| 5 | Defensa y presentación | Guion, cheatsheet, demo y material visual preparados y ensayados |
+| 6 | Línea base final | Decisión explícita entre beta patch y entrega final; versión web/Android, firma, hash y tag inequívocos |
 
 ## Checklist de trabajo
 
@@ -29,12 +30,16 @@
 - [x] Ensamblar un checkpoint coherente de `INFORME-FINAL-COMPLETO.md` desde los capítulos fuente.
 - [x] Exportar externamente, reemplazar, revisar visualmente e incorporar los gráficos de base de datos (2026-07-15).
 - [x] Revisar el marco metodológico y la defensa: corregir Scrum 2017/2020, distinguir RUP y formalizar el flujo Kanban (2026-08-11).
+- [x] Corregir AUD-001 y AUD-002: conservar borradores ante fallos, serializar guardados concurrentes y diferenciar el descarte (PR #2, 2026-09-01).
+- [x] Corregir AUD-003: acotar y validar la importación ZIP, proteger jerarquías/renderizado y aprobar los checkpoints Android acumulativos (PR #3, 2026-09-02).
+- [ ] Completar la sincronización documental posterior a las auditorías: `CHANGELOG.md`, backlog y `TODO` actualizados; resta Hito 06.
 - [ ] Alinear el tablero de GitHub Projects con la Definition of Workflow: WIP global 2, bloqueos y fechas `startedAt`/`finishedAt`; recalibrar la SLE al completar cinco elementos confiables.
 - [ ] Contrastar los metadatos bibliográficos de Gómez (2014) y Parada (2026) contra los originales de cátedra y cerrar la sección de referencias.
-- [ ] Ejecutar el gate final sobre el commit candidato y guardar la evidencia.
-- [ ] Repetir la validación Android con un conjunto de datos más representativo.
+- [ ] Resolver AUD-004 en un PR separado antes de otra APK publicada: revisar advisories/changelogs y validar dependencias, sanitización, lockfile, suite y build.
+- [ ] Ejecutar el gate final sobre el commit y artefacto candidatos y guardar la evidencia; el gate acumulativo de AUD-003 y los pre-push documentales no sustituyen este cierre.
+- [ ] Repetir la validación Android sobre el artefacto versionado con un conjunto de datos representativo; el checkpoint de AUD-003 ya cubrió `STORE`, `DEFLATE`, datos inválidos y una fixture de 500 notas.
 - [ ] Verificar específicamente la interacción `Mover a` y clasificar su fricción como corregida, aceptada o bloqueante.
-- [ ] Medir el comportamiento con un volumen mayor de notas y registrar el resultado.
+- [ ] Medir latencia CRUD y rendimiento percibido con al menos 500 notas y registrar el resultado; importar correctamente esa cantidad no constituye por sí solo una medición de `RNF-002`/`RNF-004`.
 - [ ] Ejecutar pruebas de uso con estudiantes y verificar profundidad de navegación (`RNF-005`, `RNF-006`).
 - [ ] Completar la auditoría manual de tipografía, touch targets, contraste y navegación accesible (`RNF-007`, `RNF-008`, `RNF-019` a `RNF-022`).
 - [ ] Repetir flujos principales en modo avión y comprobar recuperación ante cierre/terminación inesperada (`RNF-009`, `RNF-010`).
@@ -43,8 +48,9 @@
 - [ ] Emitir la matriz RNF final con requisito, método, comando, dispositivo, fecha, artefacto, resultado y evidencia.
 - [ ] Preparar presentación, guion de demo, respuestas de defensa y checklist de contingencia.
 - [ ] Medir el factor de ajuste real y redactar recomendaciones para futuros equipos.
+- [ ] Corregir o reforzar `scripts/release-helper.py` para sincronizar y verificar `versionName`/`versionCode` Android con la versión declarada.
 - [ ] Sincronizar README, CHANGELOG, informe de Hito 06, líneas base, velocidad y cheatsheet en el corte final.
-- [ ] Decidir si `v0.4.8` alcanza como artefacto de entrega o si corresponde crear una versión final distinta.
+- [ ] Decidir si corresponde publicar una beta patch `v0.4.9` o reservar el siguiente artefacto para la entrega final de Hito 06.
 
 ## Criterios de salida de Hito 06
 
@@ -59,6 +65,6 @@
 ## Observaciones heredadas no bloqueantes
 
 - `Mover a`: en la validación inicial del S20 FE algunas interacciones parecieron requerir pulsación prolongada.
-- Rendimiento: la beta respondió correctamente con pocos datos; falta evidencia con un volumen mayor de notas.
+- Rendimiento: la importación funcional de 500 notas fue aprobada, pero todavía faltan mediciones de latencia CRUD y rendimiento percibido con ese volumen.
 
 Estas observaciones forman parte de la validación final; las reglas de alcance que las gobiernan están centralizadas en [`BACKLOG.md`](BACKLOG.md#política-de-alcance--hito-06).
