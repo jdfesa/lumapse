@@ -6,6 +6,7 @@
 // =============================================================
 
 import { collectBackupData } from './BackupDataSource'
+import { validateMaxDepth } from '../SubjectService.validation'
 import type { AcademicEvent } from '../../domain/academicEvents'
 import type { BackupData } from '../../domain/backup'
 import type {
@@ -138,6 +139,64 @@ function countSkipped(skipped: BackupImportSkippedItem[], entity: BackupImportEn
   return skipped.filter(item => item.entity === entity).length
 }
 
+function findCircularSubjectIds(subjectsById: Map<EntityId, Subject>): Set<EntityId> {
+  const circularSubjectIds = new Set<EntityId>()
+  const visited = new Set<EntityId>()
+
+  for (const subjectId of subjectsById.keys()) {
+    if (visited.has(subjectId)) continue
+
+    const path: EntityId[] = []
+    const pathIndexById = new Map<EntityId, number>()
+    let currentId: EntityId | null = subjectId
+
+    while (currentId && subjectsById.has(currentId) && !visited.has(currentId)) {
+      const cycleStart = pathIndexById.get(currentId)
+      if (cycleStart !== undefined) {
+        for (let index = cycleStart; index < path.length; index += 1) {
+          circularSubjectIds.add(path[index])
+        }
+        break
+      }
+
+      pathIndexById.set(currentId, path.length)
+      path.push(currentId)
+      currentId = subjectsById.get(currentId)?.parentSubjectId || null
+    }
+
+    for (const pathSubjectId of path) {
+      visited.add(pathSubjectId)
+    }
+  }
+
+  return circularSubjectIds
+}
+
+function resolveSubjectParent(
+  subject: Subject,
+  circularSubjectIds: Set<EntityId>,
+  validationSubjects: Subject[],
+  availableById: Map<EntityId, Subject>,
+): { parentSubjectId: EntityId | null; repairReason: string | null } {
+  if (circularSubjectIds.has(subject.id)) {
+    return {
+      parentSubjectId: null,
+      repairReason: 'Se detecto una relacion circular entre materias/secciones.',
+    }
+  }
+
+  try {
+    validateMaxDepth(subject.parentSubjectId, validationSubjects)
+    return { parentSubjectId: subject.parentSubjectId, repairReason: null }
+  } catch {
+    const repairReason = subject.parentSubjectId && availableById.has(subject.parentSubjectId)
+      ? 'La materia padre ya es una seccion; no se permiten mas de 2 niveles.'
+      : 'La materia padre no existe en el backup ni en los datos locales.'
+
+    return { parentSubjectId: null, repairReason }
+  }
+}
+
 function planSubjects(
   importedSubjects: Subject[],
   localSubjects: Subject[],
@@ -146,74 +205,25 @@ function planSubjects(
   relationshipRepairs: BackupImportRelationshipRepair[],
 ): Subject[] {
   const localSubjectIds = idSet(localSubjects)
-  const importedById = new Map(importedSubjects.map(subject => [subject.id, subject]))
-  const plannedById = new Map<EntityId, Subject>()
-  const usedNamesByParent = createSubjectNameRegistry(localSubjects)
-  const planning = new Set<EntityId>()
-  const finished = new Set<EntityId>()
+  const candidateSubjects: Subject[] = []
 
-  function subjectExists(subjectId: EntityId): boolean {
-    return localSubjectIds.has(subjectId) || plannedById.has(subjectId)
-  }
-
-  function planSubject(subject: Subject): void {
-    if (finished.has(subject.id)) return
-    if (plannedById.has(subject.id)) return
-
+  for (const subject of importedSubjects) {
     if (localSubjectIds.has(subject.id)) {
       skipItem(skipped, 'subject', subject.id, 'Ya existe una materia o seccion con el mismo ID.')
-      finished.add(subject.id)
-      return
+      continue
     }
 
-    if (planning.has(subject.id)) {
-      addRepair(relationshipRepairs, {
-        entity: 'subject',
-        id: subject.id,
-        field: 'parentSubjectId',
-        from: subject.parentSubjectId,
-        to: null,
-        reason: 'Se detecto una relacion circular entre materias/secciones.',
-      })
-      const planned = reservePlannedSubject(subject, null)
-      plannedById.set(planned.id, planned)
-      finished.add(planned.id)
-      return
-    }
-
-    planning.add(subject.id)
-
-    let parentSubjectId = subject.parentSubjectId
-    if (parentSubjectId && !localSubjectIds.has(parentSubjectId)) {
-      const importedParent = importedById.get(parentSubjectId)
-      if (importedParent) {
-        planSubject(importedParent)
-      }
-
-      if (!subjectExists(parentSubjectId)) {
-        addRepair(relationshipRepairs, {
-          entity: 'subject',
-          id: subject.id,
-          field: 'parentSubjectId',
-          from: parentSubjectId,
-          to: null,
-          reason: 'La materia padre no existe en el backup ni en los datos locales.',
-        })
-        parentSubjectId = null
-      }
-
-      if (plannedById.has(subject.id)) {
-        planning.delete(subject.id)
-        finished.add(subject.id)
-        return
-      }
-    }
-
-    const planned = reservePlannedSubject(subject, parentSubjectId)
-    plannedById.set(planned.id, planned)
-    finished.add(planned.id)
-    planning.delete(subject.id)
+    candidateSubjects.push(subject)
   }
+
+  const importedById = new Map(candidateSubjects.map(subject => [subject.id, subject]))
+  const circularSubjectIds = findCircularSubjectIds(importedById)
+  const plannedById = new Map<EntityId, Subject>()
+  const availableById = new Map(localSubjects.map(subject => [subject.id, subject]))
+  const validationSubjects = [...localSubjects]
+  const usedNamesByParent = createSubjectNameRegistry(localSubjects)
+  const childrenByParentId = new Map<EntityId, Subject[]>()
+  const readySubjects: Subject[] = []
 
   function reservePlannedSubject(subject: Subject, parentSubjectId: EntityId | null): Subject {
     const name = createUniqueImportedSubjectName(subject.name, parentSubjectId, usedNamesByParent)
@@ -236,8 +246,50 @@ function planSubjects(
     }
   }
 
-  for (const subject of importedSubjects) {
-    planSubject(subject)
+  for (const subject of candidateSubjects) {
+    const importedParentId = subject.parentSubjectId
+    if (
+      importedParentId &&
+      importedById.has(importedParentId) &&
+      !circularSubjectIds.has(subject.id)
+    ) {
+      const children = childrenByParentId.get(importedParentId) || []
+      children.push(subject)
+      childrenByParentId.set(importedParentId, children)
+      continue
+    }
+
+    readySubjects.push(subject)
+  }
+
+  for (let index = 0; index < readySubjects.length; index += 1) {
+    const subject = readySubjects[index]
+    const { parentSubjectId, repairReason } = resolveSubjectParent(
+      subject,
+      circularSubjectIds,
+      validationSubjects,
+      availableById,
+    )
+
+    if (repairReason) {
+      addRepair(relationshipRepairs, {
+        entity: 'subject',
+        id: subject.id,
+        field: 'parentSubjectId',
+        from: subject.parentSubjectId,
+        to: null,
+        reason: repairReason,
+      })
+    }
+
+    const planned = reservePlannedSubject(subject, parentSubjectId)
+    plannedById.set(planned.id, planned)
+    availableById.set(planned.id, planned)
+    validationSubjects.push(planned)
+
+    for (const child of childrenByParentId.get(subject.id) || []) {
+      readySubjects.push(child)
+    }
   }
 
   return [...plannedById.values()]
