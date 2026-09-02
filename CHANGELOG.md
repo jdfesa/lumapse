@@ -9,17 +9,23 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ## [Unreleased] — Trabajo posterior a `v0.4.8`
 
-> `main` conserva la versión declarada `0.4.8`, pero contiene trabajo posterior al tag. No existe una release `0.4.9` ni un APK posterior publicado. El corte auditado previo al cierre documental de Hito 05 comprende exactamente 12 commits.
+> `main` conserva la versión declarada `0.4.8`, pero contiene trabajo posterior al tag. No existe una release `0.4.9` ni un APK posterior publicado. Este corte resume el rango Git completo desde `v0.4.8` (exclusivo) hasta `ba16777` (inclusivo). Las ejecuciones Android sobre código posterior al tag son evidencia de validación y no constituyen un artefacto publicado.
+
+### Added
+
+- **Regresiones de integridad de guardado:** Se incorporaron pruebas unitarias para creación y actualización fallidas, conservación del borrador y serialización de solicitudes concurrentes.
+- **Cobertura de AUD-003:** Se agregaron regresiones para preflight y lectura ZIP, CRC32, límites, validación de primitivas y entidades, jerarquía de materias y presentación por contexto. El cierre documenta 11 archivos y 75 tests focalizados de presentación, además de 60 archivos y 955 tests en la suite completa con el workaround registrado para Node 26.
+- **Evidencia Android posterior al tag:** Se registró la validación manual de backups `STORE` y `DEFLATE`, una fixture de 500 notas, el rechazo de `pinned` inválido antes de persistir y el checkpoint final de la implementación completa instalada en un Samsung `SM_G965F`; estas ejecuciones no representan una nueva release ni un APK publicado.
 
 ### Changed
 
 - **Marco metodológico reforzado:** ADR-003, el informe final y el material de defensa distinguen Scrum, RUP y Kanban con fuentes oficiales; se corrige la mezcla entre Scrum Guide 2017/2020, se elimina la equivalencia hito–Sprint y se formaliza una Definition of Workflow para Hito 06 sin inventar métricas históricas.
 - **Frontera de backend explicitada:** El informe diferencia la ausencia de backend remoto de las capas locales de aplicación, dominio y datos; SQLite, Capacitor y el servidor de desarrollo Vite quedan clasificados según su función real.
-- **Trazabilidad de la beta:** Se documentaron la publicación, la línea base operativa, el material de defensa y la sincronización parcial del informe final (`59e7011`, `8306765`, `8cc658a`, `c65d8b3`).
-- **Registro de comandos del editor tipado:** `editorCommandRegistry` y `editorInlineCommands` pasan a TypeScript sin alterar la interfaz ni el comportamiento publicado (`ced74c7`, `27d6f84`).
-- **Diagramas Mermaid sincronizados:** Se definió el alcance y se actualizaron casos de uso, modelo de dominio y secuencia de creación/edición contra `v0.4.8` (`25a675c`, `2cb7218`, `3904641`).
-- **Preparación editorial:** Se registraron consideraciones para la conversión final Markdown → LaTeX/PDF (`4a84b03`).
-- **Render Markdown seguro tipado:** `MarkdownService` pasa a TypeScript conservando sanitización, callouts y salida renderizada (`30e2dce`, `5db64de`).
+- **Trazabilidad de la beta:** Se documentaron la publicación, la línea base operativa, el material de defensa y la sincronización inicial del informe final con `v0.4.8`.
+- **Registro de comandos del editor tipado:** `editorCommandRegistry` y `editorInlineCommands` pasan a TypeScript sin alterar la interfaz ni el comportamiento publicado.
+- **Diagramas Mermaid sincronizados:** Se definió el alcance y se actualizaron casos de uso, modelo de dominio y secuencia de creación/edición contra `v0.4.8`.
+- **Preparación editorial:** Se registraron consideraciones para la conversión final Markdown → LaTeX/PDF.
+- **Render Markdown seguro tipado:** `MarkdownService` pasa a TypeScript conservando sanitización, callouts y salida renderizada.
 - **Reconciliación documental de Hito 06:** README, backlog, TODO, hitos, requisitos, investigación e informe adoptan una narrativa única para `v0.4.8`, el trabajo posterior no publicado y el alcance real de la evidencia.
 - **Arquitectura y patrones formalizados:** ADR-008 y el diagrama de componentes clasifican Lumapse como monolito modular cliente offline-first, con capas pragmáticas y patrones respaldados por puntos concretos del código.
 - **Modelos de datos sincronizados:** Las fuentes conceptual DOT, lógica DBML y física DDL reflejan el schema vigente; las exportaciones conceptual y lógica fueron reemplazadas, revisadas e incorporadas al informe el 2026-07-15.
@@ -28,21 +34,20 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Adaptadores nativos de backup tipados:** `BackupNativeNetworkService` y `BackupShareService` pasan a TypeScript con contratos locales para Network, Filesystem y Share, y cobertura directa del fallback web de conectividad.
 - **Coverage JS/TS medible:** Vitest incorpora `src/**/*.{js,ts}` y genera un resumen JSON; la nueva línea base registra 92,43% de statements en `src/services/**`, cerrando la medición pendiente de `RNF-024` sin fijar todavía umbrales bloqueantes.
 - **Dependencias estáticas explícitas:** Se retiraron cinco imports dinámicos que Vite no podía separar en chunks porque los mismos módulos ya formaban parte del grafo estático; el comportamiento y las APIs públicas permanecen sin cambios.
+- **Auditoría técnica trazable:** La revisión priorizada separa hallazgos de integridad, seguridad, confiabilidad, tooling y mantenibilidad; el análisis de AUD-003 registra riesgos confirmados y refutados, alcance, fases, evidencia y limitaciones sin mezclar la actualización de dependencias de AUD-004.
 
-### Commits posteriores al tag
+### Fixed
 
-- `59e7011` docs(release): document published v0.4.8 beta
-- `8306765` docs(project): update backlog and task tracking for v0.4.8 beta
-- `8cc658a` docs(release): document baseline and defense cheatsheet for v0.4.8
-- `c65d8b3` docs(report): synchronize final report with v0.4.8 beta updates
-- `ced74c7` refactor(editor): migrate editorCommandRegistry and editorInlineCommands to TypeScript
-- `27d6f84` docs(project): update task tracking and plan for editor commands TS migration
-- `25a675c` docs(project): define explicit scope and tools for diagram updates
-- `2cb7218` docs(diagrams): update Mermaid diagrams to align with current app features
-- `3904641` docs(project): update backlog, changelog, and todo for diagram updates
-- `4a84b03` docs(report): add LaTeX conversion considerations to final report guidelines
-- `30e2dce` refactor(markdown): migrate MarkdownService to TypeScript
-- `5db64de` docs: update backlog, changelog and TODO for MarkdownService migration
+- **Integridad del guardado (AUD-001):** El editor solo limpia los campos y descarta el borrador tras confirmar la persistencia; ante un fallo conserva contenido, borrador, contexto de edición y modo foco para permitir el reintento.
+- **Guardados concurrentes (AUD-002):** Una protección single-flight serializa el guardado y mantiene un estado visual mientras la operación está pendiente, evitando mutaciones duplicadas o fuera de orden por taps repetidos.
+- **Descarte de borrador distinguible:** La acción destructiva de descartar quedó diferenciada visualmente del guardado y cubierta por una regresión de presentación.
+
+### Security
+
+- **Importación ZIP acotada (AUD-003):** Un lector ZIP32 con preflight estructural aplica límites a la fuente, las entradas, los documentos y la salida real, verifica CRC32 y admite los formatos legítimos `STORE` y `DEFLATE`; rechaza estructuras ZIP64, multidisco o cifradas, rutas inseguras, nombres canónicos duplicados y métodos no admitidos antes de persistir.
+- **Validación runtime de backups:** El manifiesto, las entidades y sus primitivas se validan sin coerciones permisivas antes del plan de importación, con contratos y límites explícitos para conteos, booleanos, IDs, colores, fechas, timestamps y textos.
+- **Jerarquía importada consistente:** El plan impone un máximo de dos niveles, detecta ciclos y padres inexistentes o que ya son secciones, y registra en el preview las reparaciones de relaciones antes de escribir.
+- **Presentación defensiva de contenido importado:** Textos y atributos se codifican según su contexto, los colores pasan por una allowlist y los selectores evitan interpolar IDs importados; los renderizadores también toleran datos antiguos inválidos.
 
 ---
 
