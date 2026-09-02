@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 06 — Entrega Final
 > **Hito 05:** Cerrado documentalmente el 2026-07-15 sobre la beta operativa `v0.4.8`
-> **Última actualización:** 2026-07-15 — reconciliación documental transversal e incorporación de los diagramas finales de base de datos
+> **Última actualización:** 2026-09-02 — cierre de AUD-001, AUD-002 y AUD-003, y revisión del próximo corte Android
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -15,7 +15,9 @@ Hito 04 quedó cerrado formalmente como bloque de Organización y UX. El cierre 
 
 Hito 05 quedó cerrado documentalmente el 2026-07-15. Entregó el quality gate, APK firmada, validación inicial en Android real y publicación de la beta controlada [`v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8), junto con mejoras funcionales acotadas: borradores persistentes (`RF-005`), backup manual (`RF-017`), importación ZIP (`RF-018`), Acerca de (`RF-023`), fechas académicas discretas (`RF-027`) y editor enriquecido (`RF-028`). Las observaciones sobre `Mover a` y rendimiento con más notas no bloquearon ese cierre.
 
-Hito 06 queda activo para completar la documentación final, verificar la maquetación de los gráficos de base de datos ya actualizados, repetir la validación sobre un corte congelado y preparar la presentación. La versión operativa continúa siendo `v0.4.8`: el trabajo posterior al tag permanece no publicado y no se denominará `0.4.9` antes de decidir el artefacto final. El checkpoint previo a esta revisión comprendía 12 commits; ese número es histórico y no se usa como contador permanente de `main`.
+Hito 06 queda activo para completar la documentación final, verificar la maquetación de los gráficos de base de datos ya actualizados, repetir la validación sobre un corte congelado y preparar la presentación. La única versión publicada continúa siendo `v0.4.8`; el rango auditado posterior al tag comprende 38 commits hasta `ba16777`, pero todavía no constituye una release ni un APK distribuible nuevo. La decisión pendiente debe distinguir entre una beta de corrección `v0.4.9` y el artefacto final de Hito 06, sin renombrar preventivamente el estado actual de `main`.
+
+La revisión técnica priorizada del 2026-09-01 abrió trece hallazgos trazables. AUD-001 y AUD-002 quedaron resueltos mediante PR #2; AUD-003 quedó implementado, validado en Android e integrado mediante PR #3. La validación incluyó backups `STORE` y `DEFLATE`, rechazo previo a persistencia de datos inválidos y una fixture funcional de 500 notas. Esta última evidencia no sustituye las mediciones de latencia y rendimiento exigidas por `RNF-002` y `RNF-004`. AUD-004 conserva prioridad P0 y debe tratarse en un frente separado antes de publicar otro artefacto; los hallazgos restantes mantienen sus prioridades y no se incorporan automáticamente al alcance de Hito 06.
 
 La revisión de exportación/importación corrige una sobrepromesa documental del Hito 03: los servicios base de Markdown no equivalían a un flujo de usuario validado. La opción "Compartir" para una nota individual (`RF-016`) solo tendría sentido si abre el share sheet nativo de Android y ofrece apps como WhatsApp; si termina copiando contenido, duplica una acción existente y agrega ruido. La portabilidad de workspace sí quedó resuelta de forma acotada con exportación e importación de backup `.zip` desde la vista Backup.
 
@@ -25,7 +27,7 @@ El benchmark visual contra Notion mobile derivó en `RF-028`: controles opcional
 
 La revisión de `RF-005` reemplazó el auto-guardado final silencioso por borradores persistentes del editor. Lumapse conserva localmente el trabajo en curso al crear o editar, lo restaura al volver de otra app o vista, y lo limpia solo al guardar/actualizar con éxito o al descartar explícitamente. El plan cerrado queda archivado en [`docs/gestion/historico/plan-borradores-persistentes-2026-06-06.md`](docs/gestion/historico/plan-borradores-persistentes-2026-06-06.md).
 
-La estrategia de mantenibilidad y tipado gradual queda documentada en [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md). Las primeras fases operativas ya quedaron aplicadas: `tests/unit/components/` espeja la organizacion por feature de `src/components/`, `NoteStore.*` dejo de importar feedback visual, el proyecto ya tiene `typecheck` y contratos de dominio iniciales en `src/domain/`, los primeros modulos puros migrados son `AcademicEventRules`, `NoteTitleService`, `SubjectService.validation`, `BackupFormat`, `noteFilters`, `AcademicEventTypes`, `editorTextTransforms`, `MarkdownService` y el registro de comandos del editor, el primer servicio de dominio migrado es `AcademicEventService`, la capa de backup ya tipa decisiones, datos, transformacion ZIP, escritura ZIP, persistencia liviana, orquestacion y adaptadores nativos de red/share, `ExportService` ya quedo tipado como fachada web/legada del backup canonico, y `SubjectService.crud`/`SubjectService.trash` ya declaran contratos sobre materias, arbol activo y papelera avanzada manteniendo el barrel publico. Las auditorias auxiliares y el binario Rust tambien escanean `.ts`. El siguiente paso recomendado es seguir archivo por archivo con servicios donde el contrato aporte seguridad real, dejando store y componentes DOM grandes para fases posteriores.
+La estrategia de mantenibilidad y tipado gradual queda documentada en [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md). Las primeras fases operativas ya quedaron aplicadas: `tests/unit/components/` espeja la organización por feature de `src/components/`, `NoteStore.*` dejó de importar feedback visual, el proyecto ya tiene `typecheck` y contratos de dominio iniciales en `src/domain/`, los primeros módulos puros migrados son `AcademicEventRules`, `NoteTitleService`, `SubjectService.validation`, `BackupFormat`, `noteFilters`, `AcademicEventTypes`, `editorTextTransforms`, `MarkdownService` y el registro de comandos del editor, el primer servicio de dominio migrado es `AcademicEventService`, la capa de backup ya tipa decisiones, datos, transformación ZIP, escritura ZIP, persistencia liviana, orquestación y adaptadores nativos de red/share, `ExportService` ya quedó tipado como fachada web/legada del backup canónico, y `SubjectService.crud`/`SubjectService.trash` ya declaran contratos sobre materias, árbol activo y papelera avanzada manteniendo el barrel público. Las auditorías auxiliares y el binario Rust también escanean `.ts`. Las migraciones futuras permanecen subordinadas a riesgos o cambios concretos: no se abre una conversión masiva durante el cierre.
 
 La trazabilidad de `v0.4.8` queda distribuida entre `docs/gestion/lineas-base.md`, `docs/gestion/cheatsheet-defensa.md`, el cierre de Hito 05 y `CHANGELOG.md`. El trabajo final de informe, defensa, diagramas y evidencia adicional se concentra desde ahora en Hito 06.
 
@@ -35,11 +37,27 @@ La trazabilidad de `v0.4.8` queda distribuida entre `docs/gestion/lineas-base.md
 
 | Orden | Tarea | Criterio de cierre |
 |---|---|---|
-| 1 | Congelamiento editorial final | La reconciliación transversal y la incorporación de gráficos DB quedaron completadas; consolidar evidencia y revisar la maquetación antes de congelar el contenido |
-| 2 | Diagramas de base de datos | Fuentes e imágenes conceptual/lógica verificadas e incorporadas; confirmar legibilidad en PDF y diapositivas |
-| 3 | Validación final | Repetir gate y Android, ejecutar el plan RNF pendiente y emitir una matriz por artefacto; resolver o aceptar `Mover a` y rendimiento |
-| 4 | Presentación y defensa | Preparar guion, demo, cheatsheet, material visual y contingencias |
-| 5 | Corte final | Decidir artefacto, versión y línea base solo después de cerrar documentación y validación |
+| 1 | Sincronización documental de cierre | Reconciliar `CHANGELOG.md`, backlog, `TODO` e Hito 06 con la evidencia integrada hasta `ba16777`, sin declarar todavía una nueva release |
+| 2 | Seguridad previa al próximo corte | Resolver AUD-004 en un PR separado, revisar advisories/changelogs y repetir sanitización, tests, build y auditoría de dependencias |
+| 3 | Congelamiento editorial y visual | Consolidar evidencia, verificar bibliografía y confirmar legibilidad de gráficos DB en PDF y diapositivas |
+| 4 | Validación final | Ejecutar el gate sobre el corte candidato, completar las mediciones RNF y repetir Android sobre el artefacto versionado; resolver o aceptar `Mover a` y rendimiento |
+| 5 | Presentación y defensa | Preparar guion, demo, cheatsheet, material visual y contingencias |
+| 6 | Corte final | Decidir entre beta patch y entrega final; alinear versión web/Android, firmar, calcular hash, etiquetar y registrar la línea base |
+
+---
+
+## Revisión técnica priorizada — estado vivo
+
+El análisis detallado permanece en [`docs/gestion/revision-tecnica-priorizada-2026-09-01.md`](docs/gestion/revision-tecnica-priorizada-2026-09-01.md). Esta tabla solo fija el estado operativo del backlog después de integrar los PR #2 y #3.
+
+| ID | Prioridad | Frente | Estado operativo |
+|---|---|---|---|
+| AUD-001 | P0 | Pérdida de borrador ante error SQLite | Cerrado en PR #2; regresiones aprobadas |
+| AUD-002 | P0 | Guardados duplicados por taps concurrentes | Cerrado en PR #2; single-flight y estado visual validados |
+| AUD-003 | P0 | Frontera y presentación de backups no confiables | Cerrado en PR #3; suite acumulativa y checkpoints Android aprobados |
+| AUD-004 | P0 | Dependencias con advisories de seguridad | Pendiente; próximo frente técnico previo a una nueva APK |
+| AUD-005–AUD-009 | P1 | Persistencia, asincronía, contratos y tooling | Pendientes; abordar en ramas separadas según riesgo y gate de release |
+| AUD-010–AUD-013 | P2 | Escalabilidad, rendimiento, cohesión y margen de bundle/coverage | Monitorear o medir; no bloquean por sí solos el cierre actual |
 
 ---
 
@@ -77,13 +95,17 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Tipado gradual | Aplicar estrategia JS/TS por fases | Media | Plan definido en [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md): typecheck, contratos, primera tanda de modulos puros, `AcademicEventTypes`, registro de comandos del editor, `AcademicEventService`, capa de backup —incluidos adaptadores nativos—, `ExportService`, `SubjectService.crud`, `SubjectService.trash` y auditorias `.ts` completadas |
 | Tipado gradual | Continuar servicios de dominio/backup archivo por archivo | Baja/Media | No avanzar en bloque; proximos candidatos requieren evaluar bordes nativos/share/storage o store con contratos mas claros |
 | Framework UI | No incorporar Svelte por ahora | Baja | Costo de migracion alto vs beneficio actual; reabrir solo si DOM manual se vuelve una carga clara |
-| Documentación | Congelar documentos antes del corte final | Alta | El checkpoint 2026-07-15 ya distingue la beta publicada de `main` e incorpora los gráficos DB; resta evidencia final, revisión de maquetación y el corte elegido |
+| Documentación | Congelar documentos antes del corte final | Alta | La reconciliación posterior a AUD-001/002/003 está en curso; restan `TODO`, Hito 06, evidencia final, revisión de maquetación y el corte elegido |
+| Dependencias | Resolver AUD-004 sin mezclar otros hallazgos | Alta | Actualizar dependencias con advisories en una rama propia y validar especialmente sanitización, lockfile, suite, build y APK antes del próximo corte |
+| Persistencia y asincronía | Planificar AUD-005–AUD-007 | Alta/Media | Mantener ramas separadas para propiedad transaccional/migraciones, resultados async obsoletos y contratos de error; priorizar solo lo que bloquee el gate acordado |
+| Tooling | Resolver portabilidad de gate y Node 26 (AUD-008/AUD-009) | Media | Distinguir falsos positivos CSP del fallback offline y eliminar la dependencia del workaround de Web Storage sin relajar controles |
 | Tooling DB | Ampliar el smoke test a `academic_events` y constraints relevantes | Media | El DDL completo se ejecuta, pero las aserciones explícitas de tablas/columnas/relaciones se concentran en materias, notas y metadata; decidir su ampliación antes de presentar cobertura exhaustiva |
+| Tooling de release | Sincronizar versión Android desde el helper | Alta | `scripts/release-helper.py` actualiza package/changelog, pero no `versionName` ni `versionCode`; corregirlo o agregar un gate explícito antes de generar otra APK |
 | Diagramas | Revisar Mermaid de casos de uso, secuencia y dominio | Baja | Completado el 2026-07-03 contra `v0.4.8`; reabrir solo si cambia el alcance o durante la exportacion final a PDF/LaTeX |
 | Informe final | Preparar conversion LaTeX/PDF | Media | Consideraciones registradas en `docs/informe-final/README.md`; mantener Markdown como fuente de verdad y abrir pipeline LaTeX solo cuando el contenido este congelado |
-| Release | Definir el corte final | Alta | `v0.4.8` sigue como beta operativa; no crear `0.4.9` antes de la validación y de decidir si habrá un artefacto distinto |
+| Release | Definir el próximo corte | Alta | `v0.4.8` sigue como única beta publicada y no contiene AUD-001/002/003; evaluar `v0.4.9` como beta patch o reservar el artefacto para el cierre final, siempre después de los gates acordados |
 | UX menor | Revisar interacción de `Mover a` | Baja | En S20 FE se observó que puede requerir pulsación prolongada; no bloquea beta porque la acción se completa |
-| Rendimiento | Monitorear crecimiento real de notas | Media | Validación inicial con pocas notas fue correcta; observar comportamiento con mayor volumen post-release |
+| Rendimiento | Medir crecimiento real de notas | Media | La importación funcional de una fixture de 500 notas fue aprobada; todavía deben medirse latencia CRUD y rendimiento percibido para cerrar `RNF-002`/`RNF-004` |
 | Adjuntos | Planificar adjuntos de imagen post-release | Media | Valor alto para fotos de pizarrón; debe implementarse sin cargar SQLite ni saturar el feed |
 | Backup | Restauracion avanzada y Drive API directa | Alta | Exportacion e importacion ZIP manual ya estan integradas; quedan reemplazo/merge avanzado de workspace y subida directa a Drive como fases futuras |
 
@@ -107,6 +129,7 @@ Hito 06 es un hito de cierre. No incorporar salvo que un bloqueo de entrega lo e
 - Mantener un máximo de dos frentes en curso.
 - No abrir refactors ni migraciones amplias; una corrección estructural debe estar ligada a un bloqueo o a una validación concreta.
 - No denominar `0.4.9` al estado actual de `main` ni generar un APK con esa versión sin una decisión formal de corte.
+- No publicar un nuevo artefacto mientras AUD-004 o cualquier otro bloqueo de seguridad confirmado para ese corte permanezca abierto.
 - Todo cambio de comportamiento debe cerrar con tests focalizados, `npm run verify`, trazabilidad y nueva validación Android proporcional al riesgo.
 - Preservar `v0.4.8` y su SHA-256 como evidencia inmutable de la beta publicada.
 - Las ideas postergadas permanecen en este backlog; no vuelven al `TODO` operativo hasta que Hito 06 haya terminado.
@@ -145,6 +168,10 @@ Los ítems marcados como completados fueron planes que originalmente estaban en 
 - [x] Adaptadores nativos de backup migrados a TypeScript: `BackupNativeNetworkService.ts` y `BackupShareService.ts` fijan contratos pequenos para Network, Filesystem y Share sin acoplar el dominio a los plugins de Capacitor.
 - [x] Coverage ampliado a JavaScript y TypeScript: `npm run test:coverage` mide `src/**/*.{js,ts}` y la linea base del 2026-08-21 registra 92,43% de statements en `src/services/**`, por encima del 70% exigido por `RNF-024`.
 - [x] Imports dinamicos redundantes retirados del store y la restauracion de papelera: Vite ya no advierte sobre modulos que eran importados de forma estatica y dinamica a la vez.
+- [x] AUD-001 y AUD-002 cerrados en PR #2: el editor conserva el borrador ante fallos, serializa guardados concurrentes y diferencia visualmente el descarte.
+- [x] AUD-003 cerrado en PR #3: importación ZIP acotada, validación runtime, jerarquía consistente, presentación defensiva y validación Android acumulativa.
+- [ ] AUD-004: actualizar dependencias con advisories en un frente separado y repetir los controles de sanitización, lockfile, suite y build antes de otra APK.
+- [ ] Corregir o reforzar `scripts/release-helper.py` para que `versionName` y `versionCode` Android no puedan quedar desalineados del corte declarado.
 - [ ] Aplicar mejoras pequenas y verificables que aumenten cohesion, reduzcan acoplamiento y faciliten revisiones humanas/IA, evitando reescrituras grandes.
 - [ ] Restauracion avanzada desde backup `.zip` con estrategia explicita de reemplazo/merge, solo despues de validar la importacion no destructiva actual con usuarios reales.
 - [ ] Sincronización real multi-dispositivo, solo después de validar backup/restauración y con feedback fuerte de adopción.
