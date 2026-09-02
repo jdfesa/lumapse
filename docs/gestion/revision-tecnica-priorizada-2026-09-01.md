@@ -1,6 +1,6 @@
 # Revisión Técnica Priorizada — 2026-09-01
 
-**Estado:** Vigente — AUD-003 completo en rama; Android final, PR y merge pendientes
+**Estado:** Vigente — AUD-003 con implementación y validación completas; integración autorizada
 **Rama original de auditoría:** `fix/note-save-integrity`
 **Commit base original revisado:** `cd60c0e` (`main`)
 **Versión de producto documentada:** `0.4.8` (Beta)  
@@ -94,7 +94,7 @@ store, no como métrica integral de toda la aplicación.
 |---|---|---|---|---|
 | AUD-001 | P0 | Pérdida de borrador ante error SQLite | Bug confirmado | Resuelto en PR #2 |
 | AUD-002 | P0 | Guardados duplicados por taps concurrentes | Bug confirmado | Resuelto en PR #2 |
-| AUD-003 | P0 | Inyección HTML persistente desde campos de backup | Seguridad confirmada | Implementación completa en rama; Android final/PR/merge pendientes |
+| AUD-003 | P0 | Inyección HTML persistente desde campos de backup | Seguridad confirmada | Implementación y validación completas; integración autorizada |
 | AUD-004 | P0 | Dependencias vulnerables, incluida DOMPurify en producción | Seguridad/tooling | Pendiente |
 | AUD-005 | P1 | Propiedad global de transacciones y migraciones permisivas | Confiabilidad | Pendiente |
 | AUD-006 | P1 | Resultados async obsoletos sobrescriben vista/cache reciente | Bug de concurrencia | Pendiente |
@@ -164,8 +164,10 @@ botón y crear notas duplicadas o actualizaciones fuera de orden.
 > el flujo auditado.
 >
 > **Estado 2026-09-02:** la remediación está completa en `fix/backup-import-security` mediante
-> `405b4dd`, `34224bb`, `e8f0023`, `1246864` y `587da3f`. Quedan la validación Android final, la
-> creación del PR por el coordinador y el merge posterior.
+> `405b4dd`, `34224bb`, `e8f0023`, `1246864` y `587da3f`. El checkpoint Android final fue aprobado
+> por el usuario sobre la implementación completa instalada en Samsung SM_G965F; implementación y
+> validación completas, con integración autorizada. Al momento de este commit aún no se habían
+> creado el PR ni ejecutado el merge.
 
 **Evidencia original en la base auditada**
 
@@ -401,7 +403,7 @@ test(editor): cover failed and concurrent note saves
 | Orden | Rama sugerida | Resultado esperado |
 |---:|---|---|
 | 1 | `fix/note-save-integrity` | Cerrado en PR #2: AUD-001 y AUD-002 |
-| 2 | `fix/backup-import-security` | Implementado; checkpoint Android final, PR y merge pendientes |
+| 2 | `fix/backup-import-security` | Implementación y validación completas; integración autorizada |
 | 3 | `fix/dependency-security` | Actualizar DOMPurify y dependencias auditadas |
 | 4 | `fix/store-action-contract` | Unificar semántica de errores de mutaciones |
 | 5 | `fix/sqlite-write-coordination` | Aislar transacciones y endurecer migraciones/arranque |
@@ -454,8 +456,9 @@ Resultado consolidado:
   pasan. Bundle gzip total: **189,83 kB / 250 kB**.
 - El agregado `npm run verify` queda no verde solo por los dos localhost del fallback CSP; el fallo
   normal de Web Storage y esos falsos positivos pertenecen a AUD-009/AUD-008.
-- Android Fase 1C aprobado: `STORE`, `DEFLATE`, 500 notas y rechazo de `pinned` inválido. La defensa
-  de presentación requiere el checkpoint Android final antes del PR/merge.
+- Android Fase 1C aprobado: `STORE`, `DEFLATE`, 500 notas y rechazo de `pinned` inválido. El
+  checkpoint final fue aprobado el 2026-09-02 sobre la implementación completa instalada en
+  Samsung SM_G965F.
 
 ## 11. Limitaciones de la revisión
 
@@ -476,6 +479,7 @@ cohesión de features con cambios pequeños y medidos.
 
 La revisión inicial quedó vinculada al primer fix porque AUD-001 y AUD-002 afectaban el flujo
 central del producto y presentaban la mejor relación entre impacto, riesgo y tamaño de cambio.
-Ambos hallazgos se cerraron posteriormente en la PR #2. AUD-003 quedó implementado y verificado en
-`fix/backup-import-security`; resta el checkpoint Android final antes de que el coordinador cree el
-PR y evalúe su merge. AUD-004 y los demás hallazgos conservan alcance y seguimiento independientes.
+Ambos hallazgos se cerraron posteriormente en la PR #2. AUD-003 quedó implementado y validado en
+`fix/backup-import-security`; el checkpoint Android final fue aprobado el 2026-09-02 y su
+integración quedó autorizada. Al momento de este commit el coordinador aún no había creado el PR ni
+ejecutado el merge. AUD-004 y los demás hallazgos conservan alcance y seguimiento independientes.

@@ -1,6 +1,6 @@
 # AUD-003 — Análisis de seguridad de importación de backups
 
-**Estado:** Implementación completa en `fix/backup-import-security`; validación Android final, PR y merge pendientes
+**Estado:** Implementación y validación completas en `fix/backup-import-security`; integración autorizada
 **Rama:** `fix/backup-import-security`
 **Commit base revisado:** `376f7b6` (`main`)
 **Fecha:** 2026-09-01
@@ -677,9 +677,10 @@ producción ni depender de evidencia temporal.
   trazabilidad.
 
 La validación manual Android de Fase 1C fue aprobada para backup actual `STORE`, backup histórico
-`DEFLATE`, fixture de 500 notas y rechazo de `pinned` inválido antes de persistir. La defensa de
-presentación está implementada y automatizada, pero requiere un checkpoint Android final antes de
-crear/fusionar el PR.
+`DEFLATE`, fixture de 500 notas y rechazo de `pinned` inválido antes de persistir. El checkpoint
+Android final fue aprobado por el usuario el 2026-09-02 sobre la implementación completa instalada
+en Samsung SM_G965F. Con ello, la implementación y la validación de AUD-003 están completas y su
+integración quedó autorizada.
 
 ---
 
@@ -694,8 +695,9 @@ crear/fusionar el PR.
 | Fase 3 | `587da3f` | Escape por contexto, allowlist de color, selectores seguros y tolerancia a datos antiguos contaminados. |
 | Fase 4 | `docs(audit): record AUD-003 remediation status` | Verificación acumulativa y cierre documental en este checkpoint. |
 
-La implementación técnica está completa en la rama. Solo quedan el checkpoint Android final, la
-creación del PR por el coordinador y el merge posterior a su aprobación.
+La implementación y la validación están completas. El usuario autorizó su integración el
+2026-09-02; al momento de este commit documental todavía no se había creado el PR ni ejecutado el
+merge.
 
 ---
 
@@ -713,5 +715,6 @@ Ningún PR parcial se considera cierre de AUD-003 ni se fusiona sin evaluar la c
 de frontera y sinks.
 
 El alcance se cerró sin dependencias nuevas, sin cambios estéticos y sin incorporar AUD-004,
-AUD-006, AUD-008 ni AUD-009. Esos hallazgos conservan su prioridad y ramas propias. No se crea ni
-fusiona un PR hasta completar la validación Android final.
+AUD-006, AUD-008 ni AUD-009. Esos hallazgos conservan su prioridad y ramas propias. La validación
+Android final se aprobó el 2026-09-02 y el usuario autorizó la integración; al momento de este commit
+el coordinador aún no había creado el PR ni ejecutado el merge.
