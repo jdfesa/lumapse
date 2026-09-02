@@ -37,12 +37,11 @@ La trazabilidad de `v0.4.8` queda distribuida entre `docs/gestion/lineas-base.md
 
 | Orden | Tarea | Criterio de cierre |
 |---|---|---|
-| 1 | Sincronización documental de cierre | Reconciliar `CHANGELOG.md`, backlog, `TODO` e Hito 06 con la evidencia integrada hasta `ba16777`, sin declarar todavía una nueva release |
-| 2 | Seguridad previa al próximo corte | Resolver AUD-004 en un PR separado, revisar advisories/changelogs y repetir sanitización, tests, build y auditoría de dependencias |
-| 3 | Congelamiento editorial y visual | Consolidar evidencia, verificar bibliografía y confirmar legibilidad de gráficos DB en PDF y diapositivas |
-| 4 | Validación final | Ejecutar el gate sobre el corte candidato, completar las mediciones RNF y repetir Android sobre el artefacto versionado; resolver o aceptar `Mover a` y rendimiento |
-| 5 | Presentación y defensa | Preparar guion, demo, cheatsheet, material visual y contingencias |
-| 6 | Corte final | Decidir entre beta patch y entrega final; alinear versión web/Android, firmar, calcular hash, etiquetar y registrar la línea base |
+| 1 | Seguridad previa al próximo corte | Resolver AUD-004 en un PR separado, revisar advisories/changelogs y repetir sanitización, tests, build y auditoría de dependencias |
+| 2 | Congelamiento editorial y visual | Consolidar evidencia, verificar bibliografía y confirmar legibilidad de gráficos DB en PDF y diapositivas |
+| 3 | Validación final | Ejecutar el gate sobre el corte candidato, completar las mediciones RNF y repetir Android sobre el artefacto versionado; resolver o aceptar `Mover a` y rendimiento |
+| 4 | Presentación y defensa | Preparar guion, demo, cheatsheet, material visual y contingencias |
+| 5 | Corte final | Decidir entre beta patch y entrega final; alinear versión web/Android, firmar, calcular hash, etiquetar y registrar la línea base |
 
 ---
 
@@ -95,7 +94,7 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Tipado gradual | Aplicar estrategia JS/TS por fases | Media | Plan definido en [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md): typecheck, contratos, primera tanda de modulos puros, `AcademicEventTypes`, registro de comandos del editor, `AcademicEventService`, capa de backup —incluidos adaptadores nativos—, `ExportService`, `SubjectService.crud`, `SubjectService.trash` y auditorias `.ts` completadas |
 | Tipado gradual | Continuar servicios de dominio/backup archivo por archivo | Baja/Media | No avanzar en bloque; proximos candidatos requieren evaluar bordes nativos/share/storage o store con contratos mas claros |
 | Framework UI | No incorporar Svelte por ahora | Baja | Costo de migracion alto vs beneficio actual; reabrir solo si DOM manual se vuelve una carga clara |
-| Documentación | Congelar documentos antes del corte final | Alta | La reconciliación posterior a AUD-001/002/003 está en curso; restan `TODO`, Hito 06, evidencia final, revisión de maquetación y el corte elegido |
+| Documentación | Congelar documentos antes del corte final | Alta | La reconciliación posterior a AUD-001/002/003 se completó el 2026-09-02; restan evidencia final, revisión de maquetación y el corte elegido |
 | Dependencias | Resolver AUD-004 sin mezclar otros hallazgos | Alta | Actualizar dependencias con advisories en una rama propia y validar especialmente sanitización, lockfile, suite, build y APK antes del próximo corte |
 | Persistencia y asincronía | Planificar AUD-005–AUD-007 | Alta/Media | Mantener ramas separadas para propiedad transaccional/migraciones, resultados async obsoletos y contratos de error; priorizar solo lo que bloquee el gate acordado |
 | Tooling | Resolver portabilidad de gate y Node 26 (AUD-008/AUD-009) | Media | Distinguir falsos positivos CSP del fallback offline y eliminar la dependencia del workaround de Web Storage sin relajar controles |
