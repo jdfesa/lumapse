@@ -7,6 +7,8 @@
 // =============================================================
 
 import type { AcademicEventType } from '../../domain/academicEvents'
+import { escapeHtmlAttribute, escapeHtmlText } from '../common/htmlEscaping.js'
+import { getSafeHexColor, getSafeISODate } from '../common/presentationValidation.js'
 
 interface AcademicEventTypeConfig {
   id: AcademicEventType
@@ -112,32 +114,19 @@ function isAcademicEventType(value: unknown): value is AcademicEventType {
   return typeof value === 'string' && ACADEMIC_EVENT_TYPE_ORDER.includes(value as AcademicEventType)
 }
 
-function escapeHtml(value: unknown): string {
-  return String(value ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;')
-}
-
-function escapeAttribute(value: unknown): string {
-  return escapeHtml(value)
-}
-
 function dateLabel(date: string | null | undefined): string {
-  if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return ''
+  const safeDate = getSafeISODate(date)
+  if (!safeDate) return ''
 
   const monthLabels = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
-  const [, month, day] = date.split('-').map(Number)
+  const [, month, day] = safeDate.split('-').map(Number)
 
-  if (month < 1 || month > 12 || day < 1 || day > 31) return date
   return `${String(day).padStart(2, '0')} ${monthLabels[month - 1]}`
 }
 
 function renderEventActions(event: RenderableAcademicEvent, title: string): string {
-  const eventId = escapeAttribute(event.id || '')
-  const safeTitle = escapeAttribute(title)
+  const eventId = escapeHtmlAttribute(event.id || '')
+  const safeTitle = escapeHtmlAttribute(title)
 
   return `
     <span class="academic-event-item__actions" aria-label="Acciones de fecha academica">
@@ -179,7 +168,9 @@ export function getAcademicEventColor(
   fallbackColor: string | null = null,
 ): string {
   const type = typeof eventOrType === 'string' ? eventOrType : eventOrType?.type
-  return fallbackColor || getAcademicEventType(type)?.color || '#71717a'
+  return getSafeHexColor(fallbackColor)
+    || getSafeHexColor(getAcademicEventType(type)?.color)
+    || '#71717a'
 }
 
 export function renderAcademicEventIcon(type: unknown): string {
@@ -198,10 +189,10 @@ export function renderAcademicEventDot(
 
   return `
     <span class="academic-event-dot academic-event-dot--${type.id}"
-          data-event-type="${escapeAttribute(type.id)}"
-          style="--academic-event-color: ${escapeAttribute(color)}"
-          title="${escapeAttribute(label)}"
-          aria-label="${escapeAttribute(label)}"></span>
+          data-event-type="${escapeHtmlAttribute(type.id)}"
+          style="--academic-event-color: ${color}"
+          title="${escapeHtmlAttribute(label)}"
+          aria-label="${escapeHtmlAttribute(label)}"></span>
   `
 }
 
@@ -216,28 +207,29 @@ export function renderAcademicEventListItem(
   const color = getAcademicEventColor(item, options.color)
   const subjectLabel = options.subjectLabel ?? item.subjectName ?? ''
   const title = item.title || type.label
-  const date = dateLabel(item.date)
+  const safeDate = getSafeISODate(item.date)
+  const date = dateLabel(safeDate)
   const subjectClass = options.subjectArchived
     ? 'academic-event-item__subject academic-event-item__subject--archived'
     : 'academic-event-item__subject'
   const subject = subjectLabel
-    ? `<span class="${subjectClass}">${escapeHtml(subjectLabel)}</span>`
+    ? `<span class="${subjectClass}">${escapeHtmlText(subjectLabel)}</span>`
     : ''
   const actions = options.actions ? renderEventActions(item, title) : ''
   const actionsClass = options.actions ? ' academic-event-item--with-actions' : ''
 
   return `
     <article class="academic-event-item academic-event-item--${type.id}${actionsClass}"
-             data-event-id="${escapeAttribute(item.id || '')}"
-             data-event-type="${escapeAttribute(type.id)}"
-             style="--academic-event-color: ${escapeAttribute(color)}">
+             data-event-id="${escapeHtmlAttribute(item.id || '')}"
+             data-event-type="${escapeHtmlAttribute(type.id)}"
+             style="--academic-event-color: ${color}">
       <span class="academic-event-item__icon" aria-hidden="true">${type.icon}</span>
       <span class="academic-event-item__body">
         <span class="academic-event-item__meta">
-          <time class="academic-event-item__date" datetime="${escapeAttribute(item.date || '')}">${escapeHtml(date)}</time>
-          <span class="academic-event-item__type">${escapeHtml(type.shortLabel)}</span>
+          <time class="academic-event-item__date" datetime="${escapeHtmlAttribute(safeDate || '')}">${escapeHtmlText(date)}</time>
+          <span class="academic-event-item__type">${escapeHtmlText(type.shortLabel)}</span>
         </span>
-        <span class="academic-event-item__title">${escapeHtml(title)}</span>
+        <span class="academic-event-item__title">${escapeHtmlText(title)}</span>
         ${subject}
       </span>
       ${actions}

@@ -6,7 +6,9 @@
 import * as NoteStore from '../../store/NoteStore.js';
 import * as MarkdownService from '../../services/MarkdownService.ts';
 import { getNoteContentPresentation } from '../../services/NoteTitleService.ts';
-import { formatRelativeDate, escapeHtml, findSubject, buildMoveMenu } from './NoteCardRenderer.js';
+import { escapeHtmlAttribute, escapeHtmlText } from '../common/htmlEscaping.js';
+import { getSafeHexColor } from '../common/presentationValidation.js';
+import { formatRelativeDate, findSubject, buildMoveMenu } from './NoteCardRenderer.js';
 import { createFeedActionRouter } from './FeedActionRouter.js';
 import { renderTrashView } from './TrashView.js';
 import { BackupView } from '../backup/BackupView.js';
@@ -26,7 +28,7 @@ function renderImplicitTitleBlock(note) {
     ? MarkdownService.renderMarkdown(bodyMarkdown, { lineOffset: titlePresentation.lineOffset || 0 })
     : '';
   const titleHtml = titlePresentation.title
-    ? `<h2 class="note-card__implicit-title">${escapeHtml(titlePresentation.title)}</h2>`
+    ? `<h2 class="note-card__implicit-title">${escapeHtmlText(titlePresentation.title)}</h2>`
     : '';
 
   return `${titleHtml}${renderedContent}`;
@@ -36,12 +38,11 @@ function renderSubjectBadge(note, subjectsData) {
   const found = findSubject(note.subjectId, subjectsData);
   if (!found) return '';
 
-  const color = found.subject.color || (found.parent ? found.parent.color : '');
+  const color = getSafeHexColor(found.subject.color) || getSafeHexColor(found.parent?.color);
   const label = found.parent
-    ? `${escapeHtml(found.parent.name)} \u203A ${escapeHtml(found.subject.name)}`
-    : escapeHtml(found.subject.name);
-
-  return `<span class="note-card__subject-badge" style="--subject-color: ${color}">${label}</span>`;
+    ? `${escapeHtmlText(found.parent.name)} \u203A ${escapeHtmlText(found.subject.name)}`
+    : escapeHtmlText(found.subject.name);
+  return `<span class="note-card__subject-badge"${color ? ` style="--subject-color: ${color}"` : ''}>${label}</span>`;
 }
 
 function renderEmptyState(state) {
@@ -55,14 +56,14 @@ function renderEmptyState(state) {
   let copy = 'Escribí una idea arriba o asignala a una materia cuando la guardes.';
 
   if (query) {
-    title = `No encontramos notas para "${escapeHtml(query)}".`;
+    title = `No encontramos notas para "${escapeHtmlText(query)}".`;
     copy = 'Probá con otra palabra o limpiá la búsqueda para volver al feed.';
   } else if (state.dateFilter) {
     title = 'No hay notas en esta fecha.';
     copy = 'El calendario sigue marcando actividad cuando guardes apuntes ese día.';
   } else if (state.viewMode === 'subject') {
     title = activeSubject
-      ? `${escapeHtml(activeSubject.name)} todavía no tiene notas.`
+      ? `${escapeHtmlText(activeSubject.name)} todavía no tiene notas.`
       : 'Esta materia todavía no tiene notas.';
     copy = 'Guardá la próxima idea con esta materia seleccionada.';
   } else if (state.viewMode === 'archived') {
@@ -257,10 +258,10 @@ export class NoteList {
     // Usar MarkdownService para renderizar el contenido completo de forma segura
     const renderedContent = renderImplicitTitleBlock(note);
     const timeStr = formatRelativeDate(note.updatedAt);
-    const isPinned = note.pinned;
-    const isArchived = note.archived;
+    const { pinned: isPinned, archived: isArchived } = note;
     const pinLabel = isPinned ? 'Desfijar' : 'Fijar';
     const archiveLabel = isArchived ? 'Desarchivar' : 'Archivar';
+    const noteId = escapeHtmlAttribute(note.id);
 
     // Badge de archivo
     const archivedBadge = isArchived
@@ -274,11 +275,11 @@ export class NoteList {
       : '';
 
     return `
-      <article class="note-card${isPinned ? ' note-card--pinned' : ''}" data-id="${note.id}">
+      <article class="note-card${isPinned ? ' note-card--pinned' : ''}" data-id="${noteId}">
         <header class="note-card__header">
           <span class="note-card__time">
             ${isPinned ? '<svg class="note-card__pin-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 2l-4 4-6-2-2 2 5 5-5 7 2 2 7-5 5 5 2-2-2-6 4-4z"></path></svg>' : ''}
-            ${timeStr}
+            ${escapeHtmlText(timeStr)}
             ${renderSubjectBadge(note, subjectsData)}
             ${archivedBadge}
             ${statusBadge}
@@ -297,11 +298,11 @@ export class NoteList {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
             </button>
             <div class="note-card__dropdown">
-              <button class="note-card__dropdown-btn js-btn-pin" data-id="${note.id}" title="${pinLabel} nota">
+              <button class="note-card__dropdown-btn js-btn-pin" data-id="${noteId}" title="${pinLabel} nota">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 2l-4 4-6-2-2 2 5 5-5 7 2 2 7-5 5 5 2-2-2-6 4-4z"/></svg>
                 ${pinLabel}
               </button>
-              <button class="note-card__dropdown-btn js-btn-archive" data-id="${note.id}" title="${archiveLabel} nota">
+              <button class="note-card__dropdown-btn js-btn-archive" data-id="${noteId}" title="${archiveLabel} nota">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
                 ${archiveLabel}
               </button>
@@ -315,15 +316,15 @@ export class NoteList {
                   ${buildMoveMenu(note.id, note.subjectId, subjectsData)}
                 </div>
               </div>
-              <button class="note-card__dropdown-btn js-btn-edit" data-id="${note.id}" title="Editar nota">
+              <button class="note-card__dropdown-btn js-btn-edit" data-id="${noteId}" title="Editar nota">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                 Editar
               </button>
-              <button class="note-card__dropdown-btn js-btn-copy" data-id="${note.id}" title="Copiar nota">
+              <button class="note-card__dropdown-btn js-btn-copy" data-id="${noteId}" title="Copiar nota">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                 Copiar
               </button>
-              <button class="note-card__dropdown-btn note-card__dropdown-btn--delete js-btn-delete" data-id="${note.id}" title="Eliminar nota">
+              <button class="note-card__dropdown-btn note-card__dropdown-btn--delete js-btn-delete" data-id="${noteId}" title="Eliminar nota">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                 Eliminar
               </button>

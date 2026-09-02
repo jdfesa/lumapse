@@ -108,6 +108,48 @@ afterEach(() => {
 })
 
 describe('Heatmap eventos academicos read-only', () => {
+  it('ignora timestamps persistidos invalidos y conserva toda actividad valida', () => {
+    storeMock.state = defaultState({
+      notes: [
+        note({ id: 'valid-1' }),
+        note({ id: 'invalid', updatedAt: 'not-a-date' }),
+        note({ id: 'valid-2', updatedAt: '2026-06-14T23:59:59-03:00' }),
+      ],
+    })
+
+    let heatmap
+    expect(() => {
+      heatmap = createHeatmap()
+    }).not.toThrow()
+
+    expect(heatmap.activityMap['2026-06-14']).toBe(1)
+    expect(heatmap.activityMap['2026-06-15']).toBe(1)
+    expect(Object.keys(heatmap.activityMap)).toEqual(['2026-06-14', '2026-06-15'])
+
+    heatmap.destroy()
+  })
+
+  it('ignora fechas academicas invalidas sin contaminar el mapa de eventos', () => {
+    storeMock.state = defaultState({
+      academicEventsForMonth: [
+        event({ id: 'valid-event' }),
+        event({ id: 'prototype-event', date: '__proto__' }),
+        event({ id: 'impossible-event', date: '2026-02-30' }),
+      ],
+    })
+
+    let heatmap
+    expect(() => {
+      heatmap = createHeatmap()
+    }).not.toThrow()
+
+    expect(heatmap.eventMap['2026-06-14']).toHaveLength(1)
+    expect(Object.hasOwn(heatmap.eventMap, '__proto__')).toBe(false)
+    expect(Object.hasOwn(heatmap.eventMap, '2026-02-30')).toBe(false)
+
+    heatmap.destroy()
+  })
+
   it('mantiene legible un dia con notas pero sin eventos', () => {
     storeMock.state = defaultState({
       notes: [note()],

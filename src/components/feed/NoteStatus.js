@@ -6,6 +6,8 @@
 // conservar compatibilidad con notas existentes. La UI renderiza SVGs
 // lineales propios para mantener una estética consistente con Lumapse.
 
+import { escapeHtmlAttribute } from '../common/htmlEscaping.js'
+
 const STATUS_ICONS = {
   reading: `
     <svg class="note-status-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -68,14 +70,6 @@ export const NOTE_STATUSES = [
   },
 ]
 
-function escapeAttribute(value) {
-  return String(value ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-}
-
 export function getNoteStatus(value) {
   return NOTE_STATUSES.find(status => status.value === value) || null
 }
@@ -86,24 +80,24 @@ export function renderNoteStatusBadge(value) {
 
   return `
     <span class="note-card__status-badge note-card__status-badge--${status.id}"
-          title="${escapeAttribute(status.label)}"
-          aria-label="${escapeAttribute(status.label)}">
+          title="${escapeHtmlAttribute(status.label)}"
+          aria-label="${escapeHtmlAttribute(status.label)}">
       ${status.icon}
     </span>
   `
 }
 
 export function renderNoteStatusMenuItems(noteId, currentValue) {
-  const safeNoteId = escapeAttribute(noteId)
+  const safeNoteId = escapeHtmlAttribute(noteId)
 
   return NOTE_STATUSES.map(status => {
     const currentClass = currentValue === status.value ? ' note-card__status-btn--current' : ''
     return `
       <button class="note-card__status-btn js-btn-status${currentClass}"
               data-note-id="${safeNoteId}"
-              data-emoji="${escapeAttribute(status.value)}"
-              title="${escapeAttribute(status.label)}"
-              aria-label="${escapeAttribute(status.label)}">
+              data-emoji="${escapeHtmlAttribute(status.value)}"
+              title="${escapeHtmlAttribute(status.label)}"
+              aria-label="${escapeHtmlAttribute(status.label)}">
         ${status.icon}
       </button>
     `
@@ -113,7 +107,7 @@ export function renderNoteStatusMenuItems(noteId, currentValue) {
 export function renderClearNoteStatusButton(noteId) {
   return `
     <button class="note-card__status-btn js-btn-status"
-            data-note-id="${escapeAttribute(noteId)}"
+            data-note-id="${escapeHtmlAttribute(noteId)}"
             data-emoji=""
             title="Quitar estado"
             aria-label="Quitar estado">

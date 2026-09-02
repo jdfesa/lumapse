@@ -204,6 +204,20 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
     closeDrawer()
   }
 
+  /** Busca datasets por igualdad exacta sin interpretar el ID como selector CSS. */
+  function findByDataset(selector, key, value) {
+    return [...subjectsList.querySelectorAll(selector)]
+      .find(element => element.dataset[key] === value) || null
+  }
+
+  function findSectionForm(parentId) {
+    return findByDataset('.drawer__section-form', 'parentId', parentId)
+  }
+
+  function findRenameInput(subjectId) {
+    return findByDataset('.js-rename-input', 'subjectId', subjectId)
+  }
+
   /** Muestra/oculta el formulario inline de sección para una materia */
   function toggleSectionForm(parentId) {
     if (expandSubject(parentId)) {
@@ -214,7 +228,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
     subjectsList.querySelectorAll('.drawer__section-form').forEach(form => {
       form.style.display = 'none'
     })
-    const form = subjectsList.querySelector(`#section-form-${parentId}`)
+    const form = findSectionForm(parentId)
     if (!form) return
     const isVisible = form.style.display !== 'none'
     form.style.display = isVisible ? 'none' : 'block'
@@ -229,7 +243,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
 
   /** Guarda una nueva sección bajo la materia padre */
   async function saveSectionForm(parentId, parentColor) {
-    const form = subjectsList.querySelector(`#section-form-${parentId}`)
+    const form = findSectionForm(parentId)
     if (!form) return
     const input = form.querySelector('.js-section-name-input')
     const name = input ? input.value.trim() : ''
@@ -256,13 +270,13 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
 
   /** Cierra el formulario de sección */
   function closeSectionForm(parentId) {
-    const form = subjectsList.querySelector(`#section-form-${parentId}`)
+    const form = findSectionForm(parentId)
     if (form) form.style.display = 'none'
   }
 
   /** Activa el modo edición inline para renombrar una materia/sección */
   function startRenameSubject(subjectId) {
-    const nameSpan = subjectsList.querySelector(`.drawer__subject-name[data-name-id="${subjectId}"]`)
+    const nameSpan = findByDataset('.drawer__subject-name', 'nameId', subjectId)
     if (!nameSpan) return
     const currentName = nameSpan.textContent
 
@@ -295,7 +309,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
     const trimmed = newName.trim()
     if (!trimmed) {
       // Si está vacío, cancelar y restaurar
-      const input = subjectsList.querySelector(`.js-rename-input[data-subject-id="${subjectId}"]`)
+      const input = findRenameInput(subjectId)
       if (input) cancelRenameSubject(subjectId, input.dataset.originalName)
       return
     }
@@ -308,7 +322,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
 
   /** Cancela el renombrado y restaura el nombre original */
   function cancelRenameSubject(subjectId, originalName) {
-    const input = subjectsList.querySelector(`.js-rename-input[data-subject-id="${subjectId}"]`)
+    const input = findRenameInput(subjectId)
     if (!input) return
 
     const span = document.createElement('span')

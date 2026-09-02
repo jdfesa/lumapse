@@ -3,6 +3,9 @@
 // Selector compacto de materias para el composer.
 // =============================================================
 
+import { escapeHtmlAttribute, escapeHtmlText } from '../common/htmlEscaping.js';
+import { getSafeHexColor } from '../common/presentationValidation.js';
+
 export class SubjectPicker {
   constructor(root) {
     this.root = root;
@@ -90,10 +93,11 @@ export class SubjectPicker {
   buildOptions(subjectsData) {
     const options = [{ id: '', label: 'Entrada', color: '', isChild: false }];
     for (const subject of subjectsData.tree) {
+      const subjectColor = getSafeHexColor(subject.color) || '';
       options.push({
         id: subject.id,
         label: subject.name,
-        color: subject.color || '',
+        color: subjectColor,
         isChild: false,
       });
 
@@ -101,7 +105,7 @@ export class SubjectPicker {
         options.push({
           id: child.id,
           label: child.name,
-          color: child.color || subject.color || '',
+          color: getSafeHexColor(child.color) || subjectColor,
           isChild: true,
         });
       }
@@ -117,21 +121,22 @@ export class SubjectPicker {
       const selected = option.id === selectedValue;
       const childClass = option.isChild ? ' composer__subject-option--child' : '';
       const inboxClass = option.id ? '' : ' composer__subject-option--inbox';
-      const dotStyle = option.color ? ` style="--subject-color: ${this.escapeAttribute(option.color)}"` : '';
-      const safeLabel = this.escapeAttribute(option.label);
+      const safeColor = getSafeHexColor(option.color);
+      const dotStyle = safeColor ? ` style="--subject-color: ${safeColor}"` : '';
+      const safeLabel = escapeHtmlAttribute(option.label);
 
       return `
         <button
           class="composer__subject-option${childClass}${inboxClass}"
           type="button"
           role="option"
-          data-subject-id="${this.escapeAttribute(option.id)}"
+          data-subject-id="${escapeHtmlAttribute(option.id)}"
           aria-selected="${selected}"
           aria-label="${safeLabel}"
           title="${safeLabel}"
         >
           <span class="composer__subject-option-dot"${dotStyle}></span>
-          <span class="composer__subject-option-label">${this.escapeHtml(option.label)}</span>
+          <span class="composer__subject-option-label">${escapeHtmlText(option.label)}</span>
         </button>
       `;
     }).join('');
@@ -146,7 +151,12 @@ export class SubjectPicker {
 
     this.input.value = selected.id;
     this.label.textContent = selected.label;
-    this.trigger.style.setProperty('--subject-color', selected.color || 'var(--color-accent)');
+    const safeColor = getSafeHexColor(selected.color);
+    if (safeColor) {
+      this.trigger.style.setProperty('--subject-color', safeColor);
+    } else {
+      this.trigger.style.removeProperty('--subject-color');
+    }
     this.trigger.classList.toggle('composer__subject-trigger--inbox', !selected.id);
 
     if (renderMenu) {
@@ -160,15 +170,6 @@ export class SubjectPicker {
 
   getValue() {
     return this.input?.value || '';
-  }
-
-  escapeHtml(text) {
-    if (!text) return '';
-    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-
-  escapeAttribute(text) {
-    return this.escapeHtml(text).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
   destroy() {
