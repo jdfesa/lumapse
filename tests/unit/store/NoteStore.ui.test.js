@@ -363,6 +363,18 @@ describe('NoteStore.ui', () => {
       expect(NoteStoreData.loadArchivedSubjects).toHaveBeenCalled()
     })
 
+    it('conserva la vista actual si falla la carga de archivadas', async () => {
+      const error = new DatabaseError('getArchivedSubjectTree', new Error('boom'))
+      state.viewMode = 'subject'
+      state.activeSubjectId = 'subj-1'
+      NoteStoreData.loadArchivedSubjects.mockRejectedValueOnce(error)
+
+      await expect(NoteStoreUi.setShowArchived(true)).rejects.toBe(error)
+
+      expect(state.viewMode).toBe('subject')
+      expect(state.activeSubjectId).toBe('subj-1')
+    })
+
     it('con false vuelve a subject si hay activeSubjectId', async () => {
       state.activeSubjectId = 'subj-1'
 

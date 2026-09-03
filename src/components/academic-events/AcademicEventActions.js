@@ -4,6 +4,7 @@
 
 import * as NoteStore from '../../store/NoteStore.js'
 import { confirmDialog } from '../common/ConfirmDialog.js'
+import { handleStoreMutationError } from '../common/storeActionErrors.js'
 import { openAcademicEventDialog } from './AcademicEventDialog.js'
 
 function eventTitle(event) {
@@ -47,7 +48,11 @@ export function bindAcademicEventActions(container, getEventById) {
       const event = getEventById(button.dataset.eventId)
 
       handleAcademicEventAction(action, event)
-        .catch(error => console.warn('[AcademicEventActions] No se pudo ejecutar la accion:', error))
+        .catch(error => handleStoreMutationError(error, {
+          onUnexpected: unexpectedError => {
+            console.warn('[AcademicEventActions] No se pudo ejecutar la accion:', unexpectedError)
+          },
+        }))
     })
   })
 }

@@ -6,6 +6,7 @@
 import './AcademicEventDialog.css'
 
 import * as NoteStore from '../../store/NoteStore.js'
+import { handleStoreMutationError } from '../common/storeActionErrors.js'
 import {
   createLabeledControl,
   getInitialDate,
@@ -288,7 +289,11 @@ export function openAcademicEventDialog(options = {}) {
 
         finish(savedEvent)
       } catch (error) {
-        showError(error?.message || 'No se pudo guardar la fecha academica.', 'date')
+        handleStoreMutationError(error, {
+          onUnexpected: unexpectedError => {
+            showError(unexpectedError?.message || 'No se pudo guardar la fecha academica.', 'date')
+          },
+        })
         saveBtn.disabled = false
         saveBtn.textContent = mode === 'edit' ? 'Guardar cambios' : 'Guardar'
       }

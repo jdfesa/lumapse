@@ -9,6 +9,7 @@
 
 import { initSubjects } from './drawerSubjects.js'
 import { initTheme } from './drawerTheme.js'
+import { showErrorToast } from '../components/common/Toast.js'
 
 /**
  * Inicializa toda la lógica interactiva del drawer.
@@ -92,8 +93,15 @@ export function initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS }) {
   let showingArchived = false
 
   btnArchiveToggle.addEventListener('click', async () => {
-    showingArchived = !showingArchived
-    await NoteStore.setShowArchived(showingArchived)
+    const nextShowingArchived = !showingArchived
+    try {
+      await NoteStore.setShowArchived(nextShowingArchived)
+    } catch (error) {
+      showErrorToast(error?.message || 'No se pudo cambiar la vista de archivados.')
+      return
+    }
+
+    showingArchived = nextShowingArchived
     archivedLabel.textContent = showingArchived ? 'Ver notas activas' : 'Ver archivadas'
     btnArchiveToggle.classList.toggle('drawer__nav-btn--active', showingArchived)
     // Desactivar materia seleccionada cuando se muestran archivadas

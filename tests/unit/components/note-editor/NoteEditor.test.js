@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { DatabaseError } from '../../../../src/services/sqlite/errors.js'
 
 vi.mock('../../../../src/store/NoteStore.js', () => ({
   subscribe: vi.fn(() => vi.fn()),
@@ -732,6 +733,33 @@ describe('NoteEditor draft cleanup on save', () => {
     expect(input.value).toBe('Apuntes recuperables')
     expect(editor.container.querySelector('#composer-draft-actions').hidden).toBe(false)
 
+    editor.destroy()
+  })
+
+  it('el listener DOM consume el rechazo SQLite y restaura el editor sin feedback duplicado', async () => {
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+    const saveBtn = editor.container.querySelector('#btn-save-note')
+    const error = new DatabaseError('createNote', new Error('boom'))
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    NoteStore.createNote.mockRejectedValueOnce(error)
+
+    input.value = 'Apuntes recuperables'
+    input.dispatchEvent(new window.Event('input'))
+    editor.enterFocusMode()
+
+    saveBtn.click()
+    await Promise.resolve()
+    await Promise.resolve()
+
+    expect(EditorDraftService.clearDraft).not.toHaveBeenCalled()
+    expect(input.value).toBe('Apuntes recuperables')
+    expect(saveBtn.textContent).toBe('Guardar')
+    expect(saveBtn.disabled).toBe(false)
+    expect(editor.container.querySelector('.composer').classList.contains('composer--focus')).toBe(true)
+    expect(errorSpy).not.toHaveBeenCalled()
+
+    errorSpy.mockRestore()
     editor.destroy()
   })
 

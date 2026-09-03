@@ -249,6 +249,27 @@ describe('AcademicEventDialog', () => {
     expect(document.querySelector('.academic-event-dialog-backdrop')).toBeNull()
   })
 
+  it('mantiene el diálogo reintentable sin feedback inline duplicado ante DatabaseError', async () => {
+    const { DatabaseError } = await import('../../../../src/services/sqlite/errors.js')
+    const error = new DatabaseError('createAcademicEvent', new Error('boom'))
+    storeMock.createAcademicEvent.mockRejectedValueOnce(error)
+    const promise = openAcademicEventDialog({ date: '2026-06-14' })
+
+    await submitDialog()
+    await Promise.resolve()
+
+    const saveBtn = document.querySelector('.academic-event-dialog__btn--save')
+    const errorMessage = document.querySelector('.academic-event-dialog__error')
+    expect(document.querySelector('.academic-event-dialog-backdrop')).not.toBeNull()
+    expect(errorMessage.hidden).toBe(true)
+    expect(saveBtn.disabled).toBe(false)
+    expect(saveBtn.textContent).toBe('Guardar')
+
+    document.querySelector('.academic-event-dialog__btn--cancel').click()
+    await finishAnimation()
+    await expect(promise).resolves.toBeNull()
+  })
+
   it('edita una fecha existente sin cambiar de contrato de store', async () => {
     const original = event({
       id: 'event-7',
