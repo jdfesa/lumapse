@@ -205,23 +205,32 @@ describe('NoteStore.data', () => {
       expect(NoteService.createNote).toHaveBeenCalledWith('Sin título', '# ', null)
     })
 
-    it('emite error de store y retorna undefined ante DatabaseError', async () => {
+    it('emite una vez, rechaza y no cambia estado ante DatabaseError', async () => {
       const storeError = vi.fn()
       const unsubscribe = subscribeToStoreErrors(storeError)
-      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const { listener, unsubscribe: unsubscribeNotify } = listenForNotify()
       const error = new DatabaseError('createNote', new Error('boom'))
+      const existingNote = makeNote({ id: 'existing' })
+      state.notes = [existingNote]
+      state.searchQuery = 'pendiente'
+      state.dateFilter = '2026-09-03'
       NoteService.createNote.mockRejectedValueOnce(error)
 
-      await expect(NoteStoreData.createNote('T', 'C')).resolves.toBeUndefined()
+      await expect(NoteStoreData.createNote('T', 'C')).rejects.toBe(error)
 
+      expect(storeError).toHaveBeenCalledTimes(1)
       expect(storeError).toHaveBeenCalledWith({
         operation: 'createNote',
         message: 'No se pudo crear la nota. Intenta de nuevo.',
         cause: error,
       })
+      expect(state.notes).toEqual([existingNote])
+      expect(state.searchQuery).toBe('pendiente')
+      expect(state.dateFilter).toBe('2026-09-03')
+      expect(listener).not.toHaveBeenCalled()
 
       unsubscribe()
-      errorSpy.mockRestore()
+      unsubscribeNotify()
     })
   })
 
@@ -259,6 +268,30 @@ describe('NoteStore.data', () => {
 
       expect(listener).toHaveBeenCalledWith(state)
       unsubscribe()
+    })
+
+    it('rechaza y conserva la nota sin notify ante DatabaseError', async () => {
+      const originalNote = makeNote({ id: 'note-1', title: 'Vieja' })
+      const error = new DatabaseError('updateNote', new Error('boom'))
+      const storeError = vi.fn()
+      const unsubscribeError = subscribeToStoreErrors(storeError)
+      const { listener, unsubscribe: unsubscribeNotify } = listenForNotify()
+      state.notes = [originalNote]
+      NoteService.updateNote.mockRejectedValueOnce(error)
+
+      await expect(NoteStoreData.updateNote('note-1', { title: 'Nueva' })).rejects.toBe(error)
+
+      expect(state.notes).toEqual([originalNote])
+      expect(listener).not.toHaveBeenCalled()
+      expect(storeError).toHaveBeenCalledTimes(1)
+      expect(storeError).toHaveBeenCalledWith({
+        operation: 'updateNote',
+        message: 'No se pudo actualizar la nota. Intenta de nuevo.',
+        cause: error,
+      })
+
+      unsubscribeError()
+      unsubscribeNotify()
     })
   })
 
@@ -300,24 +333,28 @@ describe('NoteStore.data', () => {
     })
 
     it('rechaza la promesa si falla la persistencia para permitir rollback visual', async () => {
+      const originalNote = makeNote({ id: 'note-1', title: 'Vieja' })
       const error = new DatabaseError('updateNote', new Error('boom'))
-      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const { listener, unsubscribe } = listenForNotify()
+      state.notes = [originalNote]
       NoteService.updateNote.mockRejectedValueOnce(error)
 
       await expect(NoteStoreData.updateNoteSilent('note-1', { title: 'Nueva' })).rejects.toBe(error)
 
-      errorSpy.mockRestore()
+      expect(state.notes).toEqual([originalNote])
+      expect(listener).not.toHaveBeenCalled()
+      unsubscribe()
     })
 
     it('emite error de store si falla con DatabaseError', async () => {
       const storeError = vi.fn()
       const unsubscribe = subscribeToStoreErrors(storeError)
       const error = new DatabaseError('updateNote', new Error('boom'))
-      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
       NoteService.updateNote.mockRejectedValueOnce(error)
 
       await expect(NoteStoreData.updateNoteSilent('note-1', { title: 'Nueva' })).rejects.toBe(error)
 
+      expect(storeError).toHaveBeenCalledTimes(1)
       expect(storeError).toHaveBeenCalledWith({
         operation: 'updateNoteSilent',
         message: 'No se pudo actualizar la nota.',
@@ -325,7 +362,6 @@ describe('NoteStore.data', () => {
       })
 
       unsubscribe()
-      errorSpy.mockRestore()
     })
   })
 

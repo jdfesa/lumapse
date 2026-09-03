@@ -46,16 +46,16 @@ describe('NoteStore.errors', () => {
     await expect(runStoreAction('ok', 'No importa.', async () => 'resultado')).resolves.toBe('resultado')
   })
 
-  it('runStoreAction emite evento y retorna undefined ante DatabaseError', async () => {
+  it('runStoreAction emite exactamente una vez y rechaza el DatabaseError original', async () => {
     const listener = vi.fn()
     const unsubscribe = subscribeToStoreErrors(listener)
-    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     const error = new DatabaseError('insert', new Error('boom'))
 
     await expect(runStoreAction('createNote', 'No se pudo crear la nota.', async () => {
       throw error
-    })).resolves.toBeUndefined()
+    })).rejects.toBe(error)
 
+    expect(listener).toHaveBeenCalledTimes(1)
     expect(listener).toHaveBeenCalledWith({
       operation: 'createNote',
       message: 'No se pudo crear la nota.',
@@ -63,13 +63,11 @@ describe('NoteStore.errors', () => {
     })
 
     unsubscribe()
-    errorSpy.mockRestore()
   })
 
   it('runStoreAction relanza errores que no son de base de datos', async () => {
     const listener = vi.fn()
     const unsubscribe = subscribeToStoreErrors(listener)
-    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     const error = new Error('boom')
 
     await expect(runStoreAction('createNote', 'No se pudo crear la nota.', async () => {
@@ -79,6 +77,5 @@ describe('NoteStore.errors', () => {
     expect(listener).not.toHaveBeenCalled()
 
     unsubscribe()
-    errorSpy.mockRestore()
   })
 })
