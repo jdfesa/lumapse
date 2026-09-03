@@ -25,7 +25,6 @@ export class NoteEditor {
     
     this.handleInput = this.handleInput.bind(this);
     this.handleSave = this.handleSave.bind(this);
-    this.handleSaveClick = this.handleSaveClick.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleDiscardDraft = this.handleDiscardDraft.bind(this);
     this.handlePageHide = this.handlePageHide.bind(this);
@@ -73,7 +72,7 @@ export class NoteEditor {
     input.addEventListener('input', this.handleInput);
     input.addEventListener('keydown', this.handleKeyDown);
     subjectInput.addEventListener('change', this.handleSubjectChange);
-    saveBtn.addEventListener('click', this.handleSaveClick);
+    saveBtn.addEventListener('click', () => this.handleSave().catch(handleStoreMutationError));
     discardBtn.addEventListener('click', this.handleDiscardDraft);
 
     this.slashHandler = new SlashCommandHandler(input, composer);
@@ -296,12 +295,6 @@ export class NoteEditor {
     this.hideDraftStatus();
 
     this.exitFocusMode();
-  }
-
-  handleSaveClick() {
-    return this.handleSave().catch((error) => {
-      handleStoreMutationError(error, { context: 'NoteEditor' });
-    });
   }
 
   extractTitle(content) {
