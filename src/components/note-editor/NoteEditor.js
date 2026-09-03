@@ -6,6 +6,7 @@ import { createEditorDraftPayload, EditorDraftCapture, EditorDraftRestorer } fro
 import { setupEditorPopups } from './NoteEditorPopups.js';
 import { renderNoteEditorTemplate } from './NoteEditorTemplate.js';
 import { confirmDialog } from '../common/ConfirmDialog.js';
+import { handleStoreMutationError } from '../common/storeActionErrors.js';
 import { extractNoteTitle, resolveNoteTitleForSave, splitNoteForEditing, stripRedundantTitleFromContent } from '../../services/NoteTitleService.ts';
 import './NoteEditor.css';
 
@@ -24,6 +25,7 @@ export class NoteEditor {
     
     this.handleInput = this.handleInput.bind(this);
     this.handleSave = this.handleSave.bind(this);
+    this.handleSaveClick = this.handleSaveClick.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleDiscardDraft = this.handleDiscardDraft.bind(this);
     this.handlePageHide = this.handlePageHide.bind(this);
@@ -71,7 +73,7 @@ export class NoteEditor {
     input.addEventListener('input', this.handleInput);
     input.addEventListener('keydown', this.handleKeyDown);
     subjectInput.addEventListener('change', this.handleSubjectChange);
-    saveBtn.addEventListener('click', this.handleSave);
+    saveBtn.addEventListener('click', this.handleSaveClick);
     discardBtn.addEventListener('click', this.handleDiscardDraft);
 
     this.slashHandler = new SlashCommandHandler(input, composer);
@@ -294,6 +296,12 @@ export class NoteEditor {
     this.hideDraftStatus();
 
     this.exitFocusMode();
+  }
+
+  handleSaveClick() {
+    return this.handleSave().catch((error) => {
+      handleStoreMutationError(error, { context: 'NoteEditor' });
+    });
   }
 
   extractTitle(content) {

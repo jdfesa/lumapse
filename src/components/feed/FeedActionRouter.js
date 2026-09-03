@@ -9,6 +9,7 @@
 import * as NoteStore from '../../store/NoteStore.js'
 import { renderTrashView } from './TrashView.js'
 import { confirmDialog } from '../common/ConfirmDialog.js'
+import { handleStoreMutationError } from '../common/storeActionErrors.js'
 
 const TASK_LINE_REGEX = /^(\s*[-*+]\s+\[)([ xX])(\]\s+)/
 const pendingCheckboxToggles = new Set()
@@ -83,7 +84,7 @@ async function handleTaskCheckbox(event) {
     await NoteStore.updateNoteSilent(noteId, { content: toggle.content })
   } catch (error) {
     setCheckboxChecked(checkbox, previousChecked)
-    console.error('[FeedActionRouter] No se pudo actualizar checkbox:', error)
+    handleStoreMutationError(error, { context: 'FeedActionRouter' })
   } finally {
     pendingCheckboxToggles.delete(lockKey)
     if (checkbox.isConnected) {
@@ -110,8 +111,9 @@ const ACTION_MAP = [
   },
   {
     selector: '.js-btn-restore',
-    handler: (_event, button, deps) => {
-      NoteStore.restoreNoteFromTrash(button.dataset.id).then(() => refreshTrash(deps))
+    handler: async (_event, button, deps) => {
+      await NoteStore.restoreNoteFromTrash(button.dataset.id)
+      refreshTrash(deps)
     }
   },
   {
@@ -131,14 +133,16 @@ const ACTION_MAP = [
   },
   {
     selector: '.js-btn-restore-subject',
-    handler: (_event, button, deps) => {
-      NoteStore.restoreSubjectFromTrash(button.dataset.id).then(() => refreshTrash(deps))
+    handler: async (_event, button, deps) => {
+      await NoteStore.restoreSubjectFromTrash(button.dataset.id)
+      refreshTrash(deps)
     }
   },
   {
     selector: '.js-btn-restore-section',
-    handler: (_event, button, deps) => {
-      NoteStore.restoreSectionFromTrash(button.dataset.id).then(() => refreshTrash(deps))
+    handler: async (_event, button, deps) => {
+      await NoteStore.restoreSectionFromTrash(button.dataset.id)
+      refreshTrash(deps)
     }
   },
   {
@@ -147,37 +151,49 @@ const ACTION_MAP = [
   },
   {
     selector: '.js-btn-pin',
-    handler: (_event, button) => NoteStore.togglePin(button.dataset.id)
+    handler: async (_event, button, deps) => {
+      await NoteStore.togglePin(button.dataset.id)
+      deps.closeAllDropdowns()
+    }
   },
   {
     selector: '.js-btn-archive',
-    handler: (_event, button) => NoteStore.toggleArchive(button.dataset.id)
+    handler: async (_event, button, deps) => {
+      await NoteStore.toggleArchive(button.dataset.id)
+      deps.closeAllDropdowns()
+    }
   },
   {
     selector: '.js-btn-move-to',
-    handler: (_event, button, deps) => {
+    handler: async (_event, button, deps) => {
       const noteId = button.dataset.noteId
       const targetSubject = button.dataset.subjectId || null
-      NoteStore.moveNote(noteId, targetSubject)
+      await NoteStore.moveNote(noteId, targetSubject)
       deps.closeAllDropdowns()
     }
   },
   {
     selector: '.js-btn-status',
-    handler: (_event, button, deps) => {
+    handler: async (_event, button, deps) => {
       const noteId = button.dataset.noteId
       const statusValue = button.dataset.emoji || null
-      NoteStore.setNoteStatus(noteId, statusValue)
+      await NoteStore.setNoteStatus(noteId, statusValue)
       deps.closeAllDropdowns()
     }
   },
   {
     selector: '.js-btn-edit',
-    handler: (_event, button, deps) => deps.onEdit(button.dataset.id)
+    handler: (_event, button, deps) => {
+      deps.onEdit(button.dataset.id)
+      deps.closeAllDropdowns()
+    }
   },
   {
     selector: '.js-btn-delete',
-    handler: (_event, button, deps) => deps.onDelete(button.dataset.id)
+    handler: async (_event, button, deps) => {
+      await deps.onDelete(button.dataset.id)
+      deps.closeAllDropdowns()
+    }
   },
   {
     selector: '.js-btn-copy',
@@ -199,17 +215,23 @@ export function createFeedActionRouter(deps) {
   return (event) => {
     // Checkbox interactivo: toggle de task list (- [ ] <-> - [x])
     if (event.target.type === 'checkbox' && event.target.hasAttribute('data-line')) {
-      handleTaskCheckbox(event)
+      void handleTaskCheckbox(event)
       return
     }
 
     for (const entry of ACTION_MAP) {
       const button = event.target.closest(entry.selector)
       if (button) {
-        if (entry.selector !== '.js-btn-menu' && entry.selector !== '.js-btn-copy') {
-          deps.closeAllDropdowns()
+        try {
+          const result = entry.handler(event, button, deps)
+          if (result && typeof result.then === 'function') {
+            void result.catch(error => {
+              handleStoreMutationError(error, { context: 'FeedActionRouter' })
+            })
+          }
+        } catch (error) {
+          handleStoreMutationError(error, { context: 'FeedActionRouter' })
         }
-        entry.handler(event, button, deps)
         return
       }
     }

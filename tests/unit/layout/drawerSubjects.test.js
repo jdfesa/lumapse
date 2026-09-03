@@ -4,6 +4,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { initSubjects } from '../../../src/layout/drawerSubjects.js'
 import { DRAWER_SUBJECT_COLLAPSE_STORAGE_KEY } from '../../../src/layout/drawerSubjectCollapseState.js'
+import { showErrorToast } from '../../../src/components/common/Toast.js'
+import { DatabaseError } from '../../../src/services/sqlite/errors.js'
+
+vi.mock('../../../src/components/common/Toast.js', () => ({
+  showErrorToast: vi.fn(),
+}))
 
 const SUBJECT_COLORS = ['#818cf8', '#22c55e']
 const ADVERSARIAL_SUBJECT_ID = 'subject-id"] # odd[data-injected="true'
@@ -77,6 +83,8 @@ function setupSubjectsDrawer({ stateOverrides = {}, subjectsData = makeSubjectsD
     archiveSection: vi.fn().mockResolvedValue(undefined),
     deleteSubject: vi.fn().mockResolvedValue(undefined),
     deleteSection: vi.fn().mockResolvedValue(undefined),
+    unarchiveSubject: vi.fn().mockResolvedValue(undefined),
+    unarchiveSection: vi.fn().mockResolvedValue(undefined),
   }
   const closeDrawer = vi.fn()
   const resetArchived = vi.fn()
@@ -106,6 +114,43 @@ function getStoredCollapsedIds() {
 
 beforeEach(() => {
   localStorage.clear()
+  vi.clearAllMocks()
+})
+
+describe('drawerSubjects mutation failures', () => {
+  it('mantiene el formulario y no duplica el toast ante DatabaseError', async () => {
+    const { NoteStore } = setupSubjectsDrawer()
+    const form = document.getElementById('subject-form-container')
+    const input = document.getElementById('subject-name-input')
+    NoteStore.createSubject.mockRejectedValueOnce(
+      new DatabaseError('createSubject', new Error('boom')),
+    )
+
+    document.getElementById('btn-add-subject').click()
+    input.value = 'Materia pendiente'
+    document.getElementById('btn-subject-save').click()
+    await Promise.resolve()
+    await Promise.resolve()
+
+    expect(form.style.display).toBe('block')
+    expect(input.value).toBe('Materia pendiente')
+    expect(showErrorToast).not.toHaveBeenCalled()
+  })
+
+  it('presenta una sola vez un error no SQLite en el límite del drawer', async () => {
+    const { NoteStore } = setupSubjectsDrawer()
+    const error = new Error('fallo inesperado')
+    NoteStore.createSubject.mockRejectedValueOnce(error)
+
+    document.getElementById('btn-add-subject').click()
+    document.getElementById('subject-name-input').value = 'Materia pendiente'
+    document.getElementById('btn-subject-save').click()
+    await Promise.resolve()
+    await Promise.resolve()
+
+    expect(showErrorToast).toHaveBeenCalledTimes(1)
+    expect(showErrorToast).toHaveBeenCalledWith('fallo inesperado')
+  })
 })
 
 describe('drawerSubjects collapse', () => {

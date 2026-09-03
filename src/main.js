@@ -18,6 +18,7 @@ import { Heatmap } from './components/academic-events/Heatmap.js'
 import { UpcomingAcademicEvents } from './components/academic-events/UpcomingAcademicEvents.js'
 import { confirmDialog } from './components/common/ConfirmDialog.js'
 import { showErrorToast } from './components/common/Toast.js'
+import { handleStoreMutationError } from './components/common/storeActionErrors.js'
 import { renderAppShell } from './layout/appShell.js'
 import { initDrawer } from './layout/drawerController.js'
 // import { seedTiktokData, seedStressTest } from './utils/seeder.js'
@@ -105,15 +106,19 @@ async function initApp() {
   })
 
   btnEmptyTrashToast?.addEventListener('click', async () => {
-    const confirmed = await confirmDialog({
-      title: 'Vaciar papelera',
-      message: '¿Vaciar toda la papelera? Esta acción no se puede deshacer.',
-      confirmText: 'Vaciar',
-      danger: true,
-    })
-    if (confirmed) {
-      await NoteStore.emptyTrash()
-      trashToast.style.display = 'none'
+    try {
+      const confirmed = await confirmDialog({
+        title: 'Vaciar papelera',
+        message: '¿Vaciar toda la papelera? Esta acción no se puede deshacer.',
+        confirmText: 'Vaciar',
+        danger: true,
+      })
+      if (confirmed) {
+        await NoteStore.emptyTrash()
+        trashToast.style.display = 'none'
+      }
+    } catch (error) {
+      handleStoreMutationError(error, { context: 'main' })
     }
   })
 }

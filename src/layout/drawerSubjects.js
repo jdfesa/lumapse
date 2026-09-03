@@ -4,6 +4,7 @@
 // =============================================================
 
 import { showErrorToast } from '../components/common/Toast.js'
+import { handleStoreMutationError } from '../components/common/storeActionErrors.js'
 import { handleUnarchiveSubjectButton } from './drawerArchivedSubjects.js'
 import {
   isSubjectCollapsed,
@@ -40,6 +41,12 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
     NoteStore,
     startRenameSubject,
   })
+
+  function handleSubjectMutationError(error) {
+    handleStoreMutationError(error, {
+      onUnexpected: unexpectedError => showErrorToast(unexpectedError?.message || 'No se pudo completar la acción.'),
+    })
+  }
 
   // Renderizar paleta de colores
   colorPickerContainer.innerHTML = SUBJECT_COLORS.map((color, i) => `
@@ -80,7 +87,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
       subjectFormContainer.style.display = 'none'
       subjectNameInput.value = ''
     } catch (err) {
-      showErrorToast(err.message)
+      handleSubjectMutationError(err)
     }
   })
 
@@ -132,7 +139,8 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
     const btnUnarchive = e.target.closest('.js-btn-unarchive-subject')
     if (btnUnarchive) {
       e.stopPropagation()
-      handleUnarchiveSubjectButton(btnUnarchive, NoteStore)
+      void handleUnarchiveSubjectButton(btnUnarchive, NoteStore)
+        .catch(handleSubjectMutationError)
       return
     }
 
@@ -255,7 +263,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
       form.style.display = 'none'
     } catch (err) {
       if (wasCollapsed) setSubjectCollapsed(parentId, true)
-      showErrorToast(err.message)
+      handleSubjectMutationError(err)
     }
   }
 
@@ -316,7 +324,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
     try {
       await NoteStore.updateSubject(subjectId, { name: trimmed })
     } catch (err) {
-      showErrorToast(err.message)
+      handleSubjectMutationError(err)
     }
   }
 

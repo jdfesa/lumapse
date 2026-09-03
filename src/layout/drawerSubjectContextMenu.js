@@ -3,6 +3,7 @@
 // =============================================================
 
 import { confirmDialog } from '../components/common/ConfirmDialog.js'
+import { handleStoreMutationError } from '../components/common/storeActionErrors.js'
 
 /**
  * Configura un único menú contextual reutilizable para materias/secciones.
@@ -132,40 +133,48 @@ export function setupSubjectContextMenu({ subjectsList, NoteStore, startRenameSu
   })
 
   ctxMenu.querySelector('.js-ctx-archive').addEventListener('click', async () => {
-    if (!ctxTarget) return
-    const { subjectId, isSection, subjectName } = ctxTarget
-    const type = isSection ? 'sección' : 'materia'
-    closeCtxMenu()
-    const confirmed = await confirmDialog({
-      title: `Archivar ${type}`,
-      message: `¿Archivar la ${type} "${subjectName}" y todas sus notas?`,
-      confirmText: 'Archivar',
-    })
-    if (confirmed) {
-      if (isSection) {
-        await NoteStore.archiveSection(subjectId)
-      } else {
-        await NoteStore.archiveSubject(subjectId)
+    try {
+      if (!ctxTarget) return
+      const { subjectId, isSection, subjectName } = ctxTarget
+      const type = isSection ? 'sección' : 'materia'
+      closeCtxMenu()
+      const confirmed = await confirmDialog({
+        title: `Archivar ${type}`,
+        message: `¿Archivar la ${type} "${subjectName}" y todas sus notas?`,
+        confirmText: 'Archivar',
+      })
+      if (confirmed) {
+        if (isSection) {
+          await NoteStore.archiveSection(subjectId)
+        } else {
+          await NoteStore.archiveSubject(subjectId)
+        }
       }
+    } catch (error) {
+      handleStoreMutationError(error, { context: 'drawerSubjectContextMenu' })
     }
   })
 
   ctxMenu.querySelector('.js-ctx-delete').addEventListener('click', async () => {
-    if (!ctxTarget) return
-    const { subjectId, isSection, subjectName } = ctxTarget
-    const type = isSection ? 'sección' : 'materia'
-    closeCtxMenu()
-    const confirmed = await confirmDialog({
-      title: `Enviar ${type} a papelera`,
-      message: `¿Enviar la ${type} "${subjectName}" y todas sus notas a la Papelera de reciclaje?`,
-      confirmText: 'Enviar',
-    })
-    if (confirmed) {
-      if (isSection) {
-        await NoteStore.deleteSection(subjectId)
-      } else {
-        await NoteStore.deleteSubject(subjectId)
+    try {
+      if (!ctxTarget) return
+      const { subjectId, isSection, subjectName } = ctxTarget
+      const type = isSection ? 'sección' : 'materia'
+      closeCtxMenu()
+      const confirmed = await confirmDialog({
+        title: `Enviar ${type} a papelera`,
+        message: `¿Enviar la ${type} "${subjectName}" y todas sus notas a la Papelera de reciclaje?`,
+        confirmText: 'Enviar',
+      })
+      if (confirmed) {
+        if (isSection) {
+          await NoteStore.deleteSection(subjectId)
+        } else {
+          await NoteStore.deleteSubject(subjectId)
+        }
       }
+    } catch (error) {
+      handleStoreMutationError(error, { context: 'drawerSubjectContextMenu' })
     }
   })
 
