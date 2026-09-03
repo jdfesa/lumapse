@@ -1,7 +1,7 @@
 # AUD-007 — Contrato de errores de mutaciones del store
 
 **Fecha:** 2026-09-03  
-**Estado:** análisis y contrato aprobados para implementación  
+**Estado:** implementación y validación completas; integración autorizada mediante PR #6  
 **Rama:** `fix/store-action-contract`  
 **Base canónica:** `15de2ba95a4334b72a0549c3bd1555c658a28d9d` (`main` = `origin/main`)  
 **Alcance:** AUD-007; sin cambios de transacciones, coordinación async, tooling, schema, dependencias ni versión
@@ -193,20 +193,21 @@ persistencia primaria no muta memoria ni DOM como éxito.
 Los archivos focales se ampliarán sin debilitar expectativas existentes. Cuando un consumidor adicional lo
 requiera, su regresión se agregará en el test específico de ese componente o layout.
 
-## 10. Validación prevista
+## 10. Validación ejecutada
 
-La validación automática incluirá los seis archivos focales, suite completa, coverage, lint, typecheck, build,
-presupuesto, checks estáticos/documentales, `verify`, auditorías npm y árbol de dependencias. Cualquier limitación
-exclusiva de AUD-008/AUD-009 se informará sin debilitar el gate.
+La validación canónica en la Mac aprobó `npm run verify`: 62 archivos y 989 tests, lint sin errores
+(tres warnings conocidos), typecheck, build de 118 módulos, toolchain, smoke SQLite, bundle gzip de
+192,94 kB sobre 250 kB, diálogos nativos y accesibilidad. Los 63 tests focalizados del editor y la frontera
+de errores también aprobaron. Las auditorías npm completa y productiva informaron 0 vulnerabilidades.
 
-La validación Android no se ejecuta en la máquina remota porque el dispositivo solo estará disponible en la Mac
-local. Una vez publicados todos los commits se entregarán SHA exacto, resumen y checklist para probar creación y
-edición, pin/archive/status/move, checkbox, eventos académicos, papelera, ausencia de doble toast, reinicio y
-persistencia SQLite. El PR no se creará ni mergeará hasta recibir confirmación explícita de ese gate.
+La máquina remota implementó y publicó el refactor final; la validación Android se ejecutó exclusivamente en la
+Mac, donde está conectado el dispositivo. El script oficial instaló `a01d71e` preservando SQLite y manteniendo
+`versionName` 0.4.8 / `versionCode` 408. La creación y el guardado de una nota fueron aprobados manualmente y no
+se observó feedback duplicado. El usuario autorizó crear, aprobar y mergear el PR #6 tras checks verdes.
 
 ## 11. Criterios de cierre
 
-AUD-007 podrá cerrarse únicamente cuando:
+Los criterios de cierre de AUD-007 quedaron satisfechos:
 
 - todas las mutaciones persistentes relevantes compartan el contrato emit-and-rethrow;
 - cada límite UI inventariado consuma el rechazo y no ejecute efectos de éxito después de un fallo;
@@ -225,3 +226,12 @@ AUD-007 podrá cerrarse únicamente cuando:
 - No se actualizan dependencias, release-helper, versión web/Android, APK, release, tag ni línea base.
 
 El siguiente frente técnico independiente permanece `fix/sqlite-write-coordination` para AUD-005.
+
+## 13. Evidencia de implementación
+
+- `fd2d41b` — contrato y análisis reproducible;
+- `037ac75` — política emit-and-rethrow en mutaciones del store;
+- `0a54d22` — límites UI sin falsos éxitos ni rechazos no manejados;
+- `a01d71e` — refactor mínimo del listener de guardado; `NoteEditor.js` pasó de 406 a 400 LOC lógicas;
+- PR #6 — integración autorizada con gates de GitHub requeridos;
+- Android local — deploy oficial, SQLite de 53.248 bytes preservada y prueba manual aprobada el 2026-09-03.

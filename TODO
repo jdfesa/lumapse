@@ -4,11 +4,11 @@
 
 ## Hito actual: 06 — Entrega Final
 
-**Estado:** activo; AUD-001 a AUD-003 quedaron integrados y AUD-004 completó implementación y validación con integración autorizada al 2026-09-02.
+**Estado:** activo; AUD-001 a AUD-004 y AUD-007 quedaron cerrados técnicamente mediante PR #2, #3, #5 y #6.
 
 **Corte operativo vigente:** beta/candidata [`v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8), publicada y validada inicialmente en Android real.
 
-**Versión:** `v0.4.8`; el trabajo posterior al tag —incluido AUD-004— permanece no publicado y no existe una release `0.4.9`. La versión del próximo artefacto solo se decidirá después de cerrar sus bloqueos y validaciones.
+**Versión:** `v0.4.8`; el trabajo posterior al tag —incluidos AUD-001 a AUD-004 y AUD-007— permanece no publicado y no existe una release `0.4.9`. La versión del próximo artefacto solo se decidirá después de cerrar sus bloqueos y validaciones.
 
 **Objetivo:** cerrar documentación, gráficos de base de datos, validación final y materiales de presentación sin ampliar el producto.
 
@@ -34,6 +34,7 @@
 - [ ] Alinear el tablero de GitHub Projects con la Definition of Workflow: WIP global 2, bloqueos y fechas `startedAt`/`finishedAt`; recalibrar la SLE al completar cinco elementos confiables.
 - [ ] Contrastar los metadatos bibliográficos de Gómez (2014) y Parada (2026) contra los originales de cátedra y cerrar la sección de referencias.
 - [x] Resolver AUD-004 en un PR separado: DOMPurify y siete dependencias de tooling parcheadas, auditorías 0/0, 955 tests, build, quality gate y Android 0.4.8/408 aprobados (2026-09-02).
+- [x] Resolver AUD-007 en PR #6: contrato de errores de mutaciones unificado, límites UI adaptados, 989 tests, quality gate y prueba manual Android aprobados (2026-09-03).
 - [ ] Ejecutar el gate final sobre el commit y artefacto candidatos y guardar la evidencia; el gate acumulativo de AUD-003 y los pre-push documentales no sustituyen este cierre.
 - [ ] Repetir la validación Android sobre el artefacto versionado con un conjunto de datos representativo; el checkpoint de AUD-003 ya cubrió `STORE`, `DEFLATE`, datos inválidos y una fixture de 500 notas.
 - [ ] Verificar específicamente la interacción `Mover a` y clasificar su fricción como corregida, aceptada o bloqueante.

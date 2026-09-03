@@ -1,6 +1,6 @@
 # Revisión Técnica Priorizada — 2026-09-01
 
-**Estado:** Vigente — AUD-001 a AUD-003 integrados; AUD-004 implementado y validado, con integración autorizada
+**Estado:** Vigente — AUD-001 a AUD-004 y AUD-007 cerrados técnicamente
 **Rama original de auditoría:** `fix/note-save-integrity`
 **Commit base original revisado:** `cd60c0e` (`main`)
 **Versión de producto documentada:** `0.4.8` (Beta)  
@@ -95,10 +95,10 @@ store, no como métrica integral de toda la aplicación.
 | AUD-001 | P0 | Pérdida de borrador ante error SQLite | Bug confirmado | Resuelto en PR #2 |
 | AUD-002 | P0 | Guardados duplicados por taps concurrentes | Bug confirmado | Resuelto en PR #2 |
 | AUD-003 | P0 | Inyección HTML persistente desde campos de backup | Seguridad confirmada | Cerrado en PR #3 |
-| AUD-004 | P0 | Dependencias vulnerables, incluida DOMPurify en producción | Seguridad/tooling | Implementación y validación completas; integración autorizada |
+| AUD-004 | P0 | Dependencias vulnerables, incluida DOMPurify en producción | Seguridad/tooling | Cerrado en PR #5 |
 | AUD-005 | P1 | Propiedad global de transacciones y migraciones permisivas | Confiabilidad | Pendiente |
 | AUD-006 | P1 | Resultados async obsoletos sobrescriben vista/cache reciente | Bug de concurrencia | Pendiente |
-| AUD-007 | P1 | Contratos incompatibles para errores de mutaciones | Diseño/confiabilidad | Pendiente |
+| AUD-007 | P1 | Contratos incompatibles para errores de mutaciones | Diseño/confiabilidad | Cerrado en PR #6 |
 | AUD-008 | P1 | Gate canónico no portable y CI desalineada | Tooling | Pendiente |
 | AUD-009 | P1 | Suite no reproducible en toda la versión Node declarada | Tooling | Pendiente |
 | AUD-010 | P2 | Broadcasts globales y refreshes no atómicos | Escalabilidad | Pendiente de medición |
@@ -409,8 +409,8 @@ test(editor): cover failed and concurrent note saves
 |---:|---|---|
 | 1 | `fix/note-save-integrity` | Cerrado en PR #2: AUD-001 y AUD-002 |
 | 2 | `fix/backup-import-security` | Cerrado en PR #3: AUD-003 |
-| 3 | `fix/aud-004-dependency-security` | Implementación y validación completas; integración autorizada |
-| 4 | `fix/store-action-contract` | Unificar semántica de errores de mutaciones |
+| 3 | `fix/aud-004-dependency-security` | Cerrado en PR #5: AUD-004 |
+| 4 | `fix/store-action-contract` | Cerrado en PR #6: AUD-007 |
 | 5 | `fix/sqlite-write-coordination` | Aislar transacciones y endurecer migraciones/arranque |
 | 6 | `fix/async-request-ownership` | Evitar resultados obsoletos en trash y Heatmap |
 | 7 | `fix/quality-gate-portability` | Unificar gate local/CI y resolver matriz Node |
@@ -475,6 +475,17 @@ Resultado consolidado:
 - Android 0.4.8/408 instalado preservando SQLite en Samsung SM_G965F; comportamiento aprobado
   explícitamente. No se publicó APK, release ni tag.
 
+### Cierre automático y manual de AUD-007 — 2026-09-03
+
+- Contrato emit-and-rethrow aplicado a las mutaciones persistentes y consumidores UI adaptados sin
+  falsos éxitos, rechazos no manejados ni feedback duplicado.
+- Tests focalizados del editor/frontera: **2 archivos/63 tests**; suite completa: **62 archivos/989 tests**.
+- `npm run verify`, lint (**0 errores/3 warnings conocidos**), typecheck, build (**118 módulos**) y
+  auditorías completa/productiva (**0 vulnerabilidades**) aprobados en la Mac canónica.
+- `NoteEditor.js` pasó de **406 a 400 LOC lógicas**, eliminando el estado bloqueante sin cambiar el umbral.
+- Android 0.4.8/408 instalado mediante el script oficial, SQLite preservada y creación/guardado de nota
+  aprobados manualmente. No se publicó APK, release ni tag.
+
 ## 11. Limitaciones de la revisión
 
 - Se aprobó el escenario funcional Android con 500 notas; no se ejecutó benchmark instrumentado ni
@@ -494,7 +505,6 @@ cohesión de features con cambios pequeños y medidos.
 
 La revisión inicial quedó vinculada al primer fix porque AUD-001 y AUD-002 afectaban el flujo
 central del producto y presentaban la mejor relación entre impacto, riesgo y tamaño de cambio.
-Ambos hallazgos se cerraron posteriormente en la PR #2 y AUD-003 en la PR #3. AUD-004 quedó
-implementado y validado en `fix/aud-004-dependency-security`; las auditorías completa y productiva
-quedaron en cero, el checkpoint Android fue aprobado el 2026-09-02 y su integración quedó
-autorizada. AUD-005 y los demás hallazgos conservan alcance y seguimiento independientes.
+Ambos hallazgos se cerraron posteriormente en la PR #2, AUD-003 en la PR #3 y AUD-004 en la PR #5.
+AUD-007 quedó cerrado en la PR #6 con contrato único, límites UI adaptados y validación automática/Android
+aprobada. AUD-005 y los demás hallazgos conservan alcance y seguimiento independientes.
