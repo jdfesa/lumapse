@@ -8,7 +8,7 @@
 
 **Proyecto:** Lumapse
 
-**Estado:** Activo — endurecimiento técnico integrado; cierre editorial, RNF y artefacto pendientes
+**Estado:** Activo — AUD-001 a AUD-004 cerrados técnicamente; cierre editorial, RNF y artefacto pendientes
 
 **Última actualización:** 2026-09-02
 
@@ -56,7 +56,7 @@ Cerrar Lumapse con documentación coherente, evidencia técnica reproducible, di
 - [x] Cerrar AUD-001 y AUD-002 con regresiones de error y concurrencia, integración mediante PR #2 y comportamiento de descarte distinguible.
 - [x] Cerrar AUD-003 con importación ZIP acotada, validación runtime, jerarquía consistente, presentación defensiva, suite acumulativa e integración mediante PR #3.
 - [x] Aprobar los checkpoints Android de AUD-003 con backups `STORE`/`DEFLATE`, rechazo de datos inválidos antes de persistir, fixture de 500 notas y build completo instalado. Esta evidencia no equivale a validar un artefacto publicado nuevo.
-- [ ] Resolver AUD-004 en un PR separado antes del próximo APK publicado y repetir auditoría de dependencias, sanitización, lockfile, suite y build.
+- [x] Resolver AUD-004 en un PR separado: grafo mínimo actualizado, auditorías completa/productiva en cero, sanitización, 955 tests, build, quality gate y Android 0.4.8/408 aprobados el 2026-09-02.
 - [ ] Ejecutar el quality gate sobre el commit candidato y guardar la evidencia; los gates acumulativos y pre-push ya aprobados no sustituyen el cierre del corte.
 - [ ] Repetir la checklist Android sobre el artefacto versionado y firmado elegido.
 - [ ] Medir latencia CRUD y rendimiento con al menos 500 notas (`RNF-002`, `RNF-004`); la importación funcional de esa cantidad no constituye una medición de rendimiento.
@@ -78,7 +78,7 @@ Cerrar Lumapse con documentación coherente, evidencia técnica reproducible, di
 
 ### 5. Corte y línea base final
 
-- `v0.4.8` permanece como evidencia inmutable de la beta, pero no contiene las correcciones AUD-001/002/003 ya integradas; el próximo artefacto distribuido deberá partir de un corte posterior.
+- `v0.4.8` permanece como evidencia inmutable de la beta y no contiene las correcciones AUD-001/002/003/004; el próximo artefacto distribuido deberá partir de un corte posterior.
 - Decidir si ese corte se publica como beta patch `v0.4.9` para una nueva ronda de validación o se reserva para la versión final de Hito 06.
 - No crear `0.4.9` de forma preventiva ni reutilizar `versionCode 408` para un binario diferente.
 - Corregir o reforzar `scripts/release-helper.py`: actualmente actualiza package/changelog, pero no garantiza la alineación de `versionName` y `versionCode` Android.
@@ -102,7 +102,7 @@ Las ideas conservadas siguen en [`../../BACKLOG.md`](../../BACKLOG.md) y no comp
 | Orden | Frente | Salida esperada |
 |---|---|---|
 | 1 | Sincronización documental | Evidencia post-auditoría reflejada sin confundir `main` con una release |
-| 2 | Seguridad de release | AUD-004 resuelto y dependencias verificadas en un frente independiente |
+| 2 | Seguridad de release | Completado: AUD-004 validado con auditorías 0/0 y Android aprobado |
 | 3 | Revisión editorial y diagramas DB | Contenido congelado; fuentes y exportaciones finales verificadas |
 | 4 | Validación | Gate, matriz RNF y checklist Android sin bloqueantes sobre el mismo artefacto |
 | 5 | Presentación | Deck, demo, guion y contingencia listos |
@@ -114,7 +114,7 @@ Se mantiene WIP máximo de dos elementos activos en total entre `En Curso` y `En
 
 | Observación | Severidad actual | Evidencia requerida |
 |---|---|---|
-| AUD-004 — dependencias con advisories | P0 / bloqueante para nueva publicación | PR separado, auditoría de dependencias y regresiones de sanitización/build |
+| AUD-004 — dependencias con advisories | Cerrado técnicamente / sin bloqueantes | Grafo mínimo, auditorías 0/0, sanitización, build y Android aprobados el 2026-09-02 |
 | El helper no alinea automáticamente la versión Android | Riesgo alto de release | Test o gate que compare versión declarada, `versionName` y `versionCode` antes del build |
 | `Mover a` puede requerir pulsación prolongada | Menor / no bloqueante | Reproducción repetible en validación final y decisión explícita |
 | Rendimiento con mayor volumen de notas | Riesgo medio de evidencia | Medición de latencia y percepción con al menos 500 notas; no solo importación funcional |
@@ -127,7 +127,7 @@ Se mantiene WIP máximo de dos elementos activos en total entre `En Curso` y `En
 - [x] AUD-001, AUD-002 y AUD-003 corregidos, validados e integrados.
 - [ ] Informe final revisado, referenciado y exportable.
 - [x] Gráficos de base de datos actualizados y consistentes con el schema.
-- [ ] AUD-004 resuelto y auditoría de dependencias sin bloqueantes aceptados para el corte.
+- [x] AUD-004 resuelto y auditorías completa/productiva sin vulnerabilidades al 2026-09-02.
 - [ ] Quality gate final sin fallos.
 - [ ] Validación Android final documentada y sin bloqueantes.
 - [ ] Matriz RNF final emitida con evidencia reproducible y límites explícitos.

@@ -1,6 +1,6 @@
 # Revisión Técnica Priorizada — 2026-09-01
 
-**Estado:** Vigente — AUD-003 con implementación y validación completas; integración autorizada
+**Estado:** Vigente — AUD-001 a AUD-003 integrados; AUD-004 implementado y validado, con integración autorizada
 **Rama original de auditoría:** `fix/note-save-integrity`
 **Commit base original revisado:** `cd60c0e` (`main`)
 **Versión de producto documentada:** `0.4.8` (Beta)  
@@ -72,7 +72,7 @@ está en reforzar los límites ya existentes de forma incremental.
 | Build | Pasa con Vite 6.4.2 |
 | Bundle JS gzip | 203,77 kB de 220 kB permitidos (93%) |
 | Auditoría offline fallback | Falla por dos falsos positivos de `http://localhost` en el CSP |
-| Dependencias | 7 vulnerabilidades reportadas por `npm audit` |
+| Dependencias | 7 vulnerabilidades en la revisión inicial; 0 tras el cierre de AUD-004 el 2026-09-02 |
 
 ### 5.1 Advertencias ESLint vigentes
 
@@ -94,8 +94,8 @@ store, no como métrica integral de toda la aplicación.
 |---|---|---|---|---|
 | AUD-001 | P0 | Pérdida de borrador ante error SQLite | Bug confirmado | Resuelto en PR #2 |
 | AUD-002 | P0 | Guardados duplicados por taps concurrentes | Bug confirmado | Resuelto en PR #2 |
-| AUD-003 | P0 | Inyección HTML persistente desde campos de backup | Seguridad confirmada | Implementación y validación completas; integración autorizada |
-| AUD-004 | P0 | Dependencias vulnerables, incluida DOMPurify en producción | Seguridad/tooling | Pendiente |
+| AUD-003 | P0 | Inyección HTML persistente desde campos de backup | Seguridad confirmada | Cerrado en PR #3 |
+| AUD-004 | P0 | Dependencias vulnerables, incluida DOMPurify en producción | Seguridad/tooling | Implementación y validación completas; integración autorizada |
 | AUD-005 | P1 | Propiedad global de transacciones y migraciones permisivas | Confiabilidad | Pendiente |
 | AUD-006 | P1 | Resultados async obsoletos sobrescriben vista/cache reciente | Bug de concurrencia | Pendiente |
 | AUD-007 | P1 | Contratos incompatibles para errores de mutaciones | Diseño/confiabilidad | Pendiente |
@@ -201,15 +201,20 @@ preparados.
 
 ### AUD-004 — Dependencias vulnerables
 
-La auditoría encontró:
+El análisis reproducible y los criterios de cierre quedan en
+[`analisis-aud-004-seguridad-dependencias-2026-09-02.md`](analisis-aud-004-seguridad-dependencias-2026-09-02.md).
+La revalidación inicial encontró ocho paquetes vulnerables: DOMPurify como única dependencia
+productiva afectada y siete entradas exclusivas de tooling.
 
-- `dompurify@3.4.2`: dependencia directa de producción con advisories de sanitización/XSS.
-- `vite@6.4.2`: dependencia directa de desarrollo.
-- `tar@7.5.15`, `postcss@8.5.10`, `nanoid@3.3.11`, `undici@7.25.0` y
-  `brace-expansion@5.0.5`: dependencias transitivas.
+La remediación mantuvo los majors actuales y actualizó `dompurify` a 3.4.14, Vite a 6.4.3,
+`tar` a 7.5.22, PostCSS a 8.5.26, nanoid a 3.3.18, undici a 7.29.0,
+`brace-expansion` a 5.0.9 y `@xmldom/xmldom` a 0.9.12. El lockfile no incorporó overrides,
+transitivas directas ni expansión de paquetes opcionales.
 
-Todas reportaron una corrección disponible al momento del análisis. La actualización debe hacerse
-en un PR separado, revisando changelogs, lockfile, build y tests de sanitización.
+`npm ci`, ambas auditorías en cero, `npm ls --all`, 56 tests focalizados de Markdown, 955 tests
+totales, lint, typecheck, build y `npm run verify` pasaron. El build Android 0.4.8/408 preservó
+SQLite y su funcionamiento fue aprobado explícitamente en Samsung SM_G965F. No se publicó una
+release ni se cambió la versión; la integración quedó autorizada.
 
 ### AUD-005 — Coordinación SQLite y arranque
 
@@ -403,8 +408,8 @@ test(editor): cover failed and concurrent note saves
 | Orden | Rama sugerida | Resultado esperado |
 |---:|---|---|
 | 1 | `fix/note-save-integrity` | Cerrado en PR #2: AUD-001 y AUD-002 |
-| 2 | `fix/backup-import-security` | Implementación y validación completas; integración autorizada |
-| 3 | `fix/dependency-security` | Actualizar DOMPurify y dependencias auditadas |
+| 2 | `fix/backup-import-security` | Cerrado en PR #3: AUD-003 |
+| 3 | `fix/aud-004-dependency-security` | Implementación y validación completas; integración autorizada |
 | 4 | `fix/store-action-contract` | Unificar semántica de errores de mutaciones |
 | 5 | `fix/sqlite-write-coordination` | Aislar transacciones y endurecer migraciones/arranque |
 | 6 | `fix/async-request-ownership` | Evitar resultados obsoletos en trash y Heatmap |
@@ -460,6 +465,16 @@ Resultado consolidado:
   checkpoint final fue aprobado el 2026-09-02 sobre la implementación completa instalada en
   Samsung SM_G965F.
 
+### Cierre automático y manual de AUD-004 — 2026-09-02
+
+- `npm ci`, `npm ls --all` y auditorías completa/productiva aprobados; ambas auditorías informan
+  **0 vulnerabilidades**.
+- Suite focalizada de Markdown: **1 archivo/56 tests**; suite completa: **60 archivos/955 tests**.
+- Lint (**0 errores/3 warnings basales**), typecheck, build con Vite 6.4.3 y `npm run verify`
+  aprobados. Bundle gzip total: **192,72 kB / 250 kB**.
+- Android 0.4.8/408 instalado preservando SQLite en Samsung SM_G965F; comportamiento aprobado
+  explícitamente. No se publicó APK, release ni tag.
+
 ## 11. Limitaciones de la revisión
 
 - Se aprobó el escenario funcional Android con 500 notas; no se ejecutó benchmark instrumentado ni
@@ -468,8 +483,8 @@ Resultado consolidado:
 - La prueba de inyección fue un caso jsdom focalizado, no una explotación end-to-end en WebView.
 - Las carreras async y transaccionales se derivaron del flujo de control y necesitan regresiones
   deterministas al abordar cada fix.
-- Los advisories de dependencias reflejan el lockfile y la auditoría del 2026-09-01; deben repetirse
-  antes de cada actualización o release.
+- AUD-004 cerró los advisories conocidos al 2026-09-02; las auditorías deben repetirse antes de
+  cada actualización o release porque el resultado depende del lockfile y del momento de consulta.
 
 ## 12. Decisión de cierre del análisis
 
@@ -479,7 +494,7 @@ cohesión de features con cambios pequeños y medidos.
 
 La revisión inicial quedó vinculada al primer fix porque AUD-001 y AUD-002 afectaban el flujo
 central del producto y presentaban la mejor relación entre impacto, riesgo y tamaño de cambio.
-Ambos hallazgos se cerraron posteriormente en la PR #2. AUD-003 quedó implementado y validado en
-`fix/backup-import-security`; el checkpoint Android final fue aprobado el 2026-09-02 y su
-integración quedó autorizada. Al momento de este commit el coordinador aún no había creado el PR ni
-ejecutado el merge. AUD-004 y los demás hallazgos conservan alcance y seguimiento independientes.
+Ambos hallazgos se cerraron posteriormente en la PR #2 y AUD-003 en la PR #3. AUD-004 quedó
+implementado y validado en `fix/aud-004-dependency-security`; las auditorías completa y productiva
+quedaron en cero, el checkpoint Android fue aprobado el 2026-09-02 y su integración quedó
+autorizada. AUD-005 y los demás hallazgos conservan alcance y seguimiento independientes.

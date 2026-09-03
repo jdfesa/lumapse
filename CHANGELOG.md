@@ -9,7 +9,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ## [Unreleased] — Trabajo posterior a `v0.4.8`
 
-> `main` conserva la versión declarada `0.4.8`, pero contiene trabajo posterior al tag. No existe una release `0.4.9` ni un APK posterior publicado. Este corte resume el rango Git completo desde `v0.4.8` (exclusivo) hasta `ba16777` (inclusivo). Las ejecuciones Android sobre código posterior al tag son evidencia de validación y no constituyen un artefacto publicado.
+> `main` conserva la versión declarada `0.4.8`, pero contiene trabajo posterior al tag. No existe una release `0.4.9` ni un APK posterior publicado. Este bloque resume el trabajo desde `v0.4.8`, incluidos los cierres técnicos AUD-001 a AUD-004. Las ejecuciones Android sobre código posterior al tag son evidencia de validación y no constituyen un artefacto publicado.
 
 ### Added
 
@@ -35,6 +35,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Coverage JS/TS medible:** Vitest incorpora `src/**/*.{js,ts}` y genera un resumen JSON; la nueva línea base registra 92,43% de statements en `src/services/**`, cerrando la medición pendiente de `RNF-024` sin fijar todavía umbrales bloqueantes.
 - **Dependencias estáticas explícitas:** Se retiraron cinco imports dinámicos que Vite no podía separar en chunks porque los mismos módulos ya formaban parte del grafo estático; el comportamiento y las APIs públicas permanecen sin cambios.
 - **Auditoría técnica trazable:** La revisión priorizada separa hallazgos de integridad, seguridad, confiabilidad, tooling y mantenibilidad; el análisis de AUD-003 registra riesgos confirmados y refutados, alcance, fases, evidencia y limitaciones sin mezclar la actualización de dependencias de AUD-004.
+- **Dependencias parcheadas dentro de sus majors:** DOMPurify sube a 3.4.14 y Vite a 6.4.3; el lockfile resuelve también `tar` 7.5.22, PostCSS 8.5.26, nanoid 3.3.18, undici 7.29.0, `brace-expansion` 5.0.9 y `@xmldom/xmldom` 0.9.12 sin overrides ni transitivas directas.
 
 ### Fixed
 
@@ -48,6 +49,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Validación runtime de backups:** El manifiesto, las entidades y sus primitivas se validan sin coerciones permisivas antes del plan de importación, con contratos y límites explícitos para conteos, booleanos, IDs, colores, fechas, timestamps y textos.
 - **Jerarquía importada consistente:** El plan impone un máximo de dos niveles, detecta ciclos y padres inexistentes o que ya son secciones, y registra en el preview las reparaciones de relaciones antes de escribir.
 - **Presentación defensiva de contenido importado:** Textos y atributos se codifican según su contexto, los colores pasan por una allowlist y los selectores evitan interpolar IDs importados; los renderizadores también toleran datos antiguos inválidos.
+- **Dependencias sin advisories conocidos (AUD-004):** Las auditorías completa y productiva pasan de ocho y una vulnerabilidades respectivamente a cero; `npm ci`, el árbol completo, 56 regresiones de Markdown, 955 tests, build, quality gate y Android 0.4.8/408 fueron aprobados sin publicar una release.
 
 ---
 

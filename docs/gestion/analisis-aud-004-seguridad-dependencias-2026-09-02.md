@@ -4,7 +4,7 @@
 **Base Git:** `45b2b1ea162ec94b993e9b959c2435d6e4dcd191` (`main` y `origin/main`)  
 **Entorno:** Node.js `v22.20.0`, npm `10.9.3`  
 **Rama:** `fix/aud-004-dependency-security`  
-**Estado:** plan de remediación aprobado técnicamente; implementación y gates pendientes
+**Estado:** implementación y validaciones completas; integración autorizada
 
 ## 1. Alcance
 
@@ -154,3 +154,42 @@ AUD-004 solo podrá marcarse como cerrado cuando:
 - el build Android preserve `0.4.8`/`408`, datos SQLite y comportamiento de sanitización;
 - el usuario apruebe explícitamente la checklist Android.
 
+## 8. Resultado final — 2026-09-02
+
+La implementación quedó registrada en `efb621b` (`fix(deps): remediate AUD-004
+vulnerabilities`) con los ocho parches previstos. `package-lock.json` conserva 356 nodos y su diff
+se limita a 28 inserciones y 28 eliminaciones; no se agregaron dependencias directas transitivas,
+`overrides` ni paquetes opcionales de plataforma.
+
+| Verificación | Resultado |
+|---|---|
+| `npm ci` | 299 paquetes instalados; 300 auditados; 0 vulnerabilidades |
+| `npm audit --omit=dev` | 0 vulnerabilidades |
+| `npm audit` | 0 vulnerabilidades |
+| `npm ls --all` | Árbol válido, sin dependencias inválidas o faltantes |
+| Suite focalizada Markdown | 1 archivo, 56 tests aprobados |
+| Suite completa | 60 archivos, 955 tests aprobados |
+| ESLint | 0 errores; 3 warnings basales fuera de AUD-004 |
+| TypeScript | `tsc --noEmit` aprobado |
+| Build | Vite 6.4.3; 117 módulos transformados |
+| Bundle budget | 181,48 kB JS gzip; 192,72 kB total; dentro de presupuesto |
+| Checks auxiliares | Tamaño, diálogos nativos, a11y, links y trazabilidad aprobados |
+| Gate agregado | `npm run verify` aprobado sin relajar controles |
+
+El build Android debug se generó desde `efb621b`. El primer intento mediante
+`scripts/deploy-android.sh` llegó hasta la sincronización de Capacitor, pero el JDK 21.0.10 sufrió
+un `SIGSEGV` interno del compilador C2 durante Gradle. El mismo código compiló correctamente en un
+proceso Gradle aislado con `-XX:TieredStopAtLevel=1`; luego se instaló con `adb install -r`, sin
+desinstalar la aplicación ni borrar datos.
+
+- Dispositivo: Samsung `SM_G965F` (`ad071603088c2172aa`).
+- APK de validación: SHA-256
+  `4cd9273a10de7e652601c0c0ce18d6d491d7ed8084f496649a46c3059358e1cb`.
+- Paquete instalado: `versionName 0.4.8`, `versionCode 408`.
+- SQLite antes/después: `lumapse-dbSQLite.db`, 53.248 bytes, preservada.
+- Validación manual: funcionamiento correcto confirmado explícitamente por el usuario el
+  2026-09-02.
+
+El APK fue únicamente un artefacto debug de validación: no se publicó una release, no se creó un
+tag y no se modificó la versión. Con auditorías, suites, build y Android aprobados, AUD-004 queda
+cerrado técnicamente y habilitado para integración.
