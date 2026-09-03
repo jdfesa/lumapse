@@ -9,13 +9,14 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ## [Unreleased] — Trabajo posterior a `v0.4.8`
 
-> `main` conserva la versión declarada `0.4.8`, pero contiene trabajo posterior al tag. No existe una release `0.4.9` ni un APK posterior publicado. Este bloque resume el trabajo desde `v0.4.8`, incluidos los cierres técnicos AUD-001 a AUD-004. Las ejecuciones Android sobre código posterior al tag son evidencia de validación y no constituyen un artefacto publicado.
+> `main` conserva la versión declarada `0.4.8`, pero contiene trabajo posterior al tag. No existe una release `0.4.9` ni un APK posterior publicado. Este bloque resume el trabajo desde `v0.4.8`, incluidos los cierres técnicos AUD-001 a AUD-004 y AUD-007. Las ejecuciones Android sobre código posterior al tag son evidencia de validación y no constituyen un artefacto publicado.
 
 ### Added
 
 - **Regresiones de integridad de guardado:** Se incorporaron pruebas unitarias para creación y actualización fallidas, conservación del borrador y serialización de solicitudes concurrentes.
 - **Cobertura de AUD-003:** Se agregaron regresiones para preflight y lectura ZIP, CRC32, límites, validación de primitivas y entidades, jerarquía de materias y presentación por contexto. El cierre documenta 11 archivos y 75 tests focalizados de presentación, además de 60 archivos y 955 tests en la suite completa con el workaround registrado para Node 26.
 - **Evidencia Android posterior al tag:** Se registró la validación manual de backups `STORE` y `DEFLATE`, una fixture de 500 notas, el rechazo de `pinned` inválido antes de persistir y el checkpoint final de la implementación completa instalada en un Samsung `SM_G965F`; estas ejecuciones no representan una nueva release ni un APK publicado.
+- **Regresiones de contratos de error (AUD-007):** Se cubrieron retornos exitosos, emisión única de `DatabaseError`, propagación de errores inesperados, ausencia de mutaciones de éxito ante fallo y restauración de los límites UI.
 
 ### Changed
 
@@ -34,6 +35,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Adaptadores nativos de backup tipados:** `BackupNativeNetworkService` y `BackupShareService` pasan a TypeScript con contratos locales para Network, Filesystem y Share, y cobertura directa del fallback web de conectividad.
 - **Coverage JS/TS medible:** Vitest incorpora `src/**/*.{js,ts}` y genera un resumen JSON; la nueva línea base registra 92,43% de statements en `src/services/**`, cerrando la medición pendiente de `RNF-024` sin fijar todavía umbrales bloqueantes.
 - **Dependencias estáticas explícitas:** Se retiraron cinco imports dinámicos que Vite no podía separar en chunks porque los mismos módulos ya formaban parte del grafo estático; el comportamiento y las APIs públicas permanecen sin cambios.
+- **Contrato único de mutaciones (AUD-007):** Las escrituras persistentes del store emiten una vez los fallos SQLite y propagan la misma excepción; los no-op legítimos y retornos exitosos conservan su semántica.
 - **Auditoría técnica trazable:** La revisión priorizada separa hallazgos de integridad, seguridad, confiabilidad, tooling y mantenibilidad; el análisis de AUD-003 registra riesgos confirmados y refutados, alcance, fases, evidencia y limitaciones sin mezclar la actualización de dependencias de AUD-004.
 - **Dependencias parcheadas dentro de sus majors:** DOMPurify sube a 3.4.14 y Vite a 6.4.3; el lockfile resuelve también `tar` 7.5.22, PostCSS 8.5.26, nanoid 3.3.18, undici 7.29.0, `brace-expansion` 5.0.9 y `@xmldom/xmldom` 0.9.12 sin overrides ni transitivas directas.
 
@@ -42,6 +44,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Integridad del guardado (AUD-001):** El editor solo limpia los campos y descarta el borrador tras confirmar la persistencia; ante un fallo conserva contenido, borrador, contexto de edición y modo foco para permitir el reintento.
 - **Guardados concurrentes (AUD-002):** Una protección single-flight serializa el guardado y mantiene un estado visual mientras la operación está pendiente, evitando mutaciones duplicadas o fuera de orden por taps repetidos.
 - **Descarte de borrador distinguible:** La acción destructiva de descartar quedó diferenciada visualmente del guardado y cubierta por una regresión de presentación.
+- **Límites UI ante fallos de mutación (AUD-007):** Editor, feed, drawer, eventos académicos, papelera y acciones relacionadas consumen rechazos sin cerrar interfaces, refrescar como éxito ni duplicar feedback; `NoteEditor.js` volvió al umbral no bloqueante de 400 LOC.
 
 ### Security
 
