@@ -4,11 +4,11 @@
 
 ## Hito actual: 06 — Entrega Final
 
-**Estado:** activo; AUD-001, AUD-002 y AUD-003 quedaron integrados y validados al 2026-09-02.
+**Estado:** activo; AUD-001 a AUD-003 quedaron integrados y AUD-004 completó implementación y validación con integración autorizada al 2026-09-02.
 
 **Corte operativo vigente:** beta/candidata [`v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8), publicada y validada inicialmente en Android real.
 
-**Versión:** `v0.4.8`; el trabajo posterior al tag permanece no publicado y no existe una release `0.4.9`. El rango técnico auditado llega hasta `ba16777`, pero la versión del próximo artefacto solo se decidirá después de cerrar sus bloqueos y validaciones.
+**Versión:** `v0.4.8`; el trabajo posterior al tag —incluido AUD-004— permanece no publicado y no existe una release `0.4.9`. La versión del próximo artefacto solo se decidirá después de cerrar sus bloqueos y validaciones.
 
 **Objetivo:** cerrar documentación, gráficos de base de datos, validación final y materiales de presentación sin ampliar el producto.
 
@@ -16,11 +16,10 @@
 
 | Orden | Frente | Criterio de cierre |
 |---|---|---|
-| 1 | Seguridad del próximo corte | AUD-004 resuelto en un PR independiente, con dependencias, sanitización, lockfile, suite y build verificados |
-| 2 | Congelamiento editorial y visual | Evidencia y bibliografía consolidadas; gráficos DB legibles en PDF y diapositivas |
-| 3 | Validación final | Quality gate, checklist Android y matriz RNF cerrados sobre el mismo artefacto versionado, con observaciones clasificadas |
-| 4 | Defensa y presentación | Guion, cheatsheet, demo y material visual preparados y ensayados |
-| 5 | Línea base final | Decisión explícita entre beta patch y entrega final; versión web/Android, firma, hash y tag inequívocos |
+| 1 | Congelamiento editorial y visual | Evidencia y bibliografía consolidadas; gráficos DB legibles en PDF y diapositivas |
+| 2 | Validación final | Quality gate, checklist Android y matriz RNF cerrados sobre el mismo artefacto versionado, con observaciones clasificadas |
+| 3 | Defensa y presentación | Guion, cheatsheet, demo y material visual preparados y ensayados |
+| 4 | Línea base final | Decisión explícita entre beta patch y entrega final; versión web/Android, firma, hash y tag inequívocos |
 
 ## Checklist de trabajo
 
@@ -34,7 +33,7 @@
 - [x] Completar la sincronización documental posterior a las auditorías en `CHANGELOG.md`, backlog, `TODO` e Hito 06 (2026-09-02).
 - [ ] Alinear el tablero de GitHub Projects con la Definition of Workflow: WIP global 2, bloqueos y fechas `startedAt`/`finishedAt`; recalibrar la SLE al completar cinco elementos confiables.
 - [ ] Contrastar los metadatos bibliográficos de Gómez (2014) y Parada (2026) contra los originales de cátedra y cerrar la sección de referencias.
-- [ ] Resolver AUD-004 en un PR separado antes de otra APK publicada: revisar advisories/changelogs y validar dependencias, sanitización, lockfile, suite y build.
+- [x] Resolver AUD-004 en un PR separado: DOMPurify y siete dependencias de tooling parcheadas, auditorías 0/0, 955 tests, build, quality gate y Android 0.4.8/408 aprobados (2026-09-02).
 - [ ] Ejecutar el gate final sobre el commit y artefacto candidatos y guardar la evidencia; el gate acumulativo de AUD-003 y los pre-push documentales no sustituyen este cierre.
 - [ ] Repetir la validación Android sobre el artefacto versionado con un conjunto de datos representativo; el checkpoint de AUD-003 ya cubrió `STORE`, `DEFLATE`, datos inválidos y una fixture de 500 notas.
 - [ ] Verificar específicamente la interacción `Mover a` y clasificar su fricción como corregida, aceptada o bloqueante.
