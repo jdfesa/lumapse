@@ -37,15 +37,12 @@ export async function runStoreAction(operation, errorMessage, action) {
   try {
     return await action()
   } catch (error) {
-    console.error(`[NoteStore] ${operation} failed:`, error)
-
     if (error instanceof DatabaseError) {
       emitStoreError({
         operation,
         message: errorMessage,
         cause: error,
       })
-      return undefined
     }
 
     throw error

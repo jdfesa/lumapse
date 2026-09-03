@@ -9,8 +9,7 @@ import {
   getArchivedSubjectIds,
   getArchivedSubjectTree,
 } from '../services/sqlite/subjects.js'
-import { DatabaseError } from '../services/sqlite/errors.js'
-import { emitStoreError, runStoreAction } from './NoteStore.errors.js'
+import { runStoreAction } from './NoteStore.errors.js'
 import { getFilteredNotes as applyFilters } from './noteFilters.ts'
 import { state, notify } from './NoteStore.state.js'
 
@@ -89,22 +88,12 @@ export async function updateNote(id, changes) {
  * ya fue actualizado manualmente y un re-render causaría ghost clicks.
  */
 export async function updateNoteSilent(id, changes) {
-  try {
+  return runStoreAction('updateNoteSilent', 'No se pudo actualizar la nota.', async () => {
     const updatedNote = await NoteService.updateNote(id, changes)
     state.notes = state.notes.map(note => note.id === id ? updatedNote : note)
     // NO notify() — el DOM ya refleja el cambio
     return updatedNote
-  } catch (error) {
-    console.error('[NoteStore] updateNoteSilent failed:', error)
-    if (error instanceof DatabaseError) {
-      emitStoreError({
-        operation: 'updateNoteSilent',
-        message: 'No se pudo actualizar la nota.',
-        cause: error,
-      })
-    }
-    throw error
-  }
+  })
 }
 
 export async function moveNote(noteId, subjectId) {

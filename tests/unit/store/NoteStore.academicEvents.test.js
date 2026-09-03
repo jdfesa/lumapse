@@ -158,23 +158,31 @@ describe('NoteStore.academicEvents', () => {
       expect(state.academicEventsForMonth).toEqual([])
     })
 
-    it('emite error de store y retorna undefined ante DatabaseError', async () => {
+    it('emite una vez, rechaza y conserva caches ante DatabaseError', async () => {
       const storeError = vi.fn()
       const unsubscribe = subscribeToStoreErrors(storeError)
-      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const { listener, unsubscribe: unsubscribeNotify } = listenForNotify()
       const error = new DatabaseError('createAcademicEvent', new Error('boom'))
+      const existing = event({ id: 'existing' })
+      state.academicEvents = [existing]
+      state.academicEventsForMonth = [existing]
+      state.upcomingAcademicEvents = [existing]
       AcademicEventService.createAcademicEvent.mockRejectedValue(error)
 
-      await expect(NoteStoreAcademicEvents.createAcademicEvent({})).resolves.toBeUndefined()
+      await expect(NoteStoreAcademicEvents.createAcademicEvent({})).rejects.toBe(error)
 
+      expect(storeError).toHaveBeenCalledTimes(1)
       expect(storeError).toHaveBeenCalledWith({
         operation: 'createAcademicEvent',
         message: 'No se pudo crear la fecha academica. Intenta de nuevo.',
         cause: error,
       })
-      expect(state.academicEvents).toEqual([])
+      expect(state.academicEvents).toEqual([existing])
+      expect(state.academicEventsForMonth).toEqual([existing])
+      expect(state.upcomingAcademicEvents).toEqual([existing])
+      expect(listener).not.toHaveBeenCalled()
       unsubscribe()
-      errorSpy.mockRestore()
+      unsubscribeNotify()
     })
   })
 

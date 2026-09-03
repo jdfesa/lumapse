@@ -4,6 +4,7 @@
 
 import * as NoteService from '../services/sqlite/notes.js'
 import { loadArchivedSubjects } from './NoteStore.data.js'
+import { runStoreAction } from './NoteStore.errors.js'
 import { state, notify } from './NoteStore.state.js'
 
 export function selectNote(id) {
@@ -16,24 +17,28 @@ export function selectNote(id) {
 export async function togglePin(id) {
   const note = state.notes.find(n => n.id === id)
   if (!note) return
-  
-  const updatedNote = await NoteService.updateNote(id, { pinned: !note.pinned })
-  state.notes = state.notes.map(n => n.id === id ? updatedNote : n)
-  notify()
+
+  return runStoreAction('togglePin', 'No se pudo cambiar el pin de la nota. Intenta de nuevo.', async () => {
+    const updatedNote = await NoteService.updateNote(id, { pinned: !note.pinned })
+    state.notes = state.notes.map(n => n.id === id ? updatedNote : n)
+    notify()
+  })
 }
 
 export async function toggleArchive(id) {
   const note = state.notes.find(n => n.id === id)
   if (!note) return
-  
-  const updatedNote = await NoteService.updateNote(id, { archived: !note.archived })
-  state.notes = state.notes.map(n => n.id === id ? updatedNote : n)
-  
-  if (state.activeNoteId === id && updatedNote.archived) {
-    state.activeNoteId = null
-  }
-  
-  notify()
+
+  return runStoreAction('toggleArchive', 'No se pudo archivar la nota. Intenta de nuevo.', async () => {
+    const updatedNote = await NoteService.updateNote(id, { archived: !note.archived })
+    state.notes = state.notes.map(n => n.id === id ? updatedNote : n)
+
+    if (state.activeNoteId === id && updatedNote.archived) {
+      state.activeNoteId = null
+    }
+
+    notify()
+  })
 }
 
 /**
@@ -46,12 +51,14 @@ export async function toggleArchive(id) {
 export async function setNoteStatus(id, emoji) {
   const note = state.notes.find(n => n.id === id)
   if (!note) return
-  
+
   // Toggle: si ya tiene el mismo emoji, lo quitamos
   const newEmoji = note.statusEmoji === emoji ? null : emoji
-  const updatedNote = await NoteService.updateNote(id, { statusEmoji: newEmoji })
-  state.notes = state.notes.map(n => n.id === id ? updatedNote : n)
-  notify()
+  return runStoreAction('setNoteStatus', 'No se pudo cambiar el estado de la nota. Intenta de nuevo.', async () => {
+    const updatedNote = await NoteService.updateNote(id, { statusEmoji: newEmoji })
+    state.notes = state.notes.map(n => n.id === id ? updatedNote : n)
+    notify()
+  })
 }
 
 export async function setShowArchived(show) {

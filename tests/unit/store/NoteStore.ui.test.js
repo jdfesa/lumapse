@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import * as NoteService from '../../../src/services/sqlite/notes.js'
+import { DatabaseError } from '../../../src/services/sqlite/errors.js'
+import { subscribeToStoreErrors } from '../../../src/store/NoteStore.errors.js'
 import { state, subscribe } from '../../../src/store/NoteStore.state.js'
 import * as NoteStoreData from '../../../src/store/NoteStore.data.js'
 import * as NoteStoreUi from '../../../src/store/NoteStore.ui.js'
@@ -115,9 +117,48 @@ describe('NoteStore.ui', () => {
     })
 
     it('no hace nada si la nota no existe en state.notes', async () => {
-      await NoteStoreUi.togglePin('missing')
+      await expect(NoteStoreUi.togglePin('missing')).resolves.toBeUndefined()
 
       expect(NoteService.updateNote).not.toHaveBeenCalled()
+    })
+
+    it('emite una vez, rechaza y no muta ni notifica ante DatabaseError', async () => {
+      const originalNote = makeNote({ id: 'note-1', pinned: false })
+      const error = new DatabaseError('updateNote', new Error('boom'))
+      const storeError = vi.fn()
+      const unsubscribeError = subscribeToStoreErrors(storeError)
+      const listener = vi.fn()
+      const unsubscribeNotify = subscribe(listener)
+      listener.mockClear()
+      state.notes = [originalNote]
+      NoteService.updateNote.mockRejectedValueOnce(error)
+
+      await expect(NoteStoreUi.togglePin('note-1')).rejects.toBe(error)
+
+      expect(state.notes).toEqual([originalNote])
+      expect(listener).not.toHaveBeenCalled()
+      expect(storeError).toHaveBeenCalledTimes(1)
+      expect(storeError).toHaveBeenCalledWith({
+        operation: 'togglePin',
+        message: 'No se pudo cambiar el pin de la nota. Intenta de nuevo.',
+        cause: error,
+      })
+
+      unsubscribeError()
+      unsubscribeNotify()
+    })
+
+    it('rechaza errores no SQLite sin emitir por el canal global', async () => {
+      const error = new Error('unexpected')
+      const storeError = vi.fn()
+      const unsubscribe = subscribeToStoreErrors(storeError)
+      state.notes = [makeNote({ id: 'note-1' })]
+      NoteService.updateNote.mockRejectedValueOnce(error)
+
+      await expect(NoteStoreUi.togglePin('note-1')).rejects.toBe(error)
+
+      expect(storeError).not.toHaveBeenCalled()
+      unsubscribe()
     })
   })
 
@@ -163,6 +204,34 @@ describe('NoteStore.ui', () => {
       expect(listener).toHaveBeenCalledWith(state)
       unsubscribe()
     })
+
+    it('conserva la nota activa y el estado sin notify ante DatabaseError', async () => {
+      const originalNote = makeNote({ id: 'note-1', archived: false })
+      const error = new DatabaseError('updateNote', new Error('boom'))
+      const storeError = vi.fn()
+      const unsubscribeError = subscribeToStoreErrors(storeError)
+      const listener = vi.fn()
+      const unsubscribeNotify = subscribe(listener)
+      listener.mockClear()
+      state.activeNoteId = 'note-1'
+      state.notes = [originalNote]
+      NoteService.updateNote.mockRejectedValueOnce(error)
+
+      await expect(NoteStoreUi.toggleArchive('note-1')).rejects.toBe(error)
+
+      expect(state.notes).toEqual([originalNote])
+      expect(state.activeNoteId).toBe('note-1')
+      expect(listener).not.toHaveBeenCalled()
+      expect(storeError).toHaveBeenCalledTimes(1)
+      expect(storeError).toHaveBeenCalledWith({
+        operation: 'toggleArchive',
+        message: 'No se pudo archivar la nota. Intenta de nuevo.',
+        cause: error,
+      })
+
+      unsubscribeError()
+      unsubscribeNotify()
+    })
   })
 
   describe('setNoteStatus()', () => {
@@ -195,6 +264,32 @@ describe('NoteStore.ui', () => {
 
       expect(listener).toHaveBeenCalledWith(state)
       unsubscribe()
+    })
+
+    it('conserva el estado académico sin notify ante DatabaseError', async () => {
+      const originalNote = makeNote({ id: 'note-1', statusEmoji: null })
+      const error = new DatabaseError('updateNote', new Error('boom'))
+      const storeError = vi.fn()
+      const unsubscribeError = subscribeToStoreErrors(storeError)
+      const listener = vi.fn()
+      const unsubscribeNotify = subscribe(listener)
+      listener.mockClear()
+      state.notes = [originalNote]
+      NoteService.updateNote.mockRejectedValueOnce(error)
+
+      await expect(NoteStoreUi.setNoteStatus('note-1', '✅')).rejects.toBe(error)
+
+      expect(state.notes).toEqual([originalNote])
+      expect(listener).not.toHaveBeenCalled()
+      expect(storeError).toHaveBeenCalledTimes(1)
+      expect(storeError).toHaveBeenCalledWith({
+        operation: 'setNoteStatus',
+        message: 'No se pudo cambiar el estado de la nota. Intenta de nuevo.',
+        cause: error,
+      })
+
+      unsubscribeError()
+      unsubscribeNotify()
     })
   })
 
