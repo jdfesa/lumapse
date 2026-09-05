@@ -9,8 +9,6 @@ const mockDb = vi.hoisted(() => ({
 
 vi.mock('../../../../src/services/sqlite/connection.js', () => ({
   getDb: vi.fn(() => mockDb),
-  persistWeb: vi.fn().mockResolvedValue(undefined),
-  isWriteTransactionActive: vi.fn(() => false),
 }))
 
 function row(overrides = {}) {
@@ -31,7 +29,6 @@ beforeEach(() => {
   vi.setSystemTime(new Date('2024-01-15T10:00:00.000Z'))
   mockDb.run.mockResolvedValue(undefined)
   mockDb.query.mockResolvedValue({ values: [] })
-  connection.isWriteTransactionActive.mockReturnValue(false)
 })
 
 describe('sqlite/subjects', () => {
@@ -52,10 +49,16 @@ describe('sqlite/subjects', () => {
       )
     })
 
-    it('llama persistWeb después de insertar', async () => {
-      await Subjects.createSubjectRow(row())
-
-      expect(connection.persistWeb).toHaveBeenCalled()
+    it('espera la finalización de la escritura coordinada', async () => {
+      let release
+      mockDb.run.mockReturnValueOnce(new Promise(resolve => { release = resolve }))
+      const finished = vi.fn()
+      const pending = Subjects.createSubjectRow(row()).then(finished)
+      await Promise.resolve()
+      expect(finished).not.toHaveBeenCalled()
+      release()
+      await pending
+      expect(finished).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -121,7 +124,7 @@ describe('sqlite/subjects', () => {
       await Subjects.updateSubjectRow('subj-1', {})
 
       expect(mockDb.run).not.toHaveBeenCalled()
-      expect(connection.persistWeb).not.toHaveBeenCalled()
+      expect(mockDb.run).not.toHaveBeenCalled()
     })
   })
 
@@ -272,15 +275,15 @@ describe('sqlite/subjects', () => {
       )
     })
 
-    it('desactiva la transacción implícita si ya hay una transacción explícita', async () => {
-      connection.isWriteTransactionActive.mockReturnValue(true)
+    it('transmite el propietario explícito a la fachada', async () => {
+      const scope = {}
 
-      await Subjects.archiveChildSubjects('subj-1')
+      await Subjects.archiveChildSubjects('subj-1', scope)
+      expect(connection.getDb).toHaveBeenCalledWith(scope)
 
       expect(mockDb.run).toHaveBeenCalledWith(
         'UPDATE subjects SET archived = 1 WHERE parentSubjectId = ? AND archived = 0 AND deletedAt IS NULL',
         ['subj-1'],
-        false,
       )
     })
 

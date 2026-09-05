@@ -6,7 +6,7 @@
 // notas en la tabla `notes` de SQLite.
 // =============================================================
 
-import { getDb, persistWeb, generateUUID, isWriteTransactionActive } from './connection.js'
+import { getDb, generateUUID } from './connection.js'
 import { DatabaseError } from './errors.js'
 
 // --- Operaciones CRUD ---
@@ -20,26 +20,17 @@ async function runWriteOperation(operation, action) {
   }
 }
 
-async function runSql(db, sql, values) {
-  if (isWriteTransactionActive()) {
-    await db.run(sql, values || [], false)
-  } else if (values === undefined) {
-    await db.run(sql)
-  } else {
-    await db.run(sql, values)
-  }
-  await persistWeb()
-}
 
 /**
  * Crea una nueva nota en la base de datos.
  * @param {string} title Título de la nota
  * @param {string} content Contenido Markdown
  * @param {string|null} subjectId ID de materia asociada (null = Entrada)
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function createNote(title = 'Sin título', content = '', subjectId = null) {
+export async function createNote(title = 'Sin título', content = '', subjectId = null, scope) {
   return runWriteOperation('createNote', async () => {
-    const db = getDb()
+    const db = getDb(scope)
 
     const note = {
       id: generateUUID(),
@@ -59,7 +50,7 @@ export async function createNote(title = 'Sin título', content = '', subjectId 
     `
     const values = [note.id, note.title, note.content, note.pinned, note.archived, note.statusEmoji, note.subjectId, note.createdAt, note.updatedAt]
 
-    await runSql(db, sql, values)
+    await db.run(sql, values)
 
     return {
       ...note,
@@ -72,9 +63,10 @@ export async function createNote(title = 'Sin título', content = '', subjectId 
 
 /**
  * Obtiene una nota por su ID.
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function getNoteById(id) {
-  const db = getDb()
+export async function getNoteById(id, scope) {
+  const db = getDb(scope)
 
   const sql = `SELECT * FROM notes WHERE id = ?`
   const res = await db.query(sql, [id])
@@ -92,9 +84,10 @@ export async function getNoteById(id) {
 
 /**
  * Obtiene todas las notas ordenadas por fecha de actualización descendente.
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function getAllNotes() {
-  const db = getDb()
+export async function getAllNotes(scope) {
+  const db = getDb(scope)
 
   const sql = `SELECT * FROM notes WHERE deletedAt IS NULL ORDER BY updatedAt DESC`
   const res = await db.query(sql)
@@ -108,12 +101,13 @@ export async function getAllNotes() {
 
 /**
  * Actualiza campos de una nota existente.
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function updateNote(id, changes) {
+export async function updateNote(id, changes, scope) {
   return runWriteOperation('updateNote', async () => {
-    const db = getDb()
+    const db = getDb(scope)
 
-    const existing = await getNoteById(id)
+    const existing = await getNoteById(id, scope)
     if (!existing) {
       throw new Error(`Nota con id "${id}" no encontrada.`)
     }
@@ -153,7 +147,7 @@ export async function updateNote(id, changes) {
     values.push(id)
 
     const sql = `UPDATE notes SET ${fields.join(', ')} WHERE id = ?`
-    await runSql(db, sql, values)
+    await db.run(sql, values)
 
     return {
       ...existing,
@@ -165,21 +159,23 @@ export async function updateNote(id, changes) {
 
 /**
  * Soft-delete: marca una nota como eliminada (papelera).
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function deleteNote(id) {
+export async function deleteNote(id, scope) {
   return runWriteOperation('deleteNote', async () => {
-    const db = getDb()
+    const db = getDb(scope)
 
     const sql = `UPDATE notes SET deletedAt = ? WHERE id = ?`
-    await runSql(db, sql, [new Date().toISOString(), id])
+    await db.run(sql, [new Date().toISOString(), id])
   })
 }
 
 /**
  * Cuenta el total de notas activas (no eliminadas).
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function countNotes() {
-  const db = getDb()
+export async function countNotes(scope) {
+  const db = getDb(scope)
 
   const sql = `SELECT COUNT(*) as count FROM notes WHERE deletedAt IS NULL`
   const res = await db.query(sql)
@@ -194,9 +190,10 @@ export async function countNotes() {
 
 /**
  * Obtiene todas las notas en la papelera, ordenadas por fecha de eliminación.
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function getDeletedNotes() {
-  const db = getDb()
+export async function getDeletedNotes(scope) {
+  const db = getDb(scope)
 
   const sql = `SELECT * FROM notes WHERE deletedAt IS NOT NULL ORDER BY deletedAt DESC`
   const res = await db.query(sql)
@@ -210,45 +207,49 @@ export async function getDeletedNotes() {
 
 /**
  * Restaura una nota eliminada (quita deletedAt).
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function restoreNote(id) {
+export async function restoreNote(id, scope) {
   return runWriteOperation('restoreNote', async () => {
-    const db = getDb()
+    const db = getDb(scope)
 
     const sql = `UPDATE notes SET deletedAt = NULL WHERE id = ?`
-    await runSql(db, sql, [id])
+    await db.run(sql, [id])
   })
 }
 
 /**
  * Elimina permanentemente una nota (DELETE físico).
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function permanentlyDeleteNote(id) {
+export async function permanentlyDeleteNote(id, scope) {
   return runWriteOperation('permanentlyDeleteNote', async () => {
-    const db = getDb()
+    const db = getDb(scope)
 
     const sql = `DELETE FROM notes WHERE id = ?`
-    await runSql(db, sql, [id])
+    await db.run(sql, [id])
   })
 }
 
 /**
  * Vacía la papelera de notas (DELETE físico de todas las eliminadas).
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function emptyTrashNotes() {
+export async function emptyTrashNotes(scope) {
   return runWriteOperation('emptyTrashNotes', async () => {
-    const db = getDb()
+    const db = getDb(scope)
 
     const sql = `DELETE FROM notes WHERE deletedAt IS NOT NULL`
-    await runSql(db, sql)
+    await db.run(sql)
   })
 }
 
 /**
  * Cuenta las notas en la papelera.
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function countDeletedNotes() {
-  const db = getDb()
+export async function countDeletedNotes(scope) {
+  const db = getDb(scope)
 
   const sql = `SELECT COUNT(*) as count FROM notes WHERE deletedAt IS NOT NULL`
   const res = await db.query(sql)
@@ -259,31 +260,33 @@ export async function countDeletedNotes() {
 /**
  * Purga notas eliminadas hace más de N días (auto-purgado).
  * @param {number} days Días de retención (default: 30)
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function purgeOldDeletedNotes(days = 30) {
+export async function purgeOldDeletedNotes(days = 30, scope) {
   return runWriteOperation('purgeOldDeletedNotes', async () => {
-    const db = getDb()
+    const db = getDb(scope)
 
     const cutoff = new Date()
     cutoff.setDate(cutoff.getDate() - days)
     const cutoffISO = cutoff.toISOString()
 
     const sql = `DELETE FROM notes WHERE deletedAt IS NOT NULL AND deletedAt < ?`
-    await runSql(db, sql, [cutoffISO])
+    await db.run(sql, [cutoffISO])
   })
 }
 
 /**
  * Soft-delete en cascada: todas las notas de un subject.
  * @param {string} subjectId ID de la materia
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function softDeleteNotesBySubject(subjectId) {
+export async function softDeleteNotesBySubject(subjectId, scope) {
   return runWriteOperation('softDeleteNotesBySubject', async () => {
-    const db = getDb()
+    const db = getDb(scope)
     const now = new Date().toISOString()
 
     const sql = `UPDATE notes SET deletedAt = ? WHERE subjectId = ? AND deletedAt IS NULL`
-    await runSql(db, sql, [now, subjectId])
+    await db.run(sql, [now, subjectId])
   })
 }
 
@@ -291,12 +294,13 @@ export async function softDeleteNotesBySubject(subjectId) {
  * Restaurar en cascada: todas las notas eliminadas de un subject.
  * Solo restaura notas cuyo deletedAt no sea NULL.
  * @param {string} subjectId ID de la materia
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function restoreNotesBySubject(subjectId) {
+export async function restoreNotesBySubject(subjectId, scope) {
   return runWriteOperation('restoreNotesBySubject', async () => {
-    const db = getDb()
+    const db = getDb(scope)
 
     const sql = `UPDATE notes SET deletedAt = NULL WHERE subjectId = ? AND deletedAt IS NOT NULL`
-    await runSql(db, sql, [subjectId])
+    await db.run(sql, [subjectId])
   })
 }

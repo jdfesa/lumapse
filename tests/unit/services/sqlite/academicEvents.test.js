@@ -10,8 +10,6 @@ const mockDb = vi.hoisted(() => ({
 
 vi.mock('../../../../src/services/sqlite/connection.js', () => ({
   getDb: vi.fn(() => mockDb),
-  persistWeb: vi.fn().mockResolvedValue(undefined),
-  isWriteTransactionActive: vi.fn(() => false),
 }))
 
 function eventRow(overrides = {}) {
@@ -31,7 +29,6 @@ beforeEach(() => {
   vi.clearAllMocks()
   mockDb.run.mockResolvedValue(undefined)
   mockDb.query.mockResolvedValue({ values: [] })
-  connection.isWriteTransactionActive.mockReturnValue(false)
 })
 
 describe('sqlite/academicEvents', () => {
@@ -67,22 +64,27 @@ describe('sqlite/academicEvents', () => {
       ])
     })
 
-    it('llama persistWeb despues de insertar', async () => {
-      await AcademicEvents.createAcademicEventRow(eventRow())
-
-      expect(connection.persistWeb).toHaveBeenCalled()
-      expect(mockDb.run.mock.invocationCallOrder[0]).toBeLessThan(connection.persistWeb.mock.invocationCallOrder[0])
+    it('espera la finalización de la escritura coordinada', async () => {
+      let release
+      mockDb.run.mockReturnValueOnce(new Promise(resolve => { release = resolve }))
+      const finished = vi.fn()
+      const pending = AcademicEvents.createAcademicEventRow(eventRow()).then(finished)
+      await Promise.resolve()
+      expect(finished).not.toHaveBeenCalled()
+      release()
+      await pending
+      expect(finished).toHaveBeenCalledTimes(1)
     })
 
-    it('desactiva la transaccion implicita si ya hay una transaccion explicita', async () => {
-      connection.isWriteTransactionActive.mockReturnValue(true)
+    it('transmite el propietario explícito a la fachada', async () => {
+      const scope = {}
 
-      await AcademicEvents.createAcademicEventRow(eventRow())
+      await AcademicEvents.createAcademicEventRow(eventRow(), scope)
+      expect(connection.getDb).toHaveBeenCalledWith(scope)
 
       expect(mockDb.run).toHaveBeenCalledWith(
         expect.stringContaining('INSERT INTO academic_events'),
         expect.any(Array),
-        false,
       )
     })
   })
@@ -198,7 +200,7 @@ describe('sqlite/academicEvents', () => {
       await AcademicEvents.updateAcademicEventRow('event-1', {})
 
       expect(mockDb.run).not.toHaveBeenCalled()
-      expect(connection.persistWeb).not.toHaveBeenCalled()
+      expect(mockDb.run).not.toHaveBeenCalled()
     })
   })
 
@@ -212,10 +214,16 @@ describe('sqlite/academicEvents', () => {
       )
     })
 
-    it('llama persistWeb despues de borrar', async () => {
-      await AcademicEvents.deleteAcademicEventRow('event-1')
-
-      expect(connection.persistWeb).toHaveBeenCalled()
+    it('espera la finalización de la escritura coordinada', async () => {
+      let release
+      mockDb.run.mockReturnValueOnce(new Promise(resolve => { release = resolve }))
+      const finished = vi.fn()
+      const pending = AcademicEvents.deleteAcademicEventRow('event-1').then(finished)
+      await Promise.resolve()
+      expect(finished).not.toHaveBeenCalled()
+      release()
+      await pending
+      expect(finished).toHaveBeenCalledTimes(1)
     })
   })
 

@@ -60,13 +60,14 @@ async function updateArchiveStateWithUniqueName(
   subject: Subject,
   archived: boolean,
   allSubjects: Subject[],
+  scope: object,
 ): Promise<Subject[]> {
   const uniqueName = getUniqueNameForLevel(subject.name, subject.parentSubjectId, subject.id, allSubjects)
   const changes: SubjectChanges = uniqueName === subject.name.trim()
     ? { archived }
     : { archived, name: uniqueName }
 
-  await updateSubjectRow(subject.id, changes)
+  await updateSubjectRow(subject.id, changes, scope)
 
   return allSubjects.map(s => s.id === subject.id
     ? { ...s, name: uniqueName, archived }
@@ -161,14 +162,14 @@ export async function updateSubject(id: EntityId, changes: SubjectChanges): Prom
  * Orden: secciones hijas -> padre.
  * @param {string} id ID de la materia raíz
  */
-export async function archiveSubject(id: EntityId): Promise<void> {
-  return runTransaction(async () => {
+export async function archiveSubject(id: EntityId, parentScope?: object): Promise<void> {
+  return runTransaction(async (scope) => {
     // 1. Archivar secciones hijas
-    await archiveChildSubjects(id)
+    await archiveChildSubjects(id, scope)
 
     // 2. Archivar el subject padre
-    await updateSubjectRow(id, { archived: true })
-  })
+    await updateSubjectRow(id, { archived: true }, scope)
+  }, parentScope)
 }
 
 /**
@@ -177,22 +178,22 @@ export async function archiveSubject(id: EntityId): Promise<void> {
  * Orden: padre -> secciones hijas.
  * @param {string} id ID de la materia raíz
  */
-export async function unarchiveSubject(id: EntityId): Promise<void> {
-  return runTransaction(async () => {
-    const subject = await getSubjectRowById(id) as Subject | undefined
+export async function unarchiveSubject(id: EntityId, parentScope?: object): Promise<void> {
+  return runTransaction(async (scope) => {
+    const subject = await getSubjectRowById(id, scope) as Subject | undefined
     if (!subject) return
 
-    let allSubjects = await getAllSubjectRowsIncludingArchived() as Subject[]
+    let allSubjects = await getAllSubjectRowsIncludingArchived(scope) as Subject[]
 
     // 1. Desarchivar el subject padre con nombre navegable único
-    allSubjects = await updateArchiveStateWithUniqueName(subject, false, allSubjects)
+    allSubjects = await updateArchiveStateWithUniqueName(subject, false, allSubjects, scope)
 
     // 2. Desarchivar secciones hijas una por una para resolver duplicados previos
     const childSubjects = allSubjects.filter(s => s.parentSubjectId === id && s.archived)
     for (const child of childSubjects) {
-      allSubjects = await updateArchiveStateWithUniqueName(child, false, allSubjects)
+      allSubjects = await updateArchiveStateWithUniqueName(child, false, allSubjects, scope)
     }
-  })
+  }, parentScope)
 }
 
 /**
@@ -201,10 +202,10 @@ export async function unarchiveSubject(id: EntityId): Promise<void> {
  * La materia padre NO se archiva.
  * @param {string} id ID de la sección
  */
-export async function archiveSection(id: EntityId): Promise<void> {
-  return runTransaction(async () => {
-    await updateSubjectRow(id, { archived: true })
-  })
+export async function archiveSection(id: EntityId, parentScope?: object): Promise<void> {
+  return runTransaction(async (scope) => {
+    await updateSubjectRow(id, { archived: true }, scope)
+  }, parentScope)
 }
 
 /**
@@ -213,22 +214,22 @@ export async function archiveSection(id: EntityId): Promise<void> {
  * para que la sección y sus notas tengan una ruta navegable.
  * @param {string} id ID de la sección
  */
-export async function unarchiveSection(id: EntityId): Promise<void> {
-  return runTransaction(async () => {
-    const section = await getSubjectRowById(id) as Subject | undefined
+export async function unarchiveSection(id: EntityId, parentScope?: object): Promise<void> {
+  return runTransaction(async (scope) => {
+    const section = await getSubjectRowById(id, scope) as Subject | undefined
     if (!section) return
 
-    let allSubjects = await getAllSubjectRowsIncludingArchived() as Subject[]
+    let allSubjects = await getAllSubjectRowsIncludingArchived(scope) as Subject[]
 
     if (section.parentSubjectId) {
-      const parent = await getSubjectRowById(section.parentSubjectId) as Subject | undefined
+      const parent = await getSubjectRowById(section.parentSubjectId, scope) as Subject | undefined
       if (parent?.archived && !parent.deletedAt) {
-        allSubjects = await updateArchiveStateWithUniqueName(parent, false, allSubjects)
+        allSubjects = await updateArchiveStateWithUniqueName(parent, false, allSubjects, scope)
       }
     }
 
-    await updateArchiveStateWithUniqueName(section, false, allSubjects)
-  })
+    await updateArchiveStateWithUniqueName(section, false, allSubjects, scope)
+  }, parentScope)
 }
 
 /**

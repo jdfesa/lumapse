@@ -6,7 +6,7 @@
 // La validacion de negocio la hace AcademicEventService.
 // =============================================================
 
-import { getDb, persistWeb, isWriteTransactionActive } from './connection.js'
+import { getDb } from './connection.js'
 import { DatabaseError } from './errors.js'
 
 async function runWriteOperation(operation, action) {
@@ -18,16 +18,6 @@ async function runWriteOperation(operation, action) {
   }
 }
 
-async function runSql(db, sql, values) {
-  if (isWriteTransactionActive()) {
-    await db.run(sql, values || [], false)
-  } else if (values === undefined) {
-    await db.run(sql)
-  } else {
-    await db.run(sql, values)
-  }
-  await persistWeb()
-}
 
 function normalizeNullable(value) {
   return value || null
@@ -50,10 +40,11 @@ function monthRange(year, month) {
 /**
  * Inserta una fecha academica.
  * @param {object} event Objeto con id, type, title, date, subjectId, createdAt, updatedAt
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function createAcademicEventRow(event) {
+export async function createAcademicEventRow(event, scope) {
   return runWriteOperation('createAcademicEventRow', async () => {
-    const db = getDb()
+    const db = getDb(scope)
 
     const sql = `
       INSERT INTO academic_events (id, type, title, date, subjectId, createdAt, updatedAt)
@@ -69,15 +60,16 @@ export async function createAcademicEventRow(event) {
       event.updatedAt,
     ]
 
-    await runSql(db, sql, values)
+    await db.run(sql, values)
   })
 }
 
 /**
  * Obtiene todas las fechas academicas ordenadas cronologicamente.
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function getAcademicEventRows() {
-  const db = getDb()
+export async function getAcademicEventRows(scope) {
+  const db = getDb(scope)
   const sql = `SELECT * FROM academic_events ORDER BY date ASC, createdAt ASC`
   const res = await db.query(sql)
 
@@ -86,9 +78,10 @@ export async function getAcademicEventRows() {
 
 /**
  * Obtiene una fecha academica por su ID.
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function getAcademicEventRowById(id) {
-  const db = getDb()
+export async function getAcademicEventRowById(id, scope) {
+  const db = getDb(scope)
   const sql = `SELECT * FROM academic_events WHERE id = ?`
   const res = await db.query(sql, [id])
 
@@ -99,9 +92,10 @@ export async function getAcademicEventRowById(id) {
  * Obtiene las fechas academicas de un mes. El mes usa base 1: enero = 1.
  * @param {number} year Año completo, por ejemplo 2026
  * @param {number} month Mes base 1, por ejemplo 6 para junio
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function getAcademicEventRowsByMonth(year, month) {
-  const db = getDb()
+export async function getAcademicEventRowsByMonth(year, month, scope) {
+  const db = getDb(scope)
   const { start, end } = monthRange(year, month)
 
   const sql = `
@@ -116,9 +110,10 @@ export async function getAcademicEventRowsByMonth(year, month) {
 
 /**
  * Obtiene las fechas academicas de un dia especifico (`YYYY-MM-DD`).
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function getAcademicEventRowsByDate(date) {
-  const db = getDb()
+export async function getAcademicEventRowsByDate(date, scope) {
+  const db = getDb(scope)
 
   const sql = `
     SELECT * FROM academic_events
@@ -132,9 +127,10 @@ export async function getAcademicEventRowsByDate(date) {
 
 /**
  * Obtiene proximas fechas academicas desde `today` inclusive.
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function getUpcomingAcademicEventRows(today, limit = 5) {
-  const db = getDb()
+export async function getUpcomingAcademicEventRows(today, limit = 5, scope) {
+  const db = getDb(scope)
 
   const sql = `
     SELECT * FROM academic_events
@@ -149,10 +145,11 @@ export async function getUpcomingAcademicEventRows(today, limit = 5) {
 
 /**
  * Actualiza campos de una fecha academica existente.
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function updateAcademicEventRow(id, changes) {
+export async function updateAcademicEventRow(id, changes, scope) {
   return runWriteOperation('updateAcademicEventRow', async () => {
-    const db = getDb()
+    const db = getDb(scope)
     const fields = []
     const values = []
 
@@ -181,18 +178,19 @@ export async function updateAcademicEventRow(id, changes) {
 
     values.push(id)
     const sql = `UPDATE academic_events SET ${fields.join(', ')} WHERE id = ?`
-    await runSql(db, sql, values)
+    await db.run(sql, values)
   })
 }
 
 /**
  * Elimina fisicamente una fecha academica.
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function deleteAcademicEventRow(id) {
+export async function deleteAcademicEventRow(id, scope) {
   return runWriteOperation('deleteAcademicEventRow', async () => {
-    const db = getDb()
+    const db = getDb(scope)
     const sql = `DELETE FROM academic_events WHERE id = ?`
 
-    await runSql(db, sql, [id])
+    await db.run(sql, [id])
   })
 }

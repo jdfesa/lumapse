@@ -76,7 +76,8 @@ function getUniqueNameForLevel(
 async function restoreSubjectRowWithUniqueName(
   subject: Subject,
   parentSubjectId: EntityId | null,
-  allSubjects: Subject[]
+  allSubjects: Subject[],
+  scope: object
 ): Promise<Subject[]> {
   const targetParentId = parentSubjectId || null
   const uniqueName = getUniqueNameForLevel(subject.name, targetParentId, subject.id, allSubjects)
@@ -93,9 +94,9 @@ async function restoreSubjectRowWithUniqueName(
   }
 
   if (Object.keys(changes).length > 0) {
-    await updateSubjectRow(subject.id, changes)
+    await updateSubjectRow(subject.id, changes, scope)
   }
-  await restoreSubjectRow(subject.id)
+  await restoreSubjectRow(subject.id, scope)
 
   const restoredSubject: Subject = {
     ...subject,
@@ -117,25 +118,25 @@ async function restoreSubjectRowWithUniqueName(
  * Envía a la papelera: la materia, sus secciones hijas y todas las notas.
  * @param {string} id ID de la materia
  */
-export async function deleteSubject(id: EntityId): Promise<void> {
-  return runTransaction(async () => {
+export async function deleteSubject(id: EntityId, parentScope?: object): Promise<void> {
+  return runTransaction(async (scope) => {
     // 1. Obtener secciones hijas para eliminar sus notas también
-    const childIds = (await getChildSubjectIds(id)) as EntityId[]
+    const childIds = (await getChildSubjectIds(id, scope)) as EntityId[]
 
     // 2. Soft-delete de notas del subject padre
-    await softDeleteNotesBySubject(id)
+    await softDeleteNotesBySubject(id, scope)
 
     // 3. Soft-delete de notas de cada sección hija
     for (const childId of childIds) {
-      await softDeleteNotesBySubject(childId)
+      await softDeleteNotesBySubject(childId, scope)
     }
 
     // 4. Soft-delete de secciones hijas
-    await softDeleteChildSubjects(id)
+    await softDeleteChildSubjects(id, scope)
 
     // 5. Soft-delete del subject padre
-    await deleteSubjectRow(id)
-  })
+    await deleteSubjectRow(id, scope)
+  }, parentScope)
 }
 
 /**
@@ -143,14 +144,14 @@ export async function deleteSubject(id: EntityId): Promise<void> {
  * La materia padre NO se elimina.
  * @param {string} id ID de la sección
  */
-export async function deleteSection(id: EntityId): Promise<void> {
-  return runTransaction(async () => {
+export async function deleteSection(id: EntityId, parentScope?: object): Promise<void> {
+  return runTransaction(async (scope) => {
     // 1. Soft-delete de notas de esta sección
-    await softDeleteNotesBySubject(id)
+    await softDeleteNotesBySubject(id, scope)
 
     // 2. Soft-delete de la sección
-    await deleteSubjectRow(id)
-  })
+    await deleteSubjectRow(id, scope)
+  }, parentScope)
 }
 
 /**
@@ -158,31 +159,31 @@ export async function deleteSection(id: EntityId): Promise<void> {
  * Restaura: la materia, sus secciones hijas y todas las notas.
  * @param {string} id ID de la materia
  */
-export async function restoreSubject(id: EntityId): Promise<void> {
-  return runTransaction(async () => {
-    const subject = (await getSubjectRowById(id)) as Subject | undefined
+export async function restoreSubject(id: EntityId, parentScope?: object): Promise<void> {
+  return runTransaction(async (scope) => {
+    const subject = (await getSubjectRowById(id, scope)) as Subject | undefined
     if (!subject) return
 
-    let allSubjects = (await getAllSubjectRowsIncludingArchived()) as Subject[]
-    const deletedSubjects = (await getDeletedSubjectRows()) as Subject[]
+    let allSubjects = (await getAllSubjectRowsIncludingArchived(scope)) as Subject[]
+    const deletedSubjects = (await getDeletedSubjectRows(scope)) as Subject[]
     const childSubjects = deletedSubjects.filter(child => child.parentSubjectId === id)
 
     // 1. Restaurar la materia con un nombre navegable único.
-    allSubjects = await restoreSubjectRowWithUniqueName(subject, null, allSubjects)
+    allSubjects = await restoreSubjectRowWithUniqueName(subject, null, allSubjects, scope)
 
     // 2. Restaurar secciones hijas una por una para resolver duplicados previos.
     for (const child of childSubjects) {
-      allSubjects = await restoreSubjectRowWithUniqueName(child, id, allSubjects)
+      allSubjects = await restoreSubjectRowWithUniqueName(child, id, allSubjects, scope)
     }
 
     // 3. Restaurar notas del subject padre
-    await restoreNotesBySubject(id)
+    await restoreNotesBySubject(id, scope)
 
     // 4. Restaurar notas de cada sección hija
     for (const child of childSubjects) {
-      await restoreNotesBySubject(child.id)
+      await restoreNotesBySubject(child.id, scope)
     }
-  })
+  }, parentScope)
 }
 
 /**
@@ -191,32 +192,32 @@ export async function restoreSubject(id: EntityId): Promise<void> {
  * para que la sección tenga una ruta navegable.
  * @param {string} id ID de la sección
  */
-export async function restoreSection(id: EntityId): Promise<void> {
-  return runTransaction(async () => {
-    const section = (await getSubjectRowById(id)) as Subject | undefined
+export async function restoreSection(id: EntityId, parentScope?: object): Promise<void> {
+  return runTransaction(async (scope) => {
+    const section = (await getSubjectRowById(id, scope)) as Subject | undefined
     if (!section) return
 
-    let allSubjects = (await getAllSubjectRowsIncludingArchived()) as Subject[]
+    let allSubjects = (await getAllSubjectRowsIncludingArchived(scope)) as Subject[]
     let targetParentId: EntityId | null = section.parentSubjectId || null
 
     // Verificar si el padre sigue existiendo como contenedor navegable.
     if (section.parentSubjectId) {
-      const parent = (await getSubjectRowById(section.parentSubjectId)) as Subject | undefined
+      const parent = (await getSubjectRowById(section.parentSubjectId, scope)) as Subject | undefined
       if (!parent) {
         targetParentId = null
       } else if (parent.deletedAt) {
-        allSubjects = await restoreSubjectRowWithUniqueName(parent, null, allSubjects)
+        allSubjects = await restoreSubjectRowWithUniqueName(parent, null, allSubjects, scope)
       } else if (parent.archived) {
-        allSubjects = await restoreSubjectRowWithUniqueName(parent, parent.parentSubjectId, allSubjects)
+        allSubjects = await restoreSubjectRowWithUniqueName(parent, parent.parentSubjectId, allSubjects, scope)
       }
     }
 
     // Restaurar la sección con nombre único en su nivel.
-    await restoreSubjectRowWithUniqueName(section, targetParentId, allSubjects)
+    await restoreSubjectRowWithUniqueName(section, targetParentId, allSubjects, scope)
 
     // Restaurar sus notas
-    await restoreNotesBySubject(id)
-  })
+    await restoreNotesBySubject(id, scope)
+  }, parentScope)
 }
 
 /**
@@ -224,23 +225,25 @@ export async function restoreSection(id: EntityId): Promise<void> {
  * Si su materia padre está eliminada, la nota cae en Entrada (subjectId = null).
  * @param {string} noteId ID de la nota
  */
-export async function restoreNoteFromTrash(noteId: EntityId): Promise<void> {
-  // Primero necesitamos leer la nota para saber si su materia sigue viva
-  const note = (await getNoteById(noteId)) as Note | undefined
-  if (!note) return
+export async function restoreNoteFromTrash(noteId: EntityId, parentScope?: object): Promise<void> {
+  return runTransaction(async (scope) => {
+    // Primero necesitamos leer la nota para saber si su materia sigue viva
+    const note = (await getNoteById(noteId, scope)) as Note | undefined
+    if (!note) return
 
-  // Restaurar la nota
-  await restoreNoteRow(noteId)
+    // Restaurar la nota
+    await restoreNoteRow(noteId, scope)
 
-  // Si tenía materia, verificar que siga activa
-  if (note.subjectId) {
-    const subject = (await getSubjectRowById(note.subjectId)) as Subject | undefined
-    if (!subject || subject.deletedAt) {
-      // Materia eliminada: la nota pierde su subject (va a Entrada)
-      const changes: NoteChanges = { subjectId: null }
-      await updateNote(noteId, changes)
+    // Si tenía materia, verificar que siga activa
+    if (note.subjectId) {
+      const subject = (await getSubjectRowById(note.subjectId, scope)) as Subject | undefined
+      if (!subject || subject.deletedAt) {
+        // Materia eliminada: la nota pierde su subject (va a Entrada)
+        const changes: NoteChanges = { subjectId: null }
+        await updateNote(noteId, changes, scope)
+      }
     }
-  }
+  }, parentScope)
 }
 
 /**
@@ -309,9 +312,11 @@ export async function getTrashItems(): Promise<TrashItems> {
 /**
  * Vacía toda la papelera (notas + materias). DELETE físico.
  */
-export async function emptyTrash(): Promise<void> {
-  await emptyTrashNotes()
-  await emptyTrashSubjects()
+export async function emptyTrash(parentScope?: object): Promise<void> {
+  return runTransaction(async (scope) => {
+    await emptyTrashNotes(scope)
+    await emptyTrashSubjects(scope)
+  }, parentScope)
 }
 
 /**
@@ -319,7 +324,9 @@ export async function emptyTrash(): Promise<void> {
  * Se ejecuta al inicio de cada sesión.
  * @param {number} days Días de retención (default: 30)
  */
-export async function autoPurge(days = 30): Promise<void> {
-  await purgeOldDeletedNotes(days)
-  await purgeOldDeletedSubjects(days)
+export async function autoPurge(days = 30, parentScope?: object): Promise<void> {
+  return runTransaction(async (scope) => {
+    await purgeOldDeletedNotes(days, scope)
+    await purgeOldDeletedSubjects(days, scope)
+  }, parentScope)
 }

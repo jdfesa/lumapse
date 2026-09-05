@@ -9,9 +9,7 @@ const mockDb = vi.hoisted(() => ({
 
 vi.mock('../../../../src/services/sqlite/connection.js', () => ({
   getDb: vi.fn(() => mockDb),
-  persistWeb: vi.fn().mockResolvedValue(undefined),
   generateUUID: vi.fn(() => 'test-uuid-1234'),
-  isWriteTransactionActive: vi.fn(() => false),
 }))
 
 function dbRow(overrides = {}) {
@@ -35,7 +33,6 @@ beforeEach(() => {
   vi.setSystemTime(new Date('2024-01-15T10:00:00.000Z'))
   mockDb.run.mockResolvedValue(undefined)
   mockDb.query.mockResolvedValue({ values: [] })
-  connection.isWriteTransactionActive.mockReturnValue(false)
 })
 
 describe('sqlite/notes', () => {
@@ -86,11 +83,16 @@ describe('sqlite/notes', () => {
       await expect(Notes.createNote()).resolves.toMatchObject({ archived: false })
     })
 
-    it('llama persistWeb() después de db.run', async () => {
-      await Notes.createNote()
-
-      expect(connection.persistWeb).toHaveBeenCalled()
-      expect(mockDb.run.mock.invocationCallOrder[0]).toBeLessThan(connection.persistWeb.mock.invocationCallOrder[0])
+    it('espera la finalización de la escritura coordinada', async () => {
+      let release
+      mockDb.run.mockReturnValueOnce(new Promise(resolve => { release = resolve }))
+      const finished = vi.fn()
+      const pending = Notes.createNote().then(finished)
+      await Promise.resolve()
+      expect(finished).not.toHaveBeenCalled()
+      release()
+      await pending
+      expect(finished).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -192,12 +194,17 @@ describe('sqlite/notes', () => {
       expect(updated.updatedAt).toBe('2024-01-15T10:00:00.000Z')
     })
 
-    it('llama persistWeb() después de db.run', async () => {
+    it('espera la finalización de la escritura coordinada', async () => {
       mockDb.query.mockResolvedValue({ values: [dbRow()] })
-
-      await Notes.updateNote('note-1', { title: 'Nueva' })
-
-      expect(connection.persistWeb).toHaveBeenCalled()
+      let release
+      mockDb.run.mockReturnValueOnce(new Promise(resolve => { release = resolve }))
+      const finished = vi.fn()
+      const pending = Notes.updateNote('note-1', { title: 'Nueva' }).then(finished)
+      await Promise.resolve()
+      expect(finished).not.toHaveBeenCalled()
+      release()
+      await pending
+      expect(finished).toHaveBeenCalledTimes(1)
     })
 
     it('retorna el objeto merged de existing + changes + updatedAt', async () => {
@@ -224,21 +231,27 @@ describe('sqlite/notes', () => {
       )
     })
 
-    it('llama persistWeb()', async () => {
-      await Notes.deleteNote('note-1')
-
-      expect(connection.persistWeb).toHaveBeenCalled()
+    it('espera la finalización de la escritura coordinada', async () => {
+      let release
+      mockDb.run.mockReturnValueOnce(new Promise(resolve => { release = resolve }))
+      const finished = vi.fn()
+      const pending = Notes.deleteNote('note-1').then(finished)
+      await Promise.resolve()
+      expect(finished).not.toHaveBeenCalled()
+      release()
+      await pending
+      expect(finished).toHaveBeenCalledTimes(1)
     })
 
-    it('desactiva la transacción implícita si ya hay una transacción explícita', async () => {
-      connection.isWriteTransactionActive.mockReturnValue(true)
+    it('transmite el propietario explícito a la fachada', async () => {
+      const scope = {}
 
-      await Notes.deleteNote('note-1')
+      await Notes.deleteNote('note-1', scope)
+      expect(connection.getDb).toHaveBeenCalledWith(scope)
 
       expect(mockDb.run).toHaveBeenCalledWith(
         'UPDATE notes SET deletedAt = ? WHERE id = ?',
         ['2024-01-15T10:00:00.000Z', 'note-1'],
-        false,
       )
     })
   })
@@ -250,10 +263,16 @@ describe('sqlite/notes', () => {
       expect(mockDb.run).toHaveBeenCalledWith('DELETE FROM notes WHERE id = ?', ['note-1'])
     })
 
-    it('llama persistWeb()', async () => {
-      await Notes.permanentlyDeleteNote('note-1')
-
-      expect(connection.persistWeb).toHaveBeenCalled()
+    it('espera la finalización de la escritura coordinada', async () => {
+      let release
+      mockDb.run.mockReturnValueOnce(new Promise(resolve => { release = resolve }))
+      const finished = vi.fn()
+      const pending = Notes.permanentlyDeleteNote('note-1').then(finished)
+      await Promise.resolve()
+      expect(finished).not.toHaveBeenCalled()
+      release()
+      await pending
+      expect(finished).toHaveBeenCalledTimes(1)
     })
   })
 
