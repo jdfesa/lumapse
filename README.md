@@ -121,7 +121,7 @@ lumapse/
 │   ├── scripts/            # Pipeline modular de análisis
 │   └── graficos/           # Gráficos generados (12 archivos)
 ├── docs/                   # Documentación del proyecto
-│   ├── adr/                # Architecture Decision Records (8 ADRs)
+│   ├── adr/                # Architecture Decision Records (9 ADRs)
 │   ├── diagramas/          # Diagramas UML (Mermaid)
 │   ├── gestion/            # Estimación, planificación y control de avance
 │   ├── hitos/              # Informes de avance mensuales

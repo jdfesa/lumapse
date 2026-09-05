@@ -218,6 +218,8 @@ release ni se cambió la versión; la integración quedó autorizada.
 
 ### AUD-005 — Coordinación SQLite y arranque
 
+> **Seguimiento 2026-09-04:** implementado en `fix/sqlite-write-coordination`, con regresiones automáticas y ADR-009. Pendiente de gate canónico satisfactorio sobre el SHA final, Android y autorización de integración; todavía no cerrado. Ver [evidencia de AUD-005](analisis-aud-005-coordinacion-sqlite-2026-09-04.md). El diagnóstico siguiente conserva el hallazgo inicial.
+
 **Transacciones**
 
 `src/services/sqlite/connection.js:18-86` representa propiedad transaccional mediante el global

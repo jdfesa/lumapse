@@ -41,6 +41,8 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ### Fixed
 
+- **Coordinación SQLite y arranque (AUD-005, pendiente de integración):** Propiedad transaccional explícita y cola compartida con CRUD/lecturas, cascadas sin commits parciales, errores de persistencia web propagados y conexión incierta en cuarentena. Migraciones estrictas e idempotentes y arranque accesible en español con reintento seguro; regresiones automáticas aprobadas, validación canónica y Android pendientes. Contrato documentado en ADR-009.
+
 - **Integridad del guardado (AUD-001):** El editor solo limpia los campos y descarta el borrador tras confirmar la persistencia; ante un fallo conserva contenido, borrador, contexto de edición y modo foco para permitir el reintento.
 - **Guardados concurrentes (AUD-002):** Una protección single-flight serializa el guardado y mantiene un estado visual mientras la operación está pendiente, evitando mutaciones duplicadas o fuera de orden por taps repetidos.
 - **Descarte de borrador distinguible:** La acción destructiva de descartar quedó diferenciada visualmente del guardado y cubierta por una regresión de presentación.
