@@ -8,7 +8,7 @@
 // =============================================================
 
 import './styles/main.css'
-import { initDatabase } from './services/sqlite/connection.js'
+import { initDatabase, closeDatabaseForReload } from './services/sqlite/connection.js'
 import * as NoteStore from './store/NoteStore.js'
 import * as ThemeService from './services/ThemeService.ts'
 import { SUBJECT_COLORS, autoPurge } from './services/SubjectService.js'
@@ -21,12 +21,32 @@ import { showErrorToast } from './components/common/Toast.js'
 import { handleStoreMutationError } from './components/common/storeActionErrors.js'
 import { renderAppShell } from './layout/appShell.js'
 import { initDrawer } from './layout/drawerController.js'
+import { createAppStartup } from './layout/appStartup.js'
 // import { seedTiktokData, seedStressTest } from './utils/seeder.js'
 
-async function initApp() {
-  // 1. Inicializar base de datos SQLite
+async function prepareApp() {
   await initDatabase()
-  
+  // Preparar datos antes de crear componentes o suscripciones.
+  await NoteStore.loadSubjects()
+  await NoteStore.loadNotes()
+  await NoteStore.loadAcademicEvents()
+  const today = new Date()
+  await NoteStore.loadAcademicEventsByMonth(today.getFullYear(), today.getMonth() + 1)
+  await NoteStore.loadUpcomingAcademicEvents()
+
+  // Auto-purgado de papelera (RF-026): elimina items > 30 días
+  try {
+    await autoPurge(30)
+    console.log('[Lumapse] Auto-purge completado.')
+  } catch (err) {
+    console.warn('[Lumapse] Error en auto-purge:', err)
+  }
+
+  // Cargar conteo de papelera (para badge)
+  await NoteStore.loadTrashCount()
+}
+
+function mountApp() {
   // 2. Renderizar el shell HTML
   const app = document.getElementById('app')
   app.innerHTML = renderAppShell()
@@ -71,25 +91,6 @@ async function initApp() {
     calendarPopup.classList.remove('is-open')
   })
   
-  // 6. Cargar datos iniciales
-  await NoteStore.loadSubjects()
-  await NoteStore.loadNotes()
-  await NoteStore.loadAcademicEvents()
-  const today = new Date()
-  await NoteStore.loadAcademicEventsByMonth(today.getFullYear(), today.getMonth() + 1)
-  await NoteStore.loadUpcomingAcademicEvents()
-
-  // 7. Auto-purgado de papelera (RF-026): elimina items > 30 días
-  try {
-    await autoPurge(30)
-    console.log('[Lumapse] Auto-purge completado.')
-  } catch (err) {
-    console.warn('[Lumapse] Error en auto-purge:', err)
-  }
-
-  // 8. Cargar conteo de papelera (para badge)
-  await NoteStore.loadTrashCount()
-
   // 9. Toast de alerta de papelera (RF-026)
   const trashToast = document.getElementById('trash-warning-toast')
   const btnEmptyTrashToast = document.getElementById('btn-empty-trash-toast')
@@ -123,5 +124,11 @@ async function initApp() {
   })
 }
 
-// Iniciar aplicación
-initApp()
+// Una sola preparación concurrente, sin componentes ni listeners antes de cargar los datos.
+const startup = createAppStartup({
+  app: document.getElementById('app'),
+  prepare: prepareApp,
+  mount: mountApp,
+  beforeReload: closeDatabaseForReload,
+})
+void startup.start()

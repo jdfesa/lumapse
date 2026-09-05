@@ -19,6 +19,7 @@ let sqliteConnection = null
 let db = null
 let coordinator = null
 let initialization = null
+let closing = null
 let ready = false
 
 // No se expone la conexión nativa: incluso el CRUD independiente pasa por la cola.
@@ -91,11 +92,27 @@ async function initWebComponent() {
  * la migración desde IndexedDB si es la primera vez.
  */
 export function initDatabase() {
+  if (closing) return Promise.reject(new Error('Database connection is closing'))
   if (initialization) return initialization
   if (ready && coordinator?.isHealthy()) return Promise.resolve()
   ready = false
   initialization = initialize().finally(() => { initialization = null })
   return initialization
+}
+
+/** Cierra sin borrar datos antes de recargar una WebView parcialmente montada. */
+export function closeDatabaseForReload() {
+  if (closing) return closing
+  ready = false
+  closing = Promise.resolve().then(async () => {
+    await initialization
+    ready = false
+    // Bloquear también fachadas retenidas; drenar lo activo antes de cerrar.
+    coordinator?.invalidate(new Error('SQLite connection is closing for reload'))
+    await recoverConnection()
+    coordinator = null
+  }).finally(() => { closing = null })
+  return closing
 }
 
 async function initialize() {
