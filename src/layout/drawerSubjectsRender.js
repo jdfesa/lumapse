@@ -69,6 +69,7 @@ export function renderSubjectsList(subjectsData, { NoteStore, subjectsList, inbo
             <span class="drawer__subject-name" data-name-id="${childId}">${escapeHtmlText(child.name)}</span>
             <span class="drawer__subject-count">${escapeHtmlText(child.noteCount || 0)}</span>
           </div>
+          ${renderSubjectActionsButton(child.id, child.name, true)}
         </div>
       `
     }).join('')
@@ -110,15 +111,45 @@ export function renderSubjectsList(subjectsData, { NoteStore, subjectsList, inbo
             <span class="drawer__subject-name" data-name-id="${subjectId}">${subjectName}</span>
             <span class="drawer__subject-count">${escapeHtmlText(subject.noteCount || 0)}</span>
           </div>
-          <button class="drawer__section-add js-btn-add-section" data-parent-id="${subjectId}" data-parent-color="${subjectColorAttribute}" title="Agregar sección">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <button class="drawer__subject-action drawer__section-add js-btn-add-section"
+                  type="button"
+                  data-parent-id="${subjectId}"
+                  data-parent-color="${subjectColorAttribute}"
+                  aria-label="Agregar sección a ${subjectNameAttribute}"
+                  title="Agregar sección">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
           </button>
+          ${renderSubjectActionsButton(subject.id, subject.name, false)}
         </div>
         ${childrenGroupHtml}
         ${sectionFormHtml}
       </div>
     `
   }).join('')
+}
+
+function renderSubjectActionsButton(subjectIdValue, subjectNameValue, isSection) {
+  const subjectId = escapeHtmlAttribute(subjectIdValue)
+  const subjectName = escapeHtmlAttribute(subjectNameValue)
+  const itemType = isSection ? 'sección' : 'materia'
+
+  return `
+    <button class="drawer__subject-action drawer__subject-more js-subject-actions"
+            type="button"
+            data-subject="${subjectId}"
+            data-subject-name="${subjectName}"
+            data-is-section="${String(isSection)}"
+            aria-label="Más opciones de ${itemType} ${subjectName}"
+            aria-haspopup="menu"
+            aria-expanded="false"
+            title="Más opciones">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <circle cx="12" cy="5" r="1.6"></circle>
+        <circle cx="12" cy="12" r="1.6"></circle>
+        <circle cx="12" cy="19" r="1.6"></circle>
+      </svg>
+    </button>
+  `
 }
 
 function renderCollapseButton(subject, isCollapsed) {
