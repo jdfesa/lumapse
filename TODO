@@ -35,6 +35,8 @@
 - [ ] Contrastar los metadatos bibliográficos de Gómez (2014) y Parada (2026) contra los originales de cátedra y cerrar la sección de referencias.
 - [x] Resolver AUD-004 en un PR separado: DOMPurify y siete dependencias de tooling parcheadas, auditorías 0/0, 955 tests, build, quality gate y Android 0.4.8/408 aprobados (2026-09-02).
 - [x] Resolver AUD-007 en PR #6: contrato de errores de mutaciones unificado, límites UI adaptados, 989 tests, quality gate y prueba manual Android aprobados (2026-09-03).
+- [ ] Validar canónicamente y en Android AUD-005 sobre su SHA publicado; implementación y regresiones automáticas listas en `fix/sqlite-write-coordination`, sin PR ni integración todavía. Ver [evidencia](docs/gestion/analisis-aud-005-coordinacion-sqlite-2026-09-04.md).
+- [ ] Después de integrar AUD-005, iniciar AUD-006 en `fix/async-request-ownership` con su propio ciclo de validación y aprobación.
 - [ ] Ejecutar el gate final sobre el commit y artefacto candidatos y guardar la evidencia; el gate acumulativo de AUD-003 y los pre-push documentales no sustituyen este cierre.
 - [ ] Repetir la validación Android sobre el artefacto versionado con un conjunto de datos representativo; el checkpoint de AUD-003 ya cubrió `STORE`, `DEFLATE`, datos inválidos y una fixture de 500 notas.
 - [ ] Verificar específicamente la interacción `Mover a` y clasificar su fricción como corregida, aceptada o bloqueante.

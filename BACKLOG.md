@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 06 — Entrega Final
 > **Hito 05:** Cerrado documentalmente el 2026-07-15 sobre la beta operativa `v0.4.8`
-> **Última actualización:** 2026-09-03 — AUD-001 a AUD-004 y AUD-007 cerrados técnicamente; AUD-005 es el próximo frente técnico independiente
+> **Última actualización:** 2026-09-04 — AUD-005 implementado en rama; pendiente de validación canónica, Android e integración
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -54,7 +54,8 @@ El análisis detallado permanece en [`docs/gestion/revision-tecnica-priorizada-2
 | AUD-002 | P0 | Guardados duplicados por taps concurrentes | Cerrado en PR #2; single-flight y estado visual validados |
 | AUD-003 | P0 | Frontera y presentación de backups no confiables | Cerrado en PR #3; suite acumulativa y checkpoints Android aprobados |
 | AUD-004 | P0 | Dependencias con advisories de seguridad | Cerrado en PR #5; auditorías 0/0 y Android aprobados |
-| AUD-005–AUD-006 | P1 | Coordinación de persistencia y resultados async obsoletos | Pendientes; AUD-005 es el próximo frente técnico independiente |
+| AUD-005 | P1 | Coordinación SQLite, migraciones y arranque | Implementado en `fix/sqlite-write-coordination`; regresiones automáticas aprobadas, gate canónico y Android pendientes; no integrado. [Evidencia](docs/gestion/analisis-aud-005-coordinacion-sqlite-2026-09-04.md) |
+| AUD-006 | P1 | Resultados async obsoletos | Pendiente; iniciar en rama separada únicamente después de integrar AUD-005 |
 | AUD-007 | P1 | Contratos incompatibles para errores de mutaciones | Cerrado en PR #6; contrato único, consumidores y Android aprobados |
 | AUD-008–AUD-009 | P1 | Portabilidad del gate y Node 26 | Pendientes; abordar sin relajar controles |
 | AUD-010–AUD-013 | P2 | Escalabilidad, rendimiento, cohesión y margen de bundle/coverage | Monitorear o medir; no bloquean por sí solos el cierre actual |
@@ -97,7 +98,7 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Framework UI | No incorporar Svelte por ahora | Baja | Costo de migracion alto vs beneficio actual; reabrir solo si DOM manual se vuelve una carga clara |
 | Documentación | Congelar documentos antes del corte final | Alta | La reconciliación posterior a AUD-001/002/003 se completó el 2026-09-02; restan evidencia final, revisión de maquetación y el corte elegido |
 | Dependencias | Repetir auditorías en cada corte candidato | Recurrente | AUD-004 quedó cerrado con grafo mínimo, auditorías 0/0 y Android aprobado; revalidar porque los advisories evolucionan |
-| Persistencia y asincronía | Planificar AUD-005–AUD-006 | Alta/Media | AUD-007 quedó cerrado en PR #6; mantener ramas separadas para propiedad transaccional/migraciones y resultados async obsoletos |
+| Persistencia y asincronía | Validar e integrar AUD-005; luego ejecutar AUD-006 | Alta | AUD-005 implementado con ADR-009 y regresiones; faltan gate canónico, Android y autorizaciones. AUD-006 sigue separado y pendiente |
 | Tooling | Resolver portabilidad de gate y Node 26 (AUD-008/AUD-009) | Media | Distinguir falsos positivos CSP del fallback offline y eliminar la dependencia del workaround de Web Storage sin relajar controles |
 | Tooling DB | Ampliar el smoke test a `academic_events` y constraints relevantes | Media | El DDL completo se ejecuta, pero las aserciones explícitas de tablas/columnas/relaciones se concentran en materias, notas y metadata; decidir su ampliación antes de presentar cobertura exhaustiva |
 | Tooling de release | Sincronizar versión Android desde el helper | Alta | `scripts/release-helper.py` actualiza package/changelog, pero no `versionName` ni `versionCode`; corregirlo o agregar un gate explícito antes de generar otra APK |
