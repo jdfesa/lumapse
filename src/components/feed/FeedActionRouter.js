@@ -30,6 +30,28 @@ function handleMenuToggle(event, button, deps) {
   }
 }
 
+function handleMoveMenuToggle(event, button) {
+  event.preventDefault()
+  event.stopPropagation()
+
+  const submenu = button.nextElementSibling
+  if (!submenu?.classList.contains('note-card__move-submenu')) return
+
+  const shouldOpen = !submenu.classList.contains('is-open')
+  const dropdown = button.closest('.note-card__dropdown')
+  dropdown?.querySelectorAll('.note-card__move-submenu.is-open').forEach(openMenu => {
+    openMenu.classList.remove('is-open')
+  })
+  dropdown?.querySelectorAll('.js-btn-move-trigger[aria-expanded="true"]').forEach(trigger => {
+    trigger.setAttribute('aria-expanded', 'false')
+  })
+
+  if (shouldOpen) {
+    submenu.classList.add('is-open')
+    button.setAttribute('aria-expanded', 'true')
+  }
+}
+
 function getTaskToggle(content, lineIndex) {
   const lines = content.split('\n')
   const line = lines[lineIndex]
@@ -160,6 +182,10 @@ const ACTION_MAP = [
       await NoteStore.toggleArchive(button.dataset.id)
       deps.closeAllDropdowns()
     }
+  },
+  {
+    selector: '.js-btn-move-trigger',
+    handler: handleMoveMenuToggle
   },
   {
     selector: '.js-btn-move-to',

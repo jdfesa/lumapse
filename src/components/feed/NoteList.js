@@ -138,7 +138,7 @@ export class NoteList {
 
   closeAllDropdowns() {
     const dropdowns = this.container.querySelectorAll('.note-card__dropdown.is-open');
-    dropdowns.forEach(d => d.classList.remove('is-open'));
+    dropdowns.forEach(d => { d.classList.remove('is-open'); d.querySelector('.note-card__move-submenu.is-open')?.classList.remove('is-open'); d.querySelector('.js-btn-move-trigger[aria-expanded="true"]')?.setAttribute('aria-expanded', 'false'); });
   }
 
   handleGlobalClick(e) {
@@ -306,12 +306,12 @@ export class NoteList {
                 ${archiveLabel}
               </button>
               <div class="note-card__move-wrapper">
-                <button class="note-card__dropdown-btn js-btn-move-trigger" title="Mover nota">
+                <button class="note-card__dropdown-btn js-btn-move-trigger" type="button" title="Mover nota" aria-label="Elegir destino de la nota" aria-haspopup="menu" aria-expanded="false">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
                   Mover a
                   <svg class="note-card__move-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                 </button>
-                <div class="note-card__move-submenu">
+                <div class="note-card__move-submenu" role="menu">
                   ${buildMoveMenu(note.id, note.subjectId, subjectsData)}
                 </div>
               </div>
