@@ -70,6 +70,7 @@ function defaultState(overrides = {}) {
     notes: [],
     dateFilter: null,
     academicEventsForMonth: [],
+    academicEventsMonth: { year: 2026, month: 6 },
     subjects: {
       tree: [
         {
@@ -419,6 +420,21 @@ describe('Heatmap eventos academicos read-only', () => {
     expect(document.querySelector('.heatmap-title')?.textContent).toBe('Julio 2026')
     expect(document.querySelector('.academic-event-dot')).toBeNull()
 
+    heatmap.destroy()
+  })
+
+  it('no rehidrata el mes visible con un cache identificado como otro mes', () => {
+    const heatmap = createHeatmap()
+    heatmap.changeMonth(1)
+
+    storeMock.state = defaultState({
+      academicEventsMonth: { year: 2026, month: 6 },
+      academicEventsForMonth: [event({ id: 'wrong-month', date: '2026-07-14' })],
+    })
+    storeMock.subscriber(storeMock.state)
+
+    expect(document.querySelector('.heatmap-title')?.textContent).toBe('Julio 2026')
+    expect(document.querySelector('.heatmap-day[data-date="2026-07-14"] .academic-event-dot')).toBeNull()
     heatmap.destroy()
   })
 

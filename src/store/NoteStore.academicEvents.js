@@ -10,6 +10,12 @@ import * as AcademicEventService from '../services/AcademicEventService.ts'
 import { runStoreAction } from './NoteStore.errors.js'
 import { state, notify } from './NoteStore.state.js'
 
+let academicEventsRequestVersion = 0
+let monthRequestVersion = 0
+let upcomingRequestVersion = 0
+let mutationRevision = 0
+const academicEventMutations = new Map()
+
 function sortAcademicEvents(events) {
   return [...events].sort((a, b) => {
     const byDate = String(a.date).localeCompare(String(b.date))
@@ -48,6 +54,44 @@ function eventBelongsToMonth(event, monthState) {
   return year === monthState.year && month === monthState.month
 }
 
+async function readLatest(load, isCurrent) {
+  try {
+    const value = await load()
+    return isCurrent() ? { current: true, value } : { current: false }
+  } catch (error) {
+    if (isCurrent()) throw error
+    return { current: false }
+  }
+}
+
+function recordAcademicEventMutation(id, value) {
+  mutationRevision += 1
+  academicEventMutations.set(String(id).trim(), { revision: mutationRevision, value })
+}
+
+function reconcileReadWithMutations(events, readRevision, monthState = null) {
+  let reconciled = dedupeAcademicEvents(events)
+
+  for (const [id, mutation] of academicEventMutations) {
+    if (mutation.revision <= readRevision) continue
+
+    reconciled = removeAcademicEvent(reconciled, id)
+    if (mutation.value && (!monthState || eventBelongsToMonth(mutation.value, monthState))) {
+      reconciled = upsertAcademicEvent(reconciled, mutation.value)
+    }
+  }
+
+  return reconciled
+}
+
+async function readUpcomingAcademicEvents(today, limit) {
+  const requestVersion = ++upcomingRequestVersion
+  return readLatest(
+    () => AcademicEventService.getUpcomingAcademicEvents(today, limit),
+    () => requestVersion === upcomingRequestVersion,
+  )
+}
+
 function reconcileMonthEvent(event) {
   state.academicEventsForMonth = removeAcademicEvent(state.academicEventsForMonth, event.id)
 
@@ -57,14 +101,23 @@ function reconcileMonthEvent(event) {
 }
 
 async function reloadUpcomingAcademicEvents() {
-  state.upcomingAcademicEvents = await AcademicEventService.getUpcomingAcademicEvents()
+  const result = await readUpcomingAcademicEvents()
+  if (result.current) state.upcomingAcademicEvents = result.value
 }
 
 /**
  * Carga todas las fechas academicas disponibles.
  */
 export async function loadAcademicEvents() {
-  state.academicEvents = await AcademicEventService.getAcademicEvents()
+  const requestVersion = ++academicEventsRequestVersion
+  const readRevision = mutationRevision
+  const result = await readLatest(
+    () => AcademicEventService.getAcademicEvents(),
+    () => requestVersion === academicEventsRequestVersion,
+  )
+  if (!result.current) return
+
+  state.academicEvents = reconcileReadWithMutations(result.value, readRevision)
   notify()
 }
 
@@ -72,11 +125,21 @@ export async function loadAcademicEvents() {
  * Carga las fechas academicas de un mes base 1 para consumo del Heatmap.
  */
 export async function loadAcademicEventsByMonth(year, month) {
-  const events = await AcademicEventService.getAcademicEventsByMonth(year, month)
+  const requestVersion = ++monthRequestVersion
+  const readRevision = mutationRevision
+  const result = await readLatest(
+    () => AcademicEventService.getAcademicEventsByMonth(year, month),
+    () => requestVersion === monthRequestVersion,
+  )
+  if (!result.current) return
 
-  state.academicEventsForMonth = events
-  state.academicEventsMonth = { year, month }
-  state.academicEvents = dedupeAcademicEvents([...state.academicEvents, ...events])
+  const monthState = { year, month }
+  state.academicEventsForMonth = reconcileReadWithMutations(result.value, readRevision, monthState)
+  state.academicEventsMonth = monthState
+  state.academicEvents = reconcileReadWithMutations(
+    [...state.academicEvents, ...result.value],
+    readRevision,
+  )
   notify()
 }
 
@@ -84,7 +147,10 @@ export async function loadAcademicEventsByMonth(year, month) {
  * Carga las proximas fechas academicas para recordatorio pasivo.
  */
 export async function loadUpcomingAcademicEvents(today, limit) {
-  state.upcomingAcademicEvents = await AcademicEventService.getUpcomingAcademicEvents(today, limit)
+  const result = await readUpcomingAcademicEvents(today, limit)
+  if (!result.current) return
+
+  state.upcomingAcademicEvents = result.value
   notify()
 }
 
@@ -95,6 +161,7 @@ export async function createAcademicEvent(input) {
   return runStoreAction('createAcademicEvent', 'No se pudo crear la fecha academica. Intenta de nuevo.', async () => {
     const event = await AcademicEventService.createAcademicEvent(input)
 
+    recordAcademicEventMutation(event.id, event)
     state.academicEvents = upsertAcademicEvent(state.academicEvents, event)
     reconcileMonthEvent(event)
     await reloadUpcomingAcademicEvents()
@@ -111,6 +178,7 @@ export async function updateAcademicEvent(id, changes) {
   return runStoreAction('updateAcademicEvent', 'No se pudo actualizar la fecha academica. Intenta de nuevo.', async () => {
     const event = await AcademicEventService.updateAcademicEvent(id, changes)
 
+    recordAcademicEventMutation(event.id, event)
     state.academicEvents = upsertAcademicEvent(state.academicEvents, event)
     reconcileMonthEvent(event)
     await reloadUpcomingAcademicEvents()
@@ -128,6 +196,7 @@ export async function deleteAcademicEvent(id) {
     await AcademicEventService.deleteAcademicEvent(id)
     const eventId = String(id).trim()
 
+    recordAcademicEventMutation(eventId, null)
     state.academicEvents = removeAcademicEvent(state.academicEvents, eventId)
     state.academicEventsForMonth = removeAcademicEvent(state.academicEventsForMonth, eventId)
     await reloadUpcomingAcademicEvents()
