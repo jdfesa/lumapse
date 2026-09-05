@@ -164,34 +164,39 @@
   transform: rotate(90deg);
 }
 
-/* '+' button to add section (visible on hover) */
-.drawer__section-add {
+/* Direct actions for subjects and sections */
+.drawer__subject-action {
   background: transparent;
   border: none;
   color: var(--color-text-muted);
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0;
   transition: all var(--transition);
   flex-shrink: 0;
 }
 
-.drawer__subject-row:hover .drawer__section-add {
-  opacity: 1;
+.drawer__subject-action:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text-bright);
 }
 
-.drawer__section-add--visible {
-  opacity: 1;
+.drawer__subject-action:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
 }
 
 .drawer__section-add:hover {
-  background: var(--color-surface-hover);
   color: var(--color-accent);
+}
+
+.drawer__subject-more[aria-expanded="true"] {
+  background: var(--color-surface-hover);
+  color: var(--color-text-bright);
 }
 
 /* Inline rename input */

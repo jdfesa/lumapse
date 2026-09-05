@@ -154,6 +154,84 @@ describe('drawerSubjects mutation failures', () => {
 })
 
 describe('drawerSubjects collapse', () => {
+  it('muestra acciones directas sin ofrecer subsecciones dentro de una sección', () => {
+    const { subjectsList } = setupSubjectsDrawer()
+
+    const rootRows = subjectsList.querySelectorAll('.drawer__subject-group > .drawer__subject-row')
+    const sectionRow = subjectsList.querySelector('.drawer__subject-row--child')
+
+    expect(subjectsList.querySelectorAll('.js-btn-add-section')).toHaveLength(2)
+    expect(subjectsList.querySelectorAll('.js-subject-actions')).toHaveLength(3)
+    expect(rootRows[0].querySelector('.js-btn-add-section')?.getAttribute('aria-label'))
+      .toBe('Agregar sección a Programacion')
+    expect(rootRows[0].querySelector('.js-subject-actions')?.getAttribute('aria-label'))
+      .toBe('Más opciones de materia Programacion')
+    expect(sectionRow.querySelector('.js-btn-add-section')).toBeNull()
+    expect(sectionRow.querySelector('.js-subject-actions')?.getAttribute('aria-label'))
+      .toBe('Más opciones de sección Unidad 1')
+  })
+
+  it('abre renombrado desde el botón de opciones sin navegar por la materia', () => {
+    const { closeDrawer, NoteStore, subjectsList } = setupSubjectsDrawer()
+    const subjectRow = subjectsList.querySelector('.drawer__subject-group > .drawer__subject-row')
+    const actionsButton = subjectRow.querySelector('.js-subject-actions')
+
+    actionsButton.click()
+
+    const contextMenu = document.getElementById('subject-context-menu')
+    expect(contextMenu.style.display).toBe('block')
+    expect(contextMenu.querySelector('.js-ctx-archive-label').textContent).toBe('Archivar materia')
+    expect(actionsButton.getAttribute('aria-expanded')).toBe('true')
+    expect(NoteStore.setActiveSubject).not.toHaveBeenCalled()
+    expect(closeDrawer).not.toHaveBeenCalled()
+
+    contextMenu.querySelector('.js-ctx-rename').click()
+
+    expect(subjectRow.querySelector('.js-rename-input')?.dataset.subjectId).toBe('subj-1')
+    expect(actionsButton.getAttribute('aria-expanded')).toBe('false')
+  })
+
+  it('identifica como sección el menú directo de una fila hija', () => {
+    const { subjectsList } = setupSubjectsDrawer()
+
+    subjectsList.querySelector('.drawer__subject-row--child .js-subject-actions').click()
+
+    const contextMenu = document.getElementById('subject-context-menu')
+    expect(contextMenu.style.display).toBe('block')
+    expect(contextMenu.querySelector('.js-ctx-archive-label').textContent).toBe('Archivar sección')
+  })
+
+  it.each([
+    ['Entrada', '#btn-inbox'],
+    ['otra materia', '[data-subject="subj-2"]'],
+    ['una sección', '[data-subject="sec-1"]'],
+  ])('cierra el menú contextual al navegar a %s', (_destination, selector) => {
+    const { subjectsList } = setupSubjectsDrawer()
+    const actionsButton = subjectsList.querySelector('.drawer__subject-group > .drawer__subject-row .js-subject-actions')
+
+    actionsButton.click()
+    expect(document.getElementById('subject-context-menu').style.display).toBe('block')
+
+    document.querySelector(selector).click()
+
+    expect(document.getElementById('subject-context-menu').style.display).toBe('none')
+    expect(actionsButton.getAttribute('aria-expanded')).toBe('false')
+  })
+
+  it('cierra el menú desde el inicio de un toque fuera antes de navegar', () => {
+    const { subjectsList } = setupSubjectsDrawer()
+    const actionsButton = subjectsList.querySelector('.drawer__subject-group > .drawer__subject-row .js-subject-actions')
+    const destination = subjectsList.querySelector('[data-subject="subj-2"]')
+
+    actionsButton.click()
+    expect(document.getElementById('subject-context-menu').style.display).toBe('block')
+
+    destination.dispatchEvent(new Event('pointerdown', { bubbles: true }))
+
+    expect(document.getElementById('subject-context-menu').style.display).toBe('none')
+    expect(actionsButton.getAttribute('aria-expanded')).toBe('false')
+  })
+
   it('renderiza flecha solo en materias con secciones', () => {
     const { subjectsList } = setupSubjectsDrawer()
 

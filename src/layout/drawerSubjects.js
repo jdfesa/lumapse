@@ -103,6 +103,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
 
   // Click en Entrada
   btnInbox.addEventListener('click', () => {
+    subjectContextMenu.close()
     NoteStore.setActiveSubject(null)
     resetArchived()
     updateSubjectActiveState(null)
@@ -206,6 +207,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
   function navigateToSubject(subjectId) {
     if (!subjectId) return
 
+    subjectContextMenu.close()
     NoteStore.setActiveSubject(subjectId)
     resetArchived()
     updateSubjectActiveState(subjectId)
