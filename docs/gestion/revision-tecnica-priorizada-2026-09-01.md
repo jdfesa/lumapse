@@ -1,6 +1,6 @@
 # Revisión Técnica Priorizada — 2026-09-01
 
-**Estado:** Vigente — AUD-001 a AUD-004 y AUD-007 cerrados técnicamente
+**Estado:** Vigente — AUD-001 a AUD-005 y AUD-007 cerrados técnicamente
 **Rama original de auditoría:** `fix/note-save-integrity`
 **Commit base original revisado:** `cd60c0e` (`main`)
 **Versión de producto documentada:** `0.4.8` (Beta)  
@@ -96,7 +96,7 @@ store, no como métrica integral de toda la aplicación.
 | AUD-002 | P0 | Guardados duplicados por taps concurrentes | Bug confirmado | Resuelto en PR #2 |
 | AUD-003 | P0 | Inyección HTML persistente desde campos de backup | Seguridad confirmada | Cerrado en PR #3 |
 | AUD-004 | P0 | Dependencias vulnerables, incluida DOMPurify en producción | Seguridad/tooling | Cerrado en PR #5 |
-| AUD-005 | P1 | Propiedad global de transacciones y migraciones permisivas | Confiabilidad | Pendiente |
+| AUD-005 | P1 | Propiedad global de transacciones y migraciones permisivas | Confiabilidad | Cerrado técnicamente; integración autorizada |
 | AUD-006 | P1 | Resultados async obsoletos sobrescriben vista/cache reciente | Bug de concurrencia | Pendiente |
 | AUD-007 | P1 | Contratos incompatibles para errores de mutaciones | Diseño/confiabilidad | Cerrado en PR #6 |
 | AUD-008 | P1 | Gate canónico no portable y CI desalineada | Tooling | Pendiente |
@@ -217,6 +217,11 @@ SQLite y su funcionamiento fue aprobado explícitamente en Samsung SM_G965F. No 
 release ni se cambió la versión; la integración quedó autorizada.
 
 ### AUD-005 — Coordinación SQLite y arranque
+
+> **Cierre técnico 2026-09-04:** propiedad explícita, migraciones estrictas y arranque recuperable
+> implementados. 1035 tests, gate canónico y funcionamiento general Android aprobados; integración
+> autorizada. Ver [evidencia AUD-005](./analisis-aud-005-coordinacion-sqlite-2026-09-04.md).
+> La evidencia original siguiente describe el defecto previo a la remediación.
 
 > **Seguimiento 2026-09-04:** implementado en `fix/sqlite-write-coordination`, con regresiones automáticas y ADR-009. Pendiente de gate canónico satisfactorio sobre el SHA final, Android y autorización de integración; todavía no cerrado. Ver [evidencia de AUD-005](analisis-aud-005-coordinacion-sqlite-2026-09-04.md). El diagnóstico siguiente conserva el hallazgo inicial.
 
@@ -509,4 +514,5 @@ La revisión inicial quedó vinculada al primer fix porque AUD-001 y AUD-002 afe
 central del producto y presentaban la mejor relación entre impacto, riesgo y tamaño de cambio.
 Ambos hallazgos se cerraron posteriormente en la PR #2, AUD-003 en la PR #3 y AUD-004 en la PR #5.
 AUD-007 quedó cerrado en la PR #6 con contrato único, límites UI adaptados y validación automática/Android
-aprobada. AUD-005 y los demás hallazgos conservan alcance y seguimiento independientes.
+aprobada. AUD-005 cerró técnicamente con validación canónica y Android aprobadas; AUD-006 y los demás hallazgos
+conservan alcance y seguimiento independientes.

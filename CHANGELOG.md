@@ -9,7 +9,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ## [Unreleased] — Trabajo posterior a `v0.4.8`
 
-> `main` conserva la versión declarada `0.4.8`, pero contiene trabajo posterior al tag. No existe una release `0.4.9` ni un APK posterior publicado. Este bloque resume el trabajo desde `v0.4.8`, incluidos los cierres técnicos AUD-001 a AUD-004 y AUD-007. Las ejecuciones Android sobre código posterior al tag son evidencia de validación y no constituyen un artefacto publicado.
+> `main` conserva la versión declarada `0.4.8`, pero contiene trabajo posterior al tag. No existe una release `0.4.9` ni un APK posterior publicado. Este bloque resume el trabajo desde `v0.4.8`, incluidos los cierres técnicos AUD-001 a AUD-005 y AUD-007. Las ejecuciones Android sobre código posterior al tag son evidencia de validación y no constituyen un artefacto publicado.
 
 ### Added
 
@@ -41,7 +41,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ### Fixed
 
-- **Coordinación SQLite y arranque (AUD-005, pendiente de integración):** Propiedad transaccional explícita y cola compartida con CRUD/lecturas, cascadas sin commits parciales, errores de persistencia web propagados y conexión incierta en cuarentena. Migraciones estrictas e idempotentes y arranque accesible en español con reintento seguro; regresiones automáticas aprobadas, validación canónica y Android pendientes. Contrato documentado en ADR-009.
+- **Coordinación SQLite y arranque (AUD-005):** Propiedad transaccional explícita y cola compartida con CRUD/lecturas, cascadas sin commits parciales, errores de persistencia web propagados y conexión incierta en cuarentena. Migraciones estrictas e idempotentes y arranque accesible en español con reintento seguro; 1035 tests, gate canónico y funcionamiento general Android aprobados. Contrato documentado en ADR-009; integración autorizada sin nueva release.
 
 - **Integridad del guardado (AUD-001):** El editor solo limpia los campos y descarta el borrador tras confirmar la persistencia; ante un fallo conserva contenido, borrador, contexto de edición y modo foco para permitir el reintento.
 - **Guardados concurrentes (AUD-002):** Una protección single-flight serializa el guardado y mantiene un estado visual mientras la operación está pendiente, evitando mutaciones duplicadas o fuera de orden por taps repetidos.

@@ -14,7 +14,7 @@ Los ADR conservan decisiones importantes, sus alternativas y consecuencias. Un A
 | [ADR-006](./ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md) | Persistencia SQLite multiplataforma | Aceptado y validado |
 | [ADR-007](./ADR-007-organizacion-componentes-por-feature.md) | Componentes UI organizados por feature | Aceptado |
 | [ADR-008](./ADR-008-arquitectura-modular-y-patrones.md) | Arquitectura modular y patrones aplicados | Aceptado |
-| [ADR-009](./ADR-009-propiedad-transaccional-sqlite.md) | Propiedad transaccional SQLite y recuperación de arranque (AUD-005) | Propuesto; implementado en rama, pendiente de Android e integración |
+| [ADR-009](./ADR-009-propiedad-transaccional-sqlite.md) | Propiedad transaccional SQLite y recuperación de arranque (AUD-005) | Aceptado; validación canónica y Android aprobadas |
 
 ## Decisiones vigentes en una frase
 

@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 06 — Entrega Final
 > **Hito 05:** Cerrado documentalmente el 2026-07-15 sobre la beta operativa `v0.4.8`
-> **Última actualización:** 2026-09-04 — AUD-005 implementado en rama; pendiente de validación canónica, Android e integración
+> **Última actualización:** 2026-09-04 — AUD-005 cerrado técnicamente; validación canónica y Android aprobadas, integración autorizada
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -15,7 +15,7 @@ Hito 04 quedó cerrado formalmente como bloque de Organización y UX. El cierre 
 
 Hito 05 quedó cerrado documentalmente el 2026-07-15. Entregó el quality gate, APK firmada, validación inicial en Android real y publicación de la beta controlada [`v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8), junto con mejoras funcionales acotadas: borradores persistentes (`RF-005`), backup manual (`RF-017`), importación ZIP (`RF-018`), Acerca de (`RF-023`), fechas académicas discretas (`RF-027`) y editor enriquecido (`RF-028`). Las observaciones sobre `Mover a` y rendimiento con más notas no bloquearon ese cierre.
 
-Hito 06 queda activo para completar la documentación final, verificar la maquetación de los gráficos de base de datos ya actualizados, repetir la validación sobre un corte congelado y preparar la presentación. La única versión publicada continúa siendo `v0.4.8`; el trabajo posterior al tag ya incluye los cierres técnicos AUD-001 a AUD-004 y AUD-007, pero todavía no constituye una release ni un APK distribuible nuevo. La decisión pendiente debe distinguir entre una beta de corrección `v0.4.9` y el artefacto final de Hito 06, sin renombrar preventivamente el estado actual de `main`.
+Hito 06 queda activo para completar la documentación final, verificar la maquetación de los gráficos de base de datos ya actualizados, repetir la validación sobre un corte congelado y preparar la presentación. La única versión publicada continúa siendo `v0.4.8`; el trabajo posterior al tag ya incluye los cierres técnicos AUD-001 a AUD-005 y AUD-007, pero todavía no constituye una release ni un APK distribuible nuevo. La decisión pendiente debe distinguir entre una beta de corrección `v0.4.9` y el artefacto final de Hito 06, sin renombrar preventivamente el estado actual de `main`.
 
 La revisión técnica priorizada del 2026-09-01 abrió trece hallazgos trazables. AUD-001 y AUD-002 quedaron resueltos mediante PR #2; AUD-003 quedó validado en Android e integrado mediante PR #3; AUD-004 cerró dependencias vulnerables en PR #5. AUD-007 unificó el contrato emit-and-rethrow del store, adaptó los límites UI, aprobó 989 tests, quality gate y Android 0.4.8/408, y se integra mediante PR #6. La validación funcional de 500 notas de AUD-003 no sustituye las mediciones de latencia y rendimiento exigidas por `RNF-002` y `RNF-004`. Los hallazgos restantes mantienen sus prioridades y no se incorporan automáticamente al alcance de Hito 06.
 
@@ -46,7 +46,7 @@ La trazabilidad de `v0.4.8` queda distribuida entre `docs/gestion/lineas-base.md
 
 ## Revisión técnica priorizada — estado vivo
 
-El análisis detallado permanece en [`docs/gestion/revision-tecnica-priorizada-2026-09-01.md`](docs/gestion/revision-tecnica-priorizada-2026-09-01.md). Esta tabla fija el estado operativo después de cerrar AUD-001 a AUD-004 y AUD-007.
+El análisis detallado permanece en [`docs/gestion/revision-tecnica-priorizada-2026-09-01.md`](docs/gestion/revision-tecnica-priorizada-2026-09-01.md). Esta tabla fija el estado operativo después de cerrar AUD-001 a AUD-005 y AUD-007.
 
 | ID | Prioridad | Frente | Estado operativo |
 |---|---|---|---|
@@ -54,7 +54,7 @@ El análisis detallado permanece en [`docs/gestion/revision-tecnica-priorizada-2
 | AUD-002 | P0 | Guardados duplicados por taps concurrentes | Cerrado en PR #2; single-flight y estado visual validados |
 | AUD-003 | P0 | Frontera y presentación de backups no confiables | Cerrado en PR #3; suite acumulativa y checkpoints Android aprobados |
 | AUD-004 | P0 | Dependencias con advisories de seguridad | Cerrado en PR #5; auditorías 0/0 y Android aprobados |
-| AUD-005 | P1 | Coordinación SQLite, migraciones y arranque | Implementado en `fix/sqlite-write-coordination`; regresiones automáticas aprobadas, gate canónico y Android pendientes; no integrado. [Evidencia](docs/gestion/analisis-aud-005-coordinacion-sqlite-2026-09-04.md) |
+| AUD-005 | P1 | Coordinación SQLite, migraciones y arranque | Cerrado técnicamente; 1035 tests, gate canónico y prueba manual Android aprobados; integración autorizada. [Evidencia](docs/gestion/analisis-aud-005-coordinacion-sqlite-2026-09-04.md) |
 | AUD-006 | P1 | Resultados async obsoletos | Pendiente; iniciar en rama separada únicamente después de integrar AUD-005 |
 | AUD-007 | P1 | Contratos incompatibles para errores de mutaciones | Cerrado en PR #6; contrato único, consumidores y Android aprobados |
 | AUD-008–AUD-009 | P1 | Portabilidad del gate y Node 26 | Pendientes; abordar sin relajar controles |
@@ -98,7 +98,7 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Framework UI | No incorporar Svelte por ahora | Baja | Costo de migracion alto vs beneficio actual; reabrir solo si DOM manual se vuelve una carga clara |
 | Documentación | Congelar documentos antes del corte final | Alta | La reconciliación posterior a AUD-001/002/003 se completó el 2026-09-02; restan evidencia final, revisión de maquetación y el corte elegido |
 | Dependencias | Repetir auditorías en cada corte candidato | Recurrente | AUD-004 quedó cerrado con grafo mínimo, auditorías 0/0 y Android aprobado; revalidar porque los advisories evolucionan |
-| Persistencia y asincronía | Validar e integrar AUD-005; luego ejecutar AUD-006 | Alta | AUD-005 implementado con ADR-009 y regresiones; faltan gate canónico, Android y autorizaciones. AUD-006 sigue separado y pendiente |
+| Persistencia y asincronía | Ejecutar AUD-006 después de integrar AUD-005 | Alta | AUD-005 validado con ADR-009, 1035 tests y aprobación manual Android. AUD-006 sigue separado y pendiente |
 | Tooling | Resolver portabilidad de gate y Node 26 (AUD-008/AUD-009) | Media | Distinguir falsos positivos CSP del fallback offline y eliminar la dependencia del workaround de Web Storage sin relajar controles |
 | Tooling DB | Ampliar el smoke test a `academic_events` y constraints relevantes | Media | El DDL completo se ejecuta, pero las aserciones explícitas de tablas/columnas/relaciones se concentran en materias, notas y metadata; decidir su ampliación antes de presentar cobertura exhaustiva |
 | Tooling de release | Sincronizar versión Android desde el helper | Alta | `scripts/release-helper.py` actualiza package/changelog, pero no `versionName` ni `versionCode`; corregirlo o agregar un gate explícito antes de generar otra APK |

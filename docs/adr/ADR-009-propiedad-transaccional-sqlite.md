@@ -1,7 +1,8 @@
 # ADR-009: Propiedad transaccional explícita en SQLite
 
 **Fecha:** 2026-09-04  
-**Estado:** Propuesto; implementado en `fix/sqlite-write-coordination`, pendiente de validación Android e integración  
+**Estado:** Aceptado; validación canónica y Android aprobadas, integración autorizada
+
 **Alcance:** AUD-005; complementa ADR-006 y ADR-008 sin cambiar motor, schema final ni plataforma
 
 ## Contexto
