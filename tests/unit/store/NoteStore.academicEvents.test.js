@@ -27,6 +27,16 @@ function event(overrides = {}) {
   }
 }
 
+function deferred() {
+  let resolve
+  let reject
+  const promise = new Promise((resolvePromise, rejectPromise) => {
+    resolve = resolvePromise
+    reject = rejectPromise
+  })
+  return { promise, resolve, reject }
+}
+
 function listenForNotify() {
   const listener = vi.fn()
   const unsubscribe = subscribe(listener)
@@ -81,6 +91,20 @@ describe('NoteStore.academicEvents', () => {
       expect(listener).toHaveBeenCalledWith(state)
       unsubscribe()
     })
+
+    it('impide que una carga completa anterior reintroduzca un evento eliminado', async () => {
+      const read = deferred()
+      const deleted = event({ id: 'deleted' })
+      AcademicEventService.getAcademicEvents.mockReturnValueOnce(read.promise)
+      state.academicEvents = [deleted]
+
+      const pendingRead = NoteStoreAcademicEvents.loadAcademicEvents()
+      await NoteStoreAcademicEvents.deleteAcademicEvent('deleted')
+      read.resolve([deleted])
+      await pendingRead
+
+      expect(state.academicEvents).toEqual([])
+    })
   })
 
   describe('loadAcademicEventsByMonth()', () => {
@@ -107,6 +131,152 @@ describe('NoteStore.academicEvents', () => {
       expect(state.academicEvents.map(item => item.id)).toEqual(['a', 'b'])
       expect(state.academicEvents.find(item => item.id === 'a').title).toBe('Actualizado')
     })
+
+    it('conserva B cuando A resuelve despues', async () => {
+      const monthA = deferred()
+      const monthB = deferred()
+      AcademicEventService.getAcademicEventsByMonth
+        .mockReturnValueOnce(monthA.promise)
+        .mockReturnValueOnce(monthB.promise)
+
+      const requestA = NoteStoreAcademicEvents.loadAcademicEventsByMonth(2026, 6)
+      const requestB = NoteStoreAcademicEvents.loadAcademicEventsByMonth(2026, 7)
+      monthB.resolve([event({ id: 'b', date: '2026-07-10' })])
+      await requestB
+      monthA.resolve([event({ id: 'a', date: '2026-06-10' })])
+      await requestA
+
+      expect(state.academicEventsMonth).toEqual({ year: 2026, month: 7 })
+      expect(state.academicEventsForMonth.map(item => item.id)).toEqual(['b'])
+      expect(state.academicEvents.map(item => item.id)).toEqual(['b'])
+    })
+
+    it('distingue generaciones en A -> B -> A', async () => {
+      const firstA = deferred()
+      const monthB = deferred()
+      const latestA = deferred()
+      AcademicEventService.getAcademicEventsByMonth
+        .mockReturnValueOnce(firstA.promise)
+        .mockReturnValueOnce(monthB.promise)
+        .mockReturnValueOnce(latestA.promise)
+
+      const firstRequest = NoteStoreAcademicEvents.loadAcademicEventsByMonth(2026, 6)
+      const middleRequest = NoteStoreAcademicEvents.loadAcademicEventsByMonth(2026, 7)
+      const latestRequest = NoteStoreAcademicEvents.loadAcademicEventsByMonth(2026, 6)
+      latestA.resolve([event({ id: 'latest-a', date: '2026-06-20' })])
+      await latestRequest
+      monthB.resolve([event({ id: 'b', date: '2026-07-20' })])
+      firstA.resolve([event({ id: 'first-a', date: '2026-06-10' })])
+      await Promise.all([firstRequest, middleRequest])
+
+      expect(state.academicEventsMonth).toEqual({ year: 2026, month: 6 })
+      expect(state.academicEventsForMonth.map(item => item.id)).toEqual(['latest-a'])
+    })
+
+    it('descarta solicitudes repetidas del mismo mes resueltas fuera de orden', async () => {
+      const older = deferred()
+      const newer = deferred()
+      AcademicEventService.getAcademicEventsByMonth
+        .mockReturnValueOnce(older.promise)
+        .mockReturnValueOnce(newer.promise)
+
+      const olderRequest = NoteStoreAcademicEvents.loadAcademicEventsByMonth(2026, 6)
+      const newerRequest = NoteStoreAcademicEvents.loadAcademicEventsByMonth(2026, 6)
+      newer.resolve([event({ id: 'newer' })])
+      await newerRequest
+      older.resolve([event({ id: 'older' })])
+      await olderRequest
+
+      expect(state.academicEventsForMonth.map(item => item.id)).toEqual(['newer'])
+    })
+
+    it('conserva una creacion confirmada si resuelve una lectura anterior', async () => {
+      const read = deferred()
+      const created = event({ id: 'created' })
+      state.academicEventsMonth = { year: 2026, month: 6 }
+      AcademicEventService.getAcademicEventsByMonth.mockReturnValueOnce(read.promise)
+      AcademicEventService.createAcademicEvent.mockResolvedValueOnce(created)
+
+      const pendingRead = NoteStoreAcademicEvents.loadAcademicEventsByMonth(2026, 6)
+      await NoteStoreAcademicEvents.createAcademicEvent({ date: created.date })
+      read.resolve([])
+      await pendingRead
+
+      expect(state.academicEventsForMonth.map(item => item.id)).toEqual(['created'])
+    })
+
+    it('conserva una edicion confirmada si resuelve una lectura anterior', async () => {
+      const read = deferred()
+      const original = event({ id: 'existing', title: 'Anterior' })
+      const updated = event({ id: 'existing', title: 'Vigente' })
+      state.academicEvents = [original]
+      state.academicEventsForMonth = [original]
+      state.academicEventsMonth = { year: 2026, month: 6 }
+      AcademicEventService.getAcademicEventsByMonth.mockReturnValueOnce(read.promise)
+      AcademicEventService.updateAcademicEvent.mockResolvedValueOnce(updated)
+
+      const pendingRead = NoteStoreAcademicEvents.loadAcademicEventsByMonth(2026, 6)
+      await NoteStoreAcademicEvents.updateAcademicEvent('existing', { title: 'Vigente' })
+      read.resolve([original])
+      await pendingRead
+
+      expect(state.academicEventsForMonth).toEqual([updated])
+      expect(state.academicEvents).toEqual([updated])
+    })
+
+    it('no reintroduce una eliminacion confirmada si resuelve una lectura anterior', async () => {
+      const read = deferred()
+      const deleted = event({ id: 'deleted' })
+      state.academicEvents = [deleted]
+      state.academicEventsForMonth = [deleted]
+      state.academicEventsMonth = { year: 2026, month: 6 }
+      AcademicEventService.getAcademicEventsByMonth.mockReturnValueOnce(read.promise)
+
+      const pendingRead = NoteStoreAcademicEvents.loadAcademicEventsByMonth(2026, 6)
+      await NoteStoreAcademicEvents.deleteAcademicEvent('deleted')
+      read.resolve([deleted])
+      await pendingRead
+
+      expect(state.academicEventsForMonth).toEqual([])
+      expect(state.academicEvents).toEqual([])
+    })
+
+    it('consume un rechazo tardio sin modificar estado ni notificar', async () => {
+      const stale = deferred()
+      const current = deferred()
+      const { listener, unsubscribe } = listenForNotify()
+      AcademicEventService.getAcademicEventsByMonth
+        .mockReturnValueOnce(stale.promise)
+        .mockReturnValueOnce(current.promise)
+
+      const staleRequest = NoteStoreAcademicEvents.loadAcademicEventsByMonth(2026, 6)
+      const currentRequest = NoteStoreAcademicEvents.loadAcademicEventsByMonth(2026, 7)
+      current.resolve([event({ id: 'current', date: '2026-07-10' })])
+      await currentRequest
+      stale.reject(new Error('late failure'))
+      await expect(staleRequest).resolves.toBeUndefined()
+
+      expect(state.academicEventsMonth).toEqual({ year: 2026, month: 7 })
+      expect(state.academicEventsForMonth.map(item => item.id)).toEqual(['current'])
+      expect(listener).toHaveBeenCalledTimes(1)
+      unsubscribe()
+    })
+
+    it('permite una nueva solicitud exitosa despues de un error vigente', async () => {
+      const error = new Error('current failure')
+      AcademicEventService.getAcademicEventsByMonth.mockRejectedValueOnce(error)
+
+      await expect(NoteStoreAcademicEvents.loadAcademicEventsByMonth(2026, 6)).rejects.toBe(error)
+      expect(state.academicEventsMonth).toBeNull()
+
+      AcademicEventService.getAcademicEventsByMonth.mockResolvedValueOnce([
+        event({ id: 'recovered', date: '2026-07-10' }),
+      ])
+      await NoteStoreAcademicEvents.loadAcademicEventsByMonth(2026, 7)
+
+      expect(state.academicEventsMonth).toEqual({ year: 2026, month: 7 })
+      expect(state.academicEventsForMonth.map(item => item.id)).toEqual(['recovered'])
+    })
   })
 
   describe('loadUpcomingAcademicEvents()', () => {
@@ -118,6 +288,22 @@ describe('NoteStore.academicEvents', () => {
 
       expect(AcademicEventService.getUpcomingAcademicEvents).toHaveBeenCalledWith('2026-06-01', 3)
       expect(state.upcomingAcademicEvents).toEqual(upcoming)
+    })
+
+    it('no permite que una carga anterior deshaga el refresh posterior a una mutacion', async () => {
+      const older = deferred()
+      const created = event({ id: 'created', date: '2026-07-01' })
+      AcademicEventService.getUpcomingAcademicEvents
+        .mockReturnValueOnce(older.promise)
+        .mockResolvedValueOnce([created])
+      AcademicEventService.createAcademicEvent.mockResolvedValueOnce(created)
+
+      const pendingRead = NoteStoreAcademicEvents.loadUpcomingAcademicEvents()
+      await NoteStoreAcademicEvents.createAcademicEvent({ date: created.date })
+      older.resolve([])
+      await pendingRead
+
+      expect(state.upcomingAcademicEvents).toEqual([created])
     })
   })
 

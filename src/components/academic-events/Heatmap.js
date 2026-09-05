@@ -39,7 +39,9 @@ export class Heatmap {
       this.selectedDate = state.dateFilter
       this.subjects = createAcademicEventSubjectCatalog(state)
       this.calculateActivity(state.notes)
-      this.calculateEventMap(state.academicEventsForMonth || [])
+      const cacheMatchesVisibleMonth = state.academicEventsMonth?.year === this.currentYear
+        && state.academicEventsMonth?.month === this.currentMonth + 1
+      this.calculateEventMap(cacheMatchesVisibleMonth ? state.academicEventsForMonth || [] : [])
       this.render()
     })
 
