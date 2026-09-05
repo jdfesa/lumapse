@@ -24,6 +24,7 @@ de Gómez (2014).
 | [`analisis-aud-003-seguridad-importacion-backups-2026-09-01.md`](./analisis-aud-003-seguridad-importacion-backups-2026-09-01.md) | Revalidación e implementación de AUD-003: frontera ZIP/JSON, integridad y defensa de presentación | ✅ Cerrado en PR #3 |
 | [`analisis-aud-004-seguridad-dependencias-2026-09-02.md`](./analisis-aud-004-seguridad-dependencias-2026-09-02.md) | Revalidación y cierre de AUD-004: advisories, grafo mínimo, auditorías, gates y Android | ✅ Cerrado en PR #5 |
 | [`analisis-aud-007-contratos-errores-store-2026-09-03.md`](./analisis-aud-007-contratos-errores-store-2026-09-03.md) | Contrato emit-and-rethrow, adaptación de consumidores y evidencia automática/Android de AUD-007 | ✅ Cerrado en PR #6 |
+| [`analisis-aud-005-coordinacion-sqlite-2026-09-04.md`](./analisis-aud-005-coordinacion-sqlite-2026-09-04.md) | Propiedad SQLite explícita, migraciones estrictas y arranque recuperable | 🔄 Implementado en rama; validación canónica y Android pendientes |
 | [`historico/`](./historico/) | Snapshots operativos cerrados preservados como evidencia de proceso | 📦 Archivo |
 
 ---

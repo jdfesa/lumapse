@@ -49,7 +49,9 @@ confirman en una sola transacción; un reintento no reemplaza notas SQLite exist
 `main.js` sigue siendo el composition root: primero prepara persistencia y datos, después monta
 componentes/listeners. Un límite pequeño muestra estado accesible en español y permite reintentar
 la preparación sin montar dos veces. Si falla el montaje síncrono parcial, el botón recarga la
-WebView en lugar de reinstalar listeners en el mismo documento. El mensaje visible no incluye SQL,
+WebView en lugar de reinstalar listeners en el mismo documento. Antes de recargar, espera el cierre
+seguro de SQLite: bloquea operaciones nuevas, drena lo activo y verifica el estado nativo. Si falla,
+conserva el reintento sin recargar. El mensaje visible no incluye SQL,
 contenidos de notas ni detalles de excepciones.
 
 ## Alternativas descartadas

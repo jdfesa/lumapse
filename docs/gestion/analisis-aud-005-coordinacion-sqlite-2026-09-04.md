@@ -101,7 +101,7 @@ rtk proxy env NODE_OPTIONS=--no-experimental-webstorage npm run test:coverage
 
 Este diagnóstico **no sustituye ni vuelve verde** el comando canónico fallido.
 
-### Matriz comparada
+### Matriz comparada — checkpoint previo a la interrupción
 
 | Control | Base | Corrección |
 |---|---|---|
@@ -127,6 +127,33 @@ Durante el desarrollo, `check:db-smoke` detectó una regresión nueva: el litera
 `'ALTER TABLE'` se interpretaba como SQL incompleto por el extractor existente. Se corrigió el
 clasificador de producción, sin modificar el checker, y se repitieron smoke/schema/DBML con éxito.
 Ese fallo no se atribuyó a AUD-008/AUD-009.
+
+## Recuperación de la sesión interrumpida
+
+El límite de uso interrumpió la sesión después del commit `bf79c98`, antes de implementar dos
+regresiones nuevas de cierre nativo. La matriz anterior describe el checkpoint previo; no representa
+el resultado final de esa interrupción. Se resguardaron los archivos sin commit antes de continuar.
+
+El commit `8110de4` completó `beforeReload`, enlazado desde `main.js` a `closeDatabaseForReload`.
+El cierre comparte una promesa, impide nuevas operaciones, espera inicialización y trabajo activo,
+comprueba el estado transaccional y libera la conexión antes de recargar. Un fallo de cierre conserva
+la referencia y permite reintentar; nunca recarga ni vuelve a montar componentes mientras el estado
+sea incierto. Las fachadas SQLite retenidas también quedan invalidadas. No se borran bases ni preferencias.
+
+Validación repetida sobre la implementación recuperada, con el mismo Node/npm remoto:
+
+- Red → green ampliado: **7 fallos reproducidos; 3 archivos / 33 tests aprobados** después del fix.
+- Suite completa diagnóstica con `NODE_OPTIONS=--no-experimental-webstorage`: **67 archivos / 1035 tests aprobados**.
+- `npm run verify` normal: **no verde**, conserva los **53 fallos basales** de Web Storage (AUD-009)
+  y los dos falsos positivos CSP (AUD-008). No se relajaron controles.
+- Coverage diagnóstico global: **95,66% de statements**; no es coverage integral de UI.
+- Lint sin errores ni warnings nuevos, typecheck, build, toolchain, DB smoke, schema, DBML,
+  documentación, trazabilidad, diálogos y a11y estática aprobados.
+- Bundle gzip: **193,57 kB / 250 kB**. Auditorías npm completa y productiva: **0 / 0 vulnerabilidades**.
+- Logs adicionales: `/tmp/lumapse-aud005/recovery-red.log`, `recovery-green.log` y `recovery/`.
+
+Esta recuperación aún requiere validar el SHA publicado en la Mac canónica y en Android. No implica
+aprobación manual, apertura de PR ni autorización de merge.
 
 ## Pausa para validación local
 
