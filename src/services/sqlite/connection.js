@@ -10,79 +10,66 @@
 import { Capacitor } from '@capacitor/core'
 import { SQLiteConnection, CapacitorSQLite } from '@capacitor-community/sqlite'
 import { defineCustomElements } from 'jeep-sqlite/loader'
+import { createWriteCoordinator } from './writeCoordinator.js'
+import { migrateLegacyNotes } from './legacyMigration.js'
 
 // --- Constantes de la base de datos ---
 const DB_NAME = 'lumapse-db'
 let sqliteConnection = null
 let db = null
-let transactionDepth = 0
+let coordinator = null
+let initialization = null
+let ready = false
 
-/**
- * Retorna la instancia activa de la base de datos.
- * Los módulos CRUD (notes.js, subjects.js) usan este getter
- * en lugar de acceder directamente a la variable `db`.
- * @returns {object} Instancia de conexión SQLite
- * @throws {Error} Si la base de datos no fue inicializada
- */
-export function getDb() {
-  if (!db) throw new Error('Database not initialized')
-  return db
+// No se expone la conexión nativa: incluso el CRUD independiente pasa por la cola.
+export function getDb(scope) {
+  if (!ready || !coordinator) throw new Error('Database not initialized')
+  return coordinator.getDb(scope)
 }
 
-/**
- * Indica si hay una transacción explícita abierta desde la capa de negocio.
- * Los módulos CRUD lo usan para evitar transacciones implícitas anidadas.
- * @returns {boolean}
- */
-export function isWriteTransactionActive() {
-  return transactionDepth > 0
+export function isWriteTransactionActive(scope) {
+  return coordinator?.isActive(scope) || false
 }
 
-/**
- * Helper para persistir cambios en la versión Web (WASM).
- * En la web, los cambios en memoria deben guardarse a IndexedDB explícitamente.
- */
-export async function persistWeb() {
-  if (transactionDepth > 0) return
-  if (Capacitor.getPlatform() === 'web' && sqliteConnection) {
-    try {
-      await sqliteConnection.saveToStore(DB_NAME)
-    } catch (e) {
-      console.error('Error al guardar datos SQLite en el almacenamiento Web:', e)
-    }
+async function saveWebStore() {
+  if (Capacitor.getPlatform() === 'web') {
+    await sqliteConnection.saveToStore(DB_NAME)
   }
 }
 
+export function persistWeb(scope) {
+  if (!coordinator) return Promise.reject(new Error('Database not initialized'))
+  return coordinator.persist(scope)
+}
+
+// El callback recibe el capability que debe pasar explícitamente a sus colaboradores.
 /**
- * Ejecuta una operación crítica dentro de una transacción SQLite explícita.
- * Si falla cualquier escritura, revierte todos los cambios de la cascada.
- * @param {Function} action Operación async a ejecutar dentro de la transacción
- * @returns {Promise<*>} Resultado retornado por action
+ * @template T
+ * @param {(scope: object) => Promise<T>} action
+ * @param {object} [scope]
+ * @returns {Promise<T>}
  */
-export async function runTransaction(action) {
-  const activeDb = getDb()
+export async function runTransaction(action, scope) {
+  getDb(scope)
+  return coordinator.transaction(action, scope)
+}
 
-  if (transactionDepth > 0) {
-    return action()
-  }
+async function readConnectionFlag(method) {
+  const { result } = await db[method]()
+  if (typeof result !== 'boolean') throw new Error(`SQLite ${method} state unknown`)
+  return result
+}
 
-  await activeDb.beginTransaction()
-  transactionDepth = 1
-
-  try {
-    const result = await action()
-    await activeDb.commitTransaction()
-    transactionDepth = 0
-    await persistWeb()
-    return result
-  } catch (error) {
-    try {
-      await activeDb.rollbackTransaction()
-    } catch (rollbackError) {
-      console.error('Error al revertir transacción SQLite:', rollbackError)
+async function recoverConnection() {
+  await coordinator?.drain()
+  // Cerrar jeep-sqlite puede persistir: nunca cerrar con una transacción incierta.
+  if (db) {
+    if (await readConnectionFlag('isDBOpen')) {
+      if (await readConnectionFlag('isTransactionActive')) await db.rollbackTransaction()
+      if (await readConnectionFlag('isTransactionActive')) throw new Error('SQLite transaction still active')
     }
-    transactionDepth = 0
-    throw error
+    await sqliteConnection.closeConnection(DB_NAME, false)
+    db = null
   }
 }
 
@@ -91,9 +78,11 @@ export async function runTransaction(action) {
  */
 async function initWebComponent() {
   defineCustomElements(window)
-  const jeepSqlite = document.createElement('jeep-sqlite')
-  jeepSqlite.setAttribute('wasmPath', '/assets')
-  document.body.appendChild(jeepSqlite)
+  if (!document.querySelector('jeep-sqlite')) {
+    const jeepSqlite = document.createElement('jeep-sqlite')
+    jeepSqlite.setAttribute('wasmPath', '/assets')
+    document.body.appendChild(jeepSqlite)
+  }
   await window.customElements.whenDefined('jeep-sqlite')
 }
 
@@ -101,9 +90,18 @@ async function initWebComponent() {
  * Inicializa la conexión SQLite, crea las tablas y realiza
  * la migración desde IndexedDB si es la primera vez.
  */
-export async function initDatabase() {
+export function initDatabase() {
+  if (initialization) return initialization
+  if (ready && coordinator?.isHealthy()) return Promise.resolve()
+  ready = false
+  initialization = initialize().finally(() => { initialization = null })
+  return initialization
+}
+
+async function initialize() {
   try {
-    sqliteConnection = new SQLiteConnection(CapacitorSQLite)
+    await recoverConnection()
+    sqliteConnection ??= new SQLiteConnection(CapacitorSQLite)
     const platform = Capacitor.getPlatform()
 
     if (platform === 'web') {
@@ -161,17 +159,20 @@ export async function initDatabase() {
       );
     `
     await db.execute(schema)
-    await persistWeb()
+    await saveWebStore()
 
     // Migraciones idempotentes para instalaciones existentes
     await runMigrations()
-    await persistWeb()
+    await saveWebStore()
 
     // Realizar migración de IndexedDB a SQLite si corresponde
-    await migrateFromIndexedDB()
+    coordinator = createWriteCoordinator(db, saveWebStore)
+    await migrateLegacyNotes(coordinator)
+    ready = true
 
     console.log('Base de datos SQLite inicializada correctamente.')
   } catch (error) {
+    coordinator?.invalidate(error)
     console.error('Error crítico al inicializar base de datos SQLite:', error)
     throw error
   }
@@ -179,9 +180,7 @@ export async function initDatabase() {
 
 /**
  * Ejecuta migraciones de schema de forma idempotente.
- * SQLite lanza un error si la columna ya existe — lo ignoramos silenciosamente.
- * Esto permite que el mismo código sirva tanto para instalaciones nuevas
- * (donde las columnas ya están en el CREATE TABLE) como para las existentes.
+ * Consulta columnas reales antes del ALTER; ningún fallo SQL se interpreta por mensaje.
  */
 async function runMigrations() {
   if (!db) return
@@ -214,88 +213,16 @@ async function runMigrations() {
 
   for (const [migrationName, sql] of migrations) {
     try {
+      if (sql.startsWith('ALTER ')) {
+        const [table, column] = migrationName.split('.')
+        const result = await db.query(`PRAGMA table_info(${table})`)
+        if (!result.values?.length) throw new Error(`Missing migration table: ${table}`)
+        if (result.values.some(field => field.name === column)) continue
+      }
       await db.run(sql)
-    } catch (e) {
-      const msg = e?.message || ''
-      if (!msg.includes('duplicate column name') && !msg.includes('already exists')) {
-        console.warn(`[Migración] Advertencia en "${migrationName}": ${msg}`)
-      }
+    } catch (cause) {
+      throw new Error(`SQLite migration failed: ${migrationName}`, { cause })
     }
-  }
-}
-
-/**
- * Ejecuta una migración automática (one-time) de IndexedDB a SQLite.
- */
-async function migrateFromIndexedDB() {
-  if (!db) return
-
-  try {
-    // Verificar si ya se migró
-    const checkRes = await db.query('SELECT value FROM metadata WHERE key = ?', ['indexeddb_migrated'])
-    if (checkRes.values && checkRes.values.length > 0 && checkRes.values[0].value === 'true') {
-      return // Ya migrado anteriormente
-    }
-
-    console.log('Iniciando chequeo de migración de IndexedDB...')
-    const notesToMigrate = await new Promise((resolve) => {
-      // Intentar abrir la IndexedDB nativa del MVP
-      const request = window.indexedDB.open('lumapse-db')
-      
-      request.onsuccess = (event) => {
-        const idb = event.target.result
-        if (!idb.objectStoreNames.contains('notes')) {
-          idb.close()
-          resolve([])
-          return
-        }
-        
-        const transaction = idb.transaction('notes', 'readonly')
-        const store = transaction.objectStore('notes')
-        const getAllRequest = store.getAll()
-        
-        getAllRequest.onsuccess = () => {
-          resolve(getAllRequest.result || [])
-          idb.close()
-        }
-        
-        getAllRequest.onerror = () => {
-          resolve([])
-          idb.close()
-        }
-      }
-      
-      request.onerror = () => {
-        resolve([])
-      }
-    })
-
-    if (notesToMigrate.length > 0) {
-      console.log(`Se encontraron ${notesToMigrate.length} notas en IndexedDB. Migrando a SQLite...`)
-      for (const note of notesToMigrate) {
-        const sql = `
-          INSERT OR REPLACE INTO notes (id, title, content, pinned, archived, createdAt, updatedAt)
-          VALUES (?, ?, ?, ?, ?, ?, ?)
-        `
-        const values = [
-          note.id,
-          note.title || 'Sin título',
-          note.content || '',
-          note.pinned ? 1 : 0,
-          note.archived ? 1 : 0,
-          note.createdAt || new Date().toISOString(),
-          note.updatedAt || new Date().toISOString()
-        ]
-        await db.run(sql, values)
-      }
-      console.log('Notas migradas exitosamente a SQLite.')
-    }
-    
-    // Marcar migración como completada
-    await db.run("INSERT OR REPLACE INTO metadata (key, value) VALUES (?, ?)", ['indexeddb_migrated', 'true'])
-    await persistWeb()
-  } catch (error) {
-    console.warn('Advertencia durante la migración de IndexedDB:', error)
   }
 }
 

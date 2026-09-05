@@ -39,8 +39,10 @@ vi.mock('../../src/services/sqlite/notes.js', () => ({
   restoreNote: vi.fn().mockResolvedValue(undefined),
 }))
 
+const scope = vi.hoisted(() => Object.freeze({ owner: 'transaction' }))
+
 vi.mock('../../src/services/sqlite/connection.js', () => ({
-  runTransaction: vi.fn(async action => action()),
+  runTransaction: vi.fn(async action => action(scope)),
 }))
 
 function subject(overrides = {}) {
@@ -249,13 +251,13 @@ describe('SubjectService', () => {
     it('llama softDeleteNotesBySubject para el subject padre', async () => {
       await SubjectService.deleteSubject('subj-1')
 
-      expect(NoteRows.softDeleteNotesBySubject).toHaveBeenCalledWith('subj-1')
+      expect(NoteRows.softDeleteNotesBySubject).toHaveBeenCalledWith('subj-1', scope)
     })
 
     it('llama getChildSubjectIds para obtener secciones hijas', async () => {
       await SubjectService.deleteSubject('subj-1')
 
-      expect(SubjectRows.getChildSubjectIds).toHaveBeenCalledWith('subj-1')
+      expect(SubjectRows.getChildSubjectIds).toHaveBeenCalledWith('subj-1', scope)
     })
 
     it('llama softDeleteNotesBySubject para cada sección hija', async () => {
@@ -263,20 +265,20 @@ describe('SubjectService', () => {
 
       await SubjectService.deleteSubject('subj-1')
 
-      expect(NoteRows.softDeleteNotesBySubject).toHaveBeenCalledWith('sec-1')
-      expect(NoteRows.softDeleteNotesBySubject).toHaveBeenCalledWith('sec-2')
+      expect(NoteRows.softDeleteNotesBySubject).toHaveBeenCalledWith('sec-1', scope)
+      expect(NoteRows.softDeleteNotesBySubject).toHaveBeenCalledWith('sec-2', scope)
     })
 
     it('llama softDeleteChildSubjects para el subject padre', async () => {
       await SubjectService.deleteSubject('subj-1')
 
-      expect(SubjectRows.softDeleteChildSubjects).toHaveBeenCalledWith('subj-1')
+      expect(SubjectRows.softDeleteChildSubjects).toHaveBeenCalledWith('subj-1', scope)
     })
 
     it('llama deleteSubjectRow para el subject padre', async () => {
       await SubjectService.deleteSubject('subj-1')
 
-      expect(SubjectRows.deleteSubjectRow).toHaveBeenCalledWith('subj-1')
+      expect(SubjectRows.deleteSubjectRow).toHaveBeenCalledWith('subj-1', scope)
     })
 
     it('el orden es correcto: notas padre, notas hijos, hijos, padre', async () => {
@@ -308,7 +310,7 @@ describe('SubjectService', () => {
 
       await SubjectService.restoreSubject('subj-1')
 
-      expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('subj-1')
+      expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('subj-1', scope)
     })
 
     it('restaura secciones hijas una por una', async () => {
@@ -320,7 +322,7 @@ describe('SubjectService', () => {
 
       await SubjectService.restoreSubject('subj-1')
 
-      expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('sec-1')
+      expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('sec-1', scope)
     })
 
     it('llama restoreNotesBySubject para el subject padre', async () => {
@@ -328,7 +330,7 @@ describe('SubjectService', () => {
 
       await SubjectService.restoreSubject('subj-1')
 
-      expect(NoteRows.restoreNotesBySubject).toHaveBeenCalledWith('subj-1')
+      expect(NoteRows.restoreNotesBySubject).toHaveBeenCalledWith('subj-1', scope)
     })
 
     it('llama restoreNotesBySubject para cada sección hija', async () => {
@@ -341,8 +343,8 @@ describe('SubjectService', () => {
 
       await SubjectService.restoreSubject('subj-1')
 
-      expect(NoteRows.restoreNotesBySubject).toHaveBeenCalledWith('sec-1')
-      expect(NoteRows.restoreNotesBySubject).toHaveBeenCalledWith('sec-2')
+      expect(NoteRows.restoreNotesBySubject).toHaveBeenCalledWith('sec-1', scope)
+      expect(NoteRows.restoreNotesBySubject).toHaveBeenCalledWith('sec-2', scope)
     })
 
     it('renombra al restaurar si ya existe una materia activa con el mismo nombre', async () => {
@@ -355,8 +357,8 @@ describe('SubjectService', () => {
 
       expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('deleted-root', {
         name: 'Programación II (restaurada)',
-      })
-      expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('deleted-root')
+      }, scope)
+      expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('deleted-root', scope)
     })
   })
 
@@ -364,13 +366,13 @@ describe('SubjectService', () => {
     it('archiva secciones hijas', async () => {
       await SubjectService.archiveSubject('subj-1')
 
-      expect(SubjectRows.archiveChildSubjects).toHaveBeenCalledWith('subj-1')
+      expect(SubjectRows.archiveChildSubjects).toHaveBeenCalledWith('subj-1', scope)
     })
 
     it('archiva el subject padre', async () => {
       await SubjectService.archiveSubject('subj-1')
 
-      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('subj-1', { archived: true })
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('subj-1', { archived: true }, scope)
     })
 
     it('NO archiva las notas', async () => {
@@ -398,7 +400,7 @@ describe('SubjectService', () => {
 
       await SubjectService.unarchiveSubject('subj-1')
 
-      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('subj-1', { archived: false })
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('subj-1', { archived: false }, scope)
     })
 
     it('desarchiva secciones hijas una por una', async () => {
@@ -410,7 +412,7 @@ describe('SubjectService', () => {
 
       await SubjectService.unarchiveSubject('subj-1')
 
-      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('sec-1', { archived: false })
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('sec-1', { archived: false }, scope)
     })
 
     it('NO desarchiva las notas', async () => {
@@ -434,7 +436,7 @@ describe('SubjectService', () => {
       expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('archived-root', {
         archived: false,
         name: 'Programación II (restaurada)',
-      })
+      }, scope)
     })
   })
 
@@ -442,7 +444,7 @@ describe('SubjectService', () => {
     it('archiva solo la sección, sin tocar notas', async () => {
       await SubjectService.archiveSection('sec-1')
 
-      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('sec-1', { archived: true })
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('sec-1', { archived: true }, scope)
       expect(NoteRows.archiveNotesBySubject).not.toHaveBeenCalled()
     })
   })
@@ -464,7 +466,7 @@ describe('SubjectService', () => {
 
       await SubjectService.unarchiveSection('sec-1')
 
-      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('sec-1', { archived: false })
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('sec-1', { archived: false }, scope)
       expect(NoteRows.unarchiveNotesBySubject).not.toHaveBeenCalled()
     })
 
@@ -479,8 +481,8 @@ describe('SubjectService', () => {
 
       await SubjectService.unarchiveSection('sec-1')
 
-      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('subj-1', { archived: false })
-      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('sec-1', { archived: false })
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('subj-1', { archived: false }, scope)
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('sec-1', { archived: false }, scope)
       expect(SubjectRows.updateSubjectRow.mock.invocationCallOrder[0])
         .toBeLessThan(SubjectRows.updateSubjectRow.mock.invocationCallOrder[1])
     })
@@ -497,7 +499,7 @@ describe('SubjectService', () => {
       await SubjectService.unarchiveSection('sec-1')
 
       expect(SubjectRows.updateSubjectRow).toHaveBeenCalledTimes(1)
-      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('sec-1', { archived: false })
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('sec-1', { archived: false }, scope)
     })
 
     it('renombra al restaurar si ya existe una sección hermana con el mismo nombre', async () => {
@@ -515,7 +517,7 @@ describe('SubjectService', () => {
       expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('archived-sec', {
         archived: false,
         name: 'Unidad I (restaurada)',
-      })
+      }, scope)
     })
   })
 
@@ -539,8 +541,8 @@ describe('SubjectService', () => {
     it('elimina notas de la sección y luego la sección', async () => {
       await SubjectService.deleteSection('sec-1')
 
-      expect(NoteRows.softDeleteNotesBySubject).toHaveBeenCalledWith('sec-1')
-      expect(SubjectRows.deleteSubjectRow).toHaveBeenCalledWith('sec-1')
+      expect(NoteRows.softDeleteNotesBySubject).toHaveBeenCalledWith('sec-1', scope)
+      expect(SubjectRows.deleteSubjectRow).toHaveBeenCalledWith('sec-1', scope)
       expect(NoteRows.softDeleteNotesBySubject.mock.invocationCallOrder[0])
         .toBeLessThan(SubjectRows.deleteSubjectRow.mock.invocationCallOrder[0])
     })
@@ -562,9 +564,9 @@ describe('SubjectService', () => {
 
       await SubjectService.restoreSection('sec-1')
 
-      expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('subj-1')
-      expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('sec-1')
-      expect(NoteRows.restoreNotesBySubject).toHaveBeenCalledWith('sec-1')
+      expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('subj-1', scope)
+      expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('sec-1', scope)
+      expect(NoteRows.restoreNotesBySubject).toHaveBeenCalledWith('sec-1', scope)
       expect(SubjectRows.restoreSubjectRow.mock.invocationCallOrder[0])
         .toBeLessThan(SubjectRows.restoreSubjectRow.mock.invocationCallOrder[1])
     })
@@ -576,8 +578,8 @@ describe('SubjectService', () => {
 
       await SubjectService.restoreSection('sec-1')
 
-      expect(SubjectRows.updateSubjectRow).not.toHaveBeenCalledWith('sec-1', { parentSubjectId: null })
-      expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('sec-1')
+      expect(SubjectRows.updateSubjectRow).not.toHaveBeenCalledWith('sec-1', { parentSubjectId: null }, scope)
+      expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('sec-1', scope)
     })
 
     it('si el padre está archivado, lo desarchiva para que la sección sea navegable', async () => {
@@ -590,8 +592,8 @@ describe('SubjectService', () => {
 
       await SubjectService.restoreSection('sec-1')
 
-      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('subj-1', { archived: false })
-      expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('sec-1')
+      expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('subj-1', { archived: false }, scope)
+      expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('sec-1', scope)
     })
 
     it('renombra al restaurar si ya existe una sección hermana con el mismo nombre', async () => {
@@ -607,8 +609,8 @@ describe('SubjectService', () => {
 
       expect(SubjectRows.updateSubjectRow).toHaveBeenCalledWith('deleted-sec', {
         name: 'Unidad I (restaurada)',
-      })
-      expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('deleted-sec')
+      }, scope)
+      expect(SubjectRows.restoreSubjectRow).toHaveBeenCalledWith('deleted-sec', scope)
     })
   })
 
@@ -627,7 +629,7 @@ describe('SubjectService', () => {
 
       await SubjectService.restoreNoteFromTrash('note-1')
 
-      expect(NoteRows.restoreNote).toHaveBeenCalledWith('note-1')
+      expect(NoteRows.restoreNote).toHaveBeenCalledWith('note-1', scope)
       expect(NoteRows.updateNote).not.toHaveBeenCalled()
     })
 
@@ -637,7 +639,7 @@ describe('SubjectService', () => {
 
       await SubjectService.restoreNoteFromTrash('note-1')
 
-      expect(NoteRows.updateNote).toHaveBeenCalledWith('note-1', { subjectId: null })
+      expect(NoteRows.updateNote).toHaveBeenCalledWith('note-1', { subjectId: null }, scope)
     })
   })
 
@@ -687,8 +689,8 @@ describe('SubjectService', () => {
     it('autoPurge() purga notas y materias con el mismo umbral', async () => {
       await SubjectService.autoPurge(15)
 
-      expect(NoteRows.purgeOldDeletedNotes).toHaveBeenCalledWith(15)
-      expect(SubjectRows.purgeOldDeletedSubjects).toHaveBeenCalledWith(15)
+      expect(NoteRows.purgeOldDeletedNotes).toHaveBeenCalledWith(15, scope)
+      expect(SubjectRows.purgeOldDeletedSubjects).toHaveBeenCalledWith(15, scope)
     })
   })
 

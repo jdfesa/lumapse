@@ -1,49 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-async function importConnection({ platform = 'web', existingConnection = false } = {}) {
-  vi.resetModules()
-
-  const mockDb = {
-    open: vi.fn().mockResolvedValue(undefined),
-    execute: vi.fn().mockResolvedValue(undefined),
-    run: vi.fn().mockResolvedValue(undefined),
-    query: vi.fn().mockResolvedValue({ values: [{ value: 'true' }] }),
-    beginTransaction: vi.fn().mockResolvedValue(undefined),
-    commitTransaction: vi.fn().mockResolvedValue(undefined),
-    rollbackTransaction: vi.fn().mockResolvedValue(undefined),
-  }
-
-  const mockSqliteConnection = {
-    isConnection: vi.fn().mockResolvedValue({ result: existingConnection }),
-    createConnection: vi.fn().mockResolvedValue(mockDb),
-    retrieveConnection: vi.fn().mockResolvedValue(mockDb),
-    initWebStore: vi.fn().mockResolvedValue(undefined),
-    saveToStore: vi.fn().mockResolvedValue(undefined),
-  }
-
-  const MockSQLiteConnection = vi.fn(function SQLiteConnectionMock() {
-    return mockSqliteConnection
-  })
-  const mockCapacitor = { getPlatform: vi.fn(() => platform) }
-  const defineCustomElements = vi.fn((win) => {
-    if (!win.customElements.get('jeep-sqlite')) {
-      win.customElements.define('jeep-sqlite', class extends win.HTMLElement {})
-    }
-  })
-
-  vi.doMock('@capacitor/core', () => ({ Capacitor: mockCapacitor }))
-  vi.doMock('@capacitor-community/sqlite', () => ({
-    SQLiteConnection: MockSQLiteConnection,
-    CapacitorSQLite: {},
-  }))
-  vi.doMock('jeep-sqlite/loader', () => ({ defineCustomElements }))
-
-  const module = await import('../../../../src/services/sqlite/connection.js')
-  return { module, mockDb, mockSqliteConnection, mockCapacitor, defineCustomElements }
-}
+import { importConnection } from './connectionHarness.js'
 
 beforeEach(() => {
   vi.clearAllMocks()
+  document.body.innerHTML = ''
 })
 
 describe('generateUUID()', () => {
@@ -90,6 +51,96 @@ describe('getDb()', () => {
   })
 })
 
+function deferred() {
+  let resolve
+  const promise = new Promise(r => { resolve = r })
+  return { promise, resolve }
+}
+
+describe('AUD-005: coordinación independiente', () => {
+  it('una operación independiente espera el rollback de la propietaria', async () => {
+    const { module, mockDb } = await importConnection()
+    await module.initDatabase()
+    const entered = deferred()
+    const release = deferred()
+    const events = []
+    mockDb.rollbackTransaction.mockImplementation(async () => { events.push('rollback A') })
+    const cause = new Error('A failed')
+    const first = module.runTransaction(async () => {
+      entered.resolve()
+      await release.promise
+      throw cause
+    })
+    const rejected = expect(first).rejects.toBe(cause)
+    await entered.promise
+    const second = module.runTransaction(async () => { events.push('write B') })
+    release.resolve()
+    await Promise.all([rejected, second])
+    expect(events).toEqual(['rollback A', 'write B'])
+    expect(mockDb.commitTransaction).toHaveBeenCalledTimes(1)
+  })
+
+  it('un CRUD independiente no se incorpora a la transacción abierta', async () => {
+    const { module, mockDb } = await importConnection()
+    const notes = await import('../../../../src/services/sqlite/notes.js')
+    await module.initDatabase()
+    const entered = deferred()
+    const release = deferred()
+    const events = []
+    mockDb.run.mockImplementation(async () => { events.push('CRUD') })
+    mockDb.rollbackTransaction.mockImplementation(async () => { events.push('rollback') })
+    const first = module.runTransaction(async () => {
+      entered.resolve()
+      await release.promise
+      throw new Error('rollback owner')
+    })
+    const rejected = expect(first).rejects.toThrow('rollback owner')
+    await entered.promise
+    const crud = notes.createNote('independiente')
+    release.resolve()
+    await Promise.all([rejected, crud])
+    expect(events).toEqual(['rollback', 'CRUD'])
+  })
+
+  it('no informa éxito si saveToStore falla después del commit', async () => {
+    const { module, mockSqliteConnection } = await importConnection()
+    await module.initDatabase()
+    const cause = new Error('store unavailable')
+    mockSqliteConnection.saveToStore.mockRejectedValueOnce(cause)
+    await expect(module.runTransaction(async () => 'ok')).rejects.toBe(cause)
+  })
+
+  it('aborta una migración inesperadamente fallida', async () => {
+    const { module, mockDb } = await importConnection()
+    const cause = new Error('disk I/O error')
+    mockDb.run.mockRejectedValueOnce(cause)
+    await expect(module.initDatabase()).rejects.toMatchObject({ cause })
+  })
+
+  it('comparte una sola inicialización concurrente', async () => {
+    const { module, mockDb, mockSqliteConnection } = await importConnection()
+    const opened = deferred()
+    mockDb.open.mockReturnValue(opened.promise)
+    const first = module.initDatabase()
+    const second = module.initDatabase()
+    opened.resolve()
+    await Promise.all([first, second])
+    expect(mockSqliteConnection.createConnection).toHaveBeenCalledTimes(1)
+    expect(document.querySelectorAll('jeep-sqlite')).toHaveLength(1)
+  })
+
+  it('reintenta un open fallido sin consultar transacciones de una base cerrada', async () => {
+    const { module, mockDb, mockSqliteConnection } = await importConnection()
+    mockDb.open.mockRejectedValueOnce(new Error('open failed'))
+    mockDb.isDBOpen = vi.fn().mockResolvedValue({ result: false })
+    mockDb.isTransactionActive.mockRejectedValue(new Error('database not opened'))
+    await expect(module.initDatabase()).rejects.toThrow('open failed')
+    await expect(module.initDatabase()).resolves.toBeUndefined()
+    expect(mockDb.isTransactionActive).not.toHaveBeenCalled()
+    expect(mockSqliteConnection.closeConnection).toHaveBeenCalledTimes(1)
+  })
+})
+
 describe('initDatabase() schema', () => {
   it('crea academic_events e indices en instalaciones nuevas', async () => {
     const { module, mockDb } = await importConnection()
@@ -125,10 +176,10 @@ describe('initDatabase() schema', () => {
 })
 
 describe('persistWeb()', () => {
-  it('no lanza error si sqliteConnection es null', async () => {
+  it('rechaza persistir si no existe conexión', async () => {
     const { module } = await importConnection()
 
-    await expect(module.persistWeb()).resolves.toBeUndefined()
+    await expect(module.persistWeb()).rejects.toThrow('Database not initialized')
   })
 
   it('llama saveToStore si la plataforma es "web"', async () => {
@@ -158,8 +209,8 @@ describe('runTransaction()', () => {
     await module.initDatabase()
     mockSqliteConnection.saveToStore.mockClear()
 
-    const result = await module.runTransaction(async () => {
-      await module.persistWeb()
+    const result = await module.runTransaction(async scope => {
+      await module.persistWeb(scope)
       return 'ok'
     })
 
@@ -189,8 +240,8 @@ describe('runTransaction()', () => {
     const { module, mockDb } = await importConnection()
     await module.initDatabase()
 
-    await module.runTransaction(async () => {
-      await module.runTransaction(async () => 'inner')
+    await module.runTransaction(async scope => {
+      await module.runTransaction(async () => 'inner', scope)
     })
 
     expect(mockDb.beginTransaction).toHaveBeenCalledTimes(1)
@@ -202,8 +253,9 @@ describe('runTransaction()', () => {
     await module.initDatabase()
 
     expect(module.isWriteTransactionActive()).toBe(false)
-    await module.runTransaction(async () => {
-      expect(module.isWriteTransactionActive()).toBe(true)
+    await module.runTransaction(async scope => {
+      expect(module.isWriteTransactionActive(scope)).toBe(true)
+      expect(module.isWriteTransactionActive()).toBe(false)
     })
     expect(module.isWriteTransactionActive()).toBe(false)
   })

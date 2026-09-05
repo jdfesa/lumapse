@@ -3,13 +3,15 @@ import * as Connection from '../../../../src/services/sqlite/connection.js'
 import { buildBackupManifest } from '../../../../src/services/backup/BackupFormat.ts'
 import { applyBackupImportPlan } from '../../../../src/services/backup/BackupImportDataSource.ts'
 
+const scope = vi.hoisted(() => Object.freeze({ owner: 'import' }))
+
 const mockDb = vi.hoisted(() => ({
   run: vi.fn(),
 }))
 
 vi.mock('../../../../src/services/sqlite/connection.js', () => ({
   getDb: vi.fn(() => mockDb),
-  runTransaction: vi.fn(async action => action()),
+  runTransaction: vi.fn(async action => action(scope)),
 }))
 
 const CREATED_AT = '2026-06-03T12:30:00.000Z'
@@ -102,13 +104,14 @@ describe('BackupImportDataSource', () => {
 
     expect(Connection.runTransaction).toHaveBeenCalledTimes(1)
     expect(Connection.getDb).toHaveBeenCalledTimes(1)
+    expect(Connection.getDb).toHaveBeenCalledWith(scope)
     expect(mockDb.run).toHaveBeenCalledTimes(3)
     expect(mockDb.run.mock.calls[0][0]).toContain('INSERT INTO subjects')
     expect(mockDb.run.mock.calls[1][0]).toContain('INSERT INTO notes')
     expect(mockDb.run.mock.calls[2][0]).toContain('INSERT INTO academic_events')
-    expect(mockDb.run.mock.calls[0][2]).toBe(false)
-    expect(mockDb.run.mock.calls[1][2]).toBe(false)
-    expect(mockDb.run.mock.calls[2][2]).toBe(false)
+    expect(mockDb.run.mock.calls[0]).toHaveLength(2)
+    expect(mockDb.run.mock.calls[1]).toHaveLength(2)
+    expect(mockDb.run.mock.calls[2]).toHaveLength(2)
     expect(result.imported).toEqual({
       subjects: 1,
       notes: 1,

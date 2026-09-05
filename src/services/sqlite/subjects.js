@@ -7,7 +7,7 @@
 // La validación de negocio la hace SubjectService.
 // =============================================================
 
-import { getDb, persistWeb, isWriteTransactionActive } from './connection.js'
+import { getDb } from './connection.js'
 import { DatabaseError } from './errors.js'
 
 async function runWriteOperation(operation, action) {
@@ -19,25 +19,16 @@ async function runWriteOperation(operation, action) {
   }
 }
 
-async function runSql(db, sql, values) {
-  if (isWriteTransactionActive()) {
-    await db.run(sql, values || [], false)
-  } else if (values === undefined) {
-    await db.run(sql)
-  } else {
-    await db.run(sql, values)
-  }
-  await persistWeb()
-}
 
 /**
  * Inserta una materia en la base de datos.
  * La validación de negocio (nombre, unicidad, profundidad) la hace SubjectService.
  * @param {object} subject Objeto con id, name, color, parentSubjectId, createdAt
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function createSubjectRow(subject) {
+export async function createSubjectRow(subject, scope) {
   return runWriteOperation('createSubjectRow', async () => {
-    const db = getDb()
+    const db = getDb(scope)
 
     const sql = `
       INSERT INTO subjects (id, name, parentSubjectId, archived, color, createdAt)
@@ -52,15 +43,16 @@ export async function createSubjectRow(subject) {
       subject.createdAt
     ]
 
-    await runSql(db, sql, values)
+    await db.run(sql, values)
   })
 }
 
 /**
  * Obtiene todas las materias no archivadas, ordenadas por nombre.
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function getAllSubjectRows() {
-  const db = getDb()
+export async function getAllSubjectRows(scope) {
+  const db = getDb(scope)
 
   const sql = `SELECT * FROM subjects WHERE archived = 0 AND deletedAt IS NULL ORDER BY name ASC`
   const res = await db.query(sql)
@@ -74,9 +66,10 @@ export async function getAllSubjectRows() {
 /**
  * Obtiene todas las materias no eliminadas, incluyendo archivadas.
  * Usado por validaciones para evitar duplicados invisibles.
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function getAllSubjectRowsIncludingArchived() {
-  const db = getDb()
+export async function getAllSubjectRowsIncludingArchived(scope) {
+  const db = getDb(scope)
 
   const sql = `SELECT * FROM subjects WHERE deletedAt IS NULL ORDER BY name ASC`
   const res = await db.query(sql)
@@ -89,9 +82,10 @@ export async function getAllSubjectRowsIncludingArchived() {
 
 /**
  * Obtiene una materia por su ID.
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function getSubjectRowById(id) {
-  const db = getDb()
+export async function getSubjectRowById(id, scope) {
+  const db = getDb(scope)
 
   const sql = `SELECT * FROM subjects WHERE id = ?`
   const res = await db.query(sql, [id])
@@ -105,10 +99,11 @@ export async function getSubjectRowById(id) {
 
 /**
  * Actualiza campos de una materia existente.
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function updateSubjectRow(id, changes) {
+export async function updateSubjectRow(id, changes, scope) {
   return runWriteOperation('updateSubjectRow', async () => {
-    const db = getDb()
+    const db = getDb(scope)
 
     const fields = []
     const values = []
@@ -134,28 +129,30 @@ export async function updateSubjectRow(id, changes) {
 
     values.push(id)
     const sql = `UPDATE subjects SET ${fields.join(', ')} WHERE id = ?`
-    await runSql(db, sql, values)
+    await db.run(sql, values)
   })
 }
 
 /**
  * Soft-delete: marca una materia como eliminada (papelera).
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function deleteSubjectRow(id) {
+export async function deleteSubjectRow(id, scope) {
   return runWriteOperation('deleteSubjectRow', async () => {
-    const db = getDb()
+    const db = getDb(scope)
 
     const sql = `UPDATE subjects SET deletedAt = ? WHERE id = ?`
-    await runSql(db, sql, [new Date().toISOString(), id])
+    await db.run(sql, [new Date().toISOString(), id])
   })
 }
 
 /**
  * Cuenta las notas activas (no archivadas, no eliminadas) de una materia.
  * @param {string} subjectId ID de la materia
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function countNotesBySubject(subjectId) {
-  const db = getDb()
+export async function countNotesBySubject(subjectId, scope) {
+  const db = getDb(scope)
 
   const sql = `SELECT COUNT(*) as count FROM notes WHERE subjectId = ? AND archived = 0 AND deletedAt IS NULL`
   const res = await db.query(sql, [subjectId])
@@ -165,9 +162,10 @@ export async function countNotesBySubject(subjectId) {
 
 /**
  * Cuenta las notas activas sin materia asignada (Entrada/Inbox).
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function getInboxCount() {
-  const db = getDb()
+export async function getInboxCount(scope) {
+  const db = getDb(scope)
 
   const sql = `SELECT COUNT(*) as count FROM notes WHERE subjectId IS NULL AND archived = 0 AND deletedAt IS NULL`
   const res = await db.query(sql)
@@ -179,9 +177,10 @@ export async function getInboxCount() {
  * Obtiene los IDs de todos los subjects archivados (no eliminados).
  * Usado por noteFilters para saber qué notas ocultar/mostrar por herencia.
  * @returns {string[]} IDs de subjects archivados
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function getArchivedSubjectIds() {
-  const db = getDb()
+export async function getArchivedSubjectIds(scope) {
+  const db = getDb(scope)
 
   const sql = `SELECT id FROM subjects WHERE archived = 1 AND deletedAt IS NULL`
   const res = await db.query(sql)
@@ -193,9 +192,10 @@ export async function getArchivedSubjectIds() {
  * Cuenta notas de un subject (incluyendo notas archivadas, excluyendo eliminadas).
  * Se usa para el conteo en la vista de materias archivadas.
  * @param {string} subjectId ID de la materia/sección
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function countNotesBySubjectIncludingArchived(subjectId) {
-  const db = getDb()
+export async function countNotesBySubjectIncludingArchived(subjectId, scope) {
+  const db = getDb(scope)
 
   const sql = `SELECT COUNT(*) as count FROM notes WHERE subjectId = ? AND deletedAt IS NULL`
   const res = await db.query(sql, [subjectId])
@@ -207,9 +207,10 @@ export async function countNotesBySubjectIncludingArchived(subjectId) {
  * Obtiene materias archivadas como árbol (para mostrar en drawer/vista archivadas).
  * Incluye materias activas como contenedor cuando tienen secciones archivadas.
  * @returns {{ tree: object[] }}
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function getArchivedSubjectTree() {
-  const db = getDb()
+export async function getArchivedSubjectTree(scope) {
+  const db = getDb(scope)
 
   const sql = `SELECT * FROM subjects WHERE deletedAt IS NULL ORDER BY name ASC`
   const res = await db.query(sql)
@@ -226,11 +227,11 @@ export async function getArchivedSubjectTree() {
     const rootChildren = archivedChildren.filter(c => c.parentSubjectId === root.id)
     if (!root.archived && rootChildren.length === 0) continue
 
-    const rootCount = await countNotesBySubjectIncludingArchived(root.id)
+    const rootCount = await countNotesBySubjectIncludingArchived(root.id, scope)
     const childrenWithCounts = []
 
     for (const child of rootChildren) {
-      const childCount = await countNotesBySubjectIncludingArchived(child.id)
+      const childCount = await countNotesBySubjectIncludingArchived(child.id, scope)
       childrenWithCounts.push({ ...child, noteCount: childCount })
     }
 
@@ -248,9 +249,10 @@ export async function getArchivedSubjectTree() {
 
 /**
  * Obtiene materias/secciones eliminadas.
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function getDeletedSubjectRows() {
-  const db = getDb()
+export async function getDeletedSubjectRows(scope) {
+  const db = getDb(scope)
 
   const sql = `SELECT * FROM subjects WHERE deletedAt IS NOT NULL ORDER BY deletedAt DESC`
   const res = await db.query(sql)
@@ -263,64 +265,69 @@ export async function getDeletedSubjectRows() {
 
 /**
  * Restaura una materia eliminada (quita deletedAt).
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function restoreSubjectRow(id) {
+export async function restoreSubjectRow(id, scope) {
   return runWriteOperation('restoreSubjectRow', async () => {
-    const db = getDb()
+    const db = getDb(scope)
 
     const sql = `UPDATE subjects SET deletedAt = NULL WHERE id = ?`
-    await runSql(db, sql, [id])
+    await db.run(sql, [id])
   })
 }
 
 /**
  * Elimina permanentemente una materia (DELETE físico).
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function permanentlyDeleteSubjectRow(id) {
+export async function permanentlyDeleteSubjectRow(id, scope) {
   return runWriteOperation('permanentlyDeleteSubjectRow', async () => {
-    const db = getDb()
+    const db = getDb(scope)
 
     const sql = `DELETE FROM subjects WHERE id = ?`
-    await runSql(db, sql, [id])
+    await db.run(sql, [id])
   })
 }
 
 /**
  * Vacía la papelera de materias (DELETE físico).
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function emptyTrashSubjects() {
+export async function emptyTrashSubjects(scope) {
   return runWriteOperation('emptyTrashSubjects', async () => {
-    const db = getDb()
+    const db = getDb(scope)
 
     const sql = `DELETE FROM subjects WHERE deletedAt IS NOT NULL`
-    await runSql(db, sql)
+    await db.run(sql)
   })
 }
 
 /**
  * Soft-delete secciones hijas de una materia.
  * @param {string} parentId ID de la materia padre
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function softDeleteChildSubjects(parentId) {
+export async function softDeleteChildSubjects(parentId, scope) {
   return runWriteOperation('softDeleteChildSubjects', async () => {
-    const db = getDb()
+    const db = getDb(scope)
     const now = new Date().toISOString()
 
     const sql = `UPDATE subjects SET deletedAt = ? WHERE parentSubjectId = ? AND deletedAt IS NULL`
-    await runSql(db, sql, [now, parentId])
+    await db.run(sql, [now, parentId])
   })
 }
 
 /**
  * Restaura secciones hijas de una materia.
  * @param {string} parentId ID de la materia padre
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function restoreChildSubjects(parentId) {
+export async function restoreChildSubjects(parentId, scope) {
   return runWriteOperation('restoreChildSubjects', async () => {
-    const db = getDb()
+    const db = getDb(scope)
 
     const sql = `UPDATE subjects SET deletedAt = NULL WHERE parentSubjectId = ? AND deletedAt IS NOT NULL`
-    await runSql(db, sql, [parentId])
+    await db.run(sql, [parentId])
   })
 }
 
@@ -328,12 +335,13 @@ export async function restoreChildSubjects(parentId) {
  * Archiva secciones hijas de una materia (cascada).
  * Solo archiva las que NO están archivadas y NO están eliminadas.
  * @param {string} parentId ID de la materia padre
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function archiveChildSubjects(parentId) {
+export async function archiveChildSubjects(parentId, scope) {
   return runWriteOperation('archiveChildSubjects', async () => {
-    const db = getDb()
+    const db = getDb(scope)
     const sql = `UPDATE subjects SET archived = 1 WHERE parentSubjectId = ? AND archived = 0 AND deletedAt IS NULL`
-    await runSql(db, sql, [parentId])
+    await db.run(sql, [parentId])
   })
 }
 
@@ -341,37 +349,40 @@ export async function archiveChildSubjects(parentId) {
  * Desarchiva secciones hijas de una materia (cascada).
  * Solo desarchiva las que están archivadas y NO están eliminadas.
  * @param {string} parentId ID de la materia padre
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function unarchiveChildSubjects(parentId) {
+export async function unarchiveChildSubjects(parentId, scope) {
   return runWriteOperation('unarchiveChildSubjects', async () => {
-    const db = getDb()
+    const db = getDb(scope)
     const sql = `UPDATE subjects SET archived = 0 WHERE parentSubjectId = ? AND archived = 1 AND deletedAt IS NULL`
-    await runSql(db, sql, [parentId])
+    await db.run(sql, [parentId])
   })
 }
 
 /**
  * Purga materias eliminadas hace más de N días.
  * @param {number} days Días de retención (default: 30)
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function purgeOldDeletedSubjects(days = 30) {
+export async function purgeOldDeletedSubjects(days = 30, scope) {
   return runWriteOperation('purgeOldDeletedSubjects', async () => {
-    const db = getDb()
+    const db = getDb(scope)
 
     const cutoff = new Date()
     cutoff.setDate(cutoff.getDate() - days)
     const cutoffISO = cutoff.toISOString()
 
     const sql = `DELETE FROM subjects WHERE deletedAt IS NOT NULL AND deletedAt < ?`
-    await runSql(db, sql, [cutoffISO])
+    await db.run(sql, [cutoffISO])
   })
 }
 
 /**
  * Cuenta el total de items en papelera (notas + materias).
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function countTrashItems() {
-  const db = getDb()
+export async function countTrashItems(scope) {
+  const db = getDb(scope)
 
   const notesRes = await db.query(`SELECT COUNT(*) as count FROM notes WHERE deletedAt IS NOT NULL`)
   const subjectsRes = await db.query(`SELECT COUNT(*) as count FROM subjects WHERE deletedAt IS NOT NULL`)
@@ -386,9 +397,10 @@ export async function countTrashItems() {
  * Obtiene los IDs de las secciones hijas de una materia (incluye eliminadas).
  * @param {string} parentId ID de la materia padre
  * @returns {string[]} IDs de secciones hijas
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function getChildSubjectIds(parentId) {
-  const db = getDb()
+export async function getChildSubjectIds(parentId, scope) {
+  const db = getDb(scope)
 
   const sql = `SELECT id FROM subjects WHERE parentSubjectId = ?`
   const res = await db.query(sql, [parentId])
@@ -399,9 +411,10 @@ export async function getChildSubjectIds(parentId) {
 /**
  * Cuenta notas eliminadas de un subject específico (para preview en papelera).
  * @param {string} subjectId ID de la materia
+ * @param {object} [scope] Propietario explícito para composición transaccional.
  */
-export async function countDeletedNotesBySubject(subjectId) {
-  const db = getDb()
+export async function countDeletedNotesBySubject(subjectId, scope) {
+  const db = getDb(scope)
 
   const sql = `SELECT COUNT(*) as count FROM notes WHERE subjectId = ? AND deletedAt IS NOT NULL`
   const res = await db.query(sql, [subjectId])

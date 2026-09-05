@@ -17,7 +17,7 @@ import type { Subject } from '../../domain/subjects'
 type SqlValue = string | number | null
 
 interface ImportDatabase {
-  run: (sql: string, values: SqlValue[], transaction?: boolean) => Promise<unknown>
+  run: (sql: string, values: SqlValue[]) => Promise<unknown>
 }
 
 function boolToInteger(value: boolean): number {
@@ -29,7 +29,7 @@ function nullable(value: string | null | undefined): string | null {
 }
 
 async function runImportSql(db: ImportDatabase, sql: string, values: SqlValue[]): Promise<void> {
-  await db.run(sql, values, false)
+  await db.run(sql, values)
 }
 
 async function insertSubject(db: ImportDatabase, subject: Subject): Promise<void> {
@@ -115,8 +115,8 @@ export async function applyBackupImportPlan(plan: BackupImportPlan): Promise<Bac
     return result
   }
 
-  await runTransaction(async () => {
-    const db = getDb() as ImportDatabase
+  await runTransaction(async (scope) => {
+    const db = getDb(scope) as ImportDatabase
 
     for (const subject of plan.data.subjects) {
       await insertSubject(db, subject)
