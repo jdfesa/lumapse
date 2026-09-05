@@ -3,7 +3,7 @@
 **Fecha:** 2026-09-04  
 **Rama:** `fix/sqlite-write-coordination`  
 **Base remota verificada:** `57e653c1638af3cecff6dd72513a1a52216bff62`  
-**Estado:** implementado; regresiones automáticas aprobadas; pendiente de validación canónica, Android e integración
+**Estado:** cerrado técnicamente; validación canónica y Android aprobadas; integración y limpieza de rama autorizadas
 
 ## Alcance y preflight
 
@@ -152,14 +152,15 @@ Validación repetida sobre la implementación recuperada, con el mismo Node/npm 
 - Bundle gzip: **193,57 kB / 250 kB**. Auditorías npm completa y productiva: **0 / 0 vulnerabilidades**.
 - Logs adicionales: `/tmp/lumapse-aud005/recovery-red.log`, `recovery-green.log` y `recovery/`.
 
-Esta recuperación aún requiere validar el SHA publicado en la Mac canónica y en Android. No implica
-aprobación manual, apertura de PR ni autorización de merge.
+En ese checkpoint remoto todavía faltaban la validación canónica y Android. La sección de cierre
+siguiente registra la evidencia posterior y la autorización del usuario.
 
-## Pausa para validación local
+## Validación local — procedimiento y checklist
 
-La rama y el SHA exacto publicado se entregan en el handoff. No hay PR abierto ni autorización de
-merge. La Mac debe sincronizar ese SHA en un checkout limpio, comprobar `git rev-parse HEAD` y
-ejecutar la validación canónica antes de integrar. No usar reset, limpieza, desinstalación ni `--clean`.
+El procedimiento exige sincronizar el SHA publicado en un checkout limpio, comprobar
+`git rev-parse HEAD` y ejecutar la validación canónica antes de integrar. No usar reset, limpieza,
+desinstalación ni `--clean`. Este checklist define los escenarios sugeridos, no acredita por sí solo
+la ejecución individual de todos ellos.
 
 El Android está exclusivamente conectado a la Mac. Usar el
 [procedimiento oficial, sección 5.2](../flujo-desarrollo-android.md):
@@ -182,3 +183,28 @@ Checklist proporcional:
 Después de aprobación manual: abrir PR en inglés contra `main`, revisar checks del SHA final y
 esperar autorización explícita de integración. Cambios posteriores de código requieren revalidación
 y nueva aprobación. Después del merge se informará PR/SHA; no se eliminarán ramas sin confirmación.
+
+
+## Cierre canónico y aprobación Android — 2026-09-04
+
+- **Código validado:** `0832a75fe262da7ad3633008d69278df345bbefd`; los cambios posteriores de este cierre
+  son exclusivamente documentales, sin cambios de código, dependencias ni configuración Android.
+- **Mac canónica:** Node 22.20.0 / npm 10.9.3. `npm ci`, `npm run verify`, `npm run test:coverage`,
+  docs, trazabilidad, schema y DBML aprobados sin workaround: **67 archivos / 1035 tests**,
+  **0 errores de lint / 3 warnings conocidos**, **95,66% statements** en el scope configurado.
+  Las auditorías npm completa y productiva informaron **0 / 0 vulnerabilidades**.
+- **Instalación:** script oficial `npm run deploy:android -- --target <dispositivo>` desde la Mac,
+  sin `--clean` ni desinstalación. Samsung **SM_G965F**, paquete `com.lumapse.app`, versión **0.4.8/408**.
+  Build Vite, sync, Gradle e instalación completados; actualización registrada a las **23:19:36**.
+- **SHA-256 del APK local e instalado, comprobados iguales:**
+  `b311ae558f08ca92769172542f515e845925e1c5a71d7b9eeb4140c9bf207118`.
+- **Aprobación del usuario:** después de la instalación informó «aparentemente todo funciona ok»
+  y autorizó aceptar el PR, hacer merge y borrar ramas locales/remotas. Esto acredita una aprobación
+  manual de funcionamiento general; no se atribuye una ejecución individual exhaustiva del checklist
+  ni se amplía el cierre a la matriz RNF o a mediciones de rendimiento.
+- **Integración:** autorizada, condicionada a revisión y checks satisfactorios del head final del PR.
+  La limpieza queda limitada a `fix/sqlite-write-coordination` después de verificar su integración
+  y la ausencia de trabajo sin publicar en ambas máquinas. AUD-006 no se inicia en este cierre.
+
+El APK sigue siendo evidencia de prueba: no se publicó una release, no se cambió la versión y
+no se modificó la beta distribuida `v0.4.8`.

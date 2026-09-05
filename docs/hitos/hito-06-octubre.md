@@ -8,7 +8,7 @@
 
 **Proyecto:** Lumapse
 
-**Estado:** Activo — AUD-001 a AUD-004 y AUD-007 cerrados técnicamente; cierre editorial, RNF y artefacto pendientes
+**Estado:** Activo — AUD-001 a AUD-005 y AUD-007 cerrados técnicamente; cierre editorial, RNF y artefacto pendientes
 
 **Última actualización:** 2026-09-03
 
@@ -59,6 +59,7 @@ Cerrar Lumapse con documentación coherente, evidencia técnica reproducible, di
 - [x] Aprobar los checkpoints Android de AUD-003 con backups `STORE`/`DEFLATE`, rechazo de datos inválidos antes de persistir, fixture de 500 notas y build completo instalado. Esta evidencia no equivale a validar un artefacto publicado nuevo.
 - [x] Resolver AUD-004 en un PR separado: grafo mínimo actualizado, auditorías completa/productiva en cero, sanitización, 955 tests, build, quality gate y Android 0.4.8/408 aprobados el 2026-09-02.
 - [x] Resolver AUD-007 en un PR separado: contrato emit-and-rethrow, límites UI deterministas, 989 tests, quality gate y Android 0.4.8/408 aprobados el 2026-09-03.
+- [x] Validar AUD-005: propiedad SQLite explícita, migraciones estrictas, arranque recuperable, 1035 tests, gate canónico y funcionamiento general Android aprobados el 2026-09-04; integración autorizada.
 - [ ] Ejecutar el quality gate sobre el commit candidato y guardar la evidencia; los gates acumulativos y pre-push ya aprobados no sustituyen el cierre del corte.
 - [ ] Repetir la checklist Android sobre el artefacto versionado y firmado elegido.
 - [ ] Medir latencia CRUD y rendimiento con al menos 500 notas (`RNF-002`, `RNF-004`); la importación funcional de esa cantidad no constituye una medición de rendimiento.
