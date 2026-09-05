@@ -8,7 +8,7 @@
 
 **Proyecto:** Lumapse
 
-**Estado:** Activo — AUD-001 a AUD-005 y AUD-007 cerrados; AUD-006 implementado y pendiente de validación/integración
+**Estado:** Activo — AUD-001 a AUD-005 y AUD-007 cerrados; AUD-006 validado; integración autorizada en PR #8
 
 **Última actualización:** 2026-09-05
 
@@ -60,7 +60,7 @@ Cerrar Lumapse con documentación coherente, evidencia técnica reproducible, di
 - [x] Resolver AUD-004 en un PR separado: grafo mínimo actualizado, auditorías completa/productiva en cero, sanitización, 955 tests, build, quality gate y Android 0.4.8/408 aprobados el 2026-09-02.
 - [x] Resolver AUD-007 en un PR separado: contrato emit-and-rethrow, límites UI deterministas, 989 tests, quality gate y Android 0.4.8/408 aprobados el 2026-09-03.
 - [x] Cerrar AUD-005: propiedad SQLite explícita, migraciones estrictas, arranque recuperable, 1035 tests, gate canónico y funcionamiento general Android aprobados el 2026-09-04; integrado mediante PR #7.
-- [ ] Completar AUD-006: ownership de Papelera y caches académicos implementado con 1057 tests diagnósticos remotos; pendientes gate canónico Mac, Android, PR e integración autorizada.
+- [x] Validar AUD-006: ownership de Papelera y caches académicos, 1057 tests locales con un worker, controles individuales y Android aprobados; integración autorizada y trazada en [PR #8](https://github.com/jdfesa/lumapse/pull/8), con limitación del gate local documentada.
 - [ ] Ejecutar el quality gate sobre el commit candidato y guardar la evidencia; los gates acumulativos y pre-push ya aprobados no sustituyen el cierre del corte.
 - [ ] Repetir la checklist Android sobre el artefacto versionado y firmado elegido.
 - [ ] Medir latencia CRUD y rendimiento con al menos 500 notas (`RNF-002`, `RNF-004`); la importación funcional de esa cantidad no constituye una medición de rendimiento.
@@ -120,7 +120,7 @@ Se mantiene WIP máximo de dos elementos activos en total entre `En Curso` y `En
 |---|---|---|
 | AUD-004 — dependencias con advisories | Cerrado técnicamente / sin bloqueantes | Grafo mínimo, auditorías 0/0, sanitización, build y Android aprobados el 2026-09-02 |
 | AUD-007 — contratos de errores del store | Cerrado técnicamente / sin bloqueantes | Contrato único, consumidores, 989 tests, quality gate y Android aprobados el 2026-09-03 |
-| AUD-006 — resultados async obsoletos | Implementado / validación pendiente | 1057 tests diagnósticos remotos; faltan gate canónico Mac, Android, PR e integración |
+| AUD-006 — resultados async obsoletos | Validado / integración autorizada | 1057 tests locales con un worker, controles individuales y Android aprobados; checks e integración trazados en PR #8 |
 | El helper no alinea automáticamente la versión Android | Riesgo alto de release | Test o gate que compare versión declarada, `versionName` y `versionCode` antes del build |
 | `Mover a` puede requerir pulsación prolongada | Menor / no bloqueante | Reproducción repetible en validación final y decisión explícita |
 | Rendimiento con mayor volumen de notas | Riesgo medio de evidencia | Medición de latencia y percepción con al menos 500 notas; no solo importación funcional |

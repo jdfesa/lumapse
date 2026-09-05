@@ -1,9 +1,9 @@
 # AUD-006 — Ownership de solicitudes async
 
-**Fecha:** 2026-09-05  
-**Rama:** `fix/async-request-ownership`  
-**Base canónica:** `455860e3ba7ab026942a3a8d61139d6ab4533073` (`main` = `origin/main`)  
-**Estado:** implementación y evidencia automática remota completas; validación canónica Mac, Android, PR e integración pendientes
+**Fecha:** 2026-09-05
+**Rama:** `fix/async-request-ownership`
+**Base canónica:** `455860e3ba7ab026942a3a8d61139d6ab4533073` (`main` = `origin/main`)
+**Estado:** implementación validada en Mac y Android; integración autorizada y trazada en [PR #8](https://github.com/jdfesa/lumapse/pull/8)
 
 ## Alcance
 
@@ -96,7 +96,7 @@ Ese diagnóstico no sustituye un gate canónico. La colisión de Web Storage per
 los dos orígenes localhost del fallback offline a AUD-008; ambos se reprodujeron igual en base y
 corrección. La Mac debe validar el SHA final con Node 22 antes del PR.
 
-## Validación manual pendiente
+## Checklist manual entregada
 
 El dispositivo Android está conectado exclusivamente a la Mac y no se buscó ni desplegó desde SSH.
 Checklist proporcional sobre el SHA publicado, preservando datos:
@@ -108,6 +108,44 @@ Checklist proporcional sobre el SHA publicado, preservando datos:
 5. eliminar una fecha y navegar entre meses, comprobando que no reaparece;
 6. cerrar y reabrir la app para confirmar persistencia normal y ausencia de regresiones generales.
 
-Después de la aprobación específica se podrá abrir un PR en inglés. El merge requiere revisión,
-checks satisfactorios del head final y autorización explícita; no se habilita auto-merge ni limpieza
-anticipada de la rama.
+El usuario confirmó el funcionamiento general satisfactorio tras recibir esta checklist y autorizó
+PR, merge y limpieza el 2026-09-05. No se atribuye a esa confirmación una medición RNF ni
+evidencia individual adicional de cada caso. El merge requiere checks satisfactorios del head final;
+no se habilita auto-merge ni limpieza anticipada de la rama.
+
+
+## Validación Mac y aprobación Android — 2026-09-05
+
+Código validado e instalado: `d248e8b0e8bc2fe9ef9889505466a7a32dbc2de0`.
+Entorno local: Node **22.20.0** / npm **10.9.3**.
+
+- `npm run verify` sufrió dos cierres de Vitest con código **139 antes de ejecutar los tests**,
+  incluso fuera del sandbox. No se declara ese comando aprobado ni se altera el gate para ocultarlo.
+- `npm test -- --maxWorkers=1`: **67 archivos / 1057 tests aprobados**, salida 0, 56,89 s.
+  El límite fue un argumento temporal, sin modificar configuración ni dependencias.
+- Lint: **0 errores / 3 warnings basales**. Build y auditor Rust aprobados.
+- Los pasos restantes de `verify` aprobaron individualmente: `typecheck`, `check:toolchain`,
+  `check:db-smoke`, `check:size`, `check:native-dialogs` y `check:a11y`.
+- Bundle local: **195,07 kB gzip / 250 kB**. Esta ejecución no midió cobertura local nueva.
+- Deploy oficial: `npm run deploy:android -- --target ad071603088c2172aa`, sin `--clean`,
+  preservando SQLite y datos; Gradle con dos workers y paralelismo deshabilitado temporalmente.
+- Samsung **SM_G965F**, paquete `com.lumapse.app`, versión **0.4.8 / 408**;
+  actualización informada por Android: **2026-09-05 14:36:54**; proceso iniciado comprobado.
+- SHA256 idéntico del APK local y del instalado:
+  `69c52c8f6bc32fc4e9323c8159f843da53b9cc2ccd5a6794b707009a117ebd2b`.
+- Aprobación del usuario: «todo en orden», con autorización explícita de merge y eliminación
+  de ramas una vez que el trabajo esté en `main`.
+
+La revisión, los checks del head final y el resultado de integración se consultan en
+[PR #8](https://github.com/jdfesa/lumapse/pull/8). Este checkpoint solo modifica documentación
+respecto al APK probado; no cambia el producto ni publica una nueva release. La aceptación final
+versionada de Hito 06 y los frentes AUD-008/AUD-009 mantienen su alcance independiente.
+
+### Gate completo de cierre
+
+Antes de publicar el checkpoint documental se ejecutó
+`VITEST_MAX_WORKERS=1 npm run verify`: **aprobado con salida 0**, incluidos los **1057 tests**.
+La variable temporal es reconocida por la versión instalada de Vitest y conserva todos los
+controles del gate; no se modificaron hooks, scripts ni configuración persistente. Se mantiene
+registrado el cierre 139 de las ejecuciones sin ese límite. El pre-push se ejecuta con la misma
+variable, sin saltarse el hook. CI del PR ejecuta su configuración habitual en Node 22.
