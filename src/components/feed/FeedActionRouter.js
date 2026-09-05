@@ -7,7 +7,6 @@
 // =============================================================
 
 import * as NoteStore from '../../store/NoteStore.js'
-import { renderTrashView } from './TrashView.js'
 import { confirmDialog } from '../common/ConfirmDialog.js'
 import { handleStoreMutationError } from '../common/storeActionErrors.js'
 
@@ -15,11 +14,10 @@ const TASK_LINE_REGEX = /^(\s*[-*+]\s+\[)([ xX])(\]\s+)/
 const pendingCheckboxToggles = new Set()
 
 function refreshTrash(deps) {
-  if (deps.refreshTrash) {
-    deps.refreshTrash()
-    return
+  if (typeof deps.refreshTrash !== 'function') {
+    throw new TypeError('FeedActionRouter requires an owned refreshTrash callback')
   }
-  renderTrashView(deps.feedContainer)
+  return deps.refreshTrash()
 }
 
 function handleMenuToggle(event, button, deps) {
@@ -105,7 +103,7 @@ const ACTION_MAP = [
       })
       if (confirmed) {
         await NoteStore.emptyTrash()
-        refreshTrash(deps)
+        await refreshTrash(deps)
       }
     }
   },
@@ -113,7 +111,7 @@ const ACTION_MAP = [
     selector: '.js-btn-restore',
     handler: async (_event, button, deps) => {
       await NoteStore.restoreNoteFromTrash(button.dataset.id)
-      refreshTrash(deps)
+      await refreshTrash(deps)
     }
   },
   {
@@ -127,7 +125,7 @@ const ACTION_MAP = [
       })
       if (confirmed) {
         await NoteStore.permanentlyDeleteNote(button.dataset.id)
-        refreshTrash(deps)
+        await refreshTrash(deps)
       }
     }
   },
@@ -135,14 +133,14 @@ const ACTION_MAP = [
     selector: '.js-btn-restore-subject',
     handler: async (_event, button, deps) => {
       await NoteStore.restoreSubjectFromTrash(button.dataset.id)
-      refreshTrash(deps)
+      await refreshTrash(deps)
     }
   },
   {
     selector: '.js-btn-restore-section',
     handler: async (_event, button, deps) => {
       await NoteStore.restoreSectionFromTrash(button.dataset.id)
-      refreshTrash(deps)
+      await refreshTrash(deps)
     }
   },
   {

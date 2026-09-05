@@ -164,8 +164,9 @@ function renderDeletedNotes(notes) {
     + notes.map(note => renderDeletedNote(note, getDisplayName)).join('');
 }
 
-export async function renderTrashView(feedContainer) {
+export async function renderTrashView(feedContainer, { isCurrent = () => true } = {}) {
   const trashData = await SubjectService.getTrashItems();
+  if (!isCurrent()) return false;
 
   feedContainer.innerHTML = trashData.totalCount === 0
     ? renderEmptyTrash()
@@ -175,4 +176,5 @@ export async function renderTrashView(feedContainer) {
         renderDeletedSections(trashData.orphanSections),
         renderDeletedNotes(trashData.notes),
       ].join('');
+  return true;
 }

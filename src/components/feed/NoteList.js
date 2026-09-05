@@ -10,7 +10,7 @@ import { escapeHtmlAttribute, escapeHtmlText } from '../common/htmlEscaping.js';
 import { getSafeHexColor } from '../common/presentationValidation.js';
 import { formatRelativeDate, findSubject, buildMoveMenu } from './NoteCardRenderer.js';
 import { createFeedActionRouter } from './FeedActionRouter.js';
-import { renderTrashView } from './TrashView.js';
+import { createTrashRequestOwner } from './TrashRequestOwner.js';
 import { BackupView } from '../backup/BackupView.js';
 import { renderAboutView } from '../about/AboutView.js';
 import { confirmDialog } from '../common/ConfirmDialog.js';
@@ -24,9 +24,7 @@ const COPY_FEEDBACK_FADE_MS = 220
 function renderImplicitTitleBlock(note) {
   const titlePresentation = getNoteContentPresentation(note);
   const bodyMarkdown = titlePresentation.body || '';
-  const renderedContent = bodyMarkdown.trim()
-    ? MarkdownService.renderMarkdown(bodyMarkdown, { lineOffset: titlePresentation.lineOffset || 0 })
-    : '';
+  const renderedContent = bodyMarkdown.trim() ? MarkdownService.renderMarkdown(bodyMarkdown, { lineOffset: titlePresentation.lineOffset || 0 }) : '';
   const titleHtml = titlePresentation.title
     ? `<h2 class="note-card__implicit-title">${escapeHtmlText(titlePresentation.title)}</h2>`
     : '';
@@ -105,6 +103,7 @@ export class NoteList {
     // Render base (sin notas aún)
     this.container.innerHTML = `<div class="feed" id="feed-items"></div>`;
     this.feedContainer = this.container.querySelector('#feed-items');
+    this.trashRequests = createTrashRequestOwner(this.container, this.feedContainer);
 
     // Delegación de eventos para botones de la card
     const router = createFeedActionRouter({
@@ -112,16 +111,16 @@ export class NoteList {
       onDelete: this.handleDelete,
       onCopy: (button) => this.handleCopy(button),
       closeAllDropdowns: () => this.closeAllDropdowns(),
-      refreshTrash: () => renderTrashView(this.feedContainer)
+      refreshTrash: () => this.trashRequests.refresh()
     });
     this.feedContainer.addEventListener('click', router);
 
     // Suscribirse al store
     this.unsubscribe = NoteStore.subscribe((state) => {
+      void this.trashRequests.update(state.viewMode === 'trash');
       if (state.viewMode === 'trash') {
         this.destroyVirtualFeed();
         this.destroyBackupView();
-        renderTrashView(this.feedContainer);
       } else if (state.viewMode === 'backup') {
         this.destroyVirtualFeed();
         this.renderBackupView(state.backupPanel);
@@ -340,6 +339,7 @@ export class NoteList {
 
   destroy() {
     if (this.unsubscribe) this.unsubscribe();
+    this.trashRequests.destroy();
     this.destroyVirtualFeed();
     this.destroyBackupView();
     document.removeEventListener('click', this.handleGlobalClick);

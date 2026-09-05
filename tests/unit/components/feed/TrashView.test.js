@@ -26,6 +26,17 @@ beforeEach(() => {
 })
 
 describe('TrashView', () => {
+  it('descarta una respuesta si el propietario ya no permite escribir el DOM', async () => {
+    SubjectService.getTrashItems.mockResolvedValue(trashData())
+    const container = document.createElement('div')
+    container.innerHTML = '<p>Vista vigente</p>'
+
+    const rendered = await renderTrashView(container, { isCurrent: () => false })
+
+    expect(rendered).toBe(false)
+    expect(container.textContent).toBe('Vista vigente')
+  })
+
   it('renderiza secciones eliminadas individualmente con botón de restaurar sección', async () => {
     SubjectService.getTrashItems.mockResolvedValue(trashData({
       totalCount: 2,

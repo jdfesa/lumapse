@@ -168,6 +168,22 @@ describe('FeedActionRouter dropdown actions', () => {
 })
 
 describe('FeedActionRouter trash actions', () => {
+  it('rechaza la vía alternativa sin ownership y consume el error en el límite del router', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    dispatchAction('js-btn-restore', 'data-id="trash-id"')
+    await settleAction()
+
+    expect(NoteStore.restoreNoteFromTrash).toHaveBeenCalledWith('trash-id')
+    expect(errorSpy).toHaveBeenCalledWith(
+      '[FeedActionRouter] Error inesperado en mutación del store:',
+      expect.objectContaining({
+        message: 'FeedActionRouter requires an owned refreshTrash callback',
+      }),
+    )
+    errorSpy.mockRestore()
+  })
+
   it.each([
     ['note', 'js-btn-restore', 'restoreNoteFromTrash'],
     ['subject', 'js-btn-restore-subject', 'restoreSubjectFromTrash'],
