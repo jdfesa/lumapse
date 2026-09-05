@@ -131,11 +131,23 @@
   z-index: 20;
 }
 
-.note-card__move-wrapper:hover .note-card__move-submenu,
-.note-card__move-wrapper:focus-within .note-card__move-submenu {
+.note-card__move-submenu.is-open {
   opacity: 1;
   visibility: visible;
   transform: translateX(0);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .note-card__move-wrapper:hover .note-card__move-submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+  }
+}
+
+.js-btn-move-trigger[aria-expanded="true"] {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-bright);
 }
 
 .note-card__move-color {

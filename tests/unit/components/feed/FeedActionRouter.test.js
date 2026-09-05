@@ -102,6 +102,34 @@ beforeEach(() => {
 })
 
 describe('FeedActionRouter dropdown actions', () => {
+  it('abre y cierra el selector Mover a con toques normales', () => {
+    const deps = createDeps()
+    const feed = document.createElement('div')
+    feed.innerHTML = `
+      <div class="note-card__dropdown is-open">
+        <div class="note-card__move-wrapper">
+          <button class="js-btn-move-trigger" aria-expanded="false">Mover a</button>
+          <div class="note-card__move-submenu"></div>
+        </div>
+      </div>
+    `
+    const trigger = feed.querySelector('.js-btn-move-trigger')
+    const submenu = feed.querySelector('.note-card__move-submenu')
+    feed.addEventListener('click', createFeedActionRouter(deps))
+
+    trigger.click()
+
+    expect(submenu.classList.contains('is-open')).toBe(true)
+    expect(trigger.getAttribute('aria-expanded')).toBe('true')
+    expect(deps.closeAllDropdowns).not.toHaveBeenCalled()
+
+    trigger.click()
+
+    expect(submenu.classList.contains('is-open')).toBe(false)
+    expect(trigger.getAttribute('aria-expanded')).toBe('false')
+    expect(NoteStore.moveNote).not.toHaveBeenCalled()
+  })
+
   it('mantiene abierto el dropdown para que Copiar pueda mostrar feedback visual', () => {
     const deps = createDeps()
     const router = createFeedActionRouter(deps)
