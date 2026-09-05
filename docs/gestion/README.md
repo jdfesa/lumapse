@@ -20,12 +20,12 @@ de Gómez (2014).
 | [`cheatsheet-defensa.md`](./cheatsheet-defensa.md) | Métricas, decisiones y respuestas breves para la defensa | 🔄 Revisión final pendiente |
 | [`firma-apk-android.md`](./firma-apk-android.md) | Política de firma, secretos y resguardo del artefacto Android | ✅ Completado |
 | [`plan-mantenibilidad-tipado-gradual-2026-06-12.md`](./plan-mantenibilidad-tipado-gradual-2026-06-12.md) | Estrategia incremental de modularidad y tipado; no habilita refactors amplios durante el cierre | 📌 Referencia |
-| [`revision-tecnica-priorizada-2026-09-01.md`](./revision-tecnica-priorizada-2026-09-01.md) | Auditoría vigente de arquitectura, seguridad, persistencia, escalabilidad y tooling con backlog priorizado | 🔄 AUD-006 implementado; validación e integración pendientes |
+| [`revision-tecnica-priorizada-2026-09-01.md`](./revision-tecnica-priorizada-2026-09-01.md) | Auditoría vigente de arquitectura, seguridad, persistencia, escalabilidad y tooling con backlog priorizado | ✅ AUD-006 validado; integración trazada en PR #8 |
 | [`analisis-aud-003-seguridad-importacion-backups-2026-09-01.md`](./analisis-aud-003-seguridad-importacion-backups-2026-09-01.md) | Revalidación e implementación de AUD-003: frontera ZIP/JSON, integridad y defensa de presentación | ✅ Cerrado en PR #3 |
 | [`analisis-aud-004-seguridad-dependencias-2026-09-02.md`](./analisis-aud-004-seguridad-dependencias-2026-09-02.md) | Revalidación y cierre de AUD-004: advisories, grafo mínimo, auditorías, gates y Android | ✅ Cerrado en PR #5 |
 | [`analisis-aud-007-contratos-errores-store-2026-09-03.md`](./analisis-aud-007-contratos-errores-store-2026-09-03.md) | Contrato emit-and-rethrow, adaptación de consumidores y evidencia automática/Android de AUD-007 | ✅ Cerrado en PR #6 |
 | [`analisis-aud-005-coordinacion-sqlite-2026-09-04.md`](./analisis-aud-005-coordinacion-sqlite-2026-09-04.md) | Propiedad SQLite explícita, migraciones estrictas y arranque recuperable | ✅ Cerrado en PR #7 |
-| [`analisis-aud-006-ownership-solicitudes-async-2026-09-05.md`](./analisis-aud-006-ownership-solicitudes-async-2026-09-05.md) | Vigencia de Papelera y consistencia de caches académicos | 🔄 Implementado; Mac, Android, PR e integración pendientes |
+| [`analisis-aud-006-ownership-solicitudes-async-2026-09-05.md`](./analisis-aud-006-ownership-solicitudes-async-2026-09-05.md) | Vigencia de Papelera y consistencia de caches académicos | ✅ Mac y Android validados; integración trazada en PR #8 |
 | [`historico/`](./historico/) | Snapshots operativos cerrados preservados como evidencia de proceso | 📦 Archivo |
 
 ---

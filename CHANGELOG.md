@@ -9,7 +9,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ## [Unreleased] — Trabajo posterior a `v0.4.8`
 
-> `main` conserva la versión declarada `0.4.8`, pero contiene trabajo posterior al tag. No existe una release `0.4.9` ni un APK posterior publicado. Este bloque resume el trabajo desde `v0.4.8`, incluidos los cierres técnicos AUD-001 a AUD-005 y AUD-007 y la implementación preintegración de AUD-006. Las ejecuciones Android sobre código posterior al tag son evidencia de validación y no constituyen un artefacto publicado.
+> `main` conserva la versión declarada `0.4.8`, pero contiene trabajo posterior al tag. No existe una release `0.4.9` ni un APK posterior publicado. Este bloque resume el trabajo desde `v0.4.8`, incluidos los cierres técnicos AUD-001 a AUD-005 y AUD-007 y AUD-006 validado y trazado en PR #8. Las ejecuciones Android sobre código posterior al tag son evidencia de validación y no constituyen un artefacto publicado.
 
 ### Added
 
@@ -42,7 +42,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 ### Fixed
 
 - **Coordinación SQLite y arranque (AUD-005):** Propiedad transaccional explícita y cola compartida con CRUD/lecturas, cascadas sin commits parciales, errores de persistencia web propagados y conexión incierta en cuarentena. Migraciones estrictas e idempotentes y arranque accesible en español con reintento seguro; 1035 tests, gate canónico y funcionamiento general Android aprobados. Contrato documentado en ADR-009 e integrado mediante PR #7 sin nueva release.
-- **Ownership de solicitudes async (AUD-006):** Papelera descarta respuestas y errores de visitas, refreshes o consumidores obsoletos; las cargas académicas distinguen generaciones, protegen caches y reconcilian mutaciones confirmadas. La implementación y 1057 tests diagnósticos están publicados; gate canónico Mac, Android, PR e integración permanecen pendientes.
+- **Ownership de solicitudes async (AUD-006):** Papelera descarta respuestas y errores de visitas, refreshes o consumidores obsoletos; las cargas académicas distinguen generaciones, protegen caches y reconcilian mutaciones confirmadas. 1057 tests locales con un worker, controles individuales y Android aprobados; limitación del gate local documentada. Integración autorizada y trazada en PR #8.
 
 - **Integridad del guardado (AUD-001):** El editor solo limpia los campos y descarta el borrador tras confirmar la persistencia; ante un fallo conserva contenido, borrador, contexto de edición y modo foco para permitir el reintento.
 - **Guardados concurrentes (AUD-002):** Una protección single-flight serializa el guardado y mantiene un estado visual mientras la operación está pendiente, evitando mutaciones duplicadas o fuera de orden por taps repetidos.

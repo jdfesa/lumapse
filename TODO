@@ -4,7 +4,7 @@
 
 ## Hito actual: 06 — Entrega Final
 
-**Estado:** activo; AUD-001 a AUD-005 y AUD-007 quedaron cerrados mediante PR #2, #3, #5, #6 y #7. AUD-006 está implementado, con validación canónica/Android e integración pendientes.
+**Estado:** activo; AUD-001 a AUD-005 y AUD-007 quedaron cerrados mediante PR #2, #3, #5, #6 y #7. AUD-006 cuenta con validación Mac/Android y autorización de integración en PR #8.
 
 **Corte operativo vigente:** beta/candidata [`v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8), publicada y validada inicialmente en Android real.
 
@@ -36,7 +36,7 @@
 - [x] Resolver AUD-004 en un PR separado: DOMPurify y siete dependencias de tooling parcheadas, auditorías 0/0, 955 tests, build, quality gate y Android 0.4.8/408 aprobados (2026-09-02).
 - [x] Resolver AUD-007 en PR #6: contrato de errores de mutaciones unificado, límites UI adaptados, 989 tests, quality gate y prueba manual Android aprobados (2026-09-03).
 - [x] Cerrar AUD-005 mediante PR #7: SHA de código validado `0832a75`, 1035 tests, gate y funcionamiento general Android aprobados. Ver [evidencia](docs/gestion/analisis-aud-005-coordinacion-sqlite-2026-09-04.md).
-- [ ] Completar AUD-006: implementación y regresiones publicadas en `fix/async-request-ownership`, con 1057 tests diagnósticos remotos; pendientes gate canónico Mac, Android, PR e integración. Ver [evidencia](docs/gestion/analisis-aud-006-ownership-solicitudes-async-2026-09-05.md).
+- [x] Validar AUD-006: 1057 tests locales con un worker y controles individuales aprobados; aprobación Android y autorización de integración recibidas. Checks y resultado de merge trazados en [PR #8](https://github.com/jdfesa/lumapse/pull/8). Ver [evidencia](docs/gestion/analisis-aud-006-ownership-solicitudes-async-2026-09-05.md).
 - [ ] Ejecutar el gate final sobre el commit y artefacto candidatos y guardar la evidencia; el gate acumulativo de AUD-003 y los pre-push documentales no sustituyen este cierre.
 - [ ] Repetir la validación Android sobre el artefacto versionado con un conjunto de datos representativo; el checkpoint de AUD-003 ya cubrió `STORE`, `DEFLATE`, datos inválidos y una fixture de 500 notas.
 - [ ] Verificar específicamente la interacción `Mover a` y clasificar su fricción como corregida, aceptada o bloqueante.
