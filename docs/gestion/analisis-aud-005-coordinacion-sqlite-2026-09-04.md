@@ -3,7 +3,7 @@
 **Fecha:** 2026-09-04  
 **Rama:** `fix/sqlite-write-coordination`  
 **Base remota verificada:** `57e653c1638af3cecff6dd72513a1a52216bff62`  
-**Estado:** cerrado técnicamente; validación canónica y Android aprobadas; integración y limpieza de rama autorizadas
+**Estado:** cerrado e integrado mediante PR #7; validación canónica y Android aprobadas
 
 ## Alcance y preflight
 
@@ -202,9 +202,9 @@ y nueva aprobación. Después del merge se informará PR/SHA; no se eliminarán 
   y autorizó aceptar el PR, hacer merge y borrar ramas locales/remotas. Esto acredita una aprobación
   manual de funcionamiento general; no se atribuye una ejecución individual exhaustiva del checklist
   ni se amplía el cierre a la matriz RNF o a mediciones de rendimiento.
-- **Integración:** autorizada, condicionada a revisión y checks satisfactorios del head final del PR.
-  La limpieza queda limitada a `fix/sqlite-write-coordination` después de verificar su integración
-  y la ausencia de trabajo sin publicar en ambas máquinas. AUD-006 no se inicia en este cierre.
+- **Integración:** completada posteriormente mediante PR #7 por rebase; `main` contiene los commits
+  equivalentes con SHAs nuevos y el cierre documental en `455860e`. La rama local histórica puede
+  conservarse mientras se verifica la ausencia de trabajo sin publicar. AUD-006 no formó parte de este cierre.
 
 El APK sigue siendo evidencia de prueba: no se publicó una release, no se cambió la versión y
 no se modificó la beta distribuida `v0.4.8`.
