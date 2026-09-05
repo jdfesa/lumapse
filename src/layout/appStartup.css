@@ -1,0 +1,18 @@
+.startup-state {
+  max-width: 36rem;
+  margin: 12vh auto;
+  padding: 1.5rem;
+  line-height: 1.6;
+}
+
+.startup-state button {
+  min-height: 48px;
+  padding: 0.5rem 1.5rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.startup-state button:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}

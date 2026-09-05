@@ -260,3 +260,66 @@ describe('runTransaction()', () => {
     expect(module.isWriteTransactionActive()).toBe(false)
   })
 })
+
+
+describe('cierre seguro antes de recargar WebView', () => {
+  it('espera el trabajo activo, bloquea nuevas operaciones y cierra una sola vez', async () => {
+    const { module, mockDb, mockSqliteConnection } = await importConnection({ platform: 'android' })
+    await module.initDatabase()
+    const entered = deferred(), release = deferred()
+    const write = module.runTransaction(async () => {
+      entered.resolve()
+      await release.promise
+    })
+    await entered.promise
+    const retained = module.getDb()
+    const closing = module.closeDatabaseForReload()
+    expect(module.closeDatabaseForReload()).toBe(closing)
+    expect(() => module.getDb()).toThrow('not initialized')
+    await expect(module.initDatabase()).rejects.toThrow('closing')
+    await Promise.resolve()
+    expect(mockSqliteConnection.closeConnection).not.toHaveBeenCalled()
+    release.resolve()
+    await Promise.all([write, closing])
+    await expect(retained.query('SELECT 1')).rejects.toThrow('recovery')
+    expect(mockDb.commitTransaction).toHaveBeenCalledTimes(1)
+    expect(mockSqliteConnection.closeConnection).toHaveBeenCalledTimes(1)
+    await module.initDatabase()
+    expect(() => module.getDb()).not.toThrow()
+  })
+
+  it('no cierra con estado incierto y permite repetir el cierre seguro', async () => {
+    const { module, mockDb, mockSqliteConnection } = await importConnection({ platform: 'android' })
+    await module.initDatabase()
+    mockDb.isTransactionActive.mockResolvedValueOnce({})
+    await expect(module.closeDatabaseForReload()).rejects.toThrow('state unknown')
+    expect(mockSqliteConnection.closeConnection).not.toHaveBeenCalled()
+    expect(() => module.getDb()).toThrow('not initialized')
+    await expect(module.closeDatabaseForReload()).resolves.toBeUndefined()
+    expect(mockSqliteConnection.closeConnection).toHaveBeenCalledTimes(1)
+  })
+
+  it('propaga el fallo de closeConnection sin perder la conexión que debe cerrar', async () => {
+    const { module, mockSqliteConnection } = await importConnection({ platform: 'android' })
+    await module.initDatabase()
+    const cause = new Error('native close failed')
+    mockSqliteConnection.closeConnection.mockRejectedValueOnce(cause)
+    await expect(module.closeDatabaseForReload()).rejects.toBe(cause)
+    await expect(module.closeDatabaseForReload()).resolves.toBeUndefined()
+    expect(mockSqliteConnection.closeConnection).toHaveBeenCalledTimes(2)
+  })
+
+  it('espera una inicialización en curso antes de liberar su conexión', async () => {
+    const { module, mockDb, mockSqliteConnection } = await importConnection({ platform: 'android' })
+    const opened = deferred()
+    mockDb.open.mockReturnValueOnce(opened.promise)
+    const initializing = module.initDatabase()
+    const closing = module.closeDatabaseForReload()
+    await Promise.resolve()
+    expect(mockSqliteConnection.closeConnection).not.toHaveBeenCalled()
+    opened.resolve()
+    await Promise.all([initializing, closing])
+    expect(mockSqliteConnection.closeConnection).toHaveBeenCalledTimes(1)
+    expect(() => module.getDb()).toThrow('not initialized')
+  })
+})
