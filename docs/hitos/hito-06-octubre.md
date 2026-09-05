@@ -8,9 +8,9 @@
 
 **Proyecto:** Lumapse
 
-**Estado:** Activo — AUD-001 a AUD-005 y AUD-007 cerrados técnicamente; cierre editorial, RNF y artefacto pendientes
+**Estado:** Activo — AUD-001 a AUD-005 y AUD-007 cerrados; AUD-006 implementado y pendiente de validación/integración
 
-**Última actualización:** 2026-09-03
+**Última actualización:** 2026-09-05
 
 ---
 
@@ -27,7 +27,7 @@ Cerrar Lumapse con documentación coherente, evidencia técnica reproducible, di
 - Validación inicial aprobada en Samsung Galaxy S20 FE con Android 13.
 - El rango técnico auditado posterior al tag comprende 38 commits hasta `ba16777`: documentación, refactors TypeScript, correcciones de integridad de guardado y endurecimiento de la importación de backups. Este rango no constituye una release ni un APK publicado nuevo.
 - AUD-001 y AUD-002 quedaron integrados mediante PR #2; AUD-003 quedó integrado mediante PR #3 después de completar la suite acumulativa y los checkpoints Android acordados.
-- AUD-004 quedó integrado mediante PR #5 y AUD-007 se cerró técnicamente mediante PR #6, con quality gate y validación Android aprobados.
+- AUD-004 quedó integrado mediante PR #5, AUD-007 mediante PR #6 y AUD-005 mediante PR #7, con sus quality gates y validaciones Android aprobados.
 - Diagramas Mermaid revisados contra el alcance de la beta; fuentes DOT, DBML y DDL sincronizadas; exportaciones gráficas de base de datos reemplazadas, revisadas e incorporadas el 2026-07-15.
 
 ## Alcance del Hito
@@ -59,7 +59,8 @@ Cerrar Lumapse con documentación coherente, evidencia técnica reproducible, di
 - [x] Aprobar los checkpoints Android de AUD-003 con backups `STORE`/`DEFLATE`, rechazo de datos inválidos antes de persistir, fixture de 500 notas y build completo instalado. Esta evidencia no equivale a validar un artefacto publicado nuevo.
 - [x] Resolver AUD-004 en un PR separado: grafo mínimo actualizado, auditorías completa/productiva en cero, sanitización, 955 tests, build, quality gate y Android 0.4.8/408 aprobados el 2026-09-02.
 - [x] Resolver AUD-007 en un PR separado: contrato emit-and-rethrow, límites UI deterministas, 989 tests, quality gate y Android 0.4.8/408 aprobados el 2026-09-03.
-- [x] Validar AUD-005: propiedad SQLite explícita, migraciones estrictas, arranque recuperable, 1035 tests, gate canónico y funcionamiento general Android aprobados el 2026-09-04; integración autorizada.
+- [x] Cerrar AUD-005: propiedad SQLite explícita, migraciones estrictas, arranque recuperable, 1035 tests, gate canónico y funcionamiento general Android aprobados el 2026-09-04; integrado mediante PR #7.
+- [ ] Completar AUD-006: ownership de Papelera y caches académicos implementado con 1057 tests diagnósticos remotos; pendientes gate canónico Mac, Android, PR e integración autorizada.
 - [ ] Ejecutar el quality gate sobre el commit candidato y guardar la evidencia; los gates acumulativos y pre-push ya aprobados no sustituyen el cierre del corte.
 - [ ] Repetir la checklist Android sobre el artefacto versionado y firmado elegido.
 - [ ] Medir latencia CRUD y rendimiento con al menos 500 notas (`RNF-002`, `RNF-004`); la importación funcional de esa cantidad no constituye una medición de rendimiento.
@@ -119,6 +120,7 @@ Se mantiene WIP máximo de dos elementos activos en total entre `En Curso` y `En
 |---|---|---|
 | AUD-004 — dependencias con advisories | Cerrado técnicamente / sin bloqueantes | Grafo mínimo, auditorías 0/0, sanitización, build y Android aprobados el 2026-09-02 |
 | AUD-007 — contratos de errores del store | Cerrado técnicamente / sin bloqueantes | Contrato único, consumidores, 989 tests, quality gate y Android aprobados el 2026-09-03 |
+| AUD-006 — resultados async obsoletos | Implementado / validación pendiente | 1057 tests diagnósticos remotos; faltan gate canónico Mac, Android, PR e integración |
 | El helper no alinea automáticamente la versión Android | Riesgo alto de release | Test o gate que compare versión declarada, `versionName` y `versionCode` antes del build |
 | `Mover a` puede requerir pulsación prolongada | Menor / no bloqueante | Reproducción repetible en validación final y decisión explícita |
 | Rendimiento con mayor volumen de notas | Riesgo medio de evidencia | Medición de latencia y percepción con al menos 500 notas; no solo importación funcional |

@@ -1,6 +1,6 @@
 # Revisión Técnica Priorizada — 2026-09-01
 
-**Estado:** Vigente — AUD-001 a AUD-005 y AUD-007 cerrados técnicamente
+**Estado:** Vigente — AUD-001 a AUD-005 y AUD-007 cerrados; AUD-006 implementado y pendiente de validación final
 **Rama original de auditoría:** `fix/note-save-integrity`
 **Commit base original revisado:** `cd60c0e` (`main`)
 **Versión de producto documentada:** `0.4.8` (Beta)  
@@ -96,8 +96,8 @@ store, no como métrica integral de toda la aplicación.
 | AUD-002 | P0 | Guardados duplicados por taps concurrentes | Bug confirmado | Resuelto en PR #2 |
 | AUD-003 | P0 | Inyección HTML persistente desde campos de backup | Seguridad confirmada | Cerrado en PR #3 |
 | AUD-004 | P0 | Dependencias vulnerables, incluida DOMPurify en producción | Seguridad/tooling | Cerrado en PR #5 |
-| AUD-005 | P1 | Propiedad global de transacciones y migraciones permisivas | Confiabilidad | Cerrado técnicamente; integración autorizada |
-| AUD-006 | P1 | Resultados async obsoletos sobrescriben vista/cache reciente | Bug de concurrencia | Pendiente |
+| AUD-005 | P1 | Propiedad global de transacciones y migraciones permisivas | Confiabilidad | Cerrado en PR #7 |
+| AUD-006 | P1 | Resultados async obsoletos sobrescriben vista/cache reciente | Bug de concurrencia | Implementado; Mac/Android/PR pendientes |
 | AUD-007 | P1 | Contratos incompatibles para errores de mutaciones | Diseño/confiabilidad | Cerrado en PR #6 |
 | AUD-008 | P1 | Gate canónico no portable y CI desalineada | Tooling | Pendiente |
 | AUD-009 | P1 | Suite no reproducible en toda la versión Node declarada | Tooling | Pendiente |
@@ -218,12 +218,12 @@ release ni se cambió la versión; la integración quedó autorizada.
 
 ### AUD-005 — Coordinación SQLite y arranque
 
-> **Cierre técnico 2026-09-04:** propiedad explícita, migraciones estrictas y arranque recuperable
-> implementados. 1035 tests, gate canónico y funcionamiento general Android aprobados; integración
-> autorizada. Ver [evidencia AUD-005](./analisis-aud-005-coordinacion-sqlite-2026-09-04.md).
+> **Cierre 2026-09-04:** propiedad explícita, migraciones estrictas y arranque recuperable
+> implementados. 1035 tests, gate canónico y funcionamiento general Android aprobados; integrado
+> posteriormente mediante PR #7. Ver [evidencia AUD-005](./analisis-aud-005-coordinacion-sqlite-2026-09-04.md).
 > La evidencia original siguiente describe el defecto previo a la remediación.
 
-> **Seguimiento 2026-09-04:** implementado en `fix/sqlite-write-coordination`, con regresiones automáticas y ADR-009. Pendiente de gate canónico satisfactorio sobre el SHA final, Android y autorización de integración; todavía no cerrado. Ver [evidencia de AUD-005](analisis-aud-005-coordinacion-sqlite-2026-09-04.md). El diagnóstico siguiente conserva el hallazgo inicial.
+> **Registro histórico previo al cierre, 2026-09-04:** implementado en `fix/sqlite-write-coordination`, con regresiones automáticas y ADR-009. En ese checkpoint todavía faltaban gate canónico, Android e integración; la nota se conserva para no reescribir la secuencia de evidencia. Ver [evidencia de AUD-005](analisis-aud-005-coordinacion-sqlite-2026-09-04.md). El diagnóstico siguiente conserva el hallazgo inicial.
 
 **Transacciones**
 
@@ -251,6 +251,11 @@ errores esperados como inesperados. La aplicación puede continuar con un schema
 - Renderizar un estado de error de inicio con opción de reintento/diagnóstico.
 
 ### AUD-006 — Resultados async obsoletos
+
+> **Seguimiento 2026-09-05:** implementación y regresiones publicadas en
+> `fix/async-request-ownership`. La evidencia remota cubre 1057 tests diagnósticos y los checks
+> individuales; faltan gate canónico Mac, Android, PR y autorización de integración. Ver
+> [evidencia AUD-006](./analisis-aud-006-ownership-solicitudes-async-2026-09-05.md).
 
 - `renderTrashView()` espera `getTrashItems()` y luego escribe `innerHTML` sin comprobar que la
   vista siga activa. Una respuesta tardía puede sobrescribir backup, about o feed.
@@ -418,8 +423,8 @@ test(editor): cover failed and concurrent note saves
 | 2 | `fix/backup-import-security` | Cerrado en PR #3: AUD-003 |
 | 3 | `fix/aud-004-dependency-security` | Cerrado en PR #5: AUD-004 |
 | 4 | `fix/store-action-contract` | Cerrado en PR #6: AUD-007 |
-| 5 | `fix/sqlite-write-coordination` | Aislar transacciones y endurecer migraciones/arranque |
-| 6 | `fix/async-request-ownership` | Evitar resultados obsoletos en trash y Heatmap |
+| 5 | `fix/sqlite-write-coordination` | Cerrado en PR #7: propiedad SQLite y arranque recuperable |
+| 6 | `fix/async-request-ownership` | Implementado; validación canónica/Android e integración pendientes |
 | 7 | `fix/quality-gate-portability` | Unificar gate local/CI y resolver matriz Node |
 | 8 | `refactor/store-batched-updates` | Refresh atómico y suscripciones más selectivas |
 | 9 | `refactor/subject-query-aggregation` | Eliminar N+1 con evidencia de rendimiento |
@@ -514,5 +519,6 @@ La revisión inicial quedó vinculada al primer fix porque AUD-001 y AUD-002 afe
 central del producto y presentaban la mejor relación entre impacto, riesgo y tamaño de cambio.
 Ambos hallazgos se cerraron posteriormente en la PR #2, AUD-003 en la PR #3 y AUD-004 en la PR #5.
 AUD-007 quedó cerrado en la PR #6 con contrato único, límites UI adaptados y validación automática/Android
-aprobada. AUD-005 cerró técnicamente con validación canónica y Android aprobadas; AUD-006 y los demás hallazgos
-conservan alcance y seguimiento independientes.
+aprobada. AUD-005 se integró mediante PR #7. AUD-006 tiene implementación y evidencia remota completas,
+pero conserva pendientes su validación canónica/Android, PR y autorización de integración; los demás
+hallazgos mantienen alcance independiente.
