@@ -163,7 +163,7 @@ Las imágenes vigentes respetan esta decisión: `title` se representa como atrib
 
 Lumapse se clasifica como un **monolito modular cliente, offline-first, con capas pragmáticas y UI organizada por feature**. Combina una unidad de despliegue Android con módulos separados por responsabilidades y patrones aplicados en puntos concretos. La descripción se formula en función del código vigente y no presupone una implementación canónica de todos los patrones. La decisión se formaliza en [ADR-008](../adr/ADR-008-arquitectura-modular-y-patrones.md) y su vista de componentes se documenta en [arquitectura-componentes.md](../diagramas/arquitectura-componentes.md).
 
-La frontera de versión se declara de forma explícita: el comportamiento y el dominio corresponden a la beta publicada `v0.4.8`, mientras los nombres de archivo usados como evidencia fueron auditados sobre `main` el 2026-07-15. El trabajo posterior al tag incluye refactors JS→TS que no están en la APK; por ello una referencia actual a `.ts` demuestra la estructura de la fuente vigente, no la composición literal del artefacto publicado. El checkpoint anterior a esta revisión registró 12 commits, pero el número no se presenta como propiedad permanente de una rama viva.
+La frontera de versión se declara de forma explícita: el comportamiento, el dominio y los nombres de archivo usados como evidencia corresponden al tag publicado `v0.5.0` (`5840755`). Esta beta incluye la evolución gradual a TypeScript, los límites de error de mutaciones, la coordinación SQLite y el arranque recuperable documentados durante Hito 06.
 
 ### 4.8.1. Organización modular y flujo de dependencias
 
@@ -177,6 +177,8 @@ La frontera de versión se declara de forma explícita: el comportamiento y el d
 El flujo predominante es **UI → store/servicios → acceso SQLite o adaptadores Capacitor**. Se trata de una separación pragmática, no de capas estrictamente aisladas: la coordinación central pasa por `NoteStore` para el dominio principal, mientras que features autocontenidas pueden invocar un servicio de aplicación sin atravesar el store.
 
 La cualidad **offline-first** atraviesa estas áreas: SQLite es la fuente persistente primaria y la red no es necesaria para crear, editar, buscar u organizar notas. No se la clasifica como patrón GoF, sino como una decisión arquitectónica y de producto.
+
+Desde `v0.5.0`, la persistencia usa una cola por conexión y capacidades transaccionales explícitas: las operaciones independientes no ingresan en transacciones ajenas y las cascadas propagan su scope de forma deliberada. `main.js` prepara base y lecturas iniciales antes de montar consumidores y ofrece una recuperación segura si el arranque falla. [ADR-009](../adr/ADR-009-propiedad-transaccional-sqlite.md) fija este contrato sin cambiar el schema final.
 
 ### 4.8.2. Patrones identificados en el código
 

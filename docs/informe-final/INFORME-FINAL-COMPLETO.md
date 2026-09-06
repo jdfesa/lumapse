@@ -7,11 +7,11 @@
 | Institución | IES 6023 "Dr. Alfredo Loutaif" |
 | Materia | Prácticas Profesionalizantes III |
 | Año | 2026 |
-| Estado | Checkpoint documental — Hito 06 activo |
-| Alcance funcional | v0.4.8 (`v0.4.8` / `a808de7`) |
-| Fuente técnica auditada | `main` @ `5db64de` |
-| Corte documental | 2026-08-11 |
-| Ensamblado automáticamente | 2026-08-21 |
+| Estado | Checkpoint documental — Hito 06 activo; segunda beta publicada |
+| Alcance funcional | v0.5.0 (`v0.5.0` / `5840755`) |
+| Fuente técnica auditada | `v0.5.0` @ `5840755` |
+| Corte documental | 2026-09-05 |
+| Ensamblado automáticamente | 2026-09-05 |
 
 ---
 
@@ -148,7 +148,7 @@ La justificación académica del proyecto reside en que Lumapse permite integrar
 
 La justificación social y de producto se relaciona con el contexto de uso. La evidencia disponible sugiere valor en una alternativa que abra rápido, funcione sin conexión, no exija una cuenta y respete la organización académica por materias. Por eso, el alcance funcional prioriza captura y recuperación de notas, guardado local y simplicidad, sin asumir que deba reemplazar a todas las herramientas generalistas.
 
-El alcance verificado en la beta controlada `v0.4.8` incluye una app Android empaquetada con Capacitor, persistencia SQLite, editor Markdown con comandos opcionales y borradores persistentes, previsualización segura, búsqueda, materias y secciones, archivo, papelera, fechas académicas discretas, tema claro/oscuro, sección Acerca de y automatización de calidad. También incorpora un flujo manual de respaldo `.zip` mediante el selector o la hoja de compartir del sistema y una importación no destructiva de respaldos generados por Lumapse, con validación previa y escritura transaccional.
+El alcance verificado en la segunda beta `v0.5.0` incluye una app Android empaquetada con Capacitor, persistencia SQLite coordinada, editor Markdown con comandos opcionales y borradores persistentes, previsualización segura, búsqueda, materias y secciones, archivo, papelera, fechas académicas discretas, tema claro/oscuro, sección Acerca de y automatización de calidad. También incorpora un flujo manual de respaldo `.zip` mediante el selector o la hoja de compartir del sistema y una importación no destructiva de respaldos generados por Lumapse, con validación previa y escritura transaccional. Respecto de `v0.4.8`, el corte agrega cierres de integridad, seguridad, ownership asíncrono, recuperación de arranque y usabilidad táctil sin ampliar el alcance funcional principal.
 
 Compartir una nota individual continúa fuera del alcance actual: solo se retomará si utiliza la hoja de compartir nativa de Android y aporta una utilidad distinta de la acción Copiar. También quedan fuera del MVP la sincronización automática en la nube, la colaboración en tiempo real, el backend multiusuario, la inteligencia artificial generativa y la publicación formal en tiendas de aplicaciones. Estas posibilidades se mantienen como trabajo futuro y solo deberían incorporarse si nueva evidencia de uso justifica ampliar el alcance.
 
@@ -160,7 +160,7 @@ Compartir una nota individual continúa fuera del alcance actual: solo se retoma
 
 El desarrollo de Lumapse se organizó mediante un **enfoque ágil, iterativo e incremental**, con gestión del trabajo basada en Kanban y adaptada a un proyecto individual. La expresión distingue dos niveles: el enfoque general describe cómo evoluciona el producto mediante incrementos y aprendizaje; Kanban aporta la estrategia para visualizar, limitar y mejorar el flujo. No se presenta Kanban como un proceso prescriptivo equivalente a Scrum o RUP.
 
-Cada hito agrupa un objetivo funcional o técnico —investigación, fundación, editor, MVP offline, organización/UX, calidad/distribución y cierre— y funciona como punto de revisión, entrega y línea base. Los hitos no son Sprints: el trabajo no se selecciona en Sprint Planning, no se compromete contra Sprint Goals ni se cierra mediante los eventos definidos por Scrum. El Hito 05 quedó cerrado con la beta controlada `v0.4.8` firmada, validada inicialmente y publicada; Hito 06 concentra el cierre académico sin reabrir por defecto el alcance funcional.
+Cada hito agrupa un objetivo funcional o técnico —investigación, fundación, editor, MVP offline, organización/UX, calidad/distribución y cierre— y funciona como punto de revisión, entrega y línea base. Los hitos no son Sprints: el trabajo no se selecciona en Sprint Planning, no se compromete contra Sprint Goals ni se cierra mediante los eventos definidos por Scrum. El Hito 05 quedó cerrado con la primera beta `v0.4.8`; Hito 06 publicó la segunda beta `v0.5.0` y concentra el cierre académico sin reabrir por defecto el alcance funcional.
 
 ### 2.1.1. Justificación frente a Scrum y RUP
 
@@ -340,7 +340,7 @@ Entre los RNF centrales del proyecto se destacan:
 - Estructura modular mantenible.
 - Verificación automatizada mediante tests, build, lint y auditorías documentales.
 
-La beta `v0.4.8` aporta evidencia inicial de validación en dispositivo real: instalación de APK firmada, apertura offline, persistencia, navegación principal y flujos críticos sin crashes. La validación final de defensa debe completar esa evidencia con feedback de estudiantes, contraste visual y comportamiento con mayor volumen real de notas. Esos puntos se abordan en el Capítulo 6 como parte de la estrategia de pruebas y validación.
+Las betas aportan evidencia incremental en dispositivo real. `v0.4.8` cuenta con instalación de APK firmada, apertura offline, persistencia, navegación principal y flujos críticos sin crashes. Para `v0.5.0` se aprobaron un build equivalente con datos preservados, las correcciones táctiles, el gate y la firma del asset publicado; su instalación específica sigue pendiente. La validación final de defensa debe completar feedback de estudiantes, contraste visual y comportamiento con mayor volumen real de notas. Esos puntos se abordan en el Capítulo 6.
 
 ---
 
@@ -652,7 +652,7 @@ Las imágenes vigentes respetan esta decisión: `title` se representa como atrib
 
 Lumapse se clasifica como un **monolito modular cliente, offline-first, con capas pragmáticas y UI organizada por feature**. Combina una unidad de despliegue Android con módulos separados por responsabilidades y patrones aplicados en puntos concretos. La descripción se formula en función del código vigente y no presupone una implementación canónica de todos los patrones. La decisión se formaliza en [ADR-008](../adr/ADR-008-arquitectura-modular-y-patrones.md) y su vista de componentes se documenta en [arquitectura-componentes.md](../diagramas/arquitectura-componentes.md).
 
-La frontera de versión se declara de forma explícita: el comportamiento y el dominio corresponden a la beta publicada `v0.4.8`, mientras los nombres de archivo usados como evidencia fueron auditados sobre `main` el 2026-07-15. El trabajo posterior al tag incluye refactors JS→TS que no están en la APK; por ello una referencia actual a `.ts` demuestra la estructura de la fuente vigente, no la composición literal del artefacto publicado. El checkpoint anterior a esta revisión registró 12 commits, pero el número no se presenta como propiedad permanente de una rama viva.
+La frontera de versión se declara de forma explícita: el comportamiento, el dominio y los nombres de archivo usados como evidencia corresponden al tag publicado `v0.5.0` (`5840755`). Esta beta incluye la evolución gradual a TypeScript, los límites de error de mutaciones, la coordinación SQLite y el arranque recuperable documentados durante Hito 06.
 
 ### 4.8.1. Organización modular y flujo de dependencias
 
@@ -666,6 +666,8 @@ La frontera de versión se declara de forma explícita: el comportamiento y el d
 El flujo predominante es **UI → store/servicios → acceso SQLite o adaptadores Capacitor**. Se trata de una separación pragmática, no de capas estrictamente aisladas: la coordinación central pasa por `NoteStore` para el dominio principal, mientras que features autocontenidas pueden invocar un servicio de aplicación sin atravesar el store.
 
 La cualidad **offline-first** atraviesa estas áreas: SQLite es la fuente persistente primaria y la red no es necesaria para crear, editar, buscar u organizar notas. No se la clasifica como patrón GoF, sino como una decisión arquitectónica y de producto.
+
+Desde `v0.5.0`, la persistencia usa una cola por conexión y capacidades transaccionales explícitas: las operaciones independientes no ingresan en transacciones ajenas y las cascadas propagan su scope de forma deliberada. `main.js` prepara base y lecturas iniciales antes de montar consumidores y ofrece una recuperación segura si el arranque falla. [ADR-009](../adr/ADR-009-propiedad-transaccional-sqlite.md) fija este contrato sin cambiar el schema final.
 
 ### 4.8.2. Patrones identificados en el código
 
@@ -920,7 +922,7 @@ GitHub Actions activa el workflow "CI — Quality Gate"
 
 ### 5.8.5. Resultado actual
 
-Al corte documental actual, `npm run verify` completa lint, typecheck, 775 tests unitarios distribuidos en 53 archivos, build de producción, smoke test de base de datos, presupuesto de bundle, trazabilidad, links internos, schema SQLite, jerarquía de materias, accesibilidad estática y ausencia de diálogos nativos fuera del seeder. El workflow remoto verifica además el DBML mediante un paso explícito. Esta evidencia automatizada es amplia, pero no reemplaza las pruebas manuales en Android ni implica que ambos recorridos cubran exactamente los mismos pasos.
+En el corte `v0.5.0`, `VITEST_MAX_WORKERS=1 npm run verify` completó lint, typecheck, 1065 tests unitarios distribuidos en 67 archivos, build de producción, verificación de versiones, smoke test de base de datos, presupuesto de bundle, trazabilidad, links internos, schema SQLite, jerarquía de materias, accesibilidad estática y ausencia de diálogos nativos fuera del seeder. El workflow remoto de PR #10 aprobó su subconjunto portable y verificó además el DBML mediante un paso explícito. Esta evidencia automatizada es amplia, pero no reemplaza las pruebas manuales en Android ni implica que ambos recorridos cubran exactamente los mismos pasos.
 
 ### 5.8.6. Justificación de la práctica
 
@@ -952,7 +954,7 @@ El enfoque se organiza en capas:
 
 El comando principal de verificación local es `npm run verify`, que encadena el quality gate y auditorías adicionales. En CI, GitHub Actions ejecuta el workflow `CI — Quality Gate` ante cada push o pull request sobre `main`.
 
-Para la beta controlada `v0.4.8`, el gate final se ejecutó sin fallos bloqueantes antes de publicar el APK firmado en GitHub Releases. La evidencia operativa queda registrada en `CHANGELOG.md`, `TODO`, `docs/hitos/hito-05-septiembre.md` y `docs/gestion/checklist-validacion-android.md`.
+Para la segunda beta `v0.5.0`, el gate final se ejecutó con `VITEST_MAX_WORKERS=1 npm run verify`: 67 archivos y 1065 tests pasaron antes de publicar el APK firmado. El CI de PR #10 y GitGuardian también finalizaron correctamente. La evidencia operativa queda registrada en `CHANGELOG.md`, `TODO`, `docs/hitos/hito-06-octubre.md`, `docs/gestion/lineas-base.md` y `docs/gestion/checklist-validacion-android.md`.
 
 ## 6.2. Pruebas Unitarias
 
@@ -970,9 +972,9 @@ Los módulos actualmente cubiertos incluyen:
 
 La suite unitaria permite sostener cambios internos sin depender exclusivamente de pruebas manuales. Esto fue especialmente importante durante la migración a SQLite, la implementación de papelera y la consolidación de materias/secciones, porque esas áreas afectan persistencia, visibilidad y recuperación de datos.
 
-El corte `v0.4.8` registró 773 tests unitarios. Sobre la fuente documental actual, la suite local registra 775 tests distribuidos en 53 archivos y pasando dentro del flujo `npm run verify`; los casos adicionales cubren el fallback web del adaptador nativo de red y la conversión de vistas tipadas en el adaptador de share migrado a TypeScript.
+El corte `v0.4.8` registró 773 tests unitarios. El crecimiento posterior cubrió integridad y concurrencia del guardado, seguridad de importación, contratos de errores, coordinación SQLite, arranque recuperable, ownership de solicitudes asíncronas y navegación táctil. En `v0.5.0`, la suite registra 1065 tests distribuidos en 67 archivos y pasa dentro del flujo `npm run verify` con un worker.
 
-El repositorio dispone de `npm run test:coverage` con alcance `src/**/*.{js,ts}` y reportes de texto, HTML y resumen JSON. La medición del 2026-08-21 sobre la fuente actual registró 93,21% de statements en el scope configurado y 92,43% (1538/1664) al agregar los 31 archivos de `src/services/**`; por lo tanto, `RNF-024` supera el mínimo de 70%. La configuración todavía no fija umbrales bloqueantes: la línea base debe repetirse sobre el commit candidato antes de decidir si conviene convertirla en gate.
+El repositorio dispone de `npm run test:coverage` con alcance `src/**/*.{js,ts}` y reportes de texto, HTML y resumen JSON. La última línea base formal registrada, del 2026-08-21, midió 93,21% de statements en el scope configurado y 92,43% (1538/1664) en los 31 archivos de `src/services/**`; por lo tanto, `RNF-024` superó el mínimo de 70% en ese checkpoint. La configuración todavía no fija umbrales bloqueantes y la cobertura no se volvió a declarar como métrica del tag `v0.5.0`: debe repetirse antes de una afirmación final.
 
 ## 6.3. Pruebas de Integración y Funcionamiento Offline
 
@@ -991,7 +993,9 @@ Las pruebas manuales en dispositivo siguen siendo necesarias para validar escena
 
 La beta `v0.4.8` fue validada inicialmente el 2026-07-01 en un Samsung Galaxy S20 FE (`SM-G780G`) con Android 13. Esa ejecución cubrió instalación limpia, apertura offline, creación/edición/persistencia de notas, materias y secciones, búsqueda, pin/archivo, estados académicos, fechas discretas, papelera, tema, rotación/responsivo y rendimiento percibido (VM-01 a VM-14). El resultado fue apto para beta controlada, con observaciones UX menores.
 
-Exportar e importar ZIP cuenta con una ejecución Android separada del 2026-06-18 sobre un Samsung `SM-G965F`, Android 10 y un build previo de la rama `feature/importar-backup-zip` (`a1be7c9`, `versionName=1.0`). Esa evidencia confirma el flujo en un corte anterior, pero no se atribuye al S20 FE ni al APK firmado `v0.4.8`. Hito 06 exige repetirlo dentro de la checklist del artefacto final elegido.
+Para `v0.5.0`, un build equivalente `0.5.0/500` se instaló en un Samsung `SM_G965F` preservando SQLite y se aprobaron el funcionamiento general y las correcciones táctiles de `Mover a` y materias/secciones. El asset de GitHub fue firmado con el certificado de producción, verificado mediante APK Signature Scheme v2 y publicado con SHA-256 `d48338e04021a6096fcaeaced5fde411911d403c9ea95407891d2b034515a884`. Como el dispositivo contenía una compilación debug, la validación incremental usó la misma clave debug para permitir la actualización: no equivale a instalar el asset firmado y esa comprobación permanece pendiente.
+
+Exportar e importar ZIP cuenta con una ejecución Android separada del 2026-06-18 sobre un Samsung `SM_G965F`, Android 10 y un build previo de la rama `feature/importar-backup-zip` (`a1be7c9`, `versionName=1.0`). Las validaciones de AUD-003 agregaron backups `STORE`/`DEFLATE`, rechazo de datos inválidos y una fixture de 500 notas sobre builds posteriores. Esa evidencia confirma el flujo y sus defensas en cortes previos, pero no se atribuye automáticamente al APK firmado `v0.5.0`; Hito 06 exige repetir los casos críticos sobre ese asset.
 
 ## 6.4. Validación de Rendimiento y UX
 
@@ -1004,27 +1008,28 @@ Las validaciones actuales incluyen:
 - `npm run check:a11y`: ejecuta auditoría estática de accesibilidad.
 - `npm run check:native-dialogs`: bloquea `alert`, `confirm` y `prompt` nativos fuera del seeder.
 - Revisión manual de flujos mobile-first en dispositivo Android.
-- Publicación de `v0.4.8` como beta controlada con APK firmado y SHA-256 documentado.
+- Publicación de `v0.5.0` como segunda beta con APK firmado, tag anotado y SHA-256 documentado.
 
 Quedan pendientes para el cierre documental final y Hito 06 pruebas más cercanas al usuario final: medición de tiempo hasta crear la primera nota, revisión fina de contraste y navegación táctil, comportamiento con mayor volumen real de notas y feedback de estudiantes sobre el prototipo instalado.
 
-El build vigente finaliza con código 0, por lo que satisface el criterio explícito de `RNF-025` (construcción sin errores). Vite informa advertencias no bloqueantes sobre módulos importados de forma estática y dinámica; se registran como deuda de empaquetado y deben revisarse, pero no se reinterpretan como errores ni cambian retroactivamente el criterio del requisito.
+El build de `v0.5.0` finaliza con código 0, por lo que satisface el criterio explícito de `RNF-025` (construcción sin errores). Las advertencias previas por módulos importados de forma estática y dinámica se resolvieron retirando imports redundantes; el presupuesto de bundle continúa siendo un control bloqueante separado.
 
 ## 6.5. Alcance de la Evidencia y Validación Pendiente
 
-La evidencia reunida permite calificar `v0.4.8` como beta controlada instalable y funcional en el dispositivo probado. No permite generalizar todavía el mismo resultado a todo el parque Android ni afirmar una validación integral de accesibilidad, seguridad, rendimiento y experiencia de usuario.
+La evidencia reunida permite calificar `v0.5.0` como segunda beta firmada, publicada y respaldada por gate, CI y validación Android incremental. No permite afirmar que el asset firmado fue instalado en el dispositivo usado ni generalizar el resultado a todo el parque Android o a una validación integral de accesibilidad, seguridad, rendimiento y experiencia de usuario.
 
 Los límites principales son:
 
 - La auditoría `check:a11y` es estática; no sustituye Lighthouse, lector de pantalla, navegación táctil real ni revisión manual completa de contraste. La evaluación final debe tomar WCAG 2.2 como referencia, sin declarar conformidad hasta comprobar los criterios aplicables con métodos automáticos y humanos (World Wide Web Consortium [W3C], 2024).
 - Los smoke tests Gradle verifican el paquete y el contexto nativo básico, no los flujos completos de UI ni una prueba end-to-end del APK.
 - La prueba Python con 5.000 notas es sintética, compara dos estrategias aisladas y no mide CPU ni renderizado Android. La revisión en dispositivo se realizó con un volumen acotado; falta una medición reproducible con un conjunto realista y criterios temporales definidos.
-- El reporte de cobertura todavía excluye TypeScript y no existe un umbral acordado para convertirlo en gate.
+- El reporte de cobertura incluye JavaScript y TypeScript, pero la última línea base formal es anterior a `v0.5.0` y no existe un umbral bloqueante acordado.
 - El workflow remoto y `npm run verify` no ejecutan exactamente los mismos pasos; conviene alinear al menos typecheck y smoke test de base de datos cuando sean portables en CI.
+- La suite completa presenta una incompatibilidad de Web Storage bajo Node 26; el corte canónico se validó con Node 22 y un worker. Resolver AUD-009 exige portabilidad real, no relajar tests.
 - `quality.sh` puede usar un binario Rust compilado para la plataforma y, si no está disponible, recurrir a scripts de compatibilidad. Un resultado exitoso en macOS no prueba por sí solo ambos caminos; la portabilidad requiere compilar o distribuir el auditor por plataforma y verificar el fallback en un checkout limpio.
 - La revisión periódica de dependencias y vulnerabilidades debe conservar evidencia propia; sanitizar Markdown reduce el riesgo XSS, pero no reemplaza el mantenimiento de las bibliotecas involucradas.
 
-Estos puntos no reabren el alcance funcional de la beta: delimitan con precisión qué está validado y qué debe cerrarse como evidencia técnica o prueba de usuario en el siguiente hito.
+Estos puntos no reabren el alcance funcional de la beta: delimitan con precisión qué está validado y qué debe cerrarse como evidencia técnica o prueba de usuario dentro de Hito 06.
 
 La validación final no debe limitarse a que el código compile. Para que Lumapse cumpla su objetivo, debe demostrar que una persona puede instalarla, abrirla sin conexión, crear una nota rápidamente, encontrarla después, organizarla por materia y confiar en que no se pierde.
 
@@ -1041,12 +1046,12 @@ El objetivo general se considera **cumplido para el alcance de una beta controla
 | Relevar necesidades del público objetivo y revisar las hipótesis iniciales. | Encuesta con 120 respuestas válidas, análisis cuantitativo y pivote documentado de PWA a aplicación Android local-first. | Cumplido. |
 | Formalizar alcance, usuarios, requisitos y decisiones trazables. | Personas, problem statement, RF/RNF, historias de usuario, decisiones de producto, ADRs, backlog y changelog versionados. | Cumplido, con revisión documental final en curso. |
 | Diseñar una solución offline y orientada al uso móvil. | Arquitectura Capacitor + SQLite, UI mobile-first, persistencia local y funcionamiento sin red para los flujos principales. | Cumplido para el dispositivo y los escenarios validados. |
-| Implementar el núcleo de captura y organización académica. | Editor Markdown, borradores persistentes, búsqueda, materias/secciones, archivo, papelera, fechas académicas, tema, Acerca de y portabilidad manual mediante backup/importación `.zip`. | Cumplido para `v0.4.8`. |
-| Preparar una distribución Android verificable. | APK firmado, hash SHA-256, pre-release publicada y validación inicial en un Samsung Galaxy S20 FE con Android 13. | Cumplido como beta controlada. |
-| Incorporar calidad automatizada y validación reproducible. | `npm run verify`, 775 tests unitarios, typecheck, build, auditorías técnicas/documentales y checklist manual Android. | Cumplido parcialmente: quedan límites de accesibilidad, rendimiento, seguridad y equivalencia CI/local explicitados en el Capítulo 6; `RNF-024` ya dispone de línea base JS/TS. |
+| Implementar el núcleo de captura y organización académica. | Editor Markdown, borradores persistentes, búsqueda, materias/secciones, archivo, papelera, fechas académicas, tema, Acerca de y portabilidad manual mediante backup/importación `.zip`. | Cumplido para `v0.5.0`. |
+| Preparar una distribución Android verificable. | APK firmada, tag anotado, hash SHA-256, pre-release publicada y validación incremental sobre un build equivalente `0.5.0/500`. | Cumplido como segunda beta; instalación específica del asset firmado pendiente. |
+| Incorporar calidad automatizada y validación reproducible. | `npm run verify`, 1065 tests en 67 archivos, typecheck, build, auditorías técnicas/documentales y checklist Android. | Cumplido parcialmente: quedan límites de accesibilidad, rendimiento, seguridad y equivalencia CI/local explicitados en el Capítulo 6; `RNF-024` dispone de línea base JS/TS anterior al tag. |
 | Producir documentación académica defendible. | Documentación viva por capítulos, diagramas fuente y trazabilidad dentro del repositorio. | Cumplido como corpus versionado, con gráficos DB incorporados; el Hito 06 completa revisión editorial, consolidación de evidencias y maquetación. |
 
-En términos del Hito 05, las fases de congelamiento de la versión, generación y firma del APK, validación en Android, publicación y sincronización documental de la beta quedaron completadas. El hito se considera cerrado. En Hito 06 ya se incorporaron los gráficos finales de base de datos; el hito continúa activo para la revisión editorial y de maquetación, la consolidación de evidencias no funcionales y la preparación de la defensa, sin reabrir por defecto el alcance funcional de `v0.4.8`.
+En términos del Hito 05, la primera beta `v0.4.8` quedó cerrada. En Hito 06 se incorporaron los gráficos finales de base de datos y se publicó `v0.5.0` con AUD-001 a AUD-007, mejoras táctiles y tooling de release sincronizado. El hito continúa activo para la revisión editorial y de maquetación, la matriz RNF, la instalación manual del asset firmado y la preparación de la defensa, sin reabrir por defecto el alcance funcional.
 
 ## 7.2. Lecciones Aprendidas
 
@@ -1145,14 +1150,14 @@ Las tareas inmediatas corresponden al cierre del trabajo ya realizado:
 
 - Tras la reconciliación transversal y la incorporación de las figuras DB completadas el 2026-07-15, consolidar la evidencia final, verificar los metadatos pendientes de los materiales de cátedra, ejecutar la revisión de congelamiento y regenerar el informe ensamblado.
 - Confirmar en la maquetación PDF y en las diapositivas que las imágenes conceptual y lógica ya verificadas sean legibles, especialmente el formato panorámico del modelo conceptual; el DDL y la representación del campo `title` ya coinciden con la implementación vigente.
-- Alinear los requisitos no funcionales con evidencia reproducible: la medición JS/TS de `RNF-024` y las advertencias por imports dinámicos redundantes quedaron resueltas el 2026-08-21; resta repetir la línea base en el commit candidato antes de fijar umbrales, verificar la portabilidad del auditor local y acercar el workflow remoto al alcance de `npm run verify`.
+- Alinear los requisitos no funcionales con evidencia reproducible: el reporte JS/TS de `RNF-024` y los imports dinámicos redundantes quedaron resueltos; resta repetir la línea base de coverage después del tag `v0.5.0`, verificar la portabilidad del auditor local y acercar el workflow remoto al alcance de `npm run verify`.
 - Mantener evidencia de revisión de dependencias y seguridad, y completar pruebas de accesibilidad, rendimiento con volumen realista y uso con estudiantes. Estas pruebas deben distinguir resultados automáticos, sintéticos y manuales.
 - Preparar materiales de defensa y, cuando el contenido quede congelado, convertir Markdown a LaTeX/PDF como capa de presentación, sin crear una segunda fuente de verdad.
 - Calcular el factor de ajuste real entre estimación y esfuerzo registrado, y convertir sus desvíos en recomendaciones concretas para futuros proyectos individuales; esta medición permanece pendiente hasta consolidar la evidencia temporal del cierre.
 
 ### 7.3.2. Mejoras posteriores a la beta
 
-Las observaciones de la validación Android sugieren revisar primero la interacción **Mover a** si la fricción vuelve a reproducirse y medir el comportamiento con feeds más extensos. También pueden evaluarse, con evidencia de uso:
+La fricción de **Mover a** fue corregida y validada antes de `v0.5.0`. La observación abierta de mayor prioridad es medir el comportamiento con feeds más extensos. También pueden evaluarse, con evidencia de uso:
 
 - Compartir una nota individual mediante la hoja nativa; el backup vigente ya exporta contenido legible organizado por materia o sección.
 - Importar archivos Markdown individuales sin confundir ese flujo con la restauración completa de un respaldo.
@@ -1168,7 +1173,7 @@ La sincronización multidispositivo, un backend, la colaboración o la publicaci
 
 Lumapse demuestra que un proyecto académico puede producir a la vez un incremento de software utilizable y evidencia profesional del proceso que lo originó. Su aporte no reside solamente en el APK: incluye el relevamiento que modificó la dirección del producto, las decisiones registradas, la arquitectura local-first, la disciplina de pruebas y la capacidad de reconocer límites sin ocultarlos.
 
-La beta `v0.4.8` constituye un punto de cierre concreto: está empaquetada, firmada, publicada y validada inicialmente en Android real. El producto todavía admite mejoras y la entrega académica conserva tareas editoriales, pero esas tareas ya pueden separarse del núcleo funcional y priorizarse en un hito posterior. Concluir de forma responsable no significa vaciar el backlog, sino congelar un alcance coherente, demostrar qué funciona, documentar qué falta y evitar que nuevas ideas diluyan una entrega verificable.
+La beta `v0.5.0` constituye el punto de cierre técnico vigente: está empaquetada, firmada, publicada y respaldada por gate, CI y validación Android incremental. La instalación específica del asset firmado y varias mediciones RNF siguen pendientes, por lo que no se la presenta como versión estable ni como validación universal. El producto todavía admite mejoras y la entrega académica conserva tareas editoriales, pero esas tareas pueden separarse del núcleo funcional. Concluir de forma responsable no significa vaciar el backlog, sino congelar un alcance coherente, demostrar qué funciona, documentar qué falta y evitar que nuevas ideas diluyan una entrega verificable.
 
 En ese sentido, el resultado principal del proyecto es doble. Para el estudiante usuario, Lumapse ofrece una herramienta simple y disponible sin conexión para conservar y organizar conocimiento. Para la formación profesional, deja una experiencia completa de análisis, adaptación, diseño, implementación, validación y cierre incremental que puede ser auditada y continuada sobre evidencia versionada.
 
@@ -1199,7 +1204,8 @@ Este capítulo consolida las fuentes citadas o utilizadas como fundamento metodo
 ## 8.3. Fuentes primarias del proyecto
 
 - Sandoval, J. D. F. (2026). *Relevamiento sobre hábitos y necesidades de toma de notas en estudiantes del IES 6023* [Conjunto de datos; 121 respuestas recolectadas, 120 válidas]. Lumapse. [`analisis-relevamiento/datos/respuestas_relevamiento_2026_05.csv`](../../analisis-relevamiento/datos/respuestas_relevamiento_2026_05.csv)
-- Sandoval, J. D. F. (2026). *Lumapse v0.4.8* [Software y APK Android, beta controlada]. GitHub. https://github.com/jdfesa/lumapse/releases/tag/v0.4.8
+- Sandoval, J. D. F. (2026). *Lumapse v0.4.8* [Software y APK Android, primera beta controlada]. GitHub. https://github.com/jdfesa/lumapse/releases/tag/v0.4.8
+- Sandoval, J. D. F. (2026). *Lumapse v0.5.0* [Software y APK Android, segunda beta]. GitHub. https://github.com/jdfesa/lumapse/releases/tag/v0.5.0
 - Sandoval, J. D. F. (2026). *Registros de decisiones arquitectónicas de Lumapse* [ADR-001 a ADR-008]. [`docs/adr/`](../adr/)
 
 Los documentos internos, commits, scripts y checklists se citan mediante enlaces relativos porque funcionan como evidencia primaria versionada del proyecto, no como bibliografía externa.

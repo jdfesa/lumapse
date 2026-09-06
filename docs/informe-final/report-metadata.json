@@ -1,9 +1,9 @@
 {
-  "status": "Checkpoint documental — Hito 06 activo",
-  "document_cutoff_date": "2026-08-11",
-  "functional_scope": "v0.4.8",
-  "functional_tag": "v0.4.8",
-  "functional_commit": "a808de7",
-  "technical_ref": "main",
-  "technical_commit": "5db64de"
+  "status": "Checkpoint documental — Hito 06 activo; segunda beta publicada",
+  "document_cutoff_date": "2026-09-05",
+  "functional_scope": "v0.5.0",
+  "functional_tag": "v0.5.0",
+  "functional_commit": "5840755",
+  "technical_ref": "v0.5.0",
+  "technical_commit": "5840755"
 }

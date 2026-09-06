@@ -4,7 +4,7 @@
 
 El desarrollo de Lumapse se organizó mediante un **enfoque ágil, iterativo e incremental**, con gestión del trabajo basada en Kanban y adaptada a un proyecto individual. La expresión distingue dos niveles: el enfoque general describe cómo evoluciona el producto mediante incrementos y aprendizaje; Kanban aporta la estrategia para visualizar, limitar y mejorar el flujo. No se presenta Kanban como un proceso prescriptivo equivalente a Scrum o RUP.
 
-Cada hito agrupa un objetivo funcional o técnico —investigación, fundación, editor, MVP offline, organización/UX, calidad/distribución y cierre— y funciona como punto de revisión, entrega y línea base. Los hitos no son Sprints: el trabajo no se selecciona en Sprint Planning, no se compromete contra Sprint Goals ni se cierra mediante los eventos definidos por Scrum. El Hito 05 quedó cerrado con la beta controlada `v0.4.8` firmada, validada inicialmente y publicada; Hito 06 concentra el cierre académico sin reabrir por defecto el alcance funcional.
+Cada hito agrupa un objetivo funcional o técnico —investigación, fundación, editor, MVP offline, organización/UX, calidad/distribución y cierre— y funciona como punto de revisión, entrega y línea base. Los hitos no son Sprints: el trabajo no se selecciona en Sprint Planning, no se compromete contra Sprint Goals ni se cierra mediante los eventos definidos por Scrum. El Hito 05 quedó cerrado con la primera beta `v0.4.8`; Hito 06 publicó la segunda beta `v0.5.0` y concentra el cierre académico sin reabrir por defecto el alcance funcional.
 
 ### 2.1.1. Justificación frente a Scrum y RUP
 
@@ -184,4 +184,4 @@ Entre los RNF centrales del proyecto se destacan:
 - Estructura modular mantenible.
 - Verificación automatizada mediante tests, build, lint y auditorías documentales.
 
-La beta `v0.4.8` aporta evidencia inicial de validación en dispositivo real: instalación de APK firmada, apertura offline, persistencia, navegación principal y flujos críticos sin crashes. La validación final de defensa debe completar esa evidencia con feedback de estudiantes, contraste visual y comportamiento con mayor volumen real de notas. Esos puntos se abordan en el Capítulo 6 como parte de la estrategia de pruebas y validación.
+Las betas aportan evidencia incremental en dispositivo real. `v0.4.8` cuenta con instalación de APK firmada, apertura offline, persistencia, navegación principal y flujos críticos sin crashes. Para `v0.5.0` se aprobaron un build equivalente con datos preservados, las correcciones táctiles, el gate y la firma del asset publicado; su instalación específica sigue pendiente. La validación final de defensa debe completar feedback de estudiantes, contraste visual y comportamiento con mayor volumen real de notas. Esos puntos se abordan en el Capítulo 6.

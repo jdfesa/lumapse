@@ -26,9 +26,9 @@ La fecha de ensamblado se calcula en cada ejecución. El estado, alcance funcion
 
 ## Estado actual
 
-El Hito 05 quedó cerrado con la beta controlada `v0.4.8` firmada, validada inicialmente, publicada y documentada. El Hito 06 se encuentra activo para el cierre académico. Los capítulos fuente describen el alcance funcional vigente, la distribución Android, la suite actual de 775 tests y los límites de validación restantes.
+El Hito 05 quedó cerrado con la primera beta `v0.4.8`. El Hito 06 publicó la segunda beta `v0.5.0` y continúa activo para el cierre académico. Los capítulos fuente describen el alcance funcional vigente, la distribución Android, el gate de 67 archivos y 1065 tests y los límites de validación restantes.
 
-`INFORME-FINAL-COMPLETO.md` fue regenerado como checkpoint el 2026-07-15 después de la reconciliación transversal y se volvió a ensamblar al incorporar las figuras externas de base de datos. Los capítulos siguen siendo la fuente de verdad y el artefacto deberá ensamblarse otra vez cuando se consolide la evidencia final.
+`INFORME-FINAL-COMPLETO.md` se regeneró como checkpoint después de reconciliar los capítulos con `v0.5.0`. Los capítulos siguen siendo la fuente de verdad y el artefacto deberá ensamblarse otra vez si se incorpora nueva evidencia antes del cierre académico.
 
 Los pendientes explícitos del Hito 06 son:
 
@@ -36,16 +36,17 @@ Los pendientes explícitos del Hito 06 son:
 - Verificación de legibilidad de las imágenes de base de datos dentro del PDF y las diapositivas. El conceptual Chen y el lógico relacional ya fueron exportados, revisados e incorporados desde sus fuentes DOT y DBML sincronizadas.
 - Verificación de los metadatos bibliográficos incompletos de Gómez (2014) y Parada (2026) contra los originales de cátedra; la sección de referencias ya existe y no inventa los datos ausentes.
 - Ejecución del plan RNF de Hito 06: uso y navegación, accesibilidad, rendimiento, offline/cierre inesperado, tráfico/dependencias, coverage TypeScript y matriz final por artefacto; además, portabilidad del auditor y equivalencia entre CI y gate local.
-- Validación Android final, preparación de la presentación y ensamblado definitivo después de cerrar los puntos anteriores.
+- Instalación manual del asset firmado `lumapse-v0.5.0.apk`, validación RNF final y preparación de la presentación después de cerrar los puntos anteriores.
 
 ### Checklist antes del próximo ensamblado
 
-- [x] Confirmar que alcance, versión, cantidad de tests y estado del hito coinciden con `TODO`, `BACKLOG.md` y `CHANGELOG.md` en el checkpoint 2026-07-15.
+- [x] Confirmar que alcance, versión, cantidad de tests y estado del hito coinciden con `TODO`, `BACKLOG.md` y `CHANGELOG.md` en el checkpoint `v0.5.0` del 2026-09-05.
 - [x] Sincronizar las fuentes DOT, DBML y DDL con el schema ejecutable.
 - [x] Incorporar o referenciar las imágenes finales de base de datos y verificar su correspondencia con el código (2026-07-15).
 - [ ] Confirmar metadatos de los materiales de cátedra y cerrar la bibliografía con correspondencia uno a uno entre citas y referencias.
 - [x] Ejecutar los chequeos documentales del checkpoint.
 - [x] Ensamblar el checkpoint con `python3 scripts/assemble-report.py` y revisar el diff generado.
+- [x] Reconciliar metadatos, capítulos y referencias con el tag publicado `v0.5.0`.
 - [ ] Congelar contenido antes de iniciar la maquetación LaTeX/PDF.
 
 ## Formato final de entrega
