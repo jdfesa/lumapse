@@ -1,7 +1,7 @@
 # Requisitos Funcionales — Lumapse
 
 **Fase Design Thinking:** Idear / Prototipar  
-**Última actualización:** 2026-07-15 (reconciliación con Capacitor/SQLite y beta `v0.4.8`)
+**Última actualización:** 2026-09-05 (reconciliación con la segunda beta `v0.5.0`)
 **Autor:** José David Sandoval
 
 > **Nota de evolución:** La línea base inicial se formuló para una PWA con IndexedDB. El estado vigente del producto es una aplicación Android empaquetada con Capacitor, con persistencia SQLite y distribución mediante APK, según [ADR-005](../adr/ADR-005-pivote-app-nativa.md) y [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md). Los requisitos obsoletos se conservan tachados para mantener trazabilidad histórica.
@@ -127,7 +127,7 @@ La decisión protege la filosofía de Lumapse: tomador de notas sin fricción, o
 El cierre formal del Hito 04 (2026-06-01) reclasifica `RF-006`, `RF-022` y `RF-024` como requisitos postergados. La decisión responde a la filosofía de Lumapse: tomador de notas sin fricción, offline-first y mobile-first. Las funcionalidades que agregan ruido visual o sugieren capacidades no disponibles todavía (por ejemplo sincronización) se conservan para evaluación post-release, cuando exista feedback real de estudiantes.
 
 - `RF-006` puede volver si la comunidad estudiantil pide métricas de escritura; debe implementarse como metadato sutil calculado en UI, sin persistencia adicional.
-- `RF-022` puede volver si la validación con usuarios de la beta `v0.4.8` en Hito 06 evidencia que los empty states y affordances actuales no alcanzan para explicar la app.
+- `RF-022` puede volver si la validación con usuarios de la beta `v0.5.0` en Hito 06 evidencia que los empty states y affordances actuales no alcanzan para explicar la app.
 - `RF-024` permanece postergado como indicador **global**: el núcleo local no depende de la red y un chip permanente sugeriría sincronización. El backup ya presenta feedback contextual de conectividad dentro de su propio flujo cuando corresponde.
 
 ---

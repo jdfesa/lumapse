@@ -1,8 +1,8 @@
 # Firma de APK Android — Lumapse
 
 **Hito:** 06 — Entrega Final  
-**Versión candidata:** 0.5.0  
-**Estado:** APK firmada, verificada y aprobada manualmente en Android el 2026-09-05; pendiente de publicación
+**Versión vigente:** 0.5.0<br>
+**Estado:** APK firmada y verificada; pre-release publicada el 2026-09-05
 
 ---
 
@@ -72,20 +72,23 @@ El resultado esperado debe indicar esquemas de firma verificados y mostrar el ce
 
 ---
 
-## Resultado candidato 0.5.0
+## Resultado publicado 0.5.0
 
 | Campo | Valor |
 |---|---|
 | APK firmada | `releases/v0.5.0/lumapse-v0.5.0.apk` |
 | SHA-256 APK | `d48338e04021a6096fcaeaced5fde411911d403c9ea95407891d2b034515a884` |
 | Versión Android | `versionName 0.5.0` / `versionCode 500` |
+| Tag / commit | `v0.5.0` / `5840755` |
+| Publicación | [GitHub pre-release `Lumapse v0.5.0`](https://github.com/jdfesa/lumapse/releases/tag/v0.5.0) |
+| Asset publicado | [`lumapse-v0.5.0.apk`](https://github.com/jdfesa/lumapse/releases/download/v0.5.0/lumapse-v0.5.0.apk), 25.762.498 bytes |
 | Verificación | `apksigner verify --verbose --print-certs` |
 | Esquema validado | APK Signature Scheme v2 |
 | Certificado | `CN=Jose David Sandoval, OU=Lumapse, O=Lumapse, L=Salta, ST=Salta, C=AR` |
 | Certificado SHA-256 | `91d719826e632e10f331913c3835c51e38cf780eb139940eb3b0bf1ed6a157cd` |
-| Estado Android | Build debug equivalente instalado sobre `0.4.8` sin desinstalar; datos conservados y funcionamiento aprobado manualmente |
+| Estado Android | Build equivalente `0.5.0/500` instalado sobre `0.4.8` sin desinstalar; datos conservados y funcionamiento aprobado manualmente |
 
-La APK publicable usa el mismo certificado de producción que `v0.4.8`. El dispositivo de prueba actual tenía una compilación debug instalada; por ello la validación conservando datos utiliza el mismo código `0.5.0/500` firmado con la clave debug, sin confundir ese binario con el artefacto de GitHub.
+La APK publicada usa el mismo certificado de producción que `v0.4.8`. GitHub informa para el único asset el digest `sha256:d48338e04021a6096fcaeaced5fde411911d403c9ea95407891d2b034515a884`, coincidente con el cálculo local. El dispositivo de prueba tenía una compilación debug instalada; por ello la validación conservando datos utilizó el mismo código `0.5.0/500` firmado con la clave debug. Esa ejecución no debe presentarse como instalación del asset firmado de GitHub: la comprobación pendiente de ese binario queda explicitada en la checklist Android.
 
 ---
 

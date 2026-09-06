@@ -1,6 +1,6 @@
 # Documentación de Producto — Lumapse
 
-**Última actualización:** 2026-07-15
+**Última actualización:** 2026-09-05
 
 Esta carpeta contiene la documentación centrada en el **usuario y el producto**, siguiendo los principios de **Design Thinking** como marco metodológico de diseño.
 
@@ -57,7 +57,7 @@ La subcarpeta [`encuesta/`](./encuesta/) contiene los materiales para la distrib
 └─────────────┘   └─────────────┘   └─────────────┘   └─────────────┘   └─────────────┘
 ```
 
-> **Nota:** Prototipar se materializó incrementalmente entre los Hitos 02 y 05. Hito 05 aportó una primera validación técnica y manual de la beta `v0.4.8`; la validación directa con usuarios, la revisión final de RNF y los ajustes de cierre pertenecen al Hito 06.
+> **Nota:** Prototipar se materializó incrementalmente entre los Hitos 02 y 05. Hito 05 aportó la primera beta `v0.4.8`; Hito 06 publicó `v0.5.0` con cierres de integridad, seguridad, confiabilidad y usabilidad táctil. La validación directa con usuarios y la revisión final de RNF continúan pendientes para el cierre académico.
 
 ---
 

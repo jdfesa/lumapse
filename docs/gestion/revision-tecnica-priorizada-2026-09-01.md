@@ -1,9 +1,9 @@
 # Revisión Técnica Priorizada — 2026-09-01
 
-**Estado:** Vigente — AUD-001 a AUD-005 y AUD-007 cerrados; AUD-006 validado; integración autorizada en PR #8
+**Estado:** Vigente — AUD-001 a AUD-007 cerrados e incluidos en `v0.5.0`; AUD-008 a AUD-013 continúan como seguimiento
 **Rama original de auditoría:** `fix/note-save-integrity`
 **Commit base original revisado:** `cd60c0e` (`main`)
-**Versión de producto documentada:** `0.4.8` (Beta)  
+**Versión original revisada:** `0.4.8` (Beta); cierres publicados en `v0.5.0`<br>
 **Alcance:** arquitectura, modularidad, seguridad, persistencia, estado, asincronía, pruebas, dependencias y tooling
 
 ---
@@ -97,7 +97,7 @@ store, no como métrica integral de toda la aplicación.
 | AUD-003 | P0 | Inyección HTML persistente desde campos de backup | Seguridad confirmada | Cerrado en PR #3 |
 | AUD-004 | P0 | Dependencias vulnerables, incluida DOMPurify en producción | Seguridad/tooling | Cerrado en PR #5 |
 | AUD-005 | P1 | Propiedad global de transacciones y migraciones permisivas | Confiabilidad | Cerrado en PR #7 |
-| AUD-006 | P1 | Resultados async obsoletos sobrescriben vista/cache reciente | Bug de concurrencia | Mac/Android validados; integración trazada en PR #8 |
+| AUD-006 | P1 | Resultados async obsoletos sobrescriben vista/cache reciente | Bug de concurrencia | Cerrado en PR #8; publicado en `v0.5.0` |
 | AUD-007 | P1 | Contratos incompatibles para errores de mutaciones | Diseño/confiabilidad | Cerrado en PR #6 |
 | AUD-008 | P1 | Gate canónico no portable y CI desalineada | Tooling | Pendiente |
 | AUD-009 | P1 | Suite no reproducible en toda la versión Node declarada | Tooling | Pendiente |
@@ -252,10 +252,10 @@ errores esperados como inesperados. La aplicación puede continuar con un schema
 
 ### AUD-006 — Resultados async obsoletos
 
-> **Seguimiento 2026-09-05:** implementación y regresiones publicadas en
-> `fix/async-request-ownership`. La evidencia remota cubre 1057 tests diagnósticos y los checks
-> individuales. Mac aprobó 1057 tests con un worker y controles individuales, con la limitación
-> del gate estándar documentada; Android fue aprobado y la integración autorizada en PR #8. Ver
+> **Seguimiento 2026-09-05:** implementación y regresiones integradas mediante PR #8 y publicadas
+> en `v0.5.0`. La evidencia cubre 1057 tests diagnósticos y checks individuales. Mac aprobó 1057
+> tests con un worker y controles individuales, con la limitación del gate estándar documentada;
+> Android, CI y merge fueron aprobados. Ver
 > [evidencia AUD-006](./analisis-aud-006-ownership-solicitudes-async-2026-09-05.md).
 
 - `renderTrashView()` espera `getTrashItems()` y luego escribe `innerHTML` sin comprobar que la
@@ -520,6 +520,5 @@ La revisión inicial quedó vinculada al primer fix porque AUD-001 y AUD-002 afe
 central del producto y presentaban la mejor relación entre impacto, riesgo y tamaño de cambio.
 Ambos hallazgos se cerraron posteriormente en la PR #2, AUD-003 en la PR #3 y AUD-004 en la PR #5.
 AUD-007 quedó cerrado en la PR #6 con contrato único, límites UI adaptados y validación automática/Android
-aprobada. AUD-005 se integró mediante PR #7. AUD-006 cuenta con validación local y Android,
-autorización explícita y trazabilidad de checks/integración en PR #8; los demás hallazgos mantienen
-alcance independiente.
+aprobada. AUD-005 se integró mediante PR #7 y AUD-006 mediante PR #8. Los cierres AUD-001 a AUD-007
+quedaron congelados en la segunda beta `v0.5.0`; los demás hallazgos mantienen alcance independiente.

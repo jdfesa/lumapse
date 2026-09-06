@@ -1,16 +1,16 @@
 # Modelo de Dominio — Lumapse
 
 **Tipo:** Diagrama UML de Estructura (Clases)  
-**Última actualización:** 2026-07-15 (dominio funcional `v0.4.8`; referencias técnicas de `main`)<br>
+**Última actualización:** 2026-09-05 (dominio y referencias técnicas de `v0.5.0`)<br>
 **Autor:** José David Sandoval
 
 ---
 
 ## Objetivo del diagrama
 
-Modelar las entidades principales, servicios de dominio y límites de persistencia que componen Lumapse en el corte `v0.4.8`. Este diagrama describe el modelo conceptual de la app y su relación con la persistencia local SQLite, sin reemplazar el detalle físico documentado en [`database/04-modelo-fisico-ddl.md`](./database/04-modelo-fisico-ddl.md).
+Modelar las entidades principales, servicios de dominio y límites de persistencia que componen Lumapse en el corte `v0.5.0`. Este diagrama describe el modelo conceptual de la app y su relación con la persistencia local SQLite, sin reemplazar el detalle físico documentado en [`database/04-modelo-fisico-ddl.md`](./database/04-modelo-fisico-ddl.md).
 
-> **Frontera de versión:** Las entidades y relaciones corresponden al comportamiento publicado en `v0.4.8`. Cuando se menciona una ruta o tipo técnico se utiliza su equivalente vigente en `main` al 2026-07-15; las migraciones JS→TS posteriores al tag no forman parte de la APK.
+> **Frontera de versión:** Las entidades, relaciones, rutas y tipos técnicos corresponden al tag publicado `v0.5.0` (`5840755`). AUD-005 y AUD-006 reforzaron la coordinación y vigencia de las operaciones sin modificar estas entidades persistidas.
 
 > **Nota de evolución:** El modelo original incluía `Tag` y persistencia IndexedDB. Tras el pivote mobile-first se adoptó SQLite ([ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md)) y organización por Materia/Sección. En Hito 05 se agregan `AcademicEvent`, borradores persistentes del editor y portabilidad por backup ZIP (`RF-017` / `RF-018`).
 

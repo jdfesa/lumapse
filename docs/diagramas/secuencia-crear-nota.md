@@ -1,7 +1,7 @@
 # Diagrama de Secuencia — Crear/Editar Nota con Borrador Persistente
 
 **Tipo:** Diagrama UML de Comportamiento (Secuencia)  
-**Última actualización:** 2026-07-15<br>
+**Última actualización:** 2026-09-05<br>
 **Autor:** José David Sandoval
 
 ---
@@ -12,7 +12,7 @@ Modelar la interacción entre los componentes del sistema durante el flujo princ
 
 > **Alcance:** Este diagrama se mantiene enfocado en `RF-005` (borradores persistentes). Los flujos de backup/importación ZIP, fechas académicas y Acerca de pertenecen a otros casos de uso del Hito 05 y no forman parte de esta secuencia.
 
-> **Frontera de versión:** El flujo describe el comportamiento de `v0.4.8`; la tabla de participantes enlaza los archivos equivalentes de `main` al 2026-07-15. Si una ruta aparece hoy como `.ts`, ese nombre puede provenir de una migración posterior al tag y no se atribuye a la APK publicada.
+> **Frontera de versión:** El flujo describe el comportamiento publicado en `v0.5.0`, incluida la conservación del borrador ante fallos y el contrato de error emit-and-rethrow que permite reintentar sin presentar éxito falso.
 
 ---
 

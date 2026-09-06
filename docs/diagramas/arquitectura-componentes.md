@@ -1,12 +1,12 @@
 # Arquitectura de Componentes — Lumapse
 
-**Estado:** `main` auditado el 2026-07-15; alcance funcional de la beta `v0.4.8`  
-**Corte documental:** 2026-07-15  
-**Decisión asociada:** [ADR-008 — Arquitectura modular y patrones](../adr/ADR-008-arquitectura-modular-y-patrones.md)
+**Estado:** tag `v0.5.0` auditado; arquitectura de la segunda beta publicada<br>
+**Corte documental:** 2026-09-05<br>
+**Decisiones asociadas:** [ADR-008 — Arquitectura modular y patrones](../adr/ADR-008-arquitectura-modular-y-patrones.md) y [ADR-009 — Propiedad transaccional SQLite](../adr/ADR-009-propiedad-transaccional-sqlite.md)
 
 Lumapse se implementa como un **monolito modular cliente, offline-first**, construido con módulos ES y TypeScript gradual, empaquetado como aplicación Android mediante Capacitor. La separación es lógica: todos los módulos se entregan como una sola aplicación, pero cada capa tiene responsabilidades y dependencias delimitadas.
 
-> **Frontera de versión:** La funcionalidad representada coincide con la APK `v0.4.8`. Los nombres de archivo y la evidencia de patrones se inspeccionaron sobre `main`, que contiene trabajo posterior al tag —incluidas migraciones JS→TS— no publicado como una nueva versión. El checkpoint anterior contabilizó 12 commits, pero ese número puede crecer. Una ruta `.ts` actual no implica que ese archivo con ese nombre haya formado parte de la APK.
+> **Frontera de versión:** La funcionalidad y los nombres de archivo representados coinciden con el tag `v0.5.0` (`5840755`). La coordinación de una única conexión SQLite y el arranque preparado antes del montaje forman parte de esta beta.
 
 ```mermaid
 flowchart TB
@@ -47,11 +47,11 @@ flowchart TB
 
 | Capa | Ubicación principal | Responsabilidad | Puede depender de |
 |---|---|---|---|
-| Composición | `src/main.js` | Inicializar SQLite, construir la interfaz y conectar estado con vistas | Todas las capas necesarias para el arranque |
+| Composición | `src/main.js` | Preparar SQLite y las lecturas iniciales antes de construir la interfaz; conectar estado con vistas y ofrecer recuperación segura | Todas las capas necesarias para el arranque |
 | Presentación | `src/components/`, `src/layout/`, `src/styles/` | Interacción, renderizado y navegación, agrupados por feature | Store, servicios y componentes compartidos |
 | Estado | `src/store/` | Mantener estado observable y coordinar operaciones de la UI | Servicios, contratos de dominio y módulos SQLite de acceso a datos |
 | Aplicación/dominio | `src/services/`, `src/domain/` | Validaciones, reglas, flujos y tipos compartidos | Acceso a datos y adaptadores de infraestructura |
-| Persistencia | `src/services/sqlite/` | Conexión, esquema, migraciones, transacciones y CRUD de bajo nivel | SQLite/Capacitor; no depende de la UI |
+| Persistencia | `src/services/sqlite/` | Conexión coordinada, esquema, migraciones estrictas, capacidades transaccionales y CRUD de bajo nivel | SQLite/Capacitor; no depende de la UI |
 | Integraciones | `src/services/backup/*Native*`, `BackupShareService.ts` | Traducir APIs de Capacitor a conceptos del producto | Plugins nativos |
 
 La regla principal es que la infraestructura no conoce a la presentación. Algunos componentes consumen servicios directamente y otros lo hacen a través del store. A su vez, el store usa dos recorridos válidos: delega en servicios cuando hay reglas u orquestación de dominio y accede directamente a módulos SQLite para operaciones de datos acotadas. Por eso la arquitectura es **por capas pragmática**, no una Clean Architecture estricta ni una cadena obligatoria UI → store → servicio → datos.
@@ -60,7 +60,7 @@ La regla principal es que la infraestructura no conoce a la presentación. Algun
 
 | Patrón o enfoque | Clasificación | Evidencia | Aplicación real |
 |---|---|---|---|
-| **Composition Root** | Aplicado | [`src/main.js`](../../src/main.js) | Centraliza el arranque y el cableado de dependencias principales. |
+| **Composition Root** | Aplicado | [`src/main.js`](../../src/main.js) | Prepara persistencia/datos antes del montaje y centraliza el cableado y la recuperación de arranque. |
 | **Observer / Publish-Subscribe** | Aplicado | [`src/store/NoteStore.state.js`](../../src/store/NoteStore.state.js) | El store registra suscriptores, notifica cambios y devuelve una función de desuscripción. |
 | **Service Layer** | Aplicado | [`src/services/AcademicEventService.ts`](../../src/services/AcademicEventService.ts), [`src/services/backup/BackupFlowService.ts`](../../src/services/backup/BackupFlowService.ts) | Encapsula reglas, validación y orquestación fuera de la UI y del SQL. |
 | **Adapter** | Aplicado | [`src/services/backup/BackupNativeNetworkService.ts`](../../src/services/backup/BackupNativeNetworkService.ts), [`src/services/backup/BackupShareService.ts`](../../src/services/backup/BackupShareService.ts) | Traduce plugins nativos y fallbacks web a operaciones entendibles por la aplicación. |

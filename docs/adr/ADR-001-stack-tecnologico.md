@@ -25,7 +25,7 @@ Vite proporciona servidor de desarrollo con HMR, resolución de módulos, integr
 
 ## Estado vigente del stack
 
-La revisión realizada sobre la beta `0.4.8` confirma y amplía la decisión original:
+La revisión vigente sobre la beta `0.5.0` confirma y amplía la decisión original:
 
 - Vite 6 continúa como servidor de desarrollo y herramienta de build.
 - La interfaz sigue sin framework y combina JavaScript maduro con una migración gradual a TypeScript.

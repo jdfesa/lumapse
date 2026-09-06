@@ -1,6 +1,6 @@
 # Documentación del Proyecto — Lumapse
 
-Este directorio reúne la documentación viva de Lumapse. La referencia técnica actual corresponde a la **versión `0.4.8`**, una beta funcional instalable en Android y candidata a presentación académica. El producto vigente es una aplicación móvil empaquetada con Capacitor, con persistencia local SQLite y funcionamiento offline; la PWA e IndexedDB pertenecen a la evolución histórica del proyecto.
+Este directorio reúne la documentación viva de Lumapse. La referencia técnica actual corresponde a la **pre-release `v0.5.0`**, segunda beta firmada e instalable en Android. El producto vigente es una aplicación móvil empaquetada con Capacitor, con persistencia local SQLite y funcionamiento offline; la PWA e IndexedDB pertenecen a la evolución histórica del proyecto.
 
 ## Cómo leer la documentación
 
@@ -31,7 +31,7 @@ Cuando un documento histórico contradiga una decisión posterior, prevalece el 
 
 Los documentos deben distinguir explícitamente entre:
 
-- **Vigente:** describe la versión `0.4.8` y puede usarse en la defensa.
+- **Vigente:** describe la versión `v0.5.0` o declara explícitamente una evidencia histórica anterior y puede usarse en la defensa.
 - **Histórico:** registra una hipótesis o decisión reemplazada, sin presentarla como estado actual.
 - **Fuente:** archivo que se edita y del cual se deriva otro artefacto.
 - **Generado:** salida reproducible que no debe corregirse manualmente si existe una fuente.
@@ -42,7 +42,8 @@ El informe completo se ensambla a partir de sus capítulos fuente. La migración
 ## Estado documental actual
 
 - La arquitectura y los patrones quedan formalizados en [ADR-008](./adr/ADR-008-arquitectura-modular-y-patrones.md).
-- El Hito 05 representa el cierre funcional de la beta; el trabajo de presentación, coherencia documental, gráficos y validación final corresponde al hito siguiente.
+- [ADR-009](./adr/ADR-009-propiedad-transaccional-sqlite.md) documenta la propiedad transaccional y el arranque recuperable incluidos en `v0.5.0`.
+- El Hito 05 conserva el cierre de la primera beta `v0.4.8`; Hito 06 publicó `v0.5.0` y continúa con presentación, coherencia documental, matriz RNF y cierre académico.
 - Las fuentes DOT, DBML y DDL del modelo de datos están sincronizadas; las imágenes conceptual y lógica fueron regeneradas externamente, verificadas e incorporadas al informe el 2026-07-15. Solo resta comprobar su legibilidad en la maquetación final de PDF y diapositivas. El alcance exacto está registrado en [`diagramas/database/README.md`](./diagramas/database/README.md).
 
 ## Documentación formal académica (PP3)

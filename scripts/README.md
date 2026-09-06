@@ -96,7 +96,7 @@ Ejecuta todos los chequeos de calidad del proyecto en un solo comando. Actúa co
 
 - **Qué ejecuta (en orden):**
   1. `npm run lint` (ESLint).
-  2. `npm run test` (suite Vitest — 773 tests unitarios en el corte `0.4.8`).
+  2. `npm run test` (suite Vitest — 1065 tests en 67 archivos para el corte `0.5.0`).
   3. `npm run build` (compilación de producción con Vite).
   4. Auditoría de código (con fallback cross-platform — ver abajo).
 - **Estrategia de compatibilidad (Paso 4):** Intenta ejecutar `./scripts/lumapse-audit-bin --all` (Rust, ~2ms). Si el binario no existe o es incompatible con el OS actual (ej. profesor en Windows/Linux), **cae automáticamente** a los scripts Python/Shell originales:

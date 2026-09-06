@@ -172,7 +172,7 @@ El Hito 04 concentra el mayor volumen de SP del proyecto porque absorbió tanto 
 | SP entregados | 36 |
 | Desvío | 0 respecto de las HU formalizadas |
 
-Hito 05 adelantó trabajo respecto del mes planificado y cerró un volumen amplio: calidad, distribución y seis HU controladas. La principal lección es separar el artefacto publicado de la evolución posterior de `main`: `v0.4.8` identifica la APK validada, mientras los commits posteriores todavía no constituyen otra release.
+Hito 05 adelantó trabajo respecto del mes planificado y cerró un volumen amplio: calidad, distribución y seis HU controladas. La principal lección es separar cada artefacto publicado de la evolución posterior de `main`: `v0.4.8` identifica el cierre de ese hito y la evolución posterior quedó congelada recién en la segunda beta `v0.5.0`, ya dentro de Hito 06.
 
 ---
 
@@ -180,8 +180,8 @@ Hito 05 adelantó trabajo respecto del mes planificado y cerró un volumen ampli
 
 | Factor de riesgo | Probabilidad | Impacto | Mitigación |
 |---|---|---|---|
-| Confundir `main` posterior con la APK `v0.4.8` | Mitigado | Alto | Changelog y líneas base separan tag, artefacto y el checkpoint inicial de 12 commits; el conteo posterior puede crecer |
-| Pendientes UX pequeños crecen de alcance | Media | Medio | `Mover a` y rendimiento se validan con severidad explícita; no habilitan features nuevas |
+| Confundir `main` con una APK publicada | Mitigado | Alto | Changelog y líneas base identifican por separado `v0.4.8`, `v0.5.0`, commits, artefactos y hashes |
+| Pendientes UX pequeños crecen de alcance | Baja/Media | Medio | `Mover a` quedó corregido en PR #9; el rendimiento se mantiene como medición acotada y no habilita features nuevas |
 | Documentación generada queda desfasada | Media | Alto | Congelar fuente Markdown y regenerar salidas solo en puntos de control |
 | Gráficos de base de datos requieren herramientas externas | Mitigado | Medio | Fuentes y exportaciones contrastadas con el schema e incorporadas el 2026-07-15; resta verificar legibilidad en la maquetación final |
 | Preparación de defensa desplaza la validación final | Media | Alto | Mantener WIP máximo de dos elementos activos y cerrar validación antes del corte/tag final |

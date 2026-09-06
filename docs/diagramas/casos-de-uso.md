@@ -1,18 +1,18 @@
 # Diagrama de Casos de Uso — Lumapse
 
 **Tipo:** Diagrama UML de Comportamiento  
-**Última actualización:** 2026-07-15<br>
+**Última actualización:** 2026-09-05<br>
 **Autor:** José David Sandoval
 
 ---
 
 ## Objetivo del diagrama
 
-Representar las funcionalidades principales del sistema desde la perspectiva del usuario, identificando los **actores** que interactúan con la aplicación y los **casos de uso** que Lumapse ofrece en el corte `v0.4.8`. Este diagrama muestra **qué hace el producto**, separando el alcance implementado de las funcionalidades post-release.
+Representar las funcionalidades principales del sistema desde la perspectiva del usuario, identificando los **actores** que interactúan con la aplicación y los **casos de uso** que Lumapse ofrece en el corte `v0.5.0`. Este diagrama muestra **qué hace el producto**, separando el alcance implementado de las funcionalidades futuras.
 
 > **Nota de evolución:** Desde el pivote a aplicación Android híbrida ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)), se eliminaron los casos de uso relacionados con PWA y Service Worker. En Hito 05 se incorporan borradores persistentes (`RF-005`), backup manual `.zip` (`RF-017`), importación de backups ZIP (`RF-018`), sección Acerca de (`RF-023`), fechas académicas discretas (`RF-027`) y editor enriquecido (`RF-028`). Compartir/exportar una nota individual e importar una nota `.md` quedan explícitamente como post-release.
 
-> **Frontera de versión:** Este documento afirma capacidades de la APK `v0.4.8`; sus enlaces apuntan a la documentación vigente en `main` y no convierten los cambios posteriores al tag en una release nueva.
+> **Frontera de versión:** Este documento afirma capacidades de la APK `v0.5.0`; sus enlaces apuntan a la documentación vigente reconciliada con el tag `5840755`.
 
 ---
 

@@ -1,7 +1,7 @@
 # Flujo de Desarrollo Android — Lumapse
 
 > **Documento:** Guía operativa de desarrollo, compilación y testing en dispositivos Android.  
-> **Última actualización:** 2026-07-15 (`0.4.8`, despliegue seguro con conservación de datos)
+> **Última actualización:** 2026-09-05 (`0.5.0`, versionado verificado y despliegue seguro con conservación de datos)
 > **Autor:** José David Sandoval
 
 ---
@@ -366,7 +366,7 @@ scrcpy --turn-screen-off -K
 | APK debug | `android/app/build/outputs/apk/debug/app-debug.apk` | APK para testing (no se commitea) |
 | Config de Capacitor | `capacitor.config.json` | AppId, webDir y plugins |
 
-La firma y publicación de un artefacto de release siguen un flujo separado, documentado en [`gestion/firma-apk-android.md`](./gestion/firma-apk-android.md). No debe confundirse un APK debug con la beta firmada publicada.
+La firma y publicación de un artefacto de release siguen un flujo separado, documentado en [`gestion/firma-apk-android.md`](./gestion/firma-apk-android.md). La beta firmada vigente es `v0.5.0`; no debe confundirse el asset publicado con un APK debug o con un build equivalente usado para preservar datos durante una validación incremental.
 
 ---
 

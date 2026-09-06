@@ -2,7 +2,7 @@
 
 **Fase Design Thinking:** Idear / Prototipar / Testear
 **Formulación inicial:** Abril 2026
-**Última revisión:** 2026-07-15
+**Última revisión:** 2026-09-05
 **Autor:** José David Sandoval
 
 > **Nota de evolución:** Estos RNF se definieron originalmente para una PWA con IndexedDB. Después del relevamiento, Lumapse pivotó a una aplicación Android híbrida empaquetada con Capacitor, con persistencia SQLite y distribución por APK ([ADR-005](../adr/ADR-005-pivote-app-nativa.md), [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md)). La revisión conserva los criterios originales, pero distingue cuáles siguen vigentes, cuáles requieren evidencia y cuáles quedaron obsoletos o no aplican al artefacto Android.
@@ -16,7 +16,7 @@
 - **Métrica:** Criterio de aceptación objetivo y verificable
 - **Verificación:** Cómo se valida que el requisito se cumple
 - **Estado actual:**
-  - `Verificado`: existe evidencia reproducible registrada y se identifica si corresponde a la APK `v0.4.8` o al estado posterior de `main`.
+  - `Verificado`: existe evidencia reproducible registrada y se identifica el tag, artefacto o estado de fuente al que corresponde.
   - `Evidencia parcial`: hay controles o pruebas relacionadas, pero no cubren por completo la métrica original.
   - `Pendiente`: la medición o prueba todavía debe ejecutarse y registrarse.
   - `Obsoleto`: el criterio dependía de la arquitectura PWA reemplazada por ADR-005.
@@ -24,7 +24,7 @@
 
 > Un build correcto, la ausencia de crashes o una auditoría estática no se consideran por sí solos evidencia suficiente para métricas de tiempo, FPS, contraste, touch targets o pruebas con usuarios.
 
-> El estado se revisa sobre el repositorio al 2026-07-15. La evidencia de `main` posterior al tag no se atribuye automáticamente a la APK publicada `v0.4.8`.
+> El estado se revisa sobre el tag `v0.5.0` (`5840755`) y la documentación de su publicación. La validación ejecutada sobre un build equivalente no se atribuye automáticamente al APK firmado de GitHub.
 
 ---
 
@@ -34,8 +34,8 @@
 |---|---|---|---|---|
 | RNF-001 | La aplicación debe cargar y ser interactiva en menos de **3 segundos** en una conexión 3G simulada. | TTI ≤ 3s bajo 3G | Obsoleto | La conexión dejó de condicionar el arranque: los assets se incluyen en el APK. El equivalente vigente es apertura offline, cubierto por RNF-009. |
 | RNF-002 | El tiempo de respuesta al crear, editar o eliminar una nota no debe superar **200ms**. | Latencia CRUD ≤ 200ms | Pendiente | No hay una medición temporal registrada. Medir sobre el APK y un conjunto de datos definido en Hito 06. |
-| RNF-003 | El bundle de producción, sin assets estáticos, no debe superar **500 KB** comprimido. | Bundle ≤ 500 KB gzip | Verificado | `npm run check:size` aplica presupuestos más estrictos mediante `scripts/bundle-budget.sh` y pasó en el gate documentado de `v0.4.8`. |
-| RNF-004 | La aplicación debe mantener rendimiento fluido al desplazar un listado con al menos **500 notas**. | FPS ≥ 55 durante scroll | Pendiente | La prueba de `v0.4.8` fue perceptual y con pocas notas; falta una medición reproducible con 500 o más notas. |
+| RNF-003 | El bundle de producción, sin assets estáticos, no debe superar **500 KB** comprimido. | Bundle ≤ 500 KB gzip | Verificado | `npm run check:size` aplica presupuestos más estrictos mediante `scripts/bundle-budget.sh` y pasó en el gate final de `v0.5.0`. |
+| RNF-004 | La aplicación debe mantener rendimiento fluido al desplazar un listado con al menos **500 notas**. | FPS ≥ 55 durante scroll | Pendiente | La importación funcional de una fixture de 500 notas fue aprobada antes de `v0.5.0`, pero falta una medición reproducible de FPS o fluidez sobre ese volumen. |
 
 ---
 
@@ -54,7 +54,7 @@
 
 | ID | Requisito original / vigente | Métrica | Estado actual | Evidencia / siguiente paso |
 |---|---|---|---|---|
-| RNF-009 | La aplicación instalada debe funcionar **100% offline**; en la formulación PWA se expresaba como “después de la primera visita”. | Flujos principales disponibles sin red | Evidencia parcial | VM-02 confirma que la APK `v0.4.8` abre en modo avión y el gate controla que no haya assets remotos; falta repetir y registrar todos los flujos principales sin red. Ver [checklist Android](../gestion/checklist-validacion-android.md). |
+| RNF-009 | La aplicación instalada debe funcionar **100% offline**; en la formulación PWA se expresaba como “después de la primera visita”. | Flujos principales disponibles sin red | Evidencia parcial | VM-02 confirma que la APK `v0.4.8` abre en modo avión y el gate de `v0.5.0` controla que no haya assets remotos; falta repetir todos los flujos principales sobre el asset firmado vigente. Ver [checklist Android](../gestion/checklist-validacion-android.md). |
 | RNF-010 | El trabajo en curso no debe perderse ante pausa, bloqueo, cambio temporal de app o cierre inesperado. | Pérdida de borrador = 0 en flujos principales | Evidencia parcial | `RF-005 / HU-005` cuenta con tests y prueba manual de salida a otra app/PDF y restauración del borrador. Falta cubrir de forma explícita bloqueo y terminación inesperada para satisfacer todo el RNF. |
 | RNF-011 | El Service Worker debe cachear todos los assets estáticos. | Cache hit rate = 100% | Obsoleto | Service Worker y `vite-plugin-pwa` fueron eliminados por ADR-005. La disponibilidad offline vigente se obtiene empaquetando assets dentro del APK y se controla mediante RNF-009. |
 
@@ -98,7 +98,7 @@
 |---|---|---|---|---|
 | RNF-023 | El código debe seguir una **estructura modular** con separación clara entre componentes, servicios y estilos. | Fronteras de módulo explícitas y responsabilidades acotadas | Verificado | La estructura por feature y la estrategia gradual están documentadas en ADR-007; servicios, store, UI y estilos mantienen carpetas diferenciadas. |
 | RNF-024 | Los tests unitarios deben cubrir al menos el **70%** de la lógica de negocio de servicios. | Coverage de servicios ≥ 70% | Verificado | `npm run test:coverage` incluye `src/**/*.{js,ts}`. La medición del 2026-08-21 sobre la fuente actual registró 92,43% de statements (1538/1664) en los 31 archivos de `src/services/**`; debe repetirse en el commit candidato para la matriz final. |
-| RNF-025 | El proyecto debe construirse sin errores con `npm run build`. | Exit code = 0 | Verificado | Build y gate local pasaron para el corte `v0.4.8`; el comando también forma parte de CI. |
+| RNF-025 | El proyecto debe construirse sin errores con `npm run build`. | Exit code = 0 | Verificado | Build, gate local y CI pasaron para el corte `v0.5.0`; el comando forma parte del workflow remoto. |
 | RNF-026 | Toda decisión arquitectónica significativa debe documentarse mediante ADR. | ADR trazable por decisión significativa | Evidencia parcial | Existe un conjunto trazable de ADRs y la auditoría valida sus referencias, pero el cierre final debe revisar que no haya decisiones significativas sin ADR y distinguir los ADRs retrospectivos. |
 
 ---
@@ -131,7 +131,7 @@
 
 ## Evolución del plan de verificación
 
-La planificación inicial asignaba grupos de RNF a los Hitos 03, 04 y 05. El pivote arquitectónico volvió inválidas varias verificaciones basadas en PWA, hosting y Service Worker, y la beta `v0.4.8` aportó evidencia técnica sin completar todas las métricas de usuario, rendimiento y accesibilidad. Por eso el estado de las tablas anteriores reemplaza cualquier inferencia basada únicamente en el hito originalmente asignado.
+La planificación inicial asignaba grupos de RNF a los Hitos 03, 04 y 05. El pivote arquitectónico volvió inválidas varias verificaciones basadas en PWA, hosting y Service Worker. Las betas `v0.4.8` y `v0.5.0` aportan evidencia técnica sin completar todas las métricas de usuario, rendimiento y accesibilidad; por eso el estado de las tablas anteriores reemplaza cualquier inferencia basada únicamente en el hito originalmente asignado.
 
 ### Cierre técnico de Hito 05
 
