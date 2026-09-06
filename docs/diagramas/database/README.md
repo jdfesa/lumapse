@@ -4,14 +4,14 @@ Esta carpeta documenta el diseño de datos en tres niveles de abstracción. Las 
 
 - **Autor:** José David Sandoval
 - **Motor:** SQLite mediante `@capacitor-community/sqlite`
-- **Versión de referencia:** `0.4.8`
-- **Auditoría documental:** 2026-07-15
+- **Versión de referencia:** `0.5.0`
+- **Auditoría documental:** 2026-09-05
 
 ## Contenido y autoridad
 
 | Archivo | Nivel | Rol | Estado al corte |
 |---|---|---|---|
-| [`01-modelo-conceptual-der-chen.dot`](./01-modelo-conceptual-der-chen.dot) | Conceptual | Fuente Graphviz | Sincronizada con `v0.4.8`; fuente de la exportación vigente |
+| [`01-modelo-conceptual-der-chen.dot`](./01-modelo-conceptual-der-chen.dot) | Conceptual | Fuente Graphviz | Revalidada con `v0.5.0`; fuente de la exportación vigente |
 | [`01-modelo-conceptual-der-chen.png`](./01-modelo-conceptual-der-chen.png) | Conceptual | Imagen derivada | Reemplazada y revisada el 2026-07-15 |
 | [`02-normalizacion.md`](./02-normalizacion.md) | Lógico | Justificación de 1FN, 2FN y 3FN | Referencia textual vigente |
 | [`03-modelo-logico-relacional.dbml`](./03-modelo-logico-relacional.dbml) | Lógico | Fuente DBML | Sincronizada con el esquema ejecutable; fuente de la exportación vigente |
@@ -23,7 +23,7 @@ La tabla `metadata` aparece en el DBML y en el modelo físico porque forma parte
 
 ## Diferencias resueltas en las fuentes
 
-La revisión del 2026-07-15 sincronizó las fuentes editables con el schema de `v0.4.8`. El diff técnico entre el tag y el checkpoint previo a esta revisión confirmó que los cambios posteriores no modificaron `connection.js`:
+La revisión del 2026-07-15 sincronizó las fuentes editables con el schema de `v0.4.8`. La revalidación del 2026-09-05 confirmó que `v0.5.0` conserva el mismo esquema efectivo: AUD-005 cambió propiedad de conexión, migraciones y recuperación, pero no tablas, columnas ni relaciones. Por eso las fuentes y los PNG siguen representando el modelo vigente:
 
 - el DER conceptual ya incluye `EVENTO ACADÉMICO` y su asociación opcional con `MATERIA / SECCIÓN`;
 - `MATERIA` y `SECCIÓN` se representan como una única entidad `Subject` autorreferenciada;
@@ -65,7 +65,7 @@ Modelo lógico (DBML → dbdiagram.io)
 Modelo físico (DDL y migraciones en connection.js)
 ```
 
-La coherencia entre DBML, DDL documentado y esquema ejecutable se valida con las herramientas del repositorio antes de exportar las imágenes. Para este corte, `npm run check:dbml` y `npm run check:schema` finalizaron correctamente.
+La coherencia entre DBML, DDL documentado y esquema ejecutable se valida con las herramientas del repositorio antes de exportar las imágenes. Para `v0.5.0`, `npm run check:dbml`, `npm run check:schema` y el smoke test del DDL finalizaron correctamente dentro de los gates documentados.
 
 ## Procedimiento de actualización externa
 
@@ -89,4 +89,4 @@ La coherencia entre DBML, DDL documentado y esquema ejecutable se valida con las
 - Los verificadores de esquema del repositorio finalizan correctamente.
 - Ambos PNG tienen fecha de exportación posterior al último cambio de sus fuentes.
 - Las imágenes representan visualmente el alcance de las fuentes; la legibilidad al tamaño final de informe y diapositivas se valida durante la maquetación.
-- El informe cita la versión `0.4.8` o el corte posterior que finalmente se presente.
+- El informe cita la versión `0.5.0` y conserva `0.4.8` únicamente cuando describe la primera beta o evidencia histórica.

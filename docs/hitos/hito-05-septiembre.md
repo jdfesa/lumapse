@@ -20,7 +20,7 @@ Hito 05 se cierra con su objetivo principal cumplido: Lumapse dispone de un qual
 
 El hito también incorporó mejoras funcionales acotadas que aumentaron la utilidad de la beta sin abandonar la arquitectura offline-first: borradores persistentes (`RF-005`), backup manual externo (`RF-017`), importación de backup ZIP (`RF-018`), sección Acerca de (`RF-023`), fechas académicas discretas (`RF-027`) y editor enriquecido (`RF-028`).
 
-`v0.4.8` sigue siendo una beta/candidata operativa, no la versión estable final. En el checkpoint previo a la reconciliación documental se contaban 12 commits posteriores al tag en `main`; no forman parte de la APK publicada, el conteo puede crecer y no se promueven automáticamente a `0.4.9`.
+En el cierre de Hito 05, `v0.4.8` quedó como beta/candidata operativa, no como versión estable final. El checkpoint previo a la reconciliación documental contaba 12 commits posteriores al tag en `main`; no formaban parte de esa APK ni se promovieron automáticamente a `0.4.9`. Hito 06 congeló posteriormente esa evolución en `v0.5.0`.
 
 ## Resultado Final
 

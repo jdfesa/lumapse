@@ -1,10 +1,47 @@
 # Checklist de Validacion Manual Android — Lumapse
 
-**Hito:** 05 — Testing, Calidad y Distribucion  
-**Objetivo:** registrar una prueba manual reproducible en dispositivo Android real antes de distribuir el APK.  
-**Estado:** validacion inicial aprobada en dispositivo Android real; apto con observaciones menores.
+**Hito:** 06 — Entrega Final<br>
+**Objetivo:** registrar evidencia reproducible de cada APK y distinguir la verificación del asset firmado de las pruebas sobre builds equivalentes.<br>
+**Estado:** `v0.5.0` publicada; gate y validación incremental aprobados, instalación manual del asset firmado pendiente.
 
 ---
+
+## Corte vigente — v0.5.0
+
+### Identificación y publicación
+
+| Campo | Valor |
+|---|---|
+| Fecha del corte | 2026-09-05 |
+| Versión Lumapse | `0.5.0` (`versionCode 500`) |
+| Tag / commit | `v0.5.0` / `5840755` |
+| APK publicada | `lumapse-v0.5.0.apk` |
+| Tamaño publicado | 25.762.498 bytes |
+| SHA-256 | `d48338e04021a6096fcaeaced5fde411911d403c9ea95407891d2b034515a884` |
+| Firma | APK Signature Scheme v2; mismo certificado de producción que `v0.4.8` |
+| Release | [`Lumapse v0.5.0`](https://github.com/jdfesa/lumapse/releases/tag/v0.5.0) — pre-release |
+
+### Evidencia aprobada antes de publicar
+
+- [x] `scripts/release-helper.py --check` confirmó `package.json`, `package-lock.json`, `versionName 0.5.0` y `versionCode 500`.
+- [x] `VITEST_MAX_WORKERS=1 npm run verify` aprobó 67 archivos y 1065 tests.
+- [x] El workflow `CI — Quality Gate` de PR #10 y GitGuardian finalizaron correctamente.
+- [x] La APK firmada se verificó con `apksigner`; esquema v2 y certificado esperados.
+- [x] El SHA-256 local coincide con el digest que GitHub publica para el único asset.
+- [x] Un build equivalente `0.5.0/500` se instaló sobre la versión previa en Samsung `SM_G965F`, preservó SQLite y fue aprobado manualmente.
+- [x] La corrección táctil de PR #9 confirmó en el mismo dispositivo que `Mover a` abre con un toque normal y que los menús de materias/secciones se comportan correctamente.
+
+### Límite de la evidencia Android
+
+El dispositivo usado para la validación incremental tenía una compilación debug instalada. Para preservar los datos, el build equivalente `0.5.0/500` se firmó con la clave debug; no fue el asset firmado con la clave de producción que se adjuntó a GitHub. Por lo tanto:
+
+- [ ] instalar específicamente `lumapse-v0.5.0.apk` en un dispositivo compatible con su certificado de producción;
+- [ ] repetir al menos instalación/apertura offline, creación/edición/persistencia, materias/secciones, papelera y backup/importación;
+- [ ] registrar dispositivo, versión Android, método de instalación y resultado sin atribuir al asset pruebas ejecutadas sobre otro binario.
+
+---
+
+## Evidencia histórica — v0.4.8
 
 ## Datos de la Prueba
 

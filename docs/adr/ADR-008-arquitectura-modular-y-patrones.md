@@ -1,6 +1,6 @@
 # ADR-008: Arquitectura Modular por Capas y Patrones de Coordinación
 
-> **Frontera de versión:** Esta clasificación se auditó sobre `main` el 2026-07-15. Describe la arquitectura que sostiene el alcance funcional de `v0.4.8`, pero cita también nombres `.ts` resultantes de refactors posteriores al tag que todavía no pertenecen a una release publicada.
+> **Frontera de versión:** Esta clasificación fue reconciliada con el tag `v0.5.0` (`5840755`) el 2026-09-05. Los nombres `.ts`, la coordinación SQLite de ADR-009 y los límites de error/arranque citados pertenecen a la segunda beta publicada.
 
 **Fecha:** 2026-07-15  
 **Estado:** Aceptado  

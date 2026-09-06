@@ -4,11 +4,11 @@
 
 ## Hito actual: 06 — Entrega Final
 
-**Estado:** activo; AUD-001 a AUD-005 y AUD-007 quedaron cerrados mediante PR #2, #3, #5, #6 y #7. AUD-006 cuenta con validación Mac/Android y autorización de integración en PR #8.
+**Estado:** activo; AUD-001 a AUD-007 quedaron cerrados e integrados mediante PR #2, #3 y #5 a #8. La pre-release `v0.5.0` incorpora esos cierres, las correcciones táctiles de PR #9 y el tooling de release de PR #10.
 
-**Corte operativo vigente:** beta/candidata [`v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8), publicada y validada inicialmente en Android real.
+**Corte operativo vigente:** segunda beta [`v0.5.0`](https://github.com/jdfesa/lumapse/releases/tag/v0.5.0), publicada con APK firmada y validación automática/Android trazable.
 
-**Versión:** `v0.4.8`; el trabajo posterior al tag —incluidos AUD-001 a AUD-005 y AUD-007— permanece no publicado y no existe una release `0.4.9`. La versión del próximo artefacto solo se decidirá después de cerrar sus bloqueos y validaciones.
+**Versión:** `v0.5.0` (`versionCode 500`), tag anotado sobre `5840755`. La beta anterior `v0.4.8` permanece como evidencia inmutable; cualquier artefacto posterior deberá usar una versión nueva.
 
 **Objetivo:** cerrar documentación, gráficos de base de datos, validación final y materiales de presentación sin ampliar el producto.
 
@@ -17,9 +17,9 @@
 | Orden | Frente | Criterio de cierre |
 |---|---|---|
 | 1 | Congelamiento editorial y visual | Evidencia y bibliografía consolidadas; gráficos DB legibles en PDF y diapositivas |
-| 2 | Validación final | Quality gate, checklist Android y matriz RNF cerrados sobre el mismo artefacto versionado, con observaciones clasificadas |
+| 2 | Validación final | Consolidar el gate de `v0.5.0`, completar la checklist Android pendiente y cerrar la matriz RNF con observaciones clasificadas |
 | 3 | Defensa y presentación | Guion, cheatsheet, demo y material visual preparados y ensayados |
-| 4 | Línea base final | Decisión explícita entre beta patch y entrega final; versión web/Android, firma, hash y tag inequívocos |
+| 4 | Línea base final | Decidir si `v0.5.0` será la referencia de defensa o si corresponde un corte estable posterior; versión, firma, hash y tag siempre inequívocos |
 
 ## Checklist de trabajo
 
@@ -36,10 +36,10 @@
 - [x] Resolver AUD-004 en un PR separado: DOMPurify y siete dependencias de tooling parcheadas, auditorías 0/0, 955 tests, build, quality gate y Android 0.4.8/408 aprobados (2026-09-02).
 - [x] Resolver AUD-007 en PR #6: contrato de errores de mutaciones unificado, límites UI adaptados, 989 tests, quality gate y prueba manual Android aprobados (2026-09-03).
 - [x] Cerrar AUD-005 mediante PR #7: SHA de código validado `0832a75`, 1035 tests, gate y funcionamiento general Android aprobados. Ver [evidencia](docs/gestion/analisis-aud-005-coordinacion-sqlite-2026-09-04.md).
-- [x] Validar AUD-006: 1057 tests locales con un worker y controles individuales aprobados; aprobación Android y autorización de integración recibidas. Checks y resultado de merge trazados en [PR #8](https://github.com/jdfesa/lumapse/pull/8). Ver [evidencia](docs/gestion/analisis-aud-006-ownership-solicitudes-async-2026-09-05.md).
-- [ ] Ejecutar el gate final sobre el commit y artefacto candidatos y guardar la evidencia; el gate acumulativo de AUD-003 y los pre-push documentales no sustituyen este cierre.
-- [ ] Repetir la validación Android sobre el artefacto versionado con un conjunto de datos representativo; el checkpoint de AUD-003 ya cubrió `STORE`, `DEFLATE`, datos inválidos y una fixture de 500 notas.
-- [ ] Verificar específicamente la interacción `Mover a` y clasificar su fricción como corregida, aceptada o bloqueante.
+- [x] Cerrar AUD-006 en [PR #8](https://github.com/jdfesa/lumapse/pull/8): 1057 tests locales con un worker, controles individuales, aprobación Android, CI y merge trazados. Ver [evidencia](docs/gestion/analisis-aud-006-ownership-solicitudes-async-2026-09-05.md).
+- [x] Ejecutar el gate final de `v0.5.0`: 67 archivos y 1065 tests aprobados con un worker; CI de PR #10 en verde y versiones web/Android verificadas como `0.5.0/500`.
+- [ ] Completar una instalación manual del APK firmado `lumapse-v0.5.0.apk` cuando el dispositivo lo permita. La validación existente cubre un build equivalente `0.5.0/500` instalado sobre datos conservados, no debe confundirse con la instalación del asset firmado.
+- [x] Corregir y validar la interacción `Mover a` en PR #9: destinos con toque normal, acciones de materia/sección visibles y cierre consistente de menús contextuales.
 - [ ] Medir latencia CRUD y rendimiento percibido con al menos 500 notas y registrar el resultado; importar correctamente esa cantidad no constituye por sí solo una medición de `RNF-002`/`RNF-004`.
 - [ ] Ejecutar pruebas de uso con estudiantes y verificar profundidad de navegación (`RNF-005`, `RNF-006`).
 - [ ] Completar la auditoría manual de tipografía, touch targets, contraste y navegación accesible (`RNF-007`, `RNF-008`, `RNF-019` a `RNF-022`).
@@ -49,9 +49,9 @@
 - [ ] Emitir la matriz RNF final con requisito, método, comando, dispositivo, fecha, artefacto, resultado y evidencia.
 - [ ] Preparar presentación, guion de demo, respuestas de defensa y checklist de contingencia.
 - [ ] Medir el factor de ajuste real y redactar recomendaciones para futuros equipos.
-- [ ] Corregir o reforzar `scripts/release-helper.py` para sincronizar y verificar `versionName`/`versionCode` Android con la versión declarada.
-- [ ] Sincronizar README, CHANGELOG, informe de Hito 06, líneas base, velocidad y cheatsheet en el corte final.
-- [ ] Decidir si corresponde publicar una beta patch `v0.4.9` o reservar el siguiente artefacto para la entrega final de Hito 06.
+- [x] Reforzar `scripts/release-helper.py` para sincronizar y verificar `versionName`/`versionCode` Android con la versión declarada; aplicado en PR #10.
+- [x] Sincronizar README, CHANGELOG, Hito 06, líneas base, velocidad, cheatsheet e informe académico con la publicación de `v0.5.0`.
+- [x] Publicar la segunda beta como `v0.5.0`; la decisión pendiente ahora se limita a conservarla como referencia de defensa o producir una versión estable posterior.
 
 ## Criterios de salida de Hito 06
 
@@ -65,7 +65,7 @@
 
 ## Observaciones heredadas no bloqueantes
 
-- `Mover a`: en la validación inicial del S20 FE algunas interacciones parecieron requerir pulsación prolongada.
+- `Mover a`: la fricción observada en la primera beta fue corregida y validada en PR #9; queda como antecedente resuelto, no como bloqueo abierto.
 - Rendimiento: la importación funcional de 500 notas fue aprobada, pero todavía faltan mediciones de latencia CRUD y rendimiento percibido con ese volumen.
 
 Estas observaciones forman parte de la validación final; las reglas de alcance que las gobiernan están centralizadas en [`BACKLOG.md`](BACKLOG.md#política-de-alcance--hito-06).

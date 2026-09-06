@@ -236,10 +236,11 @@ Garantizó la calidad del código y preparó la primera distribución controlada
 
 Cerrar el proyecto con documentación coherente, evidencia final y presentación académica, sin ampliar el producto.
 
+- Segunda beta `v0.5.0` publicada con AUD-001 a AUD-007, mejoras táctiles y versionado Android `0.5.0/500`
 - Revisión editorial y congelamiento de la documentación técnica y académica
 - Gráficos de base de datos regenerados y verificados contra el schema real; resta validar su maquetación en PDF y diapositivas
-- Quality gate y validación Android final con un conjunto de datos definido y reproducible
-- Decisión explícita sobre artefacto, versión y línea base final; no se crea `0.4.9` de forma anticipada
+- Quality gate del corte aprobado con 67 archivos y 1065 tests; resta completar la matriz RNF y la instalación manual del asset firmado cuando el dispositivo lo permita
+- Decisión explícita sobre la línea base académica final: conservar `v0.5.0` como referencia de defensa o publicar un corte estable posterior
 - Preparación de presentación, demo y respuestas para el tribunal evaluador
 
 > **Nota sobre la planificación:** Los meses asociados a cada hito constituyen estimaciones formuladas al inicio del proyecto. El desarrollo es iterativo: los plazos pueden ajustarse al profundizar la complejidad o aparecer hallazgos que cambian el alcance. El relevamiento por conveniencia aportó evidencia para priorizar móvil, offline y organización por materias; las decisiones de plataforma se justifican por separado en los ADR técnicos. El avance real se registra en los [informes de hito](./docs/hitos/), el [Changelog](./CHANGELOG.md) y el historial de commits.

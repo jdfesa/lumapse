@@ -298,7 +298,7 @@ En su lugar:
 - La guía Markdown se fusiona conceptualmente con una futura sección `Acerca de/Ayuda` si el feedback la justifica.
 - El cierre de Hito 04 se considera coherente con la propuesta de producto, no una omisión funcional.
 
-> **Resultado al 2026-07-15:** La beta `v0.4.8` ya fue publicada y validada técnicamente en Android. La prueba directa con estudiantes sigue pendiente para Hito 06, por lo que `RF-006`, `RF-022` y `RF-024` permanecen postergados.
+> **Resultado al 2026-09-05:** La segunda beta `v0.5.0` ya fue publicada y validada técnicamente mediante gate, CI y pruebas Android incrementales. La prueba directa con estudiantes sigue pendiente para Hito 06, por lo que `RF-006`, `RF-022` y `RF-024` permanecen postergados.
 
 ---
 

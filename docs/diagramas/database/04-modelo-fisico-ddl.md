@@ -2,7 +2,7 @@
 
 **Motor:** SQLite (vía `@capacitor-community/sqlite`)  
 **Implementación:** [`src/services/sqlite/connection.js`](../../../src/services/sqlite/connection.js)  
-**Última revisión:** 2026-07-15 (`0.4.8`)
+**Última revisión:** 2026-09-05 (`0.5.0`; esquema efectivo sin cambios respecto de `0.4.8`)
 
 ---
 

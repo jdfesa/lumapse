@@ -59,4 +59,4 @@ La dependencia `idb` y el antiguo servicio de persistencia fueron retirados; el 
 
 ## Validación
 
-La arquitectura está operativa en `0.4.8`. El esquema ejecutable en `connection.js` es la fuente de verdad final; su correspondencia con DBML y DDL documentado se valida mediante los scripts del repositorio. La estructura por capas y la clasificación prudente de los módulos de acceso a datos se detallan en [ADR-008](ADR-008-arquitectura-modular-y-patrones.md).
+La arquitectura está operativa en `0.5.0`. El esquema ejecutable en `connection.js` es la fuente de verdad final; su correspondencia con DBML y DDL documentado se valida mediante los scripts del repositorio. La estructura por capas y la clasificación prudente de los módulos de acceso a datos se detallan en [ADR-008](ADR-008-arquitectura-modular-y-patrones.md); la propiedad de la conexión, las capacidades transaccionales y la recuperación de arranque se precisan en [ADR-009](ADR-009-propiedad-transaccional-sqlite.md).

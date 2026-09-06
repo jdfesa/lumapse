@@ -218,7 +218,7 @@ GitHub Actions activa el workflow "CI — Quality Gate"
 
 ### 5.8.5. Resultado actual
 
-Al corte documental actual, `npm run verify` completa lint, typecheck, 775 tests unitarios distribuidos en 53 archivos, build de producción, smoke test de base de datos, presupuesto de bundle, trazabilidad, links internos, schema SQLite, jerarquía de materias, accesibilidad estática y ausencia de diálogos nativos fuera del seeder. El workflow remoto verifica además el DBML mediante un paso explícito. Esta evidencia automatizada es amplia, pero no reemplaza las pruebas manuales en Android ni implica que ambos recorridos cubran exactamente los mismos pasos.
+En el corte `v0.5.0`, `VITEST_MAX_WORKERS=1 npm run verify` completó lint, typecheck, 1065 tests unitarios distribuidos en 67 archivos, build de producción, verificación de versiones, smoke test de base de datos, presupuesto de bundle, trazabilidad, links internos, schema SQLite, jerarquía de materias, accesibilidad estática y ausencia de diálogos nativos fuera del seeder. El workflow remoto de PR #10 aprobó su subconjunto portable y verificó además el DBML mediante un paso explícito. Esta evidencia automatizada es amplia, pero no reemplaza las pruebas manuales en Android ni implica que ambos recorridos cubran exactamente los mismos pasos.
 
 ### 5.8.6. Justificación de la práctica
 

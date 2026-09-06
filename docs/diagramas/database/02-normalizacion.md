@@ -4,7 +4,7 @@
 - **Nivel:** Académico — PP3, Tecnicatura en Análisis de Sistemas y Desarrollo de Software
 - **Entrada vigente:** esquema SQLite y modelo lógico DBML
 - **Salida gráfica:** fuente lógica e imagen exportada, verificadas e incorporadas el 2026-07-15
-- **Última revisión:** 2026-07-15 (`0.4.8`)
+- **Última revisión:** 2026-09-05 (`0.5.0`; relaciones persistidas sin cambios)
 
 ## Objetivo y alcance
 

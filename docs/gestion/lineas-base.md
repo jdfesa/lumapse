@@ -3,7 +3,7 @@
 > **Proyecto:** Lumapse  
 > **Referencia:** Gómez, J. (2014), Sección 6. Guía de Estudio PP3 (Ing. Mauricio Parada, 2026).  
 > **Fecha de creación:** 2026-05-15  
-> **Última actualización:** 2026-07-15 — cierre documental de Hito 05 y activación de Hito 06.
+> **Última actualización:** 2026-09-05 — publicación de la segunda beta `v0.5.0`.
 > **Autor:** José David Sandoval
 
 ---
@@ -18,9 +18,10 @@ gestionar los cambios (Gómez, 2014, §6.1).
 
 En Git, las líneas base se implementan preferentemente mediante **tags anotados**: punteros
 permanentes a un commit específico que marca un hito del proyecto. A diferencia de una rama,
-un tag no avanza: siempre apunta al mismo commit. La release `v0.4.8` conserva una diferencia
-de metadata entre el tag local anotado y el tag remoto lightweight, pero ambos resuelven al
-mismo commit `a808de7`; el artefacto se identifica además por su SHA-256.
+un tag no avanza: siempre apunta al mismo commit. La release histórica `v0.4.8` conserva una
+diferencia de metadata entre el tag local anotado y el tag remoto lightweight, pero ambos
+resuelven al mismo commit `a808de7`. La segunda beta usa el tag anotado `v0.5.0` sobre `5840755`.
+Cada artefacto se identifica además por su SHA-256.
 
 ---
 
@@ -188,6 +189,41 @@ shasum -a 256 releases/v0.4.8/lumapse-v0.4.8.apk
 
 ---
 
+### LB-PROD-v0.5.0 — Segunda Beta Operativa
+
+| Campo | Detalle |
+|---|---|
+| **Tag Git de release** | `v0.5.0` (anotado) |
+| **Commit** | `5840755` |
+| **Fecha del commit/tag** | 2026-09-05 |
+| **Hito** | 06 — Entrega Final |
+| **Release** | [`Lumapse v0.5.0`](https://github.com/jdfesa/lumapse/releases/tag/v0.5.0) |
+| **Tipo** | GitHub pre-release / segunda beta |
+| **Artefacto** | `lumapse-v0.5.0.apk` (25.762.498 bytes) |
+| **SHA-256 APK** | `d48338e04021a6096fcaeaced5fde411911d403c9ea95407891d2b034515a884` |
+| **Versión Android** | `versionName 0.5.0` / `versionCode 500` |
+| **Firma** | Mismo certificado de producción que `v0.4.8`; APK Signature Scheme v2 verificado |
+| **Descripción** | Segunda beta firmada con cierres AUD-001 a AUD-007, endurecimiento de seguridad e integridad, coordinación SQLite, manejo de errores y mejoras táctiles de organización. |
+
+**Evidencia de cierre del corte:**
+
+- `VITEST_MAX_WORKERS=1 npm run verify`: 67 archivos y 1065 tests aprobados.
+- CI `CI — Quality Gate` y control GitGuardian aprobados en PR #10.
+- Versiones web y Android verificadas como `0.5.0/500` antes del tag.
+- Asset firmado verificado localmente; el digest publicado por GitHub coincide con el SHA-256 registrado.
+- Build equivalente `0.5.0/500` aprobado manualmente en Samsung `SM_G965F` con los datos existentes preservados.
+
+> La validación manual conservando datos se ejecutó con un build equivalente firmado con la clave debug del dispositivo de prueba. No se atribuye esa instalación al APK firmado de GitHub; la instalación específica del asset publicado permanece como evidencia pendiente en la checklist Android.
+
+**Comandos de verificación:**
+
+```bash
+git show v0.5.0 --no-patch
+shasum -a 256 releases/v0.5.0/lumapse-v0.5.0.apk
+```
+
+---
+
 ## 4. Gestión de cambios respecto de la línea base
 
 Una vez establecida una LB, todo cambio en el alcance debe pasar por un proceso formal
@@ -208,6 +244,7 @@ Una vez establecida una LB, todo cambio en el alcance debe pasar por un proceso 
 | 2026-06-07 | Reclasificación de `RF-005 / HU-005` como borradores persistentes del editor | Medio — reemplaza auto-guardado final silencioso por protección local del trabajo en curso, sin crear ni actualizar notas finales sin confirmación | LB-REQ-v1.0 (criterio funcional refinado y trazabilidad actualizada) | [CHANGELOG](../../CHANGELOG.md), [Requisitos funcionales](../producto/requisitos-funcionales.md) |
 | 2026-07-01 | Publicación de beta controlada `v0.4.8` | Alto — congela un artefacto APK firmado y validado para distribución controlada | LB-PROD-v0.4.8 | [Release v0.4.8](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8), [Checklist Android](checklist-validacion-android.md) |
 | 2026-07-15 | Cierre documental de Hito 05 y activación de Hito 06 | Medio — conserva `v0.4.8` como beta operativa y separa los 12 commits posteriores del futuro corte final | LB-PROD-v0.4.8 | [Hito 05](../hitos/hito-05-septiembre.md), [Hito 06](../hitos/hito-06-octubre.md) |
+| 2026-09-05 | Publicación de la segunda beta `v0.5.0` | Alto — congela los cierres AUD-001 a AUD-007, las mejoras táctiles y el tooling de release en un nuevo APK firmado | LB-PROD-v0.5.0 | [Release v0.5.0](https://github.com/jdfesa/lumapse/releases/tag/v0.5.0), [firma](firma-apk-android.md), [Hito 06](../hitos/hito-06-octubre.md) |
 
 > **Nota:** El pivote a aplicación Android híbrida fue el cambio más significativo respecto de la LB de
 > requerimientos original. El relevamiento con 120 respuestas válidas respaldó las
@@ -220,9 +257,9 @@ Una vez establecida una LB, todo cambio en el alcance debe pasar por un proceso 
 
 | Tag | Hito | Momento esperado | Contenido |
 |---|---|---|---|
-| `LB-PROD-v1.0.0` o tag final equivalente | 06 — Entrega Final | Al completar validación y documentación | Artefacto final decidido, documentación congelada, diagramas revisados y materiales de defensa |
+| `LB-PROD-v1.0.0` o tag estable equivalente | 06 — Entrega Final | Solo si el cierre académico exige un artefacto posterior a `v0.5.0` | Documentación congelada, matriz RNF, diagramas revisados y materiales de defensa |
 
-No se planifica una línea base `0.4.9` en esta transición. El nombre y número del corte final se decidirán con evidencia completa, sin modificar ni reutilizar `v0.4.8`.
+No se creó una línea base `0.4.9`: la evolución posterior a `v0.4.8` se publicó como `v0.5.0`. El nombre y número de un eventual corte estable se decidirán con evidencia completa, sin modificar ni reutilizar ninguna de las betas publicadas.
 
 ---
 

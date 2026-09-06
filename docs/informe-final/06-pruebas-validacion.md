@@ -18,7 +18,7 @@ El enfoque se organiza en capas:
 
 El comando principal de verificación local es `npm run verify`, que encadena el quality gate y auditorías adicionales. En CI, GitHub Actions ejecuta el workflow `CI — Quality Gate` ante cada push o pull request sobre `main`.
 
-Para la beta controlada `v0.4.8`, el gate final se ejecutó sin fallos bloqueantes antes de publicar el APK firmado en GitHub Releases. La evidencia operativa queda registrada en `CHANGELOG.md`, `TODO`, `docs/hitos/hito-05-septiembre.md` y `docs/gestion/checklist-validacion-android.md`.
+Para la segunda beta `v0.5.0`, el gate final se ejecutó con `VITEST_MAX_WORKERS=1 npm run verify`: 67 archivos y 1065 tests pasaron antes de publicar el APK firmado. El CI de PR #10 y GitGuardian también finalizaron correctamente. La evidencia operativa queda registrada en `CHANGELOG.md`, `TODO`, `docs/hitos/hito-06-octubre.md`, `docs/gestion/lineas-base.md` y `docs/gestion/checklist-validacion-android.md`.
 
 ## 6.2. Pruebas Unitarias
 
@@ -36,9 +36,9 @@ Los módulos actualmente cubiertos incluyen:
 
 La suite unitaria permite sostener cambios internos sin depender exclusivamente de pruebas manuales. Esto fue especialmente importante durante la migración a SQLite, la implementación de papelera y la consolidación de materias/secciones, porque esas áreas afectan persistencia, visibilidad y recuperación de datos.
 
-El corte `v0.4.8` registró 773 tests unitarios. Sobre la fuente documental actual, la suite local registra 775 tests distribuidos en 53 archivos y pasando dentro del flujo `npm run verify`; los casos adicionales cubren el fallback web del adaptador nativo de red y la conversión de vistas tipadas en el adaptador de share migrado a TypeScript.
+El corte `v0.4.8` registró 773 tests unitarios. El crecimiento posterior cubrió integridad y concurrencia del guardado, seguridad de importación, contratos de errores, coordinación SQLite, arranque recuperable, ownership de solicitudes asíncronas y navegación táctil. En `v0.5.0`, la suite registra 1065 tests distribuidos en 67 archivos y pasa dentro del flujo `npm run verify` con un worker.
 
-El repositorio dispone de `npm run test:coverage` con alcance `src/**/*.{js,ts}` y reportes de texto, HTML y resumen JSON. La medición del 2026-08-21 sobre la fuente actual registró 93,21% de statements en el scope configurado y 92,43% (1538/1664) al agregar los 31 archivos de `src/services/**`; por lo tanto, `RNF-024` supera el mínimo de 70%. La configuración todavía no fija umbrales bloqueantes: la línea base debe repetirse sobre el commit candidato antes de decidir si conviene convertirla en gate.
+El repositorio dispone de `npm run test:coverage` con alcance `src/**/*.{js,ts}` y reportes de texto, HTML y resumen JSON. La última línea base formal registrada, del 2026-08-21, midió 93,21% de statements en el scope configurado y 92,43% (1538/1664) en los 31 archivos de `src/services/**`; por lo tanto, `RNF-024` superó el mínimo de 70% en ese checkpoint. La configuración todavía no fija umbrales bloqueantes y la cobertura no se volvió a declarar como métrica del tag `v0.5.0`: debe repetirse antes de una afirmación final.
 
 ## 6.3. Pruebas de Integración y Funcionamiento Offline
 
@@ -57,7 +57,9 @@ Las pruebas manuales en dispositivo siguen siendo necesarias para validar escena
 
 La beta `v0.4.8` fue validada inicialmente el 2026-07-01 en un Samsung Galaxy S20 FE (`SM-G780G`) con Android 13. Esa ejecución cubrió instalación limpia, apertura offline, creación/edición/persistencia de notas, materias y secciones, búsqueda, pin/archivo, estados académicos, fechas discretas, papelera, tema, rotación/responsivo y rendimiento percibido (VM-01 a VM-14). El resultado fue apto para beta controlada, con observaciones UX menores.
 
-Exportar e importar ZIP cuenta con una ejecución Android separada del 2026-06-18 sobre un Samsung `SM-G965F`, Android 10 y un build previo de la rama `feature/importar-backup-zip` (`a1be7c9`, `versionName=1.0`). Esa evidencia confirma el flujo en un corte anterior, pero no se atribuye al S20 FE ni al APK firmado `v0.4.8`. Hito 06 exige repetirlo dentro de la checklist del artefacto final elegido.
+Para `v0.5.0`, un build equivalente `0.5.0/500` se instaló en un Samsung `SM_G965F` preservando SQLite y se aprobaron el funcionamiento general y las correcciones táctiles de `Mover a` y materias/secciones. El asset de GitHub fue firmado con el certificado de producción, verificado mediante APK Signature Scheme v2 y publicado con SHA-256 `d48338e04021a6096fcaeaced5fde411911d403c9ea95407891d2b034515a884`. Como el dispositivo contenía una compilación debug, la validación incremental usó la misma clave debug para permitir la actualización: no equivale a instalar el asset firmado y esa comprobación permanece pendiente.
+
+Exportar e importar ZIP cuenta con una ejecución Android separada del 2026-06-18 sobre un Samsung `SM_G965F`, Android 10 y un build previo de la rama `feature/importar-backup-zip` (`a1be7c9`, `versionName=1.0`). Las validaciones de AUD-003 agregaron backups `STORE`/`DEFLATE`, rechazo de datos inválidos y una fixture de 500 notas sobre builds posteriores. Esa evidencia confirma el flujo y sus defensas en cortes previos, pero no se atribuye automáticamente al APK firmado `v0.5.0`; Hito 06 exige repetir los casos críticos sobre ese asset.
 
 ## 6.4. Validación de Rendimiento y UX
 
@@ -70,26 +72,27 @@ Las validaciones actuales incluyen:
 - `npm run check:a11y`: ejecuta auditoría estática de accesibilidad.
 - `npm run check:native-dialogs`: bloquea `alert`, `confirm` y `prompt` nativos fuera del seeder.
 - Revisión manual de flujos mobile-first en dispositivo Android.
-- Publicación de `v0.4.8` como beta controlada con APK firmado y SHA-256 documentado.
+- Publicación de `v0.5.0` como segunda beta con APK firmado, tag anotado y SHA-256 documentado.
 
 Quedan pendientes para el cierre documental final y Hito 06 pruebas más cercanas al usuario final: medición de tiempo hasta crear la primera nota, revisión fina de contraste y navegación táctil, comportamiento con mayor volumen real de notas y feedback de estudiantes sobre el prototipo instalado.
 
-El build vigente finaliza con código 0, por lo que satisface el criterio explícito de `RNF-025` (construcción sin errores). Vite informa advertencias no bloqueantes sobre módulos importados de forma estática y dinámica; se registran como deuda de empaquetado y deben revisarse, pero no se reinterpretan como errores ni cambian retroactivamente el criterio del requisito.
+El build de `v0.5.0` finaliza con código 0, por lo que satisface el criterio explícito de `RNF-025` (construcción sin errores). Las advertencias previas por módulos importados de forma estática y dinámica se resolvieron retirando imports redundantes; el presupuesto de bundle continúa siendo un control bloqueante separado.
 
 ## 6.5. Alcance de la Evidencia y Validación Pendiente
 
-La evidencia reunida permite calificar `v0.4.8` como beta controlada instalable y funcional en el dispositivo probado. No permite generalizar todavía el mismo resultado a todo el parque Android ni afirmar una validación integral de accesibilidad, seguridad, rendimiento y experiencia de usuario.
+La evidencia reunida permite calificar `v0.5.0` como segunda beta firmada, publicada y respaldada por gate, CI y validación Android incremental. No permite afirmar que el asset firmado fue instalado en el dispositivo usado ni generalizar el resultado a todo el parque Android o a una validación integral de accesibilidad, seguridad, rendimiento y experiencia de usuario.
 
 Los límites principales son:
 
 - La auditoría `check:a11y` es estática; no sustituye Lighthouse, lector de pantalla, navegación táctil real ni revisión manual completa de contraste. La evaluación final debe tomar WCAG 2.2 como referencia, sin declarar conformidad hasta comprobar los criterios aplicables con métodos automáticos y humanos (World Wide Web Consortium [W3C], 2024).
 - Los smoke tests Gradle verifican el paquete y el contexto nativo básico, no los flujos completos de UI ni una prueba end-to-end del APK.
 - La prueba Python con 5.000 notas es sintética, compara dos estrategias aisladas y no mide CPU ni renderizado Android. La revisión en dispositivo se realizó con un volumen acotado; falta una medición reproducible con un conjunto realista y criterios temporales definidos.
-- El reporte de cobertura todavía excluye TypeScript y no existe un umbral acordado para convertirlo en gate.
+- El reporte de cobertura incluye JavaScript y TypeScript, pero la última línea base formal es anterior a `v0.5.0` y no existe un umbral bloqueante acordado.
 - El workflow remoto y `npm run verify` no ejecutan exactamente los mismos pasos; conviene alinear al menos typecheck y smoke test de base de datos cuando sean portables en CI.
+- La suite completa presenta una incompatibilidad de Web Storage bajo Node 26; el corte canónico se validó con Node 22 y un worker. Resolver AUD-009 exige portabilidad real, no relajar tests.
 - `quality.sh` puede usar un binario Rust compilado para la plataforma y, si no está disponible, recurrir a scripts de compatibilidad. Un resultado exitoso en macOS no prueba por sí solo ambos caminos; la portabilidad requiere compilar o distribuir el auditor por plataforma y verificar el fallback en un checkout limpio.
 - La revisión periódica de dependencias y vulnerabilidades debe conservar evidencia propia; sanitizar Markdown reduce el riesgo XSS, pero no reemplaza el mantenimiento de las bibliotecas involucradas.
 
-Estos puntos no reabren el alcance funcional de la beta: delimitan con precisión qué está validado y qué debe cerrarse como evidencia técnica o prueba de usuario en el siguiente hito.
+Estos puntos no reabren el alcance funcional de la beta: delimitan con precisión qué está validado y qué debe cerrarse como evidencia técnica o prueba de usuario dentro de Hito 06.
 
 La validación final no debe limitarse a que el código compile. Para que Lumapse cumpla su objetivo, debe demostrar que una persona puede instalarla, abrirla sin conexión, crear una nota rápidamente, encontrarla después, organizarla por materia y confiar en que no se pierde.

@@ -1,7 +1,7 @@
 # ADR-005: Pivote de PWA a Aplicación Android Híbrida (APK)
 
 **Fecha:** 2026-05-14  
-**Estado:** Aceptado — pivote técnico validado en `0.4.8`; instalabilidad por el público objetivo pendiente de validación específica
+**Estado:** Aceptado — pivote técnico validado hasta `0.5.0`; instalabilidad por el público objetivo pendiente de validación específica
 **Autor:** Jose David Sandoval  
 **Reemplaza:** ADR-002 (persistencia IndexedDB → SQLite)
 
@@ -88,7 +88,7 @@ Una PWA puede requerir que el usuario descubra la acción de instalación del na
 1. **Reutilización del código existente:** Capacitor empaqueta la web app existente (HTML/CSS/JS) dentro de un contenedor Android nativo. No se reescribe el codebase, se envuelve.
 2. **SQLite > IndexedDB para el canal Android:** Los datos se almacenan fuera del almacenamiento administrado por el navegador y, por lo tanto, no están sujetos a su política de purga. Esto no elimina otros riesgos, como desinstalación, falla del dispositivo o pérdida de archivos; por eso el respaldo continúa siendo necesario.
 3. **Distribución viable dentro del alcance académico:** El `.apk` se puede alojar en GitHub Releases sin cuenta de desarrollador ni publicación inmediata en una tienda. La viabilidad técnica del canal no implica que instalarlo sea intuitivo o aceptable para el público objetivo; esa cuestión requiere validación separada.
-4. **Capacidades nativas disponibles para evolución:** El contenedor permite integrar plugins del dispositivo sin reescribir la interfaz. Cámara, micrófono y notificaciones no forman parte de la beta `0.4.8` y requieren requisitos y validación propios antes de incorporarse.
+4. **Capacidades nativas disponibles para evolución:** El contenedor permite integrar plugins del dispositivo sin reescribir la interfaz. Cámara, micrófono y notificaciones no forman parte de la beta `0.5.0` y requieren requisitos y validación propios antes de incorporarse.
 5. **Decisión informada por datos y análisis técnico:** La muestra respalda priorizar celular (72.5%) y funcionamiento offline (74.2% lo eligió entre las características prioritarias); además, 81.7% no declaró disponibilidad permanente de internet. La elección concreta de APK y SQLite proviene de comparar alternativas técnicas bajo esas restricciones, no de una preferencia de formato expresada en el cuestionario.
 
 ## Estrategia de distribución
@@ -133,7 +133,7 @@ Una PWA puede requerir que el usuario descubra la acción de instalación del na
 
 ## Validación de la decisión — 2026-07-15
 
-La revisión técnica prevista se completó. La versión `0.4.8` se construye y distribuye como APK, utiliza SQLite como persistencia local y dispone de un flujo nativo de backup mediante los plugins Network, Filesystem y Share. El canal de producto vigente es Android; el navegador continúa como entorno auxiliar de desarrollo. La instalación y los flujos principales se validaron inicialmente en un dispositivo Android real.
+La revisión técnica prevista se completó. La versión `0.5.0` se construye y distribuye como APK, utiliza SQLite como persistencia local y dispone de un flujo nativo de backup mediante los plugins Network, Filesystem y Share. El canal de producto vigente es Android; el navegador continúa como entorno auxiliar de desarrollo. La primera beta `v0.4.8` cuenta con instalación completa validada; para `v0.5.0` se aprobaron el gate, la firma y un build equivalente con datos preservados, mientras la instalación específica del asset firmado permanece documentada como pendiente.
 
 Esta evidencia confirma la viabilidad técnica del pivote para la beta, pero no demuestra todavía que estudiantes del público objetivo puedan localizar, descargar e instalar el APK sin asistencia ni que prefieran este canal frente a una tienda o una PWA. Esa instalabilidad se mantiene como validación específica del Hito 06.
 

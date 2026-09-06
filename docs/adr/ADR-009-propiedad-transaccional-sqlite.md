@@ -1,7 +1,7 @@
 # ADR-009: Propiedad transaccional explícita en SQLite
 
 **Fecha:** 2026-09-04  
-**Estado:** Aceptado; validación canónica y Android aprobadas, integración autorizada
+**Estado:** Aceptado; integrado mediante PR #7 y publicado en `v0.5.0`
 
 **Alcance:** AUD-005; complementa ADR-006 y ADR-008 sin cambiar motor, schema final ni plataforma
 
@@ -74,3 +74,4 @@ se promete que la escritura no ocurrió ni se repite automáticamente.
 Las regresiones usan promesas controladas y SQLite real en memoria, sin sleeps ni bases personales.
 La evidencia y las pausas de aprobación se registran en el
 [informe de AUD-005](../gestion/analisis-aud-005-coordinacion-sqlite-2026-09-04.md).
+El contrato quedó congelado en el tag `v0.5.0` (`5840755`) después de aprobar el gate canónico y la validación Android.

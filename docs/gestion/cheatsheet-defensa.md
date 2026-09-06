@@ -1,24 +1,26 @@
 # Cheat Sheet de Defensa — Lumapse
-**Última actualización:** 2026-08-11 — revisión metodológica y frontera de backend
+**Última actualización:** 2026-09-05 — publicación y línea base de la segunda beta
 
-> Hito 05 está cerrado y Hito 06 activo. Este documento refleja el corte operativo `v0.4.8`; las métricas de código, capturas y argumentos deben recibir una última verificación al congelar la entrega.
+> Hito 05 está cerrado y Hito 06 activo. Este documento refleja el corte operativo `v0.5.0`; las métricas de usuario y RNF pendientes deben recibir una última verificación al congelar la entrega académica.
 
 ## Métricas del Proyecto
 
 | Métrica | Valor |
 |---|---|
-| Versión beta vigente | `0.4.8` |
+| Versión beta vigente | `0.5.0` (`versionCode 500`) |
 | Hito actual | 06 — Entrega Final |
-| Release publicada | [`Lumapse v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8) |
-| APK firmado | `lumapse-v0.4.8.apk` |
-| SHA-256 del APK | `cad122d0329e1761816ac7ad07938673389c859a252d9cc63504359355db3d10` |
-| Validación Android | Samsung Galaxy S20 FE (`SM-G780G`), Android 13, apto para beta controlada |
-| Archivos de código (JS/TS/CSS) | 112 |
-| Líneas de código fuente | 15,377 en `main` al 2026-07-15 |
+| Release publicada | [`Lumapse v0.5.0`](https://github.com/jdfesa/lumapse/releases/tag/v0.5.0) |
+| Tag / commit | `v0.5.0` / `5840755` |
+| APK firmado | `lumapse-v0.5.0.apk` |
+| SHA-256 del APK | `d48338e04021a6096fcaeaced5fde411911d403c9ea95407891d2b034515a884` |
+| Validación Android | Build equivalente `0.5.0/500` aprobado en Samsung `SM_G965F` con datos conservados; instalación del asset firmado pendiente |
+| Tests del corte | 67 archivos / 1065 tests; gate local y CI de PR #10 aprobados |
+| Archivos de código (JS/TS/CSS) | 129 en `src/` al tag `v0.5.0` |
+| Líneas de código fuente | 19.648 en `src/` al tag `v0.5.0` |
 | Requisitos Funcionales | 28 (22 implementados/verificados, 0 pendientes, 4 postergados, 2 obsoletos) |
 | Historias de Usuario | 22 |
 | Story Points totales formalizados | 104: 101 entregados en Hitos 02 a 05 y 3 postergados a Futuro |
-| ADRs documentados | 8 |
+| ADRs documentados | 9 |
 | Scripts de automatización | 40 archivos `.py`/`.sh` en `scripts/` |
 | Tablas en BD | 4 |
 | Columnas totales | 26 |
@@ -27,6 +29,7 @@
 
 | Decisión | Justificación corta |
 |---|---|
+| ADR-009 — Propiedad Transaccional Explícita en SQLite | Serializar el acceso a una conexión, propagar capacidades transaccionales y recuperar el arranque sin confirmar escrituras parciales ni recrear datos del usuario. |
 | ADR-008 — Arquitectura Modular por Capas y Patrones de Coordinación | Describir el producto real como monolito modular cliente, offline-first y por capas pragmáticas, sin atribuir MVC o Clean Architecture estrictos. |
 | ADR-006 — Arquitectura de Persistencia y Tooling SQLite para Desarrollo Web y Native | Adoptar una arquitectura híbrida de persistencia y automatización de assets para desarrollo local y producción nativa |
 | ADR-005 — Pivote de PWA a Aplicación Android Híbrida (APK) | Empaquetar la UI web en una WebView Android mediante Capacitor, usar plugins nativos donde aportan valor y reemplazar IndexedDB por SQLite. |
@@ -48,11 +51,13 @@
 | ADR-006 | Arquitectura de Persistencia y Tooling SQLite para Desarrollo Web y Native | Aceptado |
 | ADR-007 | Organización de Componentes por Feature | Aceptado |
 | ADR-008 | Arquitectura Modular por Capas y Patrones de Coordinación | Aceptado |
+| ADR-009 | Propiedad Transaccional Explícita en SQLite | Aceptado; integrado y publicado en `v0.5.0` |
 
 ## Releases y Cortes Documentales
 
 | Referencia | Tipo | Fecha | Highlights |
 |---|---|---|---|
+| `v0.5.0` | GitHub pre-release | 2026-09-05 | Segunda beta firmada; AUD-001 a AUD-007, mejoras táctiles, 1065 tests y hash documentado |
 | `v0.4.8` | GitHub pre-release | 2026-07-01 | APK firmada, hash documentado, quality gate y validación Android inicial |
 | `0.4.0`–`0.4.7` | Cortes documentales | 2026-05-17 a 2026-05-26 | Lotes incrementales de Organización y UX; no tuvieron tags/releases individuales |
 | `LB-PROD-v0.3.0` | Línea base Hito 04 | 2026-06-01 | SQLite, organización, UX móvil, papelera y estabilización |
@@ -81,9 +86,9 @@ Los meses de Hitos 02 a 06 son etiquetas del calendario académico planificado; 
 - **¿Por qué no mostrás online/offline?** → RF-024 quedó postergado porque el núcleo local no depende de la red y un chip global podría sugerir una sincronización inexistente. El backup sí informa de manera contextual y únicamente dentro de su flujo cuando la conectividad afecta la salida externa.
 - **¿Por qué no hay onboarding o tutorial Markdown?** → DP-006: la beta no registró un bloqueo de descubrimiento que justificara un tutorial obligatorio. Lumapse permite escribir texto plano; Markdown es una mejora, no una barrera de entrada.
 - **¿Export/import está implementado?** → Sí para backups de workspace: `RF-017` exporta un `.zip` legible/restaurable con salida externa y `RF-018` importa ZIPs generados por Lumapse con preview, transacción y duplicados no destructivos. Sigue postergado `RF-016`, que es compartir/exportar una nota individual, y también la importación `.md` de una nota suelta.
-- **¿La APK ya está disponible?** → Sí como beta controlada `v0.4.8`, publicada en GitHub Releases y validada inicialmente en Android real. No se presenta todavía como versión final estable; el cierre definitivo queda para Hito 06.
-- **¿Por qué no existe `0.4.9` si `main` avanzó?** → Porque `v0.4.8` identifica la APK publicada y el trabajo posterior consiste en documentación/refactors aún no publicados como artefacto. El checkpoint inicial contabilizó 12 commits; el conteo puede crecer y no define una versión. La siguiente se decide al congelar y validar el artefacto final.
-- **¿Qué queda antes de defender?** → Revisión editorial y de maquetación final —incluida la legibilidad de los gráficos DB ya incorporados—, validación con más notas, decisión sobre `Mover a`/rendimiento y preparación de presentación, demo y contingencia.
+- **¿La APK ya está disponible?** → Sí. `lumapse-v0.5.0.apk` se publicó como pre-release con firma v2 y SHA-256 verificable. Un build equivalente `0.5.0/500` fue validado en Android conservando datos; la instalación manual específica del asset firmado sigue registrada como pendiente y no se oculta.
+- **¿Qué ocurrió con `0.4.9`?** → No se publicó. El trabajo posterior a `v0.4.8` se consolidó directamente en la segunda beta `v0.5.0`, con tag, APK y hash propios. `v0.4.8` se conserva como evidencia histórica inmutable.
+- **¿Qué queda antes de defender?** → Revisión editorial y de maquetación final —incluida la legibilidad de los gráficos DB ya incorporados—, matriz RNF, instalación manual del asset firmado, rendimiento con volumen realista y preparación de presentación, demo y contingencia. La fricción de `Mover a` ya fue corregida y validada en PR #9.
 
 ## Fuentes
 

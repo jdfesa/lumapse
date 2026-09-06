@@ -4,7 +4,7 @@ Esta carpeta contiene los artefactos de **estimación, planificación y control 
 del proyecto, según los lineamientos de la cátedra PP3 (Ing. Mauricio Parada) y la bibliografía
 de Gómez (2014).
 
-> **Estado actual:** Hito 05 cerrado documentalmente el 2026-07-15. Hito 06 — Entrega Final está activo; los gráficos de base de datos ya fueron incorporados y el foco continúa en congelamiento documental, validación final y presentación. Ver [`../hitos/hito-06-octubre.md`](../hitos/hito-06-octubre.md).
+> **Estado actual:** Hito 05 quedó cerrado sobre `v0.4.8`. Hito 06 — Entrega Final está activo y ya publicó la segunda beta `v0.5.0`; el foco continúa en congelamiento documental, matriz RNF, maquetación y presentación. Ver [`../hitos/hito-06-octubre.md`](../hitos/hito-06-octubre.md).
 
 ---
 
@@ -14,18 +14,18 @@ de Gómez (2014).
 |---|---|---|
 | [`definicion-flujo-kanban.md`](./definicion-flujo-kanban.md) | Definition of Workflow, WIP, políticas, SLE y métricas de flujo desde Hito 06 | ✅ Vigente |
 | [`estimacion-pert.md`](./estimacion-pert.md) | Estimación de 3 puntos (PERT) para los módulos de mayor riesgo | ✅ Completado |
-| [`lineas-base.md`](./lineas-base.md) | Registro de líneas base, release `v0.4.8` y futuro corte final | 🔄 Activo en Hito 06 |
+| [`lineas-base.md`](./lineas-base.md) | Registro de líneas base y releases `v0.4.8`/`v0.5.0`, más el futuro corte estable | 🔄 Activo en Hito 06 |
 | [`seguimiento-velocidad.md`](./seguimiento-velocidad.md) | SP planificados y entregados por hito como métrica académica separada del flujo Kanban | ✅ Actualizado |
-| [`checklist-validacion-android.md`](./checklist-validacion-android.md) | Evidencia de validación Android de `v0.4.8`; base para la repetición final | ✅ Beta validada |
+| [`checklist-validacion-android.md`](./checklist-validacion-android.md) | Evidencia histórica de `v0.4.8` y validación incremental del corte `v0.5.0` | 🔄 Instalación del asset firmado pendiente |
 | [`cheatsheet-defensa.md`](./cheatsheet-defensa.md) | Métricas, decisiones y respuestas breves para la defensa | 🔄 Revisión final pendiente |
-| [`firma-apk-android.md`](./firma-apk-android.md) | Política de firma, secretos y resguardo del artefacto Android | ✅ Completado |
+| [`firma-apk-android.md`](./firma-apk-android.md) | Política de firma, secretos y evidencia de los artefactos Android publicados | ✅ `v0.5.0` publicada |
 | [`plan-mantenibilidad-tipado-gradual-2026-06-12.md`](./plan-mantenibilidad-tipado-gradual-2026-06-12.md) | Estrategia incremental de modularidad y tipado; no habilita refactors amplios durante el cierre | 📌 Referencia |
-| [`revision-tecnica-priorizada-2026-09-01.md`](./revision-tecnica-priorizada-2026-09-01.md) | Auditoría vigente de arquitectura, seguridad, persistencia, escalabilidad y tooling con backlog priorizado | ✅ AUD-006 validado; integración trazada en PR #8 |
+| [`revision-tecnica-priorizada-2026-09-01.md`](./revision-tecnica-priorizada-2026-09-01.md) | Auditoría vigente de arquitectura, seguridad, persistencia, escalabilidad y tooling con backlog priorizado | ✅ AUD-001 a AUD-007 cerrados en `v0.5.0` |
 | [`analisis-aud-003-seguridad-importacion-backups-2026-09-01.md`](./analisis-aud-003-seguridad-importacion-backups-2026-09-01.md) | Revalidación e implementación de AUD-003: frontera ZIP/JSON, integridad y defensa de presentación | ✅ Cerrado en PR #3 |
 | [`analisis-aud-004-seguridad-dependencias-2026-09-02.md`](./analisis-aud-004-seguridad-dependencias-2026-09-02.md) | Revalidación y cierre de AUD-004: advisories, grafo mínimo, auditorías, gates y Android | ✅ Cerrado en PR #5 |
 | [`analisis-aud-007-contratos-errores-store-2026-09-03.md`](./analisis-aud-007-contratos-errores-store-2026-09-03.md) | Contrato emit-and-rethrow, adaptación de consumidores y evidencia automática/Android de AUD-007 | ✅ Cerrado en PR #6 |
 | [`analisis-aud-005-coordinacion-sqlite-2026-09-04.md`](./analisis-aud-005-coordinacion-sqlite-2026-09-04.md) | Propiedad SQLite explícita, migraciones estrictas y arranque recuperable | ✅ Cerrado en PR #7 |
-| [`analisis-aud-006-ownership-solicitudes-async-2026-09-05.md`](./analisis-aud-006-ownership-solicitudes-async-2026-09-05.md) | Vigencia de Papelera y consistencia de caches académicos | ✅ Mac y Android validados; integración trazada en PR #8 |
+| [`analisis-aud-006-ownership-solicitudes-async-2026-09-05.md`](./analisis-aud-006-ownership-solicitudes-async-2026-09-05.md) | Vigencia de Papelera y consistencia de caches académicos | ✅ Cerrado en PR #8 e incluido en `v0.5.0` |
 | [`historico/`](./historico/) | Snapshots operativos cerrados preservados como evidencia de proceso | 📦 Archivo |
 
 ---

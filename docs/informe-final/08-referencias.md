@@ -23,7 +23,8 @@ Este capítulo consolida las fuentes citadas o utilizadas como fundamento metodo
 ## 8.3. Fuentes primarias del proyecto
 
 - Sandoval, J. D. F. (2026). *Relevamiento sobre hábitos y necesidades de toma de notas en estudiantes del IES 6023* [Conjunto de datos; 121 respuestas recolectadas, 120 válidas]. Lumapse. [`analisis-relevamiento/datos/respuestas_relevamiento_2026_05.csv`](../../analisis-relevamiento/datos/respuestas_relevamiento_2026_05.csv)
-- Sandoval, J. D. F. (2026). *Lumapse v0.4.8* [Software y APK Android, beta controlada]. GitHub. https://github.com/jdfesa/lumapse/releases/tag/v0.4.8
+- Sandoval, J. D. F. (2026). *Lumapse v0.4.8* [Software y APK Android, primera beta controlada]. GitHub. https://github.com/jdfesa/lumapse/releases/tag/v0.4.8
+- Sandoval, J. D. F. (2026). *Lumapse v0.5.0* [Software y APK Android, segunda beta]. GitHub. https://github.com/jdfesa/lumapse/releases/tag/v0.5.0
 - Sandoval, J. D. F. (2026). *Registros de decisiones arquitectónicas de Lumapse* [ADR-001 a ADR-008]. [`docs/adr/`](../adr/)
 
 Los documentos internos, commits, scripts y checklists se citan mediante enlaces relativos porque funcionan como evidencia primaria versionada del proyecto, no como bibliografía externa.

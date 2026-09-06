@@ -9,7 +9,9 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ## [Unreleased]
 
-> Sin cambios todavía.
+### Changed
+
+- **Documentación posterior a la publicación:** Se reconciliaron los documentos vivos, las líneas base, el informe académico, las métricas de defensa y las guías operativas con la pre-release publicada `v0.5.0`, sin alterar la evidencia histórica de `v0.4.8`.
 
 ## [0.5.0] — 2026-09-05 — Beta
 
@@ -19,7 +21,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 - **Regresiones de integridad de guardado:** Se incorporaron pruebas unitarias para creación y actualización fallidas, conservación del borrador y serialización de solicitudes concurrentes.
 - **Cobertura de AUD-003:** Se agregaron regresiones para preflight y lectura ZIP, CRC32, límites, validación de primitivas y entidades, jerarquía de materias y presentación por contexto. El cierre documenta 11 archivos y 75 tests focalizados de presentación, además de 60 archivos y 955 tests en la suite completa con el workaround registrado para Node 26.
-- **Evidencia Android posterior al tag:** Se registró la validación manual de backups `STORE` y `DEFLATE`, una fixture de 500 notas, el rechazo de `pinned` inválido antes de persistir y el checkpoint final de la implementación completa instalada en un Samsung `SM_G965F`; estas ejecuciones no representan una nueva release ni un APK publicado.
+- **Evidencia Android previa al corte:** Se registró la validación manual de backups `STORE` y `DEFLATE`, una fixture de 500 notas, el rechazo de `pinned` inválido antes de persistir y el checkpoint final de la implementación completa instalada en un Samsung `SM_G965F`; estas ejecuciones respaldaron el código promovido a `v0.5.0`, pero no sustituyen la identificación y verificación del APK firmado publicado.
 - **Regresiones de contratos de error (AUD-007):** Se cubrieron retornos exitosos, emisión única de `DatabaseError`, propagación de errores inesperados, ausencia de mutaciones de éxito ante fallo y restauración de los límites UI.
 
 ### Changed
@@ -44,11 +46,12 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Dependencias parcheadas dentro de sus majors:** DOMPurify sube a 3.4.14 y Vite a 6.4.3; el lockfile resuelve también `tar` 7.5.22, PostCSS 8.5.26, nanoid 3.3.18, undici 7.29.0, `brace-expansion` 5.0.9 y `@xmldom/xmldom` 0.9.12 sin overrides ni transitivas directas.
 - **Versionado de release sincronizado:** `scripts/release-helper.py` alinea `package.json`, `package-lock.json`, Android `versionName` y `versionCode`, cierra `[Unreleased]`, distingue artefactos firmados de unsigned y expone una verificación bloqueante dentro de `npm run verify`.
 - **Corte Android `0.5.0/500`:** El gate final aprobó 67 archivos y 1065 tests; la APK fue firmada con el mismo certificado de producción que `v0.4.8`, verificada con esquema v2 y validada en el dispositivo de prueba conservando los datos existentes. SHA-256: `d48338e04021a6096fcaeaced5fde411911d403c9ea95407891d2b034515a884`.
+- **Publicación de la segunda beta:** El tag anotado `v0.5.0` fija `5840755`; la [pre-release de GitHub](https://github.com/jdfesa/lumapse/releases/tag/v0.5.0) distribuye únicamente `lumapse-v0.5.0.apk`, cuyo digest publicado coincide con el SHA-256 documentado.
 
 ### Fixed
 
-- **Coordinación SQLite y arranque (AUD-005):** Propiedad transaccional explícita y cola compartida con CRUD/lecturas, cascadas sin commits parciales, errores de persistencia web propagados y conexión incierta en cuarentena. Migraciones estrictas e idempotentes y arranque accesible en español con reintento seguro; 1035 tests, gate canónico y funcionamiento general Android aprobados. Contrato documentado en ADR-009 e integrado mediante PR #7 sin nueva release.
-- **Ownership de solicitudes async (AUD-006):** Papelera descarta respuestas y errores de visitas, refreshes o consumidores obsoletos; las cargas académicas distinguen generaciones, protegen caches y reconcilian mutaciones confirmadas. 1057 tests locales con un worker, controles individuales y Android aprobados; limitación del gate local documentada. Integración autorizada y trazada en PR #8.
+- **Coordinación SQLite y arranque (AUD-005):** Propiedad transaccional explícita y cola compartida con CRUD/lecturas, cascadas sin commits parciales, errores de persistencia web propagados y conexión incierta en cuarentena. Migraciones estrictas e idempotentes y arranque accesible en español con reintento seguro; 1035 tests, gate canónico y funcionamiento general Android aprobados. Contrato documentado en ADR-009 e integrado mediante PR #7.
+- **Ownership de solicitudes async (AUD-006):** Papelera descarta respuestas y errores de visitas, refreshes o consumidores obsoletos; las cargas académicas distinguen generaciones, protegen caches y reconcilian mutaciones confirmadas. 1057 tests locales con un worker, controles individuales y Android aprobados; limitación del gate local documentada. Integrado mediante [PR #8](https://github.com/jdfesa/lumapse/pull/8).
 
 - **Integridad del guardado (AUD-001):** El editor solo limpia los campos y descarta el borrador tras confirmar la persistencia; ante un fallo conserva contenido, borrador, contexto de edición y modo foco para permitir el reintento.
 - **Guardados concurrentes (AUD-002):** Una protección single-flight serializa el guardado y mantiene un estado visual mientras la operación está pendiente, evitando mutaciones duplicadas o fuera de orden por taps repetidos.

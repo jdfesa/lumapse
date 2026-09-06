@@ -1,6 +1,6 @@
 # Índice General — Informe Final Lumapse
 
-Este directorio contiene las secciones fuente del informe final para la materia Prácticas Profesionalizantes III. Con el Hito 05 cerrado y la beta `v0.4.8` publicada, el Hito 06 queda activo para revisión editorial, consolidación de evidencias y preparación de la defensa.
+Este directorio contiene las secciones fuente del informe final para la materia Prácticas Profesionalizantes III. Hito 05 conserva el cierre de la primera beta `v0.4.8`; Hito 06 ya publicó `v0.5.0` y continúa activo para revisión editorial, consolidación de evidencias y preparación de la defensa.
 
 Los archivos se ensamblan iterativamente a partir de la documentación viva del proyecto. El documento completo es un artefacto generado y puede quedar desfasado hasta el próximo punto de control.
 
