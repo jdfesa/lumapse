@@ -44,18 +44,18 @@ Lumapse se enfoca en una fricción concreta: para parte del público relevado, l
 
 ### Descargar beta Android
 
-La beta controlada actual esta publicada en GitHub Releases:
+La beta controlada actual está publicada en GitHub Releases:
 
-> [`Lumapse v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8)
+> [`Lumapse v0.5.0`](https://github.com/jdfesa/lumapse/releases/tag/v0.5.0)
 
-Descargar el asset firmado `lumapse-v0.4.8.apk`. No usar el artefacto `unsigned`, que solo se conserva como evidencia tecnica local.
+Descargar el asset firmado `lumapse-v0.5.0.apk`. No usar artefactos `unsigned`, que solo se conservan como evidencia técnica local.
 
-`v0.4.8` es la beta/candidata operativa congelada. `main` contiene trabajo documental y refactors posteriores al tag, pero no existe una release `0.4.9` ni otro APK publicado.
+`v0.5.0` es la segunda beta firmada. Incorpora las correcciones de seguridad, integridad, coordinación SQLite, manejo de errores y usabilidad táctil desarrolladas y validadas después de `v0.4.8`.
 
 SHA-256 del APK publicado:
 
 ```text
-cad122d0329e1761816ac7ad07938673389c859a252d9cc63504359355db3d10
+d48338e04021a6096fcaeaced5fde411911d403c9ea95407891d2b034515a884
 ```
 
 ### Requisitos previos — Web (desarrollo y contribución)
