@@ -1,8 +1,8 @@
 # Firma de APK Android — Lumapse
 
-**Hito:** 05 — Testing, Calidad y Distribucion  
-**Version candidata:** 0.4.8  
-**Estado:** Fase 2B completada localmente el 2026-06-30
+**Hito:** 06 — Entrega Final  
+**Versión candidata:** 0.5.0  
+**Estado:** APK firmada, verificada y aprobada manualmente en Android el 2026-09-05; pendiente de publicación
 
 ---
 
@@ -55,7 +55,7 @@ android/app/build/outputs/apk/release/app-release.apk
 Luego se copia como artefacto local:
 
 ```text
-releases/v0.4.8/lumapse-v0.4.8.apk
+releases/vVERSION/lumapse-vVERSION.apk
 ```
 
 ---
@@ -65,10 +65,27 @@ releases/v0.4.8/lumapse-v0.4.8.apk
 La firma se verifica con `apksigner`:
 
 ```bash
-apksigner verify --verbose --print-certs releases/v0.4.8/lumapse-v0.4.8.apk
+apksigner verify --verbose --print-certs releases/vVERSION/lumapse-vVERSION.apk
 ```
 
-El resultado esperado debe indicar esquemas de firma verificados y mostrar el certificado usado. El hash SHA-256 del APK firmado se registra en la checklist Android.
+El resultado esperado debe indicar esquemas de firma verificados y mostrar el certificado usado. El hash SHA-256 del APK firmado se registra junto al corte.
+
+---
+
+## Resultado candidato 0.5.0
+
+| Campo | Valor |
+|---|---|
+| APK firmada | `releases/v0.5.0/lumapse-v0.5.0.apk` |
+| SHA-256 APK | `d48338e04021a6096fcaeaced5fde411911d403c9ea95407891d2b034515a884` |
+| Versión Android | `versionName 0.5.0` / `versionCode 500` |
+| Verificación | `apksigner verify --verbose --print-certs` |
+| Esquema validado | APK Signature Scheme v2 |
+| Certificado | `CN=Jose David Sandoval, OU=Lumapse, O=Lumapse, L=Salta, ST=Salta, C=AR` |
+| Certificado SHA-256 | `91d719826e632e10f331913c3835c51e38cf780eb139940eb3b0bf1ed6a157cd` |
+| Estado Android | Build debug equivalente instalado sobre `0.4.8` sin desinstalar; datos conservados y funcionamiento aprobado manualmente |
+
+La APK publicable usa el mismo certificado de producción que `v0.4.8`. El dispositivo de prueba actual tenía una compilación debug instalada; por ello la validación conservando datos utiliza el mismo código `0.5.0/500` firmado con la clave debug, sin confundir ese binario con el artefacto de GitHub.
 
 ---
 

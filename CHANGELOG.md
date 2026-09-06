@@ -7,9 +7,13 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ---
 
-## [Unreleased] — Trabajo posterior a `v0.4.8`
+## [Unreleased]
 
-> `main` conserva la versión declarada `0.4.8`, pero contiene trabajo posterior al tag. No existe una release `0.4.9` ni un APK posterior publicado. Este bloque resume el trabajo desde `v0.4.8`, incluidos los cierres técnicos AUD-001 a AUD-005 y AUD-007 y AUD-006 validado y trazado en PR #8. Las ejecuciones Android sobre código posterior al tag son evidencia de validación y no constituyen un artefacto publicado.
+> Sin cambios todavía.
+
+## [0.5.0] — 2026-09-05 — Beta
+
+> Segunda beta Android firmada de Lumapse. Este corte reúne el trabajo posterior a `v0.4.8`: los cierres técnicos AUD-001 a AUD-007, el endurecimiento de seguridad e integridad, la evolución gradual a TypeScript y las mejoras táctiles de organización validadas en Android.
 
 ### Added
 
@@ -38,6 +42,8 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Contrato único de mutaciones (AUD-007):** Las escrituras persistentes del store emiten una vez los fallos SQLite y propagan la misma excepción; los no-op legítimos y retornos exitosos conservan su semántica.
 - **Auditoría técnica trazable:** La revisión priorizada separa hallazgos de integridad, seguridad, confiabilidad, tooling y mantenibilidad; el análisis de AUD-003 registra riesgos confirmados y refutados, alcance, fases, evidencia y limitaciones sin mezclar la actualización de dependencias de AUD-004.
 - **Dependencias parcheadas dentro de sus majors:** DOMPurify sube a 3.4.14 y Vite a 6.4.3; el lockfile resuelve también `tar` 7.5.22, PostCSS 8.5.26, nanoid 3.3.18, undici 7.29.0, `brace-expansion` 5.0.9 y `@xmldom/xmldom` 0.9.12 sin overrides ni transitivas directas.
+- **Versionado de release sincronizado:** `scripts/release-helper.py` alinea `package.json`, `package-lock.json`, Android `versionName` y `versionCode`, cierra `[Unreleased]`, distingue artefactos firmados de unsigned y expone una verificación bloqueante dentro de `npm run verify`.
+- **Corte Android `0.5.0/500`:** El gate final aprobó 67 archivos y 1065 tests; la APK fue firmada con el mismo certificado de producción que `v0.4.8`, verificada con esquema v2 y validada en el dispositivo de prueba conservando los datos existentes. SHA-256: `d48338e04021a6096fcaeaced5fde411911d403c9ea95407891d2b034515a884`.
 
 ### Fixed
 
@@ -48,6 +54,8 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Guardados concurrentes (AUD-002):** Una protección single-flight serializa el guardado y mantiene un estado visual mientras la operación está pendiente, evitando mutaciones duplicadas o fuera de orden por taps repetidos.
 - **Descarte de borrador distinguible:** La acción destructiva de descartar quedó diferenciada visualmente del guardado y cubierta por una regresión de presentación.
 - **Límites UI ante fallos de mutación (AUD-007):** Editor, feed, drawer, eventos académicos, papelera y acciones relacionadas consumen rechazos sin cerrar interfaces, refrescar como éxito ni duplicar feedback; `NoteEditor.js` volvió al umbral no bloqueante de 400 LOC.
+- **Organización táctil directa:** «Mover a» abre sus destinos con un toque normal; cada materia expone `+` para agregar secciones y `⋮` para administrar, mientras las secciones mantienen únicamente `⋮` y no permiten subsecciones.
+- **Cierre del menú contextual:** El menú de materia o sección se cierra al tocar Entrada, otra materia, otra sección o cualquier destino exterior, evitando que permanezca superpuesto después de navegar.
 
 ### Security
 

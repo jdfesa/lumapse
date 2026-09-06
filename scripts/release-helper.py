@@ -21,11 +21,23 @@ PACKAGE_JSON = PROJECT_ROOT / "package.json"
 PACKAGE_LOCK = PROJECT_ROOT / "package-lock.json"
 CHANGELOG = PROJECT_ROOT / "CHANGELOG.md"
 ANDROID_DIR = PROJECT_ROOT / "android"
+ANDROID_BUILD_GRADLE = ANDROID_DIR / "app" / "build.gradle"
 GRADLEW = ANDROID_DIR / "gradlew"
-EXPECTED_APK = ANDROID_DIR / "app" / "build" / "outputs" / "apk" / "release" / "app-release-unsigned.apk"
+ANDROID_RELEASE_DIR = ANDROID_DIR / "app" / "build" / "outputs" / "apk" / "release"
+EXPECTED_SIGNED_APK = ANDROID_RELEASE_DIR / "app-release.apk"
+EXPECTED_UNSIGNED_APK = ANDROID_RELEASE_DIR / "app-release-unsigned.apk"
 RELEASES_DIR = PROJECT_ROOT / "releases"
 VERSION_RE = re.compile(r"^\d+\.\d+\.\d+$")
-CHANGELOG_INSERT_MARKER = "---\n\n"
+UNRELEASED_HEADER_RE = re.compile(r"^## \[Unreleased\][^\n]*$", re.MULTILINE)
+VERSION_HEADER_RE = re.compile(r"^## \[[^\]]+\][^\n]*$", re.MULTILINE)
+ANDROID_VERSION_NAME_RE = re.compile(r'^(\s*)versionName\s+"([^"]+)"\s*$', re.MULTILINE)
+ANDROID_VERSION_CODE_RE = re.compile(r"^(\s*)versionCode\s+(\d+)\s*$", re.MULTILINE)
+SIGNING_ENV_VARS = (
+    "LUMAPSE_RELEASE_STORE_FILE",
+    "LUMAPSE_RELEASE_STORE_PASSWORD",
+    "LUMAPSE_RELEASE_KEY_ALIAS",
+    "LUMAPSE_RELEASE_KEY_PASSWORD",
+)
 
 
 def relative_path(path):
@@ -97,6 +109,11 @@ def parse_args(argv):
         action="store_true",
         help="Permite ejecutar release real con git status sucio.",
     )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Verifica que package.json, package-lock.json y Android declaren la misma versión.",
+    )
     return parser.parse_args(argv[1:])
 
 
@@ -126,6 +143,69 @@ def bump_version(version, bump_type):
         raise RuntimeError("Tipo de incremento inválido: {0}".format(bump_type))
 
     return "{0}.{1}.{2}".format(major, minor, patch)
+
+
+def android_version_code(version):
+    major, minor, patch = [int(part) for part in version.split(".")]
+    if any(part > 99 for part in (minor, patch)):
+        raise RuntimeError(
+            "Android versionCode admite minor/patch entre 0 y 99: {0}".format(version)
+        )
+    return major * 10000 + minor * 100 + patch
+
+
+def android_version():
+    content = read_text(ANDROID_BUILD_GRADLE)
+    name_match = ANDROID_VERSION_NAME_RE.search(content)
+    code_match = ANDROID_VERSION_CODE_RE.search(content)
+
+    if not name_match or not code_match:
+        raise RuntimeError(
+            "No se encontraron versionName/versionCode en {0}".format(
+                relative_path(ANDROID_BUILD_GRADLE)
+            )
+        )
+
+    return name_match.group(2), int(code_match.group(2))
+
+
+def package_lock_version():
+    if not PACKAGE_LOCK.exists():
+        return None
+
+    data = load_json(PACKAGE_LOCK)
+    root_version = data.get("packages", {}).get("", {}).get("version")
+    return root_version or data.get("version")
+
+
+def verify_version_alignment():
+    package_version = current_version()
+    lock_version = package_lock_version()
+    android_name, android_code = android_version()
+    expected_code = android_version_code(package_version)
+    mismatches = []
+
+    if lock_version is not None and lock_version != package_version:
+        mismatches.append(
+            "package-lock.json={0}, esperado {1}".format(lock_version, package_version)
+        )
+    if android_name != package_version:
+        mismatches.append(
+            "Android versionName={0}, esperado {1}".format(android_name, package_version)
+        )
+    if android_code != expected_code:
+        mismatches.append(
+            "Android versionCode={0}, esperado {1}".format(android_code, expected_code)
+        )
+
+    if mismatches:
+        raise RuntimeError("Versiones desalineadas: {0}".format("; ".join(mismatches)))
+
+    print(
+        "OK Versiones alineadas: {0} / Android versionCode {1}".format(
+            package_version, android_code
+        )
+    )
 
 
 def prompt_release_type():
@@ -193,6 +273,8 @@ def verify_environment(skip_build):
         missing.append(relative_path(PACKAGE_JSON))
     if not CHANGELOG.exists():
         missing.append(relative_path(CHANGELOG))
+    if not ANDROID_BUILD_GRADLE.exists():
+        missing.append(relative_path(ANDROID_BUILD_GRADLE))
 
     if not skip_build:
         if not ANDROID_DIR.exists():
@@ -222,41 +304,77 @@ def update_package_version(path, new_version):
     write_json(path, data)
 
 
-def changelog_section(new_version, commits):
-    today = date.today().isoformat()
-    lines = [
-        "## [{0}] — {1} — Release".format(new_version, today),
-        "",
-        "### Changed",
-        "- Preparación de release v{0} mediante `scripts/release-helper.py`.".format(new_version),
-        "",
-    ]
+def update_android_version(new_version):
+    content = read_text(ANDROID_BUILD_GRADLE)
+    version_code = android_version_code(new_version)
 
-    if commits:
-        lines.extend([
-            "### Commits recientes",
-        ])
-        lines.extend("- {0}".format(commit) for commit in commits)
-        lines.append("")
+    updated, name_count = ANDROID_VERSION_NAME_RE.subn(
+        lambda match: '{0}versionName "{1}"'.format(match.group(1), new_version),
+        content,
+        count=1,
+    )
+    updated, code_count = ANDROID_VERSION_CODE_RE.subn(
+        lambda match: "{0}versionCode {1}".format(match.group(1), version_code),
+        updated,
+        count=1,
+    )
 
-    return "\n".join(lines)
+    if name_count != 1 or code_count != 1:
+        raise RuntimeError(
+            "No se pudo actualizar versionName/versionCode en {0}".format(
+                relative_path(ANDROID_BUILD_GRADLE)
+            )
+        )
+
+    write_text(ANDROID_BUILD_GRADLE, updated)
 
 
 def update_changelog(new_version, commits):
     content = read_text(CHANGELOG)
-    section = changelog_section(new_version, commits)
 
     if "## [{0}]".format(new_version) in content:
         raise RuntimeError("CHANGELOG.md ya contiene una entrada para {0}".format(new_version))
 
-    marker_index = content.find(CHANGELOG_INSERT_MARKER)
-    if marker_index == -1:
-        new_content = section + "\n\n" + content
-    else:
-        insert_at = marker_index + len(CHANGELOG_INSERT_MARKER)
-        new_content = content[:insert_at] + section + "\n" + content[insert_at:]
+    unreleased_match = UNRELEASED_HEADER_RE.search(content)
+    if not unreleased_match:
+        raise RuntimeError("CHANGELOG.md no contiene una sección [Unreleased]")
+
+    next_version = VERSION_HEADER_RE.search(content, unreleased_match.end())
+    if not next_version:
+        raise RuntimeError("CHANGELOG.md no contiene una versión previa después de [Unreleased]")
+
+    unreleased_body = content[unreleased_match.end():next_version.start()].strip("\n")
+    if not unreleased_body:
+        lines = [
+            "### Changed",
+            "- Preparación de release v{0} mediante `scripts/release-helper.py`.".format(
+                new_version
+            ),
+        ]
+        if commits:
+            lines.extend(["", "### Commits recientes"])
+            lines.extend("- {0}".format(commit) for commit in commits)
+        unreleased_body = "\n".join(lines)
+
+    release_header = "## [{0}] — {1} — Beta".format(
+        new_version, date.today().isoformat()
+    )
+    replacement = (
+        "## [Unreleased]\n\n"
+        "> Sin cambios todavía.\n\n"
+        "{0}\n\n{1}\n\n".format(release_header, unreleased_body)
+    )
+    new_content = (
+        content[:unreleased_match.start()]
+        + replacement
+        + content[next_version.start():]
+    )
 
     write_text(CHANGELOG, new_content)
+
+
+def has_release_signing():
+    return all(os.getenv(name, "").strip() for name in SIGNING_ENV_VARS)
 
 
 def run_command(command, cwd=PROJECT_ROOT, input_text=None):
@@ -283,37 +401,58 @@ def run_build_pipeline():
     run_command(["npx", "cap", "sync"])
 
     print("🤖 Compilando APK release con Gradle...")
-    run_command(["./gradlew", "assembleRelease"], cwd=ANDROID_DIR)
-
-
-def find_release_apk():
-    if EXPECTED_APK.exists():
-        return EXPECTED_APK
-
-    release_dir = ANDROID_DIR / "app" / "build" / "outputs" / "apk" / "release"
-    candidates = sorted(release_dir.glob("*.apk")) if release_dir.exists() else []
-    if candidates:
-        return candidates[0]
-
-    raise RuntimeError(
-        "No se encontró APK release en {0}".format(relative_path(release_dir))
+    run_command(
+        [
+            "./gradlew",
+            "--no-daemon",
+            "--max-workers=1",
+            "-Dorg.gradle.jvmargs=-Xmx768m -Dfile.encoding=UTF-8",
+            "-Dkotlin.compiler.execution.strategy=in-process",
+            "assembleRelease",
+        ],
+        cwd=ANDROID_DIR,
     )
 
 
-def copy_release_apk(new_version):
-    source_apk = find_release_apk()
+def find_release_apk(signed):
+    expected_apk = EXPECTED_SIGNED_APK if signed else EXPECTED_UNSIGNED_APK
+    if expected_apk.exists():
+        return expected_apk
+
+    raise RuntimeError(
+        "No se encontró APK {0} en {1}".format(
+            "firmada" if signed else "unsigned",
+            relative_path(ANDROID_RELEASE_DIR),
+        )
+    )
+
+
+def copy_release_apk(new_version, signed):
+    source_apk = find_release_apk(signed)
     target_dir = RELEASES_DIR / "v{0}".format(new_version)
     target_dir.mkdir(parents=True, exist_ok=True)
-    target_apk = target_dir / "lumapse-v{0}.apk".format(new_version)
+    suffix = "" if signed else "-unsigned"
+    target_apk = target_dir / "lumapse-v{0}{1}.apk".format(new_version, suffix)
     shutil.copy2(source_apk, target_apk)
     return source_apk, target_apk
 
 
 def print_plan(current, new_version, args):
+    new_android_code = android_version_code(new_version)
     print("📋 Plan de release")
     print("   - Versión actual: {0}".format(current))
     print("   - Versión nueva:  {0}".format(new_version))
     print("   - Tipo:           {0}".format(args.type))
+    print(
+        "   - Android:        versionName {0} / versionCode {1}".format(
+            new_version, new_android_code
+        )
+    )
+    print(
+        "   - Firma release:  {0}".format(
+            "configurada" if has_release_signing() else "no configurada"
+        )
+    )
     print("   - Dry-run:        {0}".format("sí" if args.dry_run else "no"))
     print("   - Build APK:      {0}".format("no" if args.skip_build else "sí"))
     print("")
@@ -323,12 +462,18 @@ def print_plan(current, new_version, args):
         print("   2. Actualizar package-lock.json")
     else:
         print("   2. Omitir package-lock.json (no existe)")
-    print("   3. Agregar sección en CHANGELOG.md")
+    print("   3. Actualizar versionName/versionCode de Android")
+    print("   4. Cerrar [Unreleased] en CHANGELOG.md")
     if args.skip_build:
-        print("   4. Omitir build/copia de APK por --skip-build")
+        print("   5. Omitir build/copia de APK por --skip-build")
     else:
-        print("   4. Ejecutar clean, npm build, cap sync y Gradle assembleRelease")
-        print("   5. Copiar APK a releases/v{0}/lumapse-v{0}.apk".format(new_version))
+        print("   5. Ejecutar clean, npm build, cap sync y Gradle assembleRelease")
+        artifact_suffix = "" if has_release_signing() else "-unsigned"
+        print(
+            "   6. Copiar APK a releases/v{0}/lumapse-v{0}{1}.apk".format(
+                new_version, artifact_suffix
+            )
+        )
 
 
 def print_header():
@@ -342,6 +487,11 @@ def main(argv):
     print_header()
 
     try:
+        if args.check:
+            verify_environment(True)
+            verify_version_alignment()
+            return 0
+
         if args.type is None:
             if not sys.stdin.isatty():
                 raise RuntimeError("Usar --type patch|minor|major en modo no interactivo.")
@@ -375,21 +525,27 @@ def main(argv):
         update_package_version(PACKAGE_JSON, new_version)
         if PACKAGE_LOCK.exists():
             update_package_version(PACKAGE_LOCK, new_version)
+        update_android_version(new_version)
 
         print("🧾 Actualizando CHANGELOG.md...")
         update_changelog(new_version, commits)
 
         target_apk = None
+        signed = has_release_signing()
         if not args.skip_build:
             run_build_pipeline()
-            source_apk, target_apk = copy_release_apk(new_version)
+            source_apk, target_apk = copy_release_apk(new_version, signed)
             print("📦 APK copiado desde {0}".format(relative_path(source_apk)))
 
         print("==================================================")
         print("✅ Release v{0} preparado correctamente".format(new_version))
         if target_apk:
             print("📍 APK: {0}".format(target_apk.resolve()))
-            print("🔐 Próximo paso: firmar el APK con el keystore de producción antes de publicarlo.")
+            if signed:
+                print("🔐 APK compilada con la configuración de firma release.")
+                print("   Próximo paso: verificar firma y SHA-256 antes de publicarla.")
+            else:
+                print("⚠️  APK unsigned: no publicar; configurar el keystore de producción.")
         else:
             print("ℹ️  Build APK omitido. Ejecutar sin --skip-build para generar artefacto Android.")
         print("==================================================")

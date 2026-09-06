@@ -17,12 +17,13 @@ Los scripts internos más usados también están expuestos desde `package.json` 
 | Comando | Equivalente | Uso principal |
 |---|---|---|
 | `npm run quality` | `bash scripts/quality.sh` | Puerta de calidad local completa. |
-| `npm run verify` | `quality` + toolchain + DB smoke + bundle budget + diálogos nativos + a11y | Validación final antes de cerrar una sesión. |
+| `npm run verify` | `quality` + toolchain + versiones + DB smoke + bundle budget + diálogos nativos + a11y | Validación final antes de cerrar una sesión. |
 | `npm run doctor` | `python3 scripts/dev-doctor.py` | Diagnóstico general del entorno local. |
 | `npm run doctor:android` | `bash scripts/android-doctor.sh` | Diagnóstico Android/Capacitor/ADB sin tocar datos. |
 | `npm run check:session` | `bash scripts/check-session.sh` | Dashboard rápido de inicio. |
 | `npm run check:health` | `python3 scripts/health-dashboard.py` | Dashboard detallado de salud. |
 | `npm run check:toolchain` | `python3 scripts/check-toolchain.py` | Auditoría de scripts, README, entrypoints npm y artefactos generados. |
+| `npm run check:version` | `python3 scripts/release-helper.py --check` | Verifica que paquete y Android declaren la misma versión y código. |
 | `npm run check:db-smoke` | `python3 scripts/db-smoke-test.py` | Smoke test temporal del schema SQLite real. |
 | `npm run check:size` | `bash scripts/bundle-budget.sh` | Guardia de tamaño de bundle. |
 | `npm run check:a11y` | `python3 scripts/check-a11y.py` | Auditoría estática de accesibilidad. |
@@ -434,10 +435,14 @@ Asistente de lanzamiento para versionado, changelog, build web, sincronización 
 
 - **Problema que resuelve:** Reduce errores manuales durante una publicación: olvidar actualizar `package.json`, dejar el `CHANGELOG.md` incompleto, ejecutar pasos de build fuera de orden o perder el APK generado por Gradle.
 - **Qué hace:** Lee la versión actual de `package.json`, calcula el nuevo número semántico (`patch`, `minor` o `major`), actualiza archivos de versión y changelog, ejecuta limpieza/build/sync/Gradle cuando corresponde, y copia el APK final a `releases/vVERSION/lumapse-vVERSION.apk`.
-- **Protecciones:** Incluye modo `--dry-run` para revisar el plan sin tocar archivos, `--skip-build` para validar solo la parte documental, `--yes` para ejecución no interactiva y `--allow-dirty` para permitir releases con worktree modificado cuando sea una decisión consciente.
+- **Sincronización:** Actualiza en una sola operación `package.json`, `package-lock.json`, Android `versionName` y un `versionCode` derivado como `major * 10000 + minor * 100 + patch`; además cierra el contenido vigente de `[Unreleased]` bajo la versión nueva.
+- **Firma segura:** Si las cuatro variables `LUMAPSE_RELEASE_*` están presentes, exige la salida firmada `app-release.apk` y la copia sin sufijo. Sin ellas, conserva el artefacto como `-unsigned.apk` para impedir que se confunda con una APK publicable.
+- **Uso acotado de recursos:** El build Gradle de release usa un solo worker, daemon descartable y heap de 768 MB para reducir presión de memoria en el equipo de desarrollo.
+- **Protecciones:** Incluye `--check` para bloquear desalineaciones de versión, modo `--dry-run` para revisar el plan sin tocar archivos, `--skip-build` para validar solo la parte documental, `--yes` para ejecución no interactiva y `--allow-dirty` para permitir releases con worktree modificado cuando sea una decisión consciente.
 - **Cuándo usarlo:** Al preparar una versión entregable, beta, build de defensa o paquete APK versionado. Lo recomendable es correr primero un dry-run y recién después ejecutar el flujo real.
 - **Uso:**
   ```bash
+  python3 scripts/release-helper.py --check
   python3 scripts/release-helper.py --type patch --dry-run
   python3 scripts/release-helper.py --type minor --yes
   ```
