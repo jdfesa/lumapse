@@ -1,7 +1,3 @@
-
-
-https://github.com/user-attachments/assets/9c59be03-b0c7-4780-ba2a-9fe2b1bbd215
-
 # <img src="./public/icons/icon-144x144.png" alt="Icono de Lumapse" width="48" height="48"> Lumapse
 
 > App móvil minimalista de captura de notas y gestión del conocimiento personal.  
@@ -16,9 +12,11 @@ https://github.com/user-attachments/assets/9c59be03-b0c7-4780-ba2a-9fe2b1bbd215
 
 ### Recorrido general en video
 
-> [!TIP]
-> ▶️ **[Ver Lumapse en funcionamiento (1:04)](./docs/assets/lumapse-recorrido-general-v0.5.0.mp4)**  
-> Captura y consulta de notas, organización por materias, calendario académico y modos claro y oscuro.
+<div align="center">
+  <video src="https://github.com/user-attachments/assets/9c59be03-b0c7-4780-ba2a-9fe2b1bbd215" width="360" controls></video>
+</div>
+
+<p align="center"><em>Un recorrido de un minuto por la captura y consulta de notas, la organización por materias, el calendario académico y los modos claro y oscuro.</em></p>
 
 ### Capturas principales
 
