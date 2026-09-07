@@ -10,6 +10,14 @@
 
 ## Lumapse en uso
 
+### Recorrido general en video
+
+> [!TIP]
+> ▶️ **[Ver Lumapse en funcionamiento (1:04)](./docs/assets/lumapse-recorrido-general-v0.5.0.mp4)**  
+> Captura y consulta de notas, organización por materias, calendario académico y modos claro y oscuro.
+
+### Capturas principales
+
 <table>
   <tr>
     <td align="center"><img src="./docs/assets/screenshots/v0.5.0/01-entrada.png" alt="Captura rápida de una nota en Lumapse" width="230"></td>
