@@ -8,6 +8,21 @@
 [![Licencia](https://img.shields.io/badge/licencia-GPLv3-737373?style=flat-square)](./LICENSE)
 [![Conventional Commits](https://img.shields.io/badge/commits-conventional-a3e635?style=flat-square)](https://www.conventionalcommits.org)
 
+## Lumapse en uso
+
+<table>
+  <tr>
+    <td align="center"><img src="./docs/assets/screenshots/v0.5.0/01-entrada.png" alt="Captura rápida de una nota en Lumapse" width="230"></td>
+    <td align="center"><img src="./docs/assets/screenshots/v0.5.0/02-materias-secciones.png" alt="Organización por materias y secciones en Lumapse" width="230"></td>
+    <td align="center"><img src="./docs/assets/screenshots/v0.5.0/03-calendario.png" alt="Calendario y próximas fechas académicas en Lumapse" width="230"></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>Captura rápida</strong></td>
+    <td align="center"><strong>Materias y secciones</strong></td>
+    <td align="center"><strong>Calendario académico</strong></td>
+  </tr>
+</table>
+
 ---
 
 ## ¿Qué es Lumapse?
