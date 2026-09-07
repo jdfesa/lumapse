@@ -1,3 +1,7 @@
+
+
+https://github.com/user-attachments/assets/9c59be03-b0c7-4780-ba2a-9fe2b1bbd215
+
 # <img src="./public/icons/icon-144x144.png" alt="Icono de Lumapse" width="48" height="48"> Lumapse
 
 > App móvil minimalista de captura de notas y gestión del conocimiento personal.  
