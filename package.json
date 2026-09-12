@@ -4,16 +4,23 @@
   "description": "App móvil offline-first de captura de notas y gestión del conocimiento personal",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": "22.20.0",
+    "npm": "10.9.3"
+  },
+  "packageManager": "npm@10.9.3",
   "scripts": {
     "copy-wasm": "mkdir -p public/assets && cp node_modules/sql.js/dist/sql-wasm.wasm public/assets/",
-    "predev": "npm run copy-wasm",
+    "predev": "npm run check:runtime && npm run copy-wasm",
     "dev": "vite",
-    "prebuild": "npm run copy-wasm",
+    "prebuild": "npm run check:runtime && npm run copy-wasm",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint src/",
     "typecheck": "tsc --noEmit",
+    "pretest": "npm run check:runtime",
     "test": "vitest run",
+    "test:tooling": "node --test tests/tooling/*.test.js",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
@@ -23,6 +30,7 @@
     "doctor:android": "bash scripts/android-doctor.sh",
     "check:session": "bash scripts/check-session.sh",
     "check:health": "python3 scripts/health-dashboard.py",
+    "check:runtime": "node scripts/check-runtime.js",
     "check:toolchain": "python3 scripts/check-toolchain.py",
     "check:version": "python3 scripts/release-helper.py --check",
     "check:size": "bash scripts/bundle-budget.sh",
@@ -35,6 +43,7 @@
     "check:dbml": "python3 scripts/generate-dbml-from-code.py --check",
     "check:subjects": "python3 scripts/validate-subjects-hierarchy.py",
     "deploy:android": "bash scripts/deploy-android.sh",
+    "preinstall": "npm run check:runtime",
     "postinstall": "npm run copy-wasm"
   },
   "devDependencies": {
