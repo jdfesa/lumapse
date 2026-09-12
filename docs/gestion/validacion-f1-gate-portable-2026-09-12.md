@@ -4,6 +4,8 @@
 
 **Rama:** `fix/quality-gate-portability`. **Inicio observado:** 2026-09-12; cierre pendiente de aceptación.
 
+**PR de implementación:** [#14 — gate portable y reproducible](https://github.com/jdfesa/lumapse/pull/14), abierto y sin autorización de merge.
+
 **Base:** `65e5767`, merge autorizado del [PR #13](https://github.com/jdfesa/lumapse/pull/13). Se eliminaron su rama documental local/remota y las referencias obsoletas antes de iniciar F1. No se inició F2 ni otra rama de tarea.
 
 ## Alcance implementado
@@ -32,6 +34,7 @@ distribución oficial aislada en `/tmp`, verificada por SHA-256 contra la public
 | `npm ci` en checkout detached limpio de `cf84feb` | Exit 0 | Sin `node_modules` previo ni binario Rust; lockfile sin modificar |
 | `npm run verify` en ese checkout, sin `NODE_OPTIONS` | Exit 0 | 56 pruebas de tooling; 67 archivos / 1065 tests Vitest; build y todos los controles aprobados |
 | Estado Git después del gate limpio | Sin cambios | El checkout temporal no agregó una segunda rama |
+| [CI del checkpoint `37fe863`](https://github.com/jdfesa/lumapse/actions/runs/34723392190) | Aprobada | `npm ci` y el mismo `npm run verify` en Ubuntu/Python 3.12, Node 22.20.0/npm 10.9.3; no sustituye Mac/Android |
 | `npm run verify` con Node 26.7.0/npm 12.0.2 | Exit 1 antes de las suites | Diagnóstico de ambas versiones, sin workaround |
 | Regresiones del gate | Aprobadas | Fallo de cada control, exits 1/137/139/143 pese a resumen exitoso, reportes ausentes/inválidos/parciales y binario optativo simulado con exits 0/1/139 |
 | Regresiones offline | 19/19 aprobadas | Local CSP, hosts parecidos, puertos/rutas/credenciales, remoto en la misma línea/atributo, JS/TS/CSS/HTML, selector CSS universal y NUL en texto |
@@ -46,7 +49,7 @@ no equivalen a tests fallidos; el reporte estructurado exige todas las asercione
 Logs locales ignorados: `tmp/quality-gate-f1-2026-09-12/` (`npm-ci-clean.log`,
 `verify-clean.log`, `tooling-tests.log`, `unsupported-node.log` y auditorías JSON).
 Este resumen y los tests versionados permiten revisar la evidencia sin depender de `/tmp`.
-La ejecución de CI y el SHA candidato final se registran en el PR de F1, no se infieren del gate local.
+El enlace anterior conserva la ejecución de CI de un checkpoint concreto; los [checks de PR #14](https://github.com/jdfesa/lumapse/pull/14/checks) registran el SHA candidato final y cualquier ejecución posterior. No se infieren del gate local.
 
 ## Seguimiento de seguridad separado
 
@@ -78,7 +81,7 @@ npm run verify
 git rev-parse HEAD
 ```
 
-- [ ] CI del SHA candidato aprobada y enlazada en el PR.
+- [x] CI del checkpoint `37fe863` aprobada y enlazada; comprobar también la cabeza final en PR #14.
 - [ ] El autor revisó el diff y el PR.
 - [ ] La Mac aprobó `npm ci` y `npm run verify` con Node 22.20.0/npm 10.9.3, sin workaround.
 - [ ] El autor confirmó funcionamiento en el teléfono de pruebas e identificó el artefacto utilizado.

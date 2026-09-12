@@ -82,10 +82,12 @@ Cada fase vuelve a `main` actualizado antes de crear su rama y espera revisión 
 **Criterios de aceptación:**
 
 - [ ] Checkout limpio en Node 22.20.0/npm 10.9.3: `npm ci` y `npm run verify` terminan con exit 0, sin `NODE_OPTIONS` ni binario local preexistente; mismo comando verde en CI y en ambas máquinas.
-- [ ] Regresiones offline: CSP local permitido; URL remota real rechazada, incluso compartiendo línea con un origen local; host como `localhost.example.org` no queda permitido por substring. Assets remotos JS/TS/CSS/HTML siguen detectándose.
-- [ ] Pruebas del gate: un check fallido, suite incompleta o salida anormal hacen fallar el agregado; el caso exitoso funciona con y sin el acelerador opcional.
-- [ ] Node fuera del rango declarado se rechaza o diagnostica inequívocamente antes de la suite. El workaround de Node 26 queda como antecedente, no como solución canónica.
-- [ ] No se reducen umbrales, se omiten pruebas ni se pierde un control que hoy ejecuta CI.
+- [x] Regresiones offline: CSP local permitido; URL remota real rechazada, incluso compartiendo línea con un origen local; host como `localhost.example.org` no queda permitido por substring. Assets remotos JS/TS/CSS/HTML siguen detectándose.
+- [x] Pruebas del gate: un check fallido, suite incompleta o salida anormal hacen fallar el agregado; el caso exitoso funciona con y sin el acelerador opcional.
+- [x] Node fuera del rango declarado se rechaza o diagnostica inequívocamente antes de la suite. El workaround de Node 26 queda como antecedente, no como solución canónica.
+- [x] No se reducen umbrales, se omiten pruebas ni se pierde un control que hoy ejecuta CI.
+
+**Revisión F1:** [PR #14](https://github.com/jdfesa/lumapse/pull/14) abierto; Linux limpio y CI aprobados, con [evidencia por checkpoint](./validacion-f1-gate-portable-2026-09-12.md). El primer criterio permanece pendiente por la Mac; también faltan prueba del teléfono y autorización de merge.
 
 **Cierre:** actualizar solo el estado real de AUD-008/AUD-009, registrar versiones exactas, comandos, exits y enlace de CI. No atribuir este PR a una nueva validación Android del producto: no modifica el runtime.
 
