@@ -4,7 +4,7 @@ Esta carpeta contiene los artefactos de **estimación, planificación y control 
 del proyecto, según los lineamientos de la cátedra PP3 (Ing. Mauricio Parada) y la bibliografía
 de Gómez (2014).
 
-> **Estado actual:** Hito 05 quedó cerrado sobre `v0.4.8`. Hito 06 — Entrega Final está activo y ya publicó la segunda beta `v0.5.0`; el foco continúa en congelamiento documental, matriz RNF, maquetación y presentación. Ver [`../hitos/hito-06-octubre.md`](../hitos/hito-06-octubre.md).
+> **Estado actual:** Hito 05 quedó cerrado sobre `v0.4.8`. Hito 06 — Entrega Final está activo y ya publicó la segunda beta `v0.5.0`; continúa el cierre académico y se propone un [ciclo técnico inmediato](./plan-desarrollo-inmediato-beta-2026-09-12.md) de verificación, integridad de creación y evidencia Android, pendiente de aceptación por PR. Ver [`../hitos/hito-06-octubre.md`](../hitos/hito-06-octubre.md).
 
 ---
 
@@ -12,6 +12,7 @@ de Gómez (2014).
 
 | Documento | Contenido | Estado |
 |---|---|---|
+| [`plan-desarrollo-inmediato-beta-2026-09-12.md`](./plan-desarrollo-inmediato-beta-2026-09-12.md) | Análisis acotado y próximas sesiones: AUD-008/AUD-009, nuevo AUD-014 y validación del núcleo con 500 notas | 📝 Propuesta para revisión; sin implementación |
 | [`definicion-flujo-kanban.md`](./definicion-flujo-kanban.md) | Definition of Workflow, WIP, políticas, SLE y métricas de flujo desde Hito 06 | ✅ Vigente |
 | [`estimacion-pert.md`](./estimacion-pert.md) | Estimación de 3 puntos (PERT) para los módulos de mayor riesgo | ✅ Completado |
 | [`lineas-base.md`](./lineas-base.md) | Registro de líneas base y releases `v0.4.8`/`v0.5.0`, más el futuro corte estable | 🔄 Activo en Hito 06 |
@@ -20,7 +21,7 @@ de Gómez (2014).
 | [`cheatsheet-defensa.md`](./cheatsheet-defensa.md) | Métricas, decisiones y respuestas breves para la defensa | 🔄 Revisión final pendiente |
 | [`firma-apk-android.md`](./firma-apk-android.md) | Política de firma, secretos y evidencia de los artefactos Android publicados | ✅ `v0.5.0` publicada |
 | [`plan-mantenibilidad-tipado-gradual-2026-06-12.md`](./plan-mantenibilidad-tipado-gradual-2026-06-12.md) | Estrategia incremental de modularidad y tipado; no habilita refactors amplios durante el cierre | 📌 Referencia |
-| [`revision-tecnica-priorizada-2026-09-01.md`](./revision-tecnica-priorizada-2026-09-01.md) | Auditoría vigente de arquitectura, seguridad, persistencia, escalabilidad y tooling con backlog priorizado | ✅ AUD-001 a AUD-007 cerrados en `v0.5.0` |
+| [`revision-tecnica-priorizada-2026-09-01.md`](./revision-tecnica-priorizada-2026-09-01.md) | Auditoría original y seguimiento vivo; complemento AUD-014 enlazado al plan inmediato | ✅ AUD-001 a AUD-007 cerrados; restantes abiertos |
 | [`analisis-aud-003-seguridad-importacion-backups-2026-09-01.md`](./analisis-aud-003-seguridad-importacion-backups-2026-09-01.md) | Revalidación e implementación de AUD-003: frontera ZIP/JSON, integridad y defensa de presentación | ✅ Cerrado en PR #3 |
 | [`analisis-aud-004-seguridad-dependencias-2026-09-02.md`](./analisis-aud-004-seguridad-dependencias-2026-09-02.md) | Revalidación y cierre de AUD-004: advisories, grafo mínimo, auditorías, gates y Android | ✅ Cerrado en PR #5 |
 | [`analisis-aud-007-contratos-errores-store-2026-09-03.md`](./analisis-aud-007-contratos-errores-store-2026-09-03.md) | Contrato emit-and-rethrow, adaptación de consumidores y evidencia automática/Android de AUD-007 | ✅ Cerrado en PR #6 |

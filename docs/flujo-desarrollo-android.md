@@ -57,15 +57,15 @@ seguí estos pasos en orden.
 Estas herramientas son necesarias para **cualquier** contribución al proyecto (web o nativa):
 
 ```bash
-# Node.js 22+ y npm
-brew install node
+# Instalar Node.js 22.20.0 con un gestor que permita fijar la versión exacta.
+# No usar `brew install node`: puede instalar una línea distinta.
 
 # Git
 brew install git
 
 # Verificar
-node --version    # v22+
-npm --version
+node --version    # v22.20.0
+npm --version     # 10.9.3
 git --version     # v2+
 ```
 
@@ -166,8 +166,8 @@ echo "=== Dispositivos ===" && adb devices
 
 | Herramienta | Versión mínima | Versión utilizada en este proyecto |
 |---|---|---|
-| Node.js | v22+ | v22 |
-| npm | Incluido con Node 22 | v10 |
+| Node.js | v22.20.0 | v22.20.0 |
+| npm | v10.9.3 | v10.9.3 |
 | JDK | 21 | OpenJDK 21 |
 | Android SDK (compile/target) | API 36 | API 36 |
 | Android mínimo de ejecución | API 24 | Configurado en `android/variables.gradle` |
