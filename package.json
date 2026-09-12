@@ -31,6 +31,7 @@
     "check:session": "bash scripts/check-session.sh",
     "check:health": "python3 scripts/health-dashboard.py",
     "check:runtime": "node scripts/check-runtime.js",
+    "check:offline": "bash scripts/check-offline.sh",
     "check:toolchain": "python3 scripts/check-toolchain.py",
     "check:version": "python3 scripts/release-helper.py --check",
     "check:size": "bash scripts/bundle-budget.sh",

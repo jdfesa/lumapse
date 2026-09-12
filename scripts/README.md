@@ -23,6 +23,7 @@ Los scripts internos más usados también están expuestos desde `package.json` 
 | `npm run check:session` | `bash scripts/check-session.sh` | Dashboard rápido de inicio. |
 | `npm run check:health` | `python3 scripts/health-dashboard.py` | Dashboard detallado de salud. |
 | `npm run check:runtime` | `node scripts/check-runtime.js` | Exige Node 22.20.0/npm 10.9.3 y pins coherentes, sin dependencias instaladas. |
+| `npm run check:offline` | `bash scripts/check-offline.sh` → `check-offline.py` | Escanea JS/TS/CSS/HTML y assets; permite solo `http://localhost` exacto en `default-src`/`img-src` de una meta CSP. |
 | `npm run test:tooling` | `node --test tests/tooling/*.test.js` | Regresiones de herramientas sin jsdom ni datos personales. |
 | `npm run check:toolchain` | `python3 scripts/check-toolchain.py` | Auditoría de scripts, README, entrypoints npm y artefactos generados. |
 | `npm run check:version` | `python3 scripts/release-helper.py --check` | Verifica que paquete y Android declaren la misma versión y código. |
