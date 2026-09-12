@@ -16,8 +16,8 @@ Los scripts internos más usados también están expuestos desde `package.json` 
 
 | Comando | Equivalente | Uso principal |
 |---|---|---|
-| `npm run quality` | `bash scripts/quality.sh` | Puerta de calidad local completa. |
-| `npm run verify` | `quality` + toolchain + versiones + DB smoke + bundle budget + diálogos nativos + a11y | Validación final antes de cerrar una sesión. |
+| `npm run quality` | `bash scripts/quality.sh` | Gate canónico completo, idéntico al de CI. |
+| `npm run verify` | `npm run quality` | Entry point recomendado antes de solicitar revisión. |
 | `npm run doctor` | `python3 scripts/dev-doctor.py` | Diagnóstico general del entorno local. |
 | `npm run doctor:android` | `bash scripts/android-doctor.sh` | Diagnóstico Android/Capacitor/ADB sin tocar datos. |
 | `npm run check:session` | `bash scripts/check-session.sh` | Dashboard rápido de inicio. |
@@ -95,27 +95,20 @@ Realiza una auditoría rápida de consistencia en el proyecto antes de realizar 
   ```
 
 ### 4. `quality.sh`
-Ejecuta todos los chequeos de calidad del proyecto en un solo comando. Actúa como "puerta de calidad" antes de cerrar una sesión de trabajo o realizar commits importantes.
+Implementa un único gate para `npm run verify`, `npm run quality` y CI, según [ADR-010](../docs/adr/ADR-010-gate-portable-y-entorno-canonico.md).
 
-- **Qué ejecuta (en orden):**
-  1. `npm run lint` (ESLint).
-  2. `npm run test` (suite Vitest — 1065 tests en 67 archivos para el corte `0.5.0`).
-  3. `npm run build` (compilación de producción con Vite).
-  4. Auditoría de código (con fallback cross-platform — ver abajo).
-- **Estrategia de compatibilidad (Paso 4):** Intenta ejecutar `./scripts/lumapse-audit-bin --all` (Rust, ~2ms). Si el binario no existe o es incompatible con el OS actual (ej. profesor en Windows/Linux), **cae automáticamente** a los scripts Python/Shell originales:
-  - `check-file-size.sh` (reemplaza `--code`)
-  - `check-traceability.py` (reemplaza `--traceability`)
-  - `check-schema-sync.py` (reemplaza `--schema`)
-  - `check-doc-links.py` (reemplaza `--doc-links`)
-  - `validate-subjects-hierarchy.py` (reemplaza `--hierarchy`)
-- **Comportamiento:** Si algún paso falla, el script continúa los demás y al final reporta el resultado global. Si hay fallos, termina con código de salida 1.
-- **Requisitos:** Node.js + Python 3.8+. Rust/cargo es **opcional** (optimización de rendimiento).
+- **Orden:** entorno canónico; lint; regresiones de tooling; suite Vitest y validación de su reporte; build; typecheck; toolchain; versión; DB smoke; presupuesto de bundle; diálogos nativos; a11y; trazabilidad; links; schema; DBML; jerarquía; offline; diagnósticos de tamaño de archivos y TODOs/Git.
+- **Entorno:** Node 22.20.0/npm 10.9.3, Bash y Python 3.8+ (CI usa 3.12). Se diagnostican versiones distintas antes de la suite, sin `NODE_OPTIONS`. Un worker de Vitest limita memoria sin omitir casos.
+- **Resultado:** cada control conserva su etiqueta y exit. Después de un fallo se ejecutan los restantes y el agregado termina en 1; un entorno incorrecto detiene el gate de inmediato. Un crash (incluido exit 139) nunca se acepta por un resumen textual.
+- **`check-test-report.js`:** valida JSON nuevo en un directorio temporal por ejecución, exige todos los archivos `tests/unit/**/*.test.js`, aserciones aprobadas y conteos coherentes; rechaza reportes ausentes, parciales, duplicados, pendientes o inválidos. El gate además prohíbe `.only`. No fija un número histórico de tests. Si se cambia el patrón de Vitest, hay que actualizar también esta guardia y su regresión de paridad.
+- **Binario optativo:** `scripts/lumapse-audit-bin` no se ejecuta en el gate. Puede usarse aparte como diagnóstico; su presencia, ausencia o incompatibilidad no altera controles ni aceptación.
+- **Avisos históricos:** `check-file-size.sh` conserva sus umbrales orientativos, igual que los avisos de lint. No se convierten errores de ejecución en avisos ni se relajan controles obligatorios.
 - **Uso:**
   ```bash
   ./scripts/quality.sh
   ```
 
-### 5. `check-traceability.py` _(Superseded por `lumapse-audit` #35)_
+### 5. `check-traceability.py`
 Audita la coherencia y consistencia entre los documentos de trazabilidad del proyecto (RF, HU, ADR, CHANGELOG, BACKLOG) y el código fuente.
 
 - **Problema que resuelve:** El proyecto depende de una estricta coherencia documental. Este script automatiza la verificación para asegurar que ningún requisito, historia de usuario o registro de decisión (ADR) quede "huérfano" o desactualizado respecto al código implementado.
@@ -132,18 +125,19 @@ Audita la coherencia y consistencia entre los documentos de trazabilidad del pro
   python3 scripts/check-traceability.py
   ```
 
-### 6. `check-offline.sh` _(Superseded por `lumapse-audit` #35)_
+### 6. `check-offline.sh` y `check-offline.py`
 Escanea el código fuente y los assets del proyecto en busca de referencias a URLs externas que rompan la arquitectura offline-first.
 
 - **Problema que resuelve:** Como app pensada para funcionar completamente sin conexión y proteger la privacidad del usuario, cualquier referencia no intencional a recursos externos (imágenes, fuentes, scripts) es un riesgo crítico.
-- **Qué verifica:** Busca las cadenas `http://` y `https://` en los archivos JS, TS, CSS e HTML de las carpetas `src/` y `public/`.
-- **Características:** Ignora inteligentemente directorios como `node_modules/` o `docs/`, y marca posibles "falsos positivos" (como comentarios en el código) para revisión manual.
+- **Qué verifica:** Revisa JS/TS/CSS/HTML en `src/`, todos los assets de `public/` y `index.html`. Omite binarios; un NUL en un asset de texto es error. Solo permite el token exacto `http://localhost` en `default-src`/`img-src` del atributo `content` de una meta CSP real, nunca otra URL de la misma línea o atributo.
+- **Excepciones acotadas:** comentarios completos de una línea y comparaciones defensivas de los prefijos literales `http://`/`https://`. Una comparación no oculta URLs adicionales de esa línea. No se aceptan subdominios, credenciales, puertos o rutas por contener `localhost`.
+- **Límite:** es una auditoría estática de URLs literales, no una captura de tráfico ni una prueba Android; no demuestra ausencia de URLs construidas dinámicamente.
 - **Uso:**
   ```bash
   ./scripts/check-offline.sh
   ```
 
-### 7. `check-doc-links.py` _(Superseded por `lumapse-audit` #35: `--doc-links`)_
+### 7. `check-doc-links.py`
 Valida todos los enlaces internos dentro de la documentación Markdown del proyecto.
 
 - **Problema que resuelve:** La documentación Markdown está ampliamente interconectada; renombrar o mover archivos puede romper enlaces relativos silenciosamente.
@@ -568,12 +562,12 @@ Antes de tocar Android:
 
 La evolución completa del auditor Rust y la política de preservación de scripts reemplazados vive en [`scripts/docs/evolucion-toolchain-rust.md`](docs/evolucion-toolchain-rust.md).
 
-### 35. `lumapse-audit` (Rust) — Opcional, con fallback automático a Python/Shell
-Auditor concurrente unificado para chequeos críticos del proyecto.
+### 35. `lumapse-audit` (Rust) — Diagnóstico opcional fuera del gate
+Auditor concurrente conservado como utilidad optativa; no es la autoridad de aceptación de F1.
 
-- **Importante — Compatibilidad cross-platform:** El binario compilado (`lumapse-audit-bin`) funciona en el OS donde fue compilado (ej. macOS ARM64). Si el proyecto se clona en otro OS (Windows, Linux), **no se necesita Rust instalado**: tanto `quality.sh` como los hooks de Git detectan automáticamente la ausencia del binario y caen a los scripts Python/Shell originales que cubren la misma funcionalidad. Los scripts Python originales están preservados en el repositorio con este propósito.
-- **Importante — Fallos reales vs fallback:** `quality.sh` primero verifica que el binario responda a `--help`. Si el binario existe y corre, un fallo de `--all` se trata como problema real y no se enmascara con fallback. El modo Python/Shell queda reservado para ausencia o incompatibilidad del binario.
-- **Paridad offline-first:** El auditor Rust reconoce como no bloqueantes las validaciones defensivas de código que contienen `.startsWith("http://")`, `.startsWith("https://")` o `.includes(...)`, igual que `check-offline.sh`.
+- **Compatibilidad:** el binario es específico del OS/arquitectura. No hace falta Rust para `npm ci` ni `npm run verify`; el gate ejecuta siempre los scripts portables.
+- **Sin equivalencia implícita:** el binario histórico no tiene el mismo alcance ni todas las excepciones contextuales del auditor offline vigente. Un resultado Rust no sustituye `verify`; tampoco se ejecuta y luego se ignora un fallo suyo dentro del gate.
+- **Hooks:** el instalador histórico puede usarlo como diagnóstico adicional de pre-commit. Esos hooks locales no son requisitos ocultos de CI ni sustituyen el gate canónico; F1 no los instala ni cambia.
 - **Qué unifica:**
   - `--code`: LOC guard, TODO/FIXME y offline-first → fallback: `check-file-size.sh`, `check-offline.sh`, `check-docs.sh`
   - `--traceability`: RF, HU, ADR, CHANGELOG y BACKLOG → fallback: `check-traceability.py`

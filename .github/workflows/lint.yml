@@ -5,7 +5,7 @@
 #
 # ¿Qué hace?
 #   1. Instala Node.js y las dependencias del proyecto.
-#   2. Corre lint, tests, build, bundle budget y auditorías documentales.
+#   2. Corre exactamente npm run verify, igual que el gate local.
 #   3. Reporta advertencias y errores en la pestaña Actions de GitHub.
 #
 # ¿Bloquea el push? NO. Solo informa.
@@ -34,7 +34,7 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version-file: ".nvmrc"
           cache: "npm"
 
       # 3. Configurar Python para scripts documentales
@@ -43,41 +43,14 @@ jobs:
         with:
           python-version: "3.12"
 
-      # 4. Instalar dependencias (usa el package-lock.json para reproducibilidad)
+      # 4. Diagnosticar versiones antes de instalar o ejecutar tests
+      - name: Verificar entorno canónico
+        run: npm run check:runtime
+
+      # 5. Instalar dependencias (usa el package-lock.json para reproducibilidad)
       - name: Instalar dependencias
         run: npm ci
 
-      # 5. Correr chequeos de código y producto
-      - name: Correr ESLint
-        run: npm run lint
-
-      - name: Correr tests unitarios
-        run: npm run test
-
-      - name: Compilar build web
-        run: npm run build
-
-      - name: Verificar presupuesto de bundle
-        run: npm run check:size
-
-      - name: Bloquear diálogos nativos no permitidos
-        run: npm run check:native-dialogs
-
-      # 6. Correr auditorías documentales y de schema
-      - name: Auditar trazabilidad RF/HU/ADR
-        run: npm run check:traceability
-
-      - name: Auditar links internos de documentación
-        run: npm run check:docs
-
-      - name: Verificar schema SQLite documentado
-        run: npm run check:schema
-
-      - name: Verificar DBML generado desde código
-        run: npm run check:dbml
-
-      - name: Validar jerarquía de materias
-        run: npm run check:subjects
-
-      - name: Ejecutar auditoría a11y estática
-        run: npm run check:a11y
+      # 6. Unión de controles local/CI; sin lista alternativa ni binario ignorado
+      - name: Ejecutar gate canónico completo
+        run: npm run verify

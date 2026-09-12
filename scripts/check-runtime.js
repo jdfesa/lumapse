@@ -28,10 +28,11 @@ function main() {
     const { engines, packageManager } = JSON.parse(readFileSync(new URL('package.json', root), 'utf8'))
     const versionFile = readFileSync(new URL('.nvmrc', root), 'utf8').trim()
     // npm_execpath identifica el npm que lanzó el lifecycle, no otro del PATH.
+    const options = { encoding: 'utf8', timeout: 10000 }
     const npm = process.env.npm_execpath
-      ? spawnSync(process.execPath, [process.env.npm_execpath, '--version'], { encoding: 'utf8' })
-      : spawnSync('npm', ['--version'], { encoding: 'utf8' })
-    const npmVersion = npm.status === 0 ? npm.stdout.trim() : ''
+      ? spawnSync(process.execPath, [process.env.npm_execpath, '--version'], options)
+      : spawnSync('npm', ['--version'], options)
+    const npmVersion = !npm.error && npm.status === 0 ? npm.stdout.trim() : ''
     const errors = validateRuntime({ nodeVersion: process.versions.node, npmVersion, versionFile, engines, packageManager })
     if (errors.length) {
       console.error(`[FALLO] Entorno no canónico:\n- ${errors.join('\n- ')}`)

@@ -1,160 +1,61 @@
 #!/usr/bin/env bash
+# Gate canónico compartido por npm run verify, npm run quality y CI.
+# El auditor Rust es diagnóstico optativo: nunca decide ni sustituye controles.
+set -Eeuo pipefail
+PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$PROJECT_ROOT"
 
-# ==============================================================================
-# Lumapse — Quality Gate
-# ==============================================================================
-# Ejecuta todos los chequeos de calidad del proyecto en un solo comando.
-# Diseñado para correr antes de cerrar una sesión de trabajo, antes de
-# un commit importante o como validación general del estado del proyecto.
-# ==============================================================================
+if [ "$#" -ne 0 ]; then
+  echo "[FALLO] El gate completo no admite filtros ni argumentos."
+  exit 2
+fi
 
-set -e
-
-echo "🔍 Lumapse — Quality Gate"
-echo "=================================================="
+echo "Lumapse — Quality Gate"
+# Fallar antes de cualquier suite si el entorno no es el declarado.
+npm run check:runtime --silent
 
 FAIL=0
-
-tests_finished_without_failures() {
-  local output="$1"
-
-  printf '%s\n' "$output" | grep -Eq 'Test Files[[:space:]].*passed[[:space:]]+\([0-9]+\)' || return 1
-  printf '%s\n' "$output" | grep -Eq 'Tests[[:space:]].*passed[[:space:]]+\([0-9]+\)' || return 1
-  ! printf '%s\n' "$output" | grep -Eq '^(.*Test Files|.*Tests)[[:space:]].*failed'
+run_check() {
+  local label="$1"
+  shift
+  printf '\n--- %s ---\n' "$label"
+  if "$@"; then
+    echo "[OK] $label"
+  else
+    local code=$?
+    echo "[FALLO] $label (exit $code)"
+    FAIL=1
+  fi
 }
 
-# 1. Linting
+TEST_TMP="$(mktemp -d "${TMPDIR:-/tmp}/lumapse-quality.XXXXXX")"
+trap 'rm -rf "$TEST_TMP"' EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+
+run_check lint npm run lint --silent
+run_check test:tooling npm run test:tooling --silent
+# Un worker limita memoria, no cantidad de casos. No aceptar .only ni resúmenes
+# textuales como evidencia: exit no cero (incluido 139) siempre bloquea.
+run_check test npm run test --silent -- --maxWorkers=1 --allowOnly=false \
+  --reporter=default --reporter=json --outputFile.json="$TEST_TMP/vitest.json"
+run_check test:report node scripts/check-test-report.js "$TEST_TMP/vitest.json"
+run_check build npm run build --silent
+
+for check in typecheck check:toolchain check:version check:db-smoke check:size \
+  check:native-dialogs check:a11y check:traceability check:docs check:schema \
+  check:dbml check:subjects check:offline; do
+  run_check "$check" npm run "$check" --silent
+done
+
+# Se conservan los diagnósticos históricos y sus umbrales: sus avisos de deuda
+# no son fallos, pero un error de ejecución de la herramienta sí lo es.
+run_check file-size bash scripts/check-file-size.sh
+run_check quick-docs bash scripts/check-docs.sh
+
 echo ""
-echo "[1/4] Ejecutando ESLint..."
-if npm run lint --silent 2>&1; then
-  echo "OK Lint: OK"
-else
-  echo "FALLO Lint: FALLO"
-  FAIL=1
-fi
-
-# 2. Tests unitarios
-echo ""
-echo "[2/4] Ejecutando tests unitarios..."
-TEST_LOG="$(mktemp "${TMPDIR:-/tmp}/lumapse-tests.XXXXXX")"
-set +e
-npm run test --silent 2>&1 | tee "$TEST_LOG"
-TEST_RUN_EXIT=${PIPESTATUS[0]}
-set -e
-TEST_OUTPUT="$(cat "$TEST_LOG")"
-rm -f "$TEST_LOG"
-if [ $TEST_RUN_EXIT -eq 0 ]; then
-  echo "OK Tests: OK"
-elif [ $TEST_RUN_EXIT -eq 139 ] && tests_finished_without_failures "$TEST_OUTPUT"; then
-  echo "OK Tests: OK (⚠️  Node segfault al cerrar — ignorado)"
-else
-  echo "FALLO Tests: FALLO (exit $TEST_RUN_EXIT)"
-  FAIL=1
-fi
-
-# 3. Build de produccion
-echo ""
-echo "[3/4] Ejecutando build de produccion..."
-if npm run build --silent 2>&1; then
-  echo "OK Build: OK"
-else
-  echo "FALLO Build: FALLO"
-  FAIL=1
-fi
-
-# 4. Auditoría de código y documentación
-#    Estrategia: usa el binario Rust cuando esta disponible y ejecutable.
-#    Si el binario falta o es incompatible con el OS actual, cae a los scripts
-#    Python/Shell preservados. Si Rust corre y encuentra problemas reales, no
-#    se enmascara el resultado con fallback.
-echo ""
-echo "[4/4] Ejecutando auditorías de código..."
-
-AUDIT_BIN="./scripts/lumapse-audit-bin"
-
-if [ -x "$AUDIT_BIN" ] && "$AUDIT_BIN" --help >/dev/null 2>&1; then
-  if "$AUDIT_BIN" --all; then
-    echo "✅ lumapse-audit (Rust): OK"
-  else
-    echo "❌ lumapse-audit (Rust): encontró problemas reales"
-    FAIL=1
-  fi
-else
-  echo "⚠️  Binario Rust no disponible o incompatible con este OS."
-  echo "    Usando modo de compatibilidad (Python/Shell)..."
-  echo ""
-
-  # 4a. Guardia de tamaño de archivos (parte de --code)
-  echo "  [4a] check-file-size.sh..."
-  if bash scripts/check-file-size.sh; then
-    echo "  ✅ File size: OK"
-  else
-    echo "  ⚠️  File size: AVISOS (no bloqueante)"
-  fi
-
-  # 4b. Auditoria offline-first (parte de --code)
-  echo "  [4b] check-offline.sh..."
-  if bash scripts/check-offline.sh; then
-    echo "  ✅ Offline-first: OK"
-  else
-    echo "  ⚠️  Offline-first: REFERENCIAS EXTERNAS"
-    FAIL=1
-  fi
-
-  # 4c. Auditoria historica de TODOs y estado Git (parte documental de --code)
-  echo "  [4c] check-docs.sh..."
-  if bash scripts/check-docs.sh; then
-    echo "  ✅ Quick docs/code audit: OK"
-  else
-    echo "  ⚠️  Quick docs/code audit: AVISOS"
-  fi
-
-  # 4d. Trazabilidad RF/HU/ADR (reemplaza --traceability)
-  echo "  [4d] check-traceability.py..."
-  if python3 scripts/check-traceability.py.replaced 2>/dev/null || python3 scripts/check-traceability.py 2>/dev/null; then
-    echo "  ✅ Traceability: OK"
-  else
-    echo "  ⚠️  Traceability: AVISOS"
-    FAIL=1
-  fi
-
-  # 4e. Sincronización schema SQLite (reemplaza --schema)
-  echo "  [4e] check-schema-sync.py..."
-  if python3 scripts/check-schema-sync.py; then
-    echo "  ✅ Schema sync: OK"
-  else
-    echo "  ⚠️  Schema sync: DIFERENCIAS"
-    FAIL=1
-  fi
-
-  # 4f. Links internos en documentación (reemplaza --doc-links)
-  echo "  [4f] check-doc-links.py..."
-  if python3 scripts/check-doc-links.py; then
-    echo "  ✅ Doc links: OK"
-  else
-    echo "  ⚠️  Doc links: LINKS ROTOS"
-    FAIL=1
-  fi
-
-  # 4g. Jerarquía de materias (reemplaza --hierarchy)
-  echo "  [4g] validate-subjects-hierarchy.py..."
-  if python3 scripts/validate-subjects-hierarchy.py; then
-    echo "  ✅ Hierarchy: OK"
-  else
-    echo "  ⚠️  Hierarchy: VIOLACIONES"
-    FAIL=1
-  fi
-
-  echo ""
-  echo "  Modo compatibilidad completado."
-fi
-
-# Resumen final
-echo ""
-echo "=================================================="
-if [ $FAIL -eq 0 ]; then
-  echo "OK Quality Gate: TODOS LOS CHEQUEOS PASARON"
-else
-  echo "FALLO Quality Gate: HAY FALLOS -- revisar la salida anterior"
+if [ "$FAIL" -ne 0 ]; then
+  echo "[FALLO] Quality Gate: hay controles fallidos."
   exit 1
 fi
+echo "[OK] Quality Gate: todos los controles pasaron."
