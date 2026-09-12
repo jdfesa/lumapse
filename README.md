@@ -292,6 +292,7 @@ Paralelamente al desarrollo se realizó un relevamiento con potenciales usuarios
 - [Portal documental](./docs/README.md) — Jerarquía, fuentes canónicas y criterio editorial
 - [Informe final ensamblado](./docs/informe-final/INFORME-FINAL-COMPLETO.md) — Checkpoint académico generado desde los capítulos fuente
 - [Hito 06 — Entrega Final](./docs/hitos/hito-06-octubre.md) — Alcance y criterios de cierre vigentes
+- [Plan de desarrollo inmediato de la beta](./docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) — Propuesta para próximas sesiones, con evidencia y criterios de aceptación; pendiente de revisión por PR
 - [Cheat sheet de defensa](./docs/gestion/cheatsheet-defensa.md) — Métricas y respuestas verificables para la presentación
 - [Architecture Decision Records](./docs/adr/) — Decisiones técnicas justificadas
 - [Diagramas UML](./docs/diagramas/) — Casos de Uso, Secuencia, Modelo de Dominio (Mermaid)

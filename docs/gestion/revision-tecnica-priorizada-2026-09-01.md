@@ -1,6 +1,6 @@
 # Revisión Técnica Priorizada — 2026-09-01
 
-**Estado:** Vigente — AUD-001 a AUD-007 cerrados e incluidos en `v0.5.0`; AUD-008 a AUD-013 continúan como seguimiento
+**Estado:** Vigente — AUD-001 a AUD-007 cerrados e incluidos en `v0.5.0`; AUD-008 a AUD-013 continúan como seguimiento; AUD-014 agregado por revisión acotada del 2026-09-12
 **Rama original de auditoría:** `fix/note-save-integrity`
 **Commit base original revisado:** `cd60c0e` (`main`)
 **Versión original revisada:** `0.4.8` (Beta); cierres publicados en `v0.5.0`<br>
@@ -90,6 +90,10 @@ store, no como métrica integral de toda la aplicación.
 
 ## 6. Registro priorizado de hallazgos
 
+La auditoría original registró trece hallazgos. El complemento AUD-014 y la secuencia inmediata
+propuesta se documentan en el [plan del 2026-09-12](./plan-desarrollo-inmediato-beta-2026-09-12.md),
+sin convertir la evidencia histórica de las secciones siguientes en una nueva auditoría integral.
+
 | ID | Prioridad | Hallazgo | Naturaleza | Estado |
 |---|---|---|---|---|
 | AUD-001 | P0 | Pérdida de borrador ante error SQLite | Bug confirmado | Resuelto en PR #2 |
@@ -105,6 +109,7 @@ store, no como métrica integral de toda la aplicación.
 | AUD-011 | P2 | Conteos N+1 y posibles índices faltantes | Rendimiento | Pendiente de medición |
 | AUD-012 | P2 | Deriva de cohesión entre features de presentación | Arquitectura | Pendiente |
 | AUD-013 | P2 | Poco margen de bundle y visibilidad parcial de coverage UI | Mantenibilidad | Monitorear |
+| AUD-014 | P1 | Creación persistida presentada como fallo al rechazar una recarga | Defecto confirmado en notas y fechas | Pendiente; reproducción y propuesta F2 en el plan del 2026-09-12 |
 
 ## 7. Hallazgos detallados
 
@@ -425,13 +430,18 @@ test(editor): cover failed and concurrent note saves
 | 3 | `fix/aud-004-dependency-security` | Cerrado en PR #5: AUD-004 |
 | 4 | `fix/store-action-contract` | Cerrado en PR #6: AUD-007 |
 | 5 | `fix/sqlite-write-coordination` | Cerrado en PR #7: propiedad SQLite y arranque recuperable |
-| 6 | `fix/async-request-ownership` | Implementado; validación canónica/Android e integración pendientes |
+| 6 | `fix/async-request-ownership` | Cerrado en PR #8 e incluido en `v0.5.0`; conservar evidencia de las limitaciones locales del gate |
 | 7 | `fix/quality-gate-portability` | Unificar gate local/CI y resolver matriz Node |
 | 8 | `refactor/store-batched-updates` | Refresh atómico y suscripciones más selectivas |
 | 9 | `refactor/subject-query-aggregation` | Eliminar N+1 con evidencia de rendimiento |
 | 10 | `refactor/content-view-routing` | Recuperar cohesión del feed y fronteras de features |
 
 El orden puede ajustarse por riesgo operativo, pero cada rama debe preservar un alcance revisable.
+
+**Complemento 2026-09-12:** la tabla anterior conserva la secuencia original. Para las próximas
+sesiones se propone F1 (AUD-008/AUD-009), F2 (AUD-014) y F3 (medición/validación), según el
+[plan inmediato](./plan-desarrollo-inmediato-beta-2026-09-12.md). Las optimizaciones y refactors de
+las filas 8 a 10 no quedan autorizados ni iniciados por este plan.
 
 ## 10. Comandos y evidencia de validación
 

@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 06 — Entrega Final
 > **Hito 05:** Cerrado documentalmente el 2026-07-15 sobre la beta operativa `v0.4.8`
-> **Última actualización:** 2026-09-05 — pre-release `v0.5.0` publicada con AUD-001 a AUD-007, correcciones táctiles y tooling de release sincronizado
+> **Última actualización:** 2026-09-12 — plan inmediato propuesto para revisión; AUD-014 reproducido, sin cambios de implementación ni versión
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -18,6 +18,8 @@ Hito 05 quedó cerrado documentalmente el 2026-07-15. Entregó el quality gate, 
 Hito 06 queda activo para completar la documentación final, verificar la maquetación de los gráficos de base de datos, cerrar la matriz RNF y preparar la presentación. La segunda beta [`v0.5.0`](https://github.com/jdfesa/lumapse/releases/tag/v0.5.0) ya está publicada: fija el commit `5840755`, distribuye `lumapse-v0.5.0.apk` y reúne AUD-001 a AUD-007, las correcciones táctiles de organización y el tooling de release sincronizado. Este corte es la referencia operativa vigente, pero no se presenta todavía como versión estable ni como cierre académico definitivo.
 
 La revisión técnica priorizada del 2026-09-01 abrió trece hallazgos trazables. AUD-001 y AUD-002 quedaron resueltos mediante PR #2; AUD-003 mediante PR #3; AUD-004 mediante PR #5; AUD-007 mediante PR #6; AUD-005 mediante PR #7 y AUD-006 mediante PR #8. Los siete cierres forman parte de `v0.5.0`. El gate del corte aprobó 67 archivos y 1065 tests; la limitación local de Node 26 continúa registrada como AUD-009 y no invalida la ejecución canónica con Node 22. La validación funcional de 500 notas de AUD-003 no sustituye las mediciones de latencia y rendimiento exigidas por `RNF-002` y `RNF-004`. Los hallazgos restantes mantienen sus prioridades y no se incorporan automáticamente al alcance de Hito 06.
+
+La revisión acotada del 2026-09-12 agregó **AUD-014**: una creación de nota o fecha ya persistida puede rechazar por fallo de recarga y duplicarse al reintentar. Se reprodujo sobre SQLite en memoria, no en Android. El [plan de desarrollo inmediato](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) propone abordarlo después de hacer reproducible el gate; su aceptación no implica implementación ni cierre del hallazgo.
 
 La revisión de exportación/importación corrige una sobrepromesa documental del Hito 03: los servicios base de Markdown no equivalían a un flujo de usuario validado. La opción "Compartir" para una nota individual (`RF-016`) solo tendría sentido si abre el share sheet nativo de Android y ofrece apps como WhatsApp; si termina copiando contenido, duplica una acción existente y agrega ruido. La portabilidad de workspace sí quedó resuelta de forma acotada con exportación e importación de backup `.zip` desde la vista Backup.
 
@@ -35,18 +37,21 @@ La trazabilidad de `v0.4.8` y `v0.5.0` queda distribuida entre `docs/gestion/lin
 
 ## Prioridad Inmediata — Hito 06
 
+**Propuesta pendiente de aceptación por PR:** concentrar las próximas sesiones técnicas en la siguiente secuencia. Alcance, archivos, pruebas, dependencias y criterios de salida viven en el [plan inmediato](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md); no se inicia implementación antes de integrar el plan con autorización.
+
 | Orden | Tarea | Criterio de cierre |
 |---|---|---|
-| 1 | Congelamiento editorial y visual | Consolidar evidencia, verificar bibliografía y confirmar legibilidad de gráficos DB en PDF y diapositivas |
-| 2 | Validación final | Consolidar el gate aprobado de `v0.5.0`, completar las mediciones RNF y repetir los casos aún no cubiertos sobre el artefacto versionado; la fricción de `Mover a` ya quedó corregida y validada |
-| 3 | Presentación y defensa | Preparar guion, demo, cheatsheet, material visual y contingencias |
-| 4 | Corte final | Decidir si `v0.5.0` será la beta de referencia de la defensa o si corresponde una versión estable posterior; mantener versión, firma, hash, tag y línea base inequívocos |
+| F1 | Gate portable y Node explícito — AUD-008/AUD-009 | Mismo `verify` local/CI, Node 22 fijado, sin falsos positivos CSP ni aceptación de crashes |
+| F2 | Confirmación de creación — AUD-014 | Una escritura confirmada no se informa como fallida por una recarga; regresiones y smoke Android proporcionales |
+| F3 | Evidencia del núcleo y 500 notas | Resultados trazables de CRUD/FPS, offline y continuidad; optimizaciones solo si una medición las justifica y se aprueba otro PR |
+
+Continúan los pendientes de **congelamiento editorial/visual**, **validación RNF restante**, **presentación/defensa** y **línea base final**. No quedan completados ni descartados por esta secuencia técnica. No se fuerza una versión estable o `1.0.0` al terminar F3.
 
 ---
 
 ## Revisión técnica priorizada — estado vivo
 
-El análisis detallado permanece en [`docs/gestion/revision-tecnica-priorizada-2026-09-01.md`](docs/gestion/revision-tecnica-priorizada-2026-09-01.md). Esta tabla fija el estado operativo después de cerrar AUD-001 a AUD-005 y AUD-007.
+El análisis original permanece en [`docs/gestion/revision-tecnica-priorizada-2026-09-01.md`](docs/gestion/revision-tecnica-priorizada-2026-09-01.md). Esta tabla fija el estado operativo después de cerrar AUD-001 a AUD-007 y registrar el complemento acotado del 2026-09-12.
 
 | ID | Prioridad | Frente | Estado operativo |
 |---|---|---|---|
@@ -57,8 +62,9 @@ El análisis detallado permanece en [`docs/gestion/revision-tecnica-priorizada-2
 | AUD-005 | P1 | Coordinación SQLite, migraciones y arranque | Cerrado e integrado mediante PR #7; 1035 tests, gate canónico y prueba manual Android aprobados. [Evidencia](docs/gestion/analisis-aud-005-coordinacion-sqlite-2026-09-04.md) |
 | AUD-006 | P1 | Resultados async obsoletos | Cerrado en [PR #8](https://github.com/jdfesa/lumapse/pull/8), incluido en `v0.5.0`; Mac/Android y regresiones aprobados. [Evidencia](docs/gestion/analisis-aud-006-ownership-solicitudes-async-2026-09-05.md) |
 | AUD-007 | P1 | Contratos incompatibles para errores de mutaciones | Cerrado en PR #6; contrato único, consumidores y Android aprobados |
-| AUD-008–AUD-009 | P1 | Portabilidad del gate y Node 26 | Pendientes; abordar sin relajar controles |
+| AUD-008–AUD-009 | P1 | Portabilidad del gate y Node 26 | Pendientes; propuesta F1 del plan inmediato, sin relajar controles |
 | AUD-010–AUD-013 | P2 | Escalabilidad, rendimiento, cohesión y margen de bundle/coverage | Monitorear o medir; no bloquean por sí solos el cierre actual |
+| AUD-014 | P1 | Creación persistida rechaza por fallo de recarga | Confirmado en notas/fechas con SQLite en memoria; propuesta F2, sin implementación ni validación Android |
 
 ---
 
@@ -99,6 +105,7 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Documentación | Congelar documentos para la entrega académica | Alta | La documentación viva se reconcilió con `v0.5.0`; restan bibliografía, matriz RNF, revisión de maquetación y materiales de defensa |
 | Dependencias | Repetir auditorías en cada corte candidato | Recurrente | AUD-004 quedó cerrado con grafo mínimo, auditorías 0/0 y Android aprobado; revalidar porque los advisories evolucionan |
 | Tooling | Resolver portabilidad de gate y Node 26 (AUD-008/AUD-009) | Media | Distinguir falsos positivos CSP del fallback offline y eliminar la dependencia del workaround de Web Storage sin relajar controles |
+| Store / formularios | Separar creación confirmada de recarga fallida (AUD-014) | Alta | Dos caracterizaciones verifican duplicados por reintento; contrato y criterios propuestos en F2 del [plan inmediato](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) |
 | Tooling DB | Ampliar el smoke test a `academic_events` y constraints relevantes | Media | El DDL completo se ejecuta, pero las aserciones explícitas de tablas/columnas/relaciones se concentran en materias, notas y metadata; decidir su ampliación antes de presentar cobertura exhaustiva |
 | Diagramas | Revisar Mermaid de casos de uso, secuencia y dominio | Baja | Completado el 2026-07-03 contra `v0.4.8`; reabrir solo si cambia el alcance o durante la exportacion final a PDF/LaTeX |
 | Informe final | Preparar conversion LaTeX/PDF | Media | Consideraciones registradas en `docs/informe-final/README.md`; mantener Markdown como fuente de verdad y abrir pipeline LaTeX solo cuando el contenido este congelado |

@@ -12,14 +12,22 @@
 
 **Objetivo:** cerrar documentación, gráficos de base de datos, validación final y materiales de presentación sin ampliar el producto.
 
-## Prioridad inmediata
+## Prioridad inmediata — propuesta para próximas sesiones
+
+El [plan de desarrollo inmediato de la beta](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) está **pendiente de aceptación por PR**. Solo después de autorizar su merge e integrarlo se inicia F1. Ninguna de estas fases está implementada; cada una tendrá su rama, evidencia y revisión.
 
 | Orden | Frente | Criterio de cierre |
 |---|---|---|
-| 1 | Congelamiento editorial y visual | Evidencia y bibliografía consolidadas; gráficos DB legibles en PDF y diapositivas |
-| 2 | Validación final | Consolidar el gate de `v0.5.0`, completar la checklist Android pendiente y cerrar la matriz RNF con observaciones clasificadas |
-| 3 | Defensa y presentación | Guion, cheatsheet, demo y material visual preparados y ensayados |
-| 4 | Línea base final | Decidir si `v0.5.0` será la referencia de defensa o si corresponde un corte estable posterior; versión, firma, hash y tag siempre inequívocos |
+| F1 | Gate portable — AUD-008/AUD-009 | Node 22 fijado y mismo `verify` local/CI, sin depender de workaround, binario ignorado o falsos positivos CSP |
+| F2 | Creación confirmada — AUD-014 | No duplicar notas/fechas al fallar una recarga posterior a la escritura; regresiones y smoke Android |
+| F3 | Validación del núcleo | Fixture compatible de 500 notas, mediciones CRUD/FPS y casos offline/continuidad con evidencia del artefacto |
+
+El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de línea base final **siguen pendientes** en la checklist. F3 no los sustituye ni obliga a publicar `1.0.0`. WIP máximo: dos elementos entre En Curso y En Revisión.
+
+- [ ] Aceptar e integrar el PR del plan inmediato; no implementar antes de ese punto.
+- [ ] F1: cerrar AUD-008/AUD-009 en `fix/quality-gate-portability` con pruebas del gate y CI.
+- [ ] F2: cerrar el alcance confirmado de AUD-014 en `fix/post-write-refresh-contract` sin confundir fallo de escritura con fallo de refresco.
+- [ ] F3: registrar la evidencia en `docs/beta-core-validation`; no optimizar consultas/store sin medición y nueva aprobación.
 
 ## Checklist de trabajo
 
