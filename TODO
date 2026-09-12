@@ -18,7 +18,7 @@ El [plan de desarrollo inmediato de la beta](docs/gestion/plan-desarrollo-inmedi
 
 | Orden | Frente | Criterio de cierre |
 |---|---|---|
-| F1 | Gate portable — AUD-008/AUD-009 | Node 22 fijado y mismo `verify` local/CI, sin depender de workaround, binario ignorado o falsos positivos CSP |
+| F1 | Gate portable — AUD-008/AUD-009 | Node 22.20.0/npm 10.9.3 fijados y mismo `verify` local/CI, sin depender de workaround, binario ignorado o falsos positivos CSP |
 | F2 | Creación confirmada — AUD-014 | No duplicar notas/fechas al fallar una recarga posterior a la escritura; regresiones y smoke Android |
 | F3 | Validación del núcleo | Fixture compatible de 500 notas, mediciones CRUD/FPS y casos offline/continuidad con evidencia del artefacto |
 

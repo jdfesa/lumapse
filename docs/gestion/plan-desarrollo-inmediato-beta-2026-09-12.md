@@ -2,7 +2,7 @@
 
 **Estado:** Propuesta para revisión por PR; ninguna fase de implementación está iniciada.
 
-**Rama documental:** `docs/plan-inmediato-beta`.
+**Rama documental:** `docs/immediate-beta-plan`.
 
 **Base inspeccionada:** `origin/main` en `91723d6` (2026-09-07), posterior a la publicación de `v0.5.0`.
 
@@ -12,7 +12,7 @@
 
 ## 1. Decisión propuesta
 
-Trabajar en **tres entregables secuenciales y revisables**: hacer reproducible la verificación, corregir una ambigüedad de guardado confirmada y medir/validar el núcleo en Android. No agregar funcionalidades ni cambiar de arquitectura.
+Trabajar en **tres entregables secuenciales y revisables**: hacer reproducible la verificación sobre Node 22.20.0/npm 10.9.3, corregir una ambigüedad de guardado confirmada y medir/validar el núcleo en Android. No agregar funcionalidades ni cambiar de arquitectura.
 
 **La primera tarea después de aceptar e integrar este PR será F1, en `fix/quality-gate-portability`.** F1 es un prerrequisito de verificación, no una razón para postergar indefinidamente el defecto funcional F2. Si excede una sesión, registrar el bloqueo y dividir su entrega antes de incorporar otro objetivo.
 
@@ -38,7 +38,7 @@ No se realizó una auditoría integral del repositorio, un pentest, una nueva co
 |---|---|---|
 | AUD-001 a AUD-007 y `Mover a` | Sus correcciones están integradas en `v0.5.0`; el código reciente conserva single-flight, propagación de errores y ownership de solicitudes | **Cerrados.** Mantener sus regresiones; no reabrirlos por una recomendación histórica |
 | AUD-008: gate local/CI | El fallback offline rechaza las dos entradas `http://localhost` del CSP. CI ejecuta una lista propia que omite typecheck, offline, toolchain y DB smoke; `verify` tampoco incluye el DBML que CI sí controla | **Confirmado. F1.** Unificar la unión de controles, no su mínimo común |
-| AUD-009: entorno Node | README ofrece `v22+`, CI fija 22 y no existe archivo de versión. En Node 26.7.0, sin `NODE_OPTIONS`, la suite con un worker falla 60 tests por `localStorage` indefinido | **Confirmado. F1.** Proponer Node 22 como entorno soportado explícito; no ampliar ahora la matriz a Node 26 |
+| AUD-009: entorno Node | README ofrecía `v22+`, CI fija 22 y no existe archivo de versión. En Node 26.7.0, sin `NODE_OPTIONS`, la suite con un worker falla 60 tests por `localStorage` indefinido | **Confirmado. F1.** La decisión vigente fija Node 22.20.0/npm 10.9.3, ya registrados en la evidencia de la Mac canónica; no ampliar ahora la matriz a Node 26 |
 | AUD-014: escritura confirmada presentada como fallo | Dos caracterizaciones sobre SQLite en memoria prueban que crear una nota/fecha, fallar su lectura secundaria y reintentar deja dos filas con IDs distintos | **Nuevo defecto confirmado, P1. F2.** Separar persistencia de actualización de datos derivados |
 | AUD-010/AUD-011: notificaciones y conteos | `createNote`, `moveNote` y `deleteNote` encadenan loaders notificantes y otra notificación; `getSubjectTree`/`getTrashItems` conservan conteos secuenciales por contenedor | **Patrones confirmados; impacto temporal no medido. F3 mide, no optimiza por intuición** |
 | Smoke de base de datos | Ejecuta el DDL actual, pero `EXPECTED_TABLES`/`EXPECTED_COLUMNS` y las aserciones de relaciones no exigen `academic_events`, sus índices ni su `CHECK(type)` | **Brecha de cobertura**, ya registrada en backlog; no demuestra un defecto del schema. No presentarlo como validación exhaustiva |
@@ -58,7 +58,7 @@ Esto **no demuestra pérdida de datos, frecuencia del fallo en teléfonos ni una
 
 | Orden | Entregable | Rama prevista | Dependencia | Salida revisable |
 |---|---|---|---|---|
-| Actual | Analizar y acordar el alcance | `docs/plan-inmediato-beta` | Ninguna | Este documento, pendientes reconciliados y PR sin merge automático |
+| Actual | Analizar y acordar el alcance | `docs/immediate-beta-plan` | Ninguna | Este documento, pendientes reconciliados y PR sin merge automático |
 | F1 · sesión 1 | Gate portable y entorno explícito | `fix/quality-gate-portability` | PR del plan aceptado e integrado | Un PR de tooling que cierra AUD-008/AUD-009 con evidencia local/CI |
 | F2 · sesión 2, ampliable a 3 | Confirmación inequívoca de creación | `fix/post-write-refresh-contract` | F1 integrado | Un PR funcional para AUD-014, regresiones permanentes y smoke Android proporcional |
 | F3 · siguiente sesión | Validación crítica y medición con 500 notas | `docs/beta-core-validation` | F2 integrado y dispositivo autorizado disponible | Fixture/protocolo reproducibles y reporte; ninguna optimización incluida |
@@ -71,7 +71,7 @@ Cada fase vuelve a `main` actualizado antes de crear su rama y espera revisión 
 
 **Cambios acotados:**
 
-1. Fijar Node 22 mediante un archivo de versión y `engines`; elegir y registrar un patch compatible con el lockfile, consumido también por CI. Corregir `v22+` en README y documentar instalación/verificación. Una versión no soportada debe producir un diagnóstico temprano, no 60 fallos engañosos. No actualizar dependencias por arrastre.
+1. Fijar **Node 22.20.0 y npm 10.9.3**, ya registrados en la evidencia de la Mac canónica, mediante un archivo de versión, `engines` y CI. Mantener README e instrucciones de instalación/verificación alineados. Una versión distinta debe producir un diagnóstico temprano, no 60 fallos engañosos. No actualizar dependencias por arrastre ni declarar soporte Node 26.
 2. Corregir la clasificación offline mediante una excepción contextual para los orígenes locales requeridos en el CSP. No eliminar la CSP ni ignorar `index.html`, todas las URLs o líneas completas que contengan `localhost`.
 3. Hacer que `npm run verify` y CI ejecuten la misma unión de controles: lint, tests, build, typecheck, toolchain, versión, DB smoke, presupuesto, diálogos nativos, a11y, trazabilidad, links, schema, DBML, jerarquía y offline. Mantener identificable qué control falla.
 4. Garantizar que la presencia de `scripts/lumapse-audit-bin` no pueda omitir controles obligatorios ni cambiar su criterio de aceptación. Puede conservarse como acelerador/diagnóstico, pero no como requisito oculto. No emprender una reescritura del auditor Rust.
@@ -81,7 +81,7 @@ Cada fase vuelve a `main` actualizado antes de crear su rama y espera revisión 
 
 **Criterios de aceptación:**
 
-- [ ] Checkout limpio en Node 22: `npm ci` y `npm run verify` terminan con exit 0, sin `NODE_OPTIONS` ni binario local preexistente; mismo comando verde en CI.
+- [ ] Checkout limpio en Node 22.20.0/npm 10.9.3: `npm ci` y `npm run verify` terminan con exit 0, sin `NODE_OPTIONS` ni binario local preexistente; mismo comando verde en CI y en ambas máquinas.
 - [ ] Regresiones offline: CSP local permitido; URL remota real rechazada, incluso compartiendo línea con un origen local; host como `localhost.example.org` no queda permitido por substring. Assets remotos JS/TS/CSS/HTML siguen detectándose.
 - [ ] Pruebas del gate: un check fallido, suite incompleta o salida anormal hacen fallar el agregado; el caso exitoso funciona con y sin el acelerador opcional.
 - [ ] Node fuera del rango declarado se rechaza o diagnostica inequívocamente antes de la suite. El workaround de Node 26 queda como antecedente, no como solución canónica.
@@ -160,7 +160,7 @@ Entorno local: Node `26.7.0`, npm `12.0.2`; no había `NODE_OPTIONS` ni binario 
 | `npm run typecheck` / `npm run lint` | Exit 0; lint conserva 3 warnings conocidos (complejidad/tamaño de editor y tamaño de `BackupImportPlanService.ts`) |
 | `check:docs`, `check:traceability`, `check:toolchain`, `check:schema`, `check:dbml`, `check:subjects`, `check:version` | Controles individuales aprobados; versión `0.5.0/500` sin cambios |
 
-Los logs diagnósticos locales se guardaron en `tmp/plan-inmediato-beta-2026-09-12/`, ignorado por Git. Los resultados resumidos y el reproducer se conservan aquí para no depender de esos temporales. No se ejecutaron en esta sesión el agregado `npm run verify`, un nuevo coverage, auditorías de dependencias, benchmark ni validación Android. La CI de este PR documental se registra en el propio PR y no demuestra que AUD-008/AUD-009 estén resueltos.
+Los logs diagnósticos locales se guardaron en `tmp/immediate-beta-plan-2026-09-12/`, ignorado por Git. Los resultados resumidos y el reproducer se conservan aquí para no depender de esos temporales. No se ejecutaron en esta sesión el agregado `npm run verify`, un nuevo coverage, auditorías de dependencias, benchmark ni validación Android. La CI de este PR documental se registra en el propio PR y no demuestra que AUD-008/AUD-009 estén resueltos.
 
 ## 7. Condiciones de aceptación de este PR documental
 
@@ -176,7 +176,7 @@ Los logs diagnósticos locales se guardaron en `tmp/plan-inmediato-beta-2026-09-
 
 En la raíz del repositorio, con las dependencias ya instaladas, crear los siguientes archivos **temporales**, no incorporarlos como tests de aceptación sin invertir antes el resultado esperado. Los helpers importados ya están versionados. La configuración usa un único worker y no toca una base de usuario.
 
-`tmp/plan-inmediato-beta-2026-09-12/vitest.config.mjs`:
+`tmp/immediate-beta-plan-2026-09-12/vitest.config.mjs`:
 
 ```js
 import base from '../../vitest.config.js'
@@ -184,13 +184,13 @@ export default {
   ...base,
   test: {
     ...base.test,
-    include: ['tmp/plan-inmediato-beta-2026-09-12/post-write-refresh.test.js'],
+    include: ['tmp/immediate-beta-plan-2026-09-12/post-write-refresh.test.js'],
     maxWorkers: 1,
   },
 }
 ```
 
-`tmp/plan-inmediato-beta-2026-09-12/post-write-refresh.test.js`:
+`tmp/immediate-beta-plan-2026-09-12/post-write-refresh.test.js`:
 
 ```js
 import { afterEach, beforeEach, expect, it } from 'vitest'
@@ -241,7 +241,7 @@ it('fecha confirmada: el rechazo y reintento generan dos filas', async () => {
 Ejecutar:
 
 ```bash
-npm test -- --config tmp/plan-inmediato-beta-2026-09-12/vitest.config.mjs
+npm test -- --config tmp/immediate-beta-plan-2026-09-12/vitest.config.mjs
 ```
 
 Resultado observado: **1 archivo / 2 tests aprobados** porque caracterizan el comportamiento defectuoso. No usan dispositivo Android: `platform: 'android'` selecciona el camino del adaptador simulado. F2 debe transformar estos casos en pruebas del contrato corregido y sumar la integración con sus formularios.

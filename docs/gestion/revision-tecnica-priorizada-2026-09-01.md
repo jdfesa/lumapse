@@ -303,6 +303,11 @@ regresión y alinear CI con un único gate reproducible.
 
 ### AUD-009 — Compatibilidad Node 26
 
+> **Decisión 2026-09-12:** la línea canónica queda fijada en Node `22.20.0` y npm `10.9.3`,
+> coincidente con la Mac que aprobó los gates de `v0.5.0`. F1 del
+> [plan inmediato](./plan-desarrollo-inmediato-beta-2026-09-12.md) debe llevar esa decisión a un
+> archivo de versión, `engines`, CI y diagnóstico temprano. No se declara soporte Node 26.
+
 README declara Node `v22+`, mientras CI fija Node 22 y no existe archivo de versión. Con Node
 `v26.7.0`, el `localStorage` experimental de Node interfiere con jsdom y el comando normal falla
 48 tests. Con `NODE_OPTIONS=--no-experimental-webstorage`, los 775 tests pasan.

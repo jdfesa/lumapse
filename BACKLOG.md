@@ -17,7 +17,7 @@ Hito 05 quedó cerrado documentalmente el 2026-07-15. Entregó el quality gate, 
 
 Hito 06 queda activo para completar la documentación final, verificar la maquetación de los gráficos de base de datos, cerrar la matriz RNF y preparar la presentación. La segunda beta [`v0.5.0`](https://github.com/jdfesa/lumapse/releases/tag/v0.5.0) ya está publicada: fija el commit `5840755`, distribuye `lumapse-v0.5.0.apk` y reúne AUD-001 a AUD-007, las correcciones táctiles de organización y el tooling de release sincronizado. Este corte es la referencia operativa vigente, pero no se presenta todavía como versión estable ni como cierre académico definitivo.
 
-La revisión técnica priorizada del 2026-09-01 abrió trece hallazgos trazables. AUD-001 y AUD-002 quedaron resueltos mediante PR #2; AUD-003 mediante PR #3; AUD-004 mediante PR #5; AUD-007 mediante PR #6; AUD-005 mediante PR #7 y AUD-006 mediante PR #8. Los siete cierres forman parte de `v0.5.0`. El gate del corte aprobó 67 archivos y 1065 tests; la limitación local de Node 26 continúa registrada como AUD-009 y no invalida la ejecución canónica con Node 22. La validación funcional de 500 notas de AUD-003 no sustituye las mediciones de latencia y rendimiento exigidas por `RNF-002` y `RNF-004`. Los hallazgos restantes mantienen sus prioridades y no se incorporan automáticamente al alcance de Hito 06.
+La revisión técnica priorizada del 2026-09-01 abrió trece hallazgos trazables. AUD-001 y AUD-002 quedaron resueltos mediante PR #2; AUD-003 mediante PR #3; AUD-004 mediante PR #5; AUD-007 mediante PR #6; AUD-005 mediante PR #7 y AUD-006 mediante PR #8. Los siete cierres forman parte de `v0.5.0`. El gate del corte aprobó 67 archivos y 1065 tests; la limitación local de Node 26 continúa registrada como AUD-009 y no invalida la ejecución canónica con Node 22.20.0/npm 10.9.3. La validación funcional de 500 notas de AUD-003 no sustituye las mediciones de latencia y rendimiento exigidas por `RNF-002` y `RNF-004`. Los hallazgos restantes mantienen sus prioridades y no se incorporan automáticamente al alcance de Hito 06.
 
 La revisión acotada del 2026-09-12 agregó **AUD-014**: una creación de nota o fecha ya persistida puede rechazar por fallo de recarga y duplicarse al reintentar. Se reprodujo sobre SQLite en memoria, no en Android. El [plan de desarrollo inmediato](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) propone abordarlo después de hacer reproducible el gate; su aceptación no implica implementación ni cierre del hallazgo.
 
@@ -41,7 +41,7 @@ La trazabilidad de `v0.4.8` y `v0.5.0` queda distribuida entre `docs/gestion/lin
 
 | Orden | Tarea | Criterio de cierre |
 |---|---|---|
-| F1 | Gate portable y Node explícito — AUD-008/AUD-009 | Mismo `verify` local/CI, Node 22 fijado, sin falsos positivos CSP ni aceptación de crashes |
+| F1 | Gate portable y Node explícito — AUD-008/AUD-009 | Mismo `verify` local/CI, Node 22.20.0/npm 10.9.3 fijados, sin falsos positivos CSP ni aceptación de crashes |
 | F2 | Confirmación de creación — AUD-014 | Una escritura confirmada no se informa como fallida por una recarga; regresiones y smoke Android proporcionales |
 | F3 | Evidencia del núcleo y 500 notas | Resultados trazables de CRUD/FPS, offline y continuidad; optimizaciones solo si una medición las justifica y se aprueba otro PR |
 
@@ -104,7 +104,7 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Framework UI | No incorporar Svelte por ahora | Baja | Costo de migracion alto vs beneficio actual; reabrir solo si DOM manual se vuelve una carga clara |
 | Documentación | Congelar documentos para la entrega académica | Alta | La documentación viva se reconcilió con `v0.5.0`; restan bibliografía, matriz RNF, revisión de maquetación y materiales de defensa |
 | Dependencias | Repetir auditorías en cada corte candidato | Recurrente | AUD-004 quedó cerrado con grafo mínimo, auditorías 0/0 y Android aprobado; revalidar porque los advisories evolucionan |
-| Tooling | Resolver portabilidad de gate y Node 26 (AUD-008/AUD-009) | Media | Distinguir falsos positivos CSP del fallback offline y eliminar la dependencia del workaround de Web Storage sin relajar controles |
+| Tooling | Resolver portabilidad de gate y Node 26 (AUD-008/AUD-009) | Media | Fijar Node 22.20.0/npm 10.9.3, diagnosticar versiones distintas y eliminar la dependencia del workaround de Web Storage sin relajar controles |
 | Store / formularios | Separar creación confirmada de recarga fallida (AUD-014) | Alta | Dos caracterizaciones verifican duplicados por reintento; contrato y criterios propuestos en F2 del [plan inmediato](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) |
 | Tooling DB | Ampliar el smoke test a `academic_events` y constraints relevantes | Media | El DDL completo se ejecuta, pero las aserciones explícitas de tablas/columnas/relaciones se concentran en materias, notas y metadata; decidir su ampliación antes de presentar cobertura exhaustiva |
 | Diagramas | Revisar Mermaid de casos de uso, secuencia y dominio | Baja | Completado el 2026-07-03 contra `v0.4.8`; reabrir solo si cambia el alcance o durante la exportacion final a PDF/LaTeX |
