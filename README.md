@@ -87,8 +87,8 @@ d48338e04021a6096fcaeaced5fde411911d403c9ea95407891d2b034515a884
 
 | Herramienta | Versión mínima | Verificar con |
 |---|---|---|
-| **Node.js** | v22+ | `node --version` |
-| **npm** | Incluido con Node 22 | `npm --version` |
+| **Node.js** | v22.20.0 | `node --version` |
+| **npm** | v10.9.3 | `npm --version` |
 | **Git** | v2+ | `git --version` |
 
 ```bash
@@ -107,6 +107,8 @@ npm run verify
 ```
 
 El servidor corre en `http://localhost:5173` con Hot Module Replacement activo.
+
+La línea canónica de desarrollo y CI es Node 22.20.0 con npm 10.9.3, coincidente con la Mac ya utilizada para los gates de `v0.5.0`. F1 del [plan inmediato](./docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) debe fijarla y diagnosticar desvíos automáticamente; Node 26 no forma parte del entorno soportado actual.
 
 ### Compilación Android (APK)
 
@@ -292,6 +294,7 @@ Paralelamente al desarrollo se realizó un relevamiento con potenciales usuarios
 - [Portal documental](./docs/README.md) — Jerarquía, fuentes canónicas y criterio editorial
 - [Informe final ensamblado](./docs/informe-final/INFORME-FINAL-COMPLETO.md) — Checkpoint académico generado desde los capítulos fuente
 - [Hito 06 — Entrega Final](./docs/hitos/hito-06-octubre.md) — Alcance y criterios de cierre vigentes
+- [Plan de desarrollo inmediato de la beta](./docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) — Propuesta para próximas sesiones, con evidencia y criterios de aceptación; pendiente de revisión por PR
 - [Cheat sheet de defensa](./docs/gestion/cheatsheet-defensa.md) — Métricas y respuestas verificables para la presentación
 - [Architecture Decision Records](./docs/adr/) — Decisiones técnicas justificadas
 - [Diagramas UML](./docs/diagramas/) — Casos de Uso, Secuencia, Modelo de Dominio (Mermaid)

@@ -10,7 +10,7 @@
 
 **Estado:** Activo — segunda beta `v0.5.0` publicada; cierre académico, matriz RNF y presentación pendientes
 
-**Última actualización:** 2026-09-05
+**Última actualización:** 2026-09-12
 
 ---
 
@@ -103,6 +103,13 @@ Las ideas conservadas siguen en [`../../BACKLOG.md`](../../BACKLOG.md) y no comp
 
 ## Orden de Trabajo
 
+El orden académico general se conserva abajo. Para las próximas sesiones del frente técnico se
+propone el [plan inmediato de la beta](../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md):
+F1, reproducibilidad del gate (AUD-008/AUD-009); F2, confirmación de creación ante fallos de
+recarga (AUD-014); F3, evidencia Android y medición con 500 notas. **La propuesta requiere
+aceptación e integración por PR antes de implementar.** No agrega funcionalidades ni fija una
+fecha para `1.0.0`; los pendientes académicos y la matriz RNF completa siguen abiertos.
+
 | Orden | Frente | Salida esperada |
 |---|---|---|
 | 1 | Sincronización documental | Evidencia de `v0.5.0` reflejada sin reescribir la historia de `v0.4.8` |
@@ -125,6 +132,7 @@ Se mantiene WIP máximo de dos elementos activos en total entre `En Curso` y `En
 | `Mover a` requería pulsación prolongada | Cerrado en PR #9 | Toque normal y menús contextuales validados en Android; conservar como antecedente resuelto |
 | Rendimiento con mayor volumen de notas | Riesgo medio de evidencia | Medición de latencia y percepción con al menos 500 notas; no solo importación funcional |
 | `npm run verify` depende del entorno vigente | Riesgo medio de tooling | Resolver por separado falsos positivos CSP de AUD-008 y colisión Web Storage de Node 26 de AUD-009 |
+| AUD-014 — creación confirmada y recarga fallida | P1 confirmado en SQLite en memoria; sin corrección | Dos reproducciones generan duplicados al reintentar; F2 propone separar el resultado de escritura del refresco y validar consumidores/Android |
 
 ## Criterios de Cierre
 
@@ -147,6 +155,7 @@ Se mantiene WIP máximo de dos elementos activos en total entre `En Curso` y `En
 
 - [`../../TODO`](../../TODO) — tareas inmediatas.
 - [`../../BACKLOG.md`](../../BACKLOG.md) — deuda, políticas e ideas postergadas.
+- [`../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md`](../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) — propuesta de próximas sesiones, evidencia y criterios de aceptación; sin implementación.
 - [`../gestion/lineas-base.md`](../gestion/lineas-base.md) — cortes congelados y futura línea base final.
 - [`../gestion/seguimiento-velocidad.md`](../gestion/seguimiento-velocidad.md) — SP entregados por hito.
 - [`../gestion/definicion-flujo-kanban.md`](../gestion/definicion-flujo-kanban.md) — estados, políticas, WIP y métricas de flujo.
