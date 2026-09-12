@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 06 — Entrega Final
 > **Hito 05:** Cerrado documentalmente el 2026-07-15 sobre la beta operativa `v0.4.8`
-> **Última actualización:** 2026-09-12 — plan inmediato propuesto para revisión; AUD-014 reproducido, sin cambios de implementación ni versión
+> **Última actualización:** 2026-09-12 — plan aceptado en PR #13; F1 implementada y pendiente de aprobación, sin cambios de producto ni versión
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -17,7 +17,7 @@ Hito 05 quedó cerrado documentalmente el 2026-07-15. Entregó el quality gate, 
 
 Hito 06 queda activo para completar la documentación final, verificar la maquetación de los gráficos de base de datos, cerrar la matriz RNF y preparar la presentación. La segunda beta [`v0.5.0`](https://github.com/jdfesa/lumapse/releases/tag/v0.5.0) ya está publicada: fija el commit `5840755`, distribuye `lumapse-v0.5.0.apk` y reúne AUD-001 a AUD-007, las correcciones táctiles de organización y el tooling de release sincronizado. Este corte es la referencia operativa vigente, pero no se presenta todavía como versión estable ni como cierre académico definitivo.
 
-La revisión técnica priorizada del 2026-09-01 abrió trece hallazgos trazables. AUD-001 y AUD-002 quedaron resueltos mediante PR #2; AUD-003 mediante PR #3; AUD-004 mediante PR #5; AUD-007 mediante PR #6; AUD-005 mediante PR #7 y AUD-006 mediante PR #8. Los siete cierres forman parte de `v0.5.0`. El gate del corte aprobó 67 archivos y 1065 tests; la limitación local de Node 26 continúa registrada como AUD-009 y no invalida la ejecución canónica con Node 22.20.0/npm 10.9.3. La validación funcional de 500 notas de AUD-003 no sustituye las mediciones de latencia y rendimiento exigidas por `RNF-002` y `RNF-004`. Los hallazgos restantes mantienen sus prioridades y no se incorporan automáticamente al alcance de Hito 06.
+La revisión técnica priorizada del 2026-09-01 abrió trece hallazgos trazables. AUD-001 y AUD-002 quedaron resueltos mediante PR #2; AUD-003 mediante PR #3; AUD-004 mediante PR #5; AUD-007 mediante PR #6; AUD-005 mediante PR #7 y AUD-006 mediante PR #8. Los siete cierres forman parte de `v0.5.0`. El gate del corte aprobó 67 archivos y 1065 tests; la limitación local de Node 26 quedó registrada como AUD-009 y no invalidaba la ejecución canónica con Node 22.20.0/npm 10.9.3; F1 ahora diagnostica y rechaza ese entorno no soportado. La validación funcional de 500 notas de AUD-003 no sustituye las mediciones de latencia y rendimiento exigidas por `RNF-002` y `RNF-004`. Los hallazgos restantes mantienen sus prioridades y no se incorporan automáticamente al alcance de Hito 06.
 
 La revisión acotada del 2026-09-12 agregó **AUD-014**: una creación de nota o fecha ya persistida puede rechazar por fallo de recarga y duplicarse al reintentar. Se reprodujo sobre SQLite en memoria, no en Android. El [plan de desarrollo inmediato](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) propone abordarlo después de hacer reproducible el gate; su aceptación no implica implementación ni cierre del hallazgo.
 
@@ -37,7 +37,7 @@ La trazabilidad de `v0.4.8` y `v0.5.0` queda distribuida entre `docs/gestion/lin
 
 ## Prioridad Inmediata — Hito 06
 
-**Propuesta pendiente de aceptación por PR:** concentrar las próximas sesiones técnicas en la siguiente secuencia. Alcance, archivos, pruebas, dependencias y criterios de salida viven en el [plan inmediato](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md); no se inicia implementación antes de integrar el plan con autorización.
+**Plan aceptado e integrado en [PR #13](https://github.com/jdfesa/lumapse/pull/13):** F1 está implementada en `fix/quality-gate-portability`, pendiente de revisión, comprobación en la Mac/teléfono y aprobación. La [evidencia de F1](docs/gestion/validacion-f1-gate-portable-2026-09-12.md) distingue las ejecuciones realizadas de los pendientes. No iniciar F2 ni otra rama antes de integrar y limpiar F1. Alcance y criterios de salida: [plan inmediato](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md).
 
 | Orden | Tarea | Criterio de cierre |
 |---|---|---|
@@ -62,7 +62,7 @@ El análisis original permanece en [`docs/gestion/revision-tecnica-priorizada-20
 | AUD-005 | P1 | Coordinación SQLite, migraciones y arranque | Cerrado e integrado mediante PR #7; 1035 tests, gate canónico y prueba manual Android aprobados. [Evidencia](docs/gestion/analisis-aud-005-coordinacion-sqlite-2026-09-04.md) |
 | AUD-006 | P1 | Resultados async obsoletos | Cerrado en [PR #8](https://github.com/jdfesa/lumapse/pull/8), incluido en `v0.5.0`; Mac/Android y regresiones aprobados. [Evidencia](docs/gestion/analisis-aud-006-ownership-solicitudes-async-2026-09-05.md) |
 | AUD-007 | P1 | Contratos incompatibles para errores de mutaciones | Cerrado en PR #6; contrato único, consumidores y Android aprobados |
-| AUD-008–AUD-009 | P1 | Portabilidad del gate y Node 26 | Pendientes; propuesta F1 del plan inmediato, sin relajar controles |
+| AUD-008–AUD-009 | P1 | Gate portable y entorno Node canónico | Implementados en F1; en revisión, pendientes de aceptación y validación Mac/teléfono, sin relajar controles |
 | AUD-010–AUD-013 | P2 | Escalabilidad, rendimiento, cohesión y margen de bundle/coverage | Monitorear o medir; no bloquean por sí solos el cierre actual |
 | AUD-014 | P1 | Creación persistida rechaza por fallo de recarga | Confirmado en notas/fechas con SQLite en memoria; propuesta F2, sin implementación ni validación Android |
 
@@ -104,7 +104,8 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Framework UI | No incorporar Svelte por ahora | Baja | Costo de migracion alto vs beneficio actual; reabrir solo si DOM manual se vuelve una carga clara |
 | Documentación | Congelar documentos para la entrega académica | Alta | La documentación viva se reconcilió con `v0.5.0`; restan bibliografía, matriz RNF, revisión de maquetación y materiales de defensa |
 | Dependencias | Repetir auditorías en cada corte candidato | Recurrente | AUD-004 quedó cerrado con grafo mínimo, auditorías 0/0 y Android aprobado; revalidar porque los advisories evolucionan |
-| Tooling | Resolver portabilidad de gate y Node 26 (AUD-008/AUD-009) | Media | Fijar Node 22.20.0/npm 10.9.3, diagnosticar versiones distintas y eliminar la dependencia del workaround de Web Storage sin relajar controles |
+| Tooling | Aprobar F1 (AUD-008/AUD-009), ya implementada | Media | Revisar evidencia local/CI y completar verificación Mac/teléfono antes de autorizar merge |
+| Tooling / seguridad | Evaluar parche acotado de Vitest tras cerrar la rama actual | Media | Auditoría 2026-09-12: 3 entradas moderadas de desarrollo asociadas a GHSA-82fw-gwwq-j7x9; producción 0. [Detalle y límites](docs/gestion/validacion-f1-gate-portable-2026-09-12.md). No actualizar dependencias ni abrir otra rama dentro de F1 |
 | Store / formularios | Separar creación confirmada de recarga fallida (AUD-014) | Alta | Dos caracterizaciones verifican duplicados por reintento; contrato y criterios propuestos en F2 del [plan inmediato](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) |
 | Tooling DB | Ampliar el smoke test a `academic_events` y constraints relevantes | Media | El DDL completo se ejecuta, pero las aserciones explícitas de tablas/columnas/relaciones se concentran en materias, notas y metadata; decidir su ampliación antes de presentar cobertura exhaustiva |
 | Diagramas | Revisar Mermaid de casos de uso, secuencia y dominio | Baja | Completado el 2026-07-03 contra `v0.4.8`; reabrir solo si cambia el alcance o durante la exportacion final a PDF/LaTeX |

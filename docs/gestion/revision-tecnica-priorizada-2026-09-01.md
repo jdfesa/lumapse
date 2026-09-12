@@ -1,6 +1,6 @@
 # Revisión Técnica Priorizada — 2026-09-01
 
-**Estado:** Vigente — AUD-001 a AUD-007 cerrados e incluidos en `v0.5.0`; AUD-008 a AUD-013 continúan como seguimiento; AUD-014 agregado por revisión acotada del 2026-09-12
+**Estado:** Vigente — AUD-001 a AUD-007 cerrados e incluidos en `v0.5.0`; AUD-008/AUD-009 implementados en F1, pendientes de aprobación; AUD-010 a AUD-014 continúan abiertos
 **Rama original de auditoría:** `fix/note-save-integrity`
 **Commit base original revisado:** `cd60c0e` (`main`)
 **Versión original revisada:** `0.4.8` (Beta); cierres publicados en `v0.5.0`<br>
@@ -103,8 +103,8 @@ sin convertir la evidencia histórica de las secciones siguientes en una nueva a
 | AUD-005 | P1 | Propiedad global de transacciones y migraciones permisivas | Confiabilidad | Cerrado en PR #7 |
 | AUD-006 | P1 | Resultados async obsoletos sobrescriben vista/cache reciente | Bug de concurrencia | Cerrado en PR #8; publicado en `v0.5.0` |
 | AUD-007 | P1 | Contratos incompatibles para errores de mutaciones | Diseño/confiabilidad | Cerrado en PR #6 |
-| AUD-008 | P1 | Gate canónico no portable y CI desalineada | Tooling | Pendiente |
-| AUD-009 | P1 | Suite no reproducible en toda la versión Node declarada | Tooling | Pendiente |
+| AUD-008 | P1 | Gate canónico no portable y CI desalineada | Tooling | F1 implementada; en revisión |
+| AUD-009 | P1 | Suite no reproducible en toda la versión Node declarada | Tooling | F1 implementada; en revisión |
 | AUD-010 | P2 | Broadcasts globales y refreshes no atómicos | Escalabilidad | Pendiente de medición |
 | AUD-011 | P2 | Conteos N+1 y posibles índices faltantes | Rendimiento | Pendiente de medición |
 | AUD-012 | P2 | Deriva de cohesión entre features de presentación | Arquitectura | Pendiente |
@@ -287,6 +287,8 @@ en el mismo PR evita falsos éxitos y rechazos no manejados.
 
 ### AUD-008 — Gate canónico y CI
 
+> **Actualización F1 (2026-09-12):** gate portable único, CSP por token y rechazo de crashes implementados en `fix/quality-gate-portability`. [Evidencia](./validacion-f1-gate-portable-2026-09-12.md) y [ADR-010](../adr/ADR-010-gate-portable-y-entorno-canonico.md). Pendientes revisión y comprobación Mac/teléfono; no se declara cerrado. Lo siguiente conserva el diagnóstico previo a F1.
+
 `npm run verify` delega primero en `scripts/quality.sh`. Cuando el binario Rust ignorado no está
 disponible, el fallback `scripts/check-offline.sh` clasifica como dependencias externas las dos
 entradas `http://localhost` requeridas por el CSP de Capacitor en `index.html`.
@@ -302,6 +304,8 @@ Se debe agregar una allowlist explícita y comprobable para orígenes locales, c
 regresión y alinear CI con un único gate reproducible.
 
 ### AUD-009 — Compatibilidad Node 26
+
+> **Actualización F1 (2026-09-12):** `.nvmrc`, `engines`, `packageManager`, CI y guardia de runtime implementados. Node 26 se rechaza antes de la suite; no se amplió el soporte. Cierre pendiente de aceptación, con [evidencia separada por entorno](./validacion-f1-gate-portable-2026-09-12.md).
 
 > **Decisión 2026-09-12:** la línea canónica queda fijada en Node `22.20.0` y npm `10.9.3`,
 > coincidente con la Mac que aprobó los gates de `v0.5.0`. F1 del

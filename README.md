@@ -113,7 +113,7 @@ npm run verify
 
 El servidor corre en `http://localhost:5173` con Hot Module Replacement activo.
 
-La línea canónica es Node **22.20.0** con npm **10.9.3**, fijada en `.nvmrc`, `engines` y `packageManager`, coincidente con la Mac utilizada para los gates de `v0.5.0`. `check:runtime` no necesita dependencias instaladas y bloquea versiones distintas antes de instalar, probar, desarrollar o compilar. Se puede usar otro gestor que respete esas versiones exactas; no se modifica el Node global automáticamente. Node 26 no está soportado y `NODE_OPTIONS` no forma parte del procedimiento canónico.
+La línea canónica es Node **22.20.0** con npm **10.9.3**, fijada en `.nvmrc`, `engines` y `packageManager`, coincidente con la Mac utilizada para los gates de `v0.5.0`. `check:runtime` no necesita dependencias instaladas: el procedimiento y CI lo invocan antes de `npm ci`, y los lifecycles vuelven a comprobarlo al instalar, probar, desarrollar o compilar. Se puede usar otro gestor que respete esas versiones exactas; no se modifica el Node global automáticamente. Node 26 no está soportado y `NODE_OPTIONS` no forma parte del procedimiento canónico.
 
 ### Compilación Android (APK)
 

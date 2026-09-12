@@ -14,8 +14,8 @@ La arquitectura vigente se resume en [ADR-008](./docs/adr/ADR-008-arquitectura-m
 ## 2. Flujo de trabajo
 
 1. Partir de `main` actualizado.
-2. Crear una rama acotada y descriptiva, por ejemplo `feat/...`, `fix/...`, `docs/...`, `refactor/...` o `test/...`.
-3. Mantener un solo objetivo por cambio.
+2. Crear una rama acotada y descriptiva en inglés, por ejemplo `feat/...`, `fix/...`, `docs/...`, `refactor/...` o `test/...`.
+3. Mantener un solo objetivo y una sola rama de tarea activa, incluyendo su revisión. No abrir la siguiente antes de aprobar, integrar y limpiar la anterior.
 4. Actualizar requisitos, ADR, backlog o changelog solo cuando el cambio realmente los afecte.
 5. Ejecutar la verificación proporcional al riesgo antes de solicitar revisión.
 
@@ -38,6 +38,8 @@ Tipos habituales:
 - `test`: pruebas nuevas o corregidas;
 - `style`: formato sin cambio lógico;
 - `chore`: mantenimiento de tooling o dependencias.
+
+Los mensajes se escriben en inglés y pueden incluir un scope, por ejemplo `fix(tooling): validate the canonical runtime`. Hacer commits incrementales por unidad verificable. La aplicación, los archivos y el contenido de documentación permanecen en español; los nombres de ramas y títulos/descripciones de PR se escriben en inglés.
 
 El mensaje debe explicar el cambio concreto. La motivación y las consecuencias relevantes pertenecen al cuerpo del commit, al PR o al ADR.
 
@@ -69,6 +71,8 @@ npm run check:traceability
 Los cambios Android o de persistencia requieren además pruebas en el entorno correspondiente y evidencia en los checklists de gestión. Un test web no sustituye una validación nativa cuando intervienen SQLite, Filesystem, Network o Share.
 
 ## 6. Pull Request
+
+El PR queda abierto para lectura y aprobación del autor. Solo se integra a `main` después de su aprobación explícita y de que confirme el funcionamiento en el teléfono de pruebas; un CI verde no autoriza el merge. Luego se actualiza `main` y se eliminan únicamente las ramas locales/remotas ya integradas. Las mejoras o bugs nuevos se registran sin abrir un segundo frente durante esa espera.
 
 Antes de abrir o fusionar un PR, comprobar:
 

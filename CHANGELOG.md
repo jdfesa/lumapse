@@ -9,6 +9,10 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ## [Unreleased]
 
+### Fixed
+
+- **Gate portable (AUD-008/AUD-009, F1):** Node 22.20.0/npm 10.9.3 fijados y verificados antes de las suites; `verify` y CI comparten todos los controles. El auditor offline permite únicamente tokens locales de la CSP y el gate rechaza crashes/reportes incompletos, sin depender del binario Rust ignorado. Incluye regresiones de tooling; no cambia runtime de la app, dependencias, schema ni versión.
+
 ### Changed
 
 - **Documentación posterior a la publicación:** Se reconciliaron los documentos vivos, las líneas base, el informe académico, las métricas de defensa y las guías operativas con la pre-release publicada `v0.5.0`, sin alterar la evidencia histórica de `v0.4.8`.

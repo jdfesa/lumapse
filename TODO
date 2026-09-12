@@ -12,9 +12,9 @@
 
 **Objetivo:** cerrar documentación, gráficos de base de datos, validación final y materiales de presentación sin ampliar el producto.
 
-## Prioridad inmediata — propuesta para próximas sesiones
+## Prioridad inmediata — plan aceptado
 
-El [plan de desarrollo inmediato de la beta](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) está **pendiente de aceptación por PR**. Solo después de autorizar su merge e integrarlo se inicia F1. Ninguna de estas fases está implementada; cada una tendrá su rama, evidencia y revisión.
+El [plan de desarrollo inmediato de la beta](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) fue aceptado e integrado en PR #13. **F1 implementada y en revisión** en `fix/quality-gate-portability`; la [evidencia](docs/gestion/validacion-f1-gate-portable-2026-09-12.md) separa Linux/CI de la validación pendiente en la Mac y el teléfono. F2/F3 no comenzaron. No abrir otra rama antes de aprobar, integrar y limpiar F1.
 
 | Orden | Frente | Criterio de cierre |
 |---|---|---|
@@ -24,8 +24,9 @@ El [plan de desarrollo inmediato de la beta](docs/gestion/plan-desarrollo-inmedi
 
 El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de línea base final **siguen pendientes** en la checklist. F3 no los sustituye ni obliga a publicar `1.0.0`. WIP máximo: dos elementos entre En Curso y En Revisión.
 
-- [ ] Aceptar e integrar el PR del plan inmediato; no implementar antes de ese punto.
-- [ ] F1: cerrar AUD-008/AUD-009 en `fix/quality-gate-portability` con pruebas del gate y CI.
+- [x] Aceptar e integrar el PR del plan inmediato — PR #13, `65e5767`; rama documental local/remota eliminada.
+- [ ] F1: aprobar y cerrar AUD-008/AUD-009 en `fix/quality-gate-portability`; implementación y regresiones listas, pendiente aceptación Mac/teléfono.
+- [ ] Al cerrar la rama actual, evaluar la prioridad del parche de Vitest (GHSA-82fw-gwwq-j7x9): 3 avisos moderados de desarrollo, producción 0; no ampliar F1 ni abrir otro frente durante revisión.
 - [ ] F2: cerrar el alcance confirmado de AUD-014 en `fix/post-write-refresh-contract` sin confundir fallo de escritura con fallo de refresco.
 - [ ] F3: registrar la evidencia en `docs/beta-core-validation`; no optimizar consultas/store sin medición y nueva aprobación.
 

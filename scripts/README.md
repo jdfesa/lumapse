@@ -83,7 +83,7 @@ Limpia cachés y artefactos de compilación para devolver el proyecto a un estad
   ./scripts/clean.sh
   ```
 
-### 3. `check-docs.sh` _(Superseded parcialmente por `lumapse-audit` #35)_
+### 3. `check-docs.sh`
 Realiza una auditoría rápida de consistencia en el proyecto antes de realizar operaciones importantes en Git. Esta herramienta ayuda a mantener la rigurosidad académica exigida en la documentación y el código fuente.
 
 - **Qué verifica:**
@@ -222,7 +222,7 @@ Audita el formato experimental generado en `src/store/migrations/`.
   python3 scripts/check-sql-migrations.py
   ```
 
-### 13. `check-schema-sync.py` _(Superseded por `lumapse-audit` #35: `--schema`)_
+### 13. `check-schema-sync.py`
 Compara el esquema SQLite implementado en código contra el DDL documentado.
 
 - **Problema que resuelve:** Lumapse mantiene el esquema de base de datos en dos lugares: el DDL real embebido en código y la documentación académica en `docs/diagramas/database/04-modelo-fisico-ddl.md`. Si se agrega una columna, tabla o tipo en un lado y se olvida actualizar el otro, el informe técnico queda desincronizado respecto del producto real.
@@ -366,7 +366,7 @@ Calcula los Story Points entregados por hito a partir de la tabla de trazabilida
   python3 scripts/generate-velocity-report.py
   ```
 
-### 24. `validate-subjects-hierarchy.py` _(Superseded por `lumapse-audit` #35: `--hierarchy`)_
+### 24. `validate-subjects-hierarchy.py`
 Valida la integridad de la jerarquía de materias y secciones de acuerdo a la decisión de producto DP-004.
 
 - **Problema que resuelve:** Protege la base de datos contra inconsistencias lógicas en el dominio, como relaciones recursivas infinitas (ciclos), materias huérfanas, o estructuras que excedan el límite físico de profundidad de 2 niveles.
@@ -444,7 +444,7 @@ Asistente de lanzamiento para versionado, changelog, build web, sincronización 
   python3 scripts/release-helper.py --type minor --yes
   ```
 
-### 30. `check-file-size.sh` _(Superseded por `lumapse-audit` #35)_
+### 30. `check-file-size.sh`
 Guardia de tamano de archivos que escanea `src/` y reporta archivos que superan los limites saludables.
 
 - **Problema que resuelve:** Los scripts existentes detectan deuda tecnica pero no la previenen. Este guardia reporta advertencias proactivamente para que los archivos no crezcan sin control.

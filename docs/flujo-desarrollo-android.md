@@ -138,8 +138,13 @@ scrcpy --version    # 3.x.x
 git clone https://github.com/jdfesa/lumapse.git
 cd lumapse
 
-# Instalar dependencias de Node
-npm install
+# Activar el pin de .nvmrc (ejemplo con nvm ya instalado)
+nvm install
+nvm use
+npm run check:runtime
+
+# Instalar exactamente las dependencias del lockfile
+npm ci
 
 # Compilar la web app
 npm run build
