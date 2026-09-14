@@ -1,6 +1,6 @@
 # Plan de desarrollo inmediato de la beta — 2026-09-12
 
-**Estado:** Propuesta para revisión por PR; ninguna fase de implementación está iniciada.
+**Estado:** Plan aceptado e integrado mediante [PR #13](https://github.com/jdfesa/lumapse/pull/13), `65e5767`. F1 implementada en `fix/quality-gate-portability` y pendiente de aprobación; F2/F3 no iniciadas. [Evidencia y pendientes de F1](./validacion-f1-gate-portable-2026-09-12.md).
 
 **Rama documental:** `docs/immediate-beta-plan`.
 
@@ -10,11 +10,11 @@
 
 **Responsable:** autor del proyecto, con asistencia técnica; la aceptación y el merge requieren su autorización.
 
-## 1. Decisión propuesta
+## 1. Decisión aceptada
 
 Trabajar en **tres entregables secuenciales y revisables**: hacer reproducible la verificación sobre Node 22.20.0/npm 10.9.3, corregir una ambigüedad de guardado confirmada y medir/validar el núcleo en Android. No agregar funcionalidades ni cambiar de arquitectura.
 
-**La primera tarea después de aceptar e integrar este PR será F1, en `fix/quality-gate-portability`.** F1 es un prerrequisito de verificación, no una razón para postergar indefinidamente el defecto funcional F2. Si excede una sesión, registrar el bloqueo y dividir su entrega antes de incorporar otro objetivo.
+**F1 es la primera tarea y se inició en `fix/quality-gate-portability` después de integrar PR #13.** Es un prerrequisito de verificación, no una razón para postergar indefinidamente el defecto funcional F2. Si excede una sesión, registrar el bloqueo y dividir su entrega antes de incorporar otro objetivo.
 
 El plan descompone el frente de **validación final de Hito 06**. No reemplaza el cierre académico de Prácticas Profesionalizantes III: bibliografía, maquetación, pruebas con estudiantes y defensa siguen pendientes. Tampoco promete `1.0.0`: una versión estable se decidirá después de reunir evidencia y aceptar explícitamente las limitaciones, en un corte separado.
 
@@ -58,12 +58,12 @@ Esto **no demuestra pérdida de datos, frecuencia del fallo en teléfonos ni una
 
 | Orden | Entregable | Rama prevista | Dependencia | Salida revisable |
 |---|---|---|---|---|
-| Actual | Analizar y acordar el alcance | `docs/immediate-beta-plan` | Ninguna | Este documento, pendientes reconciliados y PR sin merge automático |
+| Completado | Analizar y acordar el alcance | `docs/immediate-beta-plan` | Ninguna | PR #13 aprobado e integrado; rama local/remota eliminada |
 | F1 · sesión 1 | Gate portable y entorno explícito | `fix/quality-gate-portability` | PR del plan aceptado e integrado | Un PR de tooling que cierra AUD-008/AUD-009 con evidencia local/CI |
 | F2 · sesión 2, ampliable a 3 | Confirmación inequívoca de creación | `fix/post-write-refresh-contract` | F1 integrado | Un PR funcional para AUD-014, regresiones permanentes y smoke Android proporcional |
 | F3 · siguiente sesión | Validación crítica y medición con 500 notas | `docs/beta-core-validation` | F2 integrado y dispositivo autorizado disponible | Fixture/protocolo reproducibles y reporte; ninguna optimización incluida |
 
-Cada fase vuelve a `main` actualizado antes de crear su rama y espera revisión antes del merge. Se mantiene [WIP global 2](./definicion-flujo-kanban.md), contando también `En Revisión`; la secuencia propuesta usa un solo frente técnico activo. El apoyo de estudiantes/dispositivo se coordina con el autor, no se presume disponible. Registrar `startedAt`/`finishedAt` cuando sucedan, no inventarlos desde commits.
+Cada fase vuelve a `main` actualizado antes de crear su rama y espera revisión antes del merge. Se mantiene [WIP global 2](./definicion-flujo-kanban.md) como techo, contando también `En Revisión`; esta secuencia usa **una sola rama técnica activa**. No abrir la siguiente hasta integrar y limpiar la anterior. El autor debe aprobar explícitamente el PR y confirmar funcionamiento en su teléfono de pruebas; CI no sustituye esa aprobación. El apoyo de estudiantes/dispositivo se coordina con el autor, no se presume disponible. Registrar `startedAt`/`finishedAt` cuando sucedan, no inventarlos desde commits.
 
 ### F1 — Verificación reproducible antes de tocar el comportamiento
 
@@ -82,10 +82,12 @@ Cada fase vuelve a `main` actualizado antes de crear su rama y espera revisión 
 **Criterios de aceptación:**
 
 - [ ] Checkout limpio en Node 22.20.0/npm 10.9.3: `npm ci` y `npm run verify` terminan con exit 0, sin `NODE_OPTIONS` ni binario local preexistente; mismo comando verde en CI y en ambas máquinas.
-- [ ] Regresiones offline: CSP local permitido; URL remota real rechazada, incluso compartiendo línea con un origen local; host como `localhost.example.org` no queda permitido por substring. Assets remotos JS/TS/CSS/HTML siguen detectándose.
-- [ ] Pruebas del gate: un check fallido, suite incompleta o salida anormal hacen fallar el agregado; el caso exitoso funciona con y sin el acelerador opcional.
-- [ ] Node fuera del rango declarado se rechaza o diagnostica inequívocamente antes de la suite. El workaround de Node 26 queda como antecedente, no como solución canónica.
-- [ ] No se reducen umbrales, se omiten pruebas ni se pierde un control que hoy ejecuta CI.
+- [x] Regresiones offline: CSP local permitido; URL remota real rechazada, incluso compartiendo línea con un origen local; host como `localhost.example.org` no queda permitido por substring. Assets remotos JS/TS/CSS/HTML siguen detectándose.
+- [x] Pruebas del gate: un check fallido, suite incompleta o salida anormal hacen fallar el agregado; el caso exitoso funciona con y sin el acelerador opcional.
+- [x] Node fuera del rango declarado se rechaza o diagnostica inequívocamente antes de la suite. El workaround de Node 26 queda como antecedente, no como solución canónica.
+- [x] No se reducen umbrales, se omiten pruebas ni se pierde un control que hoy ejecuta CI.
+
+**Revisión F1:** [PR #14](https://github.com/jdfesa/lumapse/pull/14) abierto; Linux limpio y CI aprobados, con [evidencia por checkpoint](./validacion-f1-gate-portable-2026-09-12.md). El primer criterio permanece pendiente por la Mac; también faltan prueba del teléfono y autorización de merge.
 
 **Cierre:** actualizar solo el estado real de AUD-008/AUD-009, registrar versiones exactas, comandos, exits y enlace de CI. No atribuir este PR a una nueva validación Android del producto: no modifica el runtime.
 
@@ -162,15 +164,15 @@ Entorno local: Node `26.7.0`, npm `12.0.2`; no había `NODE_OPTIONS` ni binario 
 
 Los logs diagnósticos locales se guardaron en `tmp/immediate-beta-plan-2026-09-12/`, ignorado por Git. Los resultados resumidos y el reproducer se conservan aquí para no depender de esos temporales. No se ejecutaron en esta sesión el agregado `npm run verify`, un nuevo coverage, auditorías de dependencias, benchmark ni validación Android. La CI de este PR documental se registra en el propio PR y no demuestra que AUD-008/AUD-009 estén resueltos.
 
-## 7. Condiciones de aceptación de este PR documental
+## 7. Condiciones de aceptación de este PR documental — cumplidas en PR #13
 
-- [ ] El autor acepta el orden F1 → F2 → F3, el alcance de AUD-014 y lo que queda fuera.
-- [ ] El contrato propuesto distingue escritura fallida de refresco fallido sin perder borradores ni ocultar errores.
-- [ ] Backlog, TODO e Hito 06 enlazan el mismo plan y no presentan tareas futuras como implementadas.
-- [ ] Checks documentales, trazabilidad y `git diff --check` aprobados; CI revisada y limitaciones locales explícitas.
-- [ ] No hay cambios en runtime, dependencias, schema, versión, APK ni datos personales.
+- [x] El autor acepta el orden F1 → F2 → F3, el alcance de AUD-014 y lo que queda fuera.
+- [x] El contrato propuesto distingue escritura fallida de refresco fallido sin perder borradores ni ocultar errores.
+- [x] Backlog, TODO e Hito 06 enlazan el mismo plan y no presentan tareas futuras como implementadas.
+- [x] Checks documentales, trazabilidad y `git diff --check` aprobados; CI revisada y limitaciones locales explícitas.
+- [x] No hay cambios en runtime, dependencias, schema, versión, APK ni datos personales.
 
-**Detención acordada:** abrir el PR y esperar su revisión. Aceptar el plan no significa que sus correcciones ya existan; solo después de autorización de merge e integración se inicia F1. No hacer merge automático, publicar release ni borrar ramas en esta sesión.
+**Detención actualizada:** el PR documental ya fue aceptado e integrado y su rama eliminada con autorización. El PR de F1 queda abierto hasta aprobación y prueba en el teléfono; no iniciar F2, publicar release ni integrar F1 automáticamente. La aceptación del plan no equivale al cierre de sus fases.
 
 ## 8. Reproducción de AUD-014
 

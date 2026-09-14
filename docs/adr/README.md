@@ -15,6 +15,7 @@ Los ADR conservan decisiones importantes, sus alternativas y consecuencias. Un A
 | [ADR-007](./ADR-007-organizacion-componentes-por-feature.md) | Componentes UI organizados por feature | Aceptado |
 | [ADR-008](./ADR-008-arquitectura-modular-y-patrones.md) | Arquitectura modular y patrones aplicados | Aceptado |
 | [ADR-009](./ADR-009-propiedad-transaccional-sqlite.md) | Propiedad transaccional SQLite y recuperación de arranque (AUD-005) | Aceptado; validación canónica y Android aprobadas |
+| [ADR-010](./ADR-010-gate-portable-y-entorno-canonico.md) | Gate portable y entorno canónico (AUD-008/AUD-009) | Implementado en F1; pendiente de aprobación del PR |
 
 ## Decisiones vigentes en una frase
 

@@ -85,7 +85,7 @@ d48338e04021a6096fcaeaced5fde411911d403c9ea95407891d2b034515a884
 
 ### Requisitos previos — Web (desarrollo y contribución)
 
-| Herramienta | Versión mínima | Verificar con |
+| Herramienta | Versión requerida | Verificar con |
 |---|---|---|
 | **Node.js** | v22.20.0 | `node --version` |
 | **npm** | v10.9.3 | `npm --version` |
@@ -96,19 +96,24 @@ d48338e04021a6096fcaeaced5fde411911d403c9ea95407891d2b034515a884
 git clone https://github.com/jdfesa/lumapse.git
 cd lumapse
 
-# 2. Instalar dependencias
-npm install
+# 2. Activar el entorno canónico (ejemplo con nvm ya instalado)
+nvm install
+nvm use
+npm run check:runtime
 
-# 3. Iniciar servidor de desarrollo
+# 3. Instalar exactamente las dependencias del lockfile
+npm ci
+
+# 4. Iniciar servidor de desarrollo
 npm run dev
 
-# 4. (Opcional) Verificar calidad del código
+# 5. Verificar calidad antes de solicitar revisión
 npm run verify
 ```
 
 El servidor corre en `http://localhost:5173` con Hot Module Replacement activo.
 
-La línea canónica de desarrollo y CI es Node 22.20.0 con npm 10.9.3, coincidente con la Mac ya utilizada para los gates de `v0.5.0`. F1 del [plan inmediato](./docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) debe fijarla y diagnosticar desvíos automáticamente; Node 26 no forma parte del entorno soportado actual.
+La línea canónica es Node **22.20.0** con npm **10.9.3**, fijada en `.nvmrc`, `engines` y `packageManager`, coincidente con la Mac utilizada para los gates de `v0.5.0`. `check:runtime` no necesita dependencias instaladas: el procedimiento y CI lo invocan antes de `npm ci`, y los lifecycles vuelven a comprobarlo al instalar, probar, desarrollar o compilar. Se puede usar otro gestor que respete esas versiones exactas; no se modifica el Node global automáticamente. Node 26 no está soportado y `NODE_OPTIONS` no forma parte del procedimiento canónico.
 
 ### Compilación Android (APK)
 

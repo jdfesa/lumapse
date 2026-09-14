@@ -104,10 +104,11 @@ Las ideas conservadas siguen en [`../../BACKLOG.md`](../../BACKLOG.md) y no comp
 ## Orden de Trabajo
 
 El orden académico general se conserva abajo. Para las próximas sesiones del frente técnico se
-propone el [plan inmediato de la beta](../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md):
+aceptó el [plan inmediato de la beta](../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) en PR #13:
 F1, reproducibilidad del gate (AUD-008/AUD-009); F2, confirmación de creación ante fallos de
-recarga (AUD-014); F3, evidencia Android y medición con 500 notas. **La propuesta requiere
-aceptación e integración por PR antes de implementar.** No agrega funcionalidades ni fija una
+recarga (AUD-014); F3, evidencia Android y medición con 500 notas. **F1 está implementada y
+pendiente de revisión/validación Mac y teléfono; F2/F3 no comenzaron.** Ver la
+[evidencia de F1](../gestion/validacion-f1-gate-portable-2026-09-12.md). No agrega funcionalidades ni fija una
 fecha para `1.0.0`; los pendientes académicos y la matriz RNF completa siguen abiertos.
 
 | Orden | Frente | Salida esperada |
