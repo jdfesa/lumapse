@@ -3,12 +3,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 const mocks = vi.hoisted(() => ({
   initDatabase: vi.fn(), closeDatabaseForReload: vi.fn(), load: vi.fn(), mount: vi.fn(),
   subscribe: vi.fn(() => vi.fn()),
+  subscribeToPendingRefreshes: vi.fn(() => vi.fn()),
 }))
 vi.mock('../../src/services/sqlite/connection.js', () => ({ initDatabase: mocks.initDatabase, closeDatabaseForReload: mocks.closeDatabaseForReload }))
 vi.mock('../../src/store/NoteStore.js', () => ({
   loadSubjects: mocks.load, loadNotes: mocks.load, loadAcademicEvents: mocks.load,
   loadAcademicEventsByMonth: mocks.load, loadUpcomingAcademicEvents: mocks.load,
   loadTrashCount: mocks.load, subscribe: mocks.subscribe, subscribeToStoreErrors: mocks.subscribe,
+  subscribeToPendingRefreshes: mocks.subscribeToPendingRefreshes,
 }))
 vi.mock('../../src/services/SubjectService.js', () => ({ SUBJECT_COLORS: [], autoPurge: vi.fn() }))
 vi.mock('../../src/components/feed/NoteList.js', () => ({ NoteList: mocks.mount }))
@@ -40,8 +42,11 @@ describe('AUD-005: composition root recuperable', () => {
     await import('../../src/main.js')
     expect(mocks.mount).not.toHaveBeenCalled()
     expect(mocks.subscribe).not.toHaveBeenCalled()
+    expect(mocks.subscribeToPendingRefreshes).not.toHaveBeenCalled()
     data.resolve()
     await vi.dynamicImportSettled()
+    expect(mocks.subscribeToPendingRefreshes).toHaveBeenCalledTimes(1)
+    expect(document.querySelector('#startup-retry')).toBeNull()
   })
 
   it('muestra error seguro y permite reintentar sin doble inicialización', async () => {
@@ -62,8 +67,24 @@ describe('AUD-005: composition root recuperable', () => {
     expect(mocks.initDatabase).toHaveBeenCalledTimes(2)
     expect(mocks.mount).toHaveBeenCalledTimes(5)
     expect(mocks.subscribe).toHaveBeenCalledTimes(2)
+    expect(mocks.subscribeToPendingRefreshes).toHaveBeenCalledTimes(1)
     expect(document.querySelector('#composer-container')).not.toBeNull()
   })
+})
+
+it('conecta el aviso de actualización pendiente sin presentarlo como error de escritura', async () => {
+  await import('../../src/main.js')
+  await vi.dynamicImportSettled()
+  const listener = mocks.subscribeToPendingRefreshes.mock.calls[0][0]
+  const event = { message: 'Nota guardada. Actualización pendiente.', retry: vi.fn().mockResolvedValue(true) }
+  listener(event)
+  listener(event)
+  expect(document.querySelectorAll('.toast--pending-refresh')).toHaveLength(1)
+  expect(document.querySelector('.toast--error')).toBeNull()
+  document.querySelector('.toast--pending-refresh button').click()
+  await Promise.resolve()
+  expect(event.retry).toHaveBeenCalledTimes(1)
+  expect(document.querySelector('.toast--pending-refresh')).toBeNull()
 })
 
 

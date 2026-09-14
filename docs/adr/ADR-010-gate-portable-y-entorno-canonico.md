@@ -2,7 +2,7 @@
 
 **Fecha:** 2026-09-12
 
-**Estado:** Implementado en F1; pendiente de revisión y aprobación de su PR.
+**Estado:** Aceptado e integrado en F1 mediante PR #14 (`7d4ceda`, 2026-09-13); evidencia de ejecución y aceptación separadas en el reporte de F1.
 
 **Alcance:** AUD-008/AUD-009; aplica el [plan inmediato aceptado](../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md), sin modificar producto, schema, dependencias ni versión.
 

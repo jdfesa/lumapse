@@ -8,6 +8,7 @@
 
 import * as AcademicEventService from '../services/AcademicEventService.ts'
 import { runStoreAction } from './NoteStore.errors.js'
+import { refreshAfterWrite } from './NoteStore.refresh.js'
 import { state, notify } from './NoteStore.state.js'
 
 let academicEventsRequestVersion = 0
@@ -103,6 +104,7 @@ function reconcileMonthEvent(event) {
 async function reloadUpcomingAcademicEvents() {
   const result = await readUpcomingAcademicEvents()
   if (result.current) state.upcomingAcademicEvents = result.value
+  return result.current
 }
 
 /**
@@ -158,17 +160,21 @@ export async function loadUpcomingAcademicEvents(today, limit) {
  * Crea una fecha academica y sincroniza los caches del store.
  */
 export async function createAcademicEvent(input) {
-  return runStoreAction('createAcademicEvent', 'No se pudo crear la fecha academica. Intenta de nuevo.', async () => {
-    const event = await AcademicEventService.createAcademicEvent(input)
+  const event = await runStoreAction(
+    'createAcademicEvent', 'No se pudo crear la fecha academica. Intenta de nuevo.',
+    () => AcademicEventService.createAcademicEvent(input),
+  )
 
-    recordAcademicEventMutation(event.id, event)
-    state.academicEvents = upsertAcademicEvent(state.academicEvents, event)
-    reconcileMonthEvent(event)
-    await reloadUpcomingAcademicEvents()
-    notify()
-
-    return event
+  recordAcademicEventMutation(event.id, event)
+  state.academicEvents = upsertAcademicEvent(state.academicEvents, event)
+  reconcileMonthEvent(event)
+  await refreshAfterWrite({
+    operation: 'createAcademicEvent',
+    entityId: event.id,
+    message: 'Fecha académica guardada. La actualización de próximas fechas quedó pendiente.',
+    refresh: reloadUpcomingAcademicEvents,
   })
+  return event
 }
 
 /**

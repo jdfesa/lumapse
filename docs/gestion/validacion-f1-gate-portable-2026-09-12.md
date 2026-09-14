@@ -1,10 +1,12 @@
 # F1 — Validación del gate portable y entorno canónico
 
-**Estado:** implementación terminada; pendiente de revisión, verificación en la Mac, prueba en el teléfono y aprobación explícita. No integrada a `main`.
+**Estado:** aceptada por el autor e integrada en `main` mediante PR #14, `7d4ceda`, el 2026-09-13 (Argentina; 2026-09-14 01:37 UTC). AUD-008/AUD-009 cerrados por esa aceptación.
 
-**Rama:** `fix/quality-gate-portability`. **Inicio observado:** 2026-09-12; cierre pendiente de aceptación.
+**Rama:** `fix/quality-gate-portability`, eliminada local y remotamente tras el merge. **Inicio observado:** 2026-09-12; **aceptación observada:** 2026-09-13.
 
-**PR de implementación:** [#14 — gate portable y reproducible](https://github.com/jdfesa/lumapse/pull/14), abierto y sin autorización de merge.
+**PR de implementación:** [#14 — gate portable y reproducible](https://github.com/jdfesa/lumapse/pull/14), integrado con autorización explícita del autor. Cabeza aceptada: `f30ab5f`; ambos checks aprobaron.
+
+El autor indicó que todo estaba OK y pidió el merge y la limpieza. No se recibieron nuevos logs de la Mac ni identificación adicional del artefacto probado; esta aceptación no agrega mediciones nativas ni ejecuciones del agente a la evidencia histórica que sigue.
 
 **Base:** `65e5767`, merge autorizado del [PR #13](https://github.com/jdfesa/lumapse/pull/13). Se eliminaron su rama documental local/remota y las referencias obsoletas antes de iniciar F1. No se inició F2 ni otra rama de tarea.
 
@@ -63,7 +65,7 @@ No se ejecutó `npm audit fix` ni se expuso un servidor de tests a la red. Evalu
 acotada después de cerrar la rama actual, con su propia aprobación; no reabrir retrospectivamente
 el cierre de AUD-004 ni reutilizar su antigua auditoría 0/0 como resultado actual.
 
-## Handoff y condición de merge
+## Handoff original de F1 — histórico, no ejecutar sobre la rama eliminada
 
 En la Mac, con el checkout sin cambios propios pendientes:
 
@@ -82,12 +84,13 @@ git rev-parse HEAD
 ```
 
 - [x] CI del checkpoint `37fe863` aprobada y enlazada; comprobar también la cabeza final en PR #14.
-- [ ] El autor revisó el diff y el PR.
+- [x] El autor aceptó el resultado del PR e indicó que todo estaba OK.
 - [ ] La Mac aprobó `npm ci` y `npm run verify` con Node 22.20.0/npm 10.9.3, sin workaround.
 - [ ] El autor confirmó funcionamiento en el teléfono de pruebas e identificó el artefacto utilizado.
-- [ ] El autor autorizó explícitamente el merge de F1.
+- [x] El autor autorizó explícitamente el merge de F1 y la limpieza local/remota.
 
 F1 no genera un APK nuevo ni valida comportamiento nativo. La comprobación en el teléfono
 se coordina con el autor, preservando firma y datos; no se desinstala ni borra información por
-defecto. Mantener AUD-008/AUD-009 **en revisión**, no cerrados, hasta aceptar estos pendientes.
-Solo después del merge autorizado y limpieza de esta rama puede comenzar F2.
+defecto. Las casillas de Mac/artefacto no completadas arriba indican evidencia detallada no recibida,
+no una ejecución inventada. La aceptación posterior del autor autorizó el merge y la limpieza;
+F2 comenzó desde `main` actualizado. Ver su [handoff vigente](./validacion-f2-guardado-y-refresco-2026-09-13.md).

@@ -14,7 +14,7 @@
 
 ## Prioridad inmediata — plan aceptado
 
-El [plan de desarrollo inmediato de la beta](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) fue aceptado e integrado en PR #13. **F1 implementada y en revisión** en `fix/quality-gate-portability`; la [evidencia](docs/gestion/validacion-f1-gate-portable-2026-09-12.md) separa Linux/CI de la validación pendiente en la Mac y el teléfono. F2/F3 no comenzaron. No abrir otra rama antes de aprobar, integrar y limpiar F1.
+El [plan de desarrollo inmediato de la beta](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) fue aceptado e integrado en PR #13. **F1 aprobada e integrada en PR #14**, `7d4ceda`, con rama local/remota eliminada. **F2 implementada y en revisión** en `fix/post-write-refresh-contract`; [evidencia y handoff](docs/gestion/validacion-f2-guardado-y-refresco-2026-09-13.md). F3 no comenzó. No abrir otra rama antes de aprobar, integrar y limpiar F2.
 
 | Orden | Frente | Criterio de cierre |
 |---|---|---|
@@ -25,9 +25,10 @@ El [plan de desarrollo inmediato de la beta](docs/gestion/plan-desarrollo-inmedi
 El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de línea base final **siguen pendientes** en la checklist. F3 no los sustituye ni obliga a publicar `1.0.0`. WIP máximo: dos elementos entre En Curso y En Revisión.
 
 - [x] Aceptar e integrar el PR del plan inmediato — PR #13, `65e5767`; rama documental local/remota eliminada.
-- [ ] F1: aprobar y cerrar AUD-008/AUD-009 en `fix/quality-gate-portability`; implementación y regresiones listas, pendiente aceptación Mac/teléfono.
-- [ ] Al cerrar la rama actual, evaluar la prioridad del parche de Vitest (GHSA-82fw-gwwq-j7x9): 3 avisos moderados de desarrollo, producción 0; no ampliar F1 ni abrir otro frente durante revisión.
-- [ ] F2: cerrar el alcance confirmado de AUD-014 en `fix/post-write-refresh-contract` sin confundir fallo de escritura con fallo de refresco.
+- [x] F1: aceptada e integrada en PR #14 (`7d4ceda`); rama `fix/quality-gate-portability` eliminada local/remota. Evidencia de ejecución e información no recibida distinguidas en su reporte.
+- [ ] Al cerrar la rama actual, evaluar la prioridad del parche de Vitest (GHSA-82fw-gwwq-j7x9): auditoría del 2026-09-12, 3 avisos moderados de desarrollo, producción 0; no ampliar F2 ni abrir otro frente durante revisión.
+- [ ] F2: aprobar y cerrar el alcance de AUD-014 en `fix/post-write-refresh-contract`; creación/recuperación implementadas, pendiente revisión y smoke del teléfono.
+- [ ] Priorizar por separado las ambigüedades de refresco vecinas registradas en F2 (crear materia, editar/eliminar fecha); no declararlas corregidas ni abrir una segunda rama.
 - [ ] F3: registrar la evidencia en `docs/beta-core-validation`; no optimizar consultas/store sin medición y nueva aprobación.
 
 ## Checklist de trabajo

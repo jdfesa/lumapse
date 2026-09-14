@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import * as AcademicEventService from '../../../src/services/AcademicEventService.ts'
 import { DatabaseError } from '../../../src/services/sqlite/errors.js'
 import { subscribeToStoreErrors } from '../../../src/store/NoteStore.errors.js'
+import { subscribeToPendingRefreshes } from '../../../src/store/NoteStore.refresh.js'
 import { state, subscribe } from '../../../src/store/NoteStore.state.js'
 import * as NoteStoreAcademicEvents from '../../../src/store/NoteStore.academicEvents.js'
 
@@ -308,6 +309,46 @@ describe('NoteStore.academicEvents', () => {
   })
 
   describe('createAcademicEvent()', () => {
+    it('conserva la creación ante una lectura mensual antigua y un refresco fallido', async () => {
+      const read = deferred()
+      const created = event({ id: 'created' })
+      state.academicEventsMonth = { year: 2026, month: 6 }
+      AcademicEventService.getAcademicEventsByMonth.mockReturnValueOnce(read.promise)
+      AcademicEventService.getUpcomingAcademicEvents.mockRejectedValueOnce(new Error('refresco fallido'))
+
+      const pendingRead = NoteStoreAcademicEvents.loadAcademicEventsByMonth(2026, 6)
+      await expect(NoteStoreAcademicEvents.createAcademicEvent({ date: created.date })).resolves.toEqual(created)
+      read.resolve([])
+      await pendingRead
+
+      expect(state.academicEventsForMonth).toEqual([created])
+      expect(state.academicEvents).toEqual([created])
+    })
+
+    it.each(['resolve', 'reject'])('no acepta una recuperación antigua que termina con %s', async (settle) => {
+      const warning = vi.fn()
+      const unsubscribe = subscribeToPendingRefreshes(warning)
+      const stale = deferred()
+      const created = event({ id: 'created' })
+      AcademicEventService.getUpcomingAcademicEvents
+        .mockRejectedValueOnce(new Error('refresco inicial fallido'))
+        .mockReturnValueOnce(stale.promise)
+        .mockResolvedValue([created])
+      try {
+        await NoteStoreAcademicEvents.createAcademicEvent({ date: created.date })
+        const { retry } = warning.mock.calls[0][0]
+        const recovery = retry()
+        await Promise.resolve()
+        await NoteStoreAcademicEvents.loadUpcomingAcademicEvents()
+        stale[settle](settle === 'reject' ? new Error('rechazo antiguo') : [])
+        await expect(recovery).resolves.toBe(false)
+        expect(state.upcomingAcademicEvents).toEqual([created])
+        await expect(retry()).resolves.toBe(true)
+        expect(warning).toHaveBeenCalledTimes(1)
+        expect(AcademicEventService.createAcademicEvent).toHaveBeenCalledTimes(1)
+      } finally { unsubscribe() }
+    })
+
     it('crea un evento y actualiza todos los caches relevantes', async () => {
       const created = event({ id: 'created', date: '2026-06-14' })
       state.academicEventsMonth = { year: 2026, month: 6 }

@@ -70,6 +70,8 @@ npm run check:traceability
 
 Los cambios Android o de persistencia requieren además pruebas en el entorno correspondiente y evidencia en los checklists de gestión. Un test web no sustituye una validación nativa cuando intervienen SQLite, Filesystem, Network o Share.
 
+Las pruebas automatizadas de `verify` (Node, DOM simulado y SQLite en memoria) no requieren abrir manualmente la app en el navegador. El smoke manual web es auxiliar, no obligatorio para este ciclo Android. Usar el entorno nativo existente para la prueba en el teléfono; no instalar Android Studio solo para intentar validar la web.
+
 ## 6. Pull Request
 
 El PR queda abierto para lectura y aprobación del autor. Solo se integra a `main` después de su aprobación explícita y de que confirme el funcionamiento en el teléfono de pruebas; un CI verde no autoriza el merge. Luego se actualiza `main` y se eliminan únicamente las ramas locales/remotas ya integradas. Las mejoras o bugs nuevos se registran sin abrir un segundo frente durante esa espera.

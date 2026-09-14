@@ -1,6 +1,6 @@
 # Revisión Técnica Priorizada — 2026-09-01
 
-**Estado:** Vigente — AUD-001 a AUD-007 cerrados e incluidos en `v0.5.0`; AUD-008/AUD-009 implementados en F1, pendientes de aprobación; AUD-010 a AUD-014 continúan abiertos
+**Estado:** Vigente — AUD-001 a AUD-007 cerrados e incluidos en `v0.5.0`; AUD-008/AUD-009 aceptados e integrados en PR #14; AUD-014 implementado para creación de notas/fechas en F2, pendiente de revisión/Android; AUD-010 a AUD-013 continúan abiertos
 **Rama original de auditoría:** `fix/note-save-integrity`
 **Commit base original revisado:** `cd60c0e` (`main`)
 **Versión original revisada:** `0.4.8` (Beta); cierres publicados en `v0.5.0`<br>
@@ -103,13 +103,13 @@ sin convertir la evidencia histórica de las secciones siguientes en una nueva a
 | AUD-005 | P1 | Propiedad global de transacciones y migraciones permisivas | Confiabilidad | Cerrado en PR #7 |
 | AUD-006 | P1 | Resultados async obsoletos sobrescriben vista/cache reciente | Bug de concurrencia | Cerrado en PR #8; publicado en `v0.5.0` |
 | AUD-007 | P1 | Contratos incompatibles para errores de mutaciones | Diseño/confiabilidad | Cerrado en PR #6 |
-| AUD-008 | P1 | Gate canónico no portable y CI desalineada | Tooling | F1 implementada; en revisión |
-| AUD-009 | P1 | Suite no reproducible en toda la versión Node declarada | Tooling | F1 implementada; en revisión |
+| AUD-008 | P1 | Gate canónico no portable y CI desalineada | Tooling | Cerrado por aceptación de F1; PR #14 |
+| AUD-009 | P1 | Suite no reproducible en toda la versión Node declarada | Tooling | Cerrado por aceptación de F1; PR #14 |
 | AUD-010 | P2 | Broadcasts globales y refreshes no atómicos | Escalabilidad | Pendiente de medición |
 | AUD-011 | P2 | Conteos N+1 y posibles índices faltantes | Rendimiento | Pendiente de medición |
 | AUD-012 | P2 | Deriva de cohesión entre features de presentación | Arquitectura | Pendiente |
 | AUD-013 | P2 | Poco margen de bundle y visibilidad parcial de coverage UI | Mantenibilidad | Monitorear |
-| AUD-014 | P1 | Creación persistida presentada como fallo al rechazar una recarga | Defecto confirmado en notas y fechas | Pendiente; reproducción y propuesta F2 en el plan del 2026-09-12 |
+| AUD-014 | P1 | Creación persistida presentada como fallo al rechazar una recarga | Defecto confirmado en notas y fechas | F2 implementada; pendiente de revisión/Android. [Evidencia y alcance](./validacion-f2-guardado-y-refresco-2026-09-13.md) |
 
 ## 7. Hallazgos detallados
 
@@ -287,7 +287,7 @@ en el mismo PR evita falsos éxitos y rechazos no manejados.
 
 ### AUD-008 — Gate canónico y CI
 
-> **Actualización F1 (2026-09-12):** gate portable único, CSP por token y rechazo de crashes implementados en `fix/quality-gate-portability`. [Evidencia](./validacion-f1-gate-portable-2026-09-12.md) y [ADR-010](../adr/ADR-010-gate-portable-y-entorno-canonico.md). Pendientes revisión y comprobación Mac/teléfono; no se declara cerrado. Lo siguiente conserva el diagnóstico previo a F1.
+> **Actualización F1 (2026-09-13):** gate portable único, CSP por token y rechazo de crashes aceptados e integrados en PR #14. [Evidencia y límites](./validacion-f1-gate-portable-2026-09-12.md) y [ADR-010](../adr/ADR-010-gate-portable-y-entorno-canonico.md). Cerrado por aceptación del autor. Lo siguiente conserva el diagnóstico previo a F1.
 
 `npm run verify` delega primero en `scripts/quality.sh`. Cuando el binario Rust ignorado no está
 disponible, el fallback `scripts/check-offline.sh` clasifica como dependencias externas las dos
@@ -305,7 +305,7 @@ regresión y alinear CI con un único gate reproducible.
 
 ### AUD-009 — Compatibilidad Node 26
 
-> **Actualización F1 (2026-09-12):** `.nvmrc`, `engines`, `packageManager`, CI y guardia de runtime implementados. Node 26 se rechaza antes de la suite; no se amplió el soporte. Cierre pendiente de aceptación, con [evidencia separada por entorno](./validacion-f1-gate-portable-2026-09-12.md).
+> **Actualización F1 (2026-09-13):** `.nvmrc`, `engines`, `packageManager`, CI y guardia de runtime aceptados e integrados en PR #14. Node 26 se rechaza antes de la suite; no se amplió el soporte. [Evidencia separada por entorno](./validacion-f1-gate-portable-2026-09-12.md).
 
 > **Decisión 2026-09-12:** la línea canónica queda fijada en Node `22.20.0` y npm `10.9.3`,
 > coincidente con la Mac que aprobó los gates de `v0.5.0`. F1 del
