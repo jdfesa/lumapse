@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 06 — Entrega Final
 > **Hito 05:** Cerrado documentalmente el 2026-07-15 sobre la beta operativa `v0.4.8`
-> **Última actualización:** 2026-09-13 — F1 aprobada e integrada en PR #14; F2 implementada y pendiente de revisión/Android, sin cambio de versión
+> **Última actualización:** 2026-09-14 — deuda UX de filtro de fecha oculto registrada como prioridad de corto plazo tras validación Android
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -98,6 +98,7 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 
 | Área | Tarea | Prioridad | Notas |
 |---|---|---|---|
+| UX / filtros | Hacer visible y predecible la combinación de fecha con materia/sección | Alta — corto plazo | Detectado el 2026-09-14 en Android con el fixture de 500 notas: al cerrar el calendario, la fecha seleccionada permanece activa sin un indicador visible; al entrar luego en una materia o sección, el feed combina ambos filtros y puede mostrar “No hay notas en esta fecha” mientras el drawer conserva el conteo total de notas. No hubo pérdida de datos, pero la discrepancia confundió incluso durante la validación interna y puede afectar más a usuarios nuevos. Antes de implementar, definir un plan acotado que compare limpiar la fecha al navegar, mostrar un chip persistente con acción para quitarla o ajustar el alcance de los conteos; el cierre debe hacer evidente qué filtros están activos y cómo volver a ver todas las notas de la sección. |
 | Arquitectura UI | Separar responsabilidades restantes en componentes grandes | Media | Priorizar `NoteEditor`, `NoteList`, `Heatmap` y `BackupView` solo cuando haya cambios funcionales relacionados |
 | Tipado gradual | Aplicar estrategia JS/TS por fases | Media | Plan definido en [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md): typecheck, contratos, primera tanda de modulos puros, `AcademicEventTypes`, registro de comandos del editor, `AcademicEventService`, capa de backup —incluidos adaptadores nativos—, `ExportService`, `SubjectService.crud`, `SubjectService.trash` y auditorias `.ts` completadas |
 | Tipado gradual | Continuar servicios de dominio/backup archivo por archivo | Baja/Media | No avanzar en bloque; proximos candidatos requieren evaluar bordes nativos/share/storage o store con contratos mas claros |
