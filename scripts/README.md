@@ -681,3 +681,45 @@ Smoke test temporal del schema SQLite real.
   npm run check:db-smoke
   python3 scripts/db-smoke-test.py
   ```
+
+### 42. `generate-test-fixture.py`
+Genera un conjunto sintético, reproducible y de alto volumen para probar Lumapse sin depender de datos personales.
+
+- **Cobertura por defecto:** 10 materias, 39 secciones, 500 notas visibles, 18 archivadas, 12 en papelera, 30 fijadas y 40 fechas académicas.
+- **Casos deliberados:** incluye Entrada con notas, secciones vacías, secciones con 1–5 notas, otras con 48–72 notas, contenidos extensos y materias con distinta cantidad de secciones.
+- **Reproducibilidad:** la semilla predeterminada es `20260913`; puede cambiarse con `--seed` y el resultado registra su SHA-256.
+- **Salida ignorada por Git:** escribe `dataset.json`, `dataset-summary.json` y `DISTRIBUTION.md` bajo `tmp/beta-500-fixture/`, salvo que se indique otro `--output-dir`.
+- **Uso:**
+  ```bash
+  npm run fixture:generate
+  python3 scripts/generate-test-fixture.py --seed 20260913
+  ```
+
+### 43. `test-fixture-db.py`
+Valida, materializa y audita el fixture sintético sobre el schema SQLite real.
+
+- **Qué protege:** valida IDs, jerarquía, referencias, conteos y reglas de dominio; ejecuta `integrity_check` y `foreign_key_check`; compara exactamente el contenido materializado; y preserva `metadata` al sembrar una base.
+- **Uso normal:** `load-test-fixture-android.sh` lo invoca internamente. También permite validar el JSON y hacer un roundtrip completamente temporal, sin ADB:
+  ```bash
+  npm run fixture:validate
+  python3 scripts/test-fixture-db.py validate-dataset tmp/beta-500-fixture/dataset.json
+  ```
+- **Regresión automatizada:** `npm run test:fixture` comprueba determinismo, conteos, casos vacíos, roundtrip SQLite y el modo local del cargador.
+
+### 44. `load-test-fixture-android.sh`
+Carga el fixture en un dispositivo Android de pruebas mediante `adb` y `run-as`, reemplazando solamente materias, notas y fechas académicas.
+
+- **Operación destructiva y explícita:** para tocar el teléfono exige `--yes`; úsese únicamente sobre un dispositivo de pruebas. `--validate-only` no abre ADB ni modifica el dispositivo.
+- **Resguardos:** detiene la app, consolida SQLite, crea un backup recuperable bajo `tmp/beta-500-fixture/backups/`, verifica la transferencia byte a byte, valida el contenido antes y después del arranque y ejecuta rollback automático si falla.
+- **Qué preserva:** no usa `pm clear`, no desinstala y no toca `shared_prefs`, `app_webview` ni la tabla `metadata`.
+- **Preflight:** requiere `main` limpio y sincronizado con `origin/main`, la misma versión instalada y un build debuggable compatible con `run-as`.
+- **Uso:**
+  ```bash
+  npm run fixture:generate
+  npm run fixture:validate
+  npm run fixture:android -- --yes --serial ad071603088c2172aa --seed-date 2026-09-13
+  # Restaurar el estado anterior:
+  npm run fixture:android -- --yes --serial ad071603088c2172aa --restore tmp/beta-500-fixture/backups/before-AAAA...
+  ```
+
+> **Límite del ZIP oficial:** el formato de backup de Lumapse excluye por contrato las filas en Papelera. Un ZIP exporta las 500 notas visibles, 18 archivadas y 40 fechas, pero no las 12 eliminadas. El generador y el snapshot SQLite del cargador sí reproducen el estado completo.
