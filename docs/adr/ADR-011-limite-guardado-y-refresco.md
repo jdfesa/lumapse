@@ -2,7 +2,7 @@
 
 **Fecha:** 2026-09-13
 
-**Estado:** Implementado en F2 conforme al plan aceptado; pendiente de revisión, prueba Android y aprobación del PR.
+**Estado:** Aceptado e integrado en PR #15 (`8e25dcd`) el 2026-09-14, tras confirmación de funcionamiento y merge del autor. Evidencia y límites en el [reporte F2](../gestion/validacion-f2-guardado-y-refresco-2026-09-13.md).
 
 **Alcance:** AUD-014, exclusivamente creación de notas y fechas académicas. No modifica esquema, coordinador SQLite ni el contrato global de mutaciones/suscripciones.
 

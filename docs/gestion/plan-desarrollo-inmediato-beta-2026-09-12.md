@@ -1,6 +1,6 @@
 # Plan de desarrollo inmediato de la beta — 2026-09-12
 
-**Estado:** Plan aceptado e integrado mediante [PR #13](https://github.com/jdfesa/lumapse/pull/13), `65e5767`. F1 aprobada e integrada en [PR #14](https://github.com/jdfesa/lumapse/pull/14), `7d4ceda`, con rama local/remota eliminada. F2 implementada en `fix/post-write-refresh-contract`, pendiente de revisión y prueba Android; F3 no iniciada. [Evidencia y pendientes de F2](./validacion-f2-guardado-y-refresco-2026-09-13.md).
+**Estado:** Plan aceptado e integrado mediante [PR #13](https://github.com/jdfesa/lumapse/pull/13), `65e5767`. F1 y F2 aprobadas e integradas en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`), con ramas eliminadas. F3 preparada en `docs/beta-core-validation`, sin cerrar y con mediciones Android pendientes. [Evidencia y límites de F2](./validacion-f2-guardado-y-refresco-2026-09-13.md); [preparación y matriz F3](../beta-core-validation/README.md).
 
 **Rama documental:** `docs/immediate-beta-plan`.
 
@@ -62,8 +62,8 @@ Esto **no demuestra pérdida de datos, frecuencia del fallo en teléfonos ni una
 |---|---|---|---|---|
 | Completado | Analizar y acordar el alcance | `docs/immediate-beta-plan` | Ninguna | PR #13 aprobado e integrado; rama local/remota eliminada |
 | F1 · integrada | Gate portable y entorno explícito | `fix/quality-gate-portability` (eliminada) | PR del plan aceptado e integrado | PR #14 aceptado e integrado; AUD-008/AUD-009 cerrados por aceptación |
-| F2 · en revisión | Confirmación inequívoca de creación | `fix/post-write-refresh-contract` | F1 integrado | Implementación y regresiones permanentes; PR abierto hasta smoke Android y aprobación |
-| F3 · siguiente sesión | Validación crítica y medición con 500 notas | `docs/beta-core-validation` | F2 integrado y dispositivo autorizado disponible | Fixture/protocolo reproducibles y reporte; ninguna optimización incluida |
+| F2 · integrada | Confirmación inequívoca de creación | `fix/post-write-refresh-contract` (eliminada) | F1 integrado | PR #15 integrado por el autor después de confirmar funcionamiento; cierre acotado de AUD-014 |
+| F3 · preparación revisable | Validación crítica y medición con 500 notas | `docs/beta-core-validation` | F2 integrado; para medir falta dispositivo/artefacto autorizado | Fixture/protocolo y evidencia local; Android pendiente, ninguna optimización incluida |
 
 Cada fase vuelve a `main` actualizado antes de crear su rama y espera revisión antes del merge. Se mantiene [WIP global 2](./definicion-flujo-kanban.md) como techo, contando también `En Revisión`; esta secuencia usa **una sola rama técnica activa**. No abrir la siguiente hasta integrar y limpiar la anterior. El autor debe aprobar explícitamente el PR y confirmar funcionamiento en su teléfono de pruebas; CI no sustituye esa aprobación. El apoyo de estudiantes/dispositivo se coordina con el autor, no se presume disponible. Registrar `startedAt`/`finishedAt` cuando sucedan, no inventarlos desde commits.
 
@@ -89,7 +89,7 @@ Cada fase vuelve a `main` actualizado antes de crear su rama y espera revisión 
 - [x] Node fuera del rango declarado se rechaza o diagnostica inequívocamente antes de la suite. El workaround de Node 26 queda como antecedente, no como solución canónica.
 - [x] No se reducen umbrales, se omiten pruebas ni se pierde un control que hoy ejecuta CI.
 
-**Revisión F1:** [PR #14](https://github.com/jdfesa/lumapse/pull/14) abierto; Linux limpio y CI aprobados, con [evidencia por checkpoint](./validacion-f1-gate-portable-2026-09-12.md). El primer criterio permanece pendiente por la Mac; también faltan prueba del teléfono y autorización de merge.
+**Aceptación F1:** [PR #14](https://github.com/jdfesa/lumapse/pull/14) integrado tras aprobación del autor; Linux limpio y CI aprobados, con [evidencia por checkpoint](./validacion-f1-gate-portable-2026-09-12.md). El criterio de ejecución en ambas máquinas conserva la limitación de logs Mac no recibidos; no se fabrica evidencia para marcarlo completo.
 
 **Cierre:** actualizar solo el estado real de AUD-008/AUD-009, registrar versiones exactas, comandos, exits y enlace de CI. No atribuir este PR a una nueva validación Android del producto: no modifica el runtime.
 
@@ -97,7 +97,7 @@ Cada fase vuelve a `main` actualizado antes de crear su rama y espera revisión 
 
 **Objetivo:** que una creación ya confirmada no se comunique como fallida ni invite a repetir la escritura.
 
-**Contrato aceptado e implementado en F2; pendiente de validar y aprobar su PR:**
+**Contrato aceptado e integrado en F2, PR #15 (`8e25dcd`), tras confirmación del autor:**
 
 - Fallo **antes de confirmar la escritura**: conservar el contrato de error actual, los datos del formulario/borrador y el reintento de guardado.
 - Escritura **confirmada** y fallo de refresco: mantener como resultado la entidad persistida, completar el estado de éxito del formulario y emitir un aviso diferenciado de actualización pendiente; ofrecer recuperación de lecturas sin repetir el `INSERT`.
@@ -125,6 +125,10 @@ Cada fase vuelve a `main` actualizado antes de crear su rama y espera revisión 
 Implementación, contrato, mutaciones vecinas fuera de alcance y handoff: [reporte F2](./validacion-f2-guardado-y-refresco-2026-09-13.md) y [ADR-011](../adr/ADR-011-limite-guardado-y-refresco.md). La prueba manual web es auxiliar, no obligatoria; no instalar Android Studio por ese motivo. Se mantiene el gate automático y la aprobación en el teléfono.
 
 ### F3 — Evidencia del núcleo, no optimización anticipada
+
+**Seguimiento 2026-09-14:** [preparación y matriz](../beta-core-validation/README.md).
+Se reutilizan las herramientas de fixture integradas entre F1/F2, conservando `beta-500`
+y añadiendo los perfiles exactos de comparación F3. No hay mediciones Android todavía.
 
 **Objetivo:** decidir con datos si hay que intervenir consultas o notificaciones, y ampliar la evidencia de continuidad/offline del producto existente.
 
@@ -176,7 +180,7 @@ Los logs diagnósticos locales se guardaron en `tmp/immediate-beta-plan-2026-09-
 - [x] Checks documentales, trazabilidad y `git diff --check` aprobados; CI revisada y limitaciones locales explícitas.
 - [x] No hay cambios en runtime, dependencias, schema, versión, APK ni datos personales.
 
-**Detención actualizada:** el plan y F1 ya fueron aceptados e integrados, con sus ramas eliminadas. El PR de F2 queda abierto hasta revisión, prueba en el teléfono y autorización explícita. No iniciar F3, publicar release ni integrar F2 automáticamente. La aceptación del plan no equivale al cierre de sus fases.
+**Detención actualizada 2026-09-14:** el plan, F1 y F2 fueron aceptados e integrados, con sus ramas eliminadas. F3 entrega preparación verificable; sin mediciones del dispositivo no se cierra. Mantener su PR abierto hasta revisión/validación y autorización explícita. No abrir otra rama, publicar release ni integrar automáticamente. La aceptación del plan no equivale al cierre de sus fases.
 
 ## 8. Reproducción de AUD-014
 

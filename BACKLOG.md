@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 06 — Entrega Final
 > **Hito 05:** Cerrado documentalmente el 2026-07-15 sobre la beta operativa `v0.4.8`
-> **Última actualización:** 2026-09-14 — deuda UX de filtro de fecha oculto registrada como prioridad de corto plazo tras validación Android
+> **Última actualización:** 2026-09-14 — F2 aceptada/integrada; F3 preparada, medición Android pendiente. Se conserva la deuda UX de filtro de fecha oculto.
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -19,7 +19,7 @@ Hito 06 queda activo para completar la documentación final, verificar la maquet
 
 La revisión técnica priorizada del 2026-09-01 abrió trece hallazgos trazables. AUD-001 y AUD-002 quedaron resueltos mediante PR #2; AUD-003 mediante PR #3; AUD-004 mediante PR #5; AUD-007 mediante PR #6; AUD-005 mediante PR #7 y AUD-006 mediante PR #8. Los siete cierres forman parte de `v0.5.0`. El gate del corte aprobó 67 archivos y 1065 tests; la limitación local de Node 26 quedó registrada como AUD-009 y no invalidaba la ejecución canónica con Node 22.20.0/npm 10.9.3; F1 ahora diagnostica y rechaza ese entorno no soportado. La validación funcional de 500 notas de AUD-003 no sustituye las mediciones de latencia y rendimiento exigidas por `RNF-002` y `RNF-004`. Los hallazgos restantes mantienen sus prioridades y no se incorporan automáticamente al alcance de Hito 06.
 
-La revisión acotada del 2026-09-12 agregó **AUD-014**: una creación de nota o fecha ya persistida podía rechazar por fallo de recarga y duplicarse al reintentar. F2 corrige esos dos caminos y agrega recuperación de lecturas, con regresiones store/SQLite/formularios. Quedan pendientes revisión y prueba Android; no se declara cerrado. Ver [evidencia y límites de F2](docs/gestion/validacion-f2-guardado-y-refresco-2026-09-13.md).
+La revisión acotada del 2026-09-12 agregó **AUD-014**: una creación de nota o fecha ya persistida podía rechazar por fallo de recarga y duplicarse al reintentar. F2 corrige esos dos caminos y agrega recuperación de lecturas, con regresiones store/SQLite/formularios. El autor confirmó su funcionamiento y realizó el merge de PR #15 (`8e25dcd`); se cierra ese alcance, no las mutaciones vecinas. Ver [evidencia y límites de F2](docs/gestion/validacion-f2-guardado-y-refresco-2026-09-13.md).
 
 La revisión de exportación/importación corrige una sobrepromesa documental del Hito 03: los servicios base de Markdown no equivalían a un flujo de usuario validado. La opción "Compartir" para una nota individual (`RF-016`) solo tendría sentido si abre el share sheet nativo de Android y ofrece apps como WhatsApp; si termina copiando contenido, duplica una acción existente y agrega ruido. La portabilidad de workspace sí quedó resuelta de forma acotada con exportación e importación de backup `.zip` desde la vista Backup.
 
@@ -37,7 +37,7 @@ La trazabilidad de `v0.4.8` y `v0.5.0` queda distribuida entre `docs/gestion/lin
 
 ## Prioridad Inmediata — Hito 06
 
-**Plan aceptado e integrado en [PR #13](https://github.com/jdfesa/lumapse/pull/13):** F1 fue aprobada e integrada en [PR #14](https://github.com/jdfesa/lumapse/pull/14), `7d4ceda`; su rama local/remota fue eliminada. F2 está implementada en la única rama activa `fix/post-write-refresh-contract`, pendiente de revisión y prueba en el teléfono. No iniciar F3 ni otra rama antes de aprobar, integrar y limpiar F2. Alcance y criterios: [plan inmediato](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md).
+**Plan aceptado e integrado en [PR #13](https://github.com/jdfesa/lumapse/pull/13):** F1 y F2 fueron aprobadas e integradas en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`), con ramas eliminadas. F3 tiene preparación reproducible en la única rama activa `docs/beta-core-validation`; mediciones Android pendientes, fase sin cerrar. Ver [protocolo y evidencia](docs/beta-core-validation/README.md) y [plan inmediato](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md). No abrir otro frente durante su revisión.
 
 | Orden | Tarea | Criterio de cierre |
 |---|---|---|
@@ -64,7 +64,7 @@ El análisis original permanece en [`docs/gestion/revision-tecnica-priorizada-20
 | AUD-007 | P1 | Contratos incompatibles para errores de mutaciones | Cerrado en PR #6; contrato único, consumidores y Android aprobados |
 | AUD-008–AUD-009 | P1 | Gate portable y entorno Node canónico | Cerrados por aceptación explícita del autor; PR #14 integrado, `7d4ceda`. [Evidencia y límites](docs/gestion/validacion-f1-gate-portable-2026-09-12.md) |
 | AUD-010–AUD-013 | P2 | Escalabilidad, rendimiento, cohesión y margen de bundle/coverage | Monitorear o medir; no bloquean por sí solos el cierre actual |
-| AUD-014 | P1 | Creación persistida rechaza por fallo de recarga | F2 implementada para crear notas/fechas; regresiones SQLite/UI. Pendientes Android y aprobación, no cerrado |
+| AUD-014 | P1 | Creación persistida rechaza por fallo de recarga | Alcance de crear notas/fechas aceptado e integrado en PR #15; mutaciones vecinas siguen pendientes |
 
 ---
 

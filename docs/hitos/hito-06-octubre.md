@@ -106,9 +106,9 @@ Las ideas conservadas siguen en [`../../BACKLOG.md`](../../BACKLOG.md) y no comp
 El orden académico general se conserva abajo. Para las próximas sesiones del frente técnico se
 aceptó el [plan inmediato de la beta](../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) en PR #13:
 F1, reproducibilidad del gate (AUD-008/AUD-009); F2, confirmación de creación ante fallos de
-recarga (AUD-014); F3, evidencia Android y medición con 500 notas. **F1 fue aprobada e integrada
-en PR #14; F2 está implementada y pendiente de revisión/prueba en el teléfono. F3 no comenzó.** Ver la
-[evidencia de F2](../gestion/validacion-f2-guardado-y-refresco-2026-09-13.md). No agrega funcionalidades ni fija una
+recarga (AUD-014); F3, evidencia Android y medición con 500 notas. **F1 y F2 fueron aprobadas e integradas
+en PR #14 y #15; sus ramas se eliminaron. F3 tiene preparación verificable y mediciones Android pendientes, sin cerrar.** Ver la
+[evidencia de F2](../gestion/validacion-f2-guardado-y-refresco-2026-09-13.md) y el [protocolo F3](../beta-core-validation/README.md). No agrega funcionalidades ni fija una
 fecha para `1.0.0`; los pendientes académicos y la matriz RNF completa siguen abiertos.
 
 | Orden | Frente | Salida esperada |
@@ -133,7 +133,7 @@ Se mantiene WIP máximo de dos elementos activos en total entre `En Curso` y `En
 | `Mover a` requería pulsación prolongada | Cerrado en PR #9 | Toque normal y menús contextuales validados en Android; conservar como antecedente resuelto |
 | Rendimiento con mayor volumen de notas | Riesgo medio de evidencia | Medición de latencia y percepción con al menos 500 notas; no solo importación funcional |
 | AUD-008/AUD-009 — gate portable | Cerrados en F1 / PR #14 | Mantener entorno canónico y gate único; aceptación y evidencia por entorno en el reporte de F1 |
-| AUD-014 — creación confirmada y recarga fallida | F2 implementada; en revisión, no cerrado | Regresiones SQLite/UI y recuperación de lecturas; pendientes smoke del teléfono y aprobación. Otras mutaciones no se declaran corregidas |
+| AUD-014 — creación confirmada y recarga fallida | F2 aceptada e integrada en PR #15 | Autor confirmó funcionamiento e hizo merge el 2026-09-14; regresiones SQLite/UI. Otras mutaciones no se declaran corregidas |
 
 ## Criterios de Cierre
 

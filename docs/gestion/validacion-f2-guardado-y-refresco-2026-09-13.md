@@ -1,10 +1,10 @@
 # F2 — Validación de guardado confirmado y refresco recuperable
 
-**Estado:** implementación terminada y gate local aprobado; pendiente de revisión, validación del candidato en el teléfono y autorización explícita de merge. AUD-014 no se declara cerrado.
+**Estado actualizado 2026-09-14:** el autor confirmó que todo funcionaba bien y realizó el merge de PR #15 (`8e25dcd`). F2 aceptada; AUD-014 cerrado únicamente para creación de notas/fechas. No se recibieron nuevos logs Mac ni identificación del APK probado: no se inventa esa evidencia ni se atribuye al asset publicado.
 
-**Rama única:** `fix/post-write-refresh-contract`. **Inicio observado:** 2026-09-13; cierre pendiente de aceptación.
+**Rama de implementación:** `fix/post-write-refresh-contract` (eliminada local/remota). **Inicio observado:** 2026-09-13; aceptación/merge del autor: 2026-09-14.
 
-**PR de implementación:** [#15 — creación confirmada y refresco recuperable](https://github.com/jdfesa/lumapse/pull/15), abierto para revisión y prueba en el teléfono, sin auto-merge.
+**PR de implementación:** [#15 — creación confirmada y refresco recuperable](https://github.com/jdfesa/lumapse/pull/15), integrado el 2026-09-14 a las 22:07:33 UTC. F3 comenzó solo después de sincronizar `main` y limpiar la rama.
 
 **Base:** `7d4ceda`, merge aprobado de [PR #14](https://github.com/jdfesa/lumapse/pull/14). Se verificó `main` sincronizado y se eliminó `fix/quality-gate-portability` local/remota antes de crear F2. F3 no se inició.
 
@@ -112,7 +112,10 @@ capturas sintéticas de navegador no se cuentan como evidencia aprobada ni nativ
 `npm run verify` no requiere abrir la app web. No se instaló Android Studio: se conserva
 el [flujo Android existente](../flujo-desarrollo-android.md) para compilar y probar en el teléfono.
 
-Preparar la rama en la Mac con el checkout sin cambios personales pendientes:
+**Handoff histórico de F2, anterior al merge.** Las casillas siguientes no son un nuevo
+registro de ejecución detallado. La aprobación global del autor se documenta arriba;
+para el trabajo vigente usar el [protocolo F3](../beta-core-validation/protocolo.md),
+no recrear la rama eliminada. Preparación solicitada entonces en la Mac:
 
 ```bash
 git status --short --branch
@@ -152,7 +155,7 @@ nativo ni versión. No se ejecutaron una nueva auditoría de dependencias, `npm 
 compilación/instalación Android, contacto con la Mac/teléfono, release o tag. El seguimiento
 de Vitest registrado en F1 conserva su fecha, sin reutilizarlo como auditoría actual.
 
-El PR permanece **abierto**, sin auto-merge. Mantener solo `main` y esta rama de trabajo
-local/remota. Después de la aprobación explícita: merge, sincronizar `main`, eliminar
-únicamente la rama integrada y recién entonces elegir el próximo objetivo. F3 y las
-mutaciones vecinas siguen pendientes; no abrir un segundo frente durante la revisión.
+**Cierre 2026-09-14:** PR #15 integrado por el autor, `main` sincronizado y rama eliminada.
+La única rama siguiente es `docs/beta-core-validation`, con preparación F3 y mediciones
+Android pendientes. Las mutaciones vecinas siguen abiertas; no se incorporan a F3 ni
+se abre otro frente durante su revisión. No hay nueva release ni cierre de la matriz RNF.

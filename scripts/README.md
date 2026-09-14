@@ -706,6 +706,23 @@ Valida, materializa y audita el fixture sintético sobre el schema SQLite real.
   ```
 - **Regresión automatizada:** `npm run test:fixture` comprueba determinismo, conteos, casos vacíos, roundtrip SQLite y el modo local del cargador.
 
+#### Perfiles y exportación F3
+
+El generador admite `--profile f3-small` (50 activas) y `--profile f3-500` (500), ambos
+con 10 materias, dos secciones cada una y 20 fechas; archivo/papelera son casos
+adicionales. `beta-500` sigue siendo el perfil por defecto y su dataset conserva el hash.
+
+```bash
+python3 scripts/generate-test-fixture.py --profile f3-500 --output-dir tmp/f3/large
+python3 scripts/test-fixture-db.py export-backup tmp/f3/large/dataset.json tmp/f3/large/lumapse-2026-09-13-12-00.zip --seed-date 2026-09-13
+```
+
+`export-backup` genera un ZIP v1 determinista desde el JSON sintético validado, sin
+SQLite personal ni ADB; excluye papelera, fija fecha/orden/atributos, usa STORE y
+rechaza sobreescribir archivos. Imprime hashes del dataset/ZIP y conteos. Las pruebas
+Python entran en `test:tooling` y el gate canónico; la integración JS verifica además
+el importador/store/DDL reales. [Protocolo y límites F3](../docs/beta-core-validation/README.md).
+
 ### 44. `load-test-fixture-android.sh`
 Carga el fixture en un dispositivo Android de pruebas mediante `adb` y `run-as`, reemplazando solamente materias, notas y fechas académicas.
 
