@@ -27,6 +27,7 @@
     "test:coverage": "vitest run --coverage",
     "pretest:ui": "npm run check:runtime",
     "test:ui": "vitest --ui",
+    "test:fixture": "python3 -m unittest discover -s scripts/tests -p 'test_fixture_scripts.py'",
     "quality": "bash scripts/quality.sh",
     "verify": "npm run quality",
     "doctor": "python3 scripts/dev-doctor.py",
@@ -46,6 +47,9 @@
     "check:schema": "python3 scripts/check-schema-sync.py",
     "check:dbml": "python3 scripts/generate-dbml-from-code.py --check",
     "check:subjects": "python3 scripts/validate-subjects-hierarchy.py",
+    "fixture:generate": "python3 scripts/generate-test-fixture.py",
+    "fixture:validate": "bash scripts/load-test-fixture-android.sh --validate-only",
+    "fixture:android": "bash scripts/load-test-fixture-android.sh",
     "deploy:android": "bash scripts/deploy-android.sh",
     "preinstall": "npm run check:runtime",
     "postinstall": "npm run copy-wasm"
