@@ -10,6 +10,7 @@ import {
   getArchivedSubjectTree,
 } from '../services/sqlite/subjects.js'
 import { runStoreAction } from './NoteStore.errors.js'
+import { refreshAfterWrite } from './NoteStore.refresh.js'
 import { getFilteredNotes as applyFilters } from './noteFilters.ts'
 import { state, notify } from './NoteStore.state.js'
 
@@ -46,7 +47,7 @@ export async function loadTrashCount() {
 }
 
 export async function createNote(title = 'Sin título', content = '', subjectId = undefined) {
-  return runStoreAction('createNote', 'No se pudo crear la nota. Intenta de nuevo.', async () => {
+  const newNote = await runStoreAction('createNote', 'No se pudo crear la nota. Intenta de nuevo.', async () => {
     if (!content && title === 'Sin título') {
       content = '# '
     }
@@ -55,14 +56,19 @@ export async function createNote(title = 'Sin título', content = '', subjectId 
       ? subjectId
       : (state.viewMode === 'subject' ? state.activeSubjectId : null)
 
-    const newNote = await NoteService.createNote(title, content, resolvedSubjectId)
-    state.notes = [newNote, ...state.notes]
-    state.searchQuery = ''
-    state.dateFilter = null
-    await loadSubjects()
-    notify()
-    return newNote
+    return NoteService.createNote(title, content, resolvedSubjectId)
   })
+
+  state.notes = [newNote, ...state.notes]
+  state.searchQuery = ''
+  state.dateFilter = null
+  await refreshAfterWrite({
+    operation: 'createNote',
+    entityId: newNote.id,
+    message: 'Nota guardada. La actualización de materias y conteos quedó pendiente.',
+    refresh: loadSubjects,
+  })
+  return newNote
 }
 
 export async function updateNote(id, changes) {
