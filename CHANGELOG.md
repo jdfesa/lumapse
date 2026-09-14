@@ -11,6 +11,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ### Fixed
 
+- **Guardado confirmado (AUD-014, F2):** crear una nota o fecha devuelve la entidad persistida aunque falle el refresco secundario. El editor limpia su borrador y el diálogo cierra con éxito; un aviso diferenciado permite actualizar solo lecturas, sin repetir la escritura. Los fallos de inserción conservan datos y reintento legítimo; el diálogo bloquea envíos concurrentes y durante el cierre. Incluye regresiones SQLite/UI y conserva ownership académico. Pendiente de aprobación y prueba Android; otras mutaciones quedan fuera de este cambio.
 - **Gate portable (AUD-008/AUD-009, F1):** Node 22.20.0/npm 10.9.3 fijados y verificados antes de las suites; `verify` y CI comparten todos los controles. El auditor offline permite únicamente tokens locales de la CSP y el gate rechaza crashes/reportes incompletos, sin depender del binario Rust ignorado. Incluye regresiones de tooling; no cambia runtime de la app, dependencias, schema ni versión.
 
 ### Changed

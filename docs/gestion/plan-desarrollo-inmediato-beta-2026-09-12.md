@@ -1,6 +1,6 @@
 # Plan de desarrollo inmediato de la beta — 2026-09-12
 
-**Estado:** Plan aceptado e integrado mediante [PR #13](https://github.com/jdfesa/lumapse/pull/13), `65e5767`. F1 implementada en `fix/quality-gate-portability` y pendiente de aprobación; F2/F3 no iniciadas. [Evidencia y pendientes de F1](./validacion-f1-gate-portable-2026-09-12.md).
+**Estado:** Plan aceptado e integrado mediante [PR #13](https://github.com/jdfesa/lumapse/pull/13), `65e5767`. F1 aprobada e integrada en [PR #14](https://github.com/jdfesa/lumapse/pull/14), `7d4ceda`, con rama local/remota eliminada. F2 implementada en `fix/post-write-refresh-contract`, pendiente de revisión y prueba Android; F3 no iniciada. [Evidencia y pendientes de F2](./validacion-f2-guardado-y-refresco-2026-09-13.md).
 
 **Rama documental:** `docs/immediate-beta-plan`.
 
@@ -14,7 +14,7 @@
 
 Trabajar en **tres entregables secuenciales y revisables**: hacer reproducible la verificación sobre Node 22.20.0/npm 10.9.3, corregir una ambigüedad de guardado confirmada y medir/validar el núcleo en Android. No agregar funcionalidades ni cambiar de arquitectura.
 
-**F1 es la primera tarea y se inició en `fix/quality-gate-portability` después de integrar PR #13.** Es un prerrequisito de verificación, no una razón para postergar indefinidamente el defecto funcional F2. Si excede una sesión, registrar el bloqueo y dividir su entrega antes de incorporar otro objetivo.
+**F1 fue la primera tarea y quedó integrada en PR #14 tras la aceptación explícita del autor. F2 comenzó después de actualizar `main` y limpiar esa rama.** Se conserva el orden F1 → F2 → F3; ninguna fase abre un segundo frente durante la revisión.
 
 El plan descompone el frente de **validación final de Hito 06**. No reemplaza el cierre académico de Prácticas Profesionalizantes III: bibliografía, maquetación, pruebas con estudiantes y defensa siguen pendientes. Tampoco promete `1.0.0`: una versión estable se decidirá después de reunir evidencia y aceptar explícitamente las limitaciones, en un corte separado.
 
@@ -33,6 +33,8 @@ Se partió de [`README.md`](../../README.md), [`BACKLOG.md`](../../BACKLOG.md), 
 No se realizó una auditoría integral del repositorio, un pentest, una nueva consulta de advisories, una instalación Android ni una medición de rendimiento nativo. No se leyeron bases personales ni se ejecutaron los generadores de datos antiguos. Las conclusiones siguientes separan hechos comprobados de riesgos pendientes de medición.
 
 ## 3. Diagnóstico vigente
+
+La tabla conserva el diagnóstico de base del 2026-09-12. El seguimiento actual está en la cabecera y en los reportes de F1/F2; no presentar los defectos ya corregidos en la rama como evidencia de su estado anterior.
 
 | Frente | Evidencia en la base revisada | Clasificación y decisión |
 |---|---|---|
@@ -59,8 +61,8 @@ Esto **no demuestra pérdida de datos, frecuencia del fallo en teléfonos ni una
 | Orden | Entregable | Rama prevista | Dependencia | Salida revisable |
 |---|---|---|---|---|
 | Completado | Analizar y acordar el alcance | `docs/immediate-beta-plan` | Ninguna | PR #13 aprobado e integrado; rama local/remota eliminada |
-| F1 · sesión 1 | Gate portable y entorno explícito | `fix/quality-gate-portability` | PR del plan aceptado e integrado | Un PR de tooling que cierra AUD-008/AUD-009 con evidencia local/CI |
-| F2 · sesión 2, ampliable a 3 | Confirmación inequívoca de creación | `fix/post-write-refresh-contract` | F1 integrado | Un PR funcional para AUD-014, regresiones permanentes y smoke Android proporcional |
+| F1 · integrada | Gate portable y entorno explícito | `fix/quality-gate-portability` (eliminada) | PR del plan aceptado e integrado | PR #14 aceptado e integrado; AUD-008/AUD-009 cerrados por aceptación |
+| F2 · en revisión | Confirmación inequívoca de creación | `fix/post-write-refresh-contract` | F1 integrado | Implementación y regresiones permanentes; PR abierto hasta smoke Android y aprobación |
 | F3 · siguiente sesión | Validación crítica y medición con 500 notas | `docs/beta-core-validation` | F2 integrado y dispositivo autorizado disponible | Fixture/protocolo reproducibles y reporte; ninguna optimización incluida |
 
 Cada fase vuelve a `main` actualizado antes de crear su rama y espera revisión antes del merge. Se mantiene [WIP global 2](./definicion-flujo-kanban.md) como techo, contando también `En Revisión`; esta secuencia usa **una sola rama técnica activa**. No abrir la siguiente hasta integrar y limpiar la anterior. El autor debe aprobar explícitamente el PR y confirmar funcionamiento en su teléfono de pruebas; CI no sustituye esa aprobación. El apoyo de estudiantes/dispositivo se coordina con el autor, no se presume disponible. Registrar `startedAt`/`finishedAt` cuando sucedan, no inventarlos desde commits.
@@ -95,7 +97,7 @@ Cada fase vuelve a `main` actualizado antes de crear su rama y espera revisión 
 
 **Objetivo:** que una creación ya confirmada no se comunique como fallida ni invite a repetir la escritura.
 
-**Contrato propuesto para aprobación:**
+**Contrato aceptado e implementado en F2; pendiente de validar y aprobar su PR:**
 
 - Fallo **antes de confirmar la escritura**: conservar el contrato de error actual, los datos del formulario/borrador y el reintento de guardado.
 - Escritura **confirmada** y fallo de refresco: mantener como resultado la entidad persistida, completar el estado de éxito del formulario y emitir un aviso diferenciado de actualización pendiente; ofrecer recuperación de lecturas sin repetir el `INSERT`.
@@ -112,13 +114,15 @@ Cada fase vuelve a `main` actualizado antes de crear su rama y espera revisión 
 
 **Criterios de aceptación:**
 
-- [ ] Nota/fecha insertada + lectura secundaria fallida: existe exactamente una fila; el resultado identifica esa entidad y el formulario no ofrece reenviar la misma creación como si hubiera fallado.
-- [ ] Recuperar conteos/próximas fechas no ejecuta otra escritura; UI y estado convergen al dato persistido y el aviso no se duplica.
-- [ ] Fallo de inserción: cero filas nuevas, borrador/formulario intacto y reintento legítimo disponible. Se conservan pruebas de taps concurrentes y respuestas async obsoletas.
-- [ ] Regresiones store + SQLite + consumidores UI, suite completa y `npm run verify` pasan en el entorno fijado por F1.
+- [x] Nota/fecha insertada + lectura secundaria fallida: existe exactamente una fila; el resultado identifica esa entidad y el formulario no ofrece reenviar la misma creación como si hubiera fallado.
+- [x] Recuperar conteos/próximas fechas no ejecuta otra escritura; UI y estado convergen al dato persistido y el aviso no se duplica.
+- [x] Fallo de inserción: cero filas nuevas, borrador/formulario intacto y reintento legítimo disponible. Se conservan pruebas de taps concurrentes y respuestas async obsoletas.
+- [x] Regresiones store + SQLite + consumidores UI, suite completa y `npm run verify` pasan en el entorno fijado por F1: checkpoint `75a5440`, 71 archivos / 1098 tests y 56 de tooling.
 - [ ] Smoke Android de crear/editar nota y fecha, navegación, reapertura y ausencia de duplicados sobre el SHA candidato. El fallo inyectado en SQLite de tests y la prueba nativa normal se registran como evidencias diferentes.
 
 **Cierre:** evidencia por caso y SHA; AUD-014 solo se cierra para los caminos efectivamente cubiertos. La preparación segura de artefacto/dispositivo descrita en F3 también aplica al smoke de F2, antes de su integración. La aprobación de este plan no autoriza borrar datos, instalar sobre una firma incompatible ni publicar un APK.
+
+Implementación, contrato, mutaciones vecinas fuera de alcance y handoff: [reporte F2](./validacion-f2-guardado-y-refresco-2026-09-13.md) y [ADR-011](../adr/ADR-011-limite-guardado-y-refresco.md). La prueba manual web es auxiliar, no obligatoria; no instalar Android Studio por ese motivo. Se mantiene el gate automático y la aprobación en el teléfono.
 
 ### F3 — Evidencia del núcleo, no optimización anticipada
 
@@ -172,9 +176,11 @@ Los logs diagnósticos locales se guardaron en `tmp/immediate-beta-plan-2026-09-
 - [x] Checks documentales, trazabilidad y `git diff --check` aprobados; CI revisada y limitaciones locales explícitas.
 - [x] No hay cambios en runtime, dependencias, schema, versión, APK ni datos personales.
 
-**Detención actualizada:** el PR documental ya fue aceptado e integrado y su rama eliminada con autorización. El PR de F1 queda abierto hasta aprobación y prueba en el teléfono; no iniciar F2, publicar release ni integrar F1 automáticamente. La aceptación del plan no equivale al cierre de sus fases.
+**Detención actualizada:** el plan y F1 ya fueron aceptados e integrados, con sus ramas eliminadas. El PR de F2 queda abierto hasta revisión, prueba en el teléfono y autorización explícita. No iniciar F3, publicar release ni integrar F2 automáticamente. La aceptación del plan no equivale al cierre de sus fases.
 
 ## 8. Reproducción de AUD-014
+
+**Evidencia histórica del defecto, anterior a F2.** Los dos tests siguientes esperan el comportamiento defectuoso; las regresiones permanentes corregidas están en `tests/unit/store/NoteStore.postWriteRefresh.test.js` y sus consumidores en `tests/unit/components/PostWriteRefresh.integration.test.js`.
 
 En la raíz del repositorio, con las dependencias ya instaladas, crear los siguientes archivos **temporales**, no incorporarlos como tests de aceptación sin invertir antes el resultado esperado. Los helpers importados ya están versionados. La configuración usa un único worker y no toca una base de usuario.
 
