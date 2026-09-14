@@ -4,6 +4,8 @@
 
 **Rama única:** `fix/post-write-refresh-contract`. **Inicio observado:** 2026-09-13; cierre pendiente de aceptación.
 
+**PR de implementación:** [#15 — creación confirmada y refresco recuperable](https://github.com/jdfesa/lumapse/pull/15), abierto para revisión y prueba en el teléfono, sin auto-merge.
+
 **Base:** `7d4ceda`, merge aprobado de [PR #14](https://github.com/jdfesa/lumapse/pull/14). Se verificó `main` sincronizado y se eliminó `fix/quality-gate-portability` local/remota antes de crear F2. F3 no se inició.
 
 **Contrato:** [ADR-011](../adr/ADR-011-limite-guardado-y-refresco.md), conforme al [plan aceptado](./plan-desarrollo-inmediato-beta-2026-09-12.md). Documentación y app en español; rama, commits y PR en inglés.
@@ -46,6 +48,8 @@ no se alteró la guardia de runtime ni se aceptó esa ejecución como válida.
 | Composición `main` tras `75a5440` | 4 tests aprobados | Suscripción solo tras preparación; un aviso diferenciado conectado a UI |
 | Primer `npm run verify`, `69dd1ab` | **Exit 1**: 1 test de arranque falló por mock incompleto | El gate y su validador rechazaron el resultado; no fue aceptado como verde |
 | `npm run verify`, `75a5440` | **Exit 0**: 56 tests de tooling; 71 archivos / 1098 tests de aplicación | Reporte estructurado completo, build y todos los controles obligatorios aprobados |
+| `npm run verify`, `d2a7e1a` | **Exit 0**, mismos totales y controles | Incluye la documentación de F2; log `verify-final.log` |
+| [CI de `d2a7e1a`](https://github.com/jdfesa/lumapse/actions/runs/34798142327) | **Aprobada**, instalación y gate canónico completos | Node 22.20.0/npm 10.9.3; no es validación Mac/Android |
 | Lint/typecheck | Sin errores; 3 warnings históricos de lint | No se redujeron umbrales ni ocultaron controles |
 | Caracterización temporal de mutaciones vecinas | 3/3 casos verifican ambigüedades existentes | Diagnóstico separado, no correcciones ni tests incluidos en los 1098 |
 
@@ -69,9 +73,12 @@ npm run verify
 ```
 
 Logs ignorados: `tmp/post-write-refresh-f2-2026-09-13/verify-code.log` (fallido),
-`verify-candidate.log` (aprobado) y `neighbors.log` (diagnóstico). Los tests versionados
-y este reporte no dependen de conservar `/tmp`. La CI del PR se registra por SHA al
-abrirlo; un gate local no se presenta como resultado de CI.
+`verify-candidate.log` y `verify-final.log` (aprobados), `ci-d2a7e1a.log` y `neighbors.log`
+(diagnóstico). Los tests versionados y este reporte no dependen de conservar `/tmp`.
+El enlace de CI anterior identifica un checkpoint inmutable; comprobar también los
+[checks de la cabeza final del PR #15](https://github.com/jdfesa/lumapse/pull/15/checks).
+CI conserva el aviso previo sobre runtime de wrappers de Actions; no cambia el runtime
+Node 22.20.0/npm 10.9.3 verificado para el proyecto ni amplía F2 a mantenimiento de tooling.
 
 ## 3. Mutaciones vecinas: no corregidas en F2
 
