@@ -84,6 +84,15 @@ describe('fixture F3 con importador, store, coordinador y DDL productivos', () =
       expect(store.getFilteredNotes()).toHaveLength(visible)
       expect(store.getState().notes.filter(note => note.archived)).toHaveLength(18)
       expect(store.getFilteredNotes().filter(note => note.pinned)).toHaveLength(visible * 6 / 100)
+      // Camino accesible en la UI actual: búsqueda global desde Entrada.
+      // No presumir que el modo interno `all` tenga un botón visible.
+      store.setViewMode('inbox')
+      store.setSearchQuery('#')
+      expect(store.getFilteredNotes()).toHaveLength(visible)
+      store.setDateFilter('1900-01-01')
+      expect(store.getFilteredNotes()).toHaveLength(0)
+      store.setDateFilter(null)
+      expect(store.getFilteredNotes()).toHaveLength(visible)
       expect(fixture.database.exec('PRAGMA foreign_key_check')).toEqual([])
       db.run.mockClear()
       const repeated = await service.importBackupZip(backups.get(profile))

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -111,6 +112,19 @@ class FixtureScriptsTest(unittest.TestCase):
     def generate(self, directory: Path, profile: str, seed: str = DEFAULT_SEED) -> Path:
         run_json(sys.executable, GENERATOR, "--profile", profile, "--seed", seed, "--output-dir", directory)
         return directory / "dataset.json"
+
+    def test_profile_defaults_do_not_override_an_explicit_output_directory(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            scripts = root / "scripts"
+            scripts.mkdir()
+            generator = scripts / GENERATOR.name
+            shutil.copyfile(GENERATOR, generator)
+            run_json(sys.executable, generator, "--profile", "f3-small")
+            self.assertTrue((root / "tmp" / "f3-small" / "dataset.json").exists())
+            explicit = root / "tmp" / "beta-500-fixture"
+            run_json(sys.executable, generator, "--profile", "f3-small", "--output-dir", explicit)
+            self.assertTrue((explicit / "dataset.json").exists())
 
     def export(self, dataset: Path, output: Path, seed_date: str = SEED_DATE) -> dict:
         return run_json(sys.executable, DB_TOOL, "export-backup", dataset, output, "--seed-date", seed_date)

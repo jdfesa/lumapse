@@ -185,8 +185,8 @@ def main() -> None:
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=DEFAULT_OUTPUT_DIR,
-        help="Directorio de salida ignorado por Git (default: tmp/beta-500-fixture).",
+        default=None,
+        help="Salida (default: tmp/beta-500-fixture, tmp/f3-small o tmp/f3-500 según perfil).",
     )
     parser.add_argument(
         "--seed",
@@ -210,9 +210,8 @@ def main() -> None:
     heavy_counts = {} if is_f3 else HEAVY_SECTION_COUNTS
     prefix = args.profile if is_f3 else "beta500"
     rng = random.Random(args.seed)
-    output_dir = args.output_dir.resolve()
-    if is_f3 and args.output_dir == DEFAULT_OUTPUT_DIR:
-        output_dir = PROJECT_ROOT / "tmp" / args.profile
+    default_output = PROJECT_ROOT / "tmp" / args.profile if is_f3 else DEFAULT_OUTPUT_DIR
+    output_dir = (args.output_dir or default_output).resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
     dataset_path = output_dir / "dataset.json"
     report_path = output_dir / "DISTRIBUTION.md"
