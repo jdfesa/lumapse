@@ -56,6 +56,7 @@ export function openAcademicEventDialog(options = {}) {
       ? (event?.type || options.type)
       : 'parcial'
     let closing = false
+    let saving = false
 
     const previousFocus = document.activeElement
     const backdrop = document.createElement('div')
@@ -222,7 +223,7 @@ export function openAcademicEventDialog(options = {}) {
     }
 
     const finish = (result) => {
-      if (closing) return
+      if (closing || saving) return
       closing = true
       closeDialog(backdrop, resolve, result, cleanup)
     }
@@ -263,6 +264,7 @@ export function openAcademicEventDialog(options = {}) {
 
     form.addEventListener('submit', async (submitEvent) => {
       submitEvent.preventDefault()
+      if (saving || closing) return
       clearError()
 
       const payload = readPayload()
@@ -272,7 +274,9 @@ export function openAcademicEventDialog(options = {}) {
         return
       }
 
+      saving = true
       saveBtn.disabled = true
+      cancelBtn.disabled = true
       saveBtn.textContent = 'Guardando...'
 
       try {
@@ -281,14 +285,19 @@ export function openAcademicEventDialog(options = {}) {
           : await NoteStore.createAcademicEvent(payload)
 
         if (!savedEvent) {
+          saving = false
+          cancelBtn.disabled = false
           showError('No se pudo guardar la fecha academica.', 'date')
           saveBtn.disabled = false
           saveBtn.textContent = mode === 'edit' ? 'Guardar cambios' : 'Guardar'
           return
         }
 
+        saving = false
         finish(savedEvent)
       } catch (error) {
+        saving = false
+        cancelBtn.disabled = false
         handleStoreMutationError(error, {
           onUnexpected: unexpectedError => {
             showError(unexpectedError?.message || 'No se pudo guardar la fecha academica.', 'date')

@@ -81,6 +81,25 @@ afterEach(() => {
 })
 
 describe('AcademicEventDialog', () => {
+  it('bloquea envíos concurrentes, cancelación en curso y reenvíos durante el cierre', async () => {
+    let resolveSave
+    storeMock.createAcademicEvent.mockReturnValueOnce(new Promise(resolve => { resolveSave = resolve }))
+    const promise = openAcademicEventDialog({ date: '2026-06-14' })
+    await submitDialog()
+    await submitDialog()
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+    document.querySelector('.academic-event-dialog-backdrop').click()
+    expect(document.querySelector('.academic-event-dialog__btn--cancel').disabled).toBe(true)
+    expect(document.querySelector('.academic-event-dialog-backdrop--leaving')).toBeNull()
+    expect(storeMock.createAcademicEvent).toHaveBeenCalledTimes(1)
+    resolveSave(event({ id: 'created' }))
+    await Promise.resolve()
+    await submitDialog()
+    expect(storeMock.createAcademicEvent).toHaveBeenCalledTimes(1)
+    await finishAnimation()
+    await expect(promise).resolves.toMatchObject({ id: 'created' })
+  })
+
   it('prefill fecha seleccionada y materia activa en modo create', () => {
     storeMock.state = defaultState({
       dateFilter: '2026-06-20',

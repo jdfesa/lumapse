@@ -17,7 +17,7 @@ import { NoteEditor as Composer } from './components/note-editor/NoteEditor.js'
 import { Heatmap } from './components/academic-events/Heatmap.js'
 import { UpcomingAcademicEvents } from './components/academic-events/UpcomingAcademicEvents.js'
 import { confirmDialog } from './components/common/ConfirmDialog.js'
-import { showErrorToast } from './components/common/Toast.js'
+import { showErrorToast, showPendingRefreshToast } from './components/common/Toast.js'
 import { handleStoreMutationError } from './components/common/storeActionErrors.js'
 import { renderAppShell } from './layout/appShell.js'
 import { initDrawer } from './layout/drawerController.js'
@@ -62,6 +62,7 @@ function mountApp() {
   NoteStore.subscribeToStoreErrors(({ message }) => {
     showErrorToast(message)
   })
+  NoteStore.subscribeToPendingRefreshes(showPendingRefreshToast)
 
   // 5. Calendar popup toggle (DP-006)
   const btnCalendar = document.getElementById('btn-toggle-calendar')
