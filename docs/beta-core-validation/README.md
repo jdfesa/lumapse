@@ -1,7 +1,12 @@
 # F3 — Validación del núcleo de la beta
 
-**Inicio:** 2026-09-14. **Estado:** preparación verificable; F3 **sin cerrar**, medición Android pendiente.
-**Rama única:** `docs/beta-core-validation`. No hay nueva release ni cambios productivos.
+**Inicio:** 2026-09-14. **Estado:** preparación aceptada e integrada en [PR #16](https://github.com/jdfesa/lumapse/pull/16), `90fd21e`; F3 **sin cierre cuantitativo**, mediciones Android pendientes.
+**Rama de preparación:** `docs/beta-core-validation`, eliminada local y remotamente tras el merge autorizado. No hay nueva release ni cambios productivos de esta preparación.
+
+El 2026-09-15 el autor informó que probó en el dispositivo y aparentemente todo funciona
+bien; autorizó el merge y la limpieza. Esta confirmación general no aporta muestras CRUD/FPS,
+identidad/hash del APK ni resultados detallados por caso. No se completan las plantillas ni
+se mejora el estado de los RNF por inferencia. El gate local y el CI de `main` integrado pasaron.
 
 F2 fue aceptada por el autor tras probar su funcionamiento y quedó integrada en
 [PR #15](https://github.com/jdfesa/lumapse/pull/15), `8e25dcd`. Se actualizó `main` a
@@ -31,6 +36,7 @@ Si hace falta otro binario, acordar antes versión/code nuevos y firma compatibl
 no reutilizar `0.5.0/500` para código distinto. El PR no autoriza instalación,
 reemplazo de datos, merge, tag o publicación automáticos.
 
-Una vez recibida la evidencia del teléfono, incorporarla en esta misma rama. Un fallo
-RNF se registra con sus muestras; cualquier corrección se prioriza por separado tras
-cerrar este frente. La deuda de filtro de fecha oculto de `main` permanece en backlog.
+Una vez recibida la evidencia del teléfono, acordar un PR de seguimiento desde `main`
+actualizado, solo después de cerrar la tarea que esté en revisión; no reutilizar la rama
+eliminada ni abrir un segundo frente. Un fallo RNF se registra con sus muestras y cualquier
+corrección se prioriza por separado. La deuda de filtro de fecha oculto permanece en backlog.

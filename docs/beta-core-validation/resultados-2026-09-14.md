@@ -3,6 +3,11 @@
 **Estado:** evidencia local reproducible; dispositivo/artefacto y mediciones Android
 pendientes. **F3 sin cerrar.** No se asignan tiempos o FPS a pruebas no ejecutadas.
 
+**Actualización 2026-09-15:** el autor confirmó funcionamiento general en el teléfono y
+autorizó integrar esta preparación en PR #16 (`90fd21e`); rama eliminada. No se recibieron
+muestras ni identidad de APK, por lo que esta matriz histórica conserva sus límites.
+El [seguimiento vigente](./README.md) distingue esa aceptación del cierre cuantitativo.
+
 ## Identidad y alcance
 
 - Base sincronizada: `f9c8de04c35c54505fb9eb1e7c5215e5c830b7c1`.
@@ -124,7 +129,7 @@ ejecución, dispositivo, SHA fuente/APK, evidencia y valor real antes de cambiar
 | CON-03 — RNF-010 | Borradores nuevo/edición, terminar tras 1 s | — | — | — | Pérdida = 0 | Pendiente: método/autorización | — |
 | CON-04 — RNF-010 | Terminación inmediata tras tecleo | — | — | — | Pérdida = 0; registrar ventana observada | Pendiente: método/autorización | — |
 
-## Handoff y decisión pendiente
+## Handoff original — histórico, anterior al merge de PR #16
 
 1. Revisar el PR y sus pruebas; no atribuir a esta entrega una APK inexistente.
 2. Acordar dispositivo/espacio seguro, artefacto y versión/code/firma si hay nuevo build.

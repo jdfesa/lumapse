@@ -8,8 +8,9 @@
 
 ## Ciclo posterior — F3, 2026-09-14
 
-**Preparación verificable, sin ejecución Android todavía.** F2 fue aceptada e integrada
-por el autor en PR #15; no se atribuye esa confirmación a una APK cuyo hash no se recibió.
+**Preparación F3 integrada en PR #16 (`90fd21e`) tras confirmación general del teléfono
+el 2026-09-15; evidencia cuantitativa/por caso pendiente.** F2 fue aceptada e integrada
+por el autor en PR #15; no se atribuyen esas confirmaciones a una APK cuyo hash no se recibió.
 Para F3, seguir el [protocolo](../beta-core-validation/protocolo.md) y completar la
 [matriz del nuevo artefacto](../beta-core-validation/resultados-2026-09-14.md).
 
@@ -18,7 +19,7 @@ Para F3, seguir el [protocolo](../beta-core-validation/protocolo.md) y completar
 - [ ] Registrar 30 muestras por operación/perfil: total, persistencia/refresco, mediana, p95, máximo y excedencias de 200 ms.
 - [ ] Capturar tres recorridos de 10 s; ≥ 55 FPS por tramo o pendiente si falta captura fiable.
 - [ ] Ejecutar OFF-01 a OFF-05 y CON-01 a CON-04, sin `clear data` ni datos personales.
-- [ ] Autor revisar evidencia, probar/validar y autorizar expresamente merge; luego limpiar rama.
+- [x] Autor informó funcionamiento general y autorizó integrar la preparación F3 en PR #16; rama local/remota eliminada. No equivale a completar los casos anteriores.
 
 La preparación local y CI **no marcan estas casillas**. El corte `v0.5.0` y la historia
 siguiente se conservan sin cambios: no trasladar sus resultados al candidato F3.

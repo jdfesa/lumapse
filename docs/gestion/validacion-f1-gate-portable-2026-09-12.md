@@ -65,6 +65,10 @@ No se ejecutó `npm audit fix` ni se expuso un servidor de tests a la red. Evalu
 acotada después de cerrar la rama actual, con su propia aprobación; no reabrir retrospectivamente
 el cierre de AUD-004 ni reutilizar su antigua auditoría 0/0 como resultado actual.
 
+**Seguimiento 2026-09-15:** después de integrar PR #16 se preparó el
+[parche separado de Vitest 4.1.11](./validacion-parche-vitest-2026-09-15.md), con auditorías
+nuevas en 0/0. Espera su propia prueba/aprobación; no altera la evidencia histórica de F1.
+
 ## Handoff original de F1 — histórico, no ejecutar sobre la rama eliminada
 
 En la Mac, con el checkout sin cambios propios pendientes:
