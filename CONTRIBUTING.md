@@ -39,7 +39,7 @@ Tipos habituales:
 - `style`: formato sin cambio lógico;
 - `chore`: mantenimiento de tooling o dependencias.
 
-Los mensajes se escriben en inglés y pueden incluir un scope, por ejemplo `fix(tooling): validate the canonical runtime`. Hacer commits incrementales por unidad verificable. La aplicación, los archivos y el contenido de documentación permanecen en español; los nombres de ramas y títulos/descripciones de PR se escriben en inglés.
+Los mensajes se escriben en inglés y pueden incluir un scope, por ejemplo `fix(tooling): validate the canonical runtime`. Hacer commits incrementales por unidad verificable; realizar el push al finalizar el trabajo de la rama y luego abrir el PR. La aplicación, los archivos y el contenido de documentación permanecen en español; los nombres de ramas y títulos/descripciones de PR se escriben en inglés.
 
 El mensaje debe explicar el cambio concreto. La motivación y las consecuencias relevantes pertenecen al cuerpo del commit, al PR o al ADR.
 

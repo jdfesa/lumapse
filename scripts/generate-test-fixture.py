@@ -122,7 +122,7 @@ def distribute_integer(total: int, weights: list[int]) -> list[int]:
     return result
 
 
-def make_content(index: int, subject_name: str, section_name: str | None, rng: random.Random) -> str:
+def make_content(index: int, subject_name: str, section_name: str | None, rng: random.Random, *, extended: bool | None = None) -> str:
     destination = section_name or subject_name
     variant = index % 6
     if variant == 0:
@@ -168,7 +168,8 @@ def make_content(index: int, subject_name: str, section_name: str | None, rng: r
         )
 
     # Algunas notas extensas fuerzan tarjetas/contenido mas realistas sin exceder limites.
-    if index in {97, 233, 401, 487}:
+    include_appendix = extended if extended is not None else index in {97, 233, 401, 487}
+    if include_appendix:
         appendix = "\n".join(
             f"- Desarrollo adicional {line:02d}: observacion sintetica para probar desplazamiento y renderizado."
             for line in range(1, 61)
@@ -184,8 +185,8 @@ def main() -> None:
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=DEFAULT_OUTPUT_DIR,
-        help="Directorio de salida ignorado por Git (default: tmp/beta-500-fixture).",
+        default=None,
+        help="Salida (default: tmp/beta-500-fixture, tmp/f3-small o tmp/f3-500 según perfil).",
     )
     parser.add_argument(
         "--seed",
@@ -193,10 +194,24 @@ def main() -> None:
         default=DEFAULT_RANDOM_SEED,
         help=f"Semilla pseudoaleatoria reproducible (default: {DEFAULT_RANDOM_SEED}).",
     )
+    parser.add_argument(
+        "--profile", choices=("beta-500", "f3-small", "f3-500"), default="beta-500",
+        help="beta-500 conserva el fixture existente; F3 compara 50/500 notas, 20 secciones y 20 fechas.",
+    )
     args = parser.parse_args()
 
+    is_f3 = args.profile != "beta-500"
+    visible_notes = 50 if args.profile == "f3-small" else TARGET_VISIBLE_NOTES
+    pinned_notes = visible_notes * 6 // 100
+    inbox_notes = 0 if is_f3 else INBOX_NOTES
+    root_note_counts = [0] * len(ROOT_SUBJECTS) if is_f3 else ROOT_NOTE_COUNTS
+    empty_indices = set() if is_f3 else EMPTY_SECTION_INDICES
+    sparse_counts = {} if is_f3 else SPARSE_SECTION_COUNTS
+    heavy_counts = {} if is_f3 else HEAVY_SECTION_COUNTS
+    prefix = args.profile if is_f3 else "beta500"
     rng = random.Random(args.seed)
-    output_dir = args.output_dir.resolve()
+    default_output = PROJECT_ROOT / "tmp" / args.profile if is_f3 else DEFAULT_OUTPUT_DIR
+    output_dir = (args.output_dir or default_output).resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
     dataset_path = output_dir / "dataset.json"
     report_path = output_dir / "DISTRIBUTION.md"
@@ -207,7 +222,7 @@ def main() -> None:
     sections: list[dict] = []
     section_index = 0
     for root_index, spec in enumerate(ROOT_SUBJECTS, start=1):
-        root_id = f"beta500-subject-{root_index:02d}"
+        root_id = f"{prefix}-subject-{root_index:02d}"
         root = {
             "id": root_id,
             "career": spec["career"],
@@ -216,9 +231,9 @@ def main() -> None:
             "createdDaysBeforeSeed": 120 - root_index,
             "sections": [],
         }
-        for local_index, name in enumerate(spec["sections"], start=1):
+        for local_index, name in enumerate(spec["sections"][:2] if is_f3 else spec["sections"], start=1):
             section = {
-                "id": f"beta500-section-{section_index + 1:02d}",
+                "id": f"{prefix}-section-{section_index + 1:02d}",
                 "name": name,
                 "createdDaysBeforeSeed": 100 - section_index,
                 "rootId": root_id,
@@ -232,19 +247,19 @@ def main() -> None:
         subjects.append(root)
         roots.append(root)
 
-    explicit_total = sum(SPARSE_SECTION_COUNTS.values()) + sum(HEAVY_SECTION_COUNTS.values())
-    section_total = TARGET_VISIBLE_NOTES - INBOX_NOTES - sum(ROOT_NOTE_COUNTS)
+    explicit_total = sum(sparse_counts.values()) + sum(heavy_counts.values())
+    section_total = visible_notes - inbox_notes - sum(root_note_counts)
     flexible_indices = [
         index for index in range(len(sections))
-        if index not in EMPTY_SECTION_INDICES
-        and index not in SPARSE_SECTION_COUNTS
-        and index not in HEAVY_SECTION_COUNTS
+        if index not in empty_indices
+        and index not in sparse_counts
+        and index not in heavy_counts
     ]
-    flexible_weights = [rng.randint(4, 20) for _ in flexible_indices]
+    flexible_weights = [1 if is_f3 else rng.randint(4, 20) for _ in flexible_indices]
     flexible_counts = distribute_integer(section_total - explicit_total, flexible_weights)
     section_counts = {index: 0 for index in range(len(sections))}
-    section_counts.update(SPARSE_SECTION_COUNTS)
-    section_counts.update(HEAVY_SECTION_COUNTS)
+    section_counts.update(sparse_counts)
+    section_counts.update(heavy_counts)
     section_counts.update(dict(zip(flexible_indices, flexible_counts)))
     assert sum(section_counts.values()) == section_total
 
@@ -257,11 +272,11 @@ def main() -> None:
         title = f"{kind} #{index:03d} - {title_context}"
         created_days = rng.randint(3, 240)
         updated_days = rng.randint(0, created_days)
-        deleted_days = rng.randint(1, min(20, updated_days if updated_days > 0 else 1)) if trashed else None
+        deleted_days = (rng.randint(1, min(20, updated_days)) if updated_days else 0) if trashed else None
         note = {
-            "id": f"beta500-note-{index:04d}",
+            "id": f"{prefix}-note-{index:04d}",
             "title": title,
-            "content": make_content(index, subject_name, section_name, rng),
+            "content": make_content(index, subject_name, section_name, rng, extended=index % 50 == 0 if is_f3 else None),
             "subjectId": subject_id,
             "pinned": False,
             "archived": archived,
@@ -272,10 +287,10 @@ def main() -> None:
         }
         notes.append(note)
 
-    for _ in range(INBOX_NOTES):
+    for _ in range(inbox_notes):
         add_note(None, "Entrada", None)
 
-    for root, count in zip(roots, ROOT_NOTE_COUNTS):
+    for root, count in zip(roots, root_note_counts):
         for _ in range(count):
             add_note(root["id"], root["name"], None)
 
@@ -283,8 +298,8 @@ def main() -> None:
         for _ in range(section_counts[section["globalIndex"]]):
             add_note(section["id"], section["rootName"], section["name"])
 
-    assert len(notes) == TARGET_VISIBLE_NOTES
-    for index in rng.sample(range(TARGET_VISIBLE_NOTES), TARGET_PINNED_NOTES):
+    assert len(notes) == visible_notes
+    for index in rng.sample(range(visible_notes), pinned_notes):
         notes[index]["pinned"] = True
 
     nonempty_sections = [section for section in sections if section_counts[section["globalIndex"]] > 0]
@@ -302,6 +317,8 @@ def main() -> None:
         53, 57, 60, 64, 69, 75, 80, 85, 90, 96,
         103, 110, 118, 125, 140, 160, 180, 210, 240, 270,
     ]
+    if is_f3:
+        event_offsets = event_offsets[:20]
     event_types = ["parcial", "final", "tp", "exposicion"]
     all_subject_destinations = [
         {"id": root["id"], "name": root["name"]} for root in roots
@@ -314,7 +331,7 @@ def main() -> None:
         destination = all_subject_destinations[(index * 7) % len(all_subject_destinations)]
         base_title = EVENT_TITLES[event_type][(index - 1) % len(EVENT_TITLES[event_type])]
         events.append({
-            "id": f"beta500-event-{index:03d}",
+            "id": f"{prefix}-event-{index:03d}",
             "type": event_type,
             "title": f"{base_title} - {destination['name']}",
             "subjectId": destination["id"],
@@ -327,19 +344,19 @@ def main() -> None:
         "subjects": len(roots) + len(sections),
         "activeSubjects": len(roots) + len(sections),
         "deletedSubjects": 0,
-        "notes": TARGET_VISIBLE_NOTES + TARGET_ARCHIVED_NOTES + TARGET_TRASH_NOTES,
-        "activeNotes": TARGET_VISIBLE_NOTES + TARGET_ARCHIVED_NOTES,
-        "normalFeedNotes": TARGET_VISIBLE_NOTES,
-        "inboxNotes": INBOX_NOTES,
+        "notes": visible_notes + TARGET_ARCHIVED_NOTES + TARGET_TRASH_NOTES,
+        "activeNotes": visible_notes + TARGET_ARCHIVED_NOTES,
+        "normalFeedNotes": visible_notes,
+        "inboxNotes": inbox_notes,
         "archivedNotes": TARGET_ARCHIVED_NOTES,
         "trashNotes": TARGET_TRASH_NOTES,
-        "pinnedActiveNotes": TARGET_PINNED_NOTES,
+        "pinnedActiveNotes": pinned_notes,
         "academicEvents": len(events),
         "eventsWithSubject": len(events),
     }
     dataset = {
         "datasetVersion": 1,
-        "id": "lumapse-beta-500-v1",
+        "id": f"lumapse-{args.profile}-v1" if is_f3 else "lumapse-beta-500-v1",
         "locale": "es-AR",
         "description": "Fixture sintetico reproducible para pruebas de volumen, navegacion, calendario, archivo y papelera.",
         "randomSeed": args.seed,
@@ -363,26 +380,26 @@ def main() -> None:
         "randomSeed": args.seed,
         "datasetSha256": dataset_sha,
         "expected": expected,
-        "emptySections": [sections[index]["name"] for index in sorted(EMPTY_SECTION_INDICES)],
+        "emptySections": [sections[index]["name"] for index in sorted(empty_indices)],
         "sectionVisibleCounts": {
             f"{section['rootName']} / {section['name']}": section_counts[section["globalIndex"]]
             for section in sections
         },
         "rootVisibleCounts": {
-            root["name"]: count for root, count in zip(roots, ROOT_NOTE_COUNTS)
+            root["name"]: count for root, count in zip(roots, root_note_counts)
         },
         "statusCountsActive": dict(status_counts),
     }
     summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     report_lines = [
-        "# Distribucion del fixture beta 500",
+        f"# Distribucion del fixture {args.profile}",
         "",
         f"- Semilla pseudoaleatoria: `{args.seed}`",
         f"- SHA-256 de `dataset.json`: `{dataset_sha}`",
         f"- Materias raiz: **{len(roots)}**",
         f"- Secciones: **{len(sections)}**",
-        f"- Notas visibles activas: **{TARGET_VISIBLE_NOTES}**",
+        f"- Notas visibles activas: **{visible_notes}**",
         f"- Notas archivadas: **{TARGET_ARCHIVED_NOTES}**",
         f"- Notas en papelera: **{TARGET_TRASH_NOTES}**",
         f"- Notas totales SQLite: **{len(notes)}**",
@@ -392,16 +409,16 @@ def main() -> None:
         "",
         "| Materia / destino | Notas visibles |",
         "|---|---:|",
-        f"| Entrada | {INBOX_NOTES} |",
+        f"| Entrada | {inbox_notes} |",
     ]
-    for root, root_count in zip(roots, ROOT_NOTE_COUNTS):
+    for root, root_count in zip(roots, root_note_counts):
         report_lines.append(f"| **{root['name']}** (directas) | {root_count} |")
         for section in sections:
             if section["rootId"] == root["id"]:
                 report_lines.append(f"| ↳ {section['name']} | {section_counts[section['globalIndex']]} |")
     report_lines.extend([
         "",
-        "El ZIP oficial de Lumapse excluye por contrato los elementos eliminados. Por eso restaura las 500 notas visibles, las 18 archivadas y las 40 fechas, pero no las 12 filas de Papelera. El snapshot SQLite y este generador conservan el estado exacto completo.",
+        f"El ZIP oficial de Lumapse excluye por contrato los elementos eliminados. Por eso restaura las {visible_notes} notas visibles, las 18 archivadas y las {len(events)} fechas, pero no las 12 filas de Papelera. El snapshot SQLite y este generador conservan el estado exacto completo.",
         "",
     ])
     report_path.write_text("\n".join(report_lines), encoding="utf-8")
@@ -411,12 +428,12 @@ def main() -> None:
         "sha256": dataset_sha,
         "roots": len(roots),
         "sections": len(sections),
-        "visibleNotes": TARGET_VISIBLE_NOTES,
+        "visibleNotes": visible_notes,
         "archivedNotes": TARGET_ARCHIVED_NOTES,
         "trashNotes": TARGET_TRASH_NOTES,
         "totalNotes": len(notes),
         "events": len(events),
-        "emptySections": len(EMPTY_SECTION_INDICES),
+        "emptySections": len(empty_indices),
     }, ensure_ascii=False, indent=2))
 
 

@@ -2,7 +2,7 @@
 
 **Fase Design Thinking:** Idear / Prototipar / Testear
 **Formulación inicial:** Abril 2026
-**Última revisión:** 2026-09-05
+**Última revisión:** 2026-09-14 — enlace a preparación F3, sin cambiar estados por pruebas no ejecutadas
 **Autor:** José David Sandoval
 
 > **Nota de evolución:** Estos RNF se definieron originalmente para una PWA con IndexedDB. Después del relevamiento, Lumapse pivotó a una aplicación Android híbrida empaquetada con Capacitor, con persistencia SQLite y distribución por APK ([ADR-005](../adr/ADR-005-pivote-app-nativa.md), [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md)). La revisión conserva los criterios originales, pero distingue cuáles siguen vigentes, cuáles requieren evidencia y cuáles quedaron obsoletos o no aplican al artefacto Android.
@@ -25,6 +25,11 @@
 > Un build correcto, la ausencia de crashes o una auditoría estática no se consideran por sí solos evidencia suficiente para métricas de tiempo, FPS, contraste, touch targets o pruebas con usuarios.
 
 > El estado se revisa sobre el tag `v0.5.0` (`5840755`) y la documentación de su publicación. La validación ejecutada sobre un build equivalente no se atribuye automáticamente al APK firmado de GitHub.
+
+> **Seguimiento F3:** [protocolo y matriz incremental](../beta-core-validation/README.md)
+> preparados con perfiles reproducibles de 50/500 notas e integración SQLite local.
+> Sin mediciones Android nuevas: RNF-002/RNF-004 continúan pendientes y RNF-009/RNF-010
+> conservan evidencia parcial. Los estados/umbrales de esta matriz no cambian.
 
 ---
 

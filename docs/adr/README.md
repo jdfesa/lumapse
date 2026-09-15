@@ -16,7 +16,7 @@ Los ADR conservan decisiones importantes, sus alternativas y consecuencias. Un A
 | [ADR-008](./ADR-008-arquitectura-modular-y-patrones.md) | Arquitectura modular y patrones aplicados | Aceptado |
 | [ADR-009](./ADR-009-propiedad-transaccional-sqlite.md) | Propiedad transaccional SQLite y recuperación de arranque (AUD-005) | Aceptado; validación canónica y Android aprobadas |
 | [ADR-010](./ADR-010-gate-portable-y-entorno-canonico.md) | Gate portable y entorno canónico (AUD-008/AUD-009) | Aceptado e integrado en PR #14 |
-| [ADR-011](./ADR-011-limite-guardado-y-refresco.md) | Confirmación de creación y recuperación de lecturas (AUD-014) | Implementado en F2; pendiente de aprobación del PR |
+| [ADR-011](./ADR-011-limite-guardado-y-refresco.md) | Confirmación de creación y recuperación de lecturas (AUD-014) | Aceptado e integrado en PR #15 |
 
 ## Decisiones vigentes en una frase
 

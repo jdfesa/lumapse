@@ -11,6 +11,7 @@ import shutil
 import sqlite3
 import sys
 import tempfile
+import zipfile
 from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterable
@@ -703,6 +704,71 @@ def command_validate_dataset(args: argparse.Namespace) -> None:
     print_json({"dataset": str(args.dataset), "status": "ok", "counts": model["counts"]})
 
 
+def command_export_backup(args: argparse.Namespace) -> None:
+    """Exporta exclusivamente un dataset sintético validado; nunca abre SQLite ni ADB."""
+    dataset = load_json(args.dataset)
+    model = validate_dataset(dataset)
+    seed_date = parse_seed_date(args.seed_date)
+    if not 1980 <= seed_date.year <= 2107:
+        fail("La fecha ZIP debe estar entre 1980 y 2107")
+    rows = expected_materialized_rows(model, seed_date)
+    created_at = relative_timestamp(seed_date, 0)
+    filename = f"lumapse-{seed_date:%Y-%m-%d}-12-00.zip"
+
+    def active_entities(entities: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        result = []
+        for row in entities:
+            if row.get("deletedAt") is not None:
+                continue
+            item = {key: value for key, value in row.items() if key != "deletedAt"}
+            for key in ("pinned", "archived"):
+                if key in item:
+                    item[key] = bool(item[key])
+            result.append(item)
+        return result
+
+    subjects = active_entities(rows["subjects"])
+    notes = active_entities(rows["notes"])
+    events = rows["academic_events"]
+
+    def json_text(value: Any) -> str:
+        return json.dumps(value, ensure_ascii=False, indent=2) + "\n"
+
+    files = {
+        "data/subjects.json": json_text(subjects),
+        "data/notes.json": json_text(notes),
+        "data/academic-events.json": json_text(events),
+        "README.txt": "Fixture sintético de Lumapse; backup v1. Incluye archivo, excluye papelera.\n",
+    }
+    for note in notes:
+        files[f"notes/{note['id']}.md"] = f"# {note['title']}\n\n{note['content']}\n"
+    counts = {"subjects": len(subjects), "notes": len(notes), "academicEvents": len(events), "attachments": 0}
+    files["manifest.json"] = json_text({
+        "app": "Lumapse", "backupFormatVersion": 1,
+        "createdAt": created_at, "filename": filename, "exportMode": "manual",
+        "dataPolicy": {"includesDeletedItems": False, "includesArchivedItems": True, "includesAttachments": False},
+        "counts": counts, "files": sorted([*files, "manifest.json"]),
+    })
+    # STORE evita variaciones por zlib; fechas, orden y atributos no dependen del host.
+    # Modo x: no sobrescribir un backup existente por accidente.
+    try:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        with zipfile.ZipFile(args.output, "x", compression=zipfile.ZIP_STORED) as archive:
+            for path, content in sorted(files.items()):
+                info = zipfile.ZipInfo(path, (seed_date.year, seed_date.month, seed_date.day, 12, 0, 0))
+                info.create_system = 3
+                info.external_attr = 0o100644 << 16
+                archive.writestr(info, content.encode("utf-8"))
+    except (OSError, ValueError) as exc:
+        fail(f"No se pudo crear el ZIP (no se sobrescriben archivos): {exc}")
+    print_json({
+        "status": "ok", "datasetId": dataset["id"], "seedDate": args.seed_date,
+        "datasetSha256": sha256_file(args.dataset), "backupSha256": sha256_file(args.output),
+        "backupBytes": args.output.stat().st_size, "counts": counts,
+        "excludedTrashNotes": model["counts"]["trashNotes"],
+    })
+
+
 def command_self_test(args: argparse.Namespace) -> None:
     dataset = load_json(args.dataset)
     seed_date = parse_seed_date(args.seed_date)
@@ -779,6 +845,12 @@ def build_parser() -> argparse.ArgumentParser:
     validate_parser = subparsers.add_parser("validate-dataset")
     validate_parser.add_argument("dataset", type=Path)
     validate_parser.set_defaults(func=command_validate_dataset)
+
+    export_parser = subparsers.add_parser("export-backup", help="ZIP v1 determinista desde JSON sintético; sin ADB")
+    export_parser.add_argument("dataset", type=Path)
+    export_parser.add_argument("output", type=Path)
+    export_parser.add_argument("--seed-date", required=True)
+    export_parser.set_defaults(func=command_export_backup)
 
     self_test_parser = subparsers.add_parser("self-test")
     self_test_parser.add_argument("dataset", type=Path)

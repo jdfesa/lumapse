@@ -1,6 +1,6 @@
 # Revisión Técnica Priorizada — 2026-09-01
 
-**Estado:** Vigente — AUD-001 a AUD-007 cerrados e incluidos en `v0.5.0`; AUD-008/AUD-009 aceptados e integrados en PR #14; AUD-014 implementado para creación de notas/fechas en F2, pendiente de revisión/Android; AUD-010 a AUD-013 continúan abiertos
+**Estado:** Vigente — AUD-001 a AUD-007 cerrados e incluidos en `v0.5.0`; AUD-008/AUD-009 aceptados e integrados en PR #14; alcance de AUD-014 aceptado para creación de notas/fechas en PR #15; AUD-010 a AUD-013 continúan abiertos. F3 preparada, medición Android pendiente.
 **Rama original de auditoría:** `fix/note-save-integrity`
 **Commit base original revisado:** `cd60c0e` (`main`)
 **Versión original revisada:** `0.4.8` (Beta); cierres publicados en `v0.5.0`<br>
@@ -109,7 +109,7 @@ sin convertir la evidencia histórica de las secciones siguientes en una nueva a
 | AUD-011 | P2 | Conteos N+1 y posibles índices faltantes | Rendimiento | Pendiente de medición |
 | AUD-012 | P2 | Deriva de cohesión entre features de presentación | Arquitectura | Pendiente |
 | AUD-013 | P2 | Poco margen de bundle y visibilidad parcial de coverage UI | Mantenibilidad | Monitorear |
-| AUD-014 | P1 | Creación persistida presentada como fallo al rechazar una recarga | Defecto confirmado en notas y fechas | F2 implementada; pendiente de revisión/Android. [Evidencia y alcance](./validacion-f2-guardado-y-refresco-2026-09-13.md) |
+| AUD-014 | P1 | Creación persistida presentada como fallo al rechazar una recarga | Defecto confirmado en notas y fechas | Alcance de F2 aceptado e integrado en PR #15; no incluye mutaciones vecinas. [Evidencia y alcance](./validacion-f2-guardado-y-refresco-2026-09-13.md) |
 
 ## 7. Hallazgos detallados
 
@@ -324,6 +324,9 @@ Opciones válidas:
 La decisión debe reflejarse en README, `package.json`, archivo de versión y CI.
 
 ### AUD-010 — Broadcasts globales y refresh no atómico
+
+> **Seguimiento F3, 2026-09-14:** conteos SQLite/store de 50/500 notas reproducidos,
+> sin UI/bridge nativo. No prueban latencia ni justifican optimización; [evidencia y límites](../beta-core-validation/resultados-2026-09-14.md).
 
 El store mantiene seis suscriptores de runtime. Cada `notify()` entrega el estado mutable completo,
 sin selector, comparación, batching ni transacción de estado. Feed, editor, Heatmap, próximos
