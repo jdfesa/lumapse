@@ -79,6 +79,7 @@ export function initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS }) {
   // --- Search Logic ---
   const searchInput = document.getElementById('drawer-search-input')
   let searchTimeout
+  let lastSearchQuery
 
   searchInput.addEventListener('input', (e) => {
     clearTimeout(searchTimeout)
@@ -168,6 +169,14 @@ export function initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS }) {
 
   // Suscribirse a cambios del store para re-renderizar materias y trash badge
   NoteStore.subscribe((state) => {
+    const searchQuery = state.searchQuery || ''
+    // Sincronizar cambios externos (chips/creación) sin pisar texto aún en debounce
+    // cuando la notificación corresponde a otro campo del store.
+    if (searchQuery !== lastSearchQuery) {
+      clearTimeout(searchTimeout)
+      searchInput.value = searchQuery
+      lastSearchQuery = searchQuery
+    }
     renderSubjects(state.subjects)
     // Actualizar badge de papelera
     if (state.trashCount > 0) {
