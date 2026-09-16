@@ -6,6 +6,17 @@
 
 ---
 
+## Corrección actual — filtros visibles, 2026-09-15
+
+PR #17 de Vitest fue probado e integrado por el autor. La nueva rama
+`fix/visible-feed-filters` tiene [plan, regresiones y checklist propios](./plan-filtros-visibles-2026-09-15.md#prueba-del-autor-y-límite-de-aprobación).
+Probar fecha con calendario cerrado al navegar a materia/sección, limpieza
+independiente de búsqueda/fecha, alcance global/Archivadas, vuelta desde vistas
+especiales y legibilidad en el teléfono. **Prueba y aprobación pendientes**; no
+trasladar aquí aceptaciones anteriores ni usar una fixture web como evidencia.
+
+---
+
 ## Ciclo posterior — F3, 2026-09-14
 
 **Preparación F3 integrada en PR #16 (`90fd21e`) tras confirmación general del teléfono

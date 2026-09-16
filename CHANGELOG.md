@@ -11,10 +11,11 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ### Security
 
-- **Parche del tooling de tests:** Vitest y coverage-v8 suben a 4.1.11 para corregir `GHSA-82fw-gwwq-j7x9`; nueve paquetes de desarrollo alineados, sin cambios al grafo productivo, Vite, Node ni versión Android. Cuatro regresiones sintéticas verifican redirects permitidos/restringidos y la desactivación del canal de registro. Auditorías del 2026-09-15 en cero; pendiente de nueva prueba/aprobación del autor antes de integrar. [Evidencia y límites](docs/gestion/validacion-parche-vitest-2026-09-15.md).
+- **Parche del tooling de tests:** Vitest y coverage-v8 suben a 4.1.11 para corregir `GHSA-82fw-gwwq-j7x9`; nueve paquetes de desarrollo alineados, sin cambios al grafo productivo, Vite, Node ni versión Android. Cuatro regresiones sintéticas verifican redirects permitidos/restringidos y la desactivación del canal de registro. Auditorías del 2026-09-15 en cero; autor confirmó pruebas e integró PR #17 (`7dc105c`). [Evidencia y límites](docs/gestion/validacion-parche-vitest-2026-09-15.md).
 
 ### Fixed
 
+- **Filtros visibles del feed:** fecha y búsqueda removibles fuera del calendario y del drawer; alcance de materia/sección o búsqueda global explícito, con conteos totales conservados. Estados vacíos orientan a quitar filtros; limpiar búsqueda sincroniza el menú sin reactivar su debounce pendiente. Incluye regresiones DOM/store, datos adversariales y 500 notas; pendiente de prueba/aprobación del autor en Android. [Plan y límites](docs/gestion/plan-filtros-visibles-2026-09-15.md).
 - **Guardado confirmado (AUD-014, F2):** crear una nota o fecha devuelve la entidad persistida aunque falle el refresco secundario. El editor limpia su borrador y el diálogo cierra con éxito; un aviso diferenciado permite actualizar solo lecturas, sin repetir la escritura. Los fallos de inserción conservan datos y reintento legítimo; el diálogo bloquea envíos concurrentes y durante el cierre. Incluye regresiones SQLite/UI y conserva ownership académico. Autor confirmó funcionamiento e integró PR #15; otras mutaciones quedan fuera de este cambio.
 - **Gate portable (AUD-008/AUD-009, F1):** Node 22.20.0/npm 10.9.3 fijados y verificados antes de las suites; `verify` y CI comparten todos los controles. El auditor offline permite únicamente tokens locales de la CSP y el gate rechaza crashes/reportes incompletos, sin depender del binario Rust ignorado. Incluye regresiones de tooling; no cambia runtime de la app, dependencias, schema ni versión.
 

@@ -67,7 +67,8 @@ el cierre de AUD-004 ni reutilizar su antigua auditoría 0/0 como resultado actu
 
 **Seguimiento 2026-09-15:** después de integrar PR #16 se preparó el
 [parche separado de Vitest 4.1.11](./validacion-parche-vitest-2026-09-15.md), con auditorías
-nuevas en 0/0. Espera su propia prueba/aprobación; no altera la evidencia histórica de F1.
+nuevas en 0/0. El autor confirmó pruebas e integró PR #17 (`7dc105c`); su rama fue
+eliminada. No altera la evidencia histórica de F1 ni sustituye auditorías futuras.
 
 ## Handoff original de F1 — histórico, no ejecutar sobre la rama eliminada
 
