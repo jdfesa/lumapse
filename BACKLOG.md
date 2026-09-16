@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 06 — Entrega Final
 > **Hito 05:** Cerrado documentalmente el 2026-07-15 sobre la beta operativa `v0.4.8`
-> **Última actualización:** 2026-09-14 — F2 aceptada/integrada; F3 preparada, medición Android pendiente. Se conserva la deuda UX de filtro de fecha oculto.
+> **Última actualización:** 2026-09-15 — preparación F3 aceptada e integrada; parche acotado de Vitest en revisión. Mediciones Android y deuda UX de filtro de fecha oculto pendientes.
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -37,7 +37,9 @@ La trazabilidad de `v0.4.8` y `v0.5.0` queda distribuida entre `docs/gestion/lin
 
 ## Prioridad Inmediata — Hito 06
 
-**Plan aceptado e integrado en [PR #13](https://github.com/jdfesa/lumapse/pull/13):** F1 y F2 fueron aprobadas e integradas en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`), con ramas eliminadas. F3 tiene preparación reproducible en la única rama activa `docs/beta-core-validation`; mediciones Android pendientes, fase sin cerrar. Ver [protocolo y evidencia](docs/beta-core-validation/README.md) y [plan inmediato](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md). No abrir otro frente durante su revisión.
+**Plan aceptado e integrado en [PR #13](https://github.com/jdfesa/lumapse/pull/13):** F1 y F2 fueron aprobadas e integradas en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`). La preparación de F3 fue aceptada tras la confirmación general del teléfono e integrada en PR #16 (`90fd21e`); sus ramas ya se eliminaron. Las mediciones cuantitativas siguen pendientes y F3 no se declara cerrada. Ver [protocolo y evidencia](docs/beta-core-validation/README.md) y [plan inmediato](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md).
+
+**Único objetivo actual:** [parche de seguridad de Vitest](docs/gestion/validacion-parche-vitest-2026-09-15.md) en `fix/vitest-redirect-security`, sin cambios productivos. Es el pendiente de tooling seleccionado tras PR #16, no una F4 ya prevista por el plan. Mantener el PR abierto hasta la nueva prueba/aprobación del autor; no abrir otra rama ni sugerir integración antes de esa aprobación.
 
 | Orden | Tarea | Criterio de cierre |
 |---|---|---|
@@ -105,8 +107,8 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Framework UI | No incorporar Svelte por ahora | Baja | Costo de migracion alto vs beneficio actual; reabrir solo si DOM manual se vuelve una carga clara |
 | Documentación | Congelar documentos para la entrega académica | Alta | La documentación viva se reconcilió con `v0.5.0`; restan bibliografía, matriz RNF, revisión de maquetación y materiales de defensa |
 | Dependencias | Repetir auditorías en cada corte candidato | Recurrente | AUD-004 quedó cerrado con grafo mínimo, auditorías 0/0 y Android aprobado; revalidar porque los advisories evolucionan |
-| Tooling / seguridad | Evaluar parche acotado de Vitest tras cerrar la rama actual | Media | Auditoría 2026-09-12: 3 entradas moderadas de desarrollo asociadas a GHSA-82fw-gwwq-j7x9; producción 0. [Detalle y límites](docs/gestion/validacion-f1-gate-portable-2026-09-12.md). No actualizar dependencias ni abrir otra rama dentro de F2; no se repitió la auditoría en esta fase |
-| Store / formularios | Aprobar F2 y validar creación de notas/fechas en Android (AUD-014) | Alta | Contrato implementado y regresiones permanentes; [evidencia y handoff](docs/gestion/validacion-f2-guardado-y-refresco-2026-09-13.md). No fusionar sin aprobación |
+| Tooling / seguridad | Revisar parche acotado de Vitest 4.1.11 | Media | Implementado en `fix/vitest-redirect-security`: nueve nodos de desarrollo, sin cambios al grafo productivo; auditorías del 2026-09-15 pasan de 3/0 a 0/0 y cuatro regresiones del mocker pasan. [Evidencia y handoff](docs/gestion/validacion-parche-vitest-2026-09-15.md). Pendiente de prueba/aprobación del autor y merge |
+| Store / formularios | Conservar regresiones de creación confirmada (AUD-014) | Cerrada en F2 | Autor confirmó funcionamiento e integró PR #15; [evidencia y límites](docs/gestion/validacion-f2-guardado-y-refresco-2026-09-13.md). No extender ese cierre a mutaciones vecinas |
 | Store / refrescos vecinos | Priorizar ambigüedades posteriores a otras escrituras | Alta | SQLite confirma rechazo tras crear materia y editar/eliminar fecha; no corregidos en F2. La materia conserva una fila y su reintento choca con nombre único, no se probó duplicación. Mover/eliminar notas y otras acciones de materias/papelera conservan el patrón estático, pendiente de caracterización. Ver límites de F2 |
 | Tooling DB | Ampliar el smoke test a `academic_events` y constraints relevantes | Media | El DDL completo se ejecuta, pero las aserciones explícitas de tablas/columnas/relaciones se concentran en materias, notas y metadata; decidir su ampliación antes de presentar cobertura exhaustiva |
 | Diagramas | Revisar Mermaid de casos de uso, secuencia y dominio | Baja | Completado el 2026-07-03 contra `v0.4.8`; reabrir solo si cambia el alcance o durante la exportacion final a PDF/LaTeX |

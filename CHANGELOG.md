@@ -9,9 +9,13 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ## [Unreleased]
 
+### Security
+
+- **Parche del tooling de tests:** Vitest y coverage-v8 suben a 4.1.11 para corregir `GHSA-82fw-gwwq-j7x9`; nueve paquetes de desarrollo alineados, sin cambios al grafo productivo, Vite, Node ni versión Android. Cuatro regresiones sintéticas verifican redirects permitidos/restringidos y la desactivación del canal de registro. Auditorías del 2026-09-15 en cero; pendiente de nueva prueba/aprobación del autor antes de integrar. [Evidencia y límites](docs/gestion/validacion-parche-vitest-2026-09-15.md).
+
 ### Fixed
 
-- **Guardado confirmado (AUD-014, F2):** crear una nota o fecha devuelve la entidad persistida aunque falle el refresco secundario. El editor limpia su borrador y el diálogo cierra con éxito; un aviso diferenciado permite actualizar solo lecturas, sin repetir la escritura. Los fallos de inserción conservan datos y reintento legítimo; el diálogo bloquea envíos concurrentes y durante el cierre. Incluye regresiones SQLite/UI y conserva ownership académico. Pendiente de aprobación y prueba Android; otras mutaciones quedan fuera de este cambio.
+- **Guardado confirmado (AUD-014, F2):** crear una nota o fecha devuelve la entidad persistida aunque falle el refresco secundario. El editor limpia su borrador y el diálogo cierra con éxito; un aviso diferenciado permite actualizar solo lecturas, sin repetir la escritura. Los fallos de inserción conservan datos y reintento legítimo; el diálogo bloquea envíos concurrentes y durante el cierre. Incluye regresiones SQLite/UI y conserva ownership académico. Autor confirmó funcionamiento e integró PR #15; otras mutaciones quedan fuera de este cambio.
 - **Gate portable (AUD-008/AUD-009, F1):** Node 22.20.0/npm 10.9.3 fijados y verificados antes de las suites; `verify` y CI comparten todos los controles. El auditor offline permite únicamente tokens locales de la CSP y el gate rechaza crashes/reportes incompletos, sin depender del binario Rust ignorado. Incluye regresiones de tooling; no cambia runtime de la app, dependencias, schema ni versión.
 
 ### Changed

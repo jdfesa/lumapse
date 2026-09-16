@@ -12,8 +12,9 @@ de Gómez (2014).
 
 | Documento | Contenido | Estado |
 |---|---|---|
-| [`plan-desarrollo-inmediato-beta-2026-09-12.md`](./plan-desarrollo-inmediato-beta-2026-09-12.md) | Análisis acotado y próximas sesiones: AUD-008/AUD-009, nuevo AUD-014 y validación del núcleo con 500 notas | ✅ Plan, F1 y F2 integrados; F3 preparada |
-| [`../beta-core-validation/README.md`](../beta-core-validation/README.md) | Fixtures, protocolo, conteos locales y matriz CRUD/FPS/offline/continuidad | 🔎 F3 preparada; Android pendiente |
+| [`plan-desarrollo-inmediato-beta-2026-09-12.md`](./plan-desarrollo-inmediato-beta-2026-09-12.md) | Análisis acotado y próximas sesiones: AUD-008/AUD-009, nuevo AUD-014 y validación del núcleo con 500 notas | ✅ Plan, F1, F2 y preparación F3 integrados |
+| [`../beta-core-validation/README.md`](../beta-core-validation/README.md) | Fixtures, protocolo, conteos locales y matriz CRUD/FPS/offline/continuidad | 🔎 PR #16 integrado; métricas Android pendientes |
+| [`validacion-parche-vitest-2026-09-15.md`](./validacion-parche-vitest-2026-09-15.md) | Parche de tooling, grafo mínimo, regresiones del mocker y handoff | 🔎 Pendiente de prueba/aprobación del autor |
 | [`definicion-flujo-kanban.md`](./definicion-flujo-kanban.md) | Definition of Workflow, WIP, políticas, SLE y métricas de flujo desde Hito 06 | ✅ Vigente |
 | [`estimacion-pert.md`](./estimacion-pert.md) | Estimación de 3 puntos (PERT) para los módulos de mayor riesgo | ✅ Completado |
 | [`lineas-base.md`](./lineas-base.md) | Registro de líneas base y releases `v0.4.8`/`v0.5.0`, más el futuro corte estable | 🔄 Activo en Hito 06 |

@@ -1,6 +1,6 @@
 # Plan de desarrollo inmediato de la beta — 2026-09-12
 
-**Estado:** Plan aceptado e integrado mediante [PR #13](https://github.com/jdfesa/lumapse/pull/13), `65e5767`. F1 y F2 aprobadas e integradas en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`), con ramas eliminadas. F3 preparada en `docs/beta-core-validation`, sin cerrar y con mediciones Android pendientes. [Evidencia y límites de F2](./validacion-f2-guardado-y-refresco-2026-09-13.md); [preparación y matriz F3](../beta-core-validation/README.md).
+**Estado:** Plan aceptado e integrado mediante [PR #13](https://github.com/jdfesa/lumapse/pull/13), `65e5767`. F1 y F2 aprobadas e integradas en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`). Preparación F3 aceptada e integrada en PR #16 (`90fd21e`) tras confirmación general del teléfono el 2026-09-15; ramas eliminadas. Las métricas Android siguen pendientes, sin declarar F3 cerrada. [Evidencia y límites de F2](./validacion-f2-guardado-y-refresco-2026-09-13.md); [preparación y matriz F3](../beta-core-validation/README.md).
 
 **Rama documental:** `docs/immediate-beta-plan`.
 
@@ -63,7 +63,7 @@ Esto **no demuestra pérdida de datos, frecuencia del fallo en teléfonos ni una
 | Completado | Analizar y acordar el alcance | `docs/immediate-beta-plan` | Ninguna | PR #13 aprobado e integrado; rama local/remota eliminada |
 | F1 · integrada | Gate portable y entorno explícito | `fix/quality-gate-portability` (eliminada) | PR del plan aceptado e integrado | PR #14 aceptado e integrado; AUD-008/AUD-009 cerrados por aceptación |
 | F2 · integrada | Confirmación inequívoca de creación | `fix/post-write-refresh-contract` (eliminada) | F1 integrado | PR #15 integrado por el autor después de confirmar funcionamiento; cierre acotado de AUD-014 |
-| F3 · preparación revisable | Validación crítica y medición con 500 notas | `docs/beta-core-validation` | F2 integrado; para medir falta dispositivo/artefacto autorizado | Fixture/protocolo y evidencia local; Android pendiente, ninguna optimización incluida |
+| F3 · preparación integrada | Validación crítica y medición con 500 notas | `docs/beta-core-validation` (eliminada) | F2 integrado; preparación aceptada en PR #16 | Confirmación general del teléfono; faltan muestras CRUD/FPS y evidencia por caso, ninguna optimización incluida |
 
 Cada fase vuelve a `main` actualizado antes de crear su rama y espera revisión antes del merge. Se mantiene [WIP global 2](./definicion-flujo-kanban.md) como techo, contando también `En Revisión`; esta secuencia usa **una sola rama técnica activa**. No abrir la siguiente hasta integrar y limpiar la anterior. El autor debe aprobar explícitamente el PR y confirmar funcionamiento en su teléfono de pruebas; CI no sustituye esa aprobación. El apoyo de estudiantes/dispositivo se coordina con el autor, no se presume disponible. Registrar `startedAt`/`finishedAt` cuando sucedan, no inventarlos desde commits.
 
@@ -180,7 +180,7 @@ Los logs diagnósticos locales se guardaron en `tmp/immediate-beta-plan-2026-09-
 - [x] Checks documentales, trazabilidad y `git diff --check` aprobados; CI revisada y limitaciones locales explícitas.
 - [x] No hay cambios en runtime, dependencias, schema, versión, APK ni datos personales.
 
-**Detención actualizada 2026-09-14:** el plan, F1 y F2 fueron aceptados e integrados, con sus ramas eliminadas. F3 entrega preparación verificable; sin mediciones del dispositivo no se cierra. Mantener su PR abierto hasta revisión/validación y autorización explícita. No abrir otra rama, publicar release ni integrar automáticamente. La aceptación del plan no equivale al cierre de sus fases.
+**Seguimiento actualizado 2026-09-15:** el plan, F1, F2 y la preparación F3 fueron aceptados e integrados, con sus ramas eliminadas. El autor informó funcionamiento correcto en el teléfono y autorizó PR #16; sin muestras cuantitativas no se cierra F3 ni se optimiza su rendimiento. Tras pedir continuar, el único objetivo seleccionado es el [parche pendiente de Vitest](./validacion-parche-vitest-2026-09-15.md), en `fix/vitest-redirect-security`. No se agrega una F4 retroactiva al plan: este parche tiene alcance propio y espera nueva prueba/aprobación antes de sugerir merge y limpieza. No publicar release ni integrar automáticamente.
 
 ## 8. Reproducción de AUD-014
 
