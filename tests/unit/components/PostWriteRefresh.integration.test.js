@@ -278,4 +278,43 @@ describe('AcademicEventDialog con SQLite', () => {
     expect(harness.db.run.mock.calls.filter(([sql]) => sql.includes('UPDATE academic_events'))).toHaveLength(1)
     expect(warnings).toHaveLength(1)
   })
+
+  it('completa una eliminación confirmada sin falso error ni DELETE concurrente', async () => {
+    const created = await harness.store.createAcademicEvent(academicInput)
+    harness.db.run.mockClear()
+    const restore = failUpcomingRead(harness.db)
+    const { bindAcademicEventActions } = await import(
+      '../../../src/components/academic-events/AcademicEventActions.js'
+    )
+    const container = document.createElement('div')
+    container.innerHTML = `
+      <button class="js-academic-event-action" data-event-action="delete" data-event-id="${created.id}">
+        Eliminar
+      </button>
+    `
+    document.body.appendChild(container)
+    bindAcademicEventActions(container, () => created)
+    const deleteButton = container.querySelector('button')
+    deleteButton.click()
+    deleteButton.click()
+    document.querySelector('.dialog__btn--confirm').click()
+
+    await vi.waitFor(() => expect(rows('academic_events')).toEqual([]))
+    expect(harness.state.academicEvents).toEqual([])
+    expect(harness.state.academicEventsForMonth).toEqual([])
+    expect(errors).toHaveLength(0)
+    expect(warnings).toHaveLength(1)
+    const retryButton = document.querySelector('.toast--pending-refresh button')
+    expect(retryButton.parentElement.parentElement.textContent).toContain('Fecha académica eliminada.')
+    retryButton.click()
+    await vi.waitFor(() => expect(retryButton.disabled).toBe(false))
+    restore()
+    retryButton.click()
+    retryButton.dispatchEvent(new window.MouseEvent('click'))
+    await vi.waitFor(() => expect(document.querySelector('.toast--pending-refresh')).toBeNull())
+
+    expect(harness.state.upcomingAcademicEvents).toEqual([])
+    expect(harness.db.run.mock.calls.filter(([sql]) => sql.includes('DELETE FROM academic_events'))).toHaveLength(1)
+    expect(warnings).toHaveLength(1)
+  })
 })

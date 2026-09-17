@@ -232,3 +232,85 @@ describe('updateAcademicEvent() con SQLite', () => {
     expect(errors).not.toHaveBeenCalled()
   })
 })
+
+describe('deleteAcademicEvent() con SQLite', () => {
+  it('elimina normalmente con retorno undefined y limpia todos los caches conocidos', async () => {
+    const created = await createAcademicFixture()
+
+    await expect(harness.store.deleteAcademicEvent(created.id)).resolves.toBeUndefined()
+
+    expect(academicRows()).toEqual([])
+    expect(harness.state.academicEvents).toEqual([])
+    expect(harness.state.academicEventsForMonth).toEqual([])
+    expect(harness.state.upcomingAcademicEvents).toEqual([])
+    expect(warnings).not.toHaveBeenCalled()
+    expect(errors).not.toHaveBeenCalled()
+  })
+
+  it('conserva el DELETE confirmado y limpia caches si falla próximas fechas', async () => {
+    const created = await createAcademicFixture()
+    failUpcomingRead(harness.db)
+
+    await expect(harness.store.deleteAcademicEvent(created.id)).resolves.toBeUndefined()
+
+    expect(academicRows()).toEqual([])
+    expect(harness.state.academicEvents).toEqual([])
+    expect(harness.state.academicEventsForMonth).toEqual([])
+    expect(harness.state.upcomingAcademicEvents).toContainEqual(created)
+    expect(warnings).toHaveBeenCalledTimes(1)
+    expect(warnings.mock.calls[0][0]).toMatchObject({
+      operation: 'deleteAcademicEvent',
+      entityId: created.id,
+    })
+    expect(errors).not.toHaveBeenCalled()
+  })
+
+  it('rechaza un DELETE real fallido y conserva fila y caches anteriores', async () => {
+    const created = await createAcademicFixture()
+    const { DatabaseError } = await import('../../../src/services/sqlite/errors.js')
+    const errorLog = vi.spyOn(console, 'error').mockImplementation(() => {})
+    harness.db.run.mockRejectedValueOnce(new Error('fallo inyectado antes de DELETE'))
+    try {
+      await expect(harness.store.deleteAcademicEvent(created.id)).rejects.toBeInstanceOf(DatabaseError)
+      expect(academicRows()).toEqual([
+        [created.id, academicInput.type, academicInput.title, academicInput.date, null],
+      ])
+      expect(harness.state.academicEvents).toContainEqual(created)
+      expect(harness.state.academicEventsForMonth).toContainEqual(created)
+      expect(harness.state.upcomingAcademicEvents).toContainEqual(created)
+      expect(warnings).not.toHaveBeenCalled()
+      expect(errors).toHaveBeenCalledTimes(1)
+      expect(errors.mock.calls[0][0].operation).toBe('deleteAcademicEvent')
+    } finally {
+      errorLog.mockRestore()
+    }
+  })
+
+  it('recupera próximas fechas single-flight sin repetir DELETE ni volver a leer', async () => {
+    const created = await createAcademicFixture()
+    const restore = failUpcomingRead(harness.db)
+    await harness.store.deleteAcademicEvent(created.id)
+    const { retry } = warnings.mock.calls[0][0]
+
+    await expect(retry()).resolves.toBe(false)
+    restore()
+    const query = harness.db.query.getMockImplementation()
+    const gate = deferred()
+    harness.db.query.mockImplementationOnce(async (...args) => {
+      await gate.promise
+      return query(...args)
+    })
+    const firstRetry = retry()
+    expect(retry()).toBe(firstRetry)
+    gate.resolve()
+    await expect(firstRetry).resolves.toBe(true)
+    const readsAfterRecovery = harness.db.query.mock.calls.length
+    await expect(retry()).resolves.toBe(true)
+
+    expect(harness.db.query).toHaveBeenCalledTimes(readsAfterRecovery)
+    expect(harness.state.upcomingAcademicEvents).toEqual([])
+    expect(harness.db.run.mock.calls.filter(([sql]) => sql.includes('DELETE FROM academic_events'))).toHaveLength(1)
+    expect(warnings).toHaveBeenCalledTimes(1)
+    expect(errors).not.toHaveBeenCalled()
+  })
+})

@@ -481,6 +481,36 @@ describe('NoteStore.academicEvents', () => {
   })
 
   describe('deleteAcademicEvent()', () => {
+    it.each(['resolve', 'reject'])('no resucita una eliminación con una recuperación antigua que termina con %s', async (settle) => {
+      const warning = vi.fn()
+      const unsubscribe = subscribeToPendingRefreshes(warning)
+      const stale = deferred()
+      const deleted = event({ id: 'event-1' })
+      state.academicEvents = [deleted]
+      state.academicEventsForMonth = [deleted]
+      state.academicEventsMonth = { year: 2026, month: 6 }
+      state.upcomingAcademicEvents = [deleted]
+      AcademicEventService.getUpcomingAcademicEvents
+        .mockRejectedValueOnce(new Error('refresco inicial fallido'))
+        .mockReturnValueOnce(stale.promise)
+        .mockResolvedValue([])
+      try {
+        await NoteStoreAcademicEvents.deleteAcademicEvent('event-1')
+        const { retry } = warning.mock.calls[0][0]
+        const recovery = retry()
+        await Promise.resolve()
+        await NoteStoreAcademicEvents.loadUpcomingAcademicEvents()
+        stale[settle](settle === 'reject' ? new Error('rechazo antiguo') : [deleted])
+        await expect(recovery).resolves.toBe(false)
+        expect(state.upcomingAcademicEvents).toEqual([])
+        await expect(retry()).resolves.toBe(true)
+        expect(state.academicEvents).toEqual([])
+        expect(state.academicEventsForMonth).toEqual([])
+        expect(AcademicEventService.deleteAcademicEvent).toHaveBeenCalledTimes(1)
+        expect(warning).toHaveBeenCalledTimes(1)
+      } finally { unsubscribe() }
+    })
+
     it('elimina de los caches y recarga proximas fechas', async () => {
       state.academicEvents = [event({ id: 'a' }), event({ id: 'b' })]
       state.academicEventsForMonth = [event({ id: 'a' })]

@@ -202,15 +202,20 @@ export async function updateAcademicEvent(id, changes) {
  * Elimina una fecha academica y limpia los caches del store.
  */
 export async function deleteAcademicEvent(id) {
-  return runStoreAction('deleteAcademicEvent', 'No se pudo eliminar la fecha academica. Intenta de nuevo.', async () => {
-    await AcademicEventService.deleteAcademicEvent(id)
-    const eventId = String(id).trim()
+  await runStoreAction(
+    'deleteAcademicEvent', 'No se pudo eliminar la fecha academica. Intenta de nuevo.',
+    () => AcademicEventService.deleteAcademicEvent(id),
+  )
+  const eventId = String(id).trim()
 
-    recordAcademicEventMutation(eventId, null)
-    state.academicEvents = removeAcademicEvent(state.academicEvents, eventId)
-    state.academicEventsForMonth = removeAcademicEvent(state.academicEventsForMonth, eventId)
-    await reloadUpcomingAcademicEvents()
-    notify()
+  recordAcademicEventMutation(eventId, null)
+  state.academicEvents = removeAcademicEvent(state.academicEvents, eventId)
+  state.academicEventsForMonth = removeAcademicEvent(state.academicEventsForMonth, eventId)
+  await refreshAfterWrite({
+    operation: 'deleteAcademicEvent',
+    entityId: eventId,
+    message: 'Fecha académica eliminada. La actualización de próximas fechas quedó pendiente.',
+    refresh: reloadUpcomingAcademicEvents,
   })
 }
 
