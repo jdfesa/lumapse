@@ -1,5 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { academicInput, failUpcomingRead, postWriteRefreshHarness } from '../store/postWriteRefreshHarness.js'
+import {
+  academicInput,
+  failSubjectRefreshAfterInsert,
+  failUpcomingRead,
+  postWriteRefreshHarness,
+} from '../store/postWriteRefreshHarness.js'
 
 // UI real -> store real -> servicios/coordinador reales -> SQLite en memoria.
 // No son mocks exitosos del store ni evidencia de un teléfono Android.
@@ -55,6 +60,75 @@ function submitDialog() {
   document.querySelector('.academic-event-dialog__form')
     .dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }))
 }
+
+async function mountSubjectsDrawer() {
+  document.body.insertAdjacentHTML('beforeend', `
+    <button id="btn-inbox"><span id="inbox-count"></span></button>
+    <button id="btn-add-subject"></button>
+    <div id="subject-form-container" style="display:none">
+      <input id="subject-name-input">
+      <div id="subject-color-picker"></div>
+      <button id="btn-subject-cancel"></button>
+      <button id="btn-subject-save"></button>
+    </div>
+    <div id="subjects-list"></div>
+  `)
+  const { initSubjects } = await import('../../../src/layout/drawerSubjects.js')
+  const drawer = initSubjects({
+    NoteStore: harness.store,
+    SUBJECT_COLORS: ['#818cf8', '#22c55e'],
+    closeDrawer: vi.fn(),
+    getShowingArchived: () => false,
+    resetArchived: vi.fn(),
+  })
+  drawer.renderSubjects(harness.state.subjects)
+  return drawer
+}
+
+describe('drawerSubjects con SQLite', () => {
+  it('finaliza una materia confirmada y recupera el árbol sin repetir INSERT', async () => {
+    await mountSubjectsDrawer()
+    failSubjectRefreshAfterInsert(harness.db)
+    document.getElementById('btn-add-subject').click()
+    document.getElementById('subject-name-input').value = 'Programación III'
+    document.getElementById('btn-subject-save').click()
+
+    await vi.waitFor(() => expect(document.getElementById('subject-form-container').style.display).toBe('none'))
+    expect(rows('subjects')).toHaveLength(1)
+    expect(errors).toHaveLength(0)
+    expect(warnings).toHaveLength(1)
+    expect(document.querySelector('.toast--pending-refresh').textContent).toContain('Materia creada.')
+
+    document.querySelector('.toast--pending-refresh button').click()
+    await vi.waitFor(() => expect(document.querySelector('.toast--pending-refresh')).toBeNull())
+    expect(harness.state.subjects.tree).toHaveLength(1)
+    expect(harness.db.run.mock.calls.filter(([sql]) => sql.includes('INSERT INTO subjects'))).toHaveLength(1)
+  })
+
+  it('finaliza una sección confirmada y conserva su relación sin repetir INSERT', async () => {
+    const root = await harness.store.createSubject('Programación III', '#818cf8')
+    harness.db.run.mockClear()
+    await mountSubjectsDrawer()
+    document.querySelector('.js-btn-add-section').click()
+    document.querySelector('.js-section-name-input').value = 'Práctica'
+    failSubjectRefreshAfterInsert(harness.db)
+    document.querySelector('.js-btn-section-save').click()
+
+    await vi.waitFor(() => expect(document.querySelector('.drawer__section-form').style.display).toBe('none'))
+    const persisted = harness.fixture.database.exec(
+      'SELECT name, color, parentSubjectId FROM subjects WHERE parentSubjectId IS NOT NULL',
+    )[0]?.values
+    expect(persisted).toEqual([['Práctica', '#818cf8', root.id]])
+    expect(errors).toHaveLength(0)
+    expect(warnings).toHaveLength(1)
+    expect(document.querySelector('.toast--pending-refresh').textContent).toContain('Sección creada.')
+
+    document.querySelector('.toast--pending-refresh button').click()
+    await vi.waitFor(() => expect(document.querySelector('.toast--pending-refresh')).toBeNull())
+    expect(harness.state.subjects.tree[0].children).toHaveLength(1)
+    expect(harness.db.run.mock.calls.filter(([sql]) => sql.includes('INSERT INTO subjects'))).toHaveLength(1)
+  })
+})
 
 describe('NoteEditor con SQLite', () => {
   it.each([false, true])('completa el formulario y descarta el borrador tras confirmar (refresco fallido: %s)', async (failRefresh) => {

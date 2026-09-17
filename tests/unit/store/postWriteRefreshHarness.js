@@ -30,3 +30,15 @@ export function failUpcomingRead(db, error = new Error('fallo inyectado al leer 
   })
   return () => db.query.mockImplementation(query)
 }
+
+export function failSubjectRefreshAfterInsert(
+  db,
+  error = new Error('fallo inyectado al refrescar materias'),
+) {
+  const run = db.run.getMockImplementation()
+  db.run.mockImplementation(async (sql, values) => {
+    const result = await run(sql, values)
+    if (sql.includes('INSERT INTO subjects')) db.query.mockRejectedValueOnce(error)
+    return result
+  })
+}
