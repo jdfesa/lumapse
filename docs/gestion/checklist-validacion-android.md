@@ -6,6 +6,22 @@
 
 ---
 
+## Candidata pendiente — refrescos vecinos, PR #19
+
+`createSubject`, `updateAcademicEvent` y `deleteAcademicEvent` conservan el éxito de
+SQLite ante un fallo de lectura secundaria y ofrecen recuperación solo de lectura.
+La evidencia automática y el handoff están en el
+[plan del 2026-09-16](./plan-refrescos-vecinos-2026-09-16.md). **No hay todavía prueba
+Android ni aprobación del autor; el PR no está cerrado ni integrado y no completa F3.**
+
+- [ ] Registrar HEAD final, identidad/hash del APK, dispositivo y versión Android.
+- [ ] Crear materia y sección; reabrir el drawer y verificar relación, color y conteos.
+- [ ] Editar una fecha; reabrir calendario/próximas fechas y verificar mismo ID/valores.
+- [ ] Eliminar una fecha; reabrir calendario/próximas fechas y comprobar que no reaparece.
+- [ ] Confirmar resultado en PR #19 antes de decidir el merge, sin borrar datos reales.
+
+---
+
 ## Corrección cerrada — filtros visibles, 2026-09-16
 
 El autor confirmó la prueba Android del HEAD `1ffa7f3` y aprobó PR #18; el cambio

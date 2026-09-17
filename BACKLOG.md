@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 06 — Entrega Final
 > **Hito 05:** Cerrado documentalmente el 2026-07-15 sobre la beta operativa `v0.4.8`
-> **Última actualización:** 2026-09-16 — PR #18 de filtros visibles probado e integrado por el autor; `main` revalidado. Mediciones Android F3 pendientes.
+> **Última actualización:** 2026-09-16 — refrescos vecinos implementados en PR #19; prueba Android y aprobación del autor pendientes. Mediciones Android F3 siguen pendientes.
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -109,7 +109,7 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Dependencias | Repetir auditorías en cada corte candidato | Recurrente | AUD-004 quedó cerrado con grafo mínimo, auditorías 0/0 y Android aprobado; revalidar porque los advisories evolucionan |
 | Tooling / seguridad | Parche acotado de Vitest 4.1.11 | Cerrada en PR #17 | Autor confirmó prueba y realizó merge (`7dc105c`); rama local/remota eliminada. Nueve nodos de desarrollo, grafo productivo intacto, auditorías del 2026-09-15 en 0/0 y cuatro regresiones. [Evidencia y límites](docs/gestion/validacion-parche-vitest-2026-09-15.md). No sustituye auditorías de futuros cortes |
 | Store / formularios | Conservar regresiones de creación confirmada (AUD-014) | Cerrada en F2 | Autor confirmó funcionamiento e integró PR #15; [evidencia y límites](docs/gestion/validacion-f2-guardado-y-refresco-2026-09-13.md). No extender ese cierre a mutaciones vecinas |
-| Store / refrescos vecinos | Priorizar ambigüedades posteriores a otras escrituras | Alta | SQLite confirma rechazo tras crear materia y editar/eliminar fecha; no corregidos en F2. La materia conserva una fila y su reintento choca con nombre único, no se probó duplicación. Mover/eliminar notas y otras acciones de materias/papelera conservan el patrón estático, pendiente de caracterización. Ver límites de F2 |
+| Store / refrescos vecinos | Priorizar ambigüedades posteriores a otras escrituras | Alta; en revisión | Crear materia y editar/eliminar fecha están implementados en [PR #19](https://github.com/jdfesa/lumapse/pull/19): una escritura confirmada conserva éxito y ofrece recuperación solo de lectura. Android/aprobación pendientes; no cerrado ni integrado. La materia conserva una fila y su reintento choca con nombre único, no se probó duplicación. Mover/eliminar notas y otras acciones de materias/papelera permanecen fuera de alcance y pendientes de caracterización. [Plan y evidencia](docs/gestion/plan-refrescos-vecinos-2026-09-16.md) |
 | Tooling DB | Ampliar el smoke test a `academic_events` y constraints relevantes | Media | El DDL completo se ejecuta, pero las aserciones explícitas de tablas/columnas/relaciones se concentran en materias, notas y metadata; decidir su ampliación antes de presentar cobertura exhaustiva |
 | Diagramas | Revisar Mermaid de casos de uso, secuencia y dominio | Baja | Completado el 2026-07-03 contra `v0.4.8`; reabrir solo si cambia el alcance o durante la exportacion final a PDF/LaTeX |
 | Informe final | Preparar conversion LaTeX/PDF | Media | Consideraciones registradas en `docs/informe-final/README.md`; mantener Markdown como fuente de verdad y abrir pipeline LaTeX solo cuando el contenido este congelado |

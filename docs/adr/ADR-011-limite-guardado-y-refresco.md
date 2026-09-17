@@ -59,3 +59,11 @@ vecinas solo fueron inspeccionadas estáticamente, no se declaran corregidas.
 
 Los tests de UI con store/SQLite reales en memoria no validan el plugin nativo. La
 prueba en el teléfono y la aprobación explícita siguen siendo condición del merge.
+
+## Seguimiento posterior
+
+El [seguimiento del 2026-09-16](../gestion/plan-refrescos-vecinos-2026-09-16.md)
+reutiliza esta frontera en `createSubject`, `updateAcademicEvent` y
+`deleteAcademicEvent`, implementados en PR #19 con validación Android y aprobación aún
+pendientes. Es un cambio separado: no amplía retroactivamente el alcance histórico de F2,
+no atribuye esos caminos al antiguo PR #15 y no declara una F4.

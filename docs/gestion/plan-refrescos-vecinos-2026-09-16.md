@@ -1,8 +1,9 @@
 # Plan y evidencia — refrescos vecinos de escrituras confirmadas
 
-**Estado:** en implementación en `fix/confirmed-subject-event-mutations`; pendiente de
-prueba Android y aprobación del autor. **Base verificada:** `1c316cc` (`main` =
-`origin/main`, árbol limpio tras `fetch`, 2026-09-16).
+**Estado:** implementado en [PR #19](https://github.com/jdfesa/lumapse/pull/19),
+pendiente de prueba Android y aprobación del autor. No está cerrado ni integrado.
+**Rama:** `fix/confirmed-subject-event-mutations`. **Base verificada:** `1c316cc`
+(`main` = `origin/main`, árbol limpio tras `fetch`, 2026-09-16).
 
 Este seguimiento corrige una sola familia ya caracterizada en la sección 3 de la
 [validación F2](./validacion-f2-guardado-y-refresco-2026-09-13.md): SQLite confirma
@@ -51,19 +52,44 @@ RED/GREEN quedan ignorados en `tmp/remote-codex-20260916/`.
 Además deben seguir verdes las regresiones F2 de `createNote` y
 `createAcademicEvent`, el canal de aviso, los consumidores directos y AUD-006.
 
-## Fases y evidencia a completar
+## Implementación y evidencia
 
 - [x] Preflight: `fetch`, limpieza y coincidencia de `HEAD`/`origin/main` verificadas;
   rama única creada desde `1c316cc`.
-- [ ] Runtime canónico y `npm run verify` de línea base.
-- [ ] Regresiones RED de los tres fallos confirmados, guardadas sin publicar un commit roto.
-- [ ] `createSubject` GREEN y commit propio.
-- [ ] `updateAcademicEvent` GREEN y commit propio.
-- [ ] `deleteAcademicEvent` GREEN y commit propio.
-- [ ] Suite focalizada, `npm run verify` completo, `git diff --check` y auditoría no
-  mutante exigida por el flujo, con SHA, códigos de salida, conteos y warnings.
-- [ ] CI del SHA final revisada.
+- [x] Runtime canónico y `npm run verify` de línea base.
+- [x] Regresiones RED de los tres fallos confirmados, guardadas sin publicar un commit roto.
+- [x] `createSubject` GREEN en `3343cb7`.
+- [x] `updateAcademicEvent` GREEN en `437b268`.
+- [x] `deleteAcademicEvent` GREEN en `574ab6d`.
+- [x] Suite focalizada, `npm run verify` completo, `git diff --check` y auditoría no
+  mutante exigida por el flujo.
+- [x] CI del checkpoint de código `574ab6d` revisada: Quality Gate y GitGuardian aprobados. La cabeza vigente se consulta en los [checks del PR #19](https://github.com/jdfesa/lumapse/pull/19/checks).
 - [ ] Prueba Android y aprobación del autor. Este trabajo no cierra F3 ni publica release.
+
+| Comando/evidencia | Resultado | Observaciones |
+|---|---|---|
+| `npm ci` | Exit 0; 300 paquetes; auditoría de instalación 0 | El primer intento dentro del sandbox no pudo crear `~/.npm/_cacache`; la repetición autorizada completó la instalación. Lockfile intacto |
+| `npm run check:runtime` | Exit 0 | Node 22.20.0 / npm 10.9.3 |
+| `npm run verify` de base | Exit 0; 61 tooling; 74 archivos / 1131 tests | 3 warnings de lint ya presentes |
+| RED sobre la base | Exit 1; 1 archivo / 3 tests, 3 fallos esperados | Un rechazo por cada camino confirmado; log ignorado `confirmed-neighbor-mutations-red.log` |
+| GREEN materia/sección | Exit 0; 6 archivos / 106 tests | Filas, unicidad, árbol pendiente, retry y drawer reales |
+| GREEN editar fecha | Exit 0; 6 archivos / 79 tests | Fila/caches, error real, ownership, single-flight y diálogo real |
+| GREEN eliminar fecha | Exit 0; 7 archivos / 89 tests | Retorno `undefined`, fila/caches, ownership, single-flight y acción real |
+| Suite focalizada final | Exit 0; 13 archivos / 269 tests | Store y consumidores directos, incluidas regresiones F2 |
+| `npm audit --omit=dev` / `npm audit` | Exit 0 / 0; 0 vulnerabilidades / 0 | Solo lectura; no se ejecutó `audit fix` |
+| `npm run verify` sobre código `574ab6d` | Exit 0; 61 tooling; 75 archivos / 1152 tests | Mismos 3 warnings históricos; 19 avisos no bloqueantes de tamaño antes/después |
+| [CI de `574ab6d`](https://github.com/jdfesa/lumapse/actions/runs/35173683033) | Quality Gate y GitGuardian aprobados | No sustituye la prueba Android pendiente; revisar también los checks de la cabeza vigente del PR |
+
+Los tests agregados usan DDL, servicios y coordinador reales con SQLite en memoria;
+cada fixture se crea y cierra por caso. Los asserts consultan IDs, relaciones y valores:
+una fila tras crear, valores nuevos tras editar y cero filas tras eliminar. Los fallos
+reales de escritura dejan cero altas o conservan la fila anterior. Las recuperaciones
+fallidas/obsoletas no se cuentan como éxito, y después de converger no vuelven a leer.
+Los logs completos permanecen ignorados en `tmp/remote-codex-20260916/`.
+
+No se agregaron warnings de lint ni avisos de tamaño. Los mensajes `stderr` de rollback,
+migraciones y escrituras fallidas corresponden a casos negativos intencionales ya
+presentes en la suite; el gate estructurado los aceptó con todos los tests en verde.
 
 ## Exclusiones
 
