@@ -324,6 +324,19 @@ describe('NoteList implicit titles', () => {
 })
 
 describe('NoteList empty states', () => {
+  it.each(['search', 'subject'])('conserva texto adversarial sin interpretar HTML en vacío de %s', mode => {
+    const list = createList()
+    const text = '<img src=x onerror=alert(1)> "&" 😀'
+    list.renderNotes([], feedState('subject', {
+      activeSubjectId: 'subject-1',
+      searchQuery: mode === 'search' ? text : '',
+      subjects: { tree: [{ id: 'subject-1', name: text }] },
+    }))
+    expect(list.feedContainer.querySelector('img, [onerror]')).toBeNull()
+    expect(list.feedContainer.textContent).toContain(text)
+    list.destroy()
+  })
+
   it('muestra un estado vacío específico para búsquedas sin resultados', () => {
     const list = createList()
 

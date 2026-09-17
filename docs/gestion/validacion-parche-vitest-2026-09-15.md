@@ -1,9 +1,11 @@
 # Parche acotado de Vitest — 2026-09-15
 
-**Estado:** implementado en rama; verificación local completa aprobada. Pendiente de nueva prueba
-y aprobación del autor; no autoriza merge ni limpieza anticipada.
+**Estado:** autor confirmó pruebas e integró [PR #17](https://github.com/jdfesa/lumapse/pull/17)
+en `main` como `7dc105c` el 2026-09-15 (Argentina; `2026-09-16T00:39:36Z`). Rama
+local/remota eliminada después de verificar integración. La confirmación es general;
+no se recibieron nuevas muestras por caso ni hash APK, y no cierra métricas F3.
 **Base:** `90fd21e9d83bc9cb67b3ba0dc6438d0fc0f48b41`, `main` sincronizado tras PR #16.
-**Rama única:** `fix/vitest-redirect-security`. **Checkpoint funcional:** `fedc43e`.
+**Rama histórica eliminada:** `fix/vitest-redirect-security`. **Checkpoint funcional:** `fedc43e`.
 
 ## Alcance y selección del pendiente
 
@@ -94,7 +96,7 @@ git diff --check
 | `test:coverage`, proveedor V8 4.1.11 | Exit 0; 72 archivos / 1104 tests, 58 archivos instrumentados (15 JS / 43 TS) |
 | `npm run verify` completo | Exit 0; 61 tests de tooling, 72 archivos / 1104 tests de aplicación, reporte JSON completo, build, typecheck y todas las auditorías |
 | Build productivo antes/después | Los 11 archivos emitidos conservan exactamente sus SHA-256; no es una comparación de APK |
-| CI del HEAD final | Se enlaza en el PR una vez ejecutada; no inferida del gate local |
+| CI del HEAD final `c06dda4` | [Quality Gate 34981383010](https://github.com/jdfesa/lumapse/actions/runs/34981383010) y GitGuardian aprobados antes del merge |
 
 En este host el sandbox impide algunos subprocesos Node: las ejecuciones válidas usan
 el runtime canónico fuera de esa restricción, no un workaround de Node 26. Persisten
@@ -111,7 +113,11 @@ El resumen de coverage del alcance configurado actual registra 95,93% de stateme
 actualizado; no es una mejora atribuible al parche ni sustituye la evidencia histórica
 de servicios para RNF-024. No se cambiaron configuración ni umbrales de cobertura.
 
-## Handoff para la Mac y el teléfono
+## Handoff histórico — no ejecutar sobre la rama eliminada
+
+El autor informó que probó el cambio y ya hizo el merge. Las casillas siguientes
+conservan el detalle no recibido; no se marcan por inferencia. El trabajo actual
+está en el [plan de filtros visibles](./plan-filtros-visibles-2026-09-15.md).
 
 En un checkout sin cambios propios pendientes:
 
@@ -134,8 +140,8 @@ git rev-parse HEAD
 - [ ] Si hace falta otro APK, acordar antes identidad, versión/code y firma compatible;
   no reutilizar la beta publicada para un binario distinto ni desinstalar/borrar datos.
   Aplican las [guardias del protocolo F3](../beta-core-validation/protocolo.md).
-- [ ] Autor aprobar explícitamente este PR después de su prueba. **Solo entonces**
-  sugerir merge a `main` y limpieza de la rama integrada; no hay auto-merge.
+- [x] Autor confirmó pruebas y realizó el merge de PR #17; main sincronizado y
+  rama integrada eliminada. No fue auto-merge ni aprobación del cambio siguiente.
 
 El smoke manual web es auxiliar, no obligatorio. No instalar Android Studio solo por
 esta tarea ni iniciar otro frente mientras el PR esté abierto. La aprobación anterior

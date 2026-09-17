@@ -15,6 +15,8 @@ import { BackupView } from '../backup/BackupView.js';
 import { renderAboutView } from '../about/AboutView.js';
 import { confirmDialog } from '../common/ConfirmDialog.js';
 import { VirtualFeed } from './VirtualFeed.js';
+import { createFeedFilters } from './FeedFilters.js';
+import { renderEmptyState } from './NoteListEmptyState.js';
 import { renderClearNoteStatusButton, renderNoteStatusBadge, renderNoteStatusMenuItems } from './NoteStatus.js';
 import './NoteList.css';
 
@@ -43,46 +45,6 @@ function renderSubjectBadge(note, subjectsData) {
   return `<span class="note-card__subject-badge"${color ? ` style="--subject-color: ${color}"` : ''}>${label}</span>`;
 }
 
-function renderEmptyState(state) {
-  const query = (state.searchQuery || '').trim();
-  const subjectsData = state.subjects || { tree: [] };
-  const activeSubject = state.activeSubjectId
-    ? findSubject(state.activeSubjectId, subjectsData)?.subject
-    : null;
-
-  let title = 'Todavía no hay notas en Entrada.';
-  let copy = 'Escribí una idea arriba o asignala a una materia cuando la guardes.';
-
-  if (query) {
-    title = `No encontramos notas para "${escapeHtmlText(query)}".`;
-    copy = 'Probá con otra palabra o limpiá la búsqueda para volver al feed.';
-  } else if (state.dateFilter) {
-    title = 'No hay notas en esta fecha.';
-    copy = 'El calendario sigue marcando actividad cuando guardes apuntes ese día.';
-  } else if (state.viewMode === 'subject') {
-    title = activeSubject
-      ? `${escapeHtmlText(activeSubject.name)} todavía no tiene notas.`
-      : 'Esta materia todavía no tiene notas.';
-    copy = 'Guardá la próxima idea con esta materia seleccionada.';
-  } else if (state.viewMode === 'archived') {
-    title = 'No hay notas archivadas.';
-    copy = 'Cuando archives apuntes, vas a poder consultarlos desde acá.';
-  }
-
-  return `
-    <div class="feed__empty">
-      <svg class="feed__empty-icon" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-        <line x1="8" y1="7" x2="16" y2="7"></line>
-        <line x1="8" y1="11" x2="14" y2="11"></line>
-      </svg>
-      <p class="feed__empty-title">${title}</p>
-      <p class="feed__empty-copy">${copy}</p>
-    </div>
-  `;
-}
-
 export class NoteList {
   constructor(containerElement) {
     this.container = containerElement;
@@ -101,8 +63,13 @@ export class NoteList {
     document.addEventListener('click', this.handleGlobalClick);
     
     // Render base (sin notas aún)
-    this.container.innerHTML = `<div class="feed" id="feed-items"></div>`;
+    this.container.innerHTML = `<div class="feed-filters-container"></div><div class="feed" id="feed-items" tabindex="-1" role="region" aria-label="Contenido de la vista"></div>`;
     this.feedContainer = this.container.querySelector('#feed-items');
+    this.filters = createFeedFilters(this.container.querySelector('.feed-filters-container'), {
+      onClearDate: () => NoteStore.setDateFilter(null),
+      onClearSearch: () => NoteStore.setSearchQuery(''),
+      focusTarget: this.feedContainer,
+    });
     this.trashRequests = createTrashRequestOwner(this.container, this.feedContainer);
 
     // Delegación de eventos para botones de la card
@@ -117,6 +84,7 @@ export class NoteList {
 
     // Suscribirse al store
     this.unsubscribe = NoteStore.subscribe((state) => {
+      this.filters.update(state);
       void this.trashRequests.update(state.viewMode === 'trash');
       if (state.viewMode === 'trash') {
         this.destroyVirtualFeed();
@@ -339,6 +307,7 @@ export class NoteList {
 
   destroy() {
     if (this.unsubscribe) this.unsubscribe();
+    this.filters.destroy();
     this.trashRequests.destroy();
     this.destroyVirtualFeed();
     this.destroyBackupView();

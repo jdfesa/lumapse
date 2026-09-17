@@ -1,0 +1,75 @@
+.feed-filters {
+  margin-bottom: var(--space-4);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.feed-filters__scope,
+.feed-filters__hint {
+  margin: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+
+.feed-filters__scope {
+  color: var(--color-text-bright);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.feed-filters__hint {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+}
+
+.feed-filters__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-2) 0;
+}
+
+.feed-filters__chip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  max-width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.85rem;
+  text-align: left;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.feed-filters__chip span {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.feed-filters__chip[hidden] {
+  display: none;
+}
+
+.feed-filters__chip:hover {
+  background: var(--color-surface-hover);
+}
+
+.feed-filters__chip:focus-visible,
+.feed:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.feed-filters__action {
+  color: var(--color-accent);
+  font-weight: 600;
+}
