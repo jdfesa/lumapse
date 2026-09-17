@@ -181,17 +181,21 @@ export async function createAcademicEvent(input) {
  * Actualiza una fecha academica y sincroniza los caches del store.
  */
 export async function updateAcademicEvent(id, changes) {
-  return runStoreAction('updateAcademicEvent', 'No se pudo actualizar la fecha academica. Intenta de nuevo.', async () => {
-    const event = await AcademicEventService.updateAcademicEvent(id, changes)
+  const event = await runStoreAction(
+    'updateAcademicEvent', 'No se pudo actualizar la fecha academica. Intenta de nuevo.',
+    () => AcademicEventService.updateAcademicEvent(id, changes),
+  )
 
-    recordAcademicEventMutation(event.id, event)
-    state.academicEvents = upsertAcademicEvent(state.academicEvents, event)
-    reconcileMonthEvent(event)
-    await reloadUpcomingAcademicEvents()
-    notify()
-
-    return event
+  recordAcademicEventMutation(event.id, event)
+  state.academicEvents = upsertAcademicEvent(state.academicEvents, event)
+  reconcileMonthEvent(event)
+  await refreshAfterWrite({
+    operation: 'updateAcademicEvent',
+    entityId: event.id,
+    message: 'Fecha académica actualizada. La actualización de próximas fechas quedó pendiente.',
+    refresh: reloadUpcomingAcademicEvents,
   })
+  return event
 }
 
 /**

@@ -414,6 +414,32 @@ describe('NoteStore.academicEvents', () => {
   })
 
   describe('updateAcademicEvent()', () => {
+    it.each(['resolve', 'reject'])('no cuenta como recuperada una lectura antigua que termina con %s', async (settle) => {
+      const warning = vi.fn()
+      const unsubscribe = subscribeToPendingRefreshes(warning)
+      const stale = deferred()
+      const updated = event({ id: 'event-1', title: 'Vigente' })
+      AcademicEventService.updateAcademicEvent.mockResolvedValueOnce(updated)
+      AcademicEventService.getUpcomingAcademicEvents
+        .mockRejectedValueOnce(new Error('refresco inicial fallido'))
+        .mockReturnValueOnce(stale.promise)
+        .mockResolvedValue([updated])
+      try {
+        await NoteStoreAcademicEvents.updateAcademicEvent('event-1', { title: 'Vigente' })
+        const { retry } = warning.mock.calls[0][0]
+        const recovery = retry()
+        await Promise.resolve()
+        await NoteStoreAcademicEvents.loadUpcomingAcademicEvents()
+        stale[settle](settle === 'reject' ? new Error('rechazo antiguo') : [event({ title: 'Anterior' })])
+        await expect(recovery).resolves.toBe(false)
+        expect(state.upcomingAcademicEvents).toEqual([updated])
+        await expect(retry()).resolves.toBe(true)
+        expect(state.academicEvents).toEqual([updated])
+        expect(AcademicEventService.updateAcademicEvent).toHaveBeenCalledTimes(1)
+        expect(warning).toHaveBeenCalledTimes(1)
+      } finally { unsubscribe() }
+    })
+
     it('actualiza el evento en los caches y recarga proximas fechas', async () => {
       const original = event({ id: 'event-1', title: 'Viejo', date: '2026-06-14' })
       const updated = event({ id: 'event-1', title: 'Nuevo', date: '2026-06-20' })

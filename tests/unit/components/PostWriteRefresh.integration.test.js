@@ -244,4 +244,38 @@ describe('AcademicEventDialog con SQLite', () => {
     expect(rows('academic_events')).toEqual([[event.id]])
     expect(document.querySelector('.academic-event-dialog-backdrop')).toBeNull()
   })
+
+  it('cierra una edición confirmada y recupera sin repetir UPDATE', async () => {
+    const created = await harness.store.createAcademicEvent(academicInput)
+    harness.db.run.mockClear()
+    const restore = failUpcomingRead(harness.db)
+    const dialog = openDialog({ mode: 'edit', event: created })
+    document.querySelector('input[name="title"]').value = 'Cambio persistido'
+    submitDialog()
+    submitDialog()
+    await vi.waitFor(() => expect(document.querySelector('.academic-event-dialog-backdrop--leaving')).not.toBeNull())
+    submitDialog()
+    const updated = await dialog
+
+    const persisted = harness.fixture.database.exec(
+      'SELECT id, title FROM academic_events',
+    )[0]?.values
+    expect(persisted).toEqual([[created.id, 'Cambio persistido']])
+    expect(updated).toMatchObject({ id: created.id, title: 'Cambio persistido' })
+    expect(document.querySelector('.academic-event-dialog-backdrop')).toBeNull()
+    expect(errors).toHaveLength(0)
+    expect(warnings).toHaveLength(1)
+    const button = document.querySelector('.toast--pending-refresh button')
+    expect(button.parentElement.parentElement.textContent).toContain('Fecha académica actualizada.')
+    button.click()
+    await vi.waitFor(() => expect(button.disabled).toBe(false))
+    restore()
+    button.click()
+    button.dispatchEvent(new window.MouseEvent('click'))
+    await vi.waitFor(() => expect(document.querySelector('.toast--pending-refresh')).toBeNull())
+
+    expect(harness.state.upcomingAcademicEvents).toContainEqual(updated)
+    expect(harness.db.run.mock.calls.filter(([sql]) => sql.includes('UPDATE academic_events'))).toHaveLength(1)
+    expect(warnings).toHaveLength(1)
+  })
 })

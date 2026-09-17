@@ -1,6 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { deferred } from '../services/sqlite/sqliteFixture.js'
-import { failSubjectRefreshAfterInsert, postWriteRefreshHarness } from './postWriteRefreshHarness.js'
+import {
+  academicInput,
+  failSubjectRefreshAfterInsert,
+  failUpcomingRead,
+  postWriteRefreshHarness,
+} from './postWriteRefreshHarness.js'
 
 let harness, warnings, errors, cleanups
 
@@ -114,6 +119,115 @@ describe('createSubject() con SQLite', () => {
     expect(harness.db.query).toHaveBeenCalledTimes(readsAfterRecovery)
     expect(harness.state.subjects.tree.map(item => item.id)).toContain(subject.id)
     expect(harness.db.run.mock.calls.filter(([sql]) => sql.includes('INSERT INTO subjects'))).toHaveLength(1)
+    expect(warnings).toHaveBeenCalledTimes(1)
+    expect(errors).not.toHaveBeenCalled()
+  })
+})
+
+function academicRows() {
+  return harness.fixture.database.exec(
+    'SELECT id, type, title, date, subjectId FROM academic_events',
+  )[0]?.values || []
+}
+
+async function createAcademicFixture() {
+  const created = await harness.store.createAcademicEvent(academicInput)
+  warnings.mockClear()
+  errors.mockClear()
+  harness.db.run.mockClear()
+  harness.db.query.mockClear()
+  return created
+}
+
+describe('updateAcademicEvent() con SQLite', () => {
+  it('actualiza normalmente la misma entidad, la fila y los caches conocidos', async () => {
+    const created = await createAcademicFixture()
+
+    const updated = await harness.store.updateAcademicEvent(created.id, {
+      title: 'Cambio persistido',
+      type: 'final',
+    })
+
+    expect(updated).toMatchObject({ id: created.id, title: 'Cambio persistido', type: 'final' })
+    expect(academicRows()).toEqual([
+      [created.id, 'final', 'Cambio persistido', academicInput.date, null],
+    ])
+    expect(harness.state.academicEvents).toContainEqual(updated)
+    expect(harness.state.academicEventsForMonth).toContainEqual(updated)
+    expect(harness.state.upcomingAcademicEvents).toContainEqual(updated)
+    expect(warnings).not.toHaveBeenCalled()
+    expect(errors).not.toHaveBeenCalled()
+  })
+
+  it('conserva el UPDATE confirmado y reconcilia caches si falla próximas fechas', async () => {
+    const created = await createAcademicFixture()
+    failUpcomingRead(harness.db)
+
+    const updated = await harness.store.updateAcademicEvent(created.id, {
+      title: 'Cambio persistido',
+    })
+
+    expect(updated).toMatchObject({ id: created.id, title: 'Cambio persistido' })
+    expect(academicRows()).toEqual([
+      [created.id, academicInput.type, 'Cambio persistido', academicInput.date, null],
+    ])
+    expect(harness.state.academicEvents).toContainEqual(updated)
+    expect(harness.state.academicEventsForMonth).toContainEqual(updated)
+    expect(harness.state.upcomingAcademicEvents).toContainEqual(created)
+    expect(warnings).toHaveBeenCalledTimes(1)
+    expect(warnings.mock.calls[0][0]).toMatchObject({
+      operation: 'updateAcademicEvent',
+      entityId: created.id,
+    })
+    expect(errors).not.toHaveBeenCalled()
+  })
+
+  it('rechaza un UPDATE real fallido y conserva fila y caches anteriores', async () => {
+    const created = await createAcademicFixture()
+    const { DatabaseError } = await import('../../../src/services/sqlite/errors.js')
+    const errorLog = vi.spyOn(console, 'error').mockImplementation(() => {})
+    harness.db.run.mockRejectedValueOnce(new Error('fallo inyectado antes de UPDATE'))
+    try {
+      await expect(harness.store.updateAcademicEvent(created.id, { title: 'No persistido' }))
+        .rejects.toBeInstanceOf(DatabaseError)
+      expect(academicRows()).toEqual([
+        [created.id, academicInput.type, academicInput.title, academicInput.date, null],
+      ])
+      expect(harness.state.academicEvents).toContainEqual(created)
+      expect(harness.state.academicEventsForMonth).toContainEqual(created)
+      expect(harness.state.upcomingAcademicEvents).toContainEqual(created)
+      expect(warnings).not.toHaveBeenCalled()
+      expect(errors).toHaveBeenCalledTimes(1)
+      expect(errors.mock.calls[0][0].operation).toBe('updateAcademicEvent')
+    } finally {
+      errorLog.mockRestore()
+    }
+  })
+
+  it('recupera próximas fechas single-flight sin repetir UPDATE y deja de leer al converger', async () => {
+    const created = await createAcademicFixture()
+    const restore = failUpcomingRead(harness.db)
+    const updated = await harness.store.updateAcademicEvent(created.id, { title: 'Cambio persistido' })
+    const { retry } = warnings.mock.calls[0][0]
+
+    await expect(retry()).resolves.toBe(false)
+    restore()
+    const query = harness.db.query.getMockImplementation()
+    const gate = deferred()
+    harness.db.query.mockImplementationOnce(async (...args) => {
+      await gate.promise
+      return query(...args)
+    })
+    const firstRetry = retry()
+    expect(retry()).toBe(firstRetry)
+    gate.resolve()
+    await expect(firstRetry).resolves.toBe(true)
+    const readsAfterRecovery = harness.db.query.mock.calls.length
+    await expect(retry()).resolves.toBe(true)
+
+    expect(harness.db.query).toHaveBeenCalledTimes(readsAfterRecovery)
+    expect(harness.state.upcomingAcademicEvents).toContainEqual(updated)
+    expect(harness.db.run.mock.calls.filter(([sql]) => sql.includes('UPDATE academic_events'))).toHaveLength(1)
     expect(warnings).toHaveBeenCalledTimes(1)
     expect(errors).not.toHaveBeenCalled()
   })
