@@ -180,7 +180,7 @@ Los logs diagnósticos locales se guardaron en `tmp/immediate-beta-plan-2026-09-
 - [x] Checks documentales, trazabilidad y `git diff --check` aprobados; CI revisada y limitaciones locales explícitas.
 - [x] No hay cambios en runtime, dependencias, schema, versión, APK ni datos personales.
 
-**Seguimiento actualizado 2026-09-15:** el plan, F1, F2 y la preparación F3 fueron aceptados e integrados, con sus ramas eliminadas. El autor informó funcionamiento correcto en el teléfono y autorizó PR #16; sin muestras cuantitativas no se cierra F3 ni se optimiza su rendimiento. También probó e integró el [parche de Vitest](./validacion-parche-vitest-2026-09-15.md) en PR #17 (`7dc105c`); su rama ya se eliminó. El único objetivo actual es la [corrección de filtros visibles](./plan-filtros-visibles-2026-09-15.md) en `fix/visible-feed-filters`, pendiente de prueba/aprobación propia en Android. No se agrega una F4 retroactiva ni se publica release o integra automáticamente.
+**Seguimiento actualizado 2026-09-16:** el plan, F1, F2 y la preparación F3 fueron aceptados e integrados, con sus ramas eliminadas. El autor informó funcionamiento correcto en el teléfono y autorizó PR #16; sin muestras cuantitativas no se cierra F3 ni se optimiza su rendimiento. También probó e integró el [parche de Vitest](./validacion-parche-vitest-2026-09-15.md) en PR #17 (`7dc105c`) y la [corrección de filtros visibles](./plan-filtros-visibles-2026-09-15.md) en PR #18 (`3898db8`). El próximo objetivo verificable vuelve a ser la evidencia Android pendiente de F3. No se agrega una F4 retroactiva ni se publica automáticamente otro release.
 
 ## 8. Reproducción de AUD-014
 

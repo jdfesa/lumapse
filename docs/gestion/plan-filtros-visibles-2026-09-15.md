@@ -1,10 +1,10 @@
 # Filtros visibles del feed — 2026-09-15
 
-**Estado:** implementado y con regresiones automáticas aprobadas; entrega en PR para
-prueba manual del autor en el teléfono. No autoriza merge ni limpieza anticipada.
-**Base:** `7dc105c`, `main` sincronizado después del merge de PR #17 por el autor.
-**Rama única:** `fix/visible-feed-filters`. No integrar sin nueva prueba y aprobación.
-**Checkpoint funcional:** `d481b8a`.
+**Estado:** cerrado; regresiones automáticas y prueba Android aprobadas por el autor,
+con PR #18 integrado en `main` mediante `3898db8` el 2026-09-16.
+**Base:** `7dc105c`, después del merge de PR #17.
+**HEAD probado:** `1ffa7f33723dc800968259036405ed4524835ae9`.
+**Checkpoint funcional:** `d481b8a`; documentación final del PR: `1ffa7f3`.
 
 ## Problema y selección
 
@@ -122,6 +122,13 @@ entrega requiere abrir `localhost` o instalar Android Studio por la prueba web.
 
 ### Prueba del autor y límite de aprobación
 
+**Cierre registrado:** el HEAD `1ffa7f3` se instaló en el Samsung SM-G965F
+`ad071603088c2172aa` sin `--clean`, preservando SQLite. APK debug de prueba:
+SHA-256 `998501094b535c3d3971657f491e1a05bf59184029a0807ff385769d42ea7418`,
+27.171.436 bytes, identidad Android `0.5.0/500`. Esta identidad compartida con la
+beta publicada no convierte el build en asset de release: el próximo APK
+distribuible debe usar una versión/code nuevos.
+
 En la Mac, con checkout limpio y usando el entorno Android habitual:
 
 ```bash
@@ -137,21 +144,20 @@ npm run verify
 git rev-parse HEAD
 ```
 
-- [ ] Registrar SHA probado e identidad del artefacto usado; no desinstalar,
-  borrar datos ni reutilizar `v0.5.0/500` para un binario distinto. Si se necesita
-  un nuevo APK, acordar primero versión/code y firma compatibles.
-- [ ] Elegir un día sin notas en el calendario, cerrarlo, abrir una materia y
+- [x] Registrar SHA probado e identidad del artefacto usado; no se desinstaló ni
+  se borraron datos. El build de prueba no debe publicarse como `v0.5.0/500`.
+- [x] Elegir un día sin notas en el calendario, cerrarlo, abrir una materia y
   una sección con notas. Ver fecha/alcance y aclaración de totales; **Quitar fecha**
   debe devolver las notas de esa ubicación sin reabrir calendario.
-- [ ] Combinar búsqueda y fecha: ver alcance global en notas activas. Quitar
+- [x] Combinar búsqueda y fecha: ver alcance global en notas activas. Quitar
   fecha conserva búsqueda; quitar búsqueda conserva fecha y vuelve al alcance
   seleccionado. Reabrir el menú: su campo debe coincidir con el filtro vigente.
 - [ ] Probar Archivadas y volver desde Papelera/Backup/Acerca de: sin franja en
   vistas especiales, con los filtros conservados al regresar al feed.
 - [ ] Comprobar legibilidad y controles en ambos temas/ancho del teléfono, nombres
   largos, lista vacía/normal/500 notas y creación/edición sin regresiones.
-- [ ] Autor confirmar resultado y aprobar explícitamente este PR. **Solo entonces**
-  sugerir merge y eliminación de la rama integrada. No hay auto-merge.
+- [x] Autor confirmó que probó el cambio y que todo estaba OK; autorizó merge y
+  limpieza. PR #18 quedó integrado mediante `3898db8`.
 
 Las mediciones CRUD/FPS de F3 y los otros pendientes siguen separados. La
-aprobación de PR #17 no sustituye esta validación.
+aprobación de PR #18 cierra esta corrección, pero no las mediciones F3.

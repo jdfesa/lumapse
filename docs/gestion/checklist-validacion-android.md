@@ -6,14 +6,15 @@
 
 ---
 
-## Corrección actual — filtros visibles, 2026-09-15
+## Corrección cerrada — filtros visibles, 2026-09-16
 
-PR #17 de Vitest fue probado e integrado por el autor. La nueva rama
-`fix/visible-feed-filters` tiene [plan, regresiones y checklist propios](./plan-filtros-visibles-2026-09-15.md#prueba-del-autor-y-límite-de-aprobación).
-Probar fecha con calendario cerrado al navegar a materia/sección, limpieza
-independiente de búsqueda/fecha, alcance global/Archivadas, vuelta desde vistas
-especiales y legibilidad en el teléfono. **Prueba y aprobación pendientes**; no
-trasladar aquí aceptaciones anteriores ni usar una fixture web como evidencia.
+El autor confirmó la prueba Android del HEAD `1ffa7f3` y aprobó PR #18; el cambio
+se integró en `main` mediante `3898db8`. El smoke local preservó datos y verificó
+fecha visible fuera del calendario, alcance al cambiar de materia, restauración
+con **Quitar fecha**, búsqueda global removible y sincronización del drawer, sin
+crashes. El APK debug de prueba quedó identificado en el
+[plan y evidencia](./plan-filtros-visibles-2026-09-15.md#prueba-del-autor-y-límite-de-aprobación);
+no es un nuevo asset de release ni sustituye las mediciones F3 pendientes.
 
 ---
 

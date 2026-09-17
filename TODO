@@ -16,7 +16,7 @@
 
 El [plan de desarrollo inmediato de la beta](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) fue aceptado e integrado en PR #13. **F1 y F2 aprobadas e integradas** en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`). **Preparación F3 aceptada e integrada** en PR #16 (`90fd21e`) tras la confirmación general del teléfono; ramas eliminadas. [Protocolo, fixtures y matriz](docs/beta-core-validation/README.md): las métricas Android siguen pendientes, sin declarar F3 cerrada.
 
-**Única tarea actual:** [filtros visibles del feed](docs/gestion/plan-filtros-visibles-2026-09-15.md), rama `fix/visible-feed-filters`, después de PR #17 integrado por el autor. Fecha/búsqueda removibles y alcance explícito, sin cambiar conteos ni filtrado. PR pendiente de nueva prueba/aprobación en el teléfono; no hacer merge, borrar la rama ni iniciar otro frente durante revisión. Sin smoke web como requisito.
+**Próximo frente verificable:** completar F3 con mediciones CRUD/FPS y casos offline/continuidad sobre un artefacto identificado. Los [filtros visibles del feed](docs/gestion/plan-filtros-visibles-2026-09-15.md) fueron probados por el autor e integrados en PR #18 (`3898db8`); su cierre no sustituye la evidencia cuantitativa ni la matriz RNF pendiente.
 
 | Orden | Frente | Criterio de cierre |
 |---|---|---|
@@ -31,7 +31,7 @@ El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de
 - [x] Revalidar y preparar el parche de Vitest (GHSA-82fw-gwwq-j7x9): 4.1.11, grafo productivo intacto, auditorías del 2026-09-15 en 0/0 y cuatro regresiones focalizadas. [Evidencia](docs/gestion/validacion-parche-vitest-2026-09-15.md).
 - [x] Autor confirmó pruebas y realizó merge de PR #17 (`7dc105c`); main sincronizado y rama local/remota eliminada.
 - [x] Comparar alternativas e implementar filtros visibles con limpieza independiente, alcance efectivo y regresiones automáticas. [Plan y handoff](docs/gestion/plan-filtros-visibles-2026-09-15.md).
-- [ ] Autor probar el PR de filtros visibles en el teléfono y aprobarlo explícitamente antes de sugerir merge y limpieza; PR #17 no aprueba este cambio.
+- [x] Autor probó y aprobó los filtros visibles en el teléfono; PR #18 integrado mediante `3898db8`, con `main` revalidado y rama local/remota eliminada.
 - [x] F2: autor confirmó funcionamiento e integró PR #15 (`8e25dcd`) el 2026-09-14; rama local/remota eliminada. Cierre acotado a creación de notas/fechas.
 - [ ] Priorizar por separado las ambigüedades de refresco vecinas registradas en F2 (crear materia, editar/eliminar fecha); no declararlas corregidas ni abrir una segunda rama.
 - [x] F3: perfiles/ZIP de 50/500 notas, integración SQLite y protocolo aceptados e integrados en PR #16; confirmación general del teléfono recibida el 2026-09-15, sin nuevas muestras crudas ni identidad APK.

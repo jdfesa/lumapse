@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 06 — Entrega Final
 > **Hito 05:** Cerrado documentalmente el 2026-07-15 sobre la beta operativa `v0.4.8`
-> **Última actualización:** 2026-09-15 — PR #17 de Vitest probado e integrado por el autor; corrección del filtro de fecha oculto preparada para revisión. Mediciones Android F3 pendientes.
+> **Última actualización:** 2026-09-16 — PR #18 de filtros visibles probado e integrado por el autor; `main` revalidado. Mediciones Android F3 pendientes.
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -39,7 +39,7 @@ La trazabilidad de `v0.4.8` y `v0.5.0` queda distribuida entre `docs/gestion/lin
 
 **Plan aceptado e integrado en [PR #13](https://github.com/jdfesa/lumapse/pull/13):** F1 y F2 fueron aprobadas e integradas en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`). La preparación de F3 fue aceptada tras la confirmación general del teléfono e integrada en PR #16 (`90fd21e`); sus ramas ya se eliminaron. Las mediciones cuantitativas siguen pendientes y F3 no se declara cerrada. Ver [protocolo y evidencia](docs/beta-core-validation/README.md) y [plan inmediato](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md).
 
-**Único objetivo actual:** [filtros visibles del feed](docs/gestion/plan-filtros-visibles-2026-09-15.md) en `fix/visible-feed-filters`. El autor probó e integró PR #17 (`7dc105c`) y su rama ya se eliminó. La nueva corrección UX conserva las reglas de fecha/búsqueda y los conteos; se entrega en PR para nueva prueba manual en el teléfono. No hacer merge, limpiar esta rama ni abrir otro frente hasta su aprobación. No se agrega una F4 retroactiva.
+**Próximo objetivo verificable:** completar la evidencia Android de F3 —mediciones CRUD/FPS, casos offline/continuidad e identidad del artefacto— antes de decidir un nuevo corte. Los [filtros visibles del feed](docs/gestion/plan-filtros-visibles-2026-09-15.md) conservaron reglas y conteos, fueron probados por el autor e integrados en PR #18 (`3898db8`). No se agrega una F4 retroactiva.
 
 | Orden | Tarea | Criterio de cierre |
 |---|---|---|
@@ -100,7 +100,7 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 
 | Área | Tarea | Prioridad | Notas |
 |---|---|---|---|
-| UX / filtros | Hacer visible y predecible la combinación de fecha con materia/sección | Alta — en revisión | Detectado el 2026-09-14 con 500 notas en Android, sin pérdida de datos. [Plan y evidencia](docs/gestion/plan-filtros-visibles-2026-09-15.md): comparadas limpieza automática, chips y conteos; elegidos filtros removibles fuera del calendario con alcance explícito y conteos totales conservados. Implementado con regresiones en `fix/visible-feed-filters`; pendiente de prueba/aprobación del autor en el teléfono, sin declarar cierre manual. |
+| UX / filtros | Hacer visible y predecible la combinación de fecha con materia/sección | Cerrada en PR #18 | Detectado el 2026-09-14 con 500 notas en Android, sin pérdida de datos. [Plan y evidencia](docs/gestion/plan-filtros-visibles-2026-09-15.md): comparadas limpieza automática, chips y conteos; elegidos filtros removibles fuera del calendario con alcance explícito y conteos totales conservados. El autor confirmó la prueba Android y el cambio se integró en `3898db8`. |
 | Arquitectura UI | Separar responsabilidades restantes en componentes grandes | Media | Priorizar `NoteEditor`, `NoteList`, `Heatmap` y `BackupView` solo cuando haya cambios funcionales relacionados |
 | Tipado gradual | Aplicar estrategia JS/TS por fases | Media | Plan definido en [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md): typecheck, contratos, primera tanda de modulos puros, `AcademicEventTypes`, registro de comandos del editor, `AcademicEventService`, capa de backup —incluidos adaptadores nativos—, `ExportService`, `SubjectService.crud`, `SubjectService.trash` y auditorias `.ts` completadas |
 | Tipado gradual | Continuar servicios de dominio/backup archivo por archivo | Baja/Media | No avanzar en bloque; proximos candidatos requieren evaluar bordes nativos/share/storage o store con contratos mas claros |
