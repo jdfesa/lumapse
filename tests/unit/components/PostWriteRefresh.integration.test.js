@@ -1,5 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { academicInput, failUpcomingRead, postWriteRefreshHarness } from '../store/postWriteRefreshHarness.js'
+import {
+  academicInput,
+  failSubjectRefreshAfterInsert,
+  failUpcomingRead,
+  postWriteRefreshHarness,
+} from '../store/postWriteRefreshHarness.js'
 
 // UI real -> store real -> servicios/coordinador reales -> SQLite en memoria.
 // No son mocks exitosos del store ni evidencia de un teléfono Android.
@@ -55,6 +60,75 @@ function submitDialog() {
   document.querySelector('.academic-event-dialog__form')
     .dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }))
 }
+
+async function mountSubjectsDrawer() {
+  document.body.insertAdjacentHTML('beforeend', `
+    <button id="btn-inbox"><span id="inbox-count"></span></button>
+    <button id="btn-add-subject"></button>
+    <div id="subject-form-container" style="display:none">
+      <input id="subject-name-input">
+      <div id="subject-color-picker"></div>
+      <button id="btn-subject-cancel"></button>
+      <button id="btn-subject-save"></button>
+    </div>
+    <div id="subjects-list"></div>
+  `)
+  const { initSubjects } = await import('../../../src/layout/drawerSubjects.js')
+  const drawer = initSubjects({
+    NoteStore: harness.store,
+    SUBJECT_COLORS: ['#818cf8', '#22c55e'],
+    closeDrawer: vi.fn(),
+    getShowingArchived: () => false,
+    resetArchived: vi.fn(),
+  })
+  drawer.renderSubjects(harness.state.subjects)
+  return drawer
+}
+
+describe('drawerSubjects con SQLite', () => {
+  it('finaliza una materia confirmada y recupera el árbol sin repetir INSERT', async () => {
+    await mountSubjectsDrawer()
+    failSubjectRefreshAfterInsert(harness.db)
+    document.getElementById('btn-add-subject').click()
+    document.getElementById('subject-name-input').value = 'Programación III'
+    document.getElementById('btn-subject-save').click()
+
+    await vi.waitFor(() => expect(document.getElementById('subject-form-container').style.display).toBe('none'))
+    expect(rows('subjects')).toHaveLength(1)
+    expect(errors).toHaveLength(0)
+    expect(warnings).toHaveLength(1)
+    expect(document.querySelector('.toast--pending-refresh').textContent).toContain('Materia creada.')
+
+    document.querySelector('.toast--pending-refresh button').click()
+    await vi.waitFor(() => expect(document.querySelector('.toast--pending-refresh')).toBeNull())
+    expect(harness.state.subjects.tree).toHaveLength(1)
+    expect(harness.db.run.mock.calls.filter(([sql]) => sql.includes('INSERT INTO subjects'))).toHaveLength(1)
+  })
+
+  it('finaliza una sección confirmada y conserva su relación sin repetir INSERT', async () => {
+    const root = await harness.store.createSubject('Programación III', '#818cf8')
+    harness.db.run.mockClear()
+    await mountSubjectsDrawer()
+    document.querySelector('.js-btn-add-section').click()
+    document.querySelector('.js-section-name-input').value = 'Práctica'
+    failSubjectRefreshAfterInsert(harness.db)
+    document.querySelector('.js-btn-section-save').click()
+
+    await vi.waitFor(() => expect(document.querySelector('.drawer__section-form').style.display).toBe('none'))
+    const persisted = harness.fixture.database.exec(
+      'SELECT name, color, parentSubjectId FROM subjects WHERE parentSubjectId IS NOT NULL',
+    )[0]?.values
+    expect(persisted).toEqual([['Práctica', '#818cf8', root.id]])
+    expect(errors).toHaveLength(0)
+    expect(warnings).toHaveLength(1)
+    expect(document.querySelector('.toast--pending-refresh').textContent).toContain('Sección creada.')
+
+    document.querySelector('.toast--pending-refresh button').click()
+    await vi.waitFor(() => expect(document.querySelector('.toast--pending-refresh')).toBeNull())
+    expect(harness.state.subjects.tree[0].children).toHaveLength(1)
+    expect(harness.db.run.mock.calls.filter(([sql]) => sql.includes('INSERT INTO subjects'))).toHaveLength(1)
+  })
+})
 
 describe('NoteEditor con SQLite', () => {
   it.each([false, true])('completa el formulario y descarta el borrador tras confirmar (refresco fallido: %s)', async (failRefresh) => {
@@ -169,5 +243,78 @@ describe('AcademicEventDialog con SQLite', () => {
     const event = await dialog
     expect(rows('academic_events')).toEqual([[event.id]])
     expect(document.querySelector('.academic-event-dialog-backdrop')).toBeNull()
+  })
+
+  it('cierra una edición confirmada y recupera sin repetir UPDATE', async () => {
+    const created = await harness.store.createAcademicEvent(academicInput)
+    harness.db.run.mockClear()
+    const restore = failUpcomingRead(harness.db)
+    const dialog = openDialog({ mode: 'edit', event: created })
+    document.querySelector('input[name="title"]').value = 'Cambio persistido'
+    submitDialog()
+    submitDialog()
+    await vi.waitFor(() => expect(document.querySelector('.academic-event-dialog-backdrop--leaving')).not.toBeNull())
+    submitDialog()
+    const updated = await dialog
+
+    const persisted = harness.fixture.database.exec(
+      'SELECT id, title FROM academic_events',
+    )[0]?.values
+    expect(persisted).toEqual([[created.id, 'Cambio persistido']])
+    expect(updated).toMatchObject({ id: created.id, title: 'Cambio persistido' })
+    expect(document.querySelector('.academic-event-dialog-backdrop')).toBeNull()
+    expect(errors).toHaveLength(0)
+    expect(warnings).toHaveLength(1)
+    const button = document.querySelector('.toast--pending-refresh button')
+    expect(button.parentElement.parentElement.textContent).toContain('Fecha académica actualizada.')
+    button.click()
+    await vi.waitFor(() => expect(button.disabled).toBe(false))
+    restore()
+    button.click()
+    button.dispatchEvent(new window.MouseEvent('click'))
+    await vi.waitFor(() => expect(document.querySelector('.toast--pending-refresh')).toBeNull())
+
+    expect(harness.state.upcomingAcademicEvents).toContainEqual(updated)
+    expect(harness.db.run.mock.calls.filter(([sql]) => sql.includes('UPDATE academic_events'))).toHaveLength(1)
+    expect(warnings).toHaveLength(1)
+  })
+
+  it('completa una eliminación confirmada sin falso error ni DELETE concurrente', async () => {
+    const created = await harness.store.createAcademicEvent(academicInput)
+    harness.db.run.mockClear()
+    const restore = failUpcomingRead(harness.db)
+    const { bindAcademicEventActions } = await import(
+      '../../../src/components/academic-events/AcademicEventActions.js'
+    )
+    const container = document.createElement('div')
+    container.innerHTML = `
+      <button class="js-academic-event-action" data-event-action="delete" data-event-id="${created.id}">
+        Eliminar
+      </button>
+    `
+    document.body.appendChild(container)
+    bindAcademicEventActions(container, () => created)
+    const deleteButton = container.querySelector('button')
+    deleteButton.click()
+    deleteButton.click()
+    document.querySelector('.dialog__btn--confirm').click()
+
+    await vi.waitFor(() => expect(rows('academic_events')).toEqual([]))
+    expect(harness.state.academicEvents).toEqual([])
+    expect(harness.state.academicEventsForMonth).toEqual([])
+    expect(errors).toHaveLength(0)
+    expect(warnings).toHaveLength(1)
+    const retryButton = document.querySelector('.toast--pending-refresh button')
+    expect(retryButton.parentElement.parentElement.textContent).toContain('Fecha académica eliminada.')
+    retryButton.click()
+    await vi.waitFor(() => expect(retryButton.disabled).toBe(false))
+    restore()
+    retryButton.click()
+    retryButton.dispatchEvent(new window.MouseEvent('click'))
+    await vi.waitFor(() => expect(document.querySelector('.toast--pending-refresh')).toBeNull())
+
+    expect(harness.state.upcomingAcademicEvents).toEqual([])
+    expect(harness.db.run.mock.calls.filter(([sql]) => sql.includes('DELETE FROM academic_events'))).toHaveLength(1)
+    expect(warnings).toHaveLength(1)
   })
 })

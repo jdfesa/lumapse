@@ -131,11 +131,20 @@ export function getFilteredNotes() {
 }
 
 export async function createSubject(name, color = null, parentSubjectId = null) {
-  return runStoreAction('createSubject', 'No se pudo crear la materia. Intenta de nuevo.', async () => {
-    const subject = await SubjectService.createSubject(name, color, parentSubjectId)
-    await loadSubjects()
-    return subject
+  const subject = await runStoreAction(
+    'createSubject', 'No se pudo crear la materia. Intenta de nuevo.',
+    () => SubjectService.createSubject(name, color, parentSubjectId),
+  )
+
+  await refreshAfterWrite({
+    operation: 'createSubject',
+    entityId: subject.id,
+    message: parentSubjectId
+      ? 'Sección creada. La actualización del árbol y los conteos quedó pendiente.'
+      : 'Materia creada. La actualización del árbol y los conteos quedó pendiente.',
+    refresh: loadSubjects,
   })
+  return subject
 }
 
 export async function updateSubject(id, changes) {
