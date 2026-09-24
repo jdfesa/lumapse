@@ -753,18 +753,23 @@ decimales con punto, sin separadores locales. `calentamiento` y `valida` aceptan
 `papelera`. Identidad única CRUD: `sesion`/`perfil`/`operacion`/`calentamiento`/
 `intento` positivo; calentamiento y medición pueden numerarse por separado.
 `resultado_funcional` acepta `ok`, `fallo`, `pendiente` o vacío; solo `ok` demuestra
-éxito. `valida=false` exige `motivo`. Las filas de calentamiento se cuentan aparte y
+éxito. `valida=false` exige `motivo`. Un calentamiento completo tiene
+`calentamiento=true`, `valida=true`, `resultado_funcional=ok` y ambos conteos
+`notas_visibles_antes`/`notas_visibles_despues` presentes. No requiere tiempos ni
+traza. Las filas de calentamiento se cuentan aparte como completas/incompletas y
 nunca integran las 30 muestras. Toda muestra válida medida requiere `total_ms`; los
 desgloses `persistencia_ms` y `refresco_ms` son opcionales, se resumen por separado y
 sus ausencias se cuentan. El total **nunca** se deriva de la suma del desglose. Una
 muestra funcional fallida, incluso si se marcó inválida, bloquea `PASS`.
 
-Por perfil/operación se exigen **30 muestras válidas medidas** con resultado `ok`,
-hash y offsets de traza para `PASS`. Se reportan intentos, válidas, inválidas y
-calentamientos; para los `total_ms` válidos, mediana (promedio de los dos centrales),
+Por perfil/operación se exigen **5 calentamientos completos registrados más 30
+muestras válidas medidas** con resultado `ok`, hash y offsets de traza para `PASS`.
+Se reportan intentos, válidas, inválidas, calentamientos totales, completos e
+incompletos; para los `total_ms` válidos, mediana (promedio de los dos centrales),
 p95 por rango más próximo (`ceil(0,95 × n)`), máximo y cantidad estrictamente `> 200 ms`.
 Un solo valor válido `> 200 ms` es `FAIL` aunque p95 sea favorable; ningún outlier se
-descarta. Menos de 30 muestras o falta de traza/resultado funcional es `PENDING`.
+descarta. Menos de 5 calentamientos completos, menos de 30 muestras medidas válidas
+o falta de traza/resultado funcional es `PENDING`, salvo fallo medido que prevalezca.
 
 FPS acepta el perfil `f3-500`, `recorrido` `1` a `3` y `tramo` `1` a `10`, todos únicos.
 Cada recorrido requiere diez segmentos válidos de un segundo (duración admitida:
@@ -782,7 +787,7 @@ negativos, FPS incongruente) sale con código no cero. Un resultado medido `FAIL
 `npm run test:fixture` descubre tanto las regresiones históricas del generador/ZIP
 como las de este analizador, y `test:tooling` las ejecuta dentro de `npm run verify`.
 
-### 44. `load-test-fixture-android.sh`
+### 45. `load-test-fixture-android.sh`
 Carga el fixture en un dispositivo Android de pruebas mediante `adb` y `run-as`, reemplazando solamente materias, notas y fechas académicas.
 
 - **Operación destructiva y explícita:** para tocar el teléfono exige `--yes`; úsese únicamente sobre un dispositivo de pruebas. `--validate-only` no abre ADB ni modifica el dispositivo.

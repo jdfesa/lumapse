@@ -42,9 +42,14 @@ python3 scripts/summarize-f3-results.py --crud tmp/f3/sesion-1/crud.csv --frames
 Se puede analizar solo `--crud` o solo `--frames`; la ausencia del otro conjunto no
 constituye un cero medido ni cierre F3. Conservar archivos de traza originales y sus
 SHA-256, offsets, fuente de frames, CSV y JSON junto a la identidad del APK, fuente y
-dispositivo. `PASS` exige muestras completas, funcionalidad confirmada y umbral cumplido;
+dispositivo. Para CRUD, `PASS` exige cinco calentamientos completos registrados por
+perfil/operación además de 30 muestras válidas medidas, funcionalidad confirmada y
+umbral cumplido; los calentamientos no integran las estadísticas temporales.
+`calentamiento=true`, `valida=true`, `resultado_funcional=ok` y ambos conteos de notas
+visibles presentes definen un calentamiento completo, sin exigir tiempo ni traza.
 `FAIL` refleja al menos una muestra válida fuera de umbral o fallo funcional;
-`PENDING` refleja evidencia insuficiente. Los errores de integridad producen exit no
+`PENDING` refleja evidencia insuficiente, incluidos calentamientos ausentes o
+incompletos. Los errores de integridad producen exit no
 cero; `FAIL`/`PENDING` estructuralmente válidos producen exit cero. La CLI **no**
 captura latencias/FPS, identifica límites de traza ni cierra RNF-002/RNF-004 por sí
 sola. El autor debe revisar, adjuntar evidencia y aprobar o comunicar fallas.

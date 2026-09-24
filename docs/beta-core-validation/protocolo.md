@@ -109,8 +109,9 @@ restablecer el setup entre muestras, fuera del intervalo medido.
 ## 4. RNF-002 — Latencia CRUD
 
 **Diseño:** mismo dispositivo/APK, perfiles pequeño y grande separados. Tras arranque y
-carga, esperar 30 s, realizar **5 ciclos de calentamiento** por operación y registrar su
-preparación/limpieza. Luego **30 muestras válidas por operación y perfil** (180 en total).
+carga, esperar 30 s, realizar **5 ciclos de calentamiento completos** por operación y
+perfil y registrar su preparación/limpieza. Luego **30 muestras válidas por operación
+y perfil** (180 en total).
 Usar títulos `F3 medición #NN`, contenido fijo de unas 200 letras y el mismo destino.
 Preparar/restaurar notas auxiliares fuera de la captura para evitar crecimiento acumulado;
 conservar 50/500 activas de base. Nunca vaciar la papelera personal. Anotar tamaños antes/después.
@@ -144,7 +145,12 @@ como parche/hash del candidato y calibrarse; no se añadió instrumentación pro
 en esta entrega. No medir tiempos con breakpoints pausantes o logging SQL intensivo.
 
 Usar [crud.template.csv](./crud.template.csv); `valida=false` requiere motivo, nunca
-descartar un outlier por ser lento. Ordenar 30 valores válidos por operación/perfil:
+descartar un outlier por ser lento. Para que un calentamiento cuente como completo,
+registrar `calentamiento=true`, `valida=true`, `resultado_funcional=ok` y ambos conteos
+`notas_visibles_antes`/`notas_visibles_despues`. No exigirle `total_ms` ni traza;
+mantenerlo fuera de la estadística medida. Cinco calentamientos completos por
+perfil/operación son condición de `PASS`; menos de cinco deja `PENDING` si no hay un
+fallo medido. Ordenar 30 valores válidos por operación/perfil:
 mediana = promedio de posiciones 15/16; p95 por nearest-rank = posición 29; máximo = 30.
 Registrar también cantidad de valores **> 200 ms**, total de intentos/fallos y las
 muestras de calentamiento. Una sola muestra válida > 200 ms no cumple el umbral del
@@ -201,8 +207,11 @@ reconstruye `total_ms` a partir de persistencia y refresco. Mediana, p95 nearest
 máximo, excedencias estrictas de 200 ms, FPS recalculados por duración y mínimo de 55
 por tramo siguen los criterios anteriores. El redondeo de FPS ingresado admite una
 diferencia absoluta de 0,05; un tramo de un segundo se admite entre 950 y 1050 ms.
-`PASS` requiere 30 muestras válidas por perfil/operación y tres recorridos de diez
-tramos válidos en 500 notas, más resultado funcional y trazabilidad completos.
+`PASS` CRUD requiere cinco calentamientos completos registrados **además de** 30
+muestras medidas válidas por perfil/operación; `PASS` FPS requiere tres recorridos de
+diez tramos válidos en 500 notas. También se exigen resultado funcional y
+trazabilidad completos. El resumen distingue calentamientos totales, completos e
+incompletos sin incluirlos en mediana, p95 ni excedencias.
 `FAIL` prevalece ante un outlier válido o fallo funcional; si falta evidencia, el
 grupo queda `PENDING`, nunca cero o aprobado. CSV/JSON malformados, tipos imposibles,
 duplicados o FPS incongruente son errores de integridad (exit no cero), distintos de

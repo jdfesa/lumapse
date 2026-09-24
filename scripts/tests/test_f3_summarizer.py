@@ -25,6 +25,13 @@ def crud_row(profile="f3-small", operation="crear", attempt=1, **changes):
     return row
 
 
+def warmup_row(profile="f3-small", operation="crear", attempt=1, **changes):
+    row = crud_row(profile, operation, attempt, calentamiento="true", total_ms="",
+                   traza_sha256="", inicio_traza_ms="", fin_traza_ms="")
+    row.update(changes)
+    return row
+
+
 def frame_row(run="1", segment=1, **changes):
     row = dict.fromkeys(FRAMES_HEADER, "")
     row.update(sesion="s1", perfil="f3-500", recorrido=run, tramo=str(segment),
@@ -66,10 +73,13 @@ class F3SummarizerTest(unittest.TestCase):
         return result, data
 
     def full_crud(self):
-        return [crud_row(profile, operation, attempt)
+        return [row
                 for profile in ("f3-small", "f3-500")
                 for operation in ("crear", "editar", "papelera")
-                for attempt in range(1, 31)]
+                for row in ([warmup_row(profile, operation, attempt)
+                             for attempt in range(1, 6)]
+                            + [crud_row(profile, operation, attempt)
+                               for attempt in range(1, 31)])]
 
     def full_frames(self):
         return [frame_row(str(run), segment) for run in range(1, 4)
@@ -86,6 +96,8 @@ class F3SummarizerTest(unittest.TestCase):
         self.assertEqual(data["status"], "PENDING")  # template identity is intentionally blank
         self.assertEqual(len(data["crud"]["groups"]), 6)
         self.assertTrue(all(group["status"] == "PASS" for group in data["crud"]["groups"]))
+        self.assertTrue(all(group["warmups"] == group["complete_warmups"] == 5
+                            and group["incomplete_warmups"] == 0 for group in data["crud"]["groups"]))
         self.assertTrue(all(group["status"] == "PASS" for group in data["frames"]["groups"]))
         self.assertIn("PENDING", first.stdout)
         first_bytes = (self.root / "result.json").read_bytes()
@@ -97,8 +109,60 @@ class F3SummarizerTest(unittest.TestCase):
         self.assertEqual(no_session.returncode, 0, no_session.stderr)
         self.assertEqual(standalone["status"], "PASS")
 
+    def test_five_complete_warmups_required_for_group_and_standalone_pass(self):
+        measured = [crud_row(attempt=i) for i in range(1, 31)]
+        for count, expected in ((0, "PENDING"), (4, "PENDING"), (5, "PASS")):
+            with self.subTest(complete_warmups=count):
+                rows = [warmup_row(attempt=i) for i in range(1, count + 1)] + measured
+                result, data = self.run_cli(self.csv_file("crud.csv", CRUD_HEADER, rows))
+                self.assertEqual(result.returncode, 0, result.stderr)
+                group = data["crud"]["groups"][0]
+                self.assertEqual(group["status"], expected)
+                self.assertEqual(group["warmups"], count)
+                self.assertEqual(group["complete_warmups"], count)
+                self.assertEqual(group["incomplete_warmups"], 0)
+                self.assertEqual(group["valid"], 30)
+                self.assertEqual(group["median_ms"], 100)
+
+        all_rows = self.full_crud()
+        all_rows.remove(next(row for row in all_rows if row["perfil"] == "f3-small"
+                             and row["operacion"] == "crear" and row["calentamiento"] == "true"))
+        result, data = self.run_cli(self.csv_file("crud.csv", CRUD_HEADER, all_rows))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(data["status"], "PENDING")
+        self.assertEqual(data["crud"]["groups"][0]["complete_warmups"], 4)
+
+    def test_incomplete_warmup_rows_never_count_as_complete(self):
+        measured = [crud_row(attempt=i) for i in range(1, 31)]
+        incomplete = (
+            {"valida": "false", "motivo": "preparación fallida"},
+            {"resultado_funcional": ""},
+            {"notas_visibles_antes": ""},
+            {"notas_visibles_despues": ""},
+        )
+        for change in incomplete:
+            with self.subTest(incomplete=change):
+                rows = [warmup_row(attempt=i) for i in range(1, 5)]
+                rows.append(warmup_row(attempt=5, **change))
+                result, data = self.run_cli(self.csv_file("crud.csv", CRUD_HEADER, rows + measured))
+                self.assertEqual(result.returncode, 0, result.stderr)
+                group = data["crud"]["groups"][0]
+                self.assertEqual(group["status"], "PENDING")
+                self.assertEqual(group["warmups"], 5)
+                self.assertEqual(group["complete_warmups"], 4)
+                self.assertEqual(group["incomplete_warmups"], 1)
+                self.assertEqual(group["valid"], 30)
+
+        rows.insert(0, warmup_row(attempt=6))
+        result, data = self.run_cli(self.csv_file("crud.csv", CRUD_HEADER, rows + measured))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        group = data["crud"]["groups"][0]
+        self.assertEqual(group["status"], "PASS")
+        self.assertEqual((group["warmups"], group["complete_warmups"], group["incomplete_warmups"]), (6, 5, 1))
+
     def test_outlier_fails_despite_favorable_p95_and_preserves_it(self):
-        rows = [crud_row(attempt=i, total_ms=str(i)) for i in range(1, 30)]
+        rows = [warmup_row(attempt=i) for i in range(1, 6)]
+        rows += [crud_row(attempt=i, total_ms=str(i)) for i in range(1, 30)]
         rows.append(crud_row(attempt=30, total_ms="201"))
         result, data = self.run_cli(self.csv_file("crud.csv", CRUD_HEADER, rows))
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -120,17 +184,20 @@ class F3SummarizerTest(unittest.TestCase):
         self.assertEqual(group["valid"], 28)
         self.assertEqual(group["invalid"], 1)
         self.assertEqual(group["warmups"], 1)
+        self.assertEqual(group["complete_warmups"], 1)
+        self.assertEqual(group["incomplete_warmups"], 0)
         self.assertEqual(group["persistencia_ms"]["missing"], 28)
         self.assertEqual(group["refresco_ms"]["missing"], 28)
 
     def test_functional_blank_or_failure_prevents_pass(self):
-        rows = [crud_row(attempt=i) for i in range(1, 31)]
-        rows[0]["resultado_funcional"] = ""
+        rows = [warmup_row(attempt=i) for i in range(1, 6)]
+        rows += [crud_row(attempt=i) for i in range(1, 31)]
+        rows[5]["resultado_funcional"] = ""
         result, data = self.run_cli(self.csv_file("crud.csv", CRUD_HEADER, rows))
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(data["crud"]["groups"][0]["status"], "PENDING")
         self.assertEqual(data["crud"]["groups"][0]["functional"]["missing"], 1)
-        rows[0]["resultado_funcional"] = "fallo"
+        rows[5]["resultado_funcional"] = "fallo"
         result, data = self.run_cli(self.csv_file("crud.csv", CRUD_HEADER, rows))
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(data["crud"]["groups"][0]["status"], "FAIL")
