@@ -2,6 +2,12 @@
 
 **Estado actualizado 2026-09-14:** el autor confirmó que todo funcionaba bien y realizó el merge de PR #15 (`8e25dcd`). F2 aceptada; AUD-014 cerrado únicamente para creación de notas/fechas. No se recibieron nuevos logs Mac ni identificación del APK probado: no se inventa esa evidencia ni se atribuye al asset publicado.
 
+**Nota posterior, 2026-09-18:** el handoff y la rama siguiente descritos abajo son
+históricos. Crear materia/sección y editar/eliminar fecha se probaron en Android e
+integraron por separado en [PR #19](https://github.com/jdfesa/lumapse/pull/19)
+(`34b2900`); las demás mutaciones vecinas siguen como deuda media guiada por evidencia.
+F3 y sus mediciones Android permanecen pendientes.
+
 **Rama de implementación:** `fix/post-write-refresh-contract` (eliminada local/remota). **Inicio observado:** 2026-09-13; aceptación/merge del autor: 2026-09-14.
 
 **PR de implementación:** [#15 — creación confirmada y refresco recuperable](https://github.com/jdfesa/lumapse/pull/15), integrado el 2026-09-14 a las 22:07:33 UTC. F3 comenzó solo después de sincronizar `main` y limpiar la rama.

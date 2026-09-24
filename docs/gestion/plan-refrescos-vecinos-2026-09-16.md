@@ -79,7 +79,7 @@ Además deben seguir verdes las regresiones F2 de `createNote` y
 | Suite focalizada final | Exit 0; 13 archivos / 269 tests | Store y consumidores directos, incluidas regresiones F2 |
 | `npm audit --omit=dev` / `npm audit` | Exit 0 / 0; 0 vulnerabilidades / 0 | Solo lectura; no se ejecutó `audit fix` |
 | `npm run verify` sobre código `574ab6d` | Exit 0; 61 tooling; 75 archivos / 1152 tests | Mismos 3 warnings históricos; 19 avisos no bloqueantes de tamaño antes/después |
-| [CI de `574ab6d`](https://github.com/jdfesa/lumapse/actions/runs/35173683033) | Quality Gate y GitGuardian aprobados | No sustituye la prueba Android pendiente; revisar también los checks de la cabeza vigente del PR |
+| [CI de `574ab6d`](https://github.com/jdfesa/lumapse/actions/runs/35173683033) | Quality Gate y GitGuardian aprobados | En aquel checkpoint no sustituía la prueba Android, que el autor aprobó después; PR #19 quedó integrado el 2026-09-18 |
 
 Los tests agregados usan DDL, servicios y coordinador reales con SQLite en memoria;
 cada fixture se crea y cierra por caso. Los asserts consultan IDs, relaciones y valores:
