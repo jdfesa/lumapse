@@ -172,6 +172,75 @@ class F3SummarizerTest(unittest.TestCase):
         self.assertEqual(group["max_ms"], 201)
         self.assertEqual(group["over_200_ms"], 1)
 
+    def test_missing_measured_visible_note_counts_prevent_pass(self):
+        for missing in (("notas_visibles_antes",), ("notas_visibles_despues",),
+                        ("notas_visibles_antes", "notas_visibles_despues")):
+            with self.subTest(missing=missing):
+                rows = self.full_crud()
+                measured = next(row for row in rows if row["calentamiento"] == "false")
+                measured.update(dict.fromkeys(missing, ""))
+                result, data = self.run_cli(self.csv_file("crud.csv", CRUD_HEADER, rows))
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(data["status"], "PENDING")
+                group = data["crud"]["groups"][0]
+                self.assertEqual(group["status"], "PENDING")
+                self.assertEqual(group["missing_visible_note_counts"], 1)
+                self.assertEqual(group["valid"], 30)
+                self.assertEqual(group["median_ms"], 100)
+                self.assertIn("visible_note_counts_missing=1", result.stdout)
+                self.assertTrue(all(group["status"] == "PASS"
+                                    for group in data["crud"]["groups"][1:]))
+
+    def test_all_measured_visible_note_counts_missing_remain_pending(self):
+        rows = self.full_crud()
+        for row in rows:
+            if row["calentamiento"] == "false":
+                row.update(notas_visibles_antes="", notas_visibles_despues="")
+        path = self.csv_file("crud.csv", CRUD_HEADER, rows)
+        original = path.read_bytes()
+        result, data = self.run_cli(path)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(data["status"], "PENDING")
+        for group in data["crud"]["groups"]:
+            self.assertEqual(group["status"], "PENDING")
+            self.assertEqual(group["complete_warmups"], 5)
+            self.assertEqual(group["missing_visible_note_counts"], 30)
+            self.assertEqual(group["valid"], 30)
+            self.assertEqual(group["p95_ms"], 100)
+        self.assertEqual(path.read_bytes(), original)
+
+    def test_missing_counts_do_not_hide_latency_or_functional_failures(self):
+        for failure in ({"total_ms": "201"}, {"resultado_funcional": "fallo"},
+                        {"resultado_funcional": "fallo", "valida": "false", "motivo": "fallo funcional"}):
+            with self.subTest(failure=failure):
+                rows = self.full_crud()
+                measured = next(row for row in rows if row["calentamiento"] == "false")
+                measured.update(notas_visibles_antes="", notas_visibles_despues="", **failure)
+                result, data = self.run_cli(self.csv_file("crud.csv", CRUD_HEADER, rows))
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(data["status"], "FAIL")
+                group = data["crud"]["groups"][0]
+                self.assertEqual(group["status"], "FAIL")
+                if "total_ms" in failure:
+                    self.assertEqual(group["over_200_ms"], 1)
+                    self.assertEqual(group["max_ms"], 201)
+                else:
+                    self.assertEqual(group["functional"]["failed"], 1)
+
+    def test_zero_counts_are_present_and_invalid_rows_do_not_block_pass(self):
+        rows = self.full_crud()
+        measured = next(row for row in rows if row["calentamiento"] == "false")
+        measured.update(notas_visibles_antes="0", notas_visibles_despues="0")
+        rows.append(crud_row(attempt=31, valida="false", motivo="traza ambigua",
+                             notas_visibles_antes="", notas_visibles_despues=""))
+        result, data = self.run_cli(self.csv_file("crud.csv", CRUD_HEADER, rows))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(data["status"], "PASS")
+        group = data["crud"]["groups"][0]
+        self.assertEqual(group["missing_visible_note_counts"], 0)
+        self.assertEqual(group["valid"], 30)
+        self.assertEqual(group["invalid"], 1)
+
     def test_incomplete_warmup_invalid_and_missing_decompositions(self):
         rows = [crud_row(attempt=i) for i in range(1, 29)]
         rows += [crud_row(attempt=29, valida="false", motivo="traza ambigua"),

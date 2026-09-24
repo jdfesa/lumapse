@@ -3,8 +3,9 @@
 
 CRUD: five complete warm-ups and 30 valid measured samples per profile/operation.
 A complete warm-up is valid, functionally ok, and has both visible-note counts;
-it needs no timing or trace fields and never enters measured statistics. Median is
-the middle pair's average, p95 is nearest rank ceil(.95*n), and every valid
+it needs no timing or trace fields and never enters measured statistics. Measured
+samples also need both visible-note counts for PASS. Median is the middle pair's
+average, p95 is nearest rank ceil(.95*n), and every valid
 total_ms > 200 fails. total_ms is NEVER derived from persistence + refresh.
 FPS: three f3-500 runs, each with ten valid 950..1050 ms segments; FPS is
 frames_completos / (duracion_ms / 1000). Supplied FPS may differ by at most
@@ -134,6 +135,10 @@ def validate_crud(path):
                                    for item in warmups)
             measured = [item for item in items if not item["warmup"]]
             valid = [item for item in measured if item["valid"]]
+            missing_visible_note_counts = sum(
+                item["fields"]["notas_visibles_antes"] is None
+                or item["fields"]["notas_visibles_despues"] is None
+                for item in valid)
             totals = sorted(item["fields"]["total_ms"] for item in valid)
             functional = {
                 "ok": sum(item["functional"] == "ok" for item in valid),
@@ -142,7 +147,9 @@ def validate_crud(path):
             }
             over = sum(value > 200 for value in totals)
             status = "FAIL" if over or functional["failed"] else "PENDING"
-            if status != "FAIL" and complete_warmups >= 5 and len(valid) >= 30 and not functional["missing"] and all(item["trace"] and item["offsets"] for item in valid):
+            if (status != "FAIL" and complete_warmups >= 5 and len(valid) >= 30
+                    and not functional["missing"] and not missing_visible_note_counts
+                    and all(item["trace"] and item["offsets"] for item in valid)):
                 status = "PASS"
             n = len(totals)
             result.append({
@@ -151,6 +158,7 @@ def validate_crud(path):
                 "invalid": len(measured) - len(valid), "warmups": len(warmups),
                 "complete_warmups": complete_warmups,
                 "incomplete_warmups": len(warmups) - complete_warmups,
+                "missing_visible_note_counts": missing_visible_note_counts,
                 "functional": functional, "missing_trace_sha256": sum(not item["trace"] for item in valid),
                 "missing_trace_offsets": sum(not item["offsets"] for item in valid),
                 "median_ms": float((totals[(n - 1) // 2] + totals[n // 2]) / 2) if n else None,
@@ -293,7 +301,7 @@ def main():
         print(f"F3 evidence: {status} (valid structure; no Android capture performed)")
         if crud:
             for group in crud["groups"]:
-                print(f"CRUD {group['profile']}/{group['operation']}: {group['status']} attempts={group['attempts']} valid={group['valid']} invalid={group['invalid']} warmups={group['warmups']} complete_warmups={group['complete_warmups']} incomplete_warmups={group['incomplete_warmups']} median={group['median_ms']} p95={group['p95_ms']} max={group['max_ms']} >200={group['over_200_ms']} functional={group['functional']} persistencia_median={group['persistencia_ms']['median_ms']} persistencia_missing={group['persistencia_ms']['missing']} refresco_median={group['refresco_ms']['median_ms']} refresco_missing={group['refresco_ms']['missing']} trace_sha_missing={group['missing_trace_sha256']} trace_offsets_missing={group['missing_trace_offsets']}")
+                print(f"CRUD {group['profile']}/{group['operation']}: {group['status']} attempts={group['attempts']} valid={group['valid']} invalid={group['invalid']} warmups={group['warmups']} complete_warmups={group['complete_warmups']} incomplete_warmups={group['incomplete_warmups']} visible_note_counts_missing={group['missing_visible_note_counts']} median={group['median_ms']} p95={group['p95_ms']} max={group['max_ms']} >200={group['over_200_ms']} functional={group['functional']} persistencia_median={group['persistencia_ms']['median_ms']} persistencia_missing={group['persistencia_ms']['missing']} refresco_median={group['refresco_ms']['median_ms']} refresco_missing={group['refresco_ms']['missing']} trace_sha_missing={group['missing_trace_sha256']} trace_offsets_missing={group['missing_trace_offsets']}")
         if frames:
             for group in frames["groups"]:
                 print(f"FPS f3-500/{group['recorrido']}: {group['status']} attempts={group['attempts']} valid={group['valid']} invalid={group['invalid']} missing_segments={group['missing_segments']} missing_trace={group['missing_trace_sha256']} min={group['min_fps']} median={group['median_fps']} mean={group['mean_fps']} <55={group['below_55_fps']}")

@@ -210,7 +210,10 @@ diferencia absoluta de 0,05; un tramo de un segundo se admite entre 950 y 1050 m
 `PASS` CRUD requiere cinco calentamientos completos registrados **además de** 30
 muestras medidas válidas por perfil/operación; `PASS` FPS requiere tres recorridos de
 diez tramos válidos en 500 notas. También se exigen resultado funcional y
-trazabilidad completos. El resumen distingue calentamientos totales, completos e
+trazabilidad completos y ambos conteos de notas visibles en cada muestra medida
+válida. Si falta cualquiera de esos conteos, el grupo queda `PENDING` salvo fallo
+medido; el resumen cuenta las filas afectadas sin excluirlas de las estadísticas
+ni ocultar outliers. El resumen distingue calentamientos totales, completos e
 incompletos sin incluirlos en mediana, p95 ni excedencias.
 `FAIL` prevalece ante un outlier válido o fallo funcional; si falta evidencia, el
 grupo queda `PENDING`, nunca cero o aprobado. CSV/JSON malformados, tipos imposibles,

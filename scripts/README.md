@@ -763,13 +763,20 @@ sus ausencias se cuentan. El total **nunca** se deriva de la suma del desglose. 
 muestra funcional fallida, incluso si se marcó inválida, bloquea `PASS`.
 
 Por perfil/operación se exigen **5 calentamientos completos registrados más 30
-muestras válidas medidas** con resultado `ok`, hash y offsets de traza para `PASS`.
+muestras válidas medidas** con resultado `ok`, ambos conteos de notas visibles,
+hash y offsets de traza para `PASS`.
 Se reportan intentos, válidas, inválidas, calentamientos totales, completos e
 incompletos; para los `total_ms` válidos, mediana (promedio de los dos centrales),
 p95 por rango más próximo (`ceil(0,95 × n)`), máximo y cantidad estrictamente `> 200 ms`.
 Un solo valor válido `> 200 ms` es `FAIL` aunque p95 sea favorable; ningún outlier se
 descarta. Menos de 5 calentamientos completos, menos de 30 muestras medidas válidas
 o falta de traza/resultado funcional es `PENDING`, salvo fallo medido que prevalezca.
+También queda `PENDING` si a cualquier muestra medida válida le falta
+`notas_visibles_antes` o `notas_visibles_despues`. El reporte cuenta esas muestras
+una vez por fila en `missing_visible_note_counts` (JSON) y
+`visible_note_counts_missing` (stdout), sin descartarlas de las estadísticas ni
+ocultar outliers o fallos funcionales. Cero es un conteo registrado, no una ausencia;
+la CLI comprueba presencia, no demuestra por sí sola el volumen real del perfil.
 
 FPS acepta el perfil `f3-500`, `recorrido` `1` a `3` y `tramo` `1` a `10`, todos únicos.
 Cada recorrido requiere diez segmentos válidos de un segundo (duración admitida:

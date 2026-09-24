@@ -47,6 +47,9 @@ perfil/operación además de 30 muestras válidas medidas, funcionalidad confirm
 umbral cumplido; los calentamientos no integran las estadísticas temporales.
 `calentamiento=true`, `valida=true`, `resultado_funcional=ok` y ambos conteos de notas
 visibles presentes definen un calentamiento completo, sin exigir tiempo ni traza.
+Las muestras medidas válidas también deben tener ambos conteos de notas visibles;
+si falta cualquiera, el grupo queda `PENDING` salvo fallo medido. El resumen cuenta
+las filas afectadas sin excluir sus tiempos ni ocultar fallos.
 `FAIL` refleja al menos una muestra válida fuera de umbral o fallo funcional;
 `PENDING` refleja evidencia insuficiente, incluidos calentamientos ausentes o
 incompletos. Los errores de integridad producen exit no
