@@ -731,9 +731,21 @@ ni abre datos del teléfono. `--crud` y `--frames` son opcionales por separado, 
 requiere al menos uno; `--session` añade identidad de artefacto/fuente/dispositivo.
 
 ```bash
-python3 scripts/summarize-f3-results.py --crud tmp/f3/crud.csv --frames tmp/f3/frames.csv --session tmp/f3/sesion.json --json-output tmp/f3/resumen.json
+mkdir -p tmp/f3/sesion-1
+cp -n docs/beta-core-validation/crud.template.csv tmp/f3/sesion-1/crud.csv
+cp -n docs/beta-core-validation/frames.template.csv tmp/f3/sesion-1/frames.csv
+cp -n docs/beta-core-validation/sesion.template.json tmp/f3/sesion-1/sesion.json
+# Completar manualmente las copias desde trazas del WebView del APK.
+python3 scripts/summarize-f3-results.py --crud tmp/f3/sesion-1/crud.csv --frames tmp/f3/sesion-1/frames.csv --session tmp/f3/sesion-1/sesion.json --json-output tmp/f3/sesion-1/resumen.json
 npm run test:fixture
 ```
+
+Las capturas de Chrome DevTools/Performance sobre el WebView son **manuales y
+autoritativas**. Esta CLI solo valida y agrega valores ingresados: no crea evidencia de
+latencia/FPS, no identifica límites de una traza y no cierra un RNF por sí sola.
+Conservar trazas crudas, offsets, método/fuente de frames y hashes SHA-256 junto al
+JSON derivado. El dueño del dispositivo revisa cada `PASS`/`FAIL`/`PENDING` y registra
+la decisión; **este PR no ejecutó ninguna medición Android**.
 
 **Convenciones de entrada:** cabeceras exactas de las plantillas; CSV UTF-8 y números
 decimales con punto, sin separadores locales. `calentamiento` y `valida` aceptan solo

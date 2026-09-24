@@ -178,6 +178,40 @@ Un overlay aislado, percepción de fluidez o datos de otra superficie no bastan.
 WebView/herramienta disponible no permite atribuir frames fiables a la app y al intervalo,
 RNF-004 queda pendiente; no convertir automáticamente `gfxinfo` en FPS de WebView.
 
+### Análisis reproducible de los CSV ingresados
+
+Las capturas manuales de Chrome DevTools/Performance sobre el WebView del APK y las
+trazas crudas siguen siendo la fuente autoritativa. El analizador local solo valida y
+agrega los valores ya identificados e ingresados; **no** crea evidencia de latencia/FPS,
+no decide dónde comienzan/terminan las acciones o frames y no cierra un RNF por sí solo.
+
+```bash
+mkdir -p tmp/f3/sesion-1
+cp -n docs/beta-core-validation/crud.template.csv tmp/f3/sesion-1/crud.csv
+cp -n docs/beta-core-validation/frames.template.csv tmp/f3/sesion-1/frames.csv
+cp -n docs/beta-core-validation/sesion.template.json tmp/f3/sesion-1/sesion.json
+# Completar copias a partir de las trazas; conservar originales y hashes.
+python3 scripts/summarize-f3-results.py --crud tmp/f3/sesion-1/crud.csv --frames tmp/f3/sesion-1/frames.csv --session tmp/f3/sesion-1/sesion.json --json-output tmp/f3/sesion-1/resumen.json
+```
+
+Las [reglas de entrada y fórmulas](../../scripts/README.md#44-summarize-f3-resultspy--análisis-offline-de-evidencia-f3)
+son explícitas: `ok` es el único resultado funcional exitoso, `fallo` es fallo y
+`pendiente`/vacío impiden `PASS`. Se excluyen calentamientos del total válido; no se
+reconstruye `total_ms` a partir de persistencia y refresco. Mediana, p95 nearest-rank,
+máximo, excedencias estrictas de 200 ms, FPS recalculados por duración y mínimo de 55
+por tramo siguen los criterios anteriores. El redondeo de FPS ingresado admite una
+diferencia absoluta de 0,05; un tramo de un segundo se admite entre 950 y 1050 ms.
+`PASS` requiere 30 muestras válidas por perfil/operación y tres recorridos de diez
+tramos válidos en 500 notas, más resultado funcional y trazabilidad completos.
+`FAIL` prevalece ante un outlier válido o fallo funcional; si falta evidencia, el
+grupo queda `PENDING`, nunca cero o aprobado. CSV/JSON malformados, tipos imposibles,
+duplicados o FPS incongruente son errores de integridad (exit no cero), distintos de
+una medición `FAIL`/`PENDING` válida (exit cero).
+
+Guardar trazas originales, hashes SHA-256, offsets y método exacto de eventos, CSV
+completos y resumen JSON. El autor debe cotejar resultados y adjuntarlos a la matriz;
+**este PR no ejecutó ninguna medición Android** ni cambia el estado F3/RNF.
+
 ## 6. Consultas y notificaciones — diagnóstico, no optimización
 
 La [evidencia Linux](./resultados-2026-09-14.md) cuenta `db.query`, `db.run` y entregas
