@@ -27,7 +27,7 @@
     "test:coverage": "vitest run --coverage",
     "pretest:ui": "npm run check:runtime",
     "test:ui": "vitest --ui",
-    "test:fixture": "python3 -m unittest discover -s scripts/tests -p 'test_fixture_scripts.py'",
+    "test:fixture": "python3 -m unittest discover -s scripts/tests -p 'test_*.py'",
     "quality": "bash scripts/quality.sh",
     "verify": "npm run quality",
     "doctor": "python3 scripts/dev-doctor.py",

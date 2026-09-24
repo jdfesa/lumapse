@@ -723,6 +723,53 @@ rechaza sobreescribir archivos. Imprime hashes del dataset/ZIP y conteos. Las pr
 Python entran en `test:tooling` y el gate canónico; la integración JS verifica además
 el importador/store/DDL reales. [Protocolo y límites F3](../docs/beta-core-validation/README.md).
 
+### 44. `summarize-f3-results.py` — análisis offline de evidencia F3
+
+Valida los CSV completados desde las [plantillas F3](../docs/beta-core-validation/README.md)
+y emite un reporte humano y, opcionalmente, JSON estable. No captura trazas, no usa ADB
+ni abre datos del teléfono. `--crud` y `--frames` son opcionales por separado, pero se
+requiere al menos uno; `--session` añade identidad de artefacto/fuente/dispositivo.
+
+```bash
+python3 scripts/summarize-f3-results.py --crud tmp/f3/crud.csv --frames tmp/f3/frames.csv --session tmp/f3/sesion.json --json-output tmp/f3/resumen.json
+npm run test:fixture
+```
+
+**Convenciones de entrada:** cabeceras exactas de las plantillas; CSV UTF-8 y números
+decimales con punto, sin separadores locales. `calentamiento` y `valida` aceptan solo
+`true`/`false`. Perfiles: `f3-small`, `f3-500`; operaciones CRUD: `crear`, `editar`,
+`papelera`. Identidad única CRUD: `sesion`/`perfil`/`operacion`/`calentamiento`/
+`intento` positivo; calentamiento y medición pueden numerarse por separado.
+`resultado_funcional` acepta `ok`, `fallo`, `pendiente` o vacío; solo `ok` demuestra
+éxito. `valida=false` exige `motivo`. Las filas de calentamiento se cuentan aparte y
+nunca integran las 30 muestras. Toda muestra válida medida requiere `total_ms`; los
+desgloses `persistencia_ms` y `refresco_ms` son opcionales, se resumen por separado y
+sus ausencias se cuentan. El total **nunca** se deriva de la suma del desglose. Una
+muestra funcional fallida, incluso si se marcó inválida, bloquea `PASS`.
+
+Por perfil/operación se exigen **30 muestras válidas medidas** con resultado `ok`,
+hash y offsets de traza para `PASS`. Se reportan intentos, válidas, inválidas y
+calentamientos; para los `total_ms` válidos, mediana (promedio de los dos centrales),
+p95 por rango más próximo (`ceil(0,95 × n)`), máximo y cantidad estrictamente `> 200 ms`.
+Un solo valor válido `> 200 ms` es `FAIL` aunque p95 sea favorable; ningún outlier se
+descarta. Menos de 30 muestras o falta de traza/resultado funcional es `PENDING`.
+
+FPS acepta el perfil `f3-500`, `recorrido` `1` a `3` y `tramo` `1` a `10`, todos únicos.
+Cada recorrido requiere diez segmentos válidos de un segundo (duración admitida:
+950–1050 ms) con fuente de eventos y hash de traza. Recalcula cada FPS como
+`frames_completos / (duracion_ms / 1000)`; si se ingresó `fps`, tolera una diferencia
+absoluta máxima de **0,05 FPS** por redondeo. Reporta mínimo, mediana y media aritmética
+de cada recorrido. Cualquier segmento válido `< 55 FPS` es `FAIL`; segmentos faltantes
+o inválidos dejan `PENDING` si no hay fallo medido. Las inválidas siguen visibles.
+
+`PASS` significa evidencia estructuralmente completa y umbrales cumplidos, no cierre
+automático del RNF; `FAIL` requiere revisar la evidencia y `PENDING` no representa cero
+ni éxito. Un fallo de integridad (cabeceras/tipos/JSON incorrectos, duplicados, valores
+negativos, FPS incongruente) sale con código no cero. Un resultado medido `FAIL` o
+`PENDING` válido sale con código **0**. La CLI nunca modifica CSV/JSON de entrada.
+`npm run test:fixture` descubre tanto las regresiones históricas del generador/ZIP
+como las de este analizador, y `test:tooling` las ejecuta dentro de `npm run verify`.
+
 ### 44. `load-test-fixture-android.sh`
 Carga el fixture en un dispositivo Android de pruebas mediante `adb` y `run-as`, reemplazando solamente materias, notas y fechas académicas.
 

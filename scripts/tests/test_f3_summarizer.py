@@ -1,0 +1,196 @@
+"""Regression tests for the offline F3 evidence summarizer."""
+
+import csv
+import json
+import subprocess
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[2]
+CLI = ROOT / "scripts" / "summarize-f3-results.py"
+CRUD_HEADER = (ROOT / "docs/beta-core-validation/crud.template.csv").read_text().strip().split(",")
+FRAMES_HEADER = (ROOT / "docs/beta-core-validation/frames.template.csv").read_text().strip().split(",")
+
+
+def crud_row(profile="f3-small", operation="crear", attempt=1, **changes):
+    row = dict.fromkeys(CRUD_HEADER, "")
+    row.update(sesion="s1", perfil=profile, operacion=operation, intento=str(attempt),
+               calentamiento="false", valida="true", notas_visibles_antes="50",
+               notas_visibles_despues="51", total_ms="100", traza_sha256="a" * 64,
+               inicio_traza_ms="0", fin_traza_ms="100", resultado_funcional="ok")
+    row.update(changes)
+    return row
+
+
+def frame_row(run="1", segment=1, **changes):
+    row = dict.fromkeys(FRAMES_HEADER, "")
+    row.update(sesion="s1", perfil="f3-500", recorrido=run, tramo=str(segment),
+               inicio_traza_ms=str((segment - 1) * 1000), duracion_ms="1000",
+               frames_completos="60", frames_parciales="0", frames_perdidos="0",
+               fps="60", valida="true", traza_sha256="b" * 64,
+               fuente_eventos="DevTools frames")
+    row.update(changes)
+    return row
+
+
+class F3SummarizerTest(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(prefix="lumapse-f3-summary-")
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+
+    def csv_file(self, name, header, rows):
+        path = self.root / name
+        with path.open("w", newline="", encoding="utf-8") as handle:
+            writer = csv.DictWriter(handle, fieldnames=header)
+            writer.writeheader()
+            writer.writerows(rows)
+        return path
+
+    def run_cli(self, crud=None, frames=None, session=None, output=True):
+        command = [sys.executable, str(CLI)]
+        if crud is not None:
+            command += ["--crud", str(crud)]
+        if frames is not None:
+            command += ["--frames", str(frames)]
+        if session is not None:
+            command += ["--session", str(session)]
+        result_path = self.root / "result.json"
+        if output:
+            command += ["--json-output", str(result_path)]
+        result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
+        data = json.loads(result_path.read_text()) if result.returncode == 0 and output else None
+        return result, data
+
+    def full_crud(self):
+        return [crud_row(profile, operation, attempt)
+                for profile in ("f3-small", "f3-500")
+                for operation in ("crear", "editar", "papelera")
+                for attempt in range(1, 31)]
+
+    def full_frames(self):
+        return [frame_row(str(run), segment) for run in range(1, 4)
+                for segment in range(1, 11)]
+
+    def test_complete_pass_and_deterministic_json(self):
+        crud = self.csv_file("crud.csv", CRUD_HEADER, self.full_crud())
+        frames = self.csv_file("frames.csv", FRAMES_HEADER, self.full_frames())
+        session = self.root / "session.json"
+        metadata = json.loads((ROOT / "docs/beta-core-validation/sesion.template.json").read_text())
+        session.write_text(json.dumps(metadata))
+        first, data = self.run_cli(crud, frames, session)
+        self.assertEqual(first.returncode, 0, first.stderr)
+        self.assertEqual(data["status"], "PENDING")  # template identity is intentionally blank
+        self.assertEqual(len(data["crud"]["groups"]), 6)
+        self.assertTrue(all(group["status"] == "PASS" for group in data["crud"]["groups"]))
+        self.assertTrue(all(group["status"] == "PASS" for group in data["frames"]["groups"]))
+        self.assertIn("PENDING", first.stdout)
+        first_bytes = (self.root / "result.json").read_bytes()
+        second, _ = self.run_cli(crud, frames, session)
+        self.assertEqual(second.returncode, 0, second.stderr)
+        self.assertEqual(first_bytes, (self.root / "result.json").read_bytes())
+        self.assertEqual(first.stdout, second.stdout)
+        no_session, standalone = self.run_cli(crud, frames)
+        self.assertEqual(no_session.returncode, 0, no_session.stderr)
+        self.assertEqual(standalone["status"], "PASS")
+
+    def test_outlier_fails_despite_favorable_p95_and_preserves_it(self):
+        rows = [crud_row(attempt=i, total_ms=str(i)) for i in range(1, 30)]
+        rows.append(crud_row(attempt=30, total_ms="201"))
+        result, data = self.run_cli(self.csv_file("crud.csv", CRUD_HEADER, rows))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        group = data["crud"]["groups"][0]
+        self.assertEqual(group["status"], "FAIL")
+        self.assertEqual(group["p95_ms"], 29)
+        self.assertEqual(group["max_ms"], 201)
+        self.assertEqual(group["over_200_ms"], 1)
+
+    def test_incomplete_warmup_invalid_and_missing_decompositions(self):
+        rows = [crud_row(attempt=i) for i in range(1, 29)]
+        rows += [crud_row(attempt=29, valida="false", motivo="traza ambigua"),
+                 crud_row(attempt=1, calentamiento="true")]
+        result, data = self.run_cli(self.csv_file("crud.csv", CRUD_HEADER, rows))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        group = data["crud"]["groups"][0]
+        self.assertEqual(group["status"], "PENDING")
+        self.assertEqual(group["attempts"], 30)
+        self.assertEqual(group["valid"], 28)
+        self.assertEqual(group["invalid"], 1)
+        self.assertEqual(group["warmups"], 1)
+        self.assertEqual(group["persistencia_ms"]["missing"], 28)
+        self.assertEqual(group["refresco_ms"]["missing"], 28)
+
+    def test_functional_blank_or_failure_prevents_pass(self):
+        rows = [crud_row(attempt=i) for i in range(1, 31)]
+        rows[0]["resultado_funcional"] = ""
+        result, data = self.run_cli(self.csv_file("crud.csv", CRUD_HEADER, rows))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(data["crud"]["groups"][0]["status"], "PENDING")
+        self.assertEqual(data["crud"]["groups"][0]["functional"]["missing"], 1)
+        rows[0]["resultado_funcional"] = "fallo"
+        result, data = self.run_cli(self.csv_file("crud.csv", CRUD_HEADER, rows))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(data["crud"]["groups"][0]["status"], "FAIL")
+
+    def test_fps_recalculation_tolerance_and_sub_55_failure(self):
+        rows = self.full_frames()
+        rows[0]["fps"] = "60.04"
+        result, data = self.run_cli(frames=self.csv_file("frames.csv", FRAMES_HEADER, rows))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(data["frames"]["groups"][0]["status"], "PASS")
+        rows[0]["frames_completos"] = "54"
+        rows[0]["fps"] = "54"
+        result, data = self.run_cli(frames=self.csv_file("frames.csv", FRAMES_HEADER, rows))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(data["frames"]["groups"][0]["status"], "FAIL")
+        self.assertEqual(data["frames"]["groups"][0]["min_fps"], 54)
+        rows[0]["fps"] = "55"
+        result, _ = self.run_cli(frames=self.csv_file("frames.csv", FRAMES_HEADER, rows))
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("fps", result.stderr)
+
+    def test_duplicate_identity_headers_and_bad_types_rejected(self):
+        duplicate = [crud_row(), crud_row()]
+        result, _ = self.run_cli(self.csv_file("crud.csv", CRUD_HEADER, duplicate))
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("duplicate", result.stderr.lower())
+        result, _ = self.run_cli(self.csv_file("crud.csv", CRUD_HEADER[:-1], []))
+        self.assertNotEqual(result.returncode, 0)
+        for update in ({"valida": "maybe"}, {"total_ms": "-1"}, {"total_ms": "nan"}):
+            result, _ = self.run_cli(self.csv_file("crud.csv", CRUD_HEADER, [crud_row(**update)]))
+            self.assertNotEqual(result.returncode, 0, update)
+
+    def test_no_input_and_malformed_json_rejected(self):
+        result, _ = self.run_cli(output=False)
+        self.assertNotEqual(result.returncode, 0)
+        session = self.root / "bad.json"
+        session.write_text("{bad")
+        result, _ = self.run_cli(self.csv_file("crud.csv", CRUD_HEADER, []), session=session)
+        self.assertNotEqual(result.returncode, 0)
+
+    def test_incomplete_fps_and_duplicate_fps_identity(self):
+        rows = [frame_row("1", 1, valida="false", motivo="traza dudosa")]
+        result, data = self.run_cli(frames=self.csv_file("frames.csv", FRAMES_HEADER, rows))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        group = data["frames"]["groups"][0]
+        self.assertEqual(group["status"], "PENDING")
+        self.assertEqual(group["invalid"], 1)
+        self.assertEqual(len(group["missing_segments"]), 10)
+        result, _ = self.run_cli(frames=self.csv_file("frames.csv", FRAMES_HEADER, rows * 2))
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("duplicate", result.stderr.lower())
+
+    def test_json_output_cannot_overwrite_input(self):
+        path = self.csv_file("crud.csv", CRUD_HEADER, [crud_row()])
+        before = path.read_bytes()
+        command = [sys.executable, str(CLI), "--crud", str(path), "--json-output", str(path)]
+        result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(path.read_bytes(), before)
+
+
+if __name__ == "__main__":
+    unittest.main()
