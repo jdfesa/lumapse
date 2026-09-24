@@ -729,6 +729,10 @@ Valida los CSV completados desde las [plantillas F3](../docs/beta-core-validatio
 y emite un reporte humano y, opcionalmente, JSON estable. No captura trazas, no usa ADB
 ni abre datos del teléfono. `--crud` y `--frames` son opcionales por separado, pero se
 requiere al menos uno; `--session` añade identidad de artefacto/fuente/dispositivo.
+En esa sesión, `shaFuente` es el identificador completo del commit Git: 40 caracteres
+hexadecimales para SHA-1 o 64 para SHA-256, sin abreviaturas. No es el hash del APK:
+los hashes del APK, certificado, dataset, ZIP y trazas siguen exigiendo SHA-256
+(64 caracteres hexadecimales).
 
 ```bash
 mkdir -p tmp/f3/sesion-1

@@ -52,6 +52,8 @@ Completar [sesion.template.json](./sesion.template.json) bajo `tmp/`:
 
 - Operador, fecha/huso, SHA fuente completo, estado limpio, versión/code, variante,
   SHA-256 del APK y huella del certificado. Distinguir release publicada y candidato.
+  `shaFuente` identifica el commit Git completo (40 caracteres hexadecimales para
+  SHA-1 o 64 para SHA-256); no usar su abreviatura ni confundirlo con el hash del APK.
 - Modelo, Android/API, WebView y Chrome/DevTools, resolución, Hz, batería/carga,
   ahorro de energía, temperatura/estado térmico y conexión. Mantenerlos comparables.
 - Dispositivo/perfil de pruebas **expresamente autorizado**; backup recuperable previo

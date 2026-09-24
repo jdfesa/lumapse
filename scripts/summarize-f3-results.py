@@ -30,6 +30,7 @@ PROFILES = ("f3-small", "f3-500")
 OPERATIONS = ("crear", "editar", "papelera")
 RUNS = ("1", "2", "3")
 SHA = re.compile(r"[0-9a-fA-F]{64}\Z")
+SOURCE_SHA = re.compile(r"(?:[0-9a-fA-F]{40}|[0-9a-fA-F]{64})\Z")
 FPS_TOLERANCE = Decimal("0.05")
 
 
@@ -67,6 +68,11 @@ def boolean(value, field, where):
 def check_sha(value, field, where):
     if value is not None and value != "" and (not isinstance(value, str) or not SHA.fullmatch(value)):
         raise EvidenceError(f"{where}: invalid {field}: expected 64 hexadecimal characters")
+
+
+def check_source_sha(value, where):
+    if value is not None and value != "" and (not isinstance(value, str) or not SOURCE_SHA.fullmatch(value)):
+        raise EvidenceError(f"{where}: invalid shaFuente: expected a full Git object ID (40 or 64 hexadecimal characters)")
 
 
 def read_csv(path, headers):
@@ -264,7 +270,8 @@ def validate_session(path):
             raise EvidenceError(f"{path}: invalid session identity type for {key}")
         elif key != "archivosEvidenciaYHashes" and (not isinstance(value, (str, int)) or isinstance(value, bool)):
             raise EvidenceError(f"{path}: invalid session identity type for {key}")
-    for key in ("shaFuente", "datasetSha256", "zipSha256"):
+    check_source_sha(data.get("shaFuente"), path)
+    for key in ("datasetSha256", "zipSha256"):
         check_sha(data.get(key), key, path)
     for key in ("sha256", "certificadoSha256"):
         check_sha(data["apk"].get(key), f"apk.{key}", path)

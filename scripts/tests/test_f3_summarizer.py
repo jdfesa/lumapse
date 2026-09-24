@@ -43,6 +43,17 @@ def frame_row(run="1", segment=1, **changes):
     return row
 
 
+def session_metadata(source_sha):
+    metadata = json.loads((ROOT / "docs/beta-core-validation/sesion.template.json").read_text())
+    metadata.update(operador="synthetic-test", fecha="2026-09-24", husoHorario="UTC",
+                    shaFuente=source_sha, datasetSha256="c" * 64, zipSha256="d" * 64,
+                    archivosEvidenciaYHashes=[{"archivo": "synthetic-trace.json", "sha256": "a" * 64}])
+    metadata["apk"].update(versionName="0.5.0", versionCode=500, variante="debug",
+                           sha256="e" * 64, certificadoSha256="f" * 64)
+    metadata["dispositivo"].update(modelo="synthetic-device", android="10", webview="synthetic-webview")
+    return metadata
+
+
 class F3SummarizerTest(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(prefix="lumapse-f3-summary-")
@@ -306,6 +317,63 @@ class F3SummarizerTest(unittest.TestCase):
         session.write_text("{bad")
         result, _ = self.run_cli(self.csv_file("crud.csv", CRUD_HEADER, []), session=session)
         self.assertNotEqual(result.returncode, 0)
+
+    def test_complete_session_accepts_full_git_source_hashes(self):
+        crud = self.csv_file("crud.csv", CRUD_HEADER, self.full_crud())
+        frames = self.csv_file("frames.csv", FRAMES_HEADER, self.full_frames())
+        session = self.root / "session.json"
+        for source_sha in ("6e18d0ab532293a5f634e972689ec5e6f91b3cf2", "A" * 64):
+            with self.subTest(source_sha=source_sha):
+                session.write_text(json.dumps(session_metadata(source_sha)))
+                result, data = self.run_cli(crud, frames, session)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(data["status"], "PASS")
+                self.assertEqual(data["session"]["status"], "PASS")
+                self.assertEqual(data["session"]["identity"]["shaFuente"], source_sha)
+
+    def test_missing_source_hash_stays_pending(self):
+        crud = self.csv_file("crud.csv", CRUD_HEADER, self.full_crud())
+        session = self.root / "session.json"
+        for source_sha in (None, ""):
+            with self.subTest(source_sha=source_sha):
+                session.write_text(json.dumps(session_metadata(source_sha)))
+                result, data = self.run_cli(crud, session=session)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(data["status"], "PENDING")
+                self.assertEqual(data["session"]["missing_critical"], ["shaFuente"])
+
+    def test_invalid_source_hashes_are_rejected(self):
+        crud = self.csv_file("crud.csv", CRUD_HEADER, [])
+        session = self.root / "session.json"
+        for source_sha in ("6e18d0a", "a" * 39, "a" * 41, "a" * 63, "a" * 65,
+                           "g" * 40, 1234, True):
+            with self.subTest(source_sha=source_sha):
+                session.write_text(json.dumps(session_metadata(source_sha)))
+                result, _ = self.run_cli(crud, session=session)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("shaFuente", result.stderr)
+
+    def test_artifact_and_trace_hashes_still_require_sha256(self):
+        crud = self.csv_file("crud.csv", CRUD_HEADER, [])
+        session = self.root / "session.json"
+        for field in ("datasetSha256", "zipSha256", "apk.sha256", "apk.certificadoSha256"):
+            with self.subTest(field=field):
+                metadata = session_metadata("a" * 40)
+                if field.startswith("apk."):
+                    metadata["apk"][field.split(".")[1]] = "b" * 40
+                else:
+                    metadata[field] = "b" * 40
+                session.write_text(json.dumps(metadata))
+                result, _ = self.run_cli(crud, session=session)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(field, result.stderr)
+        for kind, header, row in (("crud", CRUD_HEADER, crud_row(traza_sha256="a" * 40)),
+                                  ("frames", FRAMES_HEADER, frame_row(traza_sha256="a" * 40))):
+            with self.subTest(trace_kind=kind):
+                path = self.csv_file(f"{kind}.csv", header, [row])
+                result, _ = self.run_cli(**{kind: path})
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("traza_sha256", result.stderr)
 
     def test_incomplete_fps_and_duplicate_fps_identity(self):
         rows = [frame_row("1", 1, valida="false", motivo="traza dudosa")]
