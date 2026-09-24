@@ -64,6 +64,6 @@ prueba en el teléfono y la aprobación explícita siguen siendo condición del 
 
 El [seguimiento del 2026-09-16](../gestion/plan-refrescos-vecinos-2026-09-16.md)
 reutiliza esta frontera en `createSubject`, `updateAcademicEvent` y
-`deleteAcademicEvent`, implementados en PR #19 con validación Android y aprobación aún
-pendientes. Es un cambio separado: no amplía retroactivamente el alcance histórico de F2,
+`deleteAcademicEvent`, probados en Android por el autor e integrados en PR #19
+(`34b2900`, 2026-09-18). Es un cambio separado: no amplía retroactivamente el alcance histórico de F2,
 no atribuye esos caminos al antiguo PR #15 y no declara una F4.

@@ -1,8 +1,9 @@
 # Plan y evidencia — refrescos vecinos de escrituras confirmadas
 
-**Estado:** implementado en [PR #19](https://github.com/jdfesa/lumapse/pull/19),
-pendiente de prueba Android y aprobación del autor. No está cerrado ni integrado.
-**Rama:** `fix/confirmed-subject-event-mutations`. **Base verificada:** `1c316cc`
+**Estado actual:** probado en Android por el autor, aprobado e integrado en
+[PR #19](https://github.com/jdfesa/lumapse/pull/19) el 2026-09-18 mediante `34b2900`.
+El cierre cubre solo crear materia/sección y editar/eliminar fecha; no cierra F3.
+**Rama histórica del trabajo:** `fix/confirmed-subject-event-mutations`. **Base verificada en aquel momento:** `1c316cc`
 (`main` = `origin/main`, árbol limpio tras `fetch`, 2026-09-16).
 
 Este seguimiento corrige una sola familia ya caracterizada en la sección 3 de la
@@ -63,8 +64,8 @@ Además deben seguir verdes las regresiones F2 de `createNote` y
 - [x] `deleteAcademicEvent` GREEN en `574ab6d`.
 - [x] Suite focalizada, `npm run verify` completo, `git diff --check` y auditoría no
   mutante exigida por el flujo.
-- [x] CI del checkpoint de código `574ab6d` revisada: Quality Gate y GitGuardian aprobados. La cabeza vigente se consulta en los [checks del PR #19](https://github.com/jdfesa/lumapse/pull/19/checks).
-- [ ] Prueba Android y aprobación del autor. Este trabajo no cierra F3 ni publica release.
+- [x] CI del checkpoint de código `574ab6d` revisada: Quality Gate y GitGuardian aprobados. El [PR #19](https://github.com/jdfesa/lumapse/pull/19/checks) también registra el cierre integrado.
+- [x] Autor probó los flujos normales en Android y aprobó la integración; merge `34b2900` del 2026-09-18. Este trabajo no cierra F3 ni publica release.
 
 | Comando/evidencia | Resultado | Observaciones |
 |---|---|---|
@@ -99,10 +100,10 @@ conteos, routing, filtros de PR #18, dependencias/lockfile, configuración o thr
 tests/CI, versión, arquitectura ni TypeScript. Tampoco hay optimización, instalación APK,
 Android Studio, tag, release, merge o auto-merge.
 
-## Handoff manual pendiente
+## Handoff manual original — histórico, no es tarea vigente
 
-Sobre el dispositivo y artefacto que acuerde el autor, sin borrar datos ni inyectar fallos
-en una base real:
+El handoff original solicitaba usar un dispositivo y artefacto acordados por el autor,
+sin borrar datos ni inyectar fallos en una base real:
 
 - [ ] Crear una materia y una sección con nombres identificables; reabrir el drawer y
   verificar jerarquía, color y conteos.
@@ -110,6 +111,12 @@ en una base real:
 - [ ] Eliminar una fecha y reabrir calendario/próximas fechas; verificar que no reaparece.
 - [ ] Registrar SHA de código, identidad del APK, dispositivo/Android y resultado.
 
+Las casillas se conservan como handoff original, no como afirmación de detalle por
+caso ni tarea actual. El [PR integrado](https://github.com/jdfesa/lumapse/pull/19)
+y el [backlog vigente](../../BACKLOG.md) registran la aprobación Android del autor;
+este documento no contiene el hash del APK ni una planilla de resultados por caso.
+
 La falla controlada de lectura, el aviso persistente y la recuperación de solo lectura se
 validan automáticamente; un smoke normal en Android no se presenta como reproducción de
-esa inyección. El merge queda a decisión del autor.
+esa inyección. El autor decidió el merge de PR #19 el 2026-09-18. Las demás mutaciones
+vecinas siguen como deuda media guiada por evidencia, no como bloqueo del siguiente corte.
