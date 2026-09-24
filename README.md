@@ -1,3 +1,7 @@
+![Banner conceptual de Lumapse: «Tus ideas no esperan al Wi-Fi». Capturá, agrupá y conectá.](./docs/assets/readme/lumapse-hero.png)
+
+<p align="center"><sub>Ilustración conceptual: la visualización de conexiones no forma parte de la beta actual.</sub></p>
+
 # <img src="./public/icons/icon-144x144.png" alt="Icono de Lumapse" width="48" height="48"> Lumapse
 
 > App móvil minimalista de captura de notas y gestión del conocimiento personal.  
