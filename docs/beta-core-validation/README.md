@@ -20,8 +20,43 @@ consultas/notificaciones por intuición ni sustituir la validación del teléfon
 - [Resultados y matriz incremental](./resultados-2026-09-14.md): solo hechos ejecutados; pendientes identificados.
 - Plantillas vacías: [sesión](./sesion.template.json), [muestras CRUD](./crud.template.csv)
   y [frames por tramo](./frames.template.csv). Copiarlas a `tmp/` para completar la evidencia.
+- [Analizador F3](../../scripts/summarize-f3-results.py): valida CSV ingresados a mano
+  y resume `PASS`/`FAIL`/`PENDING`; no produce trazas ni mide el dispositivo.
 - Generador existente ampliado con `f3-small` y `f3-500`; `beta-500` sigue siendo el valor por defecto.
 - ZIP v1 determinista y pruebas de importación real, repetición sin duplicados, conteos y papelera separada.
+
+## Primer análisis de una sesión física — pendiente del autor
+
+Después de acordar artefacto/espacio seguro y capturar **manualmente** las trazas de
+Chrome DevTools Performance del WebView según el [protocolo](./protocolo.md), copiar las
+plantillas sin sobreescribir evidencia existente, completar las filas y ejecutar:
+
+```bash
+mkdir -p tmp/f3/sesion-1
+cp -n docs/beta-core-validation/crud.template.csv tmp/f3/sesion-1/crud.csv
+cp -n docs/beta-core-validation/frames.template.csv tmp/f3/sesion-1/frames.csv
+cp -n docs/beta-core-validation/sesion.template.json tmp/f3/sesion-1/sesion.json
+python3 scripts/summarize-f3-results.py --crud tmp/f3/sesion-1/crud.csv --frames tmp/f3/sesion-1/frames.csv --session tmp/f3/sesion-1/sesion.json --json-output tmp/f3/sesion-1/resumen.json
+```
+
+Se puede analizar solo `--crud` o solo `--frames`; la ausencia del otro conjunto no
+constituye un cero medido ni cierre F3. Conservar archivos de traza originales y sus
+SHA-256, offsets, fuente de frames, CSV y JSON junto a la identidad del APK, fuente y
+dispositivo. Para CRUD, `PASS` exige cinco calentamientos completos registrados por
+perfil/operación además de 30 muestras válidas medidas, funcionalidad confirmada y
+umbral cumplido; los calentamientos no integran las estadísticas temporales.
+`calentamiento=true`, `valida=true`, `resultado_funcional=ok` y ambos conteos de notas
+visibles presentes definen un calentamiento completo, sin exigir tiempo ni traza.
+Las muestras medidas válidas también deben tener ambos conteos de notas visibles;
+si falta cualquiera, el grupo queda `PENDING` salvo fallo medido. El resumen cuenta
+las filas afectadas sin excluir sus tiempos ni ocultar fallos.
+`FAIL` refleja al menos una muestra válida fuera de umbral o fallo funcional;
+`PENDING` refleja evidencia insuficiente, incluidos calentamientos ausentes o
+incompletos. Los errores de integridad producen exit no
+cero; `FAIL`/`PENDING` estructuralmente válidos producen exit cero. La CLI **no**
+captura latencias/FPS, identifica límites de traza ni cierra RNF-002/RNF-004 por sí
+sola. El autor debe revisar, adjuntar evidencia y aprobar o comunicar fallas.
+**No se ejecutó medición Android en este PR.**
 
 ## Qué no se afirma
 

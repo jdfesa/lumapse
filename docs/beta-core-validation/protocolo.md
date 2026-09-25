@@ -52,6 +52,8 @@ Completar [sesion.template.json](./sesion.template.json) bajo `tmp/`:
 
 - Operador, fecha/huso, SHA fuente completo, estado limpio, versión/code, variante,
   SHA-256 del APK y huella del certificado. Distinguir release publicada y candidato.
+  `shaFuente` identifica el commit Git completo (40 caracteres hexadecimales para
+  SHA-1 o 64 para SHA-256); no usar su abreviatura ni confundirlo con el hash del APK.
 - Modelo, Android/API, WebView y Chrome/DevTools, resolución, Hz, batería/carga,
   ahorro de energía, temperatura/estado térmico y conexión. Mantenerlos comparables.
 - Dispositivo/perfil de pruebas **expresamente autorizado**; backup recuperable previo
@@ -109,8 +111,9 @@ restablecer el setup entre muestras, fuera del intervalo medido.
 ## 4. RNF-002 — Latencia CRUD
 
 **Diseño:** mismo dispositivo/APK, perfiles pequeño y grande separados. Tras arranque y
-carga, esperar 30 s, realizar **5 ciclos de calentamiento** por operación y registrar su
-preparación/limpieza. Luego **30 muestras válidas por operación y perfil** (180 en total).
+carga, esperar 30 s, realizar **5 ciclos de calentamiento completos** por operación y
+perfil y registrar su preparación/limpieza. Luego **30 muestras válidas por operación
+y perfil** (180 en total).
 Usar títulos `F3 medición #NN`, contenido fijo de unas 200 letras y el mismo destino.
 Preparar/restaurar notas auxiliares fuera de la captura para evitar crecimiento acumulado;
 conservar 50/500 activas de base. Nunca vaciar la papelera personal. Anotar tamaños antes/después.
@@ -144,7 +147,12 @@ como parche/hash del candidato y calibrarse; no se añadió instrumentación pro
 en esta entrega. No medir tiempos con breakpoints pausantes o logging SQL intensivo.
 
 Usar [crud.template.csv](./crud.template.csv); `valida=false` requiere motivo, nunca
-descartar un outlier por ser lento. Ordenar 30 valores válidos por operación/perfil:
+descartar un outlier por ser lento. Para que un calentamiento cuente como completo,
+registrar `calentamiento=true`, `valida=true`, `resultado_funcional=ok` y ambos conteos
+`notas_visibles_antes`/`notas_visibles_despues`. No exigirle `total_ms` ni traza;
+mantenerlo fuera de la estadística medida. Cinco calentamientos completos por
+perfil/operación son condición de `PASS`; menos de cinco deja `PENDING` si no hay un
+fallo medido. Ordenar 30 valores válidos por operación/perfil:
 mediana = promedio de posiciones 15/16; p95 por nearest-rank = posición 29; máximo = 30.
 Registrar también cantidad de valores **> 200 ms**, total de intentos/fallos y las
 muestras de calentamiento. Una sola muestra válida > 200 ms no cumple el umbral del
@@ -177,6 +185,46 @@ un promedio global no oculta tramos inferiores. Registrar todos los descartes co
 Un overlay aislado, percepción de fluidez o datos de otra superficie no bastan. Si el
 WebView/herramienta disponible no permite atribuir frames fiables a la app y al intervalo,
 RNF-004 queda pendiente; no convertir automáticamente `gfxinfo` en FPS de WebView.
+
+### Análisis reproducible de los CSV ingresados
+
+Las capturas manuales de Chrome DevTools/Performance sobre el WebView del APK y las
+trazas crudas siguen siendo la fuente autoritativa. El analizador local solo valida y
+agrega los valores ya identificados e ingresados; **no** crea evidencia de latencia/FPS,
+no decide dónde comienzan/terminan las acciones o frames y no cierra un RNF por sí solo.
+
+```bash
+mkdir -p tmp/f3/sesion-1
+cp -n docs/beta-core-validation/crud.template.csv tmp/f3/sesion-1/crud.csv
+cp -n docs/beta-core-validation/frames.template.csv tmp/f3/sesion-1/frames.csv
+cp -n docs/beta-core-validation/sesion.template.json tmp/f3/sesion-1/sesion.json
+# Completar copias a partir de las trazas; conservar originales y hashes.
+python3 scripts/summarize-f3-results.py --crud tmp/f3/sesion-1/crud.csv --frames tmp/f3/sesion-1/frames.csv --session tmp/f3/sesion-1/sesion.json --json-output tmp/f3/sesion-1/resumen.json
+```
+
+Las [reglas de entrada y fórmulas](../../scripts/README.md#44-summarize-f3-resultspy--análisis-offline-de-evidencia-f3)
+son explícitas: `ok` es el único resultado funcional exitoso, `fallo` es fallo y
+`pendiente`/vacío impiden `PASS`. Se excluyen calentamientos del total válido; no se
+reconstruye `total_ms` a partir de persistencia y refresco. Mediana, p95 nearest-rank,
+máximo, excedencias estrictas de 200 ms, FPS recalculados por duración y mínimo de 55
+por tramo siguen los criterios anteriores. El redondeo de FPS ingresado admite una
+diferencia absoluta de 0,05; un tramo de un segundo se admite entre 950 y 1050 ms.
+`PASS` CRUD requiere cinco calentamientos completos registrados **además de** 30
+muestras medidas válidas por perfil/operación; `PASS` FPS requiere tres recorridos de
+diez tramos válidos en 500 notas. También se exigen resultado funcional y
+trazabilidad completos y ambos conteos de notas visibles en cada muestra medida
+válida. Si falta cualquiera de esos conteos, el grupo queda `PENDING` salvo fallo
+medido; el resumen cuenta las filas afectadas sin excluirlas de las estadísticas
+ni ocultar outliers. El resumen distingue calentamientos totales, completos e
+incompletos sin incluirlos en mediana, p95 ni excedencias.
+`FAIL` prevalece ante un outlier válido o fallo funcional; si falta evidencia, el
+grupo queda `PENDING`, nunca cero o aprobado. CSV/JSON malformados, tipos imposibles,
+duplicados o FPS incongruente son errores de integridad (exit no cero), distintos de
+una medición `FAIL`/`PENDING` válida (exit cero).
+
+Guardar trazas originales, hashes SHA-256, offsets y método exacto de eventos, CSV
+completos y resumen JSON. El autor debe cotejar resultados y adjuntarlos a la matriz;
+**este PR no ejecutó ninguna medición Android** ni cambia el estado F3/RNF.
 
 ## 6. Consultas y notificaciones — diagnóstico, no optimización
 

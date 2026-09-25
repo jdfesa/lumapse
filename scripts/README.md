@@ -723,7 +723,82 @@ rechaza sobreescribir archivos. Imprime hashes del dataset/ZIP y conteos. Las pr
 Python entran en `test:tooling` y el gate canónico; la integración JS verifica además
 el importador/store/DDL reales. [Protocolo y límites F3](../docs/beta-core-validation/README.md).
 
-### 44. `load-test-fixture-android.sh`
+### 44. `summarize-f3-results.py` — análisis offline de evidencia F3
+
+Valida los CSV completados desde las [plantillas F3](../docs/beta-core-validation/README.md)
+y emite un reporte humano y, opcionalmente, JSON estable. No captura trazas, no usa ADB
+ni abre datos del teléfono. `--crud` y `--frames` son opcionales por separado, pero se
+requiere al menos uno; `--session` añade identidad de artefacto/fuente/dispositivo.
+En esa sesión, `shaFuente` es el identificador completo del commit Git: 40 caracteres
+hexadecimales para SHA-1 o 64 para SHA-256, sin abreviaturas. No es el hash del APK:
+los hashes del APK, certificado, dataset, ZIP y trazas siguen exigiendo SHA-256
+(64 caracteres hexadecimales).
+
+```bash
+mkdir -p tmp/f3/sesion-1
+cp -n docs/beta-core-validation/crud.template.csv tmp/f3/sesion-1/crud.csv
+cp -n docs/beta-core-validation/frames.template.csv tmp/f3/sesion-1/frames.csv
+cp -n docs/beta-core-validation/sesion.template.json tmp/f3/sesion-1/sesion.json
+# Completar manualmente las copias desde trazas del WebView del APK.
+python3 scripts/summarize-f3-results.py --crud tmp/f3/sesion-1/crud.csv --frames tmp/f3/sesion-1/frames.csv --session tmp/f3/sesion-1/sesion.json --json-output tmp/f3/sesion-1/resumen.json
+npm run test:fixture
+```
+
+Las capturas de Chrome DevTools/Performance sobre el WebView son **manuales y
+autoritativas**. Esta CLI solo valida y agrega valores ingresados: no crea evidencia de
+latencia/FPS, no identifica límites de una traza y no cierra un RNF por sí sola.
+Conservar trazas crudas, offsets, método/fuente de frames y hashes SHA-256 junto al
+JSON derivado. El dueño del dispositivo revisa cada `PASS`/`FAIL`/`PENDING` y registra
+la decisión; **este PR no ejecutó ninguna medición Android**.
+
+**Convenciones de entrada:** cabeceras exactas de las plantillas; CSV UTF-8 y números
+decimales con punto, sin separadores locales. `calentamiento` y `valida` aceptan solo
+`true`/`false`. Perfiles: `f3-small`, `f3-500`; operaciones CRUD: `crear`, `editar`,
+`papelera`. Identidad única CRUD: `sesion`/`perfil`/`operacion`/`calentamiento`/
+`intento` positivo; calentamiento y medición pueden numerarse por separado.
+`resultado_funcional` acepta `ok`, `fallo`, `pendiente` o vacío; solo `ok` demuestra
+éxito. `valida=false` exige `motivo`. Un calentamiento completo tiene
+`calentamiento=true`, `valida=true`, `resultado_funcional=ok` y ambos conteos
+`notas_visibles_antes`/`notas_visibles_despues` presentes. No requiere tiempos ni
+traza. Las filas de calentamiento se cuentan aparte como completas/incompletas y
+nunca integran las 30 muestras. Toda muestra válida medida requiere `total_ms`; los
+desgloses `persistencia_ms` y `refresco_ms` son opcionales, se resumen por separado y
+sus ausencias se cuentan. El total **nunca** se deriva de la suma del desglose. Una
+muestra funcional fallida, incluso si se marcó inválida, bloquea `PASS`.
+
+Por perfil/operación se exigen **5 calentamientos completos registrados más 30
+muestras válidas medidas** con resultado `ok`, ambos conteos de notas visibles,
+hash y offsets de traza para `PASS`.
+Se reportan intentos, válidas, inválidas, calentamientos totales, completos e
+incompletos; para los `total_ms` válidos, mediana (promedio de los dos centrales),
+p95 por rango más próximo (`ceil(0,95 × n)`), máximo y cantidad estrictamente `> 200 ms`.
+Un solo valor válido `> 200 ms` es `FAIL` aunque p95 sea favorable; ningún outlier se
+descarta. Menos de 5 calentamientos completos, menos de 30 muestras medidas válidas
+o falta de traza/resultado funcional es `PENDING`, salvo fallo medido que prevalezca.
+También queda `PENDING` si a cualquier muestra medida válida le falta
+`notas_visibles_antes` o `notas_visibles_despues`. El reporte cuenta esas muestras
+una vez por fila en `missing_visible_note_counts` (JSON) y
+`visible_note_counts_missing` (stdout), sin descartarlas de las estadísticas ni
+ocultar outliers o fallos funcionales. Cero es un conteo registrado, no una ausencia;
+la CLI comprueba presencia, no demuestra por sí sola el volumen real del perfil.
+
+FPS acepta el perfil `f3-500`, `recorrido` `1` a `3` y `tramo` `1` a `10`, todos únicos.
+Cada recorrido requiere diez segmentos válidos de un segundo (duración admitida:
+950–1050 ms) con fuente de eventos y hash de traza. Recalcula cada FPS como
+`frames_completos / (duracion_ms / 1000)`; si se ingresó `fps`, tolera una diferencia
+absoluta máxima de **0,05 FPS** por redondeo. Reporta mínimo, mediana y media aritmética
+de cada recorrido. Cualquier segmento válido `< 55 FPS` es `FAIL`; segmentos faltantes
+o inválidos dejan `PENDING` si no hay fallo medido. Las inválidas siguen visibles.
+
+`PASS` significa evidencia estructuralmente completa y umbrales cumplidos, no cierre
+automático del RNF; `FAIL` requiere revisar la evidencia y `PENDING` no representa cero
+ni éxito. Un fallo de integridad (cabeceras/tipos/JSON incorrectos, duplicados, valores
+negativos, FPS incongruente) sale con código no cero. Un resultado medido `FAIL` o
+`PENDING` válido sale con código **0**. La CLI nunca modifica CSV/JSON de entrada.
+`npm run test:fixture` descubre tanto las regresiones históricas del generador/ZIP
+como las de este analizador, y `test:tooling` las ejecuta dentro de `npm run verify`.
+
+### 45. `load-test-fixture-android.sh`
 Carga el fixture en un dispositivo Android de pruebas mediante `adb` y `run-as`, reemplazando solamente materias, notas y fechas académicas.
 
 - **Operación destructiva y explícita:** para tocar el teléfono exige `--yes`; úsese únicamente sobre un dispositivo de pruebas. `--validate-only` no abre ADB ni modifica el dispositivo.

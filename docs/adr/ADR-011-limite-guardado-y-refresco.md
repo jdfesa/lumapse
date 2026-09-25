@@ -52,18 +52,20 @@ Cada aviso pertenece a una creación; cerrar un aviso no prueba que se recuperó
 Una recarga normal puede actualizar datos antes de pulsar el aviso: repetir la lectura
 sigue siendo seguro, sin una nueva escritura. No se cambia el orden global de loaders.
 
-El límite se aplica solo a los dos caminos cubiertos. Crear materias y editar/eliminar
-fechas conservan ambigüedades confirmadas, documentadas como seguimiento separado en
+Al aprobar F2 el 2026-09-14, el límite se aplicaba solo a los dos caminos cubiertos.
+Crear materias y editar/eliminar fechas conservaban ambigüedades confirmadas,
+documentadas como seguimiento separado en
 el [reporte F2](../gestion/validacion-f2-guardado-y-refresco-2026-09-13.md). Otras acciones
 vecinas solo fueron inspeccionadas estáticamente, no se declaran corregidas.
 
-Los tests de UI con store/SQLite reales en memoria no validan el plugin nativo. La
-prueba en el teléfono y la aprobación explícita siguen siendo condición del merge.
+Los tests de UI con store/SQLite reales en memoria no validan el plugin nativo. Para
+el merge original de F2, la prueba en el teléfono y la aprobación explícita eran
+condiciones separadas.
 
 ## Seguimiento posterior
 
 El [seguimiento del 2026-09-16](../gestion/plan-refrescos-vecinos-2026-09-16.md)
 reutiliza esta frontera en `createSubject`, `updateAcademicEvent` y
-`deleteAcademicEvent`, implementados en PR #19 con validación Android y aprobación aún
-pendientes. Es un cambio separado: no amplía retroactivamente el alcance histórico de F2,
+`deleteAcademicEvent`, probados en Android por el autor e integrados en PR #19
+(`34b2900`, 2026-09-18). Es un cambio separado: no amplía retroactivamente el alcance histórico de F2,
 no atribuye esos caminos al antiguo PR #15 y no declara una F4.

@@ -16,7 +16,7 @@ de Gómez (2014).
 | [`../beta-core-validation/README.md`](../beta-core-validation/README.md) | Fixtures, protocolo, conteos locales y matriz CRUD/FPS/offline/continuidad | 🔎 PR #16 integrado; métricas Android pendientes |
 | [`validacion-parche-vitest-2026-09-15.md`](./validacion-parche-vitest-2026-09-15.md) | Parche de tooling, grafo mínimo, regresiones del mocker y handoff histórico | ✅ Probado e integrado por el autor en PR #17 |
 | [`plan-filtros-visibles-2026-09-15.md`](./plan-filtros-visibles-2026-09-15.md) | Alternativas UX, fecha/búsqueda removibles, alcance, regresiones y handoff Android | ✅ Probado e integrado en PR #18 |
-| [`plan-refrescos-vecinos-2026-09-16.md`](./plan-refrescos-vecinos-2026-09-16.md) | Plan, matriz y evidencia de crear materia y editar/eliminar fecha con escritura confirmada | 🔎 Implementado en PR #19; Android/aprobación pendientes |
+| [`plan-refrescos-vecinos-2026-09-16.md`](./plan-refrescos-vecinos-2026-09-16.md) | Plan, matriz y evidencia de crear materia/sección y editar/eliminar fecha con escritura confirmada | ✅ Android aprobado e integrado en PR #19 (`34b2900`, 2026-09-18); otras mutaciones quedan como deuda media |
 | [`definicion-flujo-kanban.md`](./definicion-flujo-kanban.md) | Definition of Workflow, WIP, políticas, SLE y métricas de flujo desde Hito 06 | ✅ Vigente |
 | [`estimacion-pert.md`](./estimacion-pert.md) | Estimación de 3 puntos (PERT) para los módulos de mayor riesgo | ✅ Completado |
 | [`lineas-base.md`](./lineas-base.md) | Registro de líneas base y releases `v0.4.8`/`v0.5.0`, más el futuro corte estable | 🔄 Activo en Hito 06 |
