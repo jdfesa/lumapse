@@ -9,6 +9,10 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ## [Unreleased]
 
+### Added
+
+- **Identificación de builds en Acerca de (RF-023):** versión base, compilación y origen Git calculados por Vite. Deploy habitual identificado como debug privado; helper de release como candidato sin acreditar firma/publicación. Estado local y fallback honesto sin Git; no cambia `0.5.0/500`, no genera una release ni sustituye el hash/evidencia del APK.
+
 ### Security
 
 - **Parches mínimos de dependencias:** DOMPurify sube de 3.4.14 a 3.4.16 para `GHSA-p98j-92pf-mc4p`; el lockfile fija `brace-expansion` 5.0.12 y `undici` 7.29.1 en sus rutas de tooling. Solo cambian tres nodos y el piso directo del sanitizador, sin nuevos paquetes, overrides, majors ni incremento de `0.5.0/500`. Las auditorías del 2026-10-02 y las regresiones focalizadas pasan; la validación Android del autor y la revisión del PR siguen pendientes. No es una release ni demuestra explotación del APK. [Evidencia, alcance y handoff](docs/gestion/validacion-parches-dependencias-2026-10-02.md).

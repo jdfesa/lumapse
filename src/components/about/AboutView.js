@@ -2,9 +2,9 @@ import { APP_METADATA } from '../../config/appMetadata.js'
 import { escapeHtmlText as escapeHtml } from '../common/htmlEscaping.js'
 import './AboutView.css'
 
-function renderMetadataItem(label, value) {
+function renderMetadataItem(label, value, wide = false) {
   return `
-    <div class="about-view__meta-item">
+    <div class="about-view__meta-item${wide ? ' about-view__meta-item--wide' : ''}">
       <dt>${escapeHtml(label)}</dt>
       <dd>${escapeHtml(value)}</dd>
     </div>
@@ -37,9 +37,11 @@ export function renderAboutView(metadata = APP_METADATA) {
       </header>
 
       <dl class="about-view__meta" aria-label="Datos de la aplicación">
-        ${renderMetadataItem('Versión', metadata.version)}
+        ${renderMetadataItem('Versión base', metadata.version)}
         ${renderMetadataItem('Autor', metadata.author)}
         ${renderMetadataItem('Licencia', metadata.license)}
+        ${renderMetadataItem('Compilación', metadata.compilation ?? 'No disponible', true)}
+        ${renderMetadataItem('Origen', metadata.origin ?? 'No disponible', true)}
       </dl>
 
       <section class="about-view__section" aria-labelledby="about-view-purpose-title">
@@ -56,6 +58,7 @@ export function renderAboutView(metadata = APP_METADATA) {
 
       <p class="about-view__note">
         Proyecto académico construido con foco en mantenibilidad, pruebas y trazabilidad.
+        El origen identifica el código fuente, no el hash del APK ni su validación.
       </p>
     </section>
   `

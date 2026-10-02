@@ -37,8 +37,8 @@ Ejemplos:
 Notas:
   - El modo normal preserva datos locales para poder probar archivado,
     papelera, restauraciones y casos borde sin perder la base SQLite.
-  - Usar --clean cuando el WebView muestre assets viejos o se necesite
-    una instalación fresca. Ese modo borra los datos de la app.
+  - --clean requiere permiso específico y recuperación acordada; borra datos.
+    Un ZIP no respalda borradores ni papelera. No es un remedio automático.
 EOF
 }
 
@@ -114,7 +114,7 @@ fi
 
 # 3. Build web
 echo "📦 Compilando web app (Vite)..."
-npm run build
+LUMAPSE_BUILD_CHANNEL=android-debug npm run build
 
 # 4. Sincronización
 echo "🔄 Sincronizando assets con Capacitor..."

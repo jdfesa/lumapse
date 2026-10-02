@@ -45,7 +45,7 @@ Automatiza el ciclo de compilación y despliegue de la aplicación en un disposi
 - **Funcionamiento:** 
   1. Verifica conexión ADB.
   2. Elige el dispositivo destino: si hay uno solo, lo usa automáticamente; si hay varios, exige `--target <deviceId>`.
-  3. Ejecuta el build web (`npm run build`).
+  3. Ejecuta el build web (`npm run build`) declarando automáticamente el canal `android-debug` para Acerca de.
   4. Sincroniza el proyecto nativo (`npx cap sync`).
   5. Construye el APK y lo instala/lanza en el teléfono (`npx cap run android --target <deviceId>`).
 - **Uso:**
@@ -60,6 +60,7 @@ Automatiza el ciclo de compilación y despliegue de la aplicación en un disposi
   ./scripts/deploy-android.sh --target ad071603088c2172aa --clean
   ```
 - **Cuándo usar `--clean`:**
+  - Solo con permiso específico y recuperación acordada: borra datos; el ZIP no incluye borradores ni papelera. No usarlo automáticamente ante los síntomas siguientes.
   - Cuando el WebView muestre assets viejos después de un cambio de UI.
   - Cuando se necesite simular una instalación completamente fresca.
   - Cuando la base local esté corrupta o se quiera reiniciar el estado manualmente.
@@ -437,6 +438,7 @@ Asistente de lanzamiento para versionado, changelog, build web, sincronización 
 - **Uso acotado de recursos:** El build Gradle de release usa un solo worker, daemon descartable y heap de 768 MB para reducir presión de memoria en el equipo de desarrollo.
 - **Protecciones:** Incluye `--check` para bloquear desalineaciones de versión, modo `--dry-run` para revisar el plan sin tocar archivos, `--skip-build` para validar solo la parte documental, `--yes` para ejecución no interactiva y `--allow-dirty` para permitir releases con worktree modificado cuando sea una decisión consciente.
 - **Cuándo usarlo:** Al preparar una versión entregable, beta, build de defensa o paquete APK versionado. Lo recomendable es correr primero un dry-run y recién después ejecutar el flujo real.
+- **Identificación:** El build web declara automáticamente `android-candidate`, sin acreditar firma/publicación/validación. No usar este helper para una prueba debug privada ni incrementar versión por cada deploy. Semántica y límites en [identificación de compilaciones](../docs/flujo-desarrollo-android.md#identificación-de-compilaciones-en-acerca-de).
 - **Uso:**
   ```bash
   python3 scripts/release-helper.py --check
@@ -815,3 +817,13 @@ Carga el fixture en un dispositivo Android de pruebas mediante `adb` y `run-as`,
   ```
 
 > **Límite del ZIP oficial:** el formato de backup de Lumapse excluye por contrato las filas en Papelera. Un ZIP exporta las 500 notas visibles, 18 archivadas y 40 fechas, pero no las 12 eliminadas. El generador y el snapshot SQLite del cargador sí reproducen el estado completo.
+
+### 46. `build-metadata.js`
+
+Plugin de Vite compartido con Vitest: calcula canal, SHA fuente y estado local al
+cargar un módulo virtual; no agrega dependencias ni consultas Git en el cliente.
+Los scripts de deploy/release declaran su canal automáticamente. La selección del
+estado relevante excluye docs/tests y artefactos ignorados; sin Git usa fallback
+honesto. Ver [semántica, protección de datos y límites](../docs/flujo-desarrollo-android.md#identificación-de-compilaciones-en-acerca-de).
+Regresiones en `tests/tooling/build-metadata.test.js`, `tests/unit/config/buildMetadata.test.js`
+y `scripts/tests/test_release_build_metadata.py`, incluidas en el gate habitual.

@@ -377,7 +377,7 @@ def has_release_signing():
     return all(os.getenv(name, "").strip() for name in SIGNING_ENV_VARS)
 
 
-def run_command(command, cwd=PROJECT_ROOT, input_text=None):
+def run_command(command, cwd=PROJECT_ROOT, input_text=None, env=None):
     print("   $ {0}".format(" ".join(command)))
     result = subprocess.run(
         command,
@@ -385,6 +385,7 @@ def run_command(command, cwd=PROJECT_ROOT, input_text=None):
         text=True,
         input=input_text,
         check=False,
+        env=env,
     )
     if result.returncode != 0:
         raise RuntimeError("Falló comando: {0}".format(" ".join(command)))
@@ -395,7 +396,8 @@ def run_build_pipeline():
     run_command(["./scripts/clean.sh"], input_text="n\n")
 
     print("🏗️  Ejecutando build web de producción...")
-    run_command(["npm", "run", "build"])
+    build_env = dict(os.environ, LUMAPSE_BUILD_CHANNEL="android-candidate")
+    run_command(["npm", "run", "build"], env=build_env)
 
     print("🔌 Sincronizando Capacitor...")
     run_command(["npx", "cap", "sync"])
