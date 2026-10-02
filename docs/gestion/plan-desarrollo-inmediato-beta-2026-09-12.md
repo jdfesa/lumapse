@@ -83,6 +83,10 @@ con ajustes documentales de esta rama presentes al ejecutar el gate. Node **22.2
 npm **10.9.3** revalidados; distribución aislada existente contrastada con SHASUMS oficial.
 Dependencias instaladas reutilizadas con package/lock sin cambios; no se ejecutó otro
 `npm ci`, ni se alteró el runtime global. Sin dependencias nuevas ni bump de Gradle.
+Se repitió `npm run verify` íntegro sobre `a4f8413` más el ajuste local de compatibilidad
+del formateador (`hasOwnProperty.call`, patrón existente en los helpers): exit 0,
+los mismos 77 archivos / 1167 tests y 68 de tooling. El estado dirty del build de
+esa ejecución representa ese ajuste; el artefacto web final se recompila tras el commit.
 
 | Comando ejecutado | Resultado real |
 |---|---|

@@ -6,7 +6,7 @@ const COMPILATIONS = Object.freeze({
 })
 
 export function formatBuildMetadata(metadata = {}) {
-  const compilation = Object.hasOwn(COMPILATIONS, metadata.compilation)
+  const compilation = Object.prototype.hasOwnProperty.call(COMPILATIONS, metadata.compilation)
     ? COMPILATIONS[metadata.compilation] : 'No disponible'
   let origin = 'No disponible'
   if (typeof metadata.commit === 'string' && /^(?:[a-f0-9]{40}|[a-f0-9]{64})$/.test(metadata.commit)) {
