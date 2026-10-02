@@ -14,6 +14,8 @@
 
 ## Prioridad inmediata — plan aceptado
 
+**Prerrequisito de seguridad aprobado (2026-10-02):** el autor aceptó los cambios nuevos instalados en Samsung y autorizó explícitamente integrar [PR #21 — parches mínimos de dependencias](docs/gestion/validacion-parches-dependencias-2026-10-02.md). Aceptación general, sin resultados manuales por caso ni mediciones nuevas. No cambia versión ni completa F3; sus mediciones se retoman sobre `main` sincronizado después de integrar y limpiar esta única rama.
+
 El [plan de desarrollo inmediato de la beta](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) fue aceptado e integrado en PR #13. **F1 y F2 aprobadas e integradas** en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`). **Preparación F3 aceptada e integrada** en PR #16 (`90fd21e`) tras la confirmación general del teléfono; ramas eliminadas. [Protocolo, fixtures y matriz](docs/beta-core-validation/README.md): las métricas Android siguen pendientes, sin declarar F3 cerrada.
 
 **Próximo frente verificable:** completar F3 con mediciones CRUD/FPS y casos offline/continuidad sobre un artefacto identificado. Los [filtros visibles del feed](docs/gestion/plan-filtros-visibles-2026-09-15.md) fueron probados por el autor e integrados en PR #18 (`3898db8`); su cierre no sustituye la evidencia cuantitativa ni la matriz RNF pendiente.
