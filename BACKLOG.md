@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 06 — Entrega Final
 > **Hito 05:** Cerrado documentalmente el 2026-07-15 sobre la beta operativa `v0.4.8`
-> **Última actualización:** 2026-09-18 — PR #19 probado en Android e integrado; sus mutaciones cubiertas quedan cerradas y los refrescos vecinos restantes pasan a deuda media. Mediciones Android F3 siguen pendientes.
+> **Última actualización:** 2026-10-02 — PR #21 integrado; identificación de build y continuidad de dos sesiones aprobadas. Mediciones Android F3 siguen pendientes.
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -39,7 +39,7 @@ La trazabilidad de `v0.4.8` y `v0.5.0` queda distribuida entre `docs/gestion/lin
 
 **Plan aceptado e integrado en [PR #13](https://github.com/jdfesa/lumapse/pull/13):** F1 y F2 fueron aprobadas e integradas en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`). La preparación de F3 fue aceptada tras la confirmación general del teléfono e integrada en PR #16 (`90fd21e`); sus ramas ya se eliminaron. Las mediciones cuantitativas siguen pendientes y F3 no se declara cerrada. Ver [protocolo y evidencia](docs/beta-core-validation/README.md) y [plan inmediato](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md).
 
-**Próximo objetivo verificable:** completar la evidencia Android de F3 —mediciones CRUD/FPS, casos offline/continuidad e identidad del artefacto— antes de decidir un nuevo corte. Los [filtros visibles del feed](docs/gestion/plan-filtros-visibles-2026-09-15.md) conservaron reglas y conteos, fueron probados por el autor e integrados en PR #18 (`3898db8`). No se agrega una F4 retroactiva.
+**Objetivo vigente:** identificación de build aprobada y revisión Android; después, dos sesiones secuenciales RNF-002/004 y RNF-009/010 según el [plan canónico](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#continuidad-aprobada--2026-10-02). Producto/bloqueantes → APK correspondiente generada/validada (objetivo `0.6.0+`) → informe/defensa. Filtros visibles cerrados en PR #18 (`3898db8`); no se agrega una F4 retroactiva ni se promete cerrar todo en dos sesiones.
 
 | Orden | Tarea | Criterio de cierre |
 |---|---|---|
@@ -106,14 +106,14 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Tipado gradual | Continuar servicios de dominio/backup archivo por archivo | Baja/Media | No avanzar en bloque; proximos candidatos requieren evaluar bordes nativos/share/storage o store con contratos mas claros |
 | Framework UI | No incorporar Svelte por ahora | Baja | Costo de migracion alto vs beneficio actual; reabrir solo si DOM manual se vuelve una carga clara |
 | Documentación | Congelar documentos para la entrega académica | Alta | La documentación viva se reconcilió con `v0.5.0`; restan bibliografía, matriz RNF, revisión de maquetación y materiales de defensa |
-| Dependencias | Repetir auditorías en cada corte candidato | Recurrente | AUD-004 quedó cerrado con grafo mínimo, auditorías 0/0 y Android aprobado; revalidar porque los advisories evolucionan. [Seguimiento del 2026-10-02](docs/gestion/validacion-parches-dependencias-2026-10-02.md): nuevos parches acotados de sanitizador/tooling aceptados en Samsung por el autor, con autorización explícita de integrar PR #21; sin resultados manuales por caso, sin reescribir el cierre histórico ni completar F3 |
+| Dependencias | Repetir auditorías en cada corte candidato | Recurrente | AUD-004 quedó cerrado con grafo mínimo, auditorías 0/0 y Android aprobado; revalidar porque los advisories evolucionan. [Seguimiento del 2026-10-02](docs/gestion/validacion-parches-dependencias-2026-10-02.md): nuevos parches acotados de sanitizador/tooling aceptados en Samsung por el autor, con PR #21 integrado mediante `5ef1f911`; sin resultados manuales por caso, sin reescribir el cierre histórico ni completar F3 |
 | Tooling / seguridad | Parche acotado de Vitest 4.1.11 | Cerrada en PR #17 | Autor confirmó prueba y realizó merge (`7dc105c`); rama local/remota eliminada. Nueve nodos de desarrollo, grafo productivo intacto, auditorías del 2026-09-15 en 0/0 y cuatro regresiones. [Evidencia y límites](docs/gestion/validacion-parche-vitest-2026-09-15.md). No sustituye auditorías de futuros cortes |
 | Store / formularios | Conservar regresiones de creación confirmada (AUD-014) | Cerrada en F2 | Autor confirmó funcionamiento e integró PR #15; [evidencia y límites](docs/gestion/validacion-f2-guardado-y-refresco-2026-09-13.md). No extender ese cierre a mutaciones vecinas |
 | Store / refrescos vecinos | Caracterizar refrescos posteriores en mutaciones restantes | Media | Crear materia/sección y editar/eliminar fecha quedaron probados en Android e integrados mediante [PR #19](https://github.com/jdfesa/lumapse/pull/19) (`34b2900`): una escritura confirmada conserva éxito y ofrece recuperación solo de lectura, sin repetir la mutación. La inyección segura del fallo secundario permanece en regresiones SQLite/UI; el teléfono cubre el flujo normal. Mover/eliminar notas y otras acciones de materias/papelera quedaron fuera de alcance, sin fallo reproducido ni impacto actual en la estabilidad; revisarlas al tocar esos flujos o si aparece evidencia, no como bloqueo del próximo corte. [Plan y evidencia](docs/gestion/plan-refrescos-vecinos-2026-09-16.md) |
 | Tooling DB | Ampliar el smoke test a `academic_events` y constraints relevantes | Media | El DDL completo se ejecuta, pero las aserciones explícitas de tablas/columnas/relaciones se concentran en materias, notas y metadata; decidir su ampliación antes de presentar cobertura exhaustiva |
 | Diagramas | Revisar Mermaid de casos de uso, secuencia y dominio | Baja | Completado el 2026-07-03 contra `v0.4.8`; reabrir solo si cambia el alcance o durante la exportacion final a PDF/LaTeX |
 | Informe final | Preparar conversion LaTeX/PDF | Media | Consideraciones registradas en `docs/informe-final/README.md`; mantener Markdown como fuente de verdad y abrir pipeline LaTeX solo cuando el contenido este congelado |
-| Release | Definir el cierre estable | Alta | `v0.5.0` es la segunda beta publicada y contiene AUD-001 a AUD-007; decidir después de la matriz RNF y la defensa si basta como referencia o requiere un corte estable posterior |
+| Release | Definir el cierre estable | Alta | `v0.5.0` es la segunda beta publicada y contiene AUD-001 a AUD-007; producto/bloqueantes y evidencia primero; luego APK correspondiente `0.6.0+` según avance/autorización, antes del informe final/defensa; no reemplazar el corte publicado |
 | Rendimiento | Medir crecimiento real de notas | Media | La importación funcional de una fixture de 500 notas fue aprobada; todavía deben medirse latencia CRUD y rendimiento percibido para cerrar `RNF-002`/`RNF-004` |
 | Adjuntos | Planificar adjuntos de imagen post-release | Media | Valor alto para fotos de pizarrón; debe implementarse sin cargar SQLite ni saturar el feed |
 | Backup | Restauracion avanzada y Drive API directa | Alta | Exportacion e importacion ZIP manual ya estan integradas; quedan reemplazo/merge avanzado de workspace y subida directa a Drive como fases futuras |
@@ -135,9 +135,9 @@ Hito 06 es un hito de cierre. No incorporar salvo que un bloqueo de entrega lo e
 
 ### Reglas de trabajo
 
-- Mantener un máximo de dos frentes en curso.
+- WIP 2 es techo global entre En Curso y En Revisión; mantener una sola rama/frente técnico activo, incluida la revisión, conforme a AGENTS/CONTRIBUTING.
 - No abrir refactors ni migraciones amplias; una corrección estructural debe estar ligada a un bloqueo o a una validación concreta.
-- No reutilizar `v0.5.0` para un binario diferente; todo artefacto posterior requiere una nueva versión y un nuevo `versionCode`.
+- No reemplazar el asset publicado `v0.5.0`. Debug privado autorizado usa el script habitual y origen/canal/hash sin bump por prueba; candidato/entrega posterior requiere versión/code nuevos y autorización. Ver [flujo Android](docs/flujo-desarrollo-android.md#identificación-de-compilaciones-en-acerca-de).
 - No publicar un nuevo artefacto sin repetir auditorías sobre el corte candidato ni mientras exista cualquier bloqueo de seguridad confirmado.
 - Todo cambio de comportamiento debe cerrar con tests focalizados, `npm run verify`, trazabilidad y nueva validación Android proporcional al riesgo.
 - Preservar `v0.4.8`, `v0.5.0` y sus SHA-256 como evidencia inmutable de las betas publicadas.

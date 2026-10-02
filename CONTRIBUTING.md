@@ -21,6 +21,9 @@ La arquitectura vigente se resume en [ADR-008](./docs/adr/ADR-008-arquitectura-m
 
 No deben incluirse credenciales, keystores, contraseñas, bases de datos personales, artefactos temporales ni dependencias instaladas.
 
+Consultar al autor antes de adoptar cambios de flujo o ajustes operativos no aprobados
+previamente. Las mejoras propuestas no se convierten automáticamente en nuevas tareas.
+
 ## 3. Commits
 
 Se utiliza Conventional Commits con el formato:
@@ -71,6 +74,17 @@ npm run check:traceability
 Los cambios Android o de persistencia requieren además pruebas en el entorno correspondiente y evidencia en los checklists de gestión. Un test web no sustituye una validación nativa cuando intervienen SQLite, Filesystem, Network o Share.
 
 Las pruebas automatizadas de `verify` (Node, DOM simulado y SQLite en memoria) no requieren abrir manualmente la app en el navegador. El smoke manual web es auxiliar, no obligatorio para este ciclo Android. Usar el entorno nativo existente para la prueba en el teléfono; no instalar Android Studio solo para intentar validar la web.
+
+Una compilación debug privada autorizada se prueba con el **script habitual**, sin
+bump ni publicación por cada cambio. Identificar versión base, canal/origen en Acerca
+de, hash del APK y certificado en la evidencia: Git SHA no equivale a identidad binaria.
+Un candidato/entrega posterior requiere corte separado, versión/code nuevos y autorización
+específica; nunca reemplazar el asset publicado previo. Vite production no acredita una
+release. Ver [flujo e identificación Android](./docs/flujo-desarrollo-android.md#identificación-de-compilaciones-en-acerca-de).
+
+Instalación, importación, terminación y operaciones destructivas requieren autorización
+pertinente. `--clean`, desinstalación y borrado exigen permiso específico y recuperación
+acordada: el ZIP no respalda borradores ni papelera. Ante firma incompatible, detenerse.
 
 ## 6. Pull Request
 

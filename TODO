@@ -8,17 +8,17 @@
 
 **Corte operativo vigente:** segunda beta [`v0.5.0`](https://github.com/jdfesa/lumapse/releases/tag/v0.5.0), publicada con APK firmada y validación automática/Android trazable.
 
-**Versión:** `v0.5.0` (`versionCode 500`), tag anotado sobre `5840755`. La beta anterior `v0.4.8` permanece como evidencia inmutable; cualquier artefacto posterior deberá usar una versión nueva.
+**Versión publicada:** `v0.5.0` (`versionCode 500`), tag anotado sobre `5840755`. Las betas publicadas son inmutables; debug privado autorizado no exige bump por prueba. Un candidato/entrega posterior requiere versión/code nuevos: [flujo Android](docs/flujo-desarrollo-android.md#identificación-de-compilaciones-en-acerca-de).
 
-**Objetivo:** cerrar documentación, gráficos de base de datos, validación final y materiales de presentación sin ampliar el producto.
+**Objetivo:** producto y bloqueantes → APK de versión correspondiente generada/validada (objetivo `0.6.0+` según avance y autorización) → informe final/defensa. Meta fines de octubre 2026 condicionada a evidencia y disponibilidad, sin ampliar el producto.
 
 ## Prioridad inmediata — plan aceptado
 
-**Prerrequisito de seguridad aprobado (2026-10-02):** el autor aceptó los cambios nuevos instalados en Samsung y autorizó explícitamente integrar [PR #21 — parches mínimos de dependencias](docs/gestion/validacion-parches-dependencias-2026-10-02.md). Aceptación general, sin resultados manuales por caso ni mediciones nuevas. No cambia versión ni completa F3; sus mediciones se retoman sobre `main` sincronizado después de integrar y limpiar esta única rama.
+**Prerrequisito de seguridad cerrado (2026-10-02):** el autor aceptó los cambios nuevos instalados en Samsung y autorizó integrar [PR #21](docs/gestion/validacion-parches-dependencias-2026-10-02.md), fusionado mediante `5ef1f911`; rama eliminada y `main` sincronizado. Aceptación general, sin resultados manuales por caso ni mediciones nuevas. No cambia versión ni completa F3.
 
 El [plan de desarrollo inmediato de la beta](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) fue aceptado e integrado en PR #13. **F1 y F2 aprobadas e integradas** en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`). **Preparación F3 aceptada e integrada** en PR #16 (`90fd21e`) tras la confirmación general del teléfono; ramas eliminadas. [Protocolo, fixtures y matriz](docs/beta-core-validation/README.md): las métricas Android siguen pendientes, sin declarar F3 cerrada.
 
-**Próximo frente verificable:** completar F3 con mediciones CRUD/FPS y casos offline/continuidad sobre un artefacto identificado. Los [filtros visibles del feed](docs/gestion/plan-filtros-visibles-2026-09-15.md) fueron probados por el autor e integrados en PR #18 (`3898db8`); su cierre no sustituye la evidencia cuantitativa ni la matriz RNF pendiente.
+**Frente actual aprobado:** identificación de build en Acerca de y ajustes documentales mínimos; una sola rama `feat/build-identification`, revisión y prueba Android pendientes. Después de su aceptación/integración/limpieza: sesión 1 RNF-002/004, sesión 2 RNF-009/010, según [continuidad del plan](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#continuidad-aprobada--2026-10-02). Los filtros visibles quedaron cerrados en PR #18 (`3898db8`); no sustituyen F3.
 
 | Orden | Frente | Criterio de cierre |
 |---|---|---|
@@ -26,7 +26,7 @@ El [plan de desarrollo inmediato de la beta](docs/gestion/plan-desarrollo-inmedi
 | F2 | Creación confirmada — AUD-014 | No duplicar notas/fechas al fallar una recarga posterior a la escritura; regresiones y smoke Android |
 | F3 | Validación del núcleo | Fixture compatible de 500 notas, mediciones CRUD/FPS y casos offline/continuidad con evidencia del artefacto |
 
-El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de línea base final **siguen pendientes** en la checklist. F3 no los sustituye ni obliga a publicar `1.0.0`. WIP máximo: dos elementos entre En Curso y En Revisión.
+El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de línea base final **siguen pendientes** en la checklist, después del APK validado. F3 no los sustituye ni obliga a publicar `1.0.0`. WIP 2 es techo entre En Curso y En Revisión, no permiso para dos ramas/frentes técnicos.
 
 - [x] Aceptar e integrar el PR del plan inmediato — PR #13, `65e5767`; rama documental local/remota eliminada.
 - [x] F1: aceptada e integrada en PR #14 (`7d4ceda`); rama `fix/quality-gate-portability` eliminada local/remota. Evidencia de ejecución e información no recibida distinguidas en su reporte.
@@ -37,7 +37,9 @@ El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de
 - [x] F2: autor confirmó funcionamiento e integró PR #15 (`8e25dcd`) el 2026-09-14; rama local/remota eliminada. Cierre acotado a creación de notas/fechas.
 - [x] Refrescos vecinos de F2: crear materia/sección y editar/eliminar fecha fueron probados en Android por el autor e integrados en [PR #19](https://github.com/jdfesa/lumapse/pull/19) el 2026-09-18 (`34b2900`), con regresiones SQLite/UI y recuperación solo de lectura. Mover/eliminar notas y otras acciones de materias/papelera permanecen como deuda media, a revisar con evidencia; este cierre no completa F3. [Plan y evidencia](docs/gestion/plan-refrescos-vecinos-2026-09-16.md).
 - [x] F3: perfiles/ZIP de 50/500 notas, integración SQLite y protocolo aceptados e integrados en PR #16; confirmación general del teléfono recibida el 2026-09-15, sin nuevas muestras crudas ni identidad APK.
-- [ ] F3: acordar artefacto/espacio seguro, ejecutar mediciones CRUD/FPS y casos offline/continuidad; completar matriz con evidencia Android. No optimizar consultas/store sin medición y nueva aprobación.
+- [ ] Identificación de build: revisar PR draft y probar Acerca de mediante deploy habitual autorizado sin limpieza; no hay merge autorizado para este frente.
+- [ ] F3 sesión 1: acordar artefacto/espacios 50/500 e inspector; 30 calentamientos y 180 muestras CRUD ≤ 200 ms, 3 × 10 tramos FPS ≥ 55, trazas/hashes/offsets reales revisados por el autor.
+- [ ] F3 sesión 2: OFF-01–05 y CON-01–04, borradores nuevos/edición y ventana real de 500 ms, solo tras cerrar la sesión anterior y con operaciones pertinentes autorizadas. No optimizar sin medición/aprobación.
 
 ## Checklist de trabajo
 
@@ -56,7 +58,7 @@ El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de
 - [x] Cerrar AUD-005 mediante PR #7: SHA de código validado `0832a75`, 1035 tests, gate y funcionamiento general Android aprobados. Ver [evidencia](docs/gestion/analisis-aud-005-coordinacion-sqlite-2026-09-04.md).
 - [x] Cerrar AUD-006 en [PR #8](https://github.com/jdfesa/lumapse/pull/8): 1057 tests locales con un worker, controles individuales, aprobación Android, CI y merge trazados. Ver [evidencia](docs/gestion/analisis-aud-006-ownership-solicitudes-async-2026-09-05.md).
 - [x] Ejecutar el gate final de `v0.5.0`: 67 archivos y 1065 tests aprobados con un worker; CI de PR #10 en verde y versiones web/Android verificadas como `0.5.0/500`.
-- [ ] Completar una instalación manual del APK firmado `lumapse-v0.5.0.apk` cuando el dispositivo lo permita. La validación existente cubre un build equivalente `0.5.0/500` instalado sobre datos conservados, no debe confundirse con la instalación del asset firmado.
+- [x] APK firmada/publicada `v0.5.0` probada y aceptada por el autor en al menos tres dispositivos; [aceptación general canónica](docs/gestion/checklist-validacion-android.md#aceptación-general-de-la-apk-publicada-v050). Sin inventar resultados por caso/F3 ni volver a pedir esa prueba.
 - [x] Corregir y validar la interacción `Mover a` en PR #9: destinos con toque normal, acciones de materia/sección visibles y cierre consistente de menús contextuales.
 - [ ] Medir latencia CRUD y rendimiento percibido con al menos 500 notas y registrar el resultado; importar correctamente esa cantidad no constituye por sí solo una medición de `RNF-002`/`RNF-004`.
 - [ ] Ejecutar pruebas de uso con estudiantes y verificar profundidad de navegación (`RNF-005`, `RNF-006`).
@@ -69,7 +71,7 @@ El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de
 - [ ] Medir el factor de ajuste real y redactar recomendaciones para futuros equipos.
 - [x] Reforzar `scripts/release-helper.py` para sincronizar y verificar `versionName`/`versionCode` Android con la versión declarada; aplicado en PR #10.
 - [x] Sincronizar README, CHANGELOG, Hito 06, líneas base, velocidad, cheatsheet e informe académico con la publicación de `v0.5.0`.
-- [x] Publicar la segunda beta como `v0.5.0`; la decisión pendiente ahora se limita a conservarla como referencia de defensa o producir una versión estable posterior.
+- [x] Publicar y preservar la segunda beta `v0.5.0`; próximo corte correspondiente (objetivo `0.6.0+`) separado y expresamente autorizado antes del cierre final del informe/defensa.
 
 ## Criterios de salida de Hito 06
 

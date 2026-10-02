@@ -10,7 +10,7 @@
 
 **Estado:** Activo — segunda beta `v0.5.0` publicada; cierre académico, matriz RNF y presentación pendientes
 
-**Última actualización:** 2026-09-12
+**Última actualización:** 2026-10-02
 
 ---
 
@@ -18,13 +18,18 @@
 
 Cerrar Lumapse con documentación coherente, evidencia técnica reproducible, diagramas finales y una presentación académica preparada. Hito 06 no abre una nueva etapa de producto: convierte la beta operativa en una entrega defendible y decide el corte final solo después de validar todos los artefactos.
 
+**Prioridad aprobada vigente:** terminar producto/bloqueantes → generar y validar APK
+de la versión correspondiente (objetivo `0.6.0+`, condicionado al avance/autorización)
+→ completar informe final y defensa. Meta fines de octubre 2026, sujeta a evidencia y
+disponibilidad del autor/dispositivo; no se promete todo en las próximas dos sesiones.
+
 ## Punto de Partida
 
 - Hitos 00 a 05 cerrados documentalmente.
 - Primera beta [`v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8) preservada como evidencia histórica de Hito 05.
 - Segunda beta [`v0.5.0`](https://github.com/jdfesa/lumapse/releases/tag/v0.5.0) publicada con APK firmada; tag anotado sobre `5840755` y SHA-256 `d48338e04021a6096fcaeaced5fde411911d403c9ea95407891d2b034515a884`.
 - Gate final de `v0.5.0` aprobado con 67 archivos y 1065 tests; CI de PR #10 en verde y versiones web/Android alineadas como `0.5.0/500`.
-- Validación incremental aprobada en Samsung `SM_G965F` con datos preservados; la instalación específica del asset firmado de GitHub sigue pendiente y está diferenciada en la checklist.
+- Validación incremental histórica en Samsung `SM_G965F` preservada por separado; APK firmada/publicada `v0.5.0` aceptada por el autor en al menos tres dispositivos. [Aceptación general y límites](../gestion/checklist-validacion-android.md#aceptación-general-de-la-apk-publicada-v050).
 - AUD-001 y AUD-002 quedaron integrados mediante PR #2; AUD-003 quedó integrado mediante PR #3 después de completar la suite acumulativa y los checkpoints Android acordados.
 - AUD-004 quedó integrado mediante PR #5, AUD-007 mediante PR #6, AUD-005 mediante PR #7 y AUD-006 mediante PR #8, con sus quality gates y validaciones Android aprobados. Todos forman parte de `v0.5.0`.
 - PR #9 cerró la fricción táctil de `Mover a` y las acciones de materias/secciones; PR #10 preparó, verificó y versionó la segunda beta.
@@ -62,7 +67,7 @@ Cerrar Lumapse con documentación coherente, evidencia técnica reproducible, di
 - [x] Cerrar AUD-005: propiedad SQLite explícita, migraciones estrictas, arranque recuperable, 1035 tests, gate canónico y funcionamiento general Android aprobados el 2026-09-04; integrado mediante PR #7.
 - [x] Cerrar AUD-006: ownership de Papelera y caches académicos, 1057 tests locales con un worker, controles individuales y Android aprobados; integrado mediante [PR #8](https://github.com/jdfesa/lumapse/pull/8), con limitación del gate local documentada.
 - [x] Ejecutar el quality gate del corte `v0.5.0`: 67 archivos y 1065 tests aprobados, CI de PR #10 en verde y metadatos `0.5.0/500` verificados.
-- [ ] Completar la checklist Android sobre el asset firmado `lumapse-v0.5.0.apk`; la validación incremental existente utilizó un build equivalente con clave debug para preservar datos.
+- [x] Aceptación general del asset firmado/publicado `lumapse-v0.5.0.apk` recibida; no se rellenan casos históricos ni se reabre esa prueba. F3 sigue pendiente.
 - [ ] Medir latencia CRUD y rendimiento con al menos 500 notas (`RNF-002`, `RNF-004`); la importación funcional de esa cantidad no constituye una medición de rendimiento.
 - [ ] Ejecutar pruebas con estudiantes y revisar profundidad de navegación (`RNF-005`, `RNF-006`). La fricción técnica de `Mover a` ya fue corregida y validada en PR #9.
 - [ ] Auditar tipografía, touch targets, contraste y navegación accesible (`RNF-007`, `RNF-008`, `RNF-019` a `RNF-022`).
@@ -83,10 +88,10 @@ Cerrar Lumapse con documentación coherente, evidencia técnica reproducible, di
 ### 5. Corte y línea base final
 
 - `v0.4.8` permanece como evidencia inmutable de la primera beta; `v0.5.0` congela AUD-001 a AUD-007 y las correcciones táctiles en la segunda beta.
-- Decidir después de la matriz RNF y la preparación de defensa si `v0.5.0` será la referencia académica suficiente o si corresponde un corte estable posterior.
-- No reutilizar `v0.5.0` ni `versionCode 500` para un binario diferente.
+- Preparar el corte correspondiente después de producto/evidencia y antes del informe final/defensa; objetivo `0.6.0+` condicionado, no obligación de publicar `1.0.0`.
+- No reemplazar el asset `v0.5.0`. Un debug privado autorizado se identifica por canal/origen/hash sin bump por prueba; nuevo candidato/entrega requiere versión/code nuevos y permiso específico. [Flujo Android](../flujo-desarrollo-android.md#identificación-de-compilaciones-en-acerca-de).
 - `scripts/release-helper.py` ya sincroniza package/changelog, `versionName` y `versionCode`, distingue artefactos firmados/unsigned y expone `check:version` en el gate.
-- Si se genera otro APK, actualizar versión, código Android, hash, changelog, README, línea base y material de defensa en un único corte.
+- En el próximo corte entregable autorizado, actualizar versión, código Android, hash, changelog, README y línea base; después reconciliar informe y material de defensa.
 - Crear `LB-PROD-v1.0.0` o un tag estable equivalente solo cuando documentación, validación y artefacto sean definitivos.
 
 ## Fuera de Alcance
@@ -103,7 +108,7 @@ Las ideas conservadas siguen en [`../../BACKLOG.md`](../../BACKLOG.md) y no comp
 
 ## Orden de Trabajo
 
-El orden académico general se conserva abajo. Para las próximas sesiones del frente técnico se
+El seguimiento original se conserva abajo. Para el frente técnico se
 aceptó el [plan inmediato de la beta](../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) en PR #13:
 F1, reproducibilidad del gate (AUD-008/AUD-009); F2, confirmación de creación ante fallos de
 recarga (AUD-014); F3, evidencia Android y medición con 500 notas. **F1 y F2 fueron aprobadas e integradas
@@ -116,14 +121,14 @@ fecha para `1.0.0`; los pendientes académicos y la matriz RNF completa siguen a
 
 | Orden | Frente | Salida esperada |
 |---|---|---|
-| 1 | Sincronización documental | Evidencia de `v0.5.0` reflejada sin reescribir la historia de `v0.4.8` |
-| 2 | Seguridad de release | Completado: AUD-004 validado con auditorías 0/0 y Android aprobado |
-| 3 | Revisión editorial y diagramas DB | Contenido congelado; fuentes y exportaciones finales verificadas |
-| 4 | Validación | Gate, matriz RNF y checklist Android sin bloqueantes sobre el mismo artefacto |
-| 5 | Presentación | Deck, demo, guion y contingencia listos |
-| 6 | Línea base | `v0.5.0` documentada y decisión explícita sobre un eventual corte estable posterior |
+| 1 | Producto y bloqueantes | Identificación de build revisada; F3 en dos sesiones secuenciales y tratamiento aprobado de hallazgos reales |
+| 2 | APK correspondiente | Gate/auditorías y validación Android del artefacto exacto; corte `0.6.0+` según avance/autorización |
+| 3 | Informe y diagramas | Evidencia final incorporada, bibliografía/maquetación y contenido congelados |
+| 4 | Defensa y línea base | Deck, demo, contingencia y decisión académica verificables |
 
-Se mantiene WIP máximo de dos elementos activos en total entre `En Curso` y `En Revisión`, según la [`Definition of Workflow`](../gestion/definicion-flujo-kanban.md), para evitar que documentación, validación y presentación queden abiertas al mismo tiempo.
+Detalle/prerrequisitos en la [continuidad aprobada](../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#continuidad-aprobada--2026-10-02).
+
+Se mantiene WIP 2 como techo entre `En Curso` y `En Revisión`, según la [`Definition of Workflow`](../gestion/definicion-flujo-kanban.md), con una sola rama/frente técnico activo incluyendo revisión; no abrir el siguiente antes de aceptación, integración y limpieza.
 
 ## Observaciones Bajo Seguimiento
 

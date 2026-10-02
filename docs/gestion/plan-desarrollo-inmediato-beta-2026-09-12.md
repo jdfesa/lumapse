@@ -2,11 +2,11 @@
 
 **Estado:** Plan aceptado e integrado mediante [PR #13](https://github.com/jdfesa/lumapse/pull/13), `65e5767`. F1 y F2 aprobadas e integradas en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`). Preparación F3 aceptada e integrada en PR #16 (`90fd21e`) tras confirmación general del teléfono el 2026-09-15; ramas eliminadas. Las métricas Android siguen pendientes, sin declarar F3 cerrada. [Evidencia y límites de F2](./validacion-f2-guardado-y-refresco-2026-09-13.md); [preparación y matriz F3](../beta-core-validation/README.md).
 
-**Rama documental:** `docs/immediate-beta-plan`.
+**Rama documental original:** `docs/immediate-beta-plan`, integrada y eliminada.
 
-**Base inspeccionada:** `origin/main` en `91723d6` (2026-09-07), posterior a la publicación de `v0.5.0`.
+**Base inspeccionada original:** `origin/main` en `91723d6` (2026-09-07), posterior a la publicación de `v0.5.0`. Para el frente actual: `5ef1f911d593f7fbd689d304432bfed47586fff6`, posterior al merge de PR #21.
 
-**Horizonte:** próximas tres a cuatro sesiones de trabajo, sujeto a revisión y disponibilidad Android; no es una fecha de entrega.
+**Horizonte original:** tres a cuatro sesiones. La continuidad aprobada vigente se limita a las dos sesiones descritas abajo, después del frente de identificación de build; no promete la entrega final en ellas.
 
 **Responsable:** autor del proyecto, con asistencia técnica; la aceptación y el merge requieren su autorización.
 
@@ -57,6 +57,96 @@ La tabla conserva el diagnóstico de base del 2026-09-12. El seguimiento actual 
 Esto **no demuestra pérdida de datos, frecuencia del fallo en teléfonos ni una transacción SQLite defectuosa**. Confirma una señal de resultado incorrecta y duplicación por reintento en esos dos caminos. AUD-001/AUD-002 cubrieron fallo de escritura y taps simultáneos; no este fallo posterior a una escritura exitosa. La [reproducción autocontenida](#8-reproducción-de-aud-014) conserva la evidencia sin agregar tests permanentes antes de aprobar la implementación.
 
 ## 4. Secuencia de las próximas sesiones
+
+### Continuidad aprobada — 2026-10-02
+
+El autor aprobó las próximas **dos sesiones**, los ajustes mínimos de documentación
+y la identificación de builds en Acerca de. Son acuerdos vigentes, no otra auditoría
+ni autorización de merges futuros. Cualquier cambio de flujo no aprobado se consulta
+antes de adoptarlo, conforme a AGENTS/CONTRIBUTING.
+
+**Orden de entrega:** producto y bloqueantes → APK correspondiente generada/validada
+(objetivo `0.6.0+` según avance y autorización específica) → informe final/defensa.
+Meta fines de octubre 2026 condicionada a evidencia, correcciones y disponibilidad.
+No se promete APK final, todos los RNF ni defensa en estas dos sesiones.
+
+**Frente habilitador actual:** rama única `feat/build-identification`, desde `5ef1f911`.
+Acerca de presenta versión base, compilación y origen; el canal se declara automáticamente
+en los scripts existentes, sin nuevas dependencias, bump ni arquitectura. Semántica,
+fallback, HMR y límites en el [flujo Android](../flujo-desarrollo-android.md#identificación-de-compilaciones-en-acerca-de).
+Se entrega PR **draft**, sin operación Android, release ni autorización de merge.
+La APK publicada `v0.5.0` ya fue aceptada en al menos tres dispositivos: [registro general](./checklist-validacion-android.md#aceptación-general-de-la-apk-publicada-v050).
+Ese cierre no acredita el código nuevo ni los RNF de F3.
+
+**Verificación local del habilitador (2026-10-02):** código en `6278dee33575c281466179a71cf5aa4fec20de33`,
+con ajustes documentales de esta rama presentes al ejecutar el gate. Node **22.20.0** /
+npm **10.9.3** revalidados; distribución aislada existente contrastada con SHASUMS oficial.
+Dependencias instaladas reutilizadas con package/lock sin cambios; no se ejecutó otro
+`npm ci`, ni se alteró el runtime global. Sin dependencias nuevas ni bump de Gradle.
+
+| Comando ejecutado | Resultado real |
+|---|---|
+| `npm test -- tests/unit/config/buildMetadata.test.js tests/unit/components/about/AboutView.test.js` | Exit 0; 2 archivos / 14 tests: etiquetas, versión base, estado/fallback y escape del render |
+| `node --test tests/tooling/build-metadata.test.js` | Exit 0; 7 tests: Git sustituible (sin Git/HEAD, árbol ajeno, dirty/desconocido), HMR y Vite dev + tres builds web reales en memoria |
+| `python3 -m unittest discover -s scripts/tests -p test_release_build_metadata.py -v` | Exit 0; 2 regresiones con subprocess/pipeline simulados, **sin ejecutar** limpieza/Capacitor/Gradle/ADB |
+| `npm run verify` | Exit 0; 77 archivos / 1167 tests de app, 68 de tooling; gate completo, build web, types, versión `0.5.0/500`, SQLite y controles documentales/offline aprobados |
+| `npm run check:docs`, `npm run check:traceability` | Exit 0; enlaces/anclas válidos y trazabilidad sin advertencias |
+| Auditoría suplementaria con las funciones de `scripts/check-doc-links.py` | Archivos modificados incluidos AGENTS/CONTRIBUTING/TODO, normalmente no descubiertos; enlaces/anclas sin problemas |
+| `git diff --check` | Sin errores; package/lock/Gradle y evidencia histórica de resultados F3 sin cambios |
+
+Se verificaron snapshots reales de los cuatro canales sobre `6278dee`, con estado
+de código limpio aunque había documentos modificados. La integración web comprueba
+versión base desde package, canal y origen incrustados, sin rutas del host ni APIs Node
+en el cliente. No sustituye un APK. Los tres avisos lint preexistentes (NoteEditor y
+BackupImportPlanService) y avisos diagnósticos de tamaño no se ocultaron ni relajaron.
+Logs y snapshots temporales no se versionan. CI se consulta en el PR para su HEAD exacto,
+por separado de esta evidencia local. **Android de este frente y todas las mediciones
+F3: PENDING**; no se generó/firmó/publicó APK ni se tocó un teléfono.
+
+**Prueba posterior del autor para este PR:**
+
+1. Revisar el PR y acordar instalación habitual sobre firma compatible; no usar `--clean`.
+2. En el equipo con Android disponible, sincronizar la única rama/HEAD del PR y usar
+   `npm run deploy:android -- --target <DEVICE_ID>` cuando la instalación esté autorizada.
+3. En Acerca de comprobar **Versión base 0.5.0**, **Android debug · prueba privada** y
+   **Origen** igual al HEAD completo del checkout; estado local según código relevante.
+   En checkout limpio debe indicar sin cambios locales; no ensuciar datos para probarlo.
+4. Revisar legibilidad del SHA en pantalla, navegación/apertura y conservación de datos.
+   Adjuntar identidad real del APK (hash/certificado), dispositivo/Android/WebView y
+   confirmación general o resultados efectivamente observados, sin inferir métricas.
+5. Revisión, CI del HEAD exacto y **nueva autorización explícita** antes de ready/merge;
+   sincronizar `main` y limpiar la rama únicamente tras integración comprobada.
+
+**Prerrequisitos comunes de F3:** cerrar el PR anterior y comprobar GitHub/main limpio;
+autor/dispositivo e inspector disponibles; APK fuente/canal/hash/certificado identificados;
+espacios sintéticos independientes 50/500 o restauración acordada. Un ZIP no respalda
+borradores ni papelera. Instalación, importación, auxiliares y terminación necesitan
+autorización pertinente; nunca usar borrado, `uninstall` o `pm clear` por defecto.
+Quitar filtros visibles activos y confirmar **50/500** antes de capturar; PR #18 ya
+resolvió el filtro oculto. El [reporte de septiembre](../beta-core-validation/resultados-2026-09-14.md)
+permanece histórico: no rellenarlo con mediciones inexistentes.
+
+| Sesión | Una unidad/frente | Evidencia y aceptación | Cierre del ciclo |
+|---|---|---|---|
+| 1 | RNF-002/004: latencia CRUD y FPS | Perfiles 50/500; 5 calentamientos por operación/perfil (30); 30 × 3 CRUD × 2 perfiles (180) muestras válidas, **todas ≤ 200 ms**; 3 recorridos × 10 tramos con 500 resultados, **cada tramo ≥ 55 FPS**. Trazas originales/hashes/offsets, CSV y JSON cotejados por el autor. | Commit `test(validation): record Android CRUD and frame evidence`; docs/traceability y enlaces, PR inglés, revisión de evidencia, checks HEAD exacto y autorización de merge, main sincronizado y rama eliminada. |
+| 2 | RNF-009/010: offline y continuidad | OFF-01–05, CON-01–04; borradores nuevos y de edición; cambio de app, bloqueo y terminación autorizada con ventana real de 500 ms. Esperado/real, IDs/conteos/contenido, método/fecha/dispositivo y confirmación auténtica. | Solo tras cerrar sesión 1 y acordar prioridad según sus resultados. Commit `test(validation): record Android offline and draft continuity evidence`; mismo ciclo de tests/docs/PR/autorización/limpieza. |
+
+Seguir el [protocolo F3](../beta-core-validation/protocolo.md) y su matriz canónica.
+**Dispositivo/muestras de esta continuidad: PENDING.** El analizador existente sale
+0 también para FAIL/PENDING estructuralmente válidos: no mide ni demuestra PASS.
+Sin captura fiable o permiso, registrar PENDING; con fallo real, registrar FAIL y
+acordar tratamiento antes de otro frente, sin bajar umbrales u optimizar por intuición.
+Actualizar solo RNF/casos sustentados por evidencia. Si se autoriza código correctivo,
+tests focalizados y `npm run verify` íntegro; no prometer que cabe en estas sesiones.
+
+**Fase posterior condicionada:** bloqueantes resueltos o límites explícitos aceptados;
+evidencia RNF restante (estudiantes/usabilidad, accesibilidad, tráfico/privacidad,
+coverage del candidato y matriz final). Luego corte autorizado `0.6.0+`, gate/auditorías,
+APK exacta generada y validada; firma/publicación requieren permiso específico.
+Solo después: capítulos fuente del informe, originales bibliográficos, maquetación,
+ensamblado/PDF, defensa/demo/contingencia. No abrir ramas ni publicar automáticamente.
+
+### Secuencia original y cierres ya integrados
 
 | Orden | Entregable | Rama prevista | Dependencia | Salida revisable |
 |---|---|---|---|---|
@@ -132,7 +222,7 @@ y añadiendo los perfiles exactos de comparación F3. No hay mediciones Android 
 
 **Objetivo:** decidir con datos si hay que intervenir consultas o notificaciones, y ampliar la evidencia de continuidad/offline del producto existente.
 
-**Preparación segura:** acordar dispositivo y artefacto; registrar modelo, Android/WebView, SHA, versión/código, firma y hash. Distinguir siempre el asset firmado `v0.5.0` de un build de validación posterior. Si el binario cambia, acordar versión/code nuevos sin reutilizar la beta publicada; esto no obliga a crear un tag ni una release. Ante incompatibilidad de firma, detener la instalación y usar un entorno de prueba o una restauración expresamente autorizada; nunca desinstalar/borrar datos por defecto.
+**Preparación segura:** acordar dispositivo y artefacto; registrar modelo, Android/WebView, SHA, versión/código, canal, firma y hash. Distinguir asset publicado, debug privado autorizado y nuevo candidato según el [flujo Android](../flujo-desarrollo-android.md#identificación-de-compilaciones-en-acerca-de). Debug habitual no exige bump por prueba; candidato/entrega usa versión/code nuevos y autorización específica. Ante firma incompatible, detenerse y acordar entorno/restauración; nunca desinstalar/borrar datos por defecto.
 
 **Protocolo mínimo:**
 

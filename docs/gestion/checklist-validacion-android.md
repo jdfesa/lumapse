@@ -2,7 +2,26 @@
 
 **Hito:** 06 — Entrega Final<br>
 **Objetivo:** registrar evidencia reproducible de cada APK y distinguir la verificación del asset firmado de las pruebas sobre builds equivalentes.<br>
-**Estado:** `v0.5.0` publicada; gate y validación incremental aprobados, instalación manual del asset firmado pendiente.
+**Estado:** `v0.5.0` publicada y aceptada; pruebas del frente de identificación de build y mediciones F3 pendientes por separado.
+
+---
+
+## Aceptación general de la APK publicada v0.5.0
+
+Registro del acuerdo comunicado por el autor el **2026-10-02**: la APK firmada y
+publicada `lumapse-v0.5.0.apk` fue probada y aceptada en **al menos tres dispositivos**.
+Se cierra el pendiente operativo de aceptación del asset publicado. No se conocen
+los modelos, fechas de ejecución ni resultados granulares de esos dispositivos;
+no se completan por inferencia las casillas históricas ni se atribuyen métricas F3.
+
+- [x] Aceptación general del asset firmado/publicado `v0.5.0` recibida del autor.
+
+La identidad del asset permanece en [Corte vigente — v0.5.0](#corte-vigente--v050).
+El debug posterior de parches fue aceptado por separado y PR #21 integrado mediante
+`5ef1f911`; [evidencia canónica](./validacion-parches-dependencias-2026-10-02.md).
+Ninguna de estas aceptaciones demuestra los casos o mediciones RNF pendientes.
+**No solicitar nuevamente la aceptación histórica de `v0.5.0`.** La siguiente prueba
+es la del frente nuevo, conforme al [plan vigente](./plan-desarrollo-inmediato-beta-2026-09-12.md#continuidad-aprobada--2026-10-02).
 
 ---
 
@@ -83,7 +102,7 @@ siguiente se conservan sin cambios: no trasladar sus resultados al candidato F3.
 
 ### Límite de la evidencia Android
 
-El dispositivo usado para la validación incremental tenía una compilación debug instalada. Para preservar los datos, el build equivalente `0.5.0/500` se firmó con la clave debug; no fue el asset firmado con la clave de producción que se adjuntó a GitHub. Por lo tanto:
+El dispositivo usado para la validación incremental tenía una compilación debug instalada. Para preservar los datos, el build equivalente `0.5.0/500` se firmó con la clave debug; no fue el asset firmado con la clave de producción que se adjuntó a GitHub. El handoff siguiente describe el pendiente de aquel checkpoint, **no el estado operativo vigente**: la aceptación general posterior está registrada arriba. Se conserva sin inventar resultados por caso.
 
 - [ ] instalar específicamente `lumapse-v0.5.0.apk` en un dispositivo compatible con su certificado de producción;
 - [ ] repetir al menos instalación/apertura offline, creación/edición/persistencia, materias/secciones, papelera y backup/importación;

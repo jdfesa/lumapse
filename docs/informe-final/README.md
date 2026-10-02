@@ -35,8 +35,8 @@ Los pendientes explícitos del Hito 06 son:
 - Revisión editorial de congelamiento después de incorporar las evidencias finales; la reconciliación transversal y las figuras DB del checkpoint ya están completadas.
 - Verificación de legibilidad de las imágenes de base de datos dentro del PDF y las diapositivas. El conceptual Chen y el lógico relacional ya fueron exportados, revisados e incorporados desde sus fuentes DOT y DBML sincronizadas.
 - Verificación de los metadatos bibliográficos incompletos de Gómez (2014) y Parada (2026) contra los originales de cátedra; la sección de referencias ya existe y no inventa los datos ausentes.
-- Ejecución del plan RNF de Hito 06: uso y navegación, accesibilidad, rendimiento, offline/cierre inesperado, tráfico/dependencias, coverage TypeScript y matriz final por artefacto; además, portabilidad del auditor y equivalencia entre CI y gate local.
-- Instalación manual del asset firmado `lumapse-v0.5.0.apk`, validación RNF final y preparación de la presentación después de cerrar los puntos anteriores.
+- Ejecución del plan RNF de Hito 06: uso y navegación, accesibilidad, rendimiento, offline/cierre inesperado, tráfico/dependencias, coverage TypeScript y matriz final por artefacto; la portabilidad del gate fue cerrada en F1/PR #14, con sus límites por entorno documentados.
+- Producto/bloqueantes y validación RNF pendiente → APK correspondiente generada/validada (objetivo `0.6.0+` según avance/autorización) → informe final y defensa, según el [plan vigente](../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#continuidad-aprobada--2026-10-02). El asset firmado `v0.5.0` ya fue aceptado en al menos tres dispositivos: [registro general](../gestion/checklist-validacion-android.md#aceptación-general-de-la-apk-publicada-v050). No rehacer el checkpoint histórico ahora ni reabrir esa aceptación.
 
 ### Checklist antes del próximo ensamblado
 

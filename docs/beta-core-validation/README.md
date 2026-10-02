@@ -67,11 +67,21 @@ por generar datos o ejecutar SQLite en memoria.
 
 La revisión de esta preparación puede hacerse ahora. Para continuar las mediciones se
 necesita acordar con el autor dispositivo, APK identificable y espacio de prueba seguro.
-Si hace falta otro binario, acordar antes versión/code nuevos y firma compatible;
-no reutilizar `0.5.0/500` para código distinto. El PR no autoriza instalación,
+Para un debug privado autorizado usar el deploy habitual e identificar canal/origen
+y hash del APK, sin bump por cada prueba. Un candidato/entrega posterior requiere
+versión/code nuevos y firma compatible; no reemplazar el asset publicado. Ver el
+[flujo Android](../flujo-desarrollo-android.md#identificación-de-compilaciones-en-acerca-de).
+El PR no autoriza instalación,
 reemplazo de datos, merge, tag o publicación automáticos.
 
 Una vez recibida la evidencia del teléfono, acordar un PR de seguimiento desde `main`
 actualizado, solo después de cerrar la tarea que esté en revisión; no reutilizar la rama
 eliminada ni abrir un segundo frente. Un fallo RNF se registra con sus muestras y cualquier
-corrección se prioriza por separado. La deuda de filtro de fecha oculto permanece en backlog.
+corrección se prioriza por separado. El filtro oculto quedó resuelto por PR #18
+(`3898db8`); quitar los filtros visibles activos y verificar 50/500 resultados antes
+de medir. El reporte de septiembre conserva la observación histórica, no reabre esa deuda.
+
+Las próximas dos sesiones aprobadas son **RNF-002/004** y después **RNF-009/010**,
+con revisión, autorización, integración y limpieza entre frentes. Seguir el
+[plan vigente](../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#continuidad-aprobada--2026-10-02);
+las muestras/dispositivo F3 siguen **PENDING**.

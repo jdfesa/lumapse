@@ -9,13 +9,17 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ## [Unreleased]
 
+### Changed
+
+- **Continuidad aprobada:** producto/bloqueantes → APK correspondiente validada (objetivo `0.6.0+` condicionado) → informe/defensa. Próximas dos sesiones F3 secuenciales, reglas de consulta previa y protección de datos; aceptación general de la APK publicada `v0.5.0` reconciliada sin inventar casos ni mediciones.
+
 ### Added
 
 - **Identificación de builds en Acerca de (RF-023):** versión base, compilación y origen Git calculados por Vite. Deploy habitual identificado como debug privado; helper de release como candidato sin acreditar firma/publicación. Estado local y fallback honesto sin Git; no cambia `0.5.0/500`, no genera una release ni sustituye el hash/evidencia del APK.
 
 ### Security
 
-- **Parches mínimos de dependencias:** DOMPurify sube de 3.4.14 a 3.4.16 para `GHSA-p98j-92pf-mc4p`; el lockfile fija `brace-expansion` 5.0.12 y `undici` 7.29.1 en sus rutas de tooling. Solo cambian tres nodos y el piso directo del sanitizador, sin nuevos paquetes, overrides, majors ni incremento de `0.5.0/500`. Las auditorías del 2026-10-02 y las regresiones focalizadas pasan; la validación Android del autor y la revisión del PR siguen pendientes. No es una release ni demuestra explotación del APK. [Evidencia, alcance y handoff](docs/gestion/validacion-parches-dependencias-2026-10-02.md).
+- **Parches mínimos de dependencias:** DOMPurify sube de 3.4.14 a 3.4.16 para `GHSA-p98j-92pf-mc4p`; el lockfile fija `brace-expansion` 5.0.12 y `undici` 7.29.1 en sus rutas de tooling. Solo cambian tres nodos y el piso directo del sanitizador, sin nuevos paquetes, overrides, majors ni incremento de `0.5.0/500`. Las auditorías del 2026-10-02 y las regresiones focalizadas pasan; el autor aceptó el debug posterior en Samsung y autorizó PR #21, integrado mediante `5ef1f911`. Es aceptación general, no evidencia granular ni métricas F3. No es una release ni demuestra explotación del APK. [Evidencia, alcance y handoff](docs/gestion/validacion-parches-dependencias-2026-10-02.md).
 - **Parche del tooling de tests:** Vitest y coverage-v8 suben a 4.1.11 para corregir `GHSA-82fw-gwwq-j7x9`; nueve paquetes de desarrollo alineados, sin cambios al grafo productivo, Vite, Node ni versión Android. Cuatro regresiones sintéticas verifican redirects permitidos/restringidos y la desactivación del canal de registro. Auditorías del 2026-09-15 en cero; autor confirmó pruebas e integró PR #17 (`7dc105c`). [Evidencia y límites](docs/gestion/validacion-parche-vitest-2026-09-15.md).
 
 ### Fixed

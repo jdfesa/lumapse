@@ -54,6 +54,10 @@ Completar [sesion.template.json](./sesion.template.json) bajo `tmp/`:
   SHA-256 del APK y huella del certificado. Distinguir release publicada y candidato.
   `shaFuente` identifica el commit Git completo (40 caracteres hexadecimales para
   SHA-1 o 64 para SHA-256); no usar su abreviatura ni confundirlo con el hash del APK.
+  Contrastar versión base/compilación/origen de Acerca de con la evidencia del APK;
+  una etiqueta candidato no acredita firma/publicación/validación. Para debug privado
+  usar el [deploy habitual](../flujo-desarrollo-android.md#identificación-de-compilaciones-en-acerca-de)
+  autorizado, sin bump por cada prueba; un nuevo corte entregable se autoriza aparte.
 - Modelo, Android/API, WebView y Chrome/DevTools, resolución, Hz, batería/carga,
   ahorro de energía, temperatura/estado térmico y conexión. Mantenerlos comparables.
 - Dispositivo/perfil de pruebas **expresamente autorizado**; backup recuperable previo
@@ -93,8 +97,8 @@ Python usa un DDL copiado; la integración F3 adicional prueba el DDL productivo
    verificar preview de **30 contenedores, 68/518 notas, 20 fechas**, sin reparaciones
    ni renombrados. Reimportar: cero importables. Un resultado distinto invalida el setup.
 2. Verificar 18 archivadas separadas y las 12 notas adicionales de papelera si se prepararon.
-3. Quitar cualquier fecha seleccionada en Calendario (tocar otra vez la seleccionada o
-   su acción de limpiar), volver a Entrada y buscar **`#`**. Todos los títulos del fixture
+3. Quitar la fecha con **Quitar fecha** y la búsqueda previa con su control visible
+   (PR #18); volver a Entrada y buscar **`#`**. Todos los títulos del fixture
    contienen ese carácter; la búsqueda existente es global y excluye archivadas.
 4. Confirmar **50/500 resultados**, sin filtro temporal. Entrada sin búsqueda está vacía
    por diseño del fixture; el total SQLite no prueba el tamaño del listado. El modo
@@ -103,9 +107,9 @@ Python usa un DDL copiado; la integración F3 adicional prueba el DDL productivo
    vista de materia individual, teclado abierto o filtros ocultos. El feed es virtual:
    no exigir 500 nodos DOM simultáneos; sí 500 elementos en el conjunto filtrado.
 
-La deuda de **filtro de fecha oculto** sigue abierta: puede reducir resultados aunque
-la búsqueda coincida. No corregirla dentro de F3 ni marcar un supuesto problema de
-volumen sin revisar primero esta precondición. Crear una nota limpia búsqueda/fecha;
+El filtro de fecha oculto quedó resuelto en PR #18 (`3898db8`), no es una corrección
+pendiente de F3. Revisar filtros visibles y alcance antes de atribuir un problema al
+volumen. Crear una nota limpia búsqueda/fecha;
 restablecer el setup entre muestras, fuera del intervalo medido.
 
 ## 4. RNF-002 — Latencia CRUD

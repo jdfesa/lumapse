@@ -213,7 +213,7 @@ shasum -a 256 releases/v0.4.8/lumapse-v0.4.8.apk
 - Asset firmado verificado localmente; el digest publicado por GitHub coincide con el SHA-256 registrado.
 - Build equivalente `0.5.0/500` aprobado manualmente en Samsung `SM_G965F` con los datos existentes preservados.
 
-> La validación manual conservando datos se ejecutó con un build equivalente firmado con la clave debug del dispositivo de prueba. No se atribuye esa instalación al APK firmado de GitHub; la instalación específica del asset publicado permanece como evidencia pendiente en la checklist Android.
+> La validación manual conservando datos se ejecutó con un build equivalente firmado con la clave debug del dispositivo de prueba. No se atribuye esa instalación al APK firmado de GitHub; la aceptación general posterior del asset publicado en al menos tres dispositivos está registrada en la [checklist Android](./checklist-validacion-android.md#aceptación-general-de-la-apk-publicada-v050), sin atribuirle resultados granulares ni métricas.
 
 **Comandos de verificación:**
 
