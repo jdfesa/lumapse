@@ -10,11 +10,13 @@ para Android se debe identificar además el HEAD exacto del PR y su artefacto.
 
 **Entorno:** Node **22.20.0**, npm **10.9.3**, sin `NODE_OPTIONS`.
 
-**Revisión:** [PR #21](https://github.com/jdfesa/lumapse/pull/21), **draft abierto**.
+**Revisión:** [PR #21](https://github.com/jdfesa/lumapse/pull/21); aceptación humana
+y autorización explícita de integración recibidas el 2026-10-02 (Argentina).
 
 **Estado:** parches, regresiones focalizadas y gate integral verificados localmente;
-APK debug instalada para supervisión el 2026-10-02; aceptación funcional Android
-y autorización explícita de merge del autor pendientes.
+APK debug instalada para supervisión y cambios aceptados por el autor el
+2026-10-02. La integración queda sujeta a verificar los checks del HEAD final,
+sin conflictos ni bloqueos; no se habilita auto-merge.
 
 ## Alcance y grafo mínimo
 
@@ -159,10 +161,12 @@ aprobada para este frente. Build y presupuestos estáticos no son mediciones RNF
 validación Android. `java`, `javac`, `adb` y `apksigner` no están disponibles en el
 PATH observado; no se buscó ni operó un dispositivo.
 
-## Handoff Android y aprobación — pendiente
+## Handoff Android propuesto antes de la aceptación
 
-El PR permanece **draft** hasta la confirmación Android de estos cambios
-exactos. CI verde no autoriza merge ni auto-merge. El autor deberá:
+Se conserva el alcance propuesto durante la revisión; **no es una lista de casos
+ejecutados**. La aceptación general posterior se registra al final de esta
+evidencia y no permite atribuir resultados individuales a estos pasos. CI verde
+no autoriza merge ni auto-merge. El handoff propuesto fue:
 
 1. Revisar el diff, registrar el SHA completo de la rama y repetir el gate canónico
    en su entorno habitual si corresponde. No iniciar otro frente durante la revisión.
@@ -207,7 +211,7 @@ Se retomó la misma rama con fetch/prune y pull ff-only. No se creó otro frente
 | Certificado SHA-256 | `5ba36ca181d954a6dbe8a4a6afdb833429feb32a3a93dae9e8313191a0c782df`, coincide con el APK previamente instalado |
 | Instalación | Script exit 0; actualización sobre la instalación existente, sin desinstalar ni limpiar datos; `firstInstallTime` permanece 2026-09-13 22:18:32 y `lastUpdateTime` pasa a 2026-10-02 18:18:13 (Argentina) |
 | Verificación posterior | APK recuperado del paquete instalado con el mismo SHA-256; `am start -W` devuelve `Status: ok`, actividad principal ya en primer plano y proceso existente a las 21:19:03 UTC |
-| Supervisión funcional del autor | **Pendiente**: edición, render Markdown, guardado/reapertura, navegación y continuidad offline proporcionales al parche |
+| Supervisión funcional del autor | **Aceptación general recibida el 2026-10-02** sobre los cambios nuevos instalados en este Samsung; no se recibieron resultados caso por caso |
 
 Este APK es un despliegue debug privado para supervisión, **no** la beta firmada y
 publicada, ni una nueva release. No se publicaron artefactos, tags ni claves, ni se
@@ -225,6 +229,27 @@ esa ruta ante la aclaración del autor: **ese APK no se instaló ni publicó**. 
 APK desplegado es el identificado en la tabla, generado por el script habitual.
 
 No se importaron fixtures, borraron notas ni ejecutaron mediciones F3. Instalación,
-apertura y gate verde no prueban por sí solos todos los flujos Android. El PR sigue
-draft y sin merge hasta recibir el resultado de supervisión y la autorización
-explícita del autor. Los logs y APK locales permanecen fuera del repositorio.
+apertura y gate verde no prueban por sí solos todos los flujos Android. La aceptación
+humana posterior no añade muestras ni resultados individuales. Los logs y APK
+locales permanecen fuera del repositorio.
+
+
+## Aceptación humana y autorización de integración — 2026-10-02
+
+El autor supervisó los cambios nuevos instalados en el Samsung identificado arriba
+y comunicó su aceptación general. Autorizó explícitamente: **«bien, esta bien,
+vamos a integrar la rama y aprobar el pr»** (2026-10-02, Argentina). Esta autorización
+corresponde al PR #21 y al código desplegado desde `9588e0f`; los commits posteriores
+de esta rama solo registran documentación y no cambian el producto instalado.
+
+Se cierra el pendiente de aceptación humana de este parche, **sin afirmar** que
+cada paso del handoff fue ejecutado ni asignarles resultados, sin nuevas mediciones
+F3/RNF y sin reabrir la validación ya aceptada de la beta histórica `v0.5.0`. No se
+operó el teléfono desde este equipo durante el registro de la aceptación.
+
+La cuenta de GitHub `jdfesa` coincide con la del autor del PR: no se emite una
+auto-aprobación técnica ni se usa otra identidad. La autorización humana se
+registra también en el PR; su integración normal mediante squash debe verificar
+checks exitosos del HEAD exacto y ausencia de conflictos/bloqueos, sin `--admin`,
+sin auto-merge ni cambios de reglas. El estado definitivo y el commit de integración
+se consultan en el PR, no se infieren de la autorización.
