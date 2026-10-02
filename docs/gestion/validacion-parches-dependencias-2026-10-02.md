@@ -13,12 +13,13 @@ para Android se debe identificar además el HEAD exacto del PR y su artefacto.
 **Revisión:** [PR #21](https://github.com/jdfesa/lumapse/pull/21), **draft abierto**.
 
 **Estado:** parches, regresiones focalizadas y gate integral verificados localmente;
-Android y autorización explícita de merge del autor pendientes.
+APK debug instalada para supervisión el 2026-10-02; aceptación funcional Android
+y autorización explícita de merge del autor pendientes.
 
 ## Alcance y grafo mínimo
 
-El autor autorizó este único prerrequisito de seguridad antes de retomar F3. No
-incluye ajustes de instrucciones, refactors, funcionalidades, datos/schema,
+El autor autorizó este único prerrequisito de seguridad antes de retomar F3.
+La implementación no incluye ajustes de instrucciones, refactors, funcionalidades, datos/schema,
 arquitectura, APK, firma, tag ni release. La aplicación permanece en **0.5.0/500**.
 El [cierre de AUD-004 del 2026-09-02](./analisis-aud-004-seguridad-dependencias-2026-09-02.md)
 y las auditorías posteriores se conservan como evidencia de sus propias fechas.
@@ -141,7 +142,7 @@ git diff --check
 | `npm run verify` integral | Exit 0: 61/61 pruebas de tooling y 76 archivos/1156 pruebas de aplicación; reporte completo validado, lint, build, types, schema/DBML/SQLite y demás controles aprobados |
 | Docs, trazabilidad, versión y enlaces nuevos | Exit 0 dentro del gate y repetidos por separado: 96 Markdown/748 enlaces, cero enlaces rotos ni advertencias de trazabilidad; 0.5.0/500. Auditoría suplementaria de TODO y fuentes modificadas sin errores |
 | CI de la rama/PR | [Checks del PR #21](https://github.com/jdfesa/lumapse/pull/21/checks): consultar resultado y SHA del HEAD revisado; no atribuir evidencia local ni CI de main a ese head |
-| Android | **Pendiente**, sin APK generado, instalación, firma ni datos del teléfono |
+| Android en la fase remota | Sin APK generado ni instalación; el despliegue local posterior se registra abajo y no equivale a aceptación funcional |
 
 Las salidas privadas identificadas son `04-audit-before-full.txt`,
 `05-audit-before-production.txt`, `21-audit-after-full.txt`,
@@ -182,8 +183,48 @@ exactos. CI verde no autoriza merge ni auto-merge. El autor deberá:
    resultados y confirmación. Solo después podrá decidir revisión final y autorizar
    explícitamente merge; no se atribuye esa aprobación a otra beta o PR anterior.
 
-No se ha operado la app, importado fixtures ni accedido a datos personales del
+Durante la fase remota no se operó la app, importaron fixtures ni accedió a datos personales del
 teléfono. F3, sus mediciones y la matriz RNF permanecen pendientes. El checklist
 Android histórico, informe, ADR e instrucciones no cambian porque este frente no
 altera sus hechos ni arquitectura; esta evidencia conserva el handoff propio sin
 reescribir auditorías anteriores ni duplicar el protocolo F3.
+
+## Despliegue local para supervisión — 2026-10-02
+
+El autor autorizó instalar los cambios remotos en el teléfono de prueba mediante
+el script habitual, sin publicación ni ampliación a una nueva versión oficial.
+Se retomó la misma rama con fetch/prune y pull ff-only. No se creó otro frente.
+
+| Identidad y control | Evidencia real |
+|---|---|
+| SHA fuente del APK, árbol limpio antes de compilar | `9588e0f1501495eec0ad59f6c242a4770a8f2d61` |
+| Entorno local | Node 22.20.0 / npm 10.9.3; Java 21.0.10 |
+| Gate local del código instalado | `npm ci` y `npm run verify`: exit 0; 61 pruebas de tooling, 76 archivos / 1156 pruebas de aplicación |
+| Comando de despliegue | `npm run deploy:android -- --target SERIAL`, con el serial del único teléfono autorizado; sin `--clean` |
+| Dispositivo | Samsung SM-G965F, Android 10; WebView 153.0.8010.36; serial omitido de la evidencia pública |
+| Variante / metadatos del APK | Debug, `com.lumapse.app`, `0.5.0/500`, tal como los conserva el checkout y genera el script habitual |
+| SHA-256 del APK instalado | `664ec48f4b144f4d19d1e88fe16c355c6656706358e31f0518b8dc4ecd147f8d` |
+| Certificado SHA-256 | `5ba36ca181d954a6dbe8a4a6afdb833429feb32a3a93dae9e8313191a0c782df`, coincide con el APK previamente instalado |
+| Instalación | Script exit 0; actualización sobre la instalación existente, sin desinstalar ni limpiar datos; `firstInstallTime` permanece 2026-09-13 22:18:32 y `lastUpdateTime` pasa a 2026-10-02 18:18:13 (Argentina) |
+| Verificación posterior | APK recuperado del paquete instalado con el mismo SHA-256; `am start -W` devuelve `Status: ok`, actividad principal ya en primer plano y proceso existente a las 21:19:03 UTC |
+| Supervisión funcional del autor | **Pendiente**: edición, render Markdown, guardado/reapertura, navegación y continuidad offline proporcionales al parche |
+
+Este APK es un despliegue debug privado para supervisión, **no** la beta firmada y
+publicada, ni una nueva release. No se publicaron artefactos, tags ni claves, ni se
+modificaron metadatos de versión del repositorio. La coincidencia `0.5.0/500` no
+identifica el binario histórico: para esta prueba se usan el SHA fuente, la variante
+y el hash anteriores. La instrucción puntual del autor fue ejecutar el script de
+pruebas existente; este despliegue no satisface la guardia de nueva versión/code
+para un próximo artefacto candidato o publicado. La beta histórica y sus hashes
+permanecen inmutables, y su validación en al menos tres dispositivos, confirmada
+por el autor, no se reabre ni se atribuye automáticamente a estos parches.
+
+Antes del script se compiló también un APK temporal con identificación de prueba
+`0.5.1-pr21/501` mediante un init script Gradle externo al repositorio. Se abandonó
+esa ruta ante la aclaración del autor: **ese APK no se instaló ni publicó**. El único
+APK desplegado es el identificado en la tabla, generado por el script habitual.
+
+No se importaron fixtures, borraron notas ni ejecutaron mediciones F3. Instalación,
+apertura y gate verde no prueban por sí solos todos los flujos Android. El PR sigue
+draft y sin merge hasta recibir el resultado de supervisión y la autorización
+explícita del autor. Los logs y APK locales permanecen fuera del repositorio.
