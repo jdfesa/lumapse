@@ -10,8 +10,10 @@ para Android se debe identificar además el HEAD exacto del PR y su artefacto.
 
 **Entorno:** Node **22.20.0**, npm **10.9.3**, sin `NODE_OPTIONS`.
 
+**Revisión:** [PR #21](https://github.com/jdfesa/lumapse/pull/21), **draft abierto**.
+
 **Estado:** parches, regresiones focalizadas y gate integral verificados localmente;
-preparación del PR draft en curso. Android y aprobación del autor pendientes.
+Android y autorización explícita de merge del autor pendientes.
 
 ## Alcance y grafo mínimo
 
@@ -138,7 +140,7 @@ git diff --check
 | Diff estructurado del lock | Tres paquetes y piso raíz; 356 nodos, ningún agregado/removido |
 | `npm run verify` integral | Exit 0: 61/61 pruebas de tooling y 76 archivos/1156 pruebas de aplicación; reporte completo validado, lint, build, types, schema/DBML/SQLite y demás controles aprobados |
 | Docs, trazabilidad, versión y enlaces nuevos | Exit 0 dentro del gate y repetidos por separado: 96 Markdown/748 enlaces, cero enlaces rotos ni advertencias de trazabilidad; 0.5.0/500. Auditoría suplementaria de TODO y fuentes modificadas sin errores |
-| CI de la rama/PR | Sin ejecución observada todavía; no reutilizar CI de main |
+| CI de la rama/PR | [Checks del PR #21](https://github.com/jdfesa/lumapse/pull/21/checks): consultar resultado y SHA del HEAD revisado; no atribuir evidencia local ni CI de main a ese head |
 | Android | **Pendiente**, sin APK generado, instalación, firma ni datos del teléfono |
 
 Las salidas privadas identificadas son `04-audit-before-full.txt`,
@@ -158,7 +160,7 @@ PATH observado; no se buscó ni operó un dispositivo.
 
 ## Handoff Android y aprobación — pendiente
 
-El PR se prepara como **draft** hasta la confirmación Android de estos cambios
+El PR permanece **draft** hasta la confirmación Android de estos cambios
 exactos. CI verde no autoriza merge ni auto-merge. El autor deberá:
 
 1. Revisar el diff, registrar el SHA completo de la rama y repetir el gate canónico

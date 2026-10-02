@@ -12,7 +12,7 @@ de Gómez (2014).
 
 | Documento | Contenido | Estado |
 |---|---|---|
-| [`validacion-parches-dependencias-2026-10-02.md`](./validacion-parches-dependencias-2026-10-02.md) | Parche mínimo de DOMPurify, brace-expansion y undici; advisories, grafo y regresiones | 🔎 Gate local aprobado; Android y aprobación pendientes |
+| [`validacion-parches-dependencias-2026-10-02.md`](./validacion-parches-dependencias-2026-10-02.md) | Parche mínimo de DOMPurify, brace-expansion y undici; advisories, grafo y regresiones | 🔎 [PR #21 draft](https://github.com/jdfesa/lumapse/pull/21); gate local aprobado, Android y aprobación pendientes |
 | [`plan-desarrollo-inmediato-beta-2026-09-12.md`](./plan-desarrollo-inmediato-beta-2026-09-12.md) | Análisis acotado y próximas sesiones: AUD-008/AUD-009, nuevo AUD-014 y validación del núcleo con 500 notas | ✅ Plan, F1, F2 y preparación F3 integrados |
 | [`../beta-core-validation/README.md`](../beta-core-validation/README.md) | Fixtures, protocolo, conteos locales y matriz CRUD/FPS/offline/continuidad | 🔎 PR #16 integrado; métricas Android pendientes |
 | [`validacion-parche-vitest-2026-09-15.md`](./validacion-parche-vitest-2026-09-15.md) | Parche de tooling, grafo mínimo, regresiones del mocker y handoff histórico | ✅ Probado e integrado por el autor en PR #17 |
