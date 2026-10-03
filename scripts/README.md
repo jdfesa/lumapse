@@ -851,8 +851,9 @@ main como dependencia, pero no instala ese APK). Antes de `adb install -t` verif
 manifest/package/runner/target y certificado del auxiliar contra el original instalado;
 solo instala una copia privada verificada del helper `com.lumapse.app.test`. Su versión
 puede no estar declarada y se conserva como `null`, sin inventarla ni relajar los pins
-`0.5.0/500` del target. Si hay un
-helper previo o firma distinta, aborta: no lo reemplaza/desinstala, no copia keystores,
+`0.5.0/500` del target. Un helper previo bloquea por defecto; únicamente el opt-in
+conocido descrito abajo permite reuso/update. Firma distinta o helper desconocido
+abortan: no lo desinstala, no copia keystores,
 no re-firma ni instala el target. No deploy, Vite/sync, `connectedDebugAndroidTest`,
 `pm clear`, limpieza, root, forwards, sockets, red, Chrome Desktop o tracer global.
 
@@ -899,8 +900,49 @@ El inventario comprueba JSON/`traceEvents`/timestamps y conserva métricas en `n
 **PENDING**: falta revisar relojes/offsets, atribución, pérdidas, input y primer frame
 presentado con resultado funcional correcto y clasificación de frames. No convierte
 INP/rAF/promesas/`doFrame` en métricas. No modifica `summarize-f3-results.py` ni sus CSV.
-Build/piloto Android deben ejecutarse y revisarse en Mac antes de decidir una serie.
+Build/piloto de esta corrección deben ejecutarse y revisarse en Mac; un fallo o falta
+de fronteras reales detiene este método, sin serie ni reintento automático.
 
 Regresiones host: `python3 -m unittest discover -s scripts/tests -p test_webview_pilot.py -v`;
 descubiertas también por `test:tooling` dentro de `npm run verify`. Prueban guards,
 instalación exclusiva del auxiliar e inventario, **no compilan Java ni prueban teléfono**.
+
+**Reuso/update limitado del auxiliar — permiso del 2026-10-03:** default sin flags
+sigue rechazando un helper previo. `--reuse-helper` y `--update-helper` son excluyentes
+y requieren `--expected-installed-helper-sha256` más `--installed-helper-source-sha`.
+Se trae únicamente el APK auxiliar para cotejar hash/paquete/certificado/manifiesto/
+runner/target/procesos. Desconocido o incompatible aborta antes de instalación.
+El reuso no compila ni instala y exige ausencia de diferencias nativas/test/build con
+la proveniencia declarada; fuente del helper queda separada de la fuente del script.
+Update compila offline, verifica nueva copia privada, vuelve a cotejar el helper previo
+antes de `adb install -r -t` **solo auxiliar** y contrasta hash instalado antes de
+instrumentar. Si la copia generada es idéntica, reusa sin reinstalar. No downgrade,
+re-firma, uninstall, clear, deploy ni modificación del target; postcheck de target incluso
+ante error del helper/captura. Un fallo previo al acceso/identificación del dispositivo
+no permite afirmar comparación física realizada.
+
+Para **la única repetición autorizada**, agregar al ejemplo anterior:
+
+```bash
+  --update-helper \
+  --expected-installed-helper-sha256 80bb89eb429249293de2cd18f08c44d7492b81632582da8c18b432f8353f5bbd \
+  --installed-helper-source-sha d50e56bf2b3b7c1cfef20db01c70a07b6c4d38a2
+```
+
+Esta corrección cambia Java, por eso el helper anterior **no puede reusarse** para ella.
+Los pins son del auxiliar inicial ya verificado, no del APK principal ni del nuevo build.
+La descarga puntual de test-deps ya declaradas fue autorizada y ejecutada en Mac; no
+se agrega opción online/bootstrap ni cambia el default offline. [Resultados y límites](../docs/beta-core-validation/README.md#piloto-físico-inicial-y-corrección-acotada-de-transporte).
+
+**Estado/diagnóstico:** el nativo escribe/sincroniza/cierra un temporal del mismo
+directorio y publica por `Files.move(ATOMIC_MOVE)`; si no es posible, falla sin
+truncar `status.json` ni fallback. No modifica la captura ni métricas. El host solo
+reintenta vacío/JSON reconociblemente incompleto, máximo **3 consecutivas** a 250 ms,
+dentro del deadline de fase (READY 40 s, CAPTURING 5 s, CAPTURED 45 s); cada lectura
+USB tiene como máximo 2 s y se acota al tiempo restante. Sintaxis maliciosa, claves
+duplicadas/no finitos, scope/run/estado/hash/tiempo inválidos abortan inmediatamente.
+Archivo aún no publicado se espera solo antes de READY; otros errores de transporte
+no se encubren. Conserva `status-read-diagnostics.json` y `status-read-NNNN.*.bin`
+privados, 0600, con UTC/reloj host, razón, bytes y SHA-256; cada raw se acota a 64 KiB,
+hash/tamaño corresponden a la lectura completa y no son métrica ni offset Chromium.
+Nada raw al repo/GitHub. READY ausente nunca envía señal ni pide Guardar al usuario.

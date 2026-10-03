@@ -182,7 +182,7 @@ class PilotGuardTests(unittest.TestCase):
         pilot.process.poll.return_value = None
         pilot.process.wait.side_effect = subprocess.TimeoutExpired("synthetic-adb", 1)
         with patch.object(pilot, "preflight", return_value=IDENTITY), \
-                patch.object(pilot, "build_helper", side_effect=PILOT.PilotError("BUILD_FAILED")), \
+                patch.object(pilot, "prepare_helper", side_effect=PILOT.PilotError("BUILD_FAILED")), \
                 patch.object(pilot, "target_identity", return_value=IDENTITY) as after:
             with self.assertRaisesRegex(PILOT.PilotError, "BUILD_FAILED"):
                 pilot.execute()
@@ -208,7 +208,7 @@ class PilotGuardTests(unittest.TestCase):
     def test_build_failure_still_verifies_immutable_target_and_never_installs(self):
         pilot = PILOT.UsbPilot(arguments(), Path("/tmp/synthetic"))
         with patch.object(pilot, "preflight", return_value=IDENTITY), \
-                patch.object(pilot, "build_helper", side_effect=PILOT.PilotError("BUILD_FAILED")), \
+                patch.object(pilot, "prepare_helper", side_effect=PILOT.PilotError("BUILD_FAILED")), \
                 patch.object(pilot, "target_identity", return_value=IDENTITY) as after, \
                 patch.object(pilot, "adb") as adb:
             with self.assertRaisesRegex(PILOT.PilotError, "BUILD_FAILED"):
@@ -217,15 +217,15 @@ class PilotGuardTests(unittest.TestCase):
             adb.assert_not_called()
             self.assertTrue(pilot.report["target_apk_unchanged"])
 
-    def test_only_auxiliary_apk_is_installed_and_postcheck_detects_change(self):
+    def test_capture_postcheck_detects_changed_target(self):
         pilot = PILOT.UsbPilot(arguments(), Path("/tmp/synthetic"))
         with patch.object(pilot, "preflight", return_value=IDENTITY), \
-                patch.object(pilot, "build_helper"), patch.object(pilot, "capture"), \
+                patch.object(pilot, "prepare_helper"), patch.object(pilot, "capture"), \
                 patch.object(pilot, "target_identity", return_value=dict(IDENTITY, apk_sha256="e" * 64)), \
                 patch.object(pilot, "adb", return_value=subprocess.CompletedProcess([], 0, "Success")) as adb:
             with self.assertRaisesRegex(PILOT.PilotError, "CRITICAL"):
                 pilot.execute()
-            self.assertEqual(adb.call_args.args, ("install", "-t", str(pilot.helper_apk)))
+            adb.assert_not_called()
             self.assertFalse(pilot.report["target_apk_unchanged"])
 
     def test_same_binary_at_new_install_path_is_not_unchanged(self):
@@ -233,7 +233,7 @@ class PilotGuardTests(unittest.TestCase):
         before = dict(IDENTITY, installed_apk_path="/data/app/before/base.apk")
         after = dict(IDENTITY, installed_apk_path="/data/app/after/base.apk")
         with patch.object(pilot, "preflight", return_value=before), \
-                patch.object(pilot, "build_helper"), patch.object(pilot, "capture"), \
+                patch.object(pilot, "prepare_helper"), patch.object(pilot, "capture"), \
                 patch.object(pilot, "target_identity", return_value=after), \
                 patch.object(pilot, "adb", return_value=subprocess.CompletedProcess([], 0, "Success")):
             with self.assertRaisesRegex(PILOT.PilotError, "CRITICAL"):
@@ -252,6 +252,170 @@ class PilotGuardTests(unittest.TestCase):
         self.assertNotIn("evaluateJavascript", source)
         self.assertNotIn("shutdownNow();", source)
         self.assertNotIn("setWebContentsDebuggingEnabled", source)
+        self.assertNotIn("new AtomicFile(", source)
+        self.assertIn("StandardCopyOption.ATOMIC_MOVE", source)
+        self.assertLess(source.index("stream.getFD().sync();"), source.index("Files.move(pending.toPath()"))
+
+
+class TransportAndHelperTests(unittest.TestCase):
+    def ready(self, pilot):
+        return dict(run_id=pilot.run_id, state="READY", target_package=PILOT.TARGET,
+                    helper_package=PILOT.HELPER, process_name=PILOT.TARGET,
+                    api=29, model="SM-G965F", requested_capture_ms=8000)
+
+    def result(self, data, code=0, stderr=b""):
+        return subprocess.CompletedProcess([], code, data, stderr)
+
+    def test_partial_snapshot_then_ready_preserves_private_diagnostics(self):
+        with tempfile.TemporaryDirectory() as directory:
+            pilot = PILOT.UsbPilot(arguments(), Path(directory)); pilot.process = Mock()
+            pilot.process.poll.return_value = None
+            partial = b'{"run_id":"'
+            ready = self.ready(pilot)
+            with patch.object(pilot, "private_read", side_effect=[self.result(partial), self.result(json.dumps(ready).encode())]), \
+                    patch.object(PILOT.time, "sleep"):
+                self.assertEqual(pilot.wait_state({"READY"}, 2), ready)
+            diagnostics = json.loads((Path(directory) / "status-read-diagnostics.json").read_text())
+            self.assertEqual(len(diagnostics), 1)
+            self.assertEqual(diagnostics[0]["stdout_bytes"], len(partial))
+            self.assertEqual(diagnostics[0]["stdout_sha256"], PILOT.hashlib.sha256(partial).hexdigest())
+            raw = Path(directory) / "status-read-0001.stdout.bin"
+            self.assertEqual(raw.read_bytes(), partial)
+            self.assertEqual(raw.stat().st_mode & 0o777, 0o600)
+            self.assertIn("host_monotonic_s", diagnostics[0])
+
+    def test_persistent_partial_json_aborts_after_three_reads(self):
+        with tempfile.TemporaryDirectory() as directory:
+            pilot = PILOT.UsbPilot(arguments(), Path(directory)); pilot.process = Mock()
+            pilot.process.poll.return_value = None
+            with patch.object(pilot, "private_read", return_value=self.result(b"{")) as read, \
+                    patch.object(PILOT.time, "sleep"):
+                with self.assertRaisesRegex(PILOT.PilotError, "Persistent incomplete"):
+                    pilot.wait_state({"READY"}, 2)
+                self.assertEqual(read.call_count, 3)
+
+    def test_malformed_or_wrong_scope_is_permanent_not_retryable(self):
+        with tempfile.TemporaryDirectory() as directory:
+            for data in (b"{broken}", b'[{"state":"READY"}]', b'{"x":NaN}',
+                         b'{"run_id":"a","run_id":"b"}',
+                         json.dumps(dict(self.ready(PILOT.UsbPilot(arguments(), Path(directory))), process_name="other.app")).encode()):
+                pilot = PILOT.UsbPilot(arguments(), Path(directory)); pilot.process = Mock()
+                with patch.object(pilot, "private_read", return_value=self.result(data)) as read:
+                    with self.assertRaises(PILOT.PilotError):
+                        pilot.wait_state({"READY"}, 2)
+                    self.assertEqual(read.call_count, 1)
+
+    def test_ready_deadline_and_transport_timeout_preserve_diagnostics(self):
+        with tempfile.TemporaryDirectory() as directory:
+            pilot = PILOT.UsbPilot(arguments(), Path(directory)); pilot.process = Mock()
+            pilot.process.poll.return_value = None
+            ticks = iter([n / 10 for n in range(30)])
+            with patch.object(pilot, "private_read", return_value=self.result(b"", 1, b"No such file or directory")), \
+                    patch.object(PILOT.time, "monotonic", side_effect=lambda: next(ticks)), patch.object(PILOT.time, "sleep"):
+                with self.assertRaisesRegex(PILOT.PilotError, "READY deadline"):
+                    pilot.wait_state({"READY"}, 1)
+            self.assertTrue(pilot.report["status_read_failures"])
+            with patch.object(pilot, "private_read", side_effect=subprocess.TimeoutExpired("synthetic", 2, output=b"partial")):
+                with self.assertRaisesRegex(PILOT.PilotError, "transport timeout"):
+                    pilot.wait_state({"READY"}, 1)
+            self.assertEqual(pilot.report["status_read_failures"][-1]["reason"], "STATUS_READ_TIMEOUT")
+
+    def test_wrong_stage_or_captured_contract_aborts_immediately(self):
+        with tempfile.TemporaryDirectory() as directory:
+            for change in ({"state":"CAPTURING"}, {"state":"CAPTURED", "output_stream_closed":False}):
+                pilot = PILOT.UsbPilot(arguments(), Path(directory)); pilot.process = Mock()
+                data = json.dumps(dict(self.ready(pilot), **change)).encode()
+                with patch.object(pilot, "private_read", return_value=self.result(data)) as read:
+                    with self.assertRaises(PILOT.PilotError):
+                        pilot.wait_state({"READY"}, 2)
+                    self.assertEqual(read.call_count, 1)
+
+    def test_reuse_update_require_explicit_hash_and_source_pins(self):
+        for flag in ("reuse_helper", "update_helper"):
+            args = arguments(); setattr(args, flag, True)
+            with self.assertRaises(PILOT.PilotError): PILOT.validate_args(args)
+            args.expected_installed_helper_sha256 = "b" * 64
+            args.installed_helper_source_sha = "d" * 40
+            PILOT.validate_args(args)
+        args = arguments(); args.expected_installed_helper_sha256 = "b" * 64
+        with self.assertRaises(PILOT.PilotError): PILOT.validate_args(args)
+        with self.assertRaises(SystemExit), patch('sys.stderr'):
+            PILOT.parser().parse_args(["--reuse-helper", "--update-helper"])
+
+    def pinned(self, mode):
+        args = arguments(); setattr(args, mode, True)
+        args.expected_installed_helper_sha256 = "b" * 64; args.installed_helper_source_sha = "d" * 40
+        return args
+
+    def test_known_helper_reuse_verifies_manifest_hash_and_source(self):
+        with tempfile.TemporaryDirectory() as directory:
+            pilot = PILOT.UsbPilot(self.pinned("reuse_helper"), Path(directory))
+            def adb(*args, **kwargs):
+                if args[0] == "pull":
+                        path = Path(args[2])
+                        if path.exists(): path.chmod(0o600)
+                        path.write_bytes(b"synthetic")
+                return subprocess.CompletedProcess([], 0, "package:/data/app/test/base.apk" if args[0] == "shell" else "")
+            helper = dict(IDENTITY, package=PILOT.HELPER)
+            with patch.object(pilot, "adb", side_effect=adb) as calls, \
+                    patch.object(PILOT, "apk_identity", return_value=helper), \
+                    patch.object(PILOT, "run", side_effect=[subprocess.CompletedProcess([], 0, MANIFEST), subprocess.CompletedProcess([], 0)]), \
+                    patch.object(pilot, "build_helper") as build:
+                pilot.prepare_helper(IDENTITY)
+                build.assert_not_called()
+                self.assertFalse(any(c.args[0] == "install" for c in calls.call_args_list))
+                self.assertEqual(pilot.report["helper_source_sha"], "d" * 40)
+                self.assertEqual(pilot.report["script_source_sha"], "c" * 40)
+
+    def test_unknown_helper_hash_or_certificate_and_changed_source_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            for helper, diffcode in ((dict(IDENTITY, package=PILOT.HELPER, apk_sha256="e"*64), 0),
+                                     (dict(IDENTITY, package=PILOT.HELPER, certificate_sha256="e"*64), 0),
+                                     (dict(IDENTITY, package=PILOT.HELPER), 1)):
+                pilot = PILOT.UsbPilot(self.pinned("reuse_helper"), Path(directory))
+                def adb(*args, **kwargs):
+                    if args[0] == "pull":
+                        path = Path(args[2])
+                        if path.exists(): path.chmod(0o600)
+                        path.write_bytes(b"synthetic")
+                    return subprocess.CompletedProcess([], 0, "package:/data/app/test/base.apk" if args[0] == "shell" else "")
+                with patch.object(pilot, "adb", side_effect=adb) as calls, patch.object(PILOT, "apk_identity", return_value=helper), \
+                        patch.object(PILOT, "run", side_effect=[subprocess.CompletedProcess([], 0, MANIFEST), subprocess.CompletedProcess([], diffcode)]):
+                    with self.assertRaises(PILOT.PilotError): pilot.prepare_helper(IDENTITY)
+                    self.assertFalse(any(c.args[0] == "install" for c in calls.call_args_list))
+
+    def test_existing_helper_without_opt_in_never_installs(self):
+        pilot = PILOT.UsbPilot(arguments(), Path("/tmp/synthetic"))
+        with patch.object(pilot, "adb", return_value=subprocess.CompletedProcess([], 0, "package:/data/app/test/base.apk")) as adb:
+            with self.assertRaises(PILOT.PilotError): pilot.prepare_helper(IDENTITY)
+            self.assertEqual(adb.call_count, 1)
+
+    def test_update_only_auxiliary_and_skip_identical_build(self):
+        with tempfile.TemporaryDirectory() as directory:
+            for changed in (True, False):
+                pilot = PILOT.UsbPilot(self.pinned("update_helper"), Path(directory))
+                previous = dict(IDENTITY, package=PILOT.HELPER)
+                pilot.report["helper"] = dict(previous, apk_sha256="e" * 64 if changed else "b" * 64)
+                def adb(*args, **kwargs):
+                    if args[0] == "pull":
+                        path = Path(args[2])
+                        if path.exists(): path.chmod(0o600)
+                        path.write_bytes(b"synthetic")
+                    return subprocess.CompletedProcess([], 0, "Success" if args[0] == "install" else "package:/data/app/test/base.apk")
+                with patch.object(pilot, "installed_helper", return_value=previous), patch.object(pilot, "build_helper"), \
+                        patch.object(pilot, "adb", side_effect=adb) as calls, patch.object(PILOT, "sha256", side_effect=["b" * 64, "e" * 64] if changed else []):
+                    pilot.prepare_helper(IDENTITY)
+                    installs = [c.args for c in calls.call_args_list if c.args[0] == "install"]
+                    self.assertEqual(installs, [("install", "-r", "-t", str(pilot.helper_apk))] if changed else [])
+                    self.assertIn("helper", str(pilot.helper_apk))
+
+    def test_helper_rejection_still_postchecks_unchanged_target(self):
+        pilot = PILOT.UsbPilot(arguments(), Path("/tmp/synthetic"))
+        with patch.object(pilot, "preflight", return_value=IDENTITY), \
+                patch.object(pilot, "prepare_helper", side_effect=PILOT.PilotError("UNKNOWN_HELPER")), \
+                patch.object(pilot, "target_identity", return_value=IDENTITY) as after:
+            with self.assertRaisesRegex(PILOT.PilotError, "UNKNOWN_HELPER"): pilot.execute()
+            after.assert_called_once(); self.assertTrue(pilot.report["target_apk_unchanged"])
 
 
 class TraceInventoryTests(unittest.TestCase):

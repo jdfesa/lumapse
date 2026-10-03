@@ -2,6 +2,7 @@
 """Piloto opt-in por USB: instala solo androidTest; nunca acredita CRUD/FPS."""
 
 import argparse
+import datetime
 import hashlib
 import json
 import math
@@ -24,9 +25,17 @@ TEST = TARGET + ".WebViewTracePilotTest#capturePilot"
 BRANCH = "test/android-performance-evidence"
 APK = ROOT / "android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
 LIMIT = 64 * 1024 * 1024
+STATUS_LIMIT = 64 * 1024
+PARTIAL_READ_LIMIT = 3
+NATIVE_SOURCE = "android/app/src/androidTest/java/com/lumapse/app/WebViewTracePilotTest.java"
 
 
 class PilotError(Exception):
+    pass
+
+
+class PartialStatusError(PilotError):
+    """Only empty or recognizably incomplete JSON may receive bounded retries."""
     pass
 
 
@@ -160,6 +169,11 @@ def parser():
     result.add_argument("--apksigner", required=True, help="Binario existente del SDK; no lee keystores")
     result.add_argument("--gradle-user-home", required=True, type=Path, help="Caché Gradle existente; no descarga distribución")
     result.add_argument("--output", required=True, type=Path, help="Directorio nuevo privado, fuera de Git o ignorado")
+    mode = result.add_mutually_exclusive_group()
+    mode.add_argument("--reuse-helper", action="store_true", help="Reusar solo auxiliar exacto verificado sin cambios nativos")
+    mode.add_argument("--update-helper", action="store_true", help="Actualizar solo auxiliar previo exacto y de firma compatible")
+    result.add_argument("--expected-installed-helper-sha256")
+    result.add_argument("--installed-helper-source-sha", help="Proveniencia documentada del auxiliar previo, separada del script/target")
     result.add_argument("--capture-ms", type=int, default=8000)
     result.add_argument("--yes-pilot", action="store_true")
     result.add_argument("--acknowledge-restart", action="store_true")
@@ -179,6 +193,14 @@ def validate_args(args):
             raise PilotError("Expected full lowercase SHA-256")
     if not 1000 <= args.capture_ms <= 8000 or args.expected_api < 28:
         raise PilotError("Pilot requires API28+ and 1000–8000ms (10s observed maximum)")
+    opted = args.reuse_helper or args.update_helper
+    pins = (args.expected_installed_helper_sha256, args.installed_helper_source_sha)
+    if opted:
+        if (not pins[0] or not re.fullmatch(r"[a-f0-9]{64}", pins[0])
+                or not pins[1] or not re.fullmatch(r"[a-f0-9]{40}", pins[1])):
+            raise PilotError("Reuse/update requires full known helper hash and source provenance pins")
+    elif any(pins):
+        raise PilotError("Helper pins require explicit --reuse-helper or --update-helper")
     args.gradle_user_home = args.gradle_user_home.expanduser().resolve()
 
 
@@ -203,7 +225,8 @@ class UsbPilot:
         self.remote = "cache/f3-webview-pilot/" + self.run_id
         self.helper_apk = output / "helper.apk"
         self.process = None
-        self.report = dict(status="PENDING", branch=BRANCH, helper_source_sha=args.expected_head,
+        self.status_read_attempt = 0
+        self.report = dict(status="PENDING", branch=BRANCH, helper_source_sha=args.expected_head, script_source_sha=args.expected_head,
                            app_source_sha=args.app_source_sha, run_id=self.run_id,
                            capture_requested_ms=args.capture_ms, android_validation="pending",
                            rnf_002="PENDING", rnf_004="PENDING", functional_result="PENDING_OPERATOR_REVIEW",
@@ -212,11 +235,11 @@ class UsbPilot:
     def adb(self, *arguments, **kwargs):
         return run(["adb", "-s", self.args.serial, *arguments], **kwargs)
 
-    def private_read(self, filename, check=True):
+    def private_read(self, filename, check=True, timeout=15):
         if filename not in ("status.json", "trace.json"):
             raise PilotError("Not a pilot output")
         return self.adb("exec-out", "run-as", TARGET, "cat", self.remote + "/" + filename,
-                        binary=True, check=check, timeout=15)
+                        binary=True, check=check, timeout=timeout)
 
     def target_identity(self, destination):
         paths = self.adb("shell", "pm", "path", "--user", "0", TARGET).stdout.strip().splitlines()
@@ -260,8 +283,6 @@ class UsbPilot:
             raise PilotError("Unexpected device/API; review scope before testing")
         if self.adb("shell", "am", "get-current-user").stdout.strip() != "0":
             raise PilotError("Expected Android user0")
-        if self.adb("shell", "pm", "path", "--user", "0", HELPER, check=False).stdout.strip():
-            raise PilotError("Helper already installed; preserve it and request review, no automatic replacement")
         self.adb("shell", "run-as", TARGET, "id")  # no root; only installed debuggable target
         target = self.target_identity(self.output / "target-before.apk")
         expected = dict(package=TARGET, version_name=self.args.expected_version,
@@ -274,6 +295,72 @@ class UsbPilot:
                            runtime=dict(node="22.20.0", npm="10.9.3", java=java_version[1],
                                         gradle=version, python=sys.version.split()[0]))
         return target
+
+    def installed_helper(self, target):
+        paths = self.adb("shell", "pm", "path", "--user", "0", HELPER, check=False).stdout.strip().splitlines()
+        opted = self.args.reuse_helper or self.args.update_helper
+        if not paths:
+            if opted:
+                raise PilotError("Pinned helper not installed; no implicit fresh installation")
+            return None
+        if not opted:
+            raise PilotError("Helper already installed; explicit pinned reuse/update required")
+        if len(paths) != 1 or not re.fullmatch(r"package:/[A-Za-z0-9_./=+~-]+\.apk", paths[0]):
+            raise PilotError("Unknown helper installation/splits")
+        apk = self.output / "helper-before.apk"
+        self.adb("pull", paths[0][len("package:"):], str(apk), timeout=60)
+        apk.chmod(0o400)
+        identity = apk_identity(apk, self.args.aapt, self.args.apksigner, allow_unversioned=True)
+        manifest = run([self.args.aapt, "dump", "xmltree", str(apk), "AndroidManifest.xml"]).stdout
+        verify_helper(manifest, identity, target)
+        if identity["apk_sha256"] != self.args.expected_installed_helper_sha256:
+            raise PilotError("Unknown helper hash; preserve it, no update/reuse")
+        self.report.update(helper_before=identity,
+                           installed_helper_source_sha=self.args.installed_helper_source_sha)
+        if self.args.reuse_helper:
+            unchanged = run(["git", "diff", "--quiet", self.args.installed_helper_source_sha,
+                             self.args.expected_head, "--", "android/app/src/androidTest", "android/app/build.gradle",
+                             "android/build.gradle", "android/variables.gradle"], check=False)
+            if unchanged.returncode != 0:
+                raise PilotError("Cannot reuse helper with changed/unknown native source provenance")
+        return identity
+
+    def prepare_helper(self, target):
+        previous = self.installed_helper(target)
+        if self.args.reuse_helper:
+            self.helper_apk = self.output / "helper-before.apk"
+            self.report.update(helper=previous, helper_source_sha=self.args.installed_helper_source_sha,
+                               helper_action="REUSED_VERIFIED", helper_installed=False)
+            return
+        self.build_helper(target)
+        if previous and self.report["helper"]["apk_sha256"] == previous["apk_sha256"]:
+            self.report.update(helper_action="REUSED_IDENTICAL_BUILD", helper_installed=False)
+            return
+        # Recheck the known installation immediately before changing ONLY the helper.
+        current = self.adb("shell", "pm", "path", "--user", "0", HELPER, check=False).stdout.strip()
+        if previous:
+            check_apk = self.output / "helper-preinstall.apk"
+            if not re.fullmatch(r"package:/[A-Za-z0-9_./=+~-]+\.apk", current):
+                raise PilotError("Helper changed during build; no update")
+            self.adb("pull", current[len("package:"):], str(check_apk), timeout=60)
+            check_apk.chmod(0o400)
+            if sha256(check_apk) != previous["apk_sha256"]:
+                raise PilotError("Helper changed during build; no update")
+        elif current:
+            raise PilotError("Unexpected helper appeared during build; no installation")
+        flags = ("-r", "-t") if previous else ("-t",)
+        installed = self.adb("install", *flags, str(self.helper_apk), timeout=60)
+        if installed.stdout.strip() != "Success" and not installed.stdout.rstrip().endswith("\nSuccess"):
+            raise PilotError("Test helper installation not confirmed")
+        self.report.update(helper_installed=True, helper_action="UPDATED_VERIFIED" if previous else "INSTALLED_NEW")
+        path = self.adb("shell", "pm", "path", "--user", "0", HELPER).stdout.strip()
+        if not re.fullmatch(r"package:/[A-Za-z0-9_./=+~-]+\.apk", path):
+            raise PilotError("Installed helper path unverified; no instrumentation")
+        after = self.output / "helper-after.apk"
+        self.adb("pull", path[len("package:"):], str(after), timeout=60)
+        after.chmod(0o400)
+        if sha256(after) != self.report["helper"]["apk_sha256"]:
+            raise PilotError("Installed helper hash mismatch; no instrumentation")
 
     def build_helper(self, target):
         # Existing caches only, no tooling/dependency installation, Vite build, sync or main deploy.
@@ -292,11 +379,31 @@ class UsbPilot:
         self.report["helper"] = identity
 
     def read_status(self, data):
-        if len(data) > 64 * 1024:
+        if len(data) > STATUS_LIMIT:
             raise PilotError("Native status size limit exceeded")
+        if not data.strip():
+            raise PartialStatusError("Empty native status snapshot")
         try:
-            state = json.loads(data)
-        except (ValueError, UnicodeError) as error:
+            text = data.decode("utf-8")
+        except UnicodeDecodeError as error:
+            if data.lstrip().startswith(b"{") and error.reason == "unexpected end of data":
+                raise PartialStatusError("Incomplete native status encoding") from error
+            raise PilotError("Invalid native status encoding") from error
+        def unique_object(pairs):
+            result = {}
+            for key, value in pairs:
+                if key in result:
+                    raise PilotError("Duplicate native status key")
+                result[key] = value
+            return result
+        def nonfinite(value):
+            raise PilotError("Nonfinite native status constant")
+        try:
+            state = json.loads(text, object_pairs_hook=unique_object, parse_constant=nonfinite)
+        except json.JSONDecodeError as error:
+            if text.lstrip().startswith("{") and (error.pos >= len(text.rstrip())
+                    or error.msg.startswith("Unterminated string")):
+                raise PartialStatusError("Incomplete native status snapshot") from error
             raise PilotError("Invalid native status JSON") from error
         if not isinstance(state, dict) or state.get("run_id") != self.run_id:
             raise PilotError("Unexpected native status/run identity")
@@ -306,6 +413,8 @@ class UsbPilot:
                 or state.get("requested_capture_ms") != self.args.capture_ms
                 or state.get("state") not in ("READY", "CAPTURING", "CAPTURED", "ERROR")):
             raise PilotError("Unexpected native capture scope/state")
+        if state["state"] == "CAPTURED":
+            self.validate_captured(state)
         return state
 
     def validate_captured(self, state):
@@ -326,21 +435,65 @@ class UsbPilot:
                 or not isinstance(digest, str) or not re.fullmatch(r"[a-f0-9]{64}", digest)):
             raise PilotError("Invalid native trace bytes/hash")
 
+    def record_status_failure(self, result, stage, reason):
+        self.status_read_attempt += 1
+        prefix = f"status-read-{self.status_read_attempt:04d}"
+        data, stderr = result.stdout or b"", result.stderr or b""
+        for suffix, payload in (("stdout", data), ("stderr", stderr)):
+            path = self.output / f"{prefix}.{suffix}.bin"
+            path.write_bytes(payload[:STATUS_LIMIT])
+            path.chmod(0o600)
+        record = dict(at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                      host_monotonic_s=time.monotonic(), stage=stage, reason=reason,
+                      adb_exit=result.returncode, stdout_bytes=len(data),
+                      stdout_sha256=hashlib.sha256(data).hexdigest(), stderr_bytes=len(stderr),
+                      stderr_sha256=hashlib.sha256(stderr).hexdigest(),
+                      raw_prefix=prefix, raw_limit_bytes=STATUS_LIMIT)
+        self.report.setdefault("status_read_failures", []).append(record)
+        write_json(self.output / "status-read-diagnostics.json", self.report["status_read_failures"])
+
     def wait_state(self, desired, timeout):
         deadline = time.monotonic() + timeout
+        partial_reads = 0
+        stage = "/".join(sorted(desired))
         while time.monotonic() < deadline:
-            result = self.private_read("status.json", check=False)
+            try:
+                result = self.private_read("status.json", check=False,
+                                           timeout=min(2, max(0.01, deadline - time.monotonic())))
+            except subprocess.TimeoutExpired as error:
+                result = subprocess.CompletedProcess([], -1, error.output or b"", error.stderr or b"")
+                self.record_status_failure(result, stage, "STATUS_READ_TIMEOUT")
+                raise PilotError("Native status transport timeout; inspect private diagnostics") from error
             if result.returncode == 0:
-                state = self.read_status(result.stdout)
-                if state.get("state") == "ERROR":
-                    write_json(self.output / "native-status.json", state)
-                    raise PilotError("Native pilot failed; inspect private native-status.json")
-                if state.get("state") in desired:
-                    return state
+                try:
+                    state = self.read_status(result.stdout)
+                except PartialStatusError:
+                    self.record_status_failure(result, stage, "INCOMPLETE_SNAPSHOT")
+                    partial_reads += 1
+                    if partial_reads >= PARTIAL_READ_LIMIT:
+                        raise PilotError("Persistent incomplete native status; inspect private diagnostics")
+                except PilotError:
+                    self.record_status_failure(result, stage, "PERMANENT_STATUS_REJECTION")
+                    raise
+                else:
+                    partial_reads = 0
+                    if state["state"] == "ERROR":
+                        write_json(self.output / "native-status.json", state)
+                        raise PilotError("Native pilot failed; inspect private native-status.json")
+                    if state["state"] in desired:
+                        return state
+                    previous = {"CAPTURING": "READY", "CAPTURED": "CAPTURING"}.get(stage)
+                    if state["state"] != previous:
+                        self.record_status_failure(result, stage, "UNEXPECTED_STAGE_STATE")
+                        raise PilotError("Unexpected native state for " + stage)
+            else:
+                self.record_status_failure(result, stage, "STATUS_UNAVAILABLE")
+                if stage != "READY" or b"No such file or directory" not in (result.stdout + result.stderr):
+                    raise PilotError("Native status read failed; inspect private diagnostics")
             if self.process.poll() is not None:
-                raise PilotError("Instrumentation ended before requested state; inspect private instrumentation.txt")
-            time.sleep(0.25)
-        raise PilotError("Native status deadline exceeded")
+                raise PilotError("Instrumentation ended before " + stage + "; inspect private instrumentation.txt")
+            time.sleep(min(0.25, max(0, deadline - time.monotonic())))
+        raise PilotError("Native " + stage + " deadline exceeded; inspect private diagnostics")
 
     def capture(self):
         with (self.output / "instrumentation.txt").open("wb") as log:
@@ -378,11 +531,7 @@ class UsbPilot:
     def execute(self):
         target = self.preflight()
         try:
-            self.build_helper(target)
-            installed = self.adb("install", "-t", str(self.helper_apk), timeout=60)
-            if installed.stdout.strip() != "Success" and not installed.stdout.rstrip().endswith("\nSuccess"):
-                raise PilotError("Test helper installation not confirmed")
-            self.report["helper_installed"] = True
+            self.prepare_helper(target)
             self.capture()
         finally:
             if self.process is not None and self.process.poll() is None:

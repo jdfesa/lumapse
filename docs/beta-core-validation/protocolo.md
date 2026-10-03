@@ -133,6 +133,16 @@ no usa CDP, sockets WebView, forwards, proxy, consola DevTools o captura global 
   del callback de cierre, no inmediatamente al retorno de stop; un error conserva límites
   honestos, sin limpiar/desinstalar/forzar parada del target ni usar root.
 
+**Permiso posterior y stop rule:** el build inicial y la instalación exclusiva del
+helper se realizaron en Mac, pero el transporte falló antes del READY visible, sin
+captura: [checkpoint factual](./README.md#piloto-físico-inicial-y-corrección-acotada-de-transporte).
+El autor autorizó una ronda acotada de corrección y reuso/update únicamente del
+auxiliar previamente conocido con pins explícitos; el script conserva default offline
+y la identidad del target. Al cambiar Java, update compatible solo auxiliar; no main,
+downgrade, firma nueva, limpieza o uninstall. El siguiente **único piloto adicional de
+8 s** no inicia serie: si vuelve a fallar o faltan fronteras reales, registrar bloqueo
+PENDING en BACKLOG, detener este método y esperar decisión; no inventar equivalencia.
+
 **Criterio falsable del piloto:** el build/helper/manifiesto/firma pasan, el target permanece
 idéntico, el SDK cierra y entrega JSON no vacío con `traceEvents`, y se pueden inspeccionar
 entrada → **primer frame presentado con resultado correcto**, atribución a Lumapse y

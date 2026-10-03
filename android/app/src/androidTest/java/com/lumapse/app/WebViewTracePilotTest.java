@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
 import android.os.SystemClock;
-import android.util.AtomicFile;
 import android.webkit.TracingConfig;
 import android.webkit.TracingController;
 import android.webkit.WebView;
@@ -26,6 +25,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -189,15 +189,19 @@ public class WebViewTracePilotTest {
     private void status(String state, String error) throws Exception {
         metadata.put("state", state);
         if (error != null) metadata.put("error_class", error);
-        AtomicFile file = new AtomicFile(new File(directory, "status.json"));
-        FileOutputStream stream = file.startWrite();
-        try {
-            stream.write(metadata.toString(2).getBytes(StandardCharsets.UTF_8));
-            file.finishWrite(stream);
-        } catch (Exception e) {
-            file.failWrite(stream);
-            throw e;
+        // An external cat reader does not participate in AtomicFile recovery/locking.
+        // Publish only a fully written, synced and closed file in the same directory.
+        // If atomic replacement is unsupported, fail closed: never truncate status.json.
+        metadata.put("status_transport", "closed-same-directory-atomic-move-v1");
+        byte[] snapshot = metadata.toString(2).getBytes(StandardCharsets.UTF_8);
+        File pending = File.createTempFile("status-", ".pending", directory);
+        try (FileOutputStream stream = new FileOutputStream(pending)) {
+            stream.write(snapshot);
+            stream.getFD().sync();
         }
+        Files.move(pending.toPath(), new File(directory, "status.json").toPath(),
+                StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+        // Failed pending files remain private for diagnosis; no trace/original is deleted.
     }
 
     private static final class ClosedTrace extends OutputStream {
