@@ -130,6 +130,10 @@ independiente por equipo ni se inicia otro relevo automáticamente.
 
 ### Piloto físico inicial y corrección acotada de transporte
 
+Los pendientes/permisos de este corte se conservan como historia de la ronda 1;
+el resultado posterior y el permiso vigente están en
+[segundo piloto y continuación expresa](#segundo-piloto-y-continuación-expresa-del-diagnóstico).
+
 **Reporte del operador, 2026-10-03 (actualización 06:27 UTC):** el propietario autorizó
 una descarga puntual **solo de dependencias AndroidTest ya declaradas** faltantes en
 caché. `:app:assembleDebugAndroidTest` online terminó PASS a las **06:17:40 UTC**,
@@ -242,6 +246,26 @@ guardas de scope/run/estado/hash/relojes/auxiliar/target. Java y build nativo **
 la propuesta para revisión puede reusar únicamente el auxiliar actual exacto, evitando
 otra instalación. [Contrato y pins vigentes](../../scripts/README.md#47-capture-webview-pilot-androidpy).
 El permiso puntual de descargas ya declaradas/cache de la ronda anterior no se amplía.
+
+**Verificación host de la corrección `cce5ab1` (2026-10-03):** se reprodujo primero el
+rechazo `Invalid native status JSON` con una regresión sintética de 100 bytes y run ID
+nuevo (no el raw/hash privado). Sobre el código corregido final, Node22.20.0/npm10.9.3
+existentes, sin instalar herramientas ni cambiar configuración global:
+
+- `python3 -m unittest discover -s scripts/tests -p test_webview_pilot.py -v`: **40/40
+  PASS**. Ocho regresiones nuevas cubren exit0/1, canal/plazo exactos, ausencia persistente,
+  path/run/permiso/JSON/scope incorrectos, READY tardío y ningún prompt/start sin READY;
+  conservan tests de reuso/update conocido, rechazo desconocido y target inmutable.
+- `npm run verify`: **exit0**, 77 archivos/1167 tests app y 68 tooling (descubre Python),
+  build web y controles íntegros. Persisten 3 avisos de lint y avisos de tamaño previos;
+  no se degradaron fallos ni se omitieron suites. No se atribuyen los gates anteriores.
+- `npm run check:docs`, `npm run check:traceability`, auditoría suplementaria de las seis
+  fuentes tocadas (incluye TODO) y `git diff --check`: **PASS**. El commit de esta evidencia
+  es solo documental y se revalida con los mismos controles documentales.
+- Java/ADB ausentes del PATH de este host: **sin build Android ni prueba USB aquí**.
+  El diff desde `e4bef6b` no cambia Java, Android/build, producto, dependencias, versión
+  ni fixtures. No hay nueva traza/CSV/muestra, release o PR. Commits/push normales sin
+  deshabilitar hooks; este checkout solo contiene hooks de ejemplo, sin instalarlos.
 
 El resultado publicado se presenta al autor **antes de otra captura**. Sin evidencia
 nueva no se acredita reparación física, capacidad metrológica ni RNF. Si una captura
