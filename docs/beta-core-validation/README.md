@@ -322,7 +322,7 @@ guardó `pilot-result.json` con **PENDING y sin error**, pero el reporte coordin
 acredita **exit 130 y bloqueo**, no PASS. Hash del reporte original privado en Mac,
 aportado por el coordinador (no de la copia anonimizada):
 `a075ab44d0a0f5ea98653e55f8b19285d0b65142c6c1ee595bf8b12ca258ad65`.
-El primer fallo sin raw y el segundo rechazo de100 bytes permanecen diferenciados.
+El primer fallo sin raw y el segundo rechazo de 100 bytes permanecen diferenciados.
 
 **Ajuste de entrega expresamente aprobado el 2026-10-03 (Argentina):** el autor pidió
 registrar el impedimento para futuro y respondió **«Sí: preparar ese PR para revisión»**.
@@ -345,6 +345,25 @@ El [bloqueo en BACKLOG](../../BACKLOG.md#deuda-técnica-viva) sigue abierto. Pr�
 útil: offline/continuidad RNF-009/010 ya planificado, **solo tras revisión, integración
 expresamente autorizada y limpieza de esta rama**, acordando prioridad sin dar por
 cerradas RNF-002/004. No se inicia ni se publica otra prueba en esta continuación.
+
+
+**Verificación de esta entrega documental (2026-10-03; alcance registrado en `dfa7627`):** no se reparó
+stdin ni se modificó Java/JS/Python/test-infra. Código acumulado idéntico a `a8792de`;
+la evidencia física anterior sigue perteneciendo a sus fuentes script/helper/APK reales.
+Con Node **22.20.0 / npm 10.9.3** existentes y PATH solo de sesión:
+
+- `python3 -m unittest discover -s scripts/tests -p test_webview_pilot.py -v`: **40/40
+  PASS** ejecutados de nuevo en esta entrega, no atribuidos al checkpoint anterior.
+- `npm run verify` íntegro, una ejecución: **exit0, 77 archivos/1167 app +68 tooling**,
+  build web y controles completos. Avisos de lint/tamaño existentes, sin degradar fallos.
+- `npm run check:docs`, `npm run check:traceability`, enlaces suplementarios de siete
+  fuentes (incluye TODO) y `git diff --check`: **PASS**. Los ajustes posteriores del
+  registro factual son solo documentales y se revalidan con esos controles.
+- SHA-256 script: `9fbb3400210bd81e4efb03de7c280bb4d591867d4c5f2ee6e1b4888a458d5a3c`;
+  tests: `0d59653738238c9858850ee5284ad24addd2f9f80b1ba9e631c940ef26899ad6`, sin cambios.
+- **Sin compilación Android ni USB desde este host**, sin nueva captura/CSV/mediciones,
+  release o merge. La entrega sigue DRAFT: tests host no resuelven el bloqueo ni F3.
+
 
 
 No se recibieron trazas originales, calentamientos ni muestras cuantitativas válidas para esta sesión.
