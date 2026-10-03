@@ -81,18 +81,52 @@ probada en esta carga exitosa. Las bases crudas, auxiliares y respaldos quedan
 privados en el equipo operador: aquí se registran solo conteos y hashes, sin
 seriales, rutas privadas ni contenidos. No se copiaron bases al entorno remoto.
 
-**Captura manual pendiente:** no se confirmó el listado UI de 50, no se cargó el
-perfil 500 ni se recibieron calentamientos, muestras o trazas. El socket de depuración
-WebView observado no acredita inspector ni frames. La política del navegador bloqueó
-`chrome://inspect`; no se usan otras superficies, CDP ni ejecución indirecta para
-eludirlo. La próxima acción del propietario es abrir manualmente el inspector del
-WebView de Lumapse y verificar opciones/overhead, sin CPU throttling ni screencast;
-confirmar filtros limpios y 50 resultados según [§3 del protocolo](./protocolo.md#3-importación-y-precondición-visible),
-y capturar primero los calentamientos/muestras del perfil pequeño según §4.
-Solo después corresponde la sustitución por 500 y su captura CRUD/FPS (§4–5),
-sin sumar ambos perfiles en el mismo workspace ni inferir listado UI desde SQLite.
+**Observación local posterior aportada por el operador (2026-10-03):** búsqueda `#`
+cotejada con los **50 títulos exactos** del fixture. Después se guardó una nota auxiliar
+`F3 piloto #01` con 200 letras ASCII: tarjeta presente, compositor vacío, Entrada con
+la auxiliar y búsqueda limpiada conforme al producto. Estado posterior **50 base + 1
+auxiliar**, no listado medido de 50 ni perfil 500. Record/Stop manuales produjeron una
+captura de pantalla Performance con filmstrip y campo **INP 195 ms**, que **no es
+latencia CRUD ni aceptación**. Save no produjo archivo/dialogo en los intentos informados;
+sin causa confirmada ni evidencia de una incidencia de producto. No hay traza exportada
+ni CSV/muestras válidas. La política del navegador bloqueó `chrome://inspect`: no se
+elude por otra superficie y no se pide repetir Save a ciegas.
 
-No se recibieron trazas, calentamientos ni muestras físicas para esta sesión.
+**Próximo paso aprobado:** piloto experimental por API pública WebView en `androidTest`
+y script USB, instalando **solo helper de pruebas** con firma compatible, nunca otra
+APK de Lumapse. [Alcance, riesgos y criterios del piloto](./protocolo.md#piloto-nativo-experimental--autorización-acotada-del-2026-10-03)
+y [entrypoint/preflight](../../scripts/README.md#47-capture-webview-pilot-androidpy).
+Build Android, instalación del helper, nueva captura y revisión semántica **PENDING**
+en la Mac operadora; la implementación remota no constituye prueba física. Este pipeline
+autorizado no adopta equivalencia ni rebaja el protocolo. No sustituir por 500 antes de
+resolver la captura/revisión y medir el pequeño; no sumar ambos perfiles.
+
+**Verificación host del capturador (2026-10-03):** el avance de nueve archivos se
+recuperó contra la base publicada `43ec1f75`, con hash/base y aplicación comprobados,
+sin reiniciar el frente. Se mantienen API pública, opt-in, ámbito de proceso y cierre
+SDK; se reforzaron identidad/ruta instalada del target, versión no declarada del helper
+como `null` y guardas de estado/tiempo/hash. Un timeout del hijo ADB local no autoriza
+parar Lumapse ni omitir el cotejo final. Comandos ejecutados con Node 22.20.0/npm 10.9.3:
+
+- `python3 -m unittest discover -s scripts/tests -p test_webview_pilot.py -v`:
+  **21/21 PASS** (15 recuperadas + 6 regresiones); no compila Java ni ejecuta ADB.
+- `npm run verify`: **PASS**, 77 archivos/1167 tests de aplicación y 68 tests de tooling,
+  con las regresiones Python descubiertas por el gate; build web y controles completos.
+- `npm run check:docs`, `npm run check:traceability` y auditoría suplementaria de enlaces
+  de las seis fuentes tocadas, incluido `TODO` fuera del descubrimiento habitual: PASS.
+- `git diff --check`: PASS. Sin modificaciones de producción, dependencias, versiones
+  ni artefactos privados. Avisos existentes de lint/tamaño no se degradan ni son métricas F3.
+
+El guard de runtime no pudo lanzar su subprocess npm dentro del sandbox inicial;
+las versiones directas fueron exactas y el mismo guard pasó con auto-review normal,
+sin cambio global ni bypass. El gate íntegro se repitió sobre el snapshot final;
+las dos ejecuciones previas de Debian no se atribuyen a este refinamiento.
+No hay Java/ADB en PATH de este host: compilación nativa y piloto en Mac **PENDING**,
+con JDK/SDK/caché y firmante debug existentes. El checkpoint publicado no es un PR F3
+ni evidencia de dispositivo. Sin porcentaje vivo de cuota, no se presume presupuesto
+independiente por equipo ni se inicia otro relevo automáticamente.
+
+No se recibieron trazas originales, calentamientos ni muestras cuantitativas válidas para esta sesión.
 RNF-002/RNF-004 siguen **PENDING**; no hay otro PR de preparación ni cierre F3.
 La sesión 2 RNF-009/RNF-010 no se inicia. El acuerdo y la carga no rebajan umbrales,
 no aportan latencias/FPS ni sustituyen el cotejo de trazas por el autor; la evidencia
