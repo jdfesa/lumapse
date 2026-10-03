@@ -91,6 +91,61 @@ El cargador `load-test-fixture-android.sh` exige `main` limpio/sincronizado y au
 destructiva `--yes`. **No ejecutarlo en esta rama ni relajar sus guardias**. Su self-test
 Python usa un DDL copiado; la integración F3 adicional prueba el DDL productivo real.
 
+### Piloto nativo experimental — autorización acotada del 2026-10-03
+
+Ante la exportación manual sin archivo, el autor autorizó un **piloto de observabilidad**
+con `androidTest`, script USB y **solo la APK auxiliar de pruebas**, si resulta necesario.
+No autorizó reemplazar Lumapse, cambiar producción, firmas, sistema o dependencias,
+ni adoptar por anticipado una equivalencia de métricas. El procedimiento y argumentos
+están en [scripts](../../scripts/README.md#47-capture-webview-pilot-androidpy).
+Se usa la API pública [TracingController](https://developer.android.com/reference/android/webkit/TracingController)
+y [TracingConfig](https://developer.android.com/reference/android/webkit/TracingConfig),
+disponibles desde API 28. No accede a Chrome Desktop ni rescata su traza anterior;
+no usa CDP, sockets WebView, forwards, proxy, consola DevTools o captura global del sistema.
+
+- **Precondición:** terminal interactiva, USB/serial explícito, mismo usuario Android 0,
+  checkout revisado limpio y sincronizado, Node/npm canónicos, JDK 21 y SDK/caché Gradle
+  ya existentes. Solo datos sintéticos de Lumapse con el respaldo/procedimiento acordados;
+  no presupone cobertura completa de WebStorage. No otra instrumentación/grabación
+  de Lumapse activa. La instrumentación **puede reiniciar el proceso**: preparar la UI
+  después de `READY`, fuera de la traza, y registrar el efecto real sobre borradores/UI.
+  `isTracing()` se comprueba en el proceso instrumentado y otra vez antes de iniciar;
+  una traza ya activa aborta sin detenerla. Esto no recupera una sesión del proceso anterior.
+- **Identidad y aislamiento:** manifest del helper esperado `com.lumapse.app.test`, runner
+  existente y `targetPackage=com.lumapse.app`, certificado igual al APK instalado.
+  El test exige paquete, UID y proceso de Lumapse antes de usar el singleton WebView;
+  sus WebViews/renderers son el alcance, no las demás apps. No añade receivers ni hooks
+  productivos. La atribución de procesos/superficies del JSON real aún debe cotejarse.
+  El script verifica versión, certificado, SHA-256 y ruta instalada del **APK original antes y después**;
+  fuente E5 del target y commit/hash del helper se registran por separado.
+- **Una captura, no la serie:** preparación con plazos, luego una operación CRUD sintética
+  y un scroll breve manuales. Solicitud de **8 s como máximo**, con margen para stop;
+  un intervalo observado hasta retorno de stop superior a **10 s invalida el piloto**.
+  Categorías `FRAME_VIEWER`, `INPUT_LATENCY`, `RENDERING`, sin categorías custom,
+  modo `RECORD_UNTIL_FULL`; sin throttling/screencast ni flags globales. Overhead sin
+  calibrar. El límite del búfer puede perder eventos: no declarar ausencia de pérdidas
+  por silencio del JSON. Un bloqueo del UI thread/SDK puede impedir stop; si el cierre
+  no se confirma, queda error/PENDING y se requiere intervención, no un éxito inferido.
+- **Salida:** JSON original privado, sin reserializar, solo después del cierre confirmado
+  del `OutputStream` por el SDK, byte count y SHA-256 coincidentes; metadatos, offsets
+  temporales de llamadas/flush y un inventario estructural separado. No equiparar esos
+  relojes con `ts` de Chromium sin verificar dominio/offset. El executor se cierra después
+  del callback de cierre, no inmediatamente al retorno de stop; un error conserva límites
+  honestos, sin limpiar/desinstalar/forzar parada del target ni usar root.
+
+**Criterio falsable del piloto:** el build/helper/manifiesto/firma pasan, el target permanece
+idéntico, el SDK cierra y entrega JSON no vacío con `traceEvents`, y se pueden inspeccionar
+entrada → **primer frame presentado con resultado correcto**, atribución a Lumapse y
+clasificación completos/parciales/perdidos. La captura estructural exitosa no prueba la
+última parte. Si falta esa semántica, dejar latencias/FPS/desgloses **vacíos y PENDING**,
+describir la frontera ausente y detenerse antes de 180 muestras. El inventario nunca
+cuenta `doFrame`, buffers enviados, promesas, rAF o INP como sustitutos.
+
+El piloto **no cuenta** para los 30 calentamientos, 180 muestras CRUD ni 3 × 10 tramos
+FPS de §4–5. Antes de una serie completa se requiere revisar el JSON real, calibración,
+equivalencia/alcance de cualquier ajuste del método y aprobación; se conservan todos
+los umbrales, originales/hashes/offsets y el cotejo del autor. Sin datos físicos, no cierre RNF.
+
 ## 3. Importación y precondición visible
 
 1. Importar el ZIP del perfil en el espacio acordado mediante Backup → Importar ZIP;

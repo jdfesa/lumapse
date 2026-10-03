@@ -827,3 +827,80 @@ estado relevante excluye docs/tests y artefactos ignorados; sin Git usa fallback
 honesto. Ver [semántica, protección de datos y límites](../docs/flujo-desarrollo-android.md#identificación-de-compilaciones-en-acerca-de).
 Regresiones en `tests/tooling/build-metadata.test.js`, `tests/unit/config/buildMetadata.test.js`
 y `scripts/tests/test_release_build_metadata.py`, incluidas en el gate habitual.
+
+### 47. `capture-webview-pilot-android.py`
+
+Piloto **experimental opt-in**, no medidor CRUD/FPS. Usa únicamente
+[`WebViewTracePilotTest`](../android/app/src/androidTest/java/com/lumapse/app/WebViewTracePilotTest.java)
+y las dependencias/runner Android existentes. [Autorización, alcance y criterio falsable](../docs/beta-core-validation/protocolo.md#piloto-nativo-experimental--autorización-acotada-del-2026-10-03).
+
+**Operador Mac por USB:** revisar/fetch/pull ff-only de `test/android-performance-evidence`
+antes de ejecutar. Exige HEAD/upstream exactos y árbol limpio, Node 22.20.0/npm 10.9.3,
+JDK 21, ADB/aapt/apksigner y distribución/caché Gradle **ya existentes**. No instala
+herramientas ni dependencias: wrapper previamente cacheado, build `--offline`, descarga
+SDK deshabilitada. Comprueba el directorio exacto del URL y marcador de la distribución
+antes de ejecutar el wrapper, y su versión/JVM; fija el JDK 21 comprobado **solo para
+ese proceso Gradle**, sin editar variables/configuración globales. Si falta algo, detenerse.
+El localizador de caché sigue [PathAssembler de Gradle 8.14.3](https://github.com/gradle/gradle/blob/v8.14.3/platforms/core-runtime/wrapper-shared/src/main/java/org/gradle/wrapper/PathAssembler.java);
+su MD5/base36 no sustituye hashes SHA-256 de artefactos. No otra instrumentación/grabación Lumapse
+activa; reconocer que `am instrument` puede reiniciar el target y alterar el estado UI
+en memoria. Preparar después de `READY`, sin asumir recuperación de borradores.
+
+El build ejecuta **solo `:app:assembleDebugAndroidTest`** (puede compilar la variante
+main como dependencia, pero no instala ese APK). Antes de `adb install -t` verifica
+manifest/package/runner/target y certificado del auxiliar contra el original instalado;
+solo instala una copia privada verificada del helper `com.lumapse.app.test`. Su versión
+puede no estar declarada y se conserva como `null`, sin inventarla ni relajar los pins
+`0.5.0/500` del target. Si hay un
+helper previo o firma distinta, aborta: no lo reemplaza/desinstala, no copia keystores,
+no re-firma ni instala el target. No deploy, Vite/sync, `connectedDebugAndroidTest`,
+`pm clear`, limpieza, root, forwards, sockets, red, Chrome Desktop o tracer global.
+
+```bash
+# Marcadores: completar localmente, no versionar serial ni rutas privadas.
+rtk proxy python3 scripts/capture-webview-pilot-android.py \
+  --serial SERIAL_USB --expected-head SHA_COMPLETO_REVISADO \
+  --app-source-sha e5becc96b032007f587fb564c7b6afd790c5faf9 \
+  --expected-app-sha256 599d507f9e2e2b70f90921ec1d9459458f522f6f566d93ee8e29e2c8e15a4f57 \
+  --expected-app-cert-sha256 5ba36ca181d954a6dbe8a4a6afdb833429feb32a3a93dae9e8313191a0c782df \
+  --aapt RUTA_AAPT_EXISTENTE --apksigner RUTA_APKSIGNER_EXISTENTE \
+  --gradle-user-home "$HOME/.gradle" --output tmp/f3/piloto-NUEVO \
+  --capture-ms 8000 --yes-pilot --acknowledge-restart
+```
+
+Version/code esperados `0.5.0/500`, modelo/API `SM-G965F/29`; no bump. El certificado
+debug del helper debe coincidir **en la Mac**, no se presume que un build Debian tenga
+esa firma. Los pins anteriores son del target E5 aceptado, no del commit del helper.
+Un cambio de pins requiere revisar el artefacto/autorización, no editarlos para forzar éxito.
+
+En `READY` preparar una nota sintética fuera del intervalo, pulsar Enter (90 s de plazo)
+y, en `CAPTURING`, realizar **una** operación CRUD y scroll breve manuales. No automatiza
+taps ni carga 500. El test limita preparación a 120 s, solicita como máximo 8 s, invalida
+un stop observado >10 s y espera hasta 30 s el cierre del stream. Ante un cuelgue de
+SDK/UI puede no confirmarse el cierre: error/PENDING, intervención puntual, nunca éxito
+por timeout. El script solo intenta terminar su propio hijo ADB local si vence la espera; no
+fuerza la parada de Lumapse. Si no puede confirmarlo, registra el límite y aun así
+intenta el cotejo final de identidad y ruta instalada del target. No retirar el USB hasta el cierre/result y cotejo final.
+
+**Artefactos privados:** directorio nuevo modo 0700, archivos 0600 (helper 0400), ignorado
+si está en el repo. JSON SDK original `trace.json`, SHA-256/bytes contrastados después
+de `OutputStream.close`, `native-status.json`, `trace-inventory.json`, `pilot-result.json`,
+APKs target antes/después y helper, logs acotados de build/instrumentación. El test escribe
+solo su subdirectorio nuevo de caché privado; no copia SQLite, preferencias ni WebStorage.
+El original queda también allí; no hay borrado automático. Los logs y trazas pueden
+contener contenido/URLs de las notas sintéticas: **no publicarlos ni hacer commit**.
+GitHub admite resumen anonimizado, hashes/identidades y límites, tras cotejo; no bases/raw.
+
+El estado nativo exige identidad/run, ámbito, cierre del stream, hash/bytes y
+relojes monotónicos de llamadas coherentes con el límite de 10 s; esto no verifica
+su correlación con `ts` de Chromium. Exit 0 significa transferencia estructural y
+target binario/ruta instalada idénticos, **no RNF PASS**.
+El inventario comprueba JSON/`traceEvents`/timestamps y conserva métricas en `null`, RNF
+**PENDING**: falta revisar relojes/offsets, atribución, pérdidas, input y primer frame
+presentado con resultado funcional correcto y clasificación de frames. No convierte
+INP/rAF/promesas/`doFrame` en métricas. No modifica `summarize-f3-results.py` ni sus CSV.
+Build/piloto Android deben ejecutarse y revisarse en Mac antes de decidir una serie.
+
+Regresiones host: `python3 -m unittest discover -s scripts/tests -p test_webview_pilot.py -v`;
+descubiertas también por `test:tooling` dentro de `npm run verify`. Prueban guards,
+instalación exclusiva del auxiliar e inventario, **no compilan Java ni prueban teléfono**.
