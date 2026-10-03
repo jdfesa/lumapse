@@ -696,10 +696,18 @@ histórica de septiembre permanece intacta.
 local **sin API ni envío de capturas**. Se completaron instalación Python aislada,
 comprobación de sus 176 paquetes, CLI y dos handshakes MCP; cero llamadas a herramientas
 del teléfono. Su servidor directo publica toque/scroll sin lanzar el agente autónomo,
-pero **aún no se probó el control del Samsung** ni se instaló el helper de Artemis.
+pero **aún no se probó el control del Samsung**. El helper se instaló posteriormente
+con permiso específico: `com.artemis.helper` 1.2.0/código 6, APK/firma identificados en
+ADR-012; principal y auxiliar de trazas de Lumapse intactos y otros servicios preservados.
+El ping oficial informó enabled/reachable true y protocolo 2 soportado, **token_set false**;
+no demuestra lectura ni provisión segura del token. El postguard previo observó componente
+relativo y `accessibility_enabled=0`: no se da esa discrepancia por resuelta.
 El registro MCP es local, ignorado y con aprobación por herramienta; la conexión del
 cliente debe comprobarse antes de operar. Pin, aislamiento, compatibilidad y siguiente
-paso están en [ADR-012](../adr/ADR-012-ensayo-local-artemis.md).
+paso están en [ADR-012](../adr/ADR-012-ensayo-local-artemis.md). Se prepara un launcher
+portable con pin obligatorio/entorno aislado, no un instalador. Próximo paso único en Mac:
+conectarlo en el cliente y comprobar initialize/list_tools **sin herramientas UI**;
+lectura/captura sintética visible y aprobación real siguen pendientes, sin Guardar/CRUD.
 
 Este ensayo no cambia APK/datos de Lumapse, no ejecuta otro piloto y no demuestra
 Guardar → primer frame correcto presentado ni FPS. RNF-002/RNF-004 **PENDING**;

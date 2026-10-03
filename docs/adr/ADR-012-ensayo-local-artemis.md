@@ -2,8 +2,8 @@
 
 **Fecha:** 2026-10-03
 
-**Estado:** Ensayo de instalación autorizado por el autor. No se acepta Artemis como
-método de medición ni se declara validado su control del teléfono.
+**Estado:** Ensayo autorizado; helper instalado/ping comprobado en el host USB.
+Lectura/control mediante el cliente aún pendientes; no se acepta como metrología.
 
 **Alcance:** Tooling externo y aislado para la sesión 1 de F3; sin dependencias nuevas
 de Lumapse, cambios de producto, APK, datos, umbrales o runtime global.
@@ -70,26 +70,52 @@ Automatizar un toque no demuestra esa correlación.
   tooling PASS; gate completo con sus avisos no bloqueantes. No se añadieron tests
   de producto ni se usó ese resultado para aceptar las métricas.
 
-Esto prueba instalación e inicialización del protocolo, **no** helper instalado,
+Ese primer checkpoint prueba instalación host e inicialización del protocolo, **no**
 pantallas observadas, control del Samsung, pruebas funcionales ni métricas Android.
 Registrar un servidor tampoco garantiza que el catálogo del chat actual ya lo haya
 cargado: comprobar su conexión en el cliente antes de usarlo.
 
 ## Siguiente paso y límites
 
-Comprobar la conexión MCP del cliente y acordar una única prueba de observación/control
-sobre una pantalla sintética. Si requiere instalar/activar el APK de accesibilidad de
-Artemis, identificar ese artefacto y pedir autorización específica antes de hacerlo;
-no reemplazar el APK principal ni el helper de trazas de Lumapse. La instalación host
-no autoriza nuevas capturas F3, CRUD, series o alteración de datos.
+**Actualización del 2026-10-03, evidencia suministrada por el host USB:** el autor
+autorizó instalar/activar solo el helper identificado y una lectura/captura de pantalla
+sintética visible en el chat. Instalación oficial sin force/root: exit 0 en Samsung
+SM-G965F/Android 10/API 29/usuario 0; path/hash/versión del principal y auxiliar de trazas
+de Lumapse sin cambios, otros servicios de accesibilidad preservados. No hubo llamadas
+de captura/jerarquía/control. La conexión/catálogo del cliente y el diálogo real de
+aprobación siguen sin comprobar; no hay permiso de Guardar/CRUD/piloto/series.
 
 El checkout incluye `ArtemisAccessibilityHelper.apk`, 37 353 bytes. Su SHA-256 real
 `133e373fe03615c251cd74b03a38539c844d09a074954bca2d2dde6684561969` coincide con
-`helper_manifest.json`, que declara `com.artemis.helper`, 1.2.0/código 6. No se ha
-validado aún su firma/permisos ni su instalación/compatibilidad en el Samsung.
-Antes de cualquier operación, confirmar el dispositivo conectado y fijarlo
-explícitamente en la configuración privada; no operar por selección del primer
-dispositivo si hay varios.
+`helper_manifest.json`, que declara `com.artemis.helper`, 1.2.0/código 6. Se verificaron
+con aapt/apksigner minSDK 24/target 35 y certificado debug SHA-256
+`7b76b9a7d018130d9c6b752edab40c6cde27b15199853e954e3f7a0ae42b9dc4`.
+El postguard privado esperaba clase completa; Android devolvió el componente relativo
+`.ArtemisAccessibilityService` y `accessibility_enabled=0`. La consulta oficial posterior
+`helper_manager.status`, exit 0, informó instalado/código 6, enabled/reachable true,
+protocolo 2 soportado, token_set false, auto_install false y outdated false.
+El ping no demuestra lectura, provisión segura de token ni que normalizar el nombre
+resuelva la discrepancia; no se modifican settings por esa inferencia.
+
+El [launcher portable](../../scripts/README.md#48-launcher-mcp-directo-de-artemis)
+rechaza configuración sin un único target explícito antes del arranque y fija las
+variables que consume el [servidor oficial](https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/mcp/adb_server.py):
+`ARTEMIS_DEVICE_ID`/`ADB_DEVICE_SERIAL`, no `ANDROID_SERIAL`. Sin pin upstream elige
+el primer dispositivo; con pin busca coincidencia exacta o falla. El launcher no
+descubre ni lee dispositivos: disponibilidad física se valida en upstream al primer
+tool aprobado, no con un handshake. Mantiene backend helper exclusivo según el
+[factory fijado](https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/clients/screen_client_factory.py),
+sin awake, auto-install, proveedor ni cambios de configuración Codex.
+
+**Verificación del launcher en Arch (2026-10-03):** Python 3.14.7, Node 22.20.0/npm
+10.9.3 existentes; `python3 -m unittest discover -s scripts/tests -p test_artemis_direct_mcp.py -v`:
+16/16 PASS. `npm run verify` íntegro: exit 0, 77 archivos/1167 tests de aplicación y
+68 de tooling, incluidos los nuevos tests Python mediante el runner existente.
+El primer gate se detuvo por `spawnSync EPERM` del sandbox, antes de las suites;
+la ejecución con aprobación normal pasó sin cambiar controles/hooks/runtime global.
+Auditoría suplementaria de estas tres fuentes: 54 enlaces, cero problemas;
+docs/traceability/diff se revalidan tras anotar el resultado. No se instaló ni importó
+Artemis real en Arch ni hubo ADB/Android; mocks no validan conexión, token o lectura.
 
 La eventual ejecución autónoma requiere elegir proveedor, límites de pasos/coste y
 destino de las capturas; no reutilizar credenciales de Codex ni asumir que su cuota

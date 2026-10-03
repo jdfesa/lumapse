@@ -985,3 +985,43 @@ privados, 0600, con UTC/reloj host, deadline fijo, razón, exit, bytes y SHA-256
 `pilot-result.json` conserva plazos/expiración en `status_waits`; cada raw se acota a 64 KiB,
 hash/tamaño corresponden a la lectura completa y no son métrica ni offset Chromium.
 Nada raw al repo/GitHub. READY ausente nunca envía señal ni pide Guardar al usuario.
+
+## 48. Launcher MCP directo de Artemis
+
+[`artemis-direct-mcp.py`](./artemis-direct-mcp.py) prepara solo el servidor stdio ya
+instalado del [ensayo ADR-012](../docs/adr/ADR-012-ensayo-local-artemis.md).
+No instala/actualiza dependencias, APK ni ADB, descubre dispositivos, inicia awake o
+llama herramientas UI. Uso por el host USB después de revisión:
+
+```bash
+rtk proxy python3 scripts/artemis-direct-mcp.py --config <archivo-privado.json>
+```
+
+El JSON privado, regular/propietario actual y modo 0600, admite **solo** cuatro strings:
+`checkout` (ruta absoluta del checkout oficial limpio en revisión `351ca8422f7b5b54e80a9c1ce03a222e02415b6b`),
+`state_dir` (directorio privado existente, 0700), `adb` (ejecutable existente absoluto),
+`target` (un pin USB explícito, nunca una lista, dirección de red o elección automática).
+Config, paths y serial reales permanecen ignorados; no copiar ejemplos con identificadores
+del teléfono al repo/PR. La `.venv/bin/python` existente se conserva, incluso si es symlink.
+
+Rechaza campos desconocidos/duplicados, target ausente, checkout/revisión incorrectos,
+modificaciones de fuentes/lock, estado compartido/symlink, `.env` en su búsqueda y
+herramientas faltantes. Errores de validación son genéricos y no imprimen valores privados.
+Los directorios home/tmp/app se crean 0700 bajo ese estado, sin alterar permisos ajenos.
+El hijo usa entorno allowlist, Python `-I -B`, ADB solo `127.0.0.1:5037`,
+`ARTEMIS_DEVICE_ID` y `ADB_DEVICE_SERIAL` iguales al pin, helper-only,
+auto-install/keep-awake false y cloud-mode 0; no hereda claves de proveedor.
+Importa `adb_server` y llama configure_stdio_mode/stdio, **no su main con awake**.
+
+El pin es contrato de upstream, no prueba de USB conectado: antes de una llamada UI el
+operador debe cotejarlo localmente; al usarla upstream busca ese target exacto o falla,
+sin fallback al primer teléfono. Initialize/list_tools no hace esa validación física.
+No provisiona tokens ni garantiza el diálogo de aprobación del cliente. Logs/resultados
+upstream pueden contener datos privados: mantenerlos locales e ignorados, no publicarlos.
+Conexión/catálogo y una lectura sintética visible siguen pendientes; no permiso de
+acciones destructivas, Save, piloto ni series. No tocar configuración Codex global.
+
+Tests stdlib, sin instalar Artemis ni acceder ADB:
+`rtk proxy python3 -m unittest discover -s scripts/tests -p test_artemis_direct_mcp.py -v`.
+Se descubren también en el gate por `fixtures.test.js`; mocks/CI no validan Android
+ni convierten Artemis en metrología. RNF-002/004 **PENDING**.
