@@ -96,12 +96,13 @@ elude por otra superficie y no se pide repetir Save a ciegas.
 y script USB, instalando **solo helper de pruebas** con firma compatible, nunca otra
 APK de Lumapse. [Alcance, riesgos y criterios del piloto](./protocolo.md#piloto-nativo-experimental--autorización-acotada-del-2026-10-03)
 y [entrypoint/preflight](../../scripts/README.md#47-capture-webview-pilot-androidpy).
-Build Android, instalación del helper, nueva captura y revisión semántica **PENDING**
-en la Mac operadora; la implementación remota no constituye prueba física. Este pipeline
+El build y la instalación inicial del helper fueron realizados en Mac según el
+checkpoint siguiente; **captura útil y revisión semántica PENDING**. La implementación
+remota no constituye prueba física. Este pipeline
 autorizado no adopta equivalencia ni rebaja el protocolo. No sustituir por 500 antes de
 resolver la captura/revisión y medir el pequeño; no sumar ambos perfiles.
 
-**Verificación host del capturador (2026-10-03):** el avance de nueve archivos se
+**Verificación host del capturador (2026-10-03, checkpoint inicial `d50e56bf`):** el avance de nueve archivos se
 recuperó contra la base publicada `43ec1f75`, con hash/base y aplicación comprobados,
 sin reiniciar el frente. Se mantienen API pública, opt-in, ámbito de proceso y cierre
 SDK; se reforzaron identidad/ruta instalada del target, versión no declarada del helper
@@ -125,6 +126,77 @@ No hay Java/ADB en PATH de este host: compilación nativa y piloto en Mac **PEND
 con JDK/SDK/caché y firmante debug existentes. El checkpoint publicado no es un PR F3
 ni evidencia de dispositivo. Sin porcentaje vivo de cuota, no se presume presupuesto
 independiente por equipo ni se inicia otro relevo automáticamente.
+
+### Piloto físico inicial y corrección acotada de transporte
+
+**Reporte del operador, 2026-10-03 (actualización 06:27 UTC):** el propietario autorizó
+una descarga puntual **solo de dependencias AndroidTest ya declaradas** faltantes en
+caché. `:app:assembleDebugAndroidTest` online terminó PASS a las **06:17:40 UTC**,
+con JDK21/wrapper/SDK existentes y descarga SDK deshabilitada; sin cambiar fuentes,
+versiones o dependencias ni instalar herramientas. La siguiente ejecución del script
+volvió al default **offline**, PASS (162 tareas up-to-date, 12 s), e instaló solo el auxiliar.
+Hashes AAR aportados del cache resuelto (no prueban métricas):
+
+| Artefacto ya declarado o transitivo | SHA-256 AAR |
+|---|---|
+| `androidx.test.ext:junit:1.3.0` | `3363df84da4540ba8daff02c3f7cd65471037a6a5370591a7e6deba377b36e7f` |
+| `androidx.test.espresso:espresso-core:3.7.0` | `5dd90e366838bf044cb52eae06474debd285df18a7a77c40441ac8e8951bb00f` |
+| `androidx.test:runner:1.7.0` | `970311c47119928a2e406a88892a3d270387cc5a49a181a1c44511105b41b818` |
+| `androidx.test.services:storage:1.6.0` | `f97e3cf6aaf4e3fb97ef219d37a9c0a0720183c1f6db87b37642521e26fb6d30` |
+| `androidx.test:core:1.7.0` | `f4dacd8edceeec48e0c76ecf28339b28f4b4f6b74f8e34e9e59b472c27d9eb81` |
+| `androidx.test:monitor:1.8.0` | `56cb7496a06d9f2dca7d3ff76c50a8a30bd18e00a24a3b267d5a31437b278e67` |
+| `androidx.test.espresso:espresso-idling-resource:3.7.0` | `5ff62326b49c308c1d060466ae3cf4aa0e3deaf9295f077a6886048dda3e9b14` |
+
+Auxiliar instalado: `com.lumapse.app.test`, versión/code **null**, runner
+`AndroidJUnitRunner`, target `com.lumapse.app`, fuente **`d50e56bf`**; APK SHA-256
+`80bb89eb429249293de2cd18f08c44d7492b81632582da8c18b432f8353f5bbd`, certificado
+`5ba36ca181d954a6dbe8a4a6afdb833429feb32a3a93dae9e8313191a0c782df`.
+Fuente/identidad del Lumapse original siguen **E5 / 0.5.0/500**, no el commit del helper;
+APK/certificado/versiones/ruta instalada **iguales antes/después** según el operador.
+No hubo instalación main, reset de datos, root/forward/flags globales; la actividad se
+abrió de nuevo normalmente. Fixture conocido: **50 base + 1 auxiliar**, 500 no cargado;
+respaldo SQLite original preservado, sin backup completo de preferencias/WebStorage/borradores.
+
+**Fallo observado, no defecto de producto confirmado:** Python salió 1 con
+`Invalid native status JSON` **antes de mostrar READY**. No conservó los bytes de esa
+primera lectura. El operador había confirmado estar listo, pero nunca recibió el
+handshake: no se atribuye el fallo a no pulsar Enter. No se envió `start.signal`;
+el test nativo agotó su preparación de 120 s: **FAIL PREPARATION_TIMEOUT**. Estado
+final JSON válido de **866 bytes**, ERROR, sin `start_call_before_elapsed_ns`;
+**ninguna traza, operación CRUD de este piloto, muestra ni FPS**. JSON final válido
+no demuestra la causa: snapshot transitorio durante escritura/lectura es hipótesis.
+[AtomicFile](https://developer.android.com/reference/android/util/AtomicFile) no ofrece
+bloqueo entre procesos y su base no es contrato de lectura externa consistente.
+
+**Ronda de corrección 1 autorizada:** publicación solo de snapshot cerrado/sincronizado
+mediante [move atómico](https://developer.android.com/reference/java/nio/file/Files),
+sin fallback no atómico; diagnóstico privado de lecturas fallidas (bytes acotados,
+hash/tamaño/razón/hora) y máximo tres lecturas incompletas consecutivas. JSON malicioso,
+scope/run/estado incorrectos o contrato de hash/tiempo inválido abortan, no se toleran.
+Reuso/update del **auxiliar conocido** requieren opt-in y pins de hash/proveniencia;
+reuso exige fuentes nativas iguales y no reinstala. Al cambiar Java corresponde update
+solo auxiliar de firma compatible, sin downgrade, limpieza ni tocar el target.
+Contrato detallado en [scripts](../../scripts/README.md#47-capture-webview-pilot-androidpy).
+
+Investigación/implementación/verificación acotadas a objetivo **20 min**, sin recortar
+el gate ni abandonar tests a medias. Tras publicar código seguro se permite **un único
+piloto local adicional de 8 s**. Si falla o no contiene las fronteras metrológicas
+reales, registrar el [impedimento de tooling](../../BACKLOG.md#deuda-técnica-viva),
+**detener este método y esperar decisión del autor**. Sin más técnicas, series, nuevo
+relevo, reinicio automático o RNF rebajados; no hay PR checkpoint de la herramienta.
+Esta corrección aún requiere compilación/piloto Mac; no es causa raíz física probada.
+
+**Verificación remota de la ronda 1 (2026-10-03):** con Node22.20.0/npm10.9.3 existentes,
+`python3 -m unittest discover -s scripts/tests -p test_webview_pilot.py -v` **32/32 PASS**;
+`npm run verify` íntegro **exit0**, 77 archivos/1167 app +68 tooling (incluye Python),
+build web y todos los controles. `check:docs`, `check:traceability`, 97 enlaces
+suplementarios de seis fuentes (incluido TODO) y `git diff --check`: PASS.
+Dos ajustes de mocks/asserts host fallaron inicialmente durante la corrección y fueron
+corregidos sin skips; no son resultados Android. La última modificación documental
+solo registra estos hechos y se revalida con docs/trazabilidad. Java/ADB no ejecutados
+ni disponibles en PATH aquí: build del helper corregido, update y piloto físico siguen
+**PENDING**. No se atribuye el build previo Mac a este snapshot Java nuevo.
+
 
 No se recibieron trazas originales, calentamientos ni muestras cuantitativas válidas para esta sesión.
 RNF-002/RNF-004 siguen **PENDING**; no hay otro PR de preparación ni cierre F3.
