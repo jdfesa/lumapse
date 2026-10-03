@@ -15,7 +15,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ### Added
 
-- **Identificación de builds en Acerca de (RF-023):** versión base, compilación y origen Git calculados por Vite. Deploy habitual identificado como debug privado; helper de release como candidato sin acreditar firma/publicación. Estado local y fallback honesto sin Git; no cambia `0.5.0/500`, no genera una release ni sustituye el hash/evidencia del APK.
+- **Identificación de builds en Acerca de (RF-023):** versión base, compilación y origen Git calculados por Vite. Deploy habitual identificado como debug privado; helper de release como candidato sin acreditar firma/publicación. Estado local y fallback honesto sin Git; no cambia `0.5.0/500`, no genera una release ni sustituye el hash/evidencia del APK. Smoke Android E5 y navegación aceptados; cierre de [PR #22](https://github.com/jdfesa/lumapse/pull/22) autorizado, [evidencia y límites](docs/gestion/checklist-validacion-android.md#identificación-de-build--smoke-aceptado-de-pr-22), sin mediciones F3.
 
 ### Security
 

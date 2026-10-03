@@ -70,11 +70,14 @@ antes de adoptarlo, conforme a AGENTS/CONTRIBUTING.
 Meta fines de octubre 2026 condicionada a evidencia, correcciones y disponibilidad.
 No se promete APK final, todos los RNF ni defensa en estas dos sesiones.
 
-**Frente habilitador actual:** rama única `feat/build-identification`, desde `5ef1f911`.
+**Frente habilitador aceptado:** identificación de build, desde `5ef1f911`, en [PR #22](https://github.com/jdfesa/lumapse/pull/22).
 Acerca de presenta versión base, compilación y origen; el canal se declara automáticamente
 en los scripts existentes, sin nuevas dependencias, bump ni arquitectura. Semántica,
 fallback, HMR y límites en el [flujo Android](../flujo-desarrollo-android.md#identificación-de-compilaciones-en-acerca-de).
-Se entrega PR **draft**, sin operación Android, release ni autorización de merge.
+El draft inicial quedó a la espera del dispositivo; el smoke sobre E5 ya fue aceptado
+el 2026-10-02 y el autor autorizó integración/limpieza. [Artefacto, prueba y límites](./checklist-validacion-android.md#identificación-de-build--smoke-aceptado-de-pr-22).
+El PR es la fuente del estado de integración; cerrar con CI del HEAD documental final
+y limpieza comprobada, sin afirmar esas operaciones antes de ejecutarlas. Sin release.
 La APK publicada `v0.5.0` ya fue aceptada en al menos tres dispositivos: [registro general](./checklist-validacion-android.md#aceptación-general-de-la-apk-publicada-v050).
 Ese cierre no acredita el código nuevo ni los RNF de F3.
 
@@ -104,10 +107,11 @@ versión base desde package, canal y origen incrustados, sin rutas del host ni A
 en el cliente. No sustituye un APK. Los tres avisos lint preexistentes (NoteEditor y
 BackupImportPlanService) y avisos diagnósticos de tamaño no se ocultaron ni relajaron.
 Logs y snapshots temporales no se versionan. CI se consulta en el PR para su HEAD exacto,
-por separado de esta evidencia local. **Android de este frente y todas las mediciones
-F3: PENDING**; no se generó/firmó/publicó APK ni se tocó un teléfono.
+por separado de esta evidencia local. En aquel checkpoint remoto **Android estaba
+PENDING** y no se tocó el teléfono; el smoke posterior aceptado está en la checklist.
+Todas las mediciones F3 siguen **PENDING**; su próximo frente está **NO INICIADO**.
 
-**Prueba posterior del autor para este PR:**
+**Handoff original de prueba — smoke ya aceptado, no repetir:**
 
 1. Revisar el PR y acordar instalación habitual sobre firma compatible; no usar `--clean`.
 2. En el equipo con Android disponible, sincronizar la única rama/HEAD del PR y usar
@@ -120,6 +124,12 @@ F3: PENDING**; no se generó/firmó/publicó APK ni se tocó un teléfono.
    confirmación general o resultados efectivamente observados, sin inferir métricas.
 5. Revisión, CI del HEAD exacto y **nueva autorización explícita** antes de ready/merge;
    sincronizar `main` y limpiar la rama únicamente tras integración comprobada.
+
+La autorización del punto 5 ya fue recibida para **PR #22** en la
+[decisión del autor](https://github.com/jdfesa/lumapse/pull/22#issuecomment-5964326370).
+Fuente de la APK instalada: `e5becc96b032007f587fb564c7b6afd790c5faf9`; el HEAD posterior
+solo agrega este registro documental, sin modificar producto ni atribuirle otra APK.
+CI final e integración/limpieza se corroboran en el PR. No iniciar F3 automáticamente.
 
 **Prerrequisitos comunes de F3:** cerrar el PR anterior y comprobar GitHub/main limpio;
 autor/dispositivo e inspector disponibles; APK fuente/canal/hash/certificado identificados;

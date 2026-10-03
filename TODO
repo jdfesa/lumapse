@@ -18,7 +18,7 @@
 
 El [plan de desarrollo inmediato de la beta](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) fue aceptado e integrado en PR #13. **F1 y F2 aprobadas e integradas** en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`). **Preparación F3 aceptada e integrada** en PR #16 (`90fd21e`) tras la confirmación general del teléfono; ramas eliminadas. [Protocolo, fixtures y matriz](docs/beta-core-validation/README.md): las métricas Android siguen pendientes, sin declarar F3 cerrada.
 
-**Frente actual aprobado:** identificación de build en Acerca de y ajustes documentales mínimos; una sola rama `feat/build-identification`, revisión y prueba Android pendientes. Después de su aceptación/integración/limpieza: sesión 1 RNF-002/004, sesión 2 RNF-009/010, según [continuidad del plan](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#continuidad-aprobada--2026-10-02). Los filtros visibles quedaron cerrados en PR #18 (`3898db8`); no sustituyen F3.
+**Último frente aceptado:** identificación de build en Acerca de, smoke E5 y aceptación general recibidos el 2026-10-02; integración/limpieza autorizadas, estado comprobable en [PR #22](https://github.com/jdfesa/lumapse/pull/22). [Artefacto y límites](docs/gestion/checklist-validacion-android.md#identificación-de-build--smoke-aceptado-de-pr-22). Después del cierre comprobado: sesión 1 RNF-002/004, sesión 2 RNF-009/010, **NO INICIADAS**, según [continuidad del plan](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#continuidad-aprobada--2026-10-02). Los filtros quedaron cerrados en PR #18 (`3898db8`); no sustituyen F3.
 
 | Orden | Frente | Criterio de cierre |
 |---|---|---|
@@ -37,7 +37,7 @@ El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de
 - [x] F2: autor confirmó funcionamiento e integró PR #15 (`8e25dcd`) el 2026-09-14; rama local/remota eliminada. Cierre acotado a creación de notas/fechas.
 - [x] Refrescos vecinos de F2: crear materia/sección y editar/eliminar fecha fueron probados en Android por el autor e integrados en [PR #19](https://github.com/jdfesa/lumapse/pull/19) el 2026-09-18 (`34b2900`), con regresiones SQLite/UI y recuperación solo de lectura. Mover/eliminar notas y otras acciones de materias/papelera permanecen como deuda media, a revisar con evidencia; este cierre no completa F3. [Plan y evidencia](docs/gestion/plan-refrescos-vecinos-2026-09-16.md).
 - [x] F3: perfiles/ZIP de 50/500 notas, integración SQLite y protocolo aceptados e integrados en PR #16; confirmación general del teléfono recibida el 2026-09-15, sin nuevas muestras crudas ni identidad APK.
-- [ ] Identificación de build: revisar PR draft y probar Acerca de mediante deploy habitual autorizado sin limpieza; no hay merge autorizado para este frente.
+- [x] Identificación de build: smoke Acerca/navegación aceptado y merge/limpieza autorizados para PR #22. Fuente Android E5; cierre documental sin cambios de producto ni métricas F3. Integración comprobable en el PR, no se anticipa aquí.
 - [ ] F3 sesión 1: acordar artefacto/espacios 50/500 e inspector; 30 calentamientos y 180 muestras CRUD ≤ 200 ms, 3 × 10 tramos FPS ≥ 55, trazas/hashes/offsets reales revisados por el autor.
 - [ ] F3 sesión 2: OFF-01–05 y CON-01–04, borradores nuevos/edición y ventana real de 500 ms, solo tras cerrar la sesión anterior y con operaciones pertinentes autorizadas. No optimizar sin medición/aprobación.
 

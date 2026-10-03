@@ -22,7 +22,7 @@ de Gómez (2014).
 | [`estimacion-pert.md`](./estimacion-pert.md) | Estimación de 3 puntos (PERT) para los módulos de mayor riesgo | ✅ Completado |
 | [`lineas-base.md`](./lineas-base.md) | Registro de líneas base y releases `v0.4.8`/`v0.5.0`, más el futuro corte estable | 🔄 Activo en Hito 06 |
 | [`seguimiento-velocidad.md`](./seguimiento-velocidad.md) | SP planificados y entregados por hito como métrica académica separada del flujo Kanban | ✅ Actualizado |
-| [`checklist-validacion-android.md`](./checklist-validacion-android.md) | Evidencia histórica de `v0.4.8` y validación incremental del corte `v0.5.0` | ✅ Asset `v0.5.0` aceptado; nuevo frente y F3 pendientes |
+| [`checklist-validacion-android.md`](./checklist-validacion-android.md) | Evidencia histórica de `v0.4.8`, aceptación de `v0.5.0` y smoke de identificación de build | ✅ Smoke E5 de PR #22 aceptado; integración/limpieza autorizadas, F3 no iniciado |
 | [`cheatsheet-defensa.md`](./cheatsheet-defensa.md) | Métricas, decisiones y respuestas breves para la defensa | 🔄 Revisión final pendiente |
 | [`firma-apk-android.md`](./firma-apk-android.md) | Política de firma, secretos y evidencia de los artefactos Android publicados | ✅ `v0.5.0` publicada |
 | [`plan-mantenibilidad-tipado-gradual-2026-06-12.md`](./plan-mantenibilidad-tipado-gradual-2026-06-12.md) | Estrategia incremental de modularidad y tipado; no habilita refactors amplios durante el cierre | 📌 Referencia |

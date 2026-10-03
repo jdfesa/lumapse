@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 06 — Entrega Final
 > **Hito 05:** Cerrado documentalmente el 2026-07-15 sobre la beta operativa `v0.4.8`
-> **Última actualización:** 2026-10-02 — PR #21 integrado; identificación de build y continuidad de dos sesiones aprobadas. Mediciones Android F3 siguen pendientes.
+> **Última actualización:** 2026-10-02 — PR #21 integrado; smoke de identificación de build aceptado y cierre de PR #22 autorizado. Continuidad F3 no iniciada, mediciones pendientes.
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -39,7 +39,7 @@ La trazabilidad de `v0.4.8` y `v0.5.0` queda distribuida entre `docs/gestion/lin
 
 **Plan aceptado e integrado en [PR #13](https://github.com/jdfesa/lumapse/pull/13):** F1 y F2 fueron aprobadas e integradas en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`). La preparación de F3 fue aceptada tras la confirmación general del teléfono e integrada en PR #16 (`90fd21e`); sus ramas ya se eliminaron. Las mediciones cuantitativas siguen pendientes y F3 no se declara cerrada. Ver [protocolo y evidencia](docs/beta-core-validation/README.md) y [plan inmediato](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md).
 
-**Objetivo vigente:** identificación de build aprobada y revisión Android; después, dos sesiones secuenciales RNF-002/004 y RNF-009/010 según el [plan canónico](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#continuidad-aprobada--2026-10-02). Producto/bloqueantes → APK correspondiente generada/validada (objetivo `0.6.0+`) → informe/defensa. Filtros visibles cerrados en PR #18 (`3898db8`); no se agrega una F4 retroactiva ni se promete cerrar todo en dos sesiones.
+**Objetivo vigente:** identificación de build aceptada, integración/limpieza autorizadas y corroborables en [PR #22](https://github.com/jdfesa/lumapse/pull/22); después, dos sesiones secuenciales RNF-002/004 y RNF-009/010, **no iniciadas**, según el [plan canónico](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#continuidad-aprobada--2026-10-02). Producto/bloqueantes → APK correspondiente generada/validada (objetivo `0.6.0+`) → informe/defensa. Filtros visibles cerrados en PR #18 (`3898db8`); no se agrega una F4 retroactiva ni se promete cerrar todo en dos sesiones.
 
 | Orden | Tarea | Criterio de cierre |
 |---|---|---|
