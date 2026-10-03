@@ -155,8 +155,10 @@ posterior autorizada](../beta-core-validation/README.md#reparación-host-y-conti
 repara el host en la misma rama; el [cuarto piloto](../beta-core-validation/README.md#cuarto-piloto--captura-completada-semántica-pendiente)
 completó captura/cierre/hash con reuso exacto y target intacto. El
 [diagnóstico semántico](../beta-core-validation/README.md#diagnóstico-semántico-acotado--piloto-04)
-identifica fronteras aún no demostradas; siguiente acción solo consulta offline local
-del original, sin nueva captura/helper/series ni cambio del APK principal. No cambia umbrales
+identifica fronteras aún no demostradas; la [consulta offline local](../beta-core-validation/README.md#consulta-estructural-local--resultado)
+ya se completó (44 reportes / 36 identidades distintas), sin demostrar cadena funcional,
+relojes o completitud. Evaluar un ajuste mínimo y su impacto para revisión del autor
+antes de nueva captura/helper/series; APK principal intacto. No cambia umbrales
 ni el ciclo general de una rama/revisión/autorización.
 
 Seguir el [protocolo F3](../beta-core-validation/protocolo.md) y su matriz canónica.

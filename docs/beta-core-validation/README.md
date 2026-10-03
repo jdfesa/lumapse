@@ -542,13 +542,71 @@ sobre el original del cuarto piloto, cotejando su SHA-256 ya registrado; devolve
 3. Presencia de metadatos explícitos de unidad/dominio/sincronización de reloj y
    búfer/pérdidas; un campo ausente queda ausente, nunca cero pérdidas por defecto.
 
-La consulta debe declarar su procedimiento y las ambigüedades. Aunque encuentre
+La consulta debe declarar su procedimiento y las ambigüedades. La solicitud anterior
+se ejecutó localmente según el [resultado siguiente](#consulta-estructural-local--resultado). Aunque encuentre
 identidades/flows, todavía deberá demostrarse qué frame contiene el resultado
 correcto de Guardar: los conteos no lo certifican. Si faltan enlaces, identificación
 de contenido, relojes o completitud, **detener esta vía antes de series** y presentar
 al autor el ajuste mínimo y su impacto; no otro piloto/helper/categorías/instrumentación
 por iniciativa. Esta consulta no requiere operar la app ni transferir el original a
 Debian. RNF-002/004 PENDING; RNF-009/010 no iniciados, umbrales y evidencia histórica intactos.
+
+### Consulta estructural local — resultado
+
+**2026-10-03, 20:39:03 UTC, Mac, Python 3.14.6:** el autor autorizó continuar con
+el siguiente paso lógico tras explicar la revisión offline. Una consulta privada
+`rtk proxy python3 <consulta-privada.py>` (ruta anonimizada), **exit 0**, leyó el
+original del cuarto piloto, no Android ni una copia remota. SHA-256 original
+`5d05187ccbe6f7dc2d8c7c65a5402fdc11946c72f81cb3451b367b38b769a200`
+**igual antes/después**, 1456872 bytes / 7681 eventos. Consulta y salida agregada
+permanecen privadas e ignoradas; SHA-256 de la consulta
+`17415c7f3dfe0e1c513def29d519ba5e4d0ca2c1889f1390c79ad761921cb13c`
+y del resumen `dc0ccec2a9b961a080686ac8f0ca047073604bd803bb62d23cb1c9b0197c30f9`.
+No se transfirió raw ni se publicaron IDs, PID/tid, URLs o notas.
+
+**Procedimiento y límite:** selección por nombres exactos; emparejamiento `b/e`
+con stacks por `pid/tid/cat/name/id2` (fallback `id`) y scope, en el orden original;
+unión de campos de los diccionarios `frame_reporter`/`chrome_frame_reporter` de los
+extremos, contando conflictos. Se inspeccionaron claves conocidas de correlación,
+reloj y búfer/pérdidas, sin publicar valores. Comprobaciones sintéticas previas de
+emparejamiento simple/anidado, huérfanos y timestamps inválidos PASS; no son nuevas
+regresiones del producto. No se reconstruyó una cadena causal por proximidad temporal
+ni por coincidencia numérica de IDs de namespaces no verificados.
+
+| Consulta | Resultado observado | Qué no acredita |
+|---|---|---|
+| PipelineReporter | 88 eventos, 44 pares completos, 0 huérfanos; 44 límites finitos/ordenados; 44 diccionarios `frame_reporter`, 0 `chrome_frame_reporter`, sin conflictos | No prueba completitud global ni un frame físico por par. |
+| Identidad fuente/secuencia/árbol | Los tres campos presentes en 44 pares: **36 tuplas distintas, 8 grupos duplicados y 8 reportes adicionales que comparten identidad**; ninguno incompleto | No convertir 44 reportes ni 36 tuplas en un censo de frames presentados/FPS. La identidad estructural no certifica superficie/contenido correcto. |
+| Clasificación | Estados 16 ALL / 20 DROPPED / 8 NO_UPDATE, como el inventario anterior; `frame_type` ausente en 44, `has_missing_content=false` en 44 | Ausencia de `frame_type` no demuestra ausencia de FORKED/BACKFILL; `has_missing_content=false` no identifica la tarjeta correcta de Guardar. |
+| Entrada | Un `GestureProvider::OnTouchEvent` de fase X con `ts/dur`; sin las claves de correlación inspeccionadas | No identifica el botón Guardar ni enlaza su input con el primer feedback correcto. No se afirma que el usuario no guardó o no hizo scroll. |
+| Graphics.Pipeline | 224 eventos: 80 X, 72 s, 72 f; `id` en 144 y `frame_sink_id` en 16 | Existen flows, pero no se demostró el puente touch→Guardar→presentación correcta. Número de enlaces inequívocos **no determinado**, no un cero medido. |
+| Etapas de presentación | `SwapEndToPresentationCompositorFrame` y `SubmitCompositorFrameToPresentationCompositorFrame`: cada nombre 32 eventos (16 b / 16 e), `ts/id2` presentes. `WaitForPresentation`: 8 n con `ts/id2`; `SkiaRenderer::SwapBuffers`: 8 X con `ts/dur` | Son extremos/etapas, no frames diferentes para sumar ni timestamps del resultado correcto. No se validó su correspondencia causal. |
+| Relojes y pérdidas | Cero `EventLatency` y fase c; 481 s / 481 f en toda la traza. Sin claves explícitas de reloj de la lista inspeccionada. Dos claves `buffer_size` en nivel superior/metadatos | No declarar ausencia de cualquier metadato posible ni pérdida cero. Presencia de tamaño no prueba capacidad efectiva/saturación; ni los flows globales validan sincronización/completitud. |
+
+Las claves de correlación revisadas fueron `id/id2/bind_id/flow_in/flow_out`,
+`frame_token/frame_sink_id/trace_id/latency_id/interactionId/interaction_id/touch_id/flow_id/begin_frame_id`.
+Para reloj: `displayTimeUnit/clock-domain/clock_domain/clock_id/clock_name/clock_sync/time_unit/timestamp_unit/trace_clock`;
+para búfer/pérdidas: `trace_buffer_size/buffer_size/buffer_usage/buffer_overflow/overflow/events_dropped/lost_events/data_loss/data_loss_occurred/trace_stats`.
+Es una búsqueda explícitamente limitada, no prueba de ausencia de campos desconocidos.
+La [referencia Chromium ya citada](https://chromium.googlesource.com/devtools/devtools-frontend/+/b88894b14f63f84c460f66cff8918b2b4d079eae/front_end/models/trace/types/TraceEvents.ts)
+orienta esas claves/fases; sigue sin cotejo binario con WebView 153 instalada.
+
+**Conclusión y siguiente decisión:** esta consulta aporta duplicación de identidades
+y disponibilidad concreta de etapas/flows, pero **no habilita muestras válidas ni
+FPS**. Se detiene antes de otra captura/serie; no insistir con el mismo piloto sin
+resolver la frontera ausente. El ajuste a evaluar debe poder identificar el input
+de Guardar y vincular el contenido esperado con su primera presentación, además de
+justificar dominio/offset de relojes, atribución y completitud. Se necesita una
+propuesta técnica acotada con impacto/calibración y revisión del autor antes de
+cambiar helper/categorías/método o compilar/instalar. La disponibilidad de root y el
+permiso general de tocar el teléfono de pruebas no validan esa equivalencia ni
+requieren usar privilegios. No nuevo piloto, acceso Android, instalación, alteración
+de datos/APK, cambio de código o métrica en esta revisión; RNF-002/004 **PENDING**.
+
+Verificación documental local: `npm run check:docs` (96 archivos / 818 enlaces),
+`npm run check:traceability`, auditoría suplementaria de las siete fuentes cambiadas
+(incluido TODO, 158 enlaces, cero problemas) y `git diff --check`: **exit 0**.
+No se ejecutaron otra captura ni nuevas pruebas Android para esta anotación.
 
 Los pilotos primero a tercero no produjeron traza; el cuarto sí conserva el original
 identificado arriba. No se recibieron calentamientos ni muestras cuantitativas válidas para esta sesión.
