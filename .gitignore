@@ -36,6 +36,8 @@ tmp/
 
 # Internal AI skills and workflows (local tooling)
 .skills/
+# Host-specific MCP paths and private configuration
+.codex/config.toml
 
 # Android / Capacitor (la carpeta android/ SÍ se commitea)
 android/app/build/

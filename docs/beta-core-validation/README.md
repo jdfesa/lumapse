@@ -690,6 +690,22 @@ La sesión 2 RNF-009/RNF-010 no se inicia. El acuerdo y la carga no rebajan umbr
 no aportan latencias/FPS ni sustituyen el cotejo de trazas por el autor; la evidencia
 histórica de septiembre permanece intacta.
 
+### Ensayo local de Artemis — instalación, no métricas
+
+**2026-10-03:** el autor autorizó instalar Artemis y eligió una primera verificación
+local **sin API ni envío de capturas**. Se completaron instalación Python aislada,
+comprobación de sus 176 paquetes, CLI y dos handshakes MCP; cero llamadas a herramientas
+del teléfono. Su servidor directo publica toque/scroll sin lanzar el agente autónomo,
+pero **aún no se probó el control del Samsung** ni se instaló el helper de Artemis.
+El registro MCP es local, ignorado y con aprobación por herramienta; la conexión del
+cliente debe comprobarse antes de operar. Pin, aislamiento, compatibilidad y siguiente
+paso están en [ADR-012](../adr/ADR-012-ensayo-local-artemis.md).
+
+Este ensayo no cambia APK/datos de Lumapse, no ejecuta otro piloto y no demuestra
+Guardar → primer frame correcto presentado ni FPS. RNF-002/RNF-004 **PENDING**;
+la propuesta anterior de solo diseño no limita la instalación aquí autorizada,
+pero no se adopta un método metrológico ni se modifica el protocolo de aceptación.
+
 ## Entrega revisable
 
 - [Protocolo](./protocolo.md): fixtures, seguridad del dispositivo, CRUD/FPS, offline y borradores.
