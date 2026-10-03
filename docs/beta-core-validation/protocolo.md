@@ -141,8 +141,9 @@ readline del host; JUnit PREPARATION_TIMEOUT, sin start/traza/métricas. Target 
 La entrega inicial detuvo el método: no otro piloto ni series por aquel permiso.
 [La continuación posterior autorizada](./README.md#reparación-host-y-continuidad-local--2026-10-03)
 corrige preparación/aborto del host con 59 regresiones y gate completo, sin cambiar
-el helper ni aportar validación física nueva. Falta el piloto local único con reuso
-exacto y confirmación del operador; sin build/install/series automáticas. El autor autorizó **PR DRAFT de tooling
+el helper ni aportar validación física nueva. El [cuarto piloto local](./README.md#cuarto-piloto--captura-completada-semántica-pendiente)
+completó handshake/captura/cierre/hash con reuso exacto y target intacto, sin build/install.
+Falta revisar input→feedback/relojes/pérdidas/scroll; sin otras capturas/series automáticas. El autor autorizó **PR DRAFT de tooling
 con bloqueo registrado**, no F3/RNF completadas. Este ajuste específico reemplaza la
 prohibición anterior de PR checkpoint para este entregable; mantiene una rama y el
 circuito de revisión/decisión del autor. Aquel permiso inicial no autorizaba código

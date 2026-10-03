@@ -834,7 +834,7 @@ Piloto **experimental opt-in**, no medidor CRUD/FPS. Usa únicamente
 [`WebViewTracePilotTest`](../android/app/src/androidTest/java/com/lumapse/app/WebViewTracePilotTest.java)
 y las dependencias/runner Android existentes. [Autorización, alcance y criterio falsable](../docs/beta-core-validation/protocolo.md#piloto-nativo-experimental--autorización-acotada-del-2026-10-03).
 
-**Estado vigente: reparación host verificada, validación nativa pendiente.** Los tres
+**Estado vigente: piloto capturado y cerrado; revisión semántica/métricas pendiente.** Los tres
 intentos anteriores y sus causas observadas siguen en [el registro histórico](../docs/beta-core-validation/README.md#tercer-piloto--bloqueo-stdin-y-entrega-de-tooling).
 [Continuación autorizada y evidencia](../docs/beta-core-validation/README.md#reparación-host-y-continuidad-local--2026-10-03):
 lectura por bytes realmente no bloqueante, stdin aislado para los hijos, plazo absoluto,
@@ -842,6 +842,11 @@ READY fresco antes de una señal única y ABORTED/exit 130 ante Ctrl-C. 59 tests
 incluidas PTY reales; no acreditan captura Android, latencia/FPS o causa física histórica.
 Ejemplos siguientes requieren permiso/confirmación pertinente para un piloto local
 único y reuso exacto conocido, no series ni reintentos automáticos.
+
+[Cuarto piloto](../docs/beta-core-validation/README.md#cuarto-piloto--captura-completada-semántica-pendiente):
+READY/CAPTURING/cierre SDK/JUnit y hash completados con reuso exacto, sin build/install,
+target intacto. Los ejemplos no autorizan otras capturas/series; falta la revisión
+de input→feedback/relojes/pérdidas/scroll, no inferir métricas de los reportes.
 
 **Operador Mac por USB:** revisar/fetch/pull ff-only de `test/android-performance-evidence`
 antes de ejecutar. Exige HEAD/upstream exactos y árbol limpio, Node 22.20.0/npm 10.9.3,

@@ -416,7 +416,59 @@ del APK principal. Preparar fuera del intervalo y guardar/scroll solo durante CA
 Ante otro fallo, conservar la evidencia y detenerse, sin series/reintentos automáticos.
 **RNF-002/004 siguen PENDING** con sus umbrales intactos; PR DRAFT, sin ready/merge.
 
-No se recibieron trazas originales, calentamientos ni muestras cuantitativas válidas para esta sesión.
+### Cuarto piloto — captura completada, semántica pendiente
+
+**2026-10-03, 09:36:48–09:37:43 UTC, Mac/USB local:** el autor autorizó expresamente
+**un único piloto de 8 s**, reusando el auxiliar exacto sin build/install ni cambiar
+el APK principal, y reconoció el posible reinicio por instrumentación. Preflight:
+checkout limpio/HEAD/upstream `f237f10698e6221086bae12ed7888f16efb0dbc5`, 59 tests host
+PASS también en Mac (Python 3.14.6), CI Quality Gate/GitGuardian del mismo HEAD SUCCESS;
+Node 22.20.0/npm 10.9.3, JDK 21.0.10, Gradle 8.14.3 ya existentes. Samsung
+SM-G965F/Android 10/API 29/WebView 153.0.8010.36, usuario 0.
+
+**Captura completada realmente:** READY visible, autor respondió «lista» a la nota
+preparada sin guardar; Enter recibido por el host, **START_COMMAND_COMPLETED** y
+CAPTURING visible. JUnit **OK (1 test)**, salida host **0**,
+`CAPTURED_PENDING_REVIEW`, confirmación `OutputStream.close` y hash/tamaño Android–Mac
+iguales. Intervalo observado start-call-before → stop-call-after **8019,627725 ms**,
+menor al máximo 10 s del piloto (no latencia CRUD). Traza JSON original **1456872 bytes,
+7681 eventos**, SHA-256:
+`5d05187ccbe6f7dc2d8c7c65a5402fdc11946c72f81cb3451b367b38b769a200`.
+Reporte host original SHA-256:
+`2c91fd5552b27b817fd08981f32a32e04b964545b8af08a855581f03b84f8a88`.
+
+Auxiliar **REUSED_VERIFIED**, no instalación: hash `43e1…` y fuente `e4bef6b` completos
+registrados arriba; script `f237f10`, no fuente del APK principal. Target E5,
+`0.5.0/500`, APK `599d…`, certificado y ruta **iguales antes/después**.
+No restore/seed/importación, build, APK nueva ni nuevas series. El autor respondió
+«listo» después de CAPTURING y confirmó explícitamente que **la nota se guardó
+correctamente y realizó el scroll durante el aviso CAPTURING**. Es confirmación
+funcional del operador, no timestamps instrumentados ni un conteo final. Los originales/revisión estructural siguen privados e ignorados,
+no se publican seriales, bases, logs completos o contenido de notas.
+
+**Revisión estructural, no métricas aceptadas:** la traza contiene Browser/Renderer
+(el Browser coincide con el PID target) y 44 pares `PipelineReporter` completos:
+16 `STATE_PRESENTED_ALL`, 20 `STATE_DROPPED`, 8 `STATE_NO_UPDATE_DESIRED`, ningún
+`STATE_PRESENTED_PARTIAL` en esos pares. Todos declaran `SCROLL_NONE`; un evento
+`GestureProvider::OnTouchEvent`, sin `EventLatency` ni `clock_sync`/fase de clock sync.
+Estos son conteos de reportes, **no FPS, pérdidas globales ni latencia input→feedback**.
+La [definición primaria de Chromium](https://chromium.googlesource.com/devtools/devtools-frontend/+/b88894b14f63f84c460f66cff8918b2b4d079eae/front_end/models/trace/types/TraceEvents.ts)
+distingue actualización completa/parcial/no actualización; es referencia semántica,
+no prueba de correspondencia binaria exacta con la WebView instalada. No se supone
+que un frame reportado sea el primer feedback correcto del guardado.
+
+**Impedimento residual concreto:** todavía falta identificar el input de guardar y
+su primer frame correctamente presentado/resultado funcional, mapear los relojes,
+comprobar pérdidas/completitud y ventanas de scroll. La traza de 8 s no acredita
+los 3 × 10 tramos con 500 resultados ni las 180 muestras + 30 calentamientos.
+No se atribuye `SCROLL_NONE` a un fallo del operador sin evidencia de sus acciones;
+no se infiere que el JSON sea lossless por salir 0. Handshake/captura/cierre están
+validados para este único artefacto/dispositivo, **RNF-002/004 permanecen PENDING**.
+No otra captura ni cambio de categorías/método por iniciativa: revisar esta evidencia
+y acordar el siguiente paso antes de series. PR DRAFT y sin autorización de merge.
+
+Los pilotos primero a tercero no produjeron traza; el cuarto sí conserva el original
+identificado arriba. No se recibieron calentamientos ni muestras cuantitativas válidas para esta sesión.
 RNF-002/RNF-004 siguen **PENDING**. El PR DRAFT autorizado entrega herramientas y bloqueo,
 no cierre F3 ni evidencia cuantitativa completada.
 La sesión 2 RNF-009/RNF-010 no se inicia. El acuerdo y la carga no rebajan umbrales,
@@ -436,8 +488,8 @@ histórica de septiembre permanece intacta.
 
 ## Primer análisis de una sesión física — pendiente del autor
 
-La vía Chrome/CUA está bloqueada y no se elude; el piloto SDK está detenido por el
-[impedimento vigente](#tercer-piloto--bloqueo-stdin-y-entrega-de-tooling). Solo después
+La vía Chrome/CUA está bloqueada y no se elude; el [cuarto piloto SDK](#cuarto-piloto--captura-completada-semántica-pendiente)
+completó captura/cierre, pero la revisión semántica sigue pendiente. Solo después
 de una captura fiable autorizada y revisada según el [protocolo](./protocolo.md), copiar las
 plantillas sin sobreescribir evidencia existente, completar las filas y ejecutar:
 
