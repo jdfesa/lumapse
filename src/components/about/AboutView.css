@@ -63,8 +63,14 @@
   background: color-mix(in srgb, var(--color-surface) 72%, transparent);
 }
 
-.about-view__meta-item:last-child {
+.about-view__meta-item:nth-child(3),
+.about-view__meta-item--wide {
   border-right: none;
+}
+
+.about-view__meta-item--wide {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--color-border);
 }
 
 .about-view__meta dt {
@@ -145,6 +151,10 @@
   .about-view__meta-item {
     border-right: none;
     border-bottom: 1px solid var(--color-border);
+  }
+
+  .about-view__meta-item--wide {
+    border-top: none;
   }
 
   .about-view__meta-item:last-child {

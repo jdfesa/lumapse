@@ -83,6 +83,8 @@ el detalle técnico solo según el alcance de la tarea.
 
 ## 4. Límites y verificación
 
+- Consultar al autor antes de adoptar cambios de flujo o ajustes operativos que no
+  hayan sido aprobados previamente; presentar alcance e impacto antes de aplicarlos.
 - Lumapse es una aplicación Android offline-first con Capacitor, SQLite, módulos ES
   y TypeScript gradual. PWA/IndexedDB son antecedentes, no el producto vigente.
 - Respetar el alcance del hito activo. No abrir refactors amplios, migraciones, nuevas

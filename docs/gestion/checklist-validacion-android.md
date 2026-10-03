@@ -2,7 +2,61 @@
 
 **Hito:** 06 — Entrega Final<br>
 **Objetivo:** registrar evidencia reproducible de cada APK y distinguir la verificación del asset firmado de las pruebas sobre builds equivalentes.<br>
-**Estado:** `v0.5.0` publicada; gate y validación incremental aprobados, instalación manual del asset firmado pendiente.
+**Estado:** `v0.5.0` publicada y aceptada; smoke de identificación de build de PR #22 aceptado y merge autorizado. F3 sigue sin mediciones nuevas; integración/limpieza se corroboran en el PR.
+
+---
+
+## Aceptación general de la APK publicada v0.5.0
+
+Registro del acuerdo comunicado por el autor el **2026-10-02**: la APK firmada y
+publicada `lumapse-v0.5.0.apk` fue probada y aceptada en **al menos tres dispositivos**.
+Se cierra el pendiente operativo de aceptación del asset publicado. No se conocen
+los modelos, fechas de ejecución ni resultados granulares de esos dispositivos;
+no se completan por inferencia las casillas históricas ni se atribuyen métricas F3.
+
+- [x] Aceptación general del asset firmado/publicado `v0.5.0` recibida del autor.
+
+La identidad del asset permanece en [Corte vigente — v0.5.0](#corte-vigente--v050).
+El debug posterior de parches fue aceptado por separado y PR #21 integrado mediante
+`5ef1f911`; [evidencia canónica](./validacion-parches-dependencias-2026-10-02.md).
+Ninguna de estas aceptaciones demuestra los casos o mediciones RNF pendientes.
+**No solicitar nuevamente la aceptación histórica de `v0.5.0`.** El smoke del frente
+de identificación también fue aceptado; F3 queda separado según el [plan vigente](./plan-desarrollo-inmediato-beta-2026-09-12.md#continuidad-aprobada--2026-10-02).
+
+---
+
+## Identificación de build — smoke aceptado de PR #22
+
+**Fecha Argentina:** 2026-10-02. Despliegue desde Mac y smoke en Samsung, registrado en el
+[reporte Android](https://github.com/jdfesa/lumapse/pull/22#issuecomment-5963840051).
+El autor confirmó funcionamiento correcto sin roturas observadas y autorizó expresamente
+integración a `main` y limpieza de ramas integradas: [decisión](https://github.com/jdfesa/lumapse/pull/22#issuecomment-5964326370).
+Los comentarios se publicaron el 2026-10-03 UTC, todavía 2026-10-02 en Argentina.
+
+| Identificación reportada | Valor |
+|---|---|
+| Dispositivo / entorno | Samsung `SM-G965F`, Android 10, WebView `153.0.8010.36` |
+| Comando habitual | `npm run deploy:android -- --target <dispositivo-test>`, serial redactado, **sin `--clean`**, exit 0 |
+| Variante / versión base | Debug privado, `0.5.0` / `versionCode 500`; no candidato ni release |
+| Fuente incrustada | `e5becc96b032007f587fb564c7b6afd790c5faf9`, `android-debug`, `dirty=false` |
+| SHA-256 APK generada e instalada | `599d507f9e2e2b70f90921ec1d9459458f522f6f566d93ee8e29e2c8e15a4f57`, coincidencia exacta reportada |
+| SHA-256 certificado | `5ba36ca181d954a6dbe8a4a6afdb833429feb32a3a93dae9e8313191a0c782df`; certificado y `firstInstallTime` sin cambios |
+
+- [x] Acerca de real: `0.5.0`, **Android debug · prueba privada**, SHA completo seguido de **sin cambios locales**; captura legible sin recorte horizontal en configuración de 720 px.
+- [x] Navegación Acerca → Entrada (composer visible, Acerca ausente) → Opciones → Acerca: PASS.
+- [x] Aceptación **general** y autorización expresa de integración recibidas del autor.
+
+**Límites:** smoke focalizado, no CRUD exhaustivo, integridad total, continuidad ni
+mediciones F3/RNF. No se editaron notas, usó root, terminó el proceso, leyó la DB,
+importó datos, desinstaló ni borró datos. Sin bump, cambio de certificado, firma de release ni publicación.
+El cierre remoto no repite operaciones de teléfono. El `verify` local sobre E5 fue
+reportado PASS (77 archivos / 1167 tests de app + 68 de tooling); no es una ejecución
+nueva de ese gate en este cierre documental.
+
+Los commits finales de cierre son **solo documentación**, conservan el producto E5
+y no son el SHA de la APK instalada. El [PR #22](https://github.com/jdfesa/lumapse/pull/22)
+es la fuente del HEAD final, CI e integración/limpieza; esas operaciones se verifican
+después de CI verde del HEAD exacto, sin anticiparlas aquí. F3 **NO INICIADO**.
 
 ---
 
@@ -83,7 +137,7 @@ siguiente se conservan sin cambios: no trasladar sus resultados al candidato F3.
 
 ### Límite de la evidencia Android
 
-El dispositivo usado para la validación incremental tenía una compilación debug instalada. Para preservar los datos, el build equivalente `0.5.0/500` se firmó con la clave debug; no fue el asset firmado con la clave de producción que se adjuntó a GitHub. Por lo tanto:
+El dispositivo usado para la validación incremental tenía una compilación debug instalada. Para preservar los datos, el build equivalente `0.5.0/500` se firmó con la clave debug; no fue el asset firmado con la clave de producción que se adjuntó a GitHub. El handoff siguiente describe el pendiente de aquel checkpoint, **no el estado operativo vigente**: la aceptación general posterior está registrada arriba. Se conserva sin inventar resultados por caso.
 
 - [ ] instalar específicamente `lumapse-v0.5.0.apk` en un dispositivo compatible con su certificado de producción;
 - [ ] repetir al menos instalación/apertura offline, creación/edición/persistencia, materias/secciones, papelera y backup/importación;

@@ -12,8 +12,8 @@ de Gómez (2014).
 
 | Documento | Contenido | Estado |
 |---|---|---|
-| [`validacion-parches-dependencias-2026-10-02.md`](./validacion-parches-dependencias-2026-10-02.md) | Parche mínimo de DOMPurify, brace-expansion y undici; advisories, grafo y regresiones | ✅ Gate local aprobado; aceptación general Android y autorización explícita de integrar [PR #21](https://github.com/jdfesa/lumapse/pull/21) recibidas el 2026-10-02, sin resultados por caso ni nuevas métricas F3 |
-| [`plan-desarrollo-inmediato-beta-2026-09-12.md`](./plan-desarrollo-inmediato-beta-2026-09-12.md) | Análisis acotado y próximas sesiones: AUD-008/AUD-009, nuevo AUD-014 y validación del núcleo con 500 notas | ✅ Plan, F1, F2 y preparación F3 integrados |
+| [`validacion-parches-dependencias-2026-10-02.md`](./validacion-parches-dependencias-2026-10-02.md) | Parche mínimo de DOMPurify, brace-expansion y undici; advisories, grafo y regresiones | ✅ Aceptación general Android y merge autorizado de [PR #21](https://github.com/jdfesa/lumapse/pull/21), `5ef1f911`; sin resultados por caso ni nuevas métricas F3 |
+| [`plan-desarrollo-inmediato-beta-2026-09-12.md`](./plan-desarrollo-inmediato-beta-2026-09-12.md) | Análisis acotado y próximas sesiones: AUD-008/AUD-009, nuevo AUD-014 y validación del núcleo con 500 notas | 🔄 Cierres originales integrados; continuidad de dos sesiones aprobada |
 | [`../beta-core-validation/README.md`](../beta-core-validation/README.md) | Fixtures, protocolo, conteos locales y matriz CRUD/FPS/offline/continuidad | 🔎 PR #16 integrado; métricas Android pendientes |
 | [`validacion-parche-vitest-2026-09-15.md`](./validacion-parche-vitest-2026-09-15.md) | Parche de tooling, grafo mínimo, regresiones del mocker y handoff histórico | ✅ Probado e integrado por el autor en PR #17 |
 | [`plan-filtros-visibles-2026-09-15.md`](./plan-filtros-visibles-2026-09-15.md) | Alternativas UX, fecha/búsqueda removibles, alcance, regresiones y handoff Android | ✅ Probado e integrado en PR #18 |
@@ -22,7 +22,7 @@ de Gómez (2014).
 | [`estimacion-pert.md`](./estimacion-pert.md) | Estimación de 3 puntos (PERT) para los módulos de mayor riesgo | ✅ Completado |
 | [`lineas-base.md`](./lineas-base.md) | Registro de líneas base y releases `v0.4.8`/`v0.5.0`, más el futuro corte estable | 🔄 Activo en Hito 06 |
 | [`seguimiento-velocidad.md`](./seguimiento-velocidad.md) | SP planificados y entregados por hito como métrica académica separada del flujo Kanban | ✅ Actualizado |
-| [`checklist-validacion-android.md`](./checklist-validacion-android.md) | Evidencia histórica de `v0.4.8` y validación incremental del corte `v0.5.0` | 🔄 Instalación del asset firmado pendiente |
+| [`checklist-validacion-android.md`](./checklist-validacion-android.md) | Evidencia histórica de `v0.4.8`, aceptación de `v0.5.0` y smoke de identificación de build | ✅ Smoke E5 de PR #22 aceptado; integración/limpieza autorizadas, F3 no iniciado |
 | [`cheatsheet-defensa.md`](./cheatsheet-defensa.md) | Métricas, decisiones y respuestas breves para la defensa | 🔄 Revisión final pendiente |
 | [`firma-apk-android.md`](./firma-apk-android.md) | Política de firma, secretos y evidencia de los artefactos Android publicados | ✅ `v0.5.0` publicada |
 | [`plan-mantenibilidad-tipado-gradual-2026-06-12.md`](./plan-mantenibilidad-tipado-gradual-2026-06-12.md) | Estrategia incremental de modularidad y tipado; no habilita refactors amplios durante el cierre | 📌 Referencia |

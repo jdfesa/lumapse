@@ -1,6 +1,8 @@
 import { defineConfig } from 'vitest/config'
+import { buildMetadataPlugin } from './scripts/build-metadata.js'
 
 export default defineConfig({
+  plugins: [buildMetadataPlugin()],
   test: {
     environment: 'jsdom',
     pool: 'threads',

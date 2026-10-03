@@ -306,7 +306,7 @@ npm run dev
 
 Cuando se necesita probar funcionalidades nativas o validar la app como APK.
 
-> **Protección de datos:** El despliegue normal conserva SQLite y las preferencias. Usar `--clean` solo cuando se necesite una instalación fresca o se hayan detectado assets viejos; esa opción desinstala la app y borra todos sus datos locales. Antes de usarla sobre información relevante, exportar un backup.
+> **Protección de datos:** usar el script habitual con autorización de instalación; el modo normal conserva SQLite y preferencias, siempre que la firma sea compatible. `--clean`, desinstalación, borrado o importación de datos requieren permiso específico y recuperación acordada, no son remedios automáticos para assets viejos. Un ZIP no respalda borradores ni papelera; ante firma incompatible, detenerse sin desinstalar.
 
 ```bash
 # Flujo recomendado: build, sync e instalación conservando los datos
@@ -315,11 +315,51 @@ npm run deploy:android
 # Selección explícita cuando hay más de un dispositivo
 npm run deploy:android -- --target <DEVICE_ID>
 
-# Instalación fresca: BORRA SQLite y preferencias
+# Solo con permiso específico y recuperación acordada: BORRA datos
 npm run deploy:android -- --target <DEVICE_ID> --clean
 ```
 
 El script rechaza estados ambiguos de ADB, exige `--target` cuando hay varios dispositivos y muestra si el despliegue preservará o borrará datos.
+
+#### Identificación de compilaciones en Acerca de
+
+Vite calcula estos datos al cargar el módulo de metadatos en dev/build, sin Git,
+red ni telemetría en el teléfono:
+
+- **Versión base:** `package.json.version`; no identifica por sí sola un binario.
+- **Compilación:** intención del flujo que produjo los assets, no certificación.
+- **Origen:** SHA completo del commit y estado local del código relevante. Sin Git,
+  HEAD válido o metadata legible: **No disponible**; si solo falla el estado, se
+  muestra **estado local no disponible**, nunca se presume limpio.
+
+| Flujo existente | Etiqueta automática |
+|---|---|
+| `npm run dev` (incluso con modo production) | Desarrollo (servidor local) |
+| `npm run build` / CI sin variante declarada | Prueba optimizada (variante no declarada) |
+| `npm run deploy:android -- --target <DEVICE_ID>` | Android debug · prueba privada |
+| Build web de `scripts/release-helper.py` | Android · candidato (firma/publicación no verificadas) |
+
+Los scripts declaran internamente `LUMAPSE_BUILD_CHANNEL`; no se exige una variable
+manual para cada prueba. Solo se aceptan los dos canales Android conocidos; otros
+valores no se exponen ni convierten un build Vite production en release. La etiqueta
+candidato **no** demuestra firma, publicación o validación, incluso si el helper
+produce un APK unsigned. No habilita debugging en release.
+
+El estado incluye archivos seguidos y nuevos no ignorados de `src/`, `public/`,
+`android/`, package/lock, entrada/configuración de build y scripts participantes;
+excluye docs, tests y artefactos ignorados. **Cambios locales** indica que el SHA no
+describe por sí solo lo compilado. El snapshot no cambia en una APK ya instalada;
+recompilar para otro origen. En dev se invalida con HMR del código existente;
+reiniciar el servidor tras commits, altas/bajas de archivos o cambios solo de Git.
+No modificar fuentes durante el build que se utiliza como evidencia.
+
+Una prueba debug privada autorizada usa el deploy habitual, sin bump ni publicación
+por cada cambio; registrar canal/origen, **SHA-256 del APK** y certificado en la
+evidencia. El SHA fuente no es identidad binaria ni equivale al hash del APK.
+La entrega/candidata posterior es un corte separado, con versión/code nuevos y
+autorización específica; el asset publicado previo permanece inmutable. Seguir el
+[plan vigente](./gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) para revisión
+y prueba: estos metadatos no completan F3 ni autorizan operaciones de teléfono.
 
 ### 5.3 Interacción con el S7 Edge (pantalla dañada)
 
@@ -356,7 +396,7 @@ scrcpy --turn-screen-off -K
 | `adb devices` no muestra el celular | Cable USB o depuración USB desactivada | Verificar que "Depuración USB" esté activada en Opciones de Desarrollador |
 | `npx cap run android` falla con error de Gradle | Primera ejecución o caché corrupto | Ejecutar `cd android && ./gradlew clean && cd ..` y reintentar |
 | La app muestra pantalla en blanco | `dist/` no está generado o desactualizado | Ejecutar `npm run build` antes de `npx cap sync` |
-| La app muestra una versión vieja después del deploy | El WebView conserva assets del paquete anterior | Exportar datos relevantes y ejecutar `npm run deploy:android -- --target <DEVICE_ID> --clean` |
+| La app muestra una versión vieja después del deploy | Assets anteriores o APK distinto | Comparar Acerca de/origen con la evidencia del APK y repetir el deploy habitual autorizado; no usar `--clean` sin permiso específico y recuperación acordada |
 | scrcpy no conecta | ADB no autorizado en el dispositivo | Verificar el popup de autorización en el celular (o usar `adb kill-server && adb start-server`) |
 | El APK no se instala en el S20 FE | "Fuentes desconocidas" deshabilitado | Habilitar instalación de apps de fuentes desconocidas en Configuración |
 
