@@ -834,10 +834,17 @@ Piloto **experimental opt-in**, no medidor CRUD/FPS. Usa únicamente
 [`WebViewTracePilotTest`](../android/app/src/androidTest/java/com/lumapse/app/WebViewTracePilotTest.java)
 y las dependencias/runner Android existentes. [Autorización, alcance y criterio falsable](../docs/beta-core-validation/protocolo.md#piloto-nativo-experimental--autorización-acotada-del-2026-10-03).
 
-**Estado vigente:** dos pilotos terminaron antes de READY, sin captura. La continuación
-remota autorizada corrige el transporte; **no autoriza otro piloto**. Publicar/revisar
-el resultado con el autor antes de ejecutar cualquier ejemplo de esta sección.
-[Segundo fallo y límites](../docs/beta-core-validation/README.md#segundo-piloto-y-continuación-expresa-del-diagnóstico).
+**Estado vigente: capturador bloqueado, no ejecutar otro piloto.** Los dos primeros
+intentos fallaron antes de READY; el tercero alcanzó READY con reuso exacto sin
+compilación/instalación, pero quedó bloqueado en `sys.stdin.readline()` y no envió start.
+El timeout de 90 s de select **no acota la lectura posterior**; el host requirió SIGINT
+tras terminar JUnit con PREPARATION_TIMEOUT. El hijo ADB hereda stdin: competencia
+por Enter es hipótesis, no causa confirmada. `KeyboardInterrupt` no se registra como
+error en el catch actual; `pilot-result.json` PENDING no prueba éxito.
+[Hechos, bloqueo y autorización](../docs/beta-core-validation/README.md#tercer-piloto--bloqueo-stdin-y-entrega-de-tooling).
+Se entrega PR DRAFT de herramientas/bloqueo por permiso expreso, sin reparar código
+ni autorizar otra captura. Ejemplos siguientes son contrato pendiente de reparación/
+validación, **no instrucciones para reintentar hoy**.
 
 **Operador Mac por USB:** revisar/fetch/pull ff-only de `test/android-performance-evidence`
 antes de ejecutar. Exige HEAD/upstream exactos y árbol limpio, Node 22.20.0/npm 10.9.3,
@@ -879,7 +886,9 @@ debug del helper debe coincidir **en la Mac**, no se presume que un build Debian
 esa firma. Los pins anteriores son del target E5 aceptado, no del commit del helper.
 Un cambio de pins requiere revisar el artefacto/autorización, no editarlos para forzar éxito.
 
-En `READY` preparar una nota sintética fuera del intervalo, pulsar Enter (90 s de plazo)
+**Contrato previsto, actualmente no garantizado por el host:** en `READY` preparar una
+nota sintética fuera del intervalo y pulsar Enter (select espera 90 s, readline posterior
+puede bloquear; ver impedimento anterior)
 y, en `CAPTURING`, realizar **una** operación CRUD y scroll breve manuales. No automatiza
 taps ni carga 500. El test limita preparación a 120 s, solicita como máximo 8 s, invalida
 un stop observado >10 s y espera hasta 30 s el cierre del stream. Ante un cuelgue de
@@ -905,9 +914,10 @@ El inventario comprueba JSON/`traceEvents`/timestamps y conserva métricas en `n
 **PENDING**: falta revisar relojes/offsets, atribución, pérdidas, input y primer frame
 presentado con resultado funcional correcto y clasificación de frames. No convierte
 INP/rAF/promesas/`doFrame` en métricas. No modifica `summarize-f3-results.py` ni sus CSV.
-La corrección actual es solo del script host: no requiere recompilar Java. Su efecto
-en el teléfono sigue sin probarse. Una captura posterior requiere revisión/autorización
-del autor; un fallo o falta de fronteras reales detiene el método, sin serie ni reintento automático.
+La clasificación de ausencia inicial ya llegó a READY en el tercer piloto; no hay
+prueba de captura/cierre/semántica. El bloqueo stdin y el resultado de interrupción
+quedan pendientes de corrección autorizada futura, sin modificar este código ahora.
+Otro piloto exige permiso posterior; sin series/reintentos automáticos.
 
 Regresiones host: `python3 -m unittest discover -s scripts/tests -p test_webview_pilot.py -v`;
 descubiertas también por `test:tooling` dentro de `npm run verify`. Prueban guards,
@@ -927,8 +937,8 @@ re-firma, uninstall, clear, deploy ni modificación del target; postcheck de tar
 ante error del helper/captura. Un fallo previo al acceso/identificación del dispositivo
 no permite afirmar comparación física realizada.
 
-Para una **propuesta de reuso sujeta a revisión, no permiso de captura nuevo**, agregar
-al ejemplo anterior (HEAD publicado/revisado del script, auxiliar actual distinto):
+Pins del **reuso exacto realizado en el tercer piloto**, conservados como referencia;
+no permiso de captura nuevo ni actualización automática. No ejecutar ahora:
 
 ```bash
   --reuse-helper \
@@ -941,7 +951,7 @@ La corrección del wrapper no cambia Java/build nativo: preferir reuso exacto ve
 principal; `80bb…/d50e…` es historia, no el auxiliar actualmente instalado. Cualquier
 cambio ajeno invalida la propuesta, no habilita update automático. La descarga puntual
 de test-deps ya declaradas fue autorizada y ejecutada en Mac; no se agrega opción
-online/bootstrap ni cambia el default offline. [Resultados y límites](../docs/beta-core-validation/README.md#segundo-piloto-y-continuación-expresa-del-diagnóstico).
+online/bootstrap ni cambia el default offline. [Resultados y límites actuales](../docs/beta-core-validation/README.md#tercer-piloto--bloqueo-stdin-y-entrega-de-tooling).
 
 **Estado/diagnóstico:** el nativo escribe/sincroniza/cierra un temporal del mismo
 directorio y publica por `Files.move(ATOMIC_MOVE)`; si no es posible, falla sin

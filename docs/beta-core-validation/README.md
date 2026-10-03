@@ -49,7 +49,9 @@ datos de prueba**. Eligió el cargador existente, con el mismo usuario Android y
 **respaldo SQLite → 50 → medición → 500 → medición → restauración opcional**. Root
 disponible no es autorización para otras apps, datos o equipos, ni para producción;
 no permite extrapolar este procedimiento a un teléfono con datos personales.
-Se mantiene una sola rama por tarea, sin PR de este checkpoint ni cierre anticipado.
+Se mantiene una sola rama por tarea. Este checkpoint de carga no cerró F3 ni abrió PR;
+el [ajuste posterior de entrega](#tercer-piloto--bloqueo-stdin-y-entrega-de-tooling) autoriza
+un PR DRAFT de herramientas/bloqueo, no mediciones aprobadas.
 
 **Checkpoint local informado por el operador:** la carga de `f3-small` mediante
 [`load-test-fixture-android.sh`](../../scripts/load-test-fixture-android.sh) terminó
@@ -97,8 +99,9 @@ y script USB, instalando **solo helper de pruebas** con firma compatible, nunca 
 APK de Lumapse. [Alcance, riesgos y criterios del piloto](./protocolo.md#piloto-nativo-experimental--autorización-acotada-del-2026-10-03)
 y [entrypoint/preflight](../../scripts/README.md#47-capture-webview-pilot-androidpy).
 El build y la instalación inicial del helper fueron realizados en Mac según el
-checkpoint siguiente; **captura útil y revisión semántica PENDING**. Dos intentos
-fallaron antes de READY; [estado y permiso actuales](#segundo-piloto-y-continuación-expresa-del-diagnóstico). La implementación
+checkpoint siguiente; **captura útil y revisión semántica PENDING**. Los dos primeros intentos
+fallaron antes de READY; el tercero alcanzó READY pero quedó bloqueado en stdin:
+[estado y permiso actuales](#tercer-piloto--bloqueo-stdin-y-entrega-de-tooling). La implementación
 remota no constituye prueba física. Este pipeline
 autorizado no adopta equivalencia ni rebaja el protocolo. No sustituir por 500 antes de
 resolver la captura/revisión y medir el pequeño; no sumar ambos perfiles.
@@ -205,6 +208,10 @@ ni disponibles en PATH aquí: build del helper corregido, update y piloto físic
 
 ### Segundo piloto y continuación expresa del diagnóstico
 
+Este corte conserva la reparación de clasificación y su permiso de revisión; el
+[tercer piloto y nuevo alcance de entrega](#tercer-piloto--bloqueo-stdin-y-entrega-de-tooling)
+actualizan el bloqueo, sin cambiar la evidencia de los intentos anteriores.
+
 **Reporte del operador del 2026-10-03, 07:29 UTC (Mac, no ejecución remota):** el único
 piloto adicional de la ronda 1 se ejecutó con script/helper fuente
 `e4bef6b5d8eca564eb48719702e0938882d67d6e`. Build
@@ -276,8 +283,73 @@ priorizar el siguiente frente ya planificado de offline/continuidad, solo despu�
 acordar el cierre/repriorización del frente actual; no iniciarlo en esta continuación.
 
 
+### Tercer piloto — bloqueo stdin y entrega de tooling
+
+**Reporte del coordinador, 2026-10-03, 08:07 UTC (actualizado 08:17 UTC):** script
+fuente `a8792de45048e1d1e2f844a4e45ed76d8cecfbda`. Auxiliar
+`com.lumapse.app.test` **REUSED_VERIFIED**, no compilación ni instalación;
+SHA-256 `43e1eb3e34669468932d2d2a0baa19d4e0ae74e5a5049deb1eafb5c8e8b81827`,
+fuente `e4bef6b5d8eca564eb48719702e0938882d67d6e`, certificado igual al
+[registro anterior](#segundo-piloto-y-continuación-expresa-del-diagnóstico).
+Preflight local: Node 22.20.0 / npm 10.9.3, JDK 21.0.10, Gradle 8.14.3, SDK existente;
+40 tests host PASS en Mac y checkout limpio/fetch/pull ff-only antes del intento.
+Samsung SM-G965F, Android 10/API 29, WebView 153.0.8010.36, usuario 0, USB local Mac.
+
+**READY auténtico visible por primera vez:** la corrección de clasificación de `cat`
+permitió superar ese bloqueo. El autor preparó `F3 piloto #03`, confirmó lista/sin
+guardar y el coordinador envió Enter por TTY. **Sin CAPTURING ni start.signal**, sin
+inicio de captura/traza/muestra/FPS. JUnit terminó **FAIL PREPARATION_TIMEOUT,
+127.303 s**; estado nativo ERROR, sin `start_call_before_elapsed_ns`.
+Python host permaneció bloqueado **más de seis minutos**. Después del final JUnit,
+SIGINT dirigido **solo al Python local verificado**, exit 130; no force-stop de Android
+ni terminación de RTK/ADB/teléfono. `execute.finally` cotejó el original:
+**hash/certificado/0.5.0/500/ruta pre/post iguales**; fuente del target E5 y hash 599d…
+no cambian. Se mantienen los respaldos SQLite/WAL/SHM/journal privados, no un backup
+completo de preferencias/WebStorage/borradores ni una restauración. El último conteo
+conocido era **50 base + 1 auxiliar**; #03 preparada no acredita guardado ni conteo final.
+**500 no cargado**. No se piden bases, raw, serial, claves ni nuevas lecturas para este registro.
+
+**Bloqueo demostrado del host, no defecto productivo confirmado:** el stacktrace al
+interrumpir ubica `capture` en `sys.stdin.readline()` tras
+`select.select([sys.stdin], [], [], 90)` (script fuente a8792de, línea 537).
+El timeout limita [select](https://docs.python.org/3.12/library/select.html#select.select),
+no la [lectura de línea posterior](https://docs.python.org/3.12/library/io.html#io.IOBase.readline).
+`Popen` no fija stdin y [hereda la entrada del padre](https://docs.python.org/3.12/library/subprocess.html#subprocess.Popen);
+competencia entre lectores/consumo de Enter por ADB o proxy es **hipótesis**, no causa
+confirmada. No se culpa al usuario/nota ni se afirma recepción dentro/fuera de 90 s sin
+timestamps desglosados. `KeyboardInterrupt` queda fuera del catch actual: `main.finally`
+guardó `pilot-result.json` con **PENDING y sin error**, pero el reporte coordinador
+acredita **exit 130 y bloqueo**, no PASS. Hash del reporte original privado en Mac,
+aportado por el coordinador (no de la copia anonimizada):
+`a075ab44d0a0f5ea98653e55f8b19285d0b65142c6c1ee595bf8b12ca258ad65`.
+El primer fallo sin raw y el segundo rechazo de100 bytes permanecen diferenciados.
+
+**Ajuste de entrega expresamente aprobado el 2026-10-03 (Argentina):** el autor pidió
+registrar el impedimento para futuro y respondió **«Sí: preparar ese PR para revisión»**.
+Se entrega en la misma rama **tooling experimental + tests/diagnósticos + bloqueo**,
+PR **DRAFT** hacia main. Esto reemplaza el límite anterior de no PR checkpoint para
+este entregable concreto, **no** autoriza mediciones aprobadas, ready/merge, otra captura,
+reparar stdin, otra rama o iniciar RNF-009/010. Este cierre documental usa Sol/xhigh;
+Astra queda postergada, solo para futuro con tiempo y permiso. No cambia el flujo general.
+
+**Impedimento vigente:** no continuar capturas/series hoy. Una futura reparación requiere
+permiso específico, tests de lectura/preparación realmente acotada y de interrupción,
+revisar aislamiento stdin del hijo sin asumir que consumió Enter, y resultado host
+honesto ante aborto. Solo una prueba posterior autorizada puede acreditar
+READY → preparación confirmada → start/CAPTURING → cierre SDK/trace/hash, target
+intacto y fronteras metrológicas reales. Nada de eso se completa por estos 40 tests.
+Criterios RNF originales intactos: **30 calentamientos + 180 muestras CRUD válidas, todas ≤ 200 ms,
+50/500; 3 × 10 tramos de 1 s, cada uno ≥ 55 FPS, 500 resultados**. Trazas originales/hashes,
+relojes/offsets, CSV/JSON y cotejo del autor, sin sustitutos ni descarte de outliers.
+El [bloqueo en BACKLOG](../../BACKLOG.md#deuda-técnica-viva) sigue abierto. Próximo pendiente
+útil: offline/continuidad RNF-009/010 ya planificado, **solo tras revisión, integración
+expresamente autorizada y limpieza de esta rama**, acordando prioridad sin dar por
+cerradas RNF-002/004. No se inicia ni se publica otra prueba en esta continuación.
+
+
 No se recibieron trazas originales, calentamientos ni muestras cuantitativas válidas para esta sesión.
-RNF-002/RNF-004 siguen **PENDING**; no hay otro PR de preparación ni cierre F3.
+RNF-002/RNF-004 siguen **PENDING**. El PR DRAFT autorizado entrega herramientas y bloqueo,
+no cierre F3 ni evidencia cuantitativa completada.
 La sesión 2 RNF-009/RNF-010 no se inicia. El acuerdo y la carga no rebajan umbrales,
 no aportan latencias/FPS ni sustituyen el cotejo de trazas por el autor; la evidencia
 histórica de septiembre permanece intacta.
@@ -295,8 +367,9 @@ histórica de septiembre permanece intacta.
 
 ## Primer análisis de una sesión física — pendiente del autor
 
-Después de acordar artefacto/espacio seguro y capturar **manualmente** las trazas de
-Chrome DevTools Performance del WebView según el [protocolo](./protocolo.md), copiar las
+La vía Chrome/CUA está bloqueada y no se elude; el piloto SDK está detenido por el
+[impedimento vigente](#tercer-piloto--bloqueo-stdin-y-entrega-de-tooling). Solo después
+de una captura fiable autorizada y revisada según el [protocolo](./protocolo.md), copiar las
 plantillas sin sobreescribir evidencia existente, completar las filas y ejecutar:
 
 ```bash

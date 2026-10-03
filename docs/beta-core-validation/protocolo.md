@@ -133,18 +133,20 @@ no usa CDP, sockets WebView, forwards, proxy, consola DevTools o captura global 
   del callback de cierre, no inmediatamente al retorno de stop; un error conserva límites
   honestos, sin limpiar/desinstalar/forzar parada del target ni usar root.
 
-**Permiso posterior y stop rule:** el primer fallo previo a READY motivó una ronda
-acotada y un único piloto adicional de 8 s con auxiliar conocido. Ese segundo piloto
-**ya ocurrió y falló sin captura**: `cat` de archivo aún inexistente llegó por stdout
-con exit0; el wrapper lo rechazó como JSON. Build offline/update solo auxiliar PASS,
-target intacto; [identidades, evidencia y límites](./README.md#segundo-piloto-y-continuación-expresa-del-diagnóstico).
-El propietario autorizó expresamente otra continuación **remota de diagnóstico/reparación**,
-no otro piloto. Revisión del resultado publicado con el autor antes de cualquier captura;
-la propuesta usa reuso exacto del auxiliar vigente si Java/build no cambian. Se mantienen
-pins explícitos, default offline y cotejo del target; no main, downgrade, firma nueva,
-limpieza ni uninstall. Si una futura captura autorizada falla o carece de fronteras reales,
-conservar bloqueo PENDING en BACKLOG, detener el método y decidir el siguiente pendiente
-útil, sin bucles, técnicas nuevas ni equivalencias inventadas. No inicia serie ni sesión 2.
+**Permiso posterior y stop rule vigentes:** tras dos fallos previos a READY se corrigió
+la clasificación de archivo aún ausente. El tercer piloto (script a8792de, reuso exacto
+helper 43e1…/fuente e4bef6b, sin compilación/instalación) llegó a READY pero quedó bloqueado en
+readline del host; JUnit PREPARATION_TIMEOUT, sin start/traza/métricas. Target intacto;
+[evidencia y causas diferenciadas](./README.md#tercer-piloto--bloqueo-stdin-y-entrega-de-tooling).
+Se detiene el método: no otro piloto ni series. El autor autorizó **PR DRAFT de tooling
+con bloqueo registrado**, no F3/RNF completadas. Este ajuste específico reemplaza la
+prohibición anterior de PR checkpoint para este entregable; mantiene una rama y el
+circuito de revisión/decisión del autor. No autoriza merge/ready, código correctivo,
+otra captura ni otra rama. Reparación futura de lectura/preparación/interrupción exige
+permiso y evidencia auténtica, sin atribuir consumo de Enter a ADB/proxy por hipótesis.
+RNF-009/010 solo después de revisión, integración autorizada y limpieza de este frente,
+acordando prioridad sin cerrar RNF-002/004. Sin umbrales menores, técnicas nuevas,
+reinicios automáticos ni equivalencias inventadas.
 
 **Criterio falsable del piloto:** el build/helper/manifiesto/firma pasan, el target permanece
 idéntico, el SDK cierra y entrega JSON no vacío con `traceEvents`, y se pueden inspeccionar

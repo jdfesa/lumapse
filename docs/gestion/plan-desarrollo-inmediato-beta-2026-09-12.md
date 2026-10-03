@@ -145,6 +145,14 @@ permanece histórico: no rellenarlo con mediciones inexistentes.
 | 1 | RNF-002/004: latencia CRUD y FPS | Perfiles 50/500; 5 calentamientos por operación/perfil (30); 30 × 3 CRUD × 2 perfiles (180) muestras válidas, **todas ≤ 200 ms**; 3 recorridos × 10 tramos con 500 resultados, **cada tramo ≥ 55 FPS**. Trazas originales/hashes/offsets, CSV y JSON cotejados por el autor. | Commit `test(validation): record Android CRUD and frame evidence`; docs/traceability y enlaces, PR inglés, revisión de evidencia, checks HEAD exacto y autorización de merge, main sincronizado y rama eliminada. |
 | 2 | RNF-009/010: offline y continuidad | OFF-01–05, CON-01–04; borradores nuevos y de edición; cambio de app, bloqueo y terminación autorizada con ventana real de 500 ms. Esperado/real, IDs/conteos/contenido, método/fecha/dispositivo y confirmación auténtica. | Solo tras cerrar sesión 1 y acordar prioridad según sus resultados. Commit `test(validation): record Android offline and draft continuity evidence`; mismo ciclo de tests/docs/PR/autorización/limpieza. |
 
+**Ajuste acotado de entrega aprobado el 2026-10-03:** ante el
+[bloqueo real del tercer piloto](../beta-core-validation/README.md#tercer-piloto--bloqueo-stdin-y-entrega-de-tooling),
+el autor autorizó PR DRAFT de **herramientas + bloqueo**, no cierre cuantitativo de sesión 1.
+Tras revisión, integración expresamente autorizada y limpieza de ese frente, acordar
+prioridad para offline/continuidad; RNF-002/004 permanecen PENDING. No iniciar sesión 2,
+reparación stdin o nueva captura en la entrega documental actual. No cambia umbrales
+ni el ciclo general de una rama/revisión/autorización.
+
 Seguir el [protocolo F3](../beta-core-validation/protocolo.md) y su matriz canónica.
 **Dispositivo/muestras de esta continuidad: PENDING.** El analizador existente sale
 0 también para FAIL/PENDING estructuralmente válidos: no mide ni demuestra PASS.
