@@ -34,12 +34,27 @@ se reprodujeron fuera del repositorio con los hashes históricos, sin importar a
 teléfono ni modificar generador, analizador o producto. La ejecución sobre plantillas
 vacías sale 0 con estado **PENDING**, no aporta latencias ni FPS.
 
+**Lectura física aportada por el operador (2026-10-03):** Samsung SM-G965F,
+Android 10/API 29, WebView 153.0.8010.36; hash del APK instalado y certificado
+coinciden con el debug privado aceptado. Acerca de no se reabrió en esta lectura:
+fuente/canal se apoyan en la observación anterior y el mismo hash binario. No hubo
+instalación, lectura de bases personales, importación ni medición cuantitativa.
+
 **Dependencia física pendiente:** acreditar espacio separado para 50/500, respaldo
 recuperable completo y procedimiento acordado que preserve datos actuales,
 borradores y papelera; comprobar inspector, opciones/overhead y límites/frames del
 WebView en el equipo operador. El permiso de aislamiento y respaldo no demuestra
 que esos prerrequisitos ya estén disponibles. No se adopta un cambio adicional de
 sistema ni un método de captura distinto sin revisión previa.
+
+El operador no encontró un espacio separado existente; propuso dos usuarios de
+prueba y habilitar el APK existente por usuario, **sin aplicarlo** y pendiente de
+aprobación del método/impacto. No se creó ni verificó un respaldo completo ni se
+acordó su recuperación. Se observó un socket de depuración WebView, pero no se pudo
+verificar el inspector manual: la política del navegador bloqueó la apertura de
+`chrome://inspect`. No se usan superficies alternativas, CDP ni ejecución indirecta
+para evitar ese rechazo. Se requiere comprobación manual del propietario; el socket
+no acredita captura fiable ni identifica límites/frames.
 
 No se recibieron trazas, calentamientos ni muestras físicas para esta sesión.
 RNF-002/RNF-004 siguen **PENDING**; no hay otro PR de preparación ni cierre F3.
