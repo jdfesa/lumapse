@@ -14,6 +14,38 @@ F2 fue aceptada por el autor tras probar su funcionamiento y quedó integrada en
 el [plan aceptado](../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md), sin optimizar
 consultas/notificaciones por intuición ni sustituir la validación del teléfono por CI.
 
+## Seguimiento de la sesión 1
+
+**2026-10-03:** inicio autorizado de RNF-002/RNF-004 en
+`test/android-performance-evidence`, desde `main` limpio y sincronizado en
+`8215541f66572f286d016e6a18f07d9cbc82aaf6`. GitHub confirma PR #21 y #22 integrados;
+la rama local residual de PR #21 se limpió después de probar pertenencia de sus
+commits al PR y ausencia de trabajo sin publicar. No se reabre la preparación PR #16.
+
+El APK aceptado conserva la fuente
+`e5becc96b032007f587fb564c7b6afd790c5faf9` y su identidad registrada en la
+[checklist Android](../gestion/checklist-validacion-android.md#identificación-de-build--smoke-aceptado-de-pr-22).
+El commit posterior de PR #22 solo añade documentación y su árbol coincide con el
+merge actual; esto no atribuye otro origen al APK ni genera un binario nuevo.
+
+En el entorno remoto canónico pasaron **25 regresiones Python** de fixtures/analizador
+y **6 pruebas de integración SQLite en memoria**. Los dos ZIP sintéticos necesarios
+se reprodujeron fuera del repositorio con los hashes históricos, sin importar al
+teléfono ni modificar generador, analizador o producto. La ejecución sobre plantillas
+vacías sale 0 con estado **PENDING**, no aporta latencias ni FPS.
+
+**Dependencia física pendiente:** acreditar espacio separado para 50/500, respaldo
+recuperable completo y procedimiento acordado que preserve datos actuales,
+borradores y papelera; comprobar inspector, opciones/overhead y límites/frames del
+WebView en el equipo operador. El permiso de aislamiento y respaldo no demuestra
+que esos prerrequisitos ya estén disponibles. No se adopta un cambio adicional de
+sistema ni un método de captura distinto sin revisión previa.
+
+No se recibieron trazas, calentamientos ni muestras físicas para esta sesión.
+RNF-002/RNF-004 siguen **PENDING**; no hay otro PR de preparación ni cierre F3.
+La sesión 2 RNF-009/RNF-010 no se inicia. La próxima acción es aportar la comprobación
+de esos prerrequisitos y, solo si pasan, la captura manual del protocolo existente.
+
 ## Entrega revisable
 
 - [Protocolo](./protocolo.md): fixtures, seguridad del dispositivo, CRUD/FPS, offline y borradores.
