@@ -266,6 +266,143 @@ class TransportAndHelperTests(unittest.TestCase):
     def result(self, data, code=0, stderr=b""):
         return subprocess.CompletedProcess([], code, data, stderr)
 
+    def missing(self, pilot):
+        return f"cat: {pilot.remote}/status.json: No such file or directory\n".encode()
+
+    def test_observed_stdout_missing_exit_zero_then_verified_ready(self):
+        with tempfile.TemporaryDirectory() as directory:
+            pilot = PILOT.UsbPilot(arguments(), Path(directory)); pilot.process = Mock()
+            pilot.process.poll.return_value = None
+            missing = self.missing(pilot)
+            self.assertEqual(len(missing), 100)  # Synthetic run ID, not the private device bytes/hash.
+            ready = self.ready(pilot)
+            with patch.object(pilot, "private_read", side_effect=[self.result(missing), self.result(json.dumps(ready).encode())]) as read, \
+                    patch.object(PILOT.time, "sleep"):
+                self.assertEqual(pilot.wait_state({"READY"}, 2), ready)
+                self.assertEqual(read.call_count, 2)
+            diagnostics = json.loads((Path(directory) / "status-read-diagnostics.json").read_text())
+            self.assertEqual(len(diagnostics), 1)
+            self.assertEqual(diagnostics[0]["reason"], "STATUS_NOT_YET_PUBLISHED")
+            self.assertEqual(diagnostics[0]["adb_exit"], 0)
+            self.assertEqual(diagnostics[0]["stdout_sha256"], PILOT.hashlib.sha256(missing).hexdigest())
+            self.assertEqual(diagnostics[0]["stderr_bytes"], 0)
+            self.assertGreater(diagnostics[0]["deadline_monotonic_s"], diagnostics[0]["host_monotonic_s"])
+            raw = Path(directory) / "status-read-0001.stdout.bin"
+            self.assertEqual(raw.read_bytes(), missing)
+            self.assertEqual(raw.stat().st_mode & 0o777, 0o600)
+
+    def test_exact_missing_on_either_channel_and_exit_then_ready(self):
+        for code in (0, 1):
+            for channel in ("stdout", "stderr"):
+                for ending in (b"", b"\n", b"\r\n"):
+                    with self.subTest(code=code, channel=channel, ending=ending), tempfile.TemporaryDirectory() as directory:
+                        pilot = PILOT.UsbPilot(arguments(), Path(directory)); pilot.process = Mock()
+                        pilot.process.poll.return_value = None
+                        missing = self.missing(pilot).removesuffix(b"\n") + ending
+                        result = self.result(missing if channel == "stdout" else b"", code,
+                                             missing if channel == "stderr" else b"")
+                        ready = self.ready(pilot)
+                        with patch.object(pilot, "private_read", side_effect=[result, self.result(json.dumps(ready).encode())]) as read, \
+                                patch.object(PILOT.time, "sleep"):
+                            self.assertEqual(pilot.wait_state({"READY"}, 2), ready)
+                            self.assertEqual(read.call_count, 2)
+                        self.assertEqual(pilot.report["status_read_failures"][0]["reason"], "STATUS_NOT_YET_PUBLISHED")
+
+    def test_missing_persists_only_until_fixed_ready_deadline(self):
+        with tempfile.TemporaryDirectory() as directory:
+            pilot = PILOT.UsbPilot(arguments(), Path(directory)); pilot.process = Mock()
+            pilot.process.poll.return_value = None
+            clock = [0.0]
+            def sleep(seconds): clock[0] += seconds
+            with patch.object(pilot, "private_read", return_value=self.result(self.missing(pilot))) as read, \
+                    patch.object(PILOT.time, "monotonic", side_effect=lambda: clock[0]), \
+                    patch.object(PILOT.time, "sleep", side_effect=sleep):
+                with self.assertRaisesRegex(PILOT.PilotError, "READY deadline"):
+                    pilot.wait_state({"READY"}, 1)
+                self.assertEqual(read.call_count, 4)
+                self.assertEqual([call.kwargs["timeout"] for call in read.call_args_list], [1, .75, .5, .25])
+            self.assertEqual(clock[0], 1)
+            self.assertTrue(pilot.report["status_waits"][-1]["deadline_exceeded"])
+            diagnostics = json.loads((Path(directory) / "status-read-diagnostics.json").read_text())
+            self.assertEqual(len(diagnostics), 4)
+            self.assertTrue(all(row["deadline_monotonic_s"] == 1 and row["reason"] == "STATUS_NOT_YET_PUBLISHED" for row in diagnostics))
+
+    def test_other_paths_errors_channels_and_exit_codes_are_not_missing(self):
+        with tempfile.TemporaryDirectory() as directory:
+            pilot = PILOT.UsbPilot(arguments(), Path(directory)); pilot.process = Mock()
+            missing = self.missing(pilot)
+            wrong = (missing.replace(pilot.run_id.encode(), b"unknown-run"),
+                     missing.replace(b"status.json", b"trace.json"),
+                     missing.replace(b"cache/", b"../cache/"),
+                     missing.replace(b"No such file or directory", b"Permission denied"),
+                     b"run-as: package not debuggable\n", b"No such file or directory", b"{broken}",
+                     missing + b"extra\n", b"prefix " + missing)
+            for payload in wrong:
+                for code in (0, 1):
+                    with self.subTest(payload=payload, code=code), \
+                            patch.object(pilot, "private_read", return_value=self.result(payload, code)) as read:
+                        with self.assertRaises(PILOT.PilotError): pilot.wait_state({"READY"}, 2)
+                        self.assertEqual(read.call_count, 1)
+            for result in (self.result(missing, 2), self.result(missing, -1),
+                           self.result(missing, 0, missing), self.result(missing, 0, b"permission denied"),
+                           self.result(json.dumps(self.ready(pilot)).encode(), 1),
+                           self.result(json.dumps(self.ready(pilot)).encode(), 0, b"permission denied")):
+                with patch.object(pilot, "private_read", return_value=result) as read:
+                    with self.assertRaises(PILOT.PilotError): pilot.wait_state({"READY"}, 2)
+                    self.assertEqual(read.call_count, 1)
+
+    def test_missing_never_masks_wrong_status_scope_after_publication(self):
+        for key, value in (("run_id", "wrong"), ("target_package", "other.app"),
+                           ("helper_package", "other.test"), ("process_name", "other.process"),
+                           ("api", 30), ("model", "other"), ("requested_capture_ms", 9000), ("state", "UNKNOWN")):
+            with self.subTest(key=key), tempfile.TemporaryDirectory() as directory:
+                pilot = PILOT.UsbPilot(arguments(), Path(directory)); pilot.process = Mock()
+                pilot.process.poll.return_value = None
+                wrong = json.dumps(dict(self.ready(pilot), **{key: value})).encode()
+                with patch.object(pilot, "private_read", side_effect=[self.result(self.missing(pilot)), self.result(wrong)]) as read, \
+                        patch.object(PILOT.time, "sleep"):
+                    with self.assertRaises(PILOT.PilotError): pilot.wait_state({"READY"}, 2)
+                    self.assertEqual(read.call_count, 2)
+                self.assertEqual(pilot.report["status_read_failures"][-1]["reason"], "PERMANENT_STATUS_REJECTION")
+
+    def test_missing_after_a_snapshot_or_ready_stage_is_permanent(self):
+        for stage in ("READY", "CAPTURING", "CAPTURED"):
+            with self.subTest(stage=stage), tempfile.TemporaryDirectory() as directory:
+                pilot = PILOT.UsbPilot(arguments(), Path(directory)); pilot.process = Mock()
+                pilot.process.poll.return_value = None
+                results = ([self.result(b"{")] if stage == "READY" else []) + [self.result(self.missing(pilot))]
+                with patch.object(pilot, "private_read", side_effect=results) as read, patch.object(PILOT.time, "sleep"):
+                    with self.assertRaisesRegex(PILOT.PilotError, "disappeared"): pilot.wait_state({stage}, 2)
+                    self.assertEqual(read.call_count, len(results))
+                self.assertEqual(pilot.report["status_read_failures"][-1]["reason"], "UNEXPECTED_STATUS_ABSENCE")
+
+    def test_ready_arriving_after_deadline_is_preserved_but_never_accepted(self):
+        with tempfile.TemporaryDirectory() as directory:
+            pilot = PILOT.UsbPilot(arguments(), Path(directory)); pilot.process = Mock()
+            ready = json.dumps(self.ready(pilot)).encode()
+            with patch.object(pilot, "private_read", return_value=self.result(ready)) as read, \
+                    patch.object(PILOT.time, "monotonic", side_effect=[0, 0, 2, 2]):
+                with self.assertRaisesRegex(PILOT.PilotError, "READY deadline"): pilot.wait_state({"READY"}, 1)
+                self.assertEqual(read.call_count, 1)
+            self.assertEqual(pilot.report["status_read_failures"][-1]["reason"], "STATUS_AFTER_DEADLINE")
+            self.assertEqual((Path(directory) / "status-read-0001.stdout.bin").read_bytes(), ready)
+
+    def test_capture_never_prompts_or_sends_start_when_ready_is_missing(self):
+        with tempfile.TemporaryDirectory() as directory:
+            pilot = PILOT.UsbPilot(arguments(), Path(directory))
+            process = Mock(); process.poll.return_value = None
+            original_wait = pilot.wait_state
+            clock = [0.0]
+            def sleep(seconds): clock[0] += seconds
+            with patch.object(PILOT.subprocess, "Popen", return_value=process), \
+                    patch.object(pilot, "wait_state", side_effect=lambda desired, timeout: original_wait(desired, .5)), \
+                    patch.object(pilot, "private_read", return_value=self.result(self.missing(pilot))), \
+                    patch.object(pilot, "adb") as adb, patch.object(PILOT.select, "select") as prompt, \
+                    patch.object(PILOT.time, "monotonic", side_effect=lambda: clock[0]), \
+                    patch.object(PILOT.time, "sleep", side_effect=sleep), patch("builtins.print") as display:
+                with self.assertRaisesRegex(PILOT.PilotError, "READY deadline"): pilot.capture()
+                adb.assert_not_called(); prompt.assert_not_called(); display.assert_not_called()
+
     def test_partial_snapshot_then_ready_preserves_private_diagnostics(self):
         with tempfile.TemporaryDirectory() as directory:
             pilot = PILOT.UsbPilot(arguments(), Path(directory)); pilot.process = Mock()
@@ -310,7 +447,7 @@ class TransportAndHelperTests(unittest.TestCase):
             pilot = PILOT.UsbPilot(arguments(), Path(directory)); pilot.process = Mock()
             pilot.process.poll.return_value = None
             ticks = iter([n / 10 for n in range(30)])
-            with patch.object(pilot, "private_read", return_value=self.result(b"", 1, b"No such file or directory")), \
+            with patch.object(pilot, "private_read", return_value=self.result(b"", 1, self.missing(pilot))), \
                     patch.object(PILOT.time, "monotonic", side_effect=lambda: next(ticks)), patch.object(PILOT.time, "sleep"):
                 with self.assertRaisesRegex(PILOT.PilotError, "READY deadline"):
                     pilot.wait_state({"READY"}, 1)

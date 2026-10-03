@@ -435,7 +435,18 @@ class UsbPilot:
                 or not isinstance(digest, str) or not re.fullmatch(r"[a-f0-9]{64}", digest)):
             raise PilotError("Invalid native trace bytes/hash")
 
-    def record_status_failure(self, result, stage, reason):
+    def status_not_published(self, result):
+        # exec-out may carry cat's diagnostic on stdout with exit 0. Match the
+        # complete known message, never a substring or arbitrary malformed JSON.
+        if (result.returncode not in (0, 1) or not re.fullmatch(r"[a-f0-9]{32}", self.run_id)
+                or self.remote != "cache/f3-webview-pilot/" + self.run_id):
+            return False
+        message = f"cat: {self.remote}/status.json: No such file or directory".encode("ascii")
+        messages = (message, message + b"\n", message + b"\r\n")
+        return ((result.stdout in messages and not result.stderr)
+                or (result.stderr in messages and not result.stdout))
+
+    def record_status_failure(self, result, stage, reason, deadline):
         self.status_read_attempt += 1
         prefix = f"status-read-{self.status_read_attempt:04d}"
         data, stderr = result.stdout or b"", result.stderr or b""
@@ -444,7 +455,7 @@ class UsbPilot:
             path.write_bytes(payload[:STATUS_LIMIT])
             path.chmod(0o600)
         record = dict(at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-                      host_monotonic_s=time.monotonic(), stage=stage, reason=reason,
+                      host_monotonic_s=time.monotonic(), deadline_monotonic_s=deadline, stage=stage, reason=reason,
                       adb_exit=result.returncode, stdout_bytes=len(data),
                       stdout_sha256=hashlib.sha256(data).hexdigest(), stderr_bytes=len(stderr),
                       stderr_sha256=hashlib.sha256(stderr).hexdigest(),
@@ -453,27 +464,51 @@ class UsbPilot:
         write_json(self.output / "status-read-diagnostics.json", self.report["status_read_failures"])
 
     def wait_state(self, desired, timeout):
-        deadline = time.monotonic() + timeout
+        started = time.monotonic()
+        deadline = started + timeout
         partial_reads = 0
+        snapshot_seen = False
         stage = "/".join(sorted(desired))
-        while time.monotonic() < deadline:
+        wait = dict(stage=stage, started_monotonic_s=started,
+                    deadline_monotonic_s=deadline, timeout_s=timeout)
+        self.report.setdefault("status_waits", []).append(wait)
+
+        def expired():
+            wait["deadline_exceeded"] = True
+            raise PilotError("Native " + stage + " deadline exceeded; inspect private diagnostics")
+
+        while True:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                expired()
             try:
-                result = self.private_read("status.json", check=False,
-                                           timeout=min(2, max(0.01, deadline - time.monotonic())))
+                result = self.private_read("status.json", check=False, timeout=min(2, remaining))
             except subprocess.TimeoutExpired as error:
                 result = subprocess.CompletedProcess([], -1, error.output or b"", error.stderr or b"")
-                self.record_status_failure(result, stage, "STATUS_READ_TIMEOUT")
+                self.record_status_failure(result, stage, "STATUS_READ_TIMEOUT", deadline)
                 raise PilotError("Native status transport timeout; inspect private diagnostics") from error
-            if result.returncode == 0:
+            if time.monotonic() >= deadline:
+                self.record_status_failure(result, stage, "STATUS_AFTER_DEADLINE", deadline)
+                expired()  # Never accept a late READY or send start after this deadline.
+            if self.status_not_published(result):
+                if stage != "READY" or snapshot_seen:
+                    self.record_status_failure(result, stage, "UNEXPECTED_STATUS_ABSENCE", deadline)
+                    raise PilotError("Native status disappeared; inspect private diagnostics")
+                self.record_status_failure(result, stage, "STATUS_NOT_YET_PUBLISHED", deadline)
+            elif result.returncode != 0 or result.stderr:
+                self.record_status_failure(result, stage, "STATUS_READ_REJECTED", deadline)
+                raise PilotError("Native status read failed; inspect private diagnostics")
+            else:
+                snapshot_seen = True
                 try:
                     state = self.read_status(result.stdout)
                 except PartialStatusError:
-                    self.record_status_failure(result, stage, "INCOMPLETE_SNAPSHOT")
+                    self.record_status_failure(result, stage, "INCOMPLETE_SNAPSHOT", deadline)
                     partial_reads += 1
                     if partial_reads >= PARTIAL_READ_LIMIT:
                         raise PilotError("Persistent incomplete native status; inspect private diagnostics")
                 except PilotError:
-                    self.record_status_failure(result, stage, "PERMANENT_STATUS_REJECTION")
+                    self.record_status_failure(result, stage, "PERMANENT_STATUS_REJECTION", deadline)
                     raise
                 else:
                     partial_reads = 0
@@ -484,16 +519,11 @@ class UsbPilot:
                         return state
                     previous = {"CAPTURING": "READY", "CAPTURED": "CAPTURING"}.get(stage)
                     if state["state"] != previous:
-                        self.record_status_failure(result, stage, "UNEXPECTED_STAGE_STATE")
+                        self.record_status_failure(result, stage, "UNEXPECTED_STAGE_STATE", deadline)
                         raise PilotError("Unexpected native state for " + stage)
-            else:
-                self.record_status_failure(result, stage, "STATUS_UNAVAILABLE")
-                if stage != "READY" or b"No such file or directory" not in (result.stdout + result.stderr):
-                    raise PilotError("Native status read failed; inspect private diagnostics")
             if self.process.poll() is not None:
                 raise PilotError("Instrumentation ended before " + stage + "; inspect private instrumentation.txt")
             time.sleep(min(0.25, max(0, deadline - time.monotonic())))
-        raise PilotError("Native " + stage + " deadline exceeded; inspect private diagnostics")
 
     def capture(self):
         with (self.output / "instrumentation.txt").open("wb") as log:

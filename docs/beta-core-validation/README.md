@@ -92,12 +92,13 @@ sin causa confirmada ni evidencia de una incidencia de producto. No hay traza ex
 ni CSV/muestras válidas. La política del navegador bloqueó `chrome://inspect`: no se
 elude por otra superficie y no se pide repetir Save a ciegas.
 
-**Próximo paso aprobado:** piloto experimental por API pública WebView en `androidTest`
+**Paso experimental aprobado inicialmente (estado actualizado abajo):** piloto experimental por API pública WebView en `androidTest`
 y script USB, instalando **solo helper de pruebas** con firma compatible, nunca otra
 APK de Lumapse. [Alcance, riesgos y criterios del piloto](./protocolo.md#piloto-nativo-experimental--autorización-acotada-del-2026-10-03)
 y [entrypoint/preflight](../../scripts/README.md#47-capture-webview-pilot-androidpy).
 El build y la instalación inicial del helper fueron realizados en Mac según el
-checkpoint siguiente; **captura útil y revisión semántica PENDING**. La implementación
+checkpoint siguiente; **captura útil y revisión semántica PENDING**. Dos intentos
+fallaron antes de READY; [estado y permiso actuales](#segundo-piloto-y-continuación-expresa-del-diagnóstico). La implementación
 remota no constituye prueba física. Este pipeline
 autorizado no adopta equivalencia ni rebaja el protocolo. No sustituir por 500 antes de
 resolver la captura/revisión y medir el pequeño; no sumar ambos perfiles.
@@ -196,6 +197,59 @@ corregidos sin skips; no son resultados Android. La última modificación docume
 solo registra estos hechos y se revalida con docs/trazabilidad. Java/ADB no ejecutados
 ni disponibles en PATH aquí: build del helper corregido, update y piloto físico siguen
 **PENDING**. No se atribuye el build previo Mac a este snapshot Java nuevo.
+
+
+### Segundo piloto y continuación expresa del diagnóstico
+
+**Reporte del operador del 2026-10-03, 07:29 UTC (Mac, no ejecución remota):** el único
+piloto adicional de la ronda 1 se ejecutó con script/helper fuente
+`e4bef6b5d8eca564eb48719702e0938882d67d6e`. Build
+`:app:assembleDebugAndroidTest --offline --no-daemon -Pandroid.builder.sdkDownload=false`
+**PASS, 15 s, 162 tareas (4 ejecutadas/158 up-to-date)**, sin nuevas dependencias.
+Update compatible `-r -t` **solo auxiliar** verificado; APK actual `com.lumapse.app.test`
+(versión/code null), SHA-256
+`43e1eb3e34669468932d2d2a0baa19d4e0ae74e5a5049deb1eafb5c8e8b81827`, certificado
+`5ba36ca181d954a6dbe8a4a6afdb833429feb32a3a93dae9e8313191a0c782df`.
+El helper `80bb…/d50e…` queda como antecedente, no pin vigente.
+
+Samsung SM-G965F, Android10/API29, WebView153.0.8010.36, usuario0. Lumapse principal
+siguió **0.5.0/500**, fuente `e5becc96b032007f587fb564c7b6afd790c5faf9`, APK
+`599d507f9e2e2b70f90921ec1d9459458f522f6f566d93ee8e29e2c8e15a4f57`, mismo certificado:
+**identidad y ruta instalada pre/post iguales**, según cotejo del operador. Sin instalación
+main, force-stop, clear, uninstall ni root. Fixture **50 base + 1 auxiliar**, 500 no
+cargado; respaldo SQLite/WAL/SHM/journal privado intacto, no backup completo ni restore.
+
+**Causa observada del segundo rechazo:** primera lectura READY, exit ADB **0**, stdout
+**100 bytes**, stderr **0**. El diagnóstico de `cat` indicaba que `status.json` de la
+ruta/run esperado aún no existía; `wait_state` seleccionó el parser JSON por exit 0 y
+abortó con `PERMANENT_STATUS_REJECTION`. SHA-256 del stdout privado original:
+`8b49b7be5bff1d165acf7ba32e4e540e98e33e558f8fd43a512f9c50fc65f86e`.
+No se publican bytes ni run ID reales. READY no fue visible; el operador estaba listo,
+pero **no recibió el handshake**. Sin Enter/señal, captura, traza, CRUD ni métricas.
+JUnit terminó **FAIL (1 test/1 failure), PREPARATION_TIMEOUT, 122.183 s**; JSON final
+válido **928 bytes**, transporte `closed-same-directory-atomic-move-v1`, sin inicio de
+captura; SHA-256 `3a1b143fbcc7e757a05f2264cb281c319576c1b036d43aa887d04a58da57cc31`.
+Esto demuestra clasificación incorrecta del transporte del **segundo** piloto, no la
+causa del primero sin bytes ni un defecto de Lumapse. El snapshot final no prueba que
+el primero sufriera escritura parcial. Se consumió el permiso del único piloto adicional.
+
+**Nueva continuación expresamente autorizada:** diagnóstico/reparación remota acotada
+(Astra/max) de este impedimento, no reinicio automático ni autorización de otro piloto.
+Se corrige solo el wrapper Python y sus regresiones: ausencia inicial estrictamente
+identificada antes del parser, tanto exit0 como exit1, sin aceptar errores arbitrarios;
+deadline READY fijo, diagnóstico privado y rechazo de READY tardío. Se preservan las
+guardas de scope/run/estado/hash/relojes/auxiliar/target. Java y build nativo **sin cambios**;
+la propuesta para revisión puede reusar únicamente el auxiliar actual exacto, evitando
+otra instalación. [Contrato y pins vigentes](../../scripts/README.md#47-capture-webview-pilot-androidpy).
+El permiso puntual de descargas ya declaradas/cache de la ronda anterior no se amplía.
+
+El resultado publicado se presenta al autor **antes de otra captura**. Sin evidencia
+nueva no se acredita reparación física, capacidad metrológica ni RNF. Si una captura
+posterior autorizada falla o carece de fronteras reales, conservar el impedimento
+[en BACKLOG](../../BACKLOG.md#deuda-técnica-viva), detener el método y pedir una decisión,
+sin técnicas/reintentos indefinidos ni umbrales menores. Como alternativa **por decidir**,
+priorizar el siguiente frente ya planificado de offline/continuidad, solo después de
+acordar el cierre/repriorización del frente actual; no iniciarlo en esta continuación.
 
 
 No se recibieron trazas originales, calentamientos ni muestras cuantitativas válidas para esta sesión.

@@ -834,6 +834,11 @@ Piloto **experimental opt-in**, no medidor CRUD/FPS. Usa únicamente
 [`WebViewTracePilotTest`](../android/app/src/androidTest/java/com/lumapse/app/WebViewTracePilotTest.java)
 y las dependencias/runner Android existentes. [Autorización, alcance y criterio falsable](../docs/beta-core-validation/protocolo.md#piloto-nativo-experimental--autorización-acotada-del-2026-10-03).
 
+**Estado vigente:** dos pilotos terminaron antes de READY, sin captura. La continuación
+remota autorizada corrige el transporte; **no autoriza otro piloto**. Publicar/revisar
+el resultado con el autor antes de ejecutar cualquier ejemplo de esta sección.
+[Segundo fallo y límites](../docs/beta-core-validation/README.md#segundo-piloto-y-continuación-expresa-del-diagnóstico).
+
 **Operador Mac por USB:** revisar/fetch/pull ff-only de `test/android-performance-evidence`
 antes de ejecutar. Exige HEAD/upstream exactos y árbol limpio, Node 22.20.0/npm 10.9.3,
 JDK 21, ADB/aapt/apksigner y distribución/caché Gradle **ya existentes**. No instala
@@ -900,8 +905,9 @@ El inventario comprueba JSON/`traceEvents`/timestamps y conserva métricas en `n
 **PENDING**: falta revisar relojes/offsets, atribución, pérdidas, input y primer frame
 presentado con resultado funcional correcto y clasificación de frames. No convierte
 INP/rAF/promesas/`doFrame` en métricas. No modifica `summarize-f3-results.py` ni sus CSV.
-Build/piloto de esta corrección deben ejecutarse y revisarse en Mac; un fallo o falta
-de fronteras reales detiene este método, sin serie ni reintento automático.
+La corrección actual es solo del script host: no requiere recompilar Java. Su efecto
+en el teléfono sigue sin probarse. Una captura posterior requiere revisión/autorización
+del autor; un fallo o falta de fronteras reales detiene el método, sin serie ni reintento automático.
 
 Regresiones host: `python3 -m unittest discover -s scripts/tests -p test_webview_pilot.py -v`;
 descubiertas también por `test:tooling` dentro de `npm run verify`. Prueban guards,
@@ -921,18 +927,21 @@ re-firma, uninstall, clear, deploy ni modificación del target; postcheck de tar
 ante error del helper/captura. Un fallo previo al acceso/identificación del dispositivo
 no permite afirmar comparación física realizada.
 
-Para **la única repetición autorizada**, agregar al ejemplo anterior:
+Para una **propuesta de reuso sujeta a revisión, no permiso de captura nuevo**, agregar
+al ejemplo anterior (HEAD publicado/revisado del script, auxiliar actual distinto):
 
 ```bash
-  --update-helper \
-  --expected-installed-helper-sha256 80bb89eb429249293de2cd18f08c44d7492b81632582da8c18b432f8353f5bbd \
-  --installed-helper-source-sha d50e56bf2b3b7c1cfef20db01c70a07b6c4d38a2
+  --reuse-helper \
+  --expected-installed-helper-sha256 43e1eb3e34669468932d2d2a0baa19d4e0ae74e5a5049deb1eafb5c8e8b81827 \
+  --installed-helper-source-sha e4bef6b5d8eca564eb48719702e0938882d67d6e
 ```
 
-Esta corrección cambia Java, por eso el helper anterior **no puede reusarse** para ella.
-Los pins son del auxiliar inicial ya verificado, no del APK principal ni del nuevo build.
-La descarga puntual de test-deps ya declaradas fue autorizada y ejecutada en Mac; no
-se agrega opción online/bootstrap ni cambia el default offline. [Resultados y límites](../docs/beta-core-validation/README.md#piloto-físico-inicial-y-corrección-acotada-de-transporte).
+La corrección del wrapper no cambia Java/build nativo: preferir reuso exacto verificado,
+**sin recompilar/reinstalar**. Los pins son del auxiliar del segundo piloto, no del APK
+principal; `80bb…/d50e…` es historia, no el auxiliar actualmente instalado. Cualquier
+cambio ajeno invalida la propuesta, no habilita update automático. La descarga puntual
+de test-deps ya declaradas fue autorizada y ejecutada en Mac; no se agrega opción
+online/bootstrap ni cambia el default offline. [Resultados y límites](../docs/beta-core-validation/README.md#segundo-piloto-y-continuación-expresa-del-diagnóstico).
 
 **Estado/diagnóstico:** el nativo escribe/sincroniza/cierra un temporal del mismo
 directorio y publica por `Files.move(ATOMIC_MOVE)`; si no es posible, falla sin
@@ -941,8 +950,15 @@ reintenta vacío/JSON reconociblemente incompleto, máximo **3 consecutivas** a 
 dentro del deadline de fase (READY 40 s, CAPTURING 5 s, CAPTURED 45 s); cada lectura
 USB tiene como máximo 2 s y se acota al tiempo restante. Sintaxis maliciosa, claves
 duplicadas/no finitos, scope/run/estado/hash/tiempo inválidos abortan inmediatamente.
-Archivo aún no publicado se espera solo antes de READY; otros errores de transporte
-no se encubren. Conserva `status-read-diagnostics.json` y `status-read-NNNN.*.bin`
-privados, 0600, con UTC/reloj host, razón, bytes y SHA-256; cada raw se acota a 64 KiB,
+Antes del primer snapshot, solo en espera de READY, se reconoce el diagnóstico **completo**
+`cat: cache/f3-webview-pilot/<run_id>/status.json: No such file or directory`, con el
+run/ruta generados para esa ejecución. Puede llegar por stdout o stderr, **un solo canal**,
+con exit 0 o 1 y terminador vacío/LF/CRLF; no se interpreta como JSON ni como READY.
+Se espera a 250 ms hasta el plazo fijo de 40 s, sin extenderlo. Otro path/run/archivo,
+permiso denegado, texto extra, canales mezclados o exit distinto abortan. Si ya hubo
+snapshot o se pasó READY, una ausencia también aborta. Un READY recibido después del
+plazo no se acepta; jamás se envía start ni se pide Enter sin READY validado. Conserva `status-read-diagnostics.json` y `status-read-NNNN.*.bin`
+privados, 0600, con UTC/reloj host, deadline fijo, razón, exit, bytes y SHA-256;
+`pilot-result.json` conserva plazos/expiración en `status_waits`; cada raw se acota a 64 KiB,
 hash/tamaño corresponden a la lectura completa y no son métrica ni offset Chromium.
 Nada raw al repo/GitHub. READY ausente nunca envía señal ni pide Guardar al usuario.
