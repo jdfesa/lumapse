@@ -159,8 +159,12 @@ El [diagnóstico offline del piloto 04](./README.md#diagnóstico-semántico-acot
 separa estados de reportes de frames físicos únicos y de feedback correcto; no valida
 una equivalencia SDK con §4–5. La [consulta estructural local](./README.md#consulta-estructural-local--resultado)
 ya se realizó sin operar Android y no demostró la cadena funcional/relojes/completitud.
-Hace falta revisar una propuesta acotada de ajuste antes de otra captura. No se completa un CSV ni se
-inicia otro piloto/serie por disponer de nombres de eventos o pares completos.
+La [evaluación posterior del ajuste mínimo](./README.md#evaluación-del-ajuste-mínimo--frontera-de-presentación),
+autorizada condicionalmente sin instalación/piloto, no justificó la primera presentación
+correcta: visual-state, commit, copia del búfer y categorías no cubren ese extremo.
+Helper/host quedan intactos. Ampliar el diseño del método exige nueva autorización,
+no otro piloto a ciegas. No se completa un CSV ni se inicia una serie por disponer
+de nombres de eventos o pares completos.
 
 **Criterio falsable del piloto:** el build/helper/manifiesto/firma pasan, el target permanece
 idéntico, el SDK cierra y entrega JSON no vacío con `traceEvents`, y se pueden inspeccionar

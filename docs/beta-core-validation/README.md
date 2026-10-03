@@ -608,6 +608,80 @@ Verificación documental local: `npm run check:docs` (96 archivos / 818 enlaces)
 (incluido TODO, 158 enlaces, cero problemas) y `git diff --check`: **exit 0**.
 No se ejecutaron otra captura ni nuevas pruebas Android para esta anotación.
 
+### Evaluación del ajuste mínimo — frontera de presentación
+
+**2026-10-03, continuación autorizada en Debian:** el autor permitió diseñar y,
+**solo si se justificaba Guardar → primer resultado correcto realmente presentado**,
+ajustar helper/categorías con tests y push. No autorizó instalación ni otro piloto.
+Se contrastaron los contratos públicos y el código vigente; el original sigue privado
+en Mac. **El gate de implementación no se supera:** no se encontró una cadena
+justificada dentro de ese ajuste mínimo. No se modifica helper, categorías ni host.
+
+**Propuesta mínima evaluada, no adoptada:** input real → comprobación del contenido
+esperado → estado visual listo → commit/copia del frame → enlace a presentación en
+la traza. Debe identificar una misma operación, superficie y frame, no asociar eventos
+solo por proximidad temporal. Las fronteras se revisaron así:
+
+| Eslabón | Contrato/código comprobado | Resultado del gate |
+|---|---|---|
+| Input real | [MotionEvent.getEventTime](https://developer.android.com/reference/android/view/MotionEvent#getEventTime()) usa `uptimeMillis`; no el reloj `elapsedRealtimeNanos` de las llamadas SDK | Un listener podría aportar el instante de entrada, no la identidad semántica Guardar ni el extremo final. Faltarían correlación con la operación y mapeo de relojes; no se añadió listener. |
+| Contenido correcto | [NoteEditor.handleSave](../../src/components/note-editor/NoteEditor.js) cambia el botón a `Guardando...` **antes** de esperar `NoteStore.createNote/updateNote`; el [protocolo CRUD](./protocolo.md#4-rnf-002--latencia-crud) exige la tarjeta/estado final correcto | La primera respuesta visual al toque puede ser progreso, no éxito. Para crear se requiere confirmación, formulario cerrado y nueva tarjeta visible; editar y papelera conservan sus finales propios. No se redefine el indicador como resultado aceptado. |
+| Estado listo | [VisualStateCallback](https://developer.android.com/reference/android/webkit/WebView.VisualStateCallback) notifica disponibilidad para el próximo `onDraw` | No es confirmación de dibujo ni de presentación. |
+| Commit y contenido del búfer | [registerFrameCommitCallback](https://developer.android.com/reference/android/view/ViewTreeObserver#registerFrameCommitCallback(java.lang.Runnable)) confirma render/envío a swapchain y advierte que el frame puede no ser visible; [PixelCopy](https://developer.android.com/reference/android/view/PixelCopy) copia el último búfer encolado | Ni combinados aportan un acuse de presentación física o prueban que sea el primer frame correcto. Una copia correcta no resuelve este extremo. |
+| Métricas de ventana | [FrameMetrics](https://developer.android.com/reference/android/view/FrameMetrics#TOTAL_DURATION) termina `TOTAL_DURATION` en render/envío al subsistema; su `FRAME_TIMELINE_VSYNC_ID` público requiere API 36, no API 29 | No sustituye el instante de presentación ni enlaza por sí solo contenido/frame/superficie. No se adopta como FPS o latencia CRUD. |
+
+**Contraejemplo contractual, no una nueva observación física:** aunque la comprobación
+de contenido fuera perfecta, un callback y una copia pueden terminar con el búfer
+correcto todavía encolado. También faltaría descartar una presentación correcta
+anterior al callback. Por ello esa cadena no garantiza ni presentación ni **primera**
+presentación; una regresión con mocks solo probaría el orden simulado.
+
+**Por qué no basta añadir categorías:** el helper ya solicita INPUT_LATENCY,
+RENDERING y FRAME_VIEWER. En [AwTracingController, `main` consultado el 2026-10-03](https://chromium.googlesource.com/chromium/src/+/refs/heads/main/android_webview/java/src/org/chromium/android_webview/AwTracingController.java)
+(blob `2d6a6ce513a2c5b8490bd886c751e8bd5721fee9`), INPUT_LATENCY ya incluye
+`benchmark/input` y RENDERING incluye `cc`. Seleccionar más emisores no crea una
+comprobación del contenido correcto ni una garantía de presentación. No se atribuye
+la ausencia observada de EventLatency a categorías erróneas sin cotejar el build.
+
+Además, [EventLatencyTracingRecorder, `HEAD` consultado el 2026-10-03](https://chromium.googlesource.com/chromium/src/+/HEAD/cc/metrics/event_latency_tracing_recorder.cc)
+(blob `e42956a79298a2c40f6f3d87fb25d4c33ef4499d`) documenta una limitación WebView:
+en la ruta descrita el tiempo de presentación coincide con inicio de swap y falta
+recibir presentación como en Chrome. [HardwareRenderer, revisión `a6f13d0`](https://chromium.googlesource.com/chromium/src/+/a6f13d05946c819b20d2e0043801b473246a6e57/android_webview/browser/gfx/hardware_renderer.cc)
+construye feedback mediante `TimeTicks::Now()` y flags cero después de DrawAndSwap.
+Estas fuentes son evidencia de que **el nombre Presentation no garantiza el extremo
+requerido**, no prueba de la ruta usada por el Samsung. **No se verificó correspondencia
+con el binario WebView 153.0.8010.36**; no se declara incapacidad universal del SDK.
+
+**Condiciones falsables para reabrir implementación:** identificar input/operación;
+demostrar contenido final correcto vinculado a una identidad de frame/superficie;
+obtener su presentación real con cobertura de los frames anteriores para afirmar
+primacía; y justificar dominios/offsets, deduplicación, pérdidas/completitud y
+calibración del overhead. Más eventos pueden cambiar coste/ocupación del búfer:
+no se supone overhead nulo ni se resta una constante inventada. La consulta local
+previa no satisface estas condiciones; no se solicitan más conteos sin una señal útil.
+
+**Decisión y permiso mínimo pendiente:** no programar un helper especulativo ni pedir
+otro piloto de esta cadena. Para continuar más allá del alcance actual, solicitar
+autorización **solo de diseño** de un método que combine una señal verificable de
+presentación del compositor/display atribuible a Lumapse con una comprobación
+funcional por operación. Su fuente exacta, acceso necesario, privacidad y calibración
+deben presentarse antes de elegir herramienta o autorizar implementación/build/
+instalación/captura. Esto no autoriza trazado global, root, acceso Chrome ni modificar
+producto, y no afirma que tal señal esté disponible en API 29. Una eventual adopción
+que cambie tooling/metodología requiere el ADR y revisión previstos en CONTRIBUTING;
+aquí no se adopta un método ni se cambia arquitectura. Sin esa justificación,
+RNF-002/004 permanecen **PENDING**, no FAIL del producto; umbrales intactos.
+
+**Verificación de esta unidad documental (Debian; Node 22.20.0/npm 10.9.3,
+Python 3.13.5; código base `fb064d7` sin cambios):**
+`python3 -m unittest discover -s scripts/tests -p test_webview_pilot.py -v`:
+59/59 PASS, exit 0, suite existente con PTY reales, no nuevas regresiones.
+`npm run check:docs` (96 archivos / 825 enlaces), `npm run check:traceability`,
+auditoría suplementaria de los siete archivos modificados (incluido TODO, 166 enlaces)
+y `git diff --check`: exit 0, sin problemas. No se ejecutan `npm run verify`,
+compilación Java ni validación Android nueva en esta revisión solo documental;
+los resultados previos de verify/piloto no se presentan como pruebas de este gate.
+
 Los pilotos primero a tercero no produjeron traza; el cuarto sí conserva el original
 identificado arriba. No se recibieron calentamientos ni muestras cuantitativas válidas para esta sesión.
 RNF-002/RNF-004 siguen **PENDING**. El PR DRAFT autorizado entrega herramientas y bloqueo,

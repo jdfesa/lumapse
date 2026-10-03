@@ -157,8 +157,10 @@ completó captura/cierre/hash con reuso exacto y target intacto. El
 [diagnóstico semántico](../beta-core-validation/README.md#diagnóstico-semántico-acotado--piloto-04)
 identifica fronteras aún no demostradas; la [consulta offline local](../beta-core-validation/README.md#consulta-estructural-local--resultado)
 ya se completó (44 reportes / 36 identidades distintas), sin demostrar cadena funcional,
-relojes o completitud. Evaluar un ajuste mínimo y su impacto para revisión del autor
-antes de nueva captura/helper/series; APK principal intacto. No cambia umbrales
+relojes o completitud. La [evaluación autorizada del ajuste mínimo](../beta-core-validation/README.md#evaluación-del-ajuste-mínimo--frontera-de-presentación)
+no justificó la primera presentación correcta; no hay parche de helper/categorías ni
+otro piloto. Ampliar el diseño de observabilidad requiere una nueva decisión del autor;
+APK principal intacto. No cambia umbrales
 ni el ciclo general de una rama/revisión/autorización.
 
 Seguir el [protocolo F3](../beta-core-validation/protocolo.md) y su matriz canónica.

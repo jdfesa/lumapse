@@ -926,8 +926,10 @@ en el cuarto piloto local; **semántica y métricas siguen pendientes**, no el t
 del JSON. El [diagnóstico acotado](../docs/beta-core-validation/README.md#diagnóstico-semántico-acotado--piloto-04)
 distingue reportes de frames físicos/resultado correcto. La [consulta estructural local](../docs/beta-core-validation/README.md#consulta-estructural-local--resultado)
 se completó: 44 pares contienen 36 identidades distintas, sin cadena Guardar→feedback
-correcto/relojes/completitud demostrada. No nuevo parser, captura o modificación del
-helper; evaluar y acordar un ajuste concreto antes de otra muestra.
+correcto/relojes/completitud demostrada. La [evaluación del ajuste autorizado](../docs/beta-core-validation/README.md#evaluación-del-ajuste-mínimo--frontera-de-presentación)
+no supera el gate de implementación: callbacks de dibujo/commit/PixelCopy no prueban
+primera presentación correcta; más categorías tampoco la garantizan. No se modifican
+helper, categorías, guardias de reuso ni inventario; no hay un nuevo auxiliar que instalar.
 Otro piloto exige permiso posterior; sin series/reintentos automáticos.
 
 Regresiones host: `python3 -m unittest discover -s scripts/tests -p test_webview_pilot.py -v`;
