@@ -27,6 +27,9 @@ APK = ROOT / "android/app/build/outputs/apk/androidTest/debug/app-debug-androidT
 LIMIT = 64 * 1024 * 1024
 STATUS_LIMIT = 64 * 1024
 PARTIAL_READ_LIMIT = 3
+PREPARATION_SECONDS = 90
+# Native READY gets 120s. Anchor conservatively before launch, leaving 10s margin.
+START_BUDGET_SECONDS = 110
 NATIVE_SOURCE = "android/app/src/androidTest/java/com/lumapse/app/WebViewTracePilotTest.java"
 
 
@@ -41,7 +44,7 @@ class PartialStatusError(PilotError):
 
 def run(command, timeout=30, binary=False, check=True, cwd=ROOT):
     result = subprocess.run(command, cwd=cwd, capture_output=True,
-                            text=not binary, timeout=timeout, check=False)
+                            stdin=subprocess.DEVNULL, text=not binary, timeout=timeout, check=False)
     if check and result.returncode:
         # Do not dump arbitrary device/build output into public summaries.
         raise PilotError(f"Command failed: {Path(command[0]).name} (exit {result.returncode})")
@@ -525,20 +528,107 @@ class UsbPilot:
                 raise PilotError("Instrumentation ended before " + stage + "; inspect private instrumentation.txt")
             time.sleep(min(0.25, max(0, deadline - time.monotonic())))
 
+    def preparation_remaining(self, deadline):
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            self.report["preparation"]["outcome"] = "DEADLINE_EXCEEDED"
+            raise PilotError("Preparation deadline exceeded; no further start attempt")
+        if self.process.poll() is not None:
+            self.report["preparation"]["outcome"] = "NATIVE_ENDED"
+            raise PilotError("Instrumentation ended during preparation; no start")
+        return remaining
+
+    def confirm_preparation(self, deadline):
+        preparation = dict(started_monotonic_s=time.monotonic(), deadline_monotonic_s=deadline,
+                           outcome="WAITING", bytes_received=0)
+        self.report["preparation"] = preparation
+        fd = None
+        try:
+            original = sys.stdin.fileno()
+            # A separate open description avoids changing O_NONBLOCK on inherited
+            # stdin (dup would share its flags). Never alter termios or flush input.
+            fd = os.open(os.ttyname(original), os.O_RDONLY | os.O_NONBLOCK | os.O_NOCTTY)
+            if not os.isatty(fd) or os.fstat(fd).st_rdev != os.fstat(original).st_rdev:
+                raise PilotError("Preparation terminal identity changed")
+            pending = b""
+            while True:
+                remaining = self.preparation_remaining(deadline)
+                readable = select.select([fd], [], [], min(0.1, remaining))[0]
+                self.preparation_remaining(deadline)
+                if not readable:
+                    continue
+                try:
+                    chunk = os.read(fd, 2 - len(pending))
+                except BlockingIOError:
+                    # Another reader may consume readiness. Never fall back to a
+                    # blocking read/readline or restart the absolute deadline.
+                    continue
+                if not chunk:
+                    preparation["outcome"] = "EOF"
+                    raise PilotError("Preparation input closed without acknowledgment")
+                pending += chunk
+                preparation["bytes_received"] += len(chunk)  # Never record typed contents.
+                self.preparation_remaining(deadline)
+                if pending in (b"\n", b"\r\n"):
+                    preparation.update(outcome="ACKNOWLEDGED", acknowledged_monotonic_s=time.monotonic())
+                    return
+                if pending != b"\r":
+                    preparation["outcome"] = "INVALID_INPUT"
+                    raise PilotError("Preparation requires an empty Enter line, not text")
+        except KeyboardInterrupt:
+            preparation["outcome"] = "INTERRUPTED"
+            raise
+        except Exception:
+            if preparation["outcome"] == "WAITING":
+                preparation["outcome"] = "ERROR"
+            raise
+        finally:
+            preparation["finished_monotonic_s"] = time.monotonic()
+            if fd is not None:
+                primary = sys.exc_info()[1]
+                try:
+                    os.close(fd)
+                except OSError as error:
+                    preparation["close_error"] = str(error)
+                    if primary is None:
+                        raise
+
+    def start_after_preparation(self, deadline):
+        if self.report.get("preparation", {}).get("outcome") != "ACKNOWLEDGED":
+            raise PilotError("Preparation not acknowledged; no start")
+        remaining = self.preparation_remaining(deadline)
+        # A fresh, strict snapshot and process check reject stale READY after JUnit
+        # ended. Missing/partial/corrupt status is not retryable at this stage.
+        result = self.private_read("status.json", check=False, timeout=min(2, remaining))
+        try:
+            if result.returncode != 0 or result.stderr or self.read_status(result.stdout)["state"] != "READY":
+                raise PilotError("Native pilot is not READY before start")
+        except PilotError:
+            self.record_status_failure(result, "PREPARATION", "PRE_START_STATUS_REJECTED", deadline)
+            raise
+        remaining = self.preparation_remaining(deadline)
+        signal = "printf %s " + shlex.quote(self.run_id) + " > " + shlex.quote(self.remote + "/start.signal")
+        self.report["preparation"]["outcome"] = "START_REQUESTED"
+        self.report["preparation"]["start_attempted_monotonic_s"] = time.monotonic()
+        self.adb("shell", "run-as", TARGET, "sh", "-c", shlex.quote(signal), timeout=min(2, remaining))
+        self.report["preparation"]["start_command_completed_monotonic_s"] = time.monotonic()
+        self.report["preparation"]["outcome"] = "START_COMMAND_COMPLETED"
+        self.preparation_remaining(deadline)
+
     def capture(self):
         with (self.output / "instrumentation.txt").open("wb") as log:
             command = ["adb", "-s", self.args.serial, "shell", "am", "instrument", "--user", "0", "-w", "-r",
                        "-e", "class", TEST, "-e", "f3Pilot", "yes", "-e", "runId", self.run_id,
                        "-e", "captureMs", str(self.args.capture_ms), HELPER + "/" + RUNNER]
-            self.process = subprocess.Popen(command, stdout=log, stderr=subprocess.STDOUT)
+            launched = time.monotonic()
+            self.process = subprocess.Popen(command, stdin=subprocess.DEVNULL, stdout=log, stderr=subprocess.STDOUT)
             self.wait_state({"READY"}, 40)
+            deadline = min(time.monotonic() + PREPARATION_SECONDS, launched + START_BUDGET_SECONDS)
             print("READY: Lumapse pudo reiniciarse. Preparar una nota sintética, teclado/filtros y scroll.\n"
-                  "No otra grabación/instrumentación de Lumapse activa. Enter cuando esté lista (máximo 90s).", flush=True)
-            if not select.select([sys.stdin], [], [], 90)[0] or sys.stdin.readline() not in ("\n", "\r\n"):
-                raise PilotError("Preparation not acknowledged within deadline")
-            # Known private signal, no arbitrary command delivered by another machine.
-            signal = "printf %s " + shlex.quote(self.run_id) + " > " + shlex.quote(self.remote + "/start.signal")
-            self.adb("shell", "run-as", TARGET, "sh", "-c", shlex.quote(signal))
+                  "No otra grabación/instrumentación de Lumapse activa. Enter sin texto cuando esté lista "
+                  f"(hasta {max(0, int(deadline - time.monotonic()))}s; Ctrl-C cancela).", flush=True)
+            self.confirm_preparation(deadline)
+            self.start_after_preparation(deadline)
             self.wait_state({"CAPTURING"}, 5)
             print("CAPTURING: realizar UNA operación CRUD sintética y un scroll breve; solo diagnóstico.", flush=True)
             state = self.wait_state({"CAPTURED"}, 45)
@@ -560,26 +650,41 @@ class UsbPilot:
 
     def execute(self):
         target = self.preflight()
+        primary = None
         try:
             self.prepare_helper(target)
             self.capture()
+        except (Exception, KeyboardInterrupt) as error:
+            primary = error
+            raise
         finally:
-            if self.process is not None and self.process.poll() is None:
-                # Native deadlines stop/flush its own trace. Never force-stop/clear/uninstall target.
-                try:
-                    self.process.wait(timeout=165)
-                except subprocess.TimeoutExpired:
-                    self.report["instrumentation_cleanup"] = "UNCONFIRMED; no device force-stop attempted"
+            errors = []
+            try:
+                if self.process is not None and self.process.poll() is None:
+                    # Native deadlines stop/flush its own trace. Never force-stop/clear/uninstall target.
                     try:
-                        self.process.terminate()  # Only the local ADB child; not a device process.
-                        self.process.wait(timeout=5)
-                    except (OSError, subprocess.SubprocessError):
-                        # Preserve the limitation but still attempt the immutable target check.
-                        self.report["local_adb_cleanup"] = "UNCONFIRMED; supervision required"
-            after = self.target_identity(self.output / "target-after.apk")
-            self.report.update(target_after=after, target_apk_unchanged=(after == target))
-            if after != target:
-                raise PilotError("CRITICAL: target APK identity changed; preserve artifacts and request supervision")
+                        self.process.wait(timeout=165)
+                    except subprocess.TimeoutExpired:
+                        self.report["instrumentation_cleanup"] = "UNCONFIRMED; no device force-stop attempted"
+                        try:
+                            self.process.terminate()  # Only the local ADB child; not a device process.
+                            self.process.wait(timeout=5)
+                        except (OSError, subprocess.SubprocessError):
+                            self.report["local_adb_cleanup"] = "UNCONFIRMED; supervision required"
+                        raise PilotError("Instrumentation cleanup unconfirmed; supervision required")
+            except (Exception, KeyboardInterrupt) as error:
+                errors.append(error)
+                self.report["instrumentation_cleanup_error"] = dict(type=type(error).__name__, message=str(error))
+            try:
+                after = self.target_identity(self.output / "target-after.apk")
+                self.report.update(target_after=after, target_apk_unchanged=(after == target))
+                if after != target:
+                    raise PilotError("CRITICAL: target APK identity changed; preserve artifacts and request supervision")
+            except (Exception, KeyboardInterrupt) as error:
+                errors.append(error)
+                self.report["target_postcheck_error"] = dict(type=type(error).__name__, message=str(error))
+            if errors and primary is None:
+                raise errors[0]
 
 
 def main(argv=None):
@@ -593,15 +698,26 @@ def main(argv=None):
         output = prepare_output(args.output)
         pilot = UsbPilot(args, output)
         pilot.execute()
-        return 0
-    except (PilotError, OSError, ValueError, subprocess.SubprocessError) as error:
+        exit_code = 0
+    except KeyboardInterrupt:
         if pilot:
-            pilot.report.update(status="ERROR", error=str(error))
+            pilot.report.update(status="ABORTED", error="Host interrupted (KeyboardInterrupt)", error_type="KeyboardInterrupt")
+        print("PENDING / Host interrupted; no automatic retry", file=sys.stderr)
+        exit_code = 130
+    except Exception as error:
+        if pilot:
+            pilot.report.update(status="ERROR", error=str(error), error_type=type(error).__name__)
         print(f"PENDING / {error}", file=sys.stderr)
-        return 1
-    finally:
-        if pilot:
+        exit_code = 1
+    if pilot:
+        pilot.report["exit_code"] = exit_code
+        try:
             write_json(pilot.output / "pilot-result.json", pilot.report)
+        except OSError as error:
+            print(f"Result persistence failed: {error}; original exit={exit_code}", file=sys.stderr)
+            if exit_code == 0:
+                exit_code = 1
+    return exit_code
 
 
 if __name__ == "__main__":

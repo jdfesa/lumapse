@@ -834,17 +834,14 @@ Piloto **experimental opt-in**, no medidor CRUD/FPS. Usa únicamente
 [`WebViewTracePilotTest`](../android/app/src/androidTest/java/com/lumapse/app/WebViewTracePilotTest.java)
 y las dependencias/runner Android existentes. [Autorización, alcance y criterio falsable](../docs/beta-core-validation/protocolo.md#piloto-nativo-experimental--autorización-acotada-del-2026-10-03).
 
-**Estado vigente: capturador bloqueado, no ejecutar otro piloto.** Los dos primeros
-intentos fallaron antes de READY; el tercero alcanzó READY con reuso exacto sin
-compilación/instalación, pero quedó bloqueado en `sys.stdin.readline()` y no envió start.
-El timeout de 90 s de select **no acota la lectura posterior**; el host requirió SIGINT
-tras terminar JUnit con PREPARATION_TIMEOUT. El hijo ADB hereda stdin: competencia
-por Enter es hipótesis, no causa confirmada. `KeyboardInterrupt` no se registra como
-error en el catch actual; `pilot-result.json` PENDING no prueba éxito.
-[Hechos, bloqueo y autorización](../docs/beta-core-validation/README.md#tercer-piloto--bloqueo-stdin-y-entrega-de-tooling).
-Se entrega PR DRAFT de herramientas/bloqueo por permiso expreso, sin reparar código
-ni autorizar otra captura. Ejemplos siguientes son contrato pendiente de reparación/
-validación, **no instrucciones para reintentar hoy**.
+**Estado vigente: reparación host verificada, validación nativa pendiente.** Los tres
+intentos anteriores y sus causas observadas siguen en [el registro histórico](../docs/beta-core-validation/README.md#tercer-piloto--bloqueo-stdin-y-entrega-de-tooling).
+[Continuación autorizada y evidencia](../docs/beta-core-validation/README.md#reparación-host-y-continuidad-local--2026-10-03):
+lectura por bytes realmente no bloqueante, stdin aislado para los hijos, plazo absoluto,
+READY fresco antes de una señal única y ABORTED/exit 130 ante Ctrl-C. 59 tests host,
+incluidas PTY reales; no acreditan captura Android, latencia/FPS o causa física histórica.
+Ejemplos siguientes requieren permiso/confirmación pertinente para un piloto local
+único y reuso exacto conocido, no series ni reintentos automáticos.
 
 **Operador Mac por USB:** revisar/fetch/pull ff-only de `test/android-performance-evidence`
 antes de ejecutar. Exige HEAD/upstream exactos y árbol limpio, Node 22.20.0/npm 10.9.3,
@@ -886,9 +883,13 @@ debug del helper debe coincidir **en la Mac**, no se presume que un build Debian
 esa firma. Los pins anteriores son del target E5 aceptado, no del commit del helper.
 Un cambio de pins requiere revisar el artefacto/autorización, no editarlos para forzar éxito.
 
-**Contrato previsto, actualmente no garantizado por el host:** en `READY` preparar una
-nota sintética fuera del intervalo y pulsar Enter (select espera 90 s, readline posterior
-puede bloquear; ver impedimento anterior)
+**Contrato host corregido, pendiente de prueba nativa:** en `READY` preparar una
+nota sintética fuera del intervalo y pulsar Enter sin texto. Lectura de bytes no
+bloqueante en una apertura independiente de la misma terminal, sin cambiar flags
+del stdin original ni termios/flush. Plazo absoluto: mínimo entre READY + 90 s y
+lanzamiento + 110 s; el prompt muestra el tiempo restante. EOF/texto/plazo/Ctrl-C
+/final nativo abortan sin start. Snapshot READY fresco y una sola señal acotada al
+plazo restante; `pilot-result.json` registra ABORTED/exit 130 ante interrupción
 y, en `CAPTURING`, realizar **una** operación CRUD y scroll breve manuales. No automatiza
 taps ni carga 500. El test limita preparación a 120 s, solicita como máximo 8 s, invalida
 un stop observado >10 s y espera hasta 30 s el cierre del stream. Ante un cuelgue de
@@ -915,8 +916,8 @@ El inventario comprueba JSON/`traceEvents`/timestamps y conserva métricas en `n
 presentado con resultado funcional correcto y clasificación de frames. No convierte
 INP/rAF/promesas/`doFrame` en métricas. No modifica `summarize-f3-results.py` ni sus CSV.
 La clasificación de ausencia inicial ya llegó a READY en el tercer piloto; no hay
-prueba de captura/cierre/semántica. El bloqueo stdin y el resultado de interrupción
-quedan pendientes de corrección autorizada futura, sin modificar este código ahora.
+prueba de captura/cierre/semántica. La corrección host posterior se describe arriba;
+queda pendiente comprobar captura/cierre/semántica en el dispositivo real.
 Otro piloto exige permiso posterior; sin series/reintentos automáticos.
 
 Regresiones host: `python3 -m unittest discover -s scripts/tests -p test_webview_pilot.py -v`;

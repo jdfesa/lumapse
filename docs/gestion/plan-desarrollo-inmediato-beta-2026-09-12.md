@@ -150,7 +150,10 @@ permanece histórico: no rellenarlo con mediciones inexistentes.
 el autor autorizó PR DRAFT de **herramientas + bloqueo**, no cierre cuantitativo de sesión 1.
 Tras revisión, integración expresamente autorizada y limpieza de ese frente, acordar
 prioridad para offline/continuidad; RNF-002/004 permanecen PENDING. No iniciar sesión 2,
-reparación stdin o nueva captura en la entrega documental actual. No cambia umbrales
+reparación stdin o nueva captura en aquella entrega documental. La [continuación
+posterior autorizada](../beta-core-validation/README.md#reparación-host-y-continuidad-local--2026-10-03)
+repara el host en la misma rama y retorna al checkout local tras commit/push;
+validación nativa pendiente, sin series ni cambio del APK principal. No cambia umbrales
 ni el ciclo general de una rama/revisión/autorización.
 
 Seguir el [protocolo F3](../beta-core-validation/protocolo.md) y su matriz canónica.

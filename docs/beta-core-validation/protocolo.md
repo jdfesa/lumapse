@@ -138,12 +138,18 @@ la clasificación de archivo aún ausente. El tercer piloto (script a8792de, reu
 helper 43e1…/fuente e4bef6b, sin compilación/instalación) llegó a READY pero quedó bloqueado en
 readline del host; JUnit PREPARATION_TIMEOUT, sin start/traza/métricas. Target intacto;
 [evidencia y causas diferenciadas](./README.md#tercer-piloto--bloqueo-stdin-y-entrega-de-tooling).
-Se detiene el método: no otro piloto ni series. El autor autorizó **PR DRAFT de tooling
+La entrega inicial detuvo el método: no otro piloto ni series por aquel permiso.
+[La continuación posterior autorizada](./README.md#reparación-host-y-continuidad-local--2026-10-03)
+corrige preparación/aborto del host con 59 regresiones y gate completo, sin cambiar
+el helper ni aportar validación física nueva. Falta el piloto local único con reuso
+exacto y confirmación del operador; sin build/install/series automáticas. El autor autorizó **PR DRAFT de tooling
 con bloqueo registrado**, no F3/RNF completadas. Este ajuste específico reemplaza la
 prohibición anterior de PR checkpoint para este entregable; mantiene una rama y el
-circuito de revisión/decisión del autor. No autoriza merge/ready, código correctivo,
-otra captura ni otra rama. Reparación futura de lectura/preparación/interrupción exige
-permiso y evidencia auténtica, sin atribuir consumo de Enter a ADB/proxy por hipótesis.
+circuito de revisión/decisión del autor. Aquel permiso inicial no autorizaba código
+correctivo ni otra captura; la reparación host posterior tiene su autorización
+separada indicada arriba. Se mantienen sin autorización merge/ready/otra rama/series.
+La prueba posterior requiere evidencia auténtica, sin atribuir consumo de Enter
+a ADB/proxy por hipótesis.
 RNF-009/010 solo después de revisión, integración autorizada y limpieza de este frente,
 acordando prioridad sin cerrar RNF-002/004. Sin umbrales menores, técnicas nuevas,
 reinicios automáticos ni equivalencias inventadas.

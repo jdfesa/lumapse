@@ -2,9 +2,15 @@
 
 import importlib.util
 import json
+import os
 from pathlib import Path
+import pty
 import subprocess
+import sys
 import tempfile
+import termios
+import time
+import tty
 import unittest
 from unittest.mock import Mock, patch
 
@@ -553,6 +559,236 @@ class TransportAndHelperTests(unittest.TestCase):
                 patch.object(pilot, "target_identity", return_value=IDENTITY) as after:
             with self.assertRaisesRegex(PILOT.PilotError, "UNKNOWN_HELPER"): pilot.execute()
             after.assert_called_once(); self.assertTrue(pilot.report["target_apk_unchanged"])
+
+
+class PreparationInputTests(unittest.TestCase):
+    def real_terminal(self, payload=b"", raw=False, extra="", deadline=.15):
+        """A private PTY + supervised Python child, never ADB or the real stdin."""
+        master, slave = pty.openpty()
+        child = None
+        code = f'''
+import fcntl,json,os,sys,termios,time
+from unittest.mock import Mock,patch
+sys.path.insert(0,{str(Path(__file__).parent)!r})
+from test_webview_pilot import PILOT,arguments
+pilot=PILOT.UsbPilot(arguments(),PILOT.Path('/tmp/synthetic'))
+pilot.process=Mock();pilot.process.poll.return_value=None
+flags=fcntl.fcntl(0,fcntl.F_GETFL); attributes=termios.tcgetattr(0)
+{extra}
+started=time.monotonic()
+try:
+    pilot.confirm_preparation(started+{deadline})
+    outcome='ACKNOWLEDGED'
+except (PILOT.PilotError,KeyboardInterrupt) as error:
+    outcome=pilot.report['preparation']['outcome']
+print(json.dumps(dict(outcome=outcome,elapsed=time.monotonic()-started,preparation=pilot.report['preparation'],
+    flags_preserved=flags==fcntl.fcntl(0,fcntl.F_GETFL),termios_preserved=attributes==termios.tcgetattr(0))))
+'''
+        try:
+            if raw:
+                tty.setraw(slave)  # Only this fixture terminal; production never changes termios.
+            if payload:
+                os.write(master, payload)
+            child = subprocess.Popen([sys.executable, "-u", "-c", code], stdin=slave,
+                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            out, error = child.communicate(timeout=3)
+            self.assertEqual(child.returncode, 0, error)
+            result = json.loads(out)
+            self.assertTrue(result["flags_preserved"])
+            self.assertTrue(result["termios_preserved"])
+            return result
+        finally:
+            if child is not None and child.poll() is None:
+                child.terminate(); child.communicate(timeout=2)
+            os.close(master); os.close(slave)
+
+    def test_real_pty_enter_preserves_terminal_and_never_uses_text_readline(self):
+        extra = "sys.stdin=Mock(wraps=sys.stdin); sys.stdin.readline.side_effect=AssertionError('blocking text reader used')"
+        self.assertEqual(self.real_terminal(b"\n", extra=extra)["outcome"], "ACKNOWLEDGED")
+        # Normal canonical terminal translates the Enter CR to LF without our intervention.
+        self.assertEqual(self.real_terminal(b"\r")["outcome"], "ACKNOWLEDGED")
+
+    def test_real_pty_split_crlf_uses_bounded_byte_reads(self):
+        extra = "original_read=PILOT.os.read\nPILOT.os.read=lambda fd,count: original_read(fd,min(count,1))"
+        result = self.real_terminal(b"\r\n", raw=True, extra=extra)
+        self.assertEqual(result["outcome"], "ACKNOWLEDGED")
+        self.assertEqual(result["preparation"]["bytes_received"], 2)
+
+    def test_real_pty_partial_line_that_blocked_readline_now_rejects(self):
+        result = self.real_terminal(b"partial\x04")  # Canonical VEOF releases bytes, not a newline.
+        self.assertEqual(result["outcome"], "INVALID_INPUT")
+        self.assertLess(result["elapsed"], 1)
+
+    def test_real_pty_eof_is_not_enter(self):
+        self.assertEqual(self.real_terminal(b"\x04")["outcome"], "EOF")
+
+    def test_real_pty_silence_or_partial_cr_cannot_extend_deadline(self):
+        for payload, raw in ((b"", False), (b"\r", True)):
+            result = self.real_terminal(payload, raw=raw)
+            self.assertEqual(result["outcome"], "DEADLINE_EXCEEDED")
+            self.assertGreaterEqual(result["elapsed"], .15)
+            self.assertLess(result["elapsed"], 1)
+
+    def test_real_pty_readiness_consumed_by_other_reader_does_not_block(self):
+        extra = '''original_select=PILOT.select.select
+consumed=[False]
+def competing_reader(*args):
+    result=original_select(*args)
+    if result[0] and not consumed[0]:
+        os.read(0,2); consumed[0]=True
+    return result
+PILOT.select.select=competing_reader'''
+        result = self.real_terminal(b"\n", extra=extra)
+        self.assertEqual(result["outcome"], "DEADLINE_EXCEEDED")
+        self.assertEqual(result["preparation"]["bytes_received"], 0)
+        self.assertLess(result["elapsed"], 1)
+
+    def test_real_child_gets_eof_without_consuming_parent_enter(self):
+        extra = '''child_result=PILOT.run([sys.executable,'-c','import os; print(repr(os.read(0,1)))'],timeout=1)
+assert child_result.stdout.strip()=="b''", child_result.stdout'''
+        self.assertEqual(self.real_terminal(b"\n", extra=extra)["outcome"], "ACKNOWLEDGED")
+
+    def test_real_pty_sigint_closes_reader_and_records_interruption(self):
+        extra = '''import signal
+def interrupt(*args): os.kill(os.getpid(),signal.SIGINT)
+PILOT.select.select=interrupt'''
+        self.assertEqual(self.real_terminal(extra=extra)["outcome"], "INTERRUPTED")
+
+    def test_native_exit_is_detected_without_waiting_for_enter(self):
+        result = self.real_terminal(extra="pilot.process.poll.return_value=0")
+        self.assertEqual(result["outcome"], "NATIVE_ENDED")
+
+    def ready(self, pilot):
+        return TransportAndHelperTests().ready(pilot)
+
+    def test_no_start_on_missing_ack_expired_deadline_or_native_exit(self):
+        with tempfile.TemporaryDirectory() as directory:
+            for outcome, deadline, exit_code in (("EOF", time.monotonic()+2, None),
+                                                  ("INTERRUPTED", time.monotonic()+2, None),
+                                                  ("ACKNOWLEDGED", 0, None),
+                                                  ("ACKNOWLEDGED", time.monotonic()+2, 0)):
+                pilot = PILOT.UsbPilot(arguments(), Path(directory)); pilot.process = Mock()
+                pilot.process.poll.return_value = exit_code
+                pilot.report["preparation"] = dict(outcome=outcome)
+                with patch.object(pilot, "adb") as adb, patch.object(pilot, "private_read") as read:
+                    with self.assertRaises(PILOT.PilotError): pilot.start_after_preparation(deadline)
+                    adb.assert_not_called(); read.assert_not_called()
+
+    def test_prestart_snapshot_must_be_fresh_strict_ready_and_process_alive(self):
+        with tempfile.TemporaryDirectory() as directory:
+            pilot = PILOT.UsbPilot(arguments(), Path(directory)); pilot.process = Mock()
+            ready = self.ready(pilot)
+            for payload in (b"{", b"{broken}", TransportAndHelperTests().missing(pilot),
+                            json.dumps(dict(ready, state="ERROR")).encode(),
+                            json.dumps(dict(ready, run_id="wrong")).encode(), json.dumps(ready).encode()):
+                pilot.report["preparation"] = dict(outcome="ACKNOWLEDGED")
+                pilot.process.poll.side_effect = [None, 0]  # Even a valid READY cannot outlive its process.
+                with patch.object(pilot, "private_read", return_value=subprocess.CompletedProcess([], 0, payload, b"")), \
+                        patch.object(pilot, "adb") as adb:
+                    with self.assertRaises(PILOT.PilotError): pilot.start_after_preparation(time.monotonic()+2)
+                    adb.assert_not_called()
+
+    def test_late_prestart_read_cannot_send_signal(self):
+        with tempfile.TemporaryDirectory() as directory:
+            pilot = PILOT.UsbPilot(arguments(), Path(directory)); pilot.process = Mock()
+            pilot.process.poll.return_value = None
+            pilot.report["preparation"] = dict(outcome="ACKNOWLEDGED")
+            clock = [0.0]
+            def read(*args, **kwargs):
+                clock[0] = 2.0
+                return subprocess.CompletedProcess([], 0, json.dumps(self.ready(pilot)).encode(), b"")
+            with patch.object(PILOT.time, "monotonic", side_effect=lambda: clock[0]), \
+                    patch.object(pilot, "private_read", side_effect=read), patch.object(pilot, "adb") as adb:
+                with self.assertRaisesRegex(PILOT.PilotError, "deadline"): pilot.start_after_preparation(1)
+                adb.assert_not_called()
+
+    def test_acknowledged_start_is_single_attempt_with_remaining_timeout(self):
+        with tempfile.TemporaryDirectory() as directory:
+            pilot = PILOT.UsbPilot(arguments(), Path(directory)); pilot.process = Mock()
+            pilot.process.poll.return_value = None
+            pilot.report["preparation"] = dict(outcome="ACKNOWLEDGED")
+            with patch.object(pilot, "private_read", return_value=subprocess.CompletedProcess(
+                    [], 0, json.dumps(self.ready(pilot)).encode(), b"")), patch.object(pilot, "adb") as adb:
+                pilot.start_after_preparation(time.monotonic()+.5)
+                self.assertLessEqual(adb.call_args.kwargs["timeout"], .5)
+                self.assertIn("start.signal", adb.call_args.args[-1])
+                with self.assertRaises(PILOT.PilotError): pilot.start_after_preparation(time.monotonic()+.5)
+                self.assertEqual(adb.call_count, 1)
+
+    def test_capture_child_has_no_stdin_and_delayed_ready_shortens_budget(self):
+        with tempfile.TemporaryDirectory() as directory:
+            pilot = PILOT.UsbPilot(arguments(), Path(directory)); process = Mock()
+            clock = [0.0]
+            def ready(*args): clock[0] = 39
+            with patch.object(PILOT.subprocess, "Popen", return_value=process) as child, \
+                    patch.object(pilot, "wait_state", side_effect=ready), patch("builtins.print"), \
+                    patch.object(PILOT.time, "monotonic", side_effect=lambda: clock[0]), \
+                    patch.object(pilot, "confirm_preparation", side_effect=PILOT.PilotError("STOP_FIXTURE")) as confirm, \
+                    patch.object(pilot, "adb") as adb:
+                with self.assertRaisesRegex(PILOT.PilotError, "STOP_FIXTURE"): pilot.capture()
+                self.assertEqual(child.call_args.kwargs["stdin"], subprocess.DEVNULL)
+                self.assertEqual(confirm.call_args.args, (110,))  # Not READY+90 =129 > native minimum120.
+                adb.assert_not_called()
+
+
+class InterruptionOutcomeTests(unittest.TestCase):
+    def main_result(self, directory, exception):
+        pilot = PILOT.UsbPilot(arguments(), Path(directory))
+        args = arguments()
+        with patch.object(PILOT, "validate_args"), patch.object(PILOT.sys.stdin, "isatty", return_value=True), \
+                patch.object(PILOT, "prepare_output", return_value=Path(directory)), patch.object(PILOT, "UsbPilot", return_value=pilot), \
+                patch.object(pilot, "execute", side_effect=exception), patch('sys.stderr'), \
+                patch.object(PILOT.os, "umask"), patch.object(PILOT, "parser") as parser:
+            parser.return_value.parse_args.return_value = args
+            code = PILOT.main([])
+        return code, json.loads((Path(directory) / "pilot-result.json").read_text())
+
+    def test_keyboard_interrupt_is_aborted_exit130_not_pending_success(self):
+        with tempfile.TemporaryDirectory() as directory:
+            code, report = self.main_result(directory, KeyboardInterrupt())
+            self.assertEqual(code, 130)
+            self.assertEqual(report["status"], "ABORTED")
+            self.assertEqual(report["exit_code"], 130)
+            self.assertEqual(report["error_type"], "KeyboardInterrupt")
+            self.assertEqual(report["rnf_002"], "PENDING")
+
+    def test_unexpected_exception_is_error_not_pending_success(self):
+        with tempfile.TemporaryDirectory() as directory:
+            code, report = self.main_result(directory, RuntimeError("synthetic failure"))
+            self.assertEqual(code, 1)
+            self.assertEqual(report["status"], "ERROR")
+
+    def test_postcheck_failure_never_masks_original_interrupt_or_error(self):
+        for primary in (KeyboardInterrupt(), PILOT.PilotError("PRIMARY_FAILURE")):
+            pilot = PILOT.UsbPilot(arguments(), Path("/tmp/synthetic"))
+            with patch.object(pilot, "preflight", return_value=IDENTITY), patch.object(pilot, "prepare_helper"), \
+                    patch.object(pilot, "capture", side_effect=primary), \
+                    patch.object(pilot, "target_identity", side_effect=OSError("POSTCHECK_FAILURE")) as after:
+                with self.assertRaises(type(primary)) as caught: pilot.execute()
+                self.assertIs(caught.exception, primary)
+                after.assert_called_once()
+                self.assertEqual(pilot.report["target_postcheck_error"]["message"], "POSTCHECK_FAILURE")
+
+    def test_cleanup_interruption_still_postchecks_and_does_not_mask_primary(self):
+        pilot = PILOT.UsbPilot(arguments(), Path("/tmp/synthetic")); pilot.process = Mock()
+        pilot.process.poll.return_value = None
+        pilot.process.wait.side_effect = KeyboardInterrupt()
+        with patch.object(pilot, "preflight", return_value=IDENTITY), patch.object(pilot, "prepare_helper"), \
+                patch.object(pilot, "capture", side_effect=PILOT.PilotError("PRIMARY_FAILURE")), \
+                patch.object(pilot, "target_identity", return_value=IDENTITY) as after:
+            with self.assertRaisesRegex(PILOT.PilotError, "PRIMARY_FAILURE"): pilot.execute()
+            after.assert_called_once()
+            self.assertEqual(pilot.report["instrumentation_cleanup_error"]["type"], "KeyboardInterrupt")
+
+    def test_cleanup_failure_without_primary_cannot_return_success(self):
+        pilot = PILOT.UsbPilot(arguments(), Path("/tmp/synthetic")); pilot.process = Mock()
+        pilot.process.poll.return_value = None
+        pilot.process.wait.side_effect = [subprocess.TimeoutExpired("synthetic", 165), 0]
+        with patch.object(pilot, "preflight", return_value=IDENTITY), patch.object(pilot, "prepare_helper"), \
+                patch.object(pilot, "capture"), patch.object(pilot, "target_identity", return_value=IDENTITY) as after:
+            with self.assertRaisesRegex(PILOT.PilotError, "cleanup unconfirmed"): pilot.execute()
+            after.assert_called_once()
+            self.assertTrue(pilot.report["target_apk_unchanged"])
 
 
 class TraceInventoryTests(unittest.TestCase):

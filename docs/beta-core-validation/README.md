@@ -366,6 +366,56 @@ Con Node **22.20.0 / npm 10.9.3** existentes y PATH solo de sesión:
 
 
 
+### Reparación host y continuidad local — 2026-10-03
+
+**Nueva autorización posterior a la entrega inicial:** el autor pidió un intento acotado
+para resolver el impedimento en la **misma rama/PR**, sin integrar ni limpiar todavía.
+La continuación Debian (Astra/max solo para esa ronda) quedó interrumpida por límite
+de uso tras modificar el coordinador y sus tests. El autor autorizó al coordinador
+retomar por SSH, revisar/completar la unidad, hacer commit/push y después fetch/pull
+local para preparar la prueba. Los borradores antiguos de Debian se respaldaron
+fuera del repo con aprobación explícita y **no se reaplicaron**; se partió del último
+HEAD publicado `6d5bc5c`. No hay nueva rama, cambios de producto, versión o dependencias.
+
+**Reproducción y corrección host:** una PTY sintética en Debian confirmó que `select`
+puede indicar lectura disponible con bytes parciales + VEOF mientras `readline`
+sigue bloqueado. La corrección lee bytes no bloqueantes desde una apertura independiente
+de la misma terminal: conserva flags del stdin original y termios, sin flush ni registrar
+lo escrito. Solo una línea Enter vacía confirma; EOF/texto/plazo/interrupción/final del
+nativo abortan. No se usa un hilo de lectura que quede vivo después del timeout.
+Los subprocess del coordinador y el hijo de instrumentación reciben stdin DEVNULL.
+Esto elimina un riesgo de lector heredado, **no demuestra que ADB consumiera el Enter**
+del tercer piloto ni modifica su evidencia histórica.
+
+El plazo absoluto es el menor entre READY + 90 s y lanzamiento host + 110 s, con
+margen conservador respecto de los 120 s nativos. Se consulta un READY fresco/estricto,
+se comprueba proceso y plazo otra vez antes de un único start con timeout restante;
+no se reintenta la señal. `KeyboardInterrupt` registra **ABORTED/exit 130**, no un
+PENDING sin error. Cleanup y postcheck intentan conservar el error primario y registran
+fallos secundarios; una limpieza/identidad sin confirmar no produce éxito.
+No hay cambios Java: el auxiliar instalado conserva su fuente/hash y el reuso exacto
+no requiere compilar ni instalar. HEAD del script nunca se confunde con el APK auxiliar.
+
+**Evidencia ejecutada en Debian:** Python 3.13.5, Node 22.20.0/npm 10.9.3 existentes;
+`python3 -m unittest discover -s scripts/tests -p test_webview_pilot.py -v`: **59/59 PASS**,
+repetidos por el coordinador tras retomar. Incluyen PTY real, Enter/CRLF fragmentado,
+EOF/bytes parciales/silencio/lector competidor, flags/termios intactos, SIGINT y
+ningún start tardío/sin confirmación/tras final nativo, además de las 40 regresiones previas.
+`npm run verify` íntegro: **exit 0**, 77 archivos/1167 tests de aplicación y
+68 tests de tooling; controles y build web completos, sin omisiones.
+Los avisos existentes no se convierten en fallos ni en aceptación nativa. Los cambios
+documentales posteriores se revalidan con docs/traceability/enlaces y diff-check.
+
+**Límite de cierre:** reparación host revisada y verificable, **validación nativa pendiente**.
+No se ejecutó Android ni captura nueva desde Debian; no se acredita READY → CAPTURING
+→ cierre SDK/traza/hash/semántica por estos tests. Antes de un piloto local único,
+comprobar checkout limpio/HEAD/upstream, dispositivo/target/helper exactos, ausencia de
+instrumentación concurrente y confirmación del operador. Solo se contempla reuso del
+auxiliar conocido, sin build/install, datos nuevos/importación/restauración ni cambio
+del APK principal. Preparar fuera del intervalo y guardar/scroll solo durante CAPTURING.
+Ante otro fallo, conservar la evidencia y detenerse, sin series/reintentos automáticos.
+**RNF-002/004 siguen PENDING** con sus umbrales intactos; PR DRAFT, sin ready/merge.
+
 No se recibieron trazas originales, calentamientos ni muestras cuantitativas válidas para esta sesión.
 RNF-002/RNF-004 siguen **PENDING**. El PR DRAFT autorizado entrega herramientas y bloqueo,
 no cierre F3 ni evidencia cuantitativa completada.
