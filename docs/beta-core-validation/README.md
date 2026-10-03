@@ -99,7 +99,8 @@ y script USB, instalando **solo helper de pruebas** con firma compatible, nunca 
 APK de Lumapse. [Alcance, riesgos y criterios del piloto](./protocolo.md#piloto-nativo-experimental--autorización-acotada-del-2026-10-03)
 y [entrypoint/preflight](../../scripts/README.md#47-capture-webview-pilot-androidpy).
 El build y la instalación inicial del helper fueron realizados en Mac según el
-checkpoint siguiente; **captura útil y revisión semántica PENDING**. Los dos primeros intentos
+checkpoint siguiente; la captura original se completó posteriormente en el
+[cuarto piloto](#cuarto-piloto--captura-completada-semántica-pendiente), pero las métricas siguen **PENDING**. Los dos primeros intentos
 fallaron antes de READY; el tercero alcanzó READY pero quedó bloqueado en stdin:
 [estado y permiso actuales](#tercer-piloto--bloqueo-stdin-y-entrega-de-tooling). La implementación
 remota no constituye prueba física. Este pipeline
@@ -406,7 +407,8 @@ ningún start tardío/sin confirmación/tras final nativo, además de las 40 reg
 Los avisos existentes no se convierten en fallos ni en aceptación nativa. Los cambios
 documentales posteriores se revalidan con docs/traceability/enlaces y diff-check.
 
-**Límite de cierre:** reparación host revisada y verificable, **validación nativa pendiente**.
+**Límite de ese checkpoint:** reparación host revisada y verificable, **validación nativa entonces pendiente**;
+el resultado posterior está en el [cuarto piloto](#cuarto-piloto--captura-completada-semántica-pendiente).
 No se ejecutó Android ni captura nueva desde Debian; no se acredita READY → CAPTURING
 → cierre SDK/traza/hash/semántica por estos tests. Antes de un piloto local único,
 comprobar checkout limpio/HEAD/upstream, dispositivo/target/helper exactos, ausencia de
@@ -466,6 +468,87 @@ no se infiere que el JSON sea lossless por salir 0. Handshake/captura/cierre est
 validados para este único artefacto/dispositivo, **RNF-002/004 permanecen PENDING**.
 No otra captura ni cambio de categorías/método por iniciativa: revisar esta evidencia
 y acordar el siguiente paso antes de series. PR DRAFT y sin autorización de merge.
+
+### Diagnóstico semántico acotado — piloto 04
+
+**Continuación autorizada el 2026-10-03:** revisión offline/documental de las fronteras
+del artefacto ya capturado, no otra captura, instalación o reparación de stdin.
+Debian parte del checkpoint publicado `fc2f028`; **no tiene ni inspeccionó el JSON
+original privado**. Los conteos siguientes proceden del inventario anonimizado
+aportado por el operador y de la evidencia del cuarto piloto, no de una medición remota.
+Los 44 pares se emparejaron localmente por `pid/tid/cat/id2` con stack, sin extremos
+sin pareja en ese conjunto; esto no demuestra completitud de toda la traza.
+
+| Frontera | Evidencia disponible | Conclusión y carencia concreta |
+|---|---|---|
+| Entrada de Guardar → resultado correcto | Un `GestureProvider::OnTouchEvent`, cero `EventLatency`; confirmación funcional del autor | No se identifica qué input disparó Guardar ni se enlaza con el primer frame que muestra la tarjeta/feedback correcto. Un touch genérico o la confirmación posterior no aporta esos timestamps. Latencia/desgloses vacíos. |
+| Presentación y clasificación | 16 reportes ALL, 20 DROPPED, 8 NO_UPDATE_DESIRED, 0 PARTIAL; nombres de etapas de presentación | Son estados del pipeline reportado, no un censo deduplicado de frames físicos de Lumapse. ALL no demuestra contenido funcional correcto; NO_UPDATE no es una actualización presentada. DROPPED tampoco significa evento perdido del archivo. No se calcula FPS ni un FAIL RNF. |
+| Scroll y ventanas | 44 SCROLL_NONE; autor confirmó scroll durante CAPTURING; perfil 500 no cargado | La clasificación observada no reconstruye el gesto/ventana y no desmiente al operador. Faltan los 3 × 10 tramos de 1 s con 500 resultados. No dividir 16 por los 8 s del piloto. |
+| Relojes | Llamadas SDK en `elapsedRealtimeNanos`; cero `clock_sync`/fase `c` informados | No hay correlación documentada con `ts` Chromium. Convertir ns a otra unidad no establece dominio/origen/offset; la duración de captura no es latencia CRUD. |
+| Atribución y completitud | Browser coincide con target PID, Renderer identificado; cierre/hash/bytes cotejados | El hash verifica transferencia, no cobertura de todas las superficies ni ausencia de pérdidas. Cero pares huérfanos no prueba que no falten pares enteros. Scope/loss siguen pendientes. |
+
+**Fuentes primarias y límites de correspondencia:**
+
+- [TracingController](https://developer.android.com/reference/android/webkit/TracingController)
+  documenta captura WebView y salida JSON; no ofrece por ese contrato una frontera de
+  resultado correcto de Lumapse. [TracingConfig](https://developer.android.com/reference/android/webkit/TracingConfig)
+  describe conjuntos de categorías típicos, no garantiza un evento concreto.
+  `RECORD_UNTIL_FULL` deja de registrar al llenarse: 7681 eventos y cierre correcto
+  no prueban que el búfer no se agotara ni cuál fue su capacidad efectiva.
+- [TraceEvents.ts, revisión `b88894b`](https://chromium.googlesource.com/devtools/devtools-frontend/+/b88894b14f63f84c460f66cff8918b2b4d079eae/front_end/models/trace/types/TraceEvents.ts)
+  distingue actualizaciones completas/parciales, no actualización y descarte;
+  contempla reportes FORKED/BACKFILL y campos de fuente/secuencia/árbol. Emparejar
+  reportes no equivale a deduplicar frames. [Emisor Chromium, revisión `6718b70`](https://chromium.googlesource.com/chromium/src/+/6718b706ff100957d755554cec783840a8f1f05b/cc/metrics/compositor_frame_reporter.cc)
+  publica estado, identidad del frame y clasificación de scroll del pipeline.
+  Son referencias orientativas: **no se verificó su correspondencia con el build
+  exacto WebView 153.0.8010.36**. La consulta del source por ese tag no devolvió
+  contenido utilizable; no demuestra que el tag o la funcionalidad no existan.
+- [SystemClock](https://developer.android.com/reference/android/os/SystemClock#elapsedRealtimeNanos())
+  define el reloj SDK desde el arranque, incluyendo suspensión profunda; esto por
+  sí solo no identifica el reloj de los eventos Chromium del artefacto.
+
+**Decisión de esta unidad:** no hay base para una serie ni para afirmar que el SDK
+sea intrínsecamente incapaz de medir. Tampoco se justifica un parser nuevo o cambios
+en `inspect_trace`: ya deja métricas `null` y RNF PENDING; sin el raw ni su esquema
+verificado, automatizar relaciones supuestas sería especulativo. Se mantienen sin
+cambios captura/handshake/categorías, Java/helper, producto y el analizador F3.
+
+**Verificación de esta revisión documental (Debian, Python 3.13.5;
+Node 22.20.0/npm 10.9.3):** suite host existente
+`python3 -m unittest discover -s scripts/tests -p test_webview_pilot.py -v`,
+**59/59 PASS, exit 0**; `npm run check:docs`, `npm run check:traceability`,
+auditoría suplementaria de los siete archivos modificados (incluido TODO, 152 enlaces
+internos) y `git diff --check`: **exit 0, sin problemas**. No nuevas regresiones,
+inspección del raw, ejecución Android ni equivalencia metrológica demostrada.
+Además se ejecutó manualmente una vez `npm run verify` íntegro: **exit 0**, 77 archivos /
+1167 tests de aplicación y 68 de tooling, build web y todos los controles; versión
+`0.5.0/500` intacta. La anotación posterior de ese resultado solo cambia documentación
+y se revalida con docs/traceability/enlaces/diff-check, sin otra ejecución del gate.
+
+**Siguiente acción mínima solicitada:** una consulta local **solo lectura y offline**
+sobre el original del cuarto piloto, cotejando su SHA-256 ya registrado; devolver
+únicamente presencia/conteos agregados, nunca IDs, URLs, notas ni el raw:
+
+1. En los pares `PipelineReporter`, presencia de `chrome_frame_reporter`/`frame_reporter`
+   y de `frame_source`, `frame_sequence`, `layer_tree_host_id`, `frame_type`,
+   `has_missing_content`; cantidad de tuplas fuente/secuencia/árbol distintas,
+   duplicadas y sin campos suficientes, sin publicar sus valores.
+2. Para el touch y `Graphics.Pipeline`, presencia de identificadores/flows de
+   correlación y número de enlaces inequívocos a un reporte/etapa de presentación;
+   admitir **no identificable**. Para `SwapEndToPresentationCompositorFrame`,
+   `SubmitCompositorFrameToPresentationCompositorFrame`, `WaitForPresentation` y
+   `SkiaRenderer::SwapBuffers`, solo fases/conteos y disponibilidad de límites
+   temporales/identidad de frame, sin tratarlos como frames distintos.
+3. Presencia de metadatos explícitos de unidad/dominio/sincronización de reloj y
+   búfer/pérdidas; un campo ausente queda ausente, nunca cero pérdidas por defecto.
+
+La consulta debe declarar su procedimiento y las ambigüedades. Aunque encuentre
+identidades/flows, todavía deberá demostrarse qué frame contiene el resultado
+correcto de Guardar: los conteos no lo certifican. Si faltan enlaces, identificación
+de contenido, relojes o completitud, **detener esta vía antes de series** y presentar
+al autor el ajuste mínimo y su impacto; no otro piloto/helper/categorías/instrumentación
+por iniciativa. Esta consulta no requiere operar la app ni transferir el original a
+Debian. RNF-002/004 PENDING; RNF-009/010 no iniciados, umbrales y evidencia histórica intactos.
 
 Los pilotos primero a tercero no produjeron traza; el cuarto sí conserva el original
 identificado arriba. No se recibieron calentamientos ni muestras cuantitativas válidas para esta sesión.

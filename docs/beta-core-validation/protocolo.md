@@ -155,6 +155,12 @@ RNF-009/010 solo después de revisión, integración autorizada y limpieza de es
 acordando prioridad sin cerrar RNF-002/004. Sin umbrales menores, técnicas nuevas,
 reinicios automáticos ni equivalencias inventadas.
 
+El [diagnóstico offline del piloto 04](./README.md#diagnóstico-semántico-acotado--piloto-04)
+separa estados de reportes de frames físicos únicos y de feedback correcto; no valida
+una equivalencia SDK con §4–5. El siguiente paso solicitado es una consulta estructural
+local del original ya preservado, sin operar Android. No se completa un CSV ni se
+inicia otro piloto/serie por disponer de nombres de eventos o pares completos.
+
 **Criterio falsable del piloto:** el build/helper/manifiesto/firma pasan, el target permanece
 idéntico, el SDK cierra y entrega JSON no vacío con `traceEvents`, y se pueden inspeccionar
 entrada → **primer frame presentado con resultado correcto**, atribución a Lumapse y

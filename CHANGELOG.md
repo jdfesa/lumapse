@@ -15,7 +15,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ### Changed
 
-- **Entrega de tooling F3 con bloqueo:** alcance acotado aprobado para PR DRAFT de preparación y diagnósticos, sin declarar completadas RNF-002/004. Offline/continuidad solo tras revisión, integración autorizada y limpieza; sin código correctivo en aquella entrega inicial; la reparación host posterior tiene autorización separada y no habilita series automáticas. [Impedimento vigente](docs/beta-core-validation/README.md#tercer-piloto--bloqueo-stdin-y-entrega-de-tooling).
+- **Entrega de tooling F3 con límites:** alcance acotado aprobado para PR DRAFT de preparación y diagnósticos, sin declarar completadas RNF-002/004. Offline/continuidad solo tras revisión, integración autorizada y limpieza; sin código correctivo en aquella entrega inicial; la reparación host posterior y el piloto capturado no habilitan series automáticas. [Diagnóstico vigente](docs/beta-core-validation/README.md#diagnóstico-semántico-acotado--piloto-04): reportes de composición no acreditan por sí solos input→resultado correcto presentado, FPS, relojes ni completitud; siguiente revisión solo offline del original privado.
 - **Continuidad aprobada:** producto/bloqueantes → APK correspondiente validada (objetivo `0.6.0+` condicionado) → informe/defensa. Próximas dos sesiones F3 secuenciales, reglas de consulta previa y protección de datos; aceptación general de la APK publicada `v0.5.0` reconciliada sin inventar casos ni mediciones.
 
 ### Added

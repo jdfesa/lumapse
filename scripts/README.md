@@ -920,9 +920,12 @@ El inventario comprueba JSON/`traceEvents`/timestamps y conserva métricas en `n
 **PENDING**: falta revisar relojes/offsets, atribución, pérdidas, input y primer frame
 presentado con resultado funcional correcto y clasificación de frames. No convierte
 INP/rAF/promesas/`doFrame` en métricas. No modifica `summarize-f3-results.py` ni sus CSV.
-La clasificación de ausencia inicial ya llegó a READY en el tercer piloto; no hay
-prueba de captura/cierre/semántica. La corrección host posterior se describe arriba;
-queda pendiente comprobar captura/cierre/semántica en el dispositivo real.
+La clasificación de ausencia inicial llegó a READY en el tercer piloto, sin captura
+en aquel intento. La corrección host posterior permitió completar captura/cierre/hash
+en el cuarto piloto local; **semántica y métricas siguen pendientes**, no el traslado
+del JSON. El [diagnóstico acotado](../docs/beta-core-validation/README.md#diagnóstico-semántico-acotado--piloto-04)
+distingue reportes de frames físicos/resultado correcto y solicita una única revisión
+estructural local del original, sin nuevo parser, captura o modificación del helper.
 Otro piloto exige permiso posterior; sin series/reintentos automáticos.
 
 Regresiones host: `python3 -m unittest discover -s scripts/tests -p test_webview_pilot.py -v`;

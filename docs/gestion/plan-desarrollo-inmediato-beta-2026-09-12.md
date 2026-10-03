@@ -152,12 +152,15 @@ Tras revisión, integración expresamente autorizada y limpieza de ese frente, a
 prioridad para offline/continuidad; RNF-002/004 permanecen PENDING. No iniciar sesión 2,
 reparación stdin o nueva captura en aquella entrega documental. La [continuación
 posterior autorizada](../beta-core-validation/README.md#reparación-host-y-continuidad-local--2026-10-03)
-repara el host en la misma rama y retorna al checkout local tras commit/push;
-validación nativa pendiente, sin series ni cambio del APK principal. No cambia umbrales
+repara el host en la misma rama; el [cuarto piloto](../beta-core-validation/README.md#cuarto-piloto--captura-completada-semántica-pendiente)
+completó captura/cierre/hash con reuso exacto y target intacto. El
+[diagnóstico semántico](../beta-core-validation/README.md#diagnóstico-semántico-acotado--piloto-04)
+identifica fronteras aún no demostradas; siguiente acción solo consulta offline local
+del original, sin nueva captura/helper/series ni cambio del APK principal. No cambia umbrales
 ni el ciclo general de una rama/revisión/autorización.
 
 Seguir el [protocolo F3](../beta-core-validation/protocolo.md) y su matriz canónica.
-**Dispositivo/muestras de esta continuidad: PENDING.** El analizador existente sale
+**Captura diagnóstica identificada; muestras/métricas de esta continuidad: PENDING.** El analizador existente sale
 0 también para FAIL/PENDING estructuralmente válidos: no mide ni demuestra PASS.
 Sin captura fiable o permiso, registrar PENDING; con fallo real, registrar FAIL y
 acordar tratamiento antes de otro frente, sin bajar umbrales u optimizar por intuición.
