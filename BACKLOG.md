@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 06 — Entrega Final
 > **Hito 05:** Cerrado documentalmente el 2026-07-15 sobre la beta operativa `v0.4.8`
-> **Última actualización:** 2026-10-03 — PR #21/#22 integrados; [sesión 1 F3 iniciada](docs/beta-core-validation/README.md), sin mediciones físicas: aislamiento, respaldo recuperable e inspector/captura pendientes. Sesión 2 no iniciada.
+> **Última actualización:** 2026-10-03 — PR #21/#22 integrados; [sesión 1 F3 iniciada](docs/beta-core-validation/README.md#seguimiento-de-la-sesión-1): mismo usuario/APK y sustitución de datos sintéticos descartables autorizados, respaldo SQLite verificado y `f3-small` cargado localmente. Listado UI y métricas Android **PENDING**, 500 aún no cargado; sin PR hasta completar la evidencia. Cobertura/límites del respaldo en la fuente F3. Sesión 2 no iniciada.
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
