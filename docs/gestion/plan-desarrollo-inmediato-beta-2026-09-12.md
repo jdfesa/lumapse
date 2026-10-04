@@ -146,7 +146,7 @@ permanece histórico: no rellenarlo con mediciones inexistentes.
 | 2 | RNF-009/010: offline y continuidad | OFF-01–05, CON-01–04; borradores nuevos y de edición; cambio de app, bloqueo y terminación autorizada con ventana real de 500 ms. Esperado/real, IDs/conteos/contenido, método/fecha/dispositivo y confirmación auténtica. | Solo tras cerrar sesión 1 y acordar prioridad según sus resultados. Commit `test(validation): record Android offline and draft continuity evidence`; mismo ciclo de tests/docs/PR/autorización/limpieza. |
 
 **Entrega acotada aprobada (2026-10-03):** [PR #23](https://github.com/jdfesa/lumapse/pull/23)
-DRAFT conserva [evidencia funcional/exportación y pendientes](../beta-core-validation/README.md#evidencia-de-la-sesión-1),
+conserva [evidencia funcional/exportación y pendientes](../beta-core-validation/README.md#evidencia-de-la-sesión-1),
 retirando código/tests/ADR experimentales SDK/Artemis y su diario operativo.
 Esto cierra solo una unidad de entrega, no F3/RNF ni autoriza ready/merge, release,
 otro frente o nuevas operaciones. La secuencia y los umbrales originales no cambian.

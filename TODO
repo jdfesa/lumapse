@@ -21,7 +21,7 @@ El [plan de desarrollo inmediato de la beta](docs/gestion/plan-desarrollo-inmedi
 **Último frente aceptado:** identificación de build y smoke E5 de [PR #22](https://github.com/jdfesa/lumapse/pull/22), integrado mediante `8215541`; [artefacto y límites](docs/gestion/checklist-validacion-android.md#identificación-de-build--smoke-aceptado-de-pr-22).
 **Sesión 1 RNF-002/004 iniciada:** control/exportación comprobados, sin métricas aceptadas;
 [evidencia canónica](docs/beta-core-validation/README.md#evidencia-de-la-sesión-1).
-PR #23 DRAFT se acota a evidencia/retirada experimental. Sesión 2 RNF-009/010 **no iniciada**;
+[PR #23](https://github.com/jdfesa/lumapse/pull/23) se acota a evidencia/retirada experimental. Sesión 2 RNF-009/010 **no iniciada**;
 seguir el [plan vigente](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#continuidad-aprobada--2026-10-02).
 Los filtros quedaron cerrados en PR #18 (`3898db8`); no sustituyen F3.
 
