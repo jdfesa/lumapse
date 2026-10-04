@@ -418,3 +418,12 @@ La firma y publicación de un artefacto de release siguen un flujo separado, doc
 > **Nota:** Este documento se actualiza cada vez que se incorpore una nueva herramienta
 > o cambie el flujo de trabajo. Para el flujo de contribución al código fuente
 > (branches, commits, pull requests), ver [`CONTRIBUTING.md`](../CONTRIBUTING.md).
+
+---
+
+## 8. Estación de pruebas en Arch Linux con Android Emulator
+
+La instalación, configuración y control del emulador de esta estación se describen
+por separado en [Flujo de Desarrollo Android en Arch Linux](./flujo-desarrollo-android-en-arch.md).
+Esa guía complementa el flujo con dispositivos físicos de este documento y conserva
+los límites de la evidencia obtenida en el emulador.
