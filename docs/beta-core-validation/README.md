@@ -165,6 +165,49 @@ las operaciones físicas del protocolo por esta autorización documental. Sesió
 La entrega versionada es este handoff y su enlace en TODO; las plantillas quedan
 vacías. Revisar esta preparación no acredita ningún RNF ni cierra F3.
 
+## Preparación física F3-1 — 2026-10-04
+
+Esta ejecución acotada retoma el handoff anterior en la rama
+`test/f3-session-1-rnf-measurements`, desde `main`/`origin/main` en `93e8967`. El
+objetivo fue preparar un único perfil sintético y comprobar, con pilotos fuera de la
+serie formal, si el WebView expone señales útiles para revisar CRUD y frames. No se
+modificó el código productivo ni se inició F3-2.
+
+### Perfil y precondiciones verificadas
+
+- Runtime local: Node `22.20.0`, npm `10.9.3`; `check:runtime`, `check:version` y el
+  quality gate de `npm run verify` reportaron controles OK.
+- Artefacto instalado: `com.lumapse.app` `0.5.0/500`, en Samsung SM-G965F,
+  Android 10/API 29 y WebView `153.0.8010.36`. La APK y su hash coinciden con el
+  artefacto de referencia de esta página; no se generó ni instaló una APK nueva.
+- El perfil `f3-small` generado para la fecha de la prueba validó exactamente **10
+  materias, 20 secciones, 50 notas visibles, 18 archivadas, 12 en papelera y 20
+  fechas**. Se conservó un backup recuperable antes de cada carga; las copias y
+  capturas permanecen bajo `tmp/` ignorado.
+
+La primera carga usando la fecha histórica `2026-09-13` fue rechazada correctamente:
+la purga automática de papelera de más de 30 días eliminó cuatro filas y el contenido
+materializado dejó de coincidir con el dataset. El rollback restauró el estado previo.
+La misma distribución, cargada con `--seed-date 2026-10-04`, pasó la validación exacta.
+Este ajuste de fecha queda registrado como límite de la sesión; todavía no cambia el
+protocolo canónico ni sus umbrales.
+
+### Pilotos de trazabilidad (no son muestras aceptadas)
+
+Se capturó una interacción de menú y una única creación sintética con el endpoint
+DevTools del WebView, sin throttling. Las trazas conservaron eventos
+`AnimationFrame::Presentation`, estados `STATE_PRESENTED_ALL/PARTIAL/DROPPED` de
+`PipelineReporter` y flujos `LatencyInfo`; el piloto CRUD terminó con el formulario
+limpio y la tarjeta correcta visible. Esto demuestra que existe una señal candidata
+para explorar, pero no enlaza por sí sola el contenido correcto con el primer scan-out
+físico de Android ni sustituye la captura manual prevista. Por lo tanto no se calculan
+latencias/FPS y RNF-002/RNF-004 continúan **PENDING**.
+
+Después de ambos pilotos se volvió a cargar el perfil limpio y se retiraron los
+forwards CDP temporales. Las series de **30 muestras por operación/perfil** y **3 × 10
+tramos de scroll** aún no comenzaron; el siguiente paso requiere acordar el límite de
+presentación física y conservar las trazas originales, offsets y cotejo del autor.
+
 ## Primer análisis de una sesión física — pendiente del autor
 
 Con el artefacto/espacio seguro acordados, revisar las trazas capturadas **manualmente**
