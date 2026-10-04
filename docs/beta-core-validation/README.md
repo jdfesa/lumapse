@@ -112,6 +112,59 @@ Revisión de este PR no autoriza otra captura, código, frente, ready, merge ni 
 - Generador existente ampliado con `f3-small` y `f3-500`; `beta-500` sigue siendo el valor por defecto.
 - ZIP v1 determinista y pruebas de importación real, repetición sin duplicados, conteos y papelera separada.
 
+## Preparación F3-1 — handoff al autor
+
+**2026-10-04:** preparación documental de `test/f3-session-1-rnf-evidence`, desde
+`main` limpio y sincronizado en `e600a1ee561dcdd0571b29460c5ee96828afce69`, tras la
+integración de [PR #24](https://github.com/jdfesa/lumapse/pull/24). No aporta otra
+captura ni medición: RNF-002/RNF-004 permanecen **PENDING**.
+
+**Objetivo único:** preparar la continuación de latencia CRUD y frames de
+scroll, según la [sesión 1 del plan vigente](../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#continuidad-aprobada--2026-10-02)
+y el [protocolo](./protocolo.md), sin cambiar sus muestras ni umbrales. La
+[evidencia ya registrada](#evidencia-de-la-sesión-1) no se repite ni se eleva a
+medición física; el cotejo visual de Guardar ya está hecho.
+
+**Artefacto:** el APK principal del diagnóstico es el debug `0.5.0/500` de fuente
+`e5becc96b032007f587fb564c7b6afd790c5faf9`, con hash y dispositivo en
+[Artefacto y datos](#artefacto-y-datos). Es una referencia previa, no un APK generado
+desde el HEAD de esta rama ni prueba de qué sigue instalado. Antes de continuar,
+el autor debe confirmar APK fuente/canal/hash/certificado, Android/WebView y estado
+del dispositivo en una copia privada de [sesión](./sesion.template.json).
+
+**Prerrequisitos aún a confirmar con el autor:** host USB e inspector disponibles;
+espacio sintético autorizado, respaldo y recuperación acordados; perfiles separados
+y conteos visibles reales de 50/500, sin filtros activos que alteren el conjunto
+medido (§2–3). No asumir que el perfil 500 está cargado ni restauración realizada.
+El ZIP no protege borradores ni papelera. Una firma incompatible o falta de espacio
+seguro obliga a detener la preparación física, no a borrar datos.
+
+**Intervención necesaria, en este orden:**
+
+1. Acordar cómo resolver el [límite de presentación pendiente](#cotejo-offline-de-guardar--2026-10-04):
+   entrada → contenido correcto → primera presentación física, relojes/offsets y
+   frames atribuibles, con pérdidas, deduplicación y calibración verificables. Autorizar
+   específicamente las capturas DevTools/WebView necesarias y su cotejo físico.
+   Exportar JSON o identificar un screenshot no basta. Si no hay método verificable,
+   conservar **PENDING** y no iniciar las series como si ese límite estuviera resuelto.
+2. Solo con esos prerrequisitos, ejecutar las series de §4–5 en el artefacto acordado:
+   calentamientos y muestras CRUD de ambos perfiles, y scroll con 500 resultados.
+   Conservar todos los intentos, fallos y motivos de invalidez; no estimar valores,
+   descartar outliers ni sustituir presentación por final de promesa/feedback Chromium.
+3. Conservar originales/hashes y método en privado; completar copias nuevas de las
+   plantillas CSV/JSON, sin sobrescribir evidencia. Usar el analizador existente solo
+   sobre muestras identificables y cotejar con el autor trazas, resumen y límites.
+   Entregar un resumen anonimizado y referencias verificables en este registro
+   canónico, sin modificar retrospectivamente el reporte de septiembre.
+
+**Exclusiones de esta preparación:** instalaciones, importación/borrado/restauración
+de datos, terminación de procesos, código o instrumentación nuevos, reactivar SDK/Artemis,
+optimizaciones, dependencias, cambios de versión, APK/release y merge. No se ejecutan
+las operaciones físicas del protocolo por esta autorización documental. Sesión 2
+(RNF-009/RNF-010) no se inicia; la aceptación general previa de `v0.5.0` no se reabre.
+La entrega versionada es este handoff y su enlace en TODO; las plantillas quedan
+vacías. Revisar esta preparación no acredita ningún RNF ni cierra F3.
+
 ## Primer análisis de una sesión física — pendiente del autor
 
 Con el artefacto/espacio seguro acordados, revisar las trazas capturadas **manualmente**
