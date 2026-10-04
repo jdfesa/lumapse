@@ -25,7 +25,8 @@ Cuando un documento histórico contradiga una decisión posterior, prevalece el 
 - [`informe-final/`](./informe-final/) — Capítulos fuente del informe académico final.
 - [`inspiracion/`](./inspiracion/) — Benchmarking y referencias externas; no constituye especificación del producto.
 - [`producto/`](./producto/) — Problema, personas, requisitos, historias de usuario y evidencia del relevamiento.
-- [`flujo-desarrollo-android.md`](./flujo-desarrollo-android.md) — Build, despliegue y prueba en Android.
+- [`flujo-desarrollo-android.md`](./flujo-desarrollo-android.md) — Build, despliegue y pruebas con dispositivos Android físicos desde macOS.
+- [`flujo-desarrollo-android-en-arch.md`](./flujo-desarrollo-android-en-arch.md) — Instalación y pruebas con Android Emulator en Arch Linux.
 
 ## Criterio editorial
 
