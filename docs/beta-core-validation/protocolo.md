@@ -91,6 +91,10 @@ El cargador `load-test-fixture-android.sh` exige `main` limpio/sincronizado y au
 destructiva `--yes`. **No ejecutarlo en esta rama ni relajar sus guardias**. Su self-test
 Python usa un DDL copiado; la integración F3 adicional prueba el DDL productivo real.
 
+**Compatibilidad observada (2026-10-03):** el autor exportó trazas del WebView Android
+con Microsoft Edge 154.0.4258.53; la ausencia de vista espejo no impidió esa exportación.
+Es el método DevTools previsto, no una equivalencia metrológica nueva; [evidencia y límites](./README.md#evidencia-de-la-sesión-1).
+
 ## 3. Importación y precondición visible
 
 1. Importar el ZIP del perfil en el espacio acordado mediante Backup → Importar ZIP;

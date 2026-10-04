@@ -145,8 +145,14 @@ permanece histórico: no rellenarlo con mediciones inexistentes.
 | 1 | RNF-002/004: latencia CRUD y FPS | Perfiles 50/500; 5 calentamientos por operación/perfil (30); 30 × 3 CRUD × 2 perfiles (180) muestras válidas, **todas ≤ 200 ms**; 3 recorridos × 10 tramos con 500 resultados, **cada tramo ≥ 55 FPS**. Trazas originales/hashes/offsets, CSV y JSON cotejados por el autor. | Commit `test(validation): record Android CRUD and frame evidence`; docs/traceability y enlaces, PR inglés, revisión de evidencia, checks HEAD exacto y autorización de merge, main sincronizado y rama eliminada. |
 | 2 | RNF-009/010: offline y continuidad | OFF-01–05, CON-01–04; borradores nuevos y de edición; cambio de app, bloqueo y terminación autorizada con ventana real de 500 ms. Esperado/real, IDs/conteos/contenido, método/fecha/dispositivo y confirmación auténtica. | Solo tras cerrar sesión 1 y acordar prioridad según sus resultados. Commit `test(validation): record Android offline and draft continuity evidence`; mismo ciclo de tests/docs/PR/autorización/limpieza. |
 
+**Entrega acotada aprobada (2026-10-03):** [PR #23](https://github.com/jdfesa/lumapse/pull/23)
+conserva [evidencia funcional/exportación y pendientes](../beta-core-validation/README.md#evidencia-de-la-sesión-1),
+retirando código/tests/ADR experimentales SDK/Artemis y su diario operativo.
+Esto cierra solo una unidad de entrega, no F3/RNF ni autoriza ready/merge, release,
+otro frente o nuevas operaciones. La secuencia y los umbrales originales no cambian.
+
 Seguir el [protocolo F3](../beta-core-validation/protocolo.md) y su matriz canónica.
-**Dispositivo/muestras de esta continuidad: PENDING.** El analizador existente sale
+**Artefacto identificado/exportación comprobada; muestras/métricas de esta continuidad: PENDING.** El analizador existente sale
 0 también para FAIL/PENDING estructuralmente válidos: no mide ni demuestra PASS.
 Sin captura fiable o permiso, registrar PENDING; con fallo real, registrar FAIL y
 acordar tratamiento antes de otro frente, sin bajar umbrales u optimizar por intuición.

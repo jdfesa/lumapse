@@ -14,6 +14,72 @@ F2 fue aceptada por el autor tras probar su funcionamiento y quedó integrada en
 el [plan aceptado](../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md), sin optimizar
 consultas/notificaciones por intuición ni sustituir la validación del teléfono por CI.
 
+## Evidencia de la sesión 1
+
+**2026-10-03, hechos suministrados y cotejados en el host USB Mac:** RNF-002/RNF-004
+iniciados, **sin muestras cuantitativas aceptadas**. Arch no inspeccionó los originales
+ni operó el teléfono. Este PR entrega evidencia breve y retira los experimentos; no cierra F3.
+
+### Artefacto y datos
+
+- Samsung SM-G965F, Android 10/API 29, WebView 153.0.8010.36, usuario 0.
+- Principal `com.lumapse.app`, debug `0.5.0/500`, fuente
+  `e5becc96b032007f587fb564c7b6afd790c5faf9`; APK SHA-256
+  `599d507f9e2e2b70f90921ec1d9459458f522f6f566d93ee8e29e2c8e15a4f57`.
+- Auxiliar SDK externo de pruebas: APK SHA-256
+  `43e1eb3e34669468932d2d2a0baa19d4e0ae74e5a5049deb1eafb5c8e8b81827`, fuente
+  `e4bef6b5d8eca564eb48719702e0938882d67d6e`; no es producto ni un binario inferido del HEAD actual.
+- La aceptación general de la APK publicada `v0.5.0` en al menos tres dispositivos
+  [ya está registrada](../gestion/checklist-validacion-android.md#aceptación-general-de-la-apk-publicada-v050); no se reabre.
+- Se preparó el perfil pequeño con datos sintéticos y respaldo SQLite/WAL/SHM/journal
+  privado; no es backup completo de preferencias/WebStorage/borradores. **Conteo actual
+  no reconsultado; perfil 500 no cargado** en esta sesión. No se presume restauración.
+
+### Observaciones y experimentos retirados
+
+Hubo cuatro pilotos SDK: fallos de preparación/reparaciones host y luego una captura
+estructuralmente exitosa, **sin métricas aceptadas**. El sondeo readonly posterior de
+SurfaceFlinger devolvió **127 triples cero en cada una de dos superficies**; no aporta
+presentación ni FPS. Artemis directo observó UI sintética y guardó una nota; postguard
+principal/auxiliar sin cambios de hash. Ese control funcional no certifica latencia/FPS.
+
+Con aprobación del autor se retiran de esta entrega el capturador SDK, coordinadores,
+tests experimentales y ADR de Artemis. Detalle recuperable en Git; no quedan instrucciones
+activas de ese método. El launcher se preservó privadamente en Mac antes del retiro;
+la instalación privada puede continuar, sin convertir Artemis en dependencia del producto.
+
+### Exportación DevTools/WebView comprobada
+
+Chrome no produjo exportación para el autor; **causa desconocida**, no un fallo de
+seguridad demostrado. **Microsoft Edge 154.0.4258.53 sí exportó** el WebView Android;
+la ausencia de vista espejo no impidió exportar. Es el método ya previsto en el [protocolo](./protocolo.md).
+
+- Diagnóstico idle: gzip CRC/JSON PASS, **158121 B** comprimidos, SHA-256
+  `bdfea13b9a4fc01dab7498beef58eaf94b08e3551d12f8b42310b9aa82039e69`;
+  decodificado **763493 B / 693 eventos**, sin acciones: prueba exportación, no mediciones.
+- Diagnóstico Guardar/scroll: nota preparada **antes** de Record; un Guardar, scroll y
+  Stop/export. gzip CRC/JSON PASS, **3636227 B** comprimidos, SHA-256
+  `614bf9f8379e26a457c4f0aa15943e99416c5e1956136729867e211e0d1e32d2`;
+  decodificado **15774304 B**, SHA-256
+  `413244055ca2e300ac2778a8b457b388d6088fc99a06b64937296f11c5639aa7`.
+  Imágenes originales revisadas **en Mac** muestran nota sintética preparada,
+  «Guardando…» y luego formulario limpio/Guardar deshabilitado/nota correcta visible.
+
+Lo anterior corrobora Guardar funcional y exportación. Las parejas de eventos, identidades
+frame/surface y capturas presentes no establecen aún entrada→**primer frame realmente
+presentado con contenido correcto**, relojes/offsets, deduplicación, pérdida/completitud
+ni clasificación full/partial/lost calibrada. No se usan offsets de screenshots como
+latencia física ni se declara fallo de 200 ms por ellos. No se inventan timestamps de
+acciones/conteo final ni se calculan FPS desde reportes o duración de captura.
+
+**Pendiente:** 30 calentamientos + 180 CRUD a 50/500, **cada muestra ≤ 200 ms**;
+3 × 10 tramos de 1 s a 500 resultados, **cada tramo ≥ 55 FPS**. Originales/hashes,
+relojes/offsets/alcance/pérdidas/dedup/calibración, CSV/JSON y cotejo del autor, según
+§4–5 del protocolo; no sustitutos, umbrales menores ni outliers descartados.
+Originales, imágenes, contenido, seriales/IDs, DB y config permanecen privados en Mac;
+no se transfirieron a Arch/Git. RNF-002/RNF-004 **PENDING**, RNF-009/RNF-010 **no iniciados**.
+Revisión de este PR no autoriza otra captura, código, frente, ready, merge ni release.
+
 ## Entrega revisable
 
 - [Protocolo](./protocolo.md): fixtures, seguridad del dispositivo, CRUD/FPS, offline y borradores.
@@ -27,8 +93,9 @@ consultas/notificaciones por intuición ni sustituir la validación del teléfon
 
 ## Primer análisis de una sesión física — pendiente del autor
 
-Después de acordar artefacto/espacio seguro y capturar **manualmente** las trazas de
-Chrome DevTools Performance del WebView según el [protocolo](./protocolo.md), copiar las
+Con el artefacto/espacio seguro acordados, revisar las trazas capturadas **manualmente**
+con DevTools Performance del WebView según el [protocolo](./protocolo.md); solo con
+límites de medición identificables, copiar las
 plantillas sin sobreescribir evidencia existente, completar las filas y ejecutar:
 
 ```bash
@@ -60,6 +127,9 @@ sola. El autor debe revisar, adjuntar evidencia y aprobar o comunicar fallas.
 
 ## Qué no se afirma
 
+Este apartado conserva los límites de la preparación original PR #16; los controles
+posteriores del host USB se distinguen en la evidencia de la sesión 1.
+
 No hay latencias Android, FPS, prueba de bloqueo/terminación ni APK nuevo en esta entrega.
 No se accedió al teléfono ni a bases personales. El host Linux no tiene `adb`/Java
 en PATH. RNF-002/RNF-004 siguen **pendientes**; RNF-009/RNF-010 no mejoran de estado
@@ -84,4 +154,4 @@ de medir. El reporte de septiembre conserva la observación histórica, no reabr
 Las próximas dos sesiones aprobadas son **RNF-002/004** y después **RNF-009/010**,
 con revisión, autorización, integración y limpieza entre frentes. Seguir el
 [plan vigente](../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#continuidad-aprobada--2026-10-02);
-las muestras/dispositivo F3 siguen **PENDING**.
+las muestras cuantitativas F3 siguen **PENDING**.

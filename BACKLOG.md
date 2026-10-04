@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 06 — Entrega Final
 > **Hito 05:** Cerrado documentalmente el 2026-07-15 sobre la beta operativa `v0.4.8`
-> **Última actualización:** 2026-10-02 — PR #21 integrado; smoke de identificación de build aceptado y cierre de PR #22 autorizado. Continuidad F3 no iniciada, mediciones pendientes.
+> **Última actualización:** 2026-10-03 — PR #21/#22 integrados; [sesión 1 F3](docs/beta-core-validation/README.md#evidencia-de-la-sesión-1) con control/exportación comprobados y RNF-002/004 PENDING. PR #23 acotado a evidencia/retirada experimental; RNF-009/010 no iniciados.
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -39,7 +39,7 @@ La trazabilidad de `v0.4.8` y `v0.5.0` queda distribuida entre `docs/gestion/lin
 
 **Plan aceptado e integrado en [PR #13](https://github.com/jdfesa/lumapse/pull/13):** F1 y F2 fueron aprobadas e integradas en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`). La preparación de F3 fue aceptada tras la confirmación general del teléfono e integrada en PR #16 (`90fd21e`); sus ramas ya se eliminaron. Las mediciones cuantitativas siguen pendientes y F3 no se declara cerrada. Ver [protocolo y evidencia](docs/beta-core-validation/README.md) y [plan inmediato](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md).
 
-**Objetivo vigente:** identificación de build aceptada, integración/limpieza autorizadas y corroborables en [PR #22](https://github.com/jdfesa/lumapse/pull/22); después, dos sesiones secuenciales RNF-002/004 y RNF-009/010, **no iniciadas**, según el [plan canónico](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#continuidad-aprobada--2026-10-02). Producto/bloqueantes → APK correspondiente generada/validada (objetivo `0.6.0+`) → informe/defensa. Filtros visibles cerrados en PR #18 (`3898db8`); no se agrega una F4 retroactiva ni se promete cerrar todo en dos sesiones.
+**Objetivo vigente:** identificación de build aceptada e integrada en [PR #22](https://github.com/jdfesa/lumapse/pull/22); sesiones secuenciales RNF-002/004 **iniciada, métricas PENDING**, y RNF-009/010 **no iniciada**, según el [plan canónico](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#continuidad-aprobada--2026-10-02). Producto/bloqueantes → APK correspondiente generada/validada (objetivo `0.6.0+`) → informe/defensa. Filtros visibles cerrados en PR #18 (`3898db8`); no se agrega una F4 retroactiva ni se promete cerrar todo en dos sesiones.
 
 | Orden | Tarea | Criterio de cierre |
 |---|---|---|
@@ -101,6 +101,7 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Área | Tarea | Prioridad | Notas |
 |---|---|---|---|
 | UX / filtros | Hacer visible y predecible la combinación de fecha con materia/sección | Cerrada en PR #18 | Detectado el 2026-09-14 con 500 notas en Android, sin pérdida de datos. [Plan y evidencia](docs/gestion/plan-filtros-visibles-2026-09-15.md): comparadas limpieza automática, chips y conteos; elegidos filtros removibles fuera del calendario con alcance explícito y conteos totales conservados. El autor confirmó la prueba Android y el cambio se integró en `3898db8`. |
+| Evidencia F3 | Correlacionar entrada, contenido correcto y primera presentación; frames/relojes/completitud | Alta / mediciones PENDING | DevTools ya exporta; no hay latencia/FPS aceptados ni defecto productivo demostrado. [Registro único y criterio de cierre](docs/beta-core-validation/README.md#evidencia-de-la-sesión-1). Sin reabrir experimentos ni iniciar otro frente automáticamente. |
 | Arquitectura UI | Separar responsabilidades restantes en componentes grandes | Media | Priorizar `NoteEditor`, `NoteList`, `Heatmap` y `BackupView` solo cuando haya cambios funcionales relacionados |
 | Tipado gradual | Aplicar estrategia JS/TS por fases | Media | Plan definido en [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md): typecheck, contratos, primera tanda de modulos puros, `AcademicEventTypes`, registro de comandos del editor, `AcademicEventService`, capa de backup —incluidos adaptadores nativos—, `ExportService`, `SubjectService.crud`, `SubjectService.trash` y auditorias `.ts` completadas |
 | Tipado gradual | Continuar servicios de dominio/backup archivo por archivo | Baja/Media | No avanzar en bloque; proximos candidatos requieren evaluar bordes nativos/share/storage o store con contratos mas claros |
