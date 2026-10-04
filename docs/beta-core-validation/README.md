@@ -193,6 +193,11 @@ atribuibles; la captura CDP exploratoria no sustituye la manual prevista. No se
 ejecutaron las series formales ni las pruebas de edición/papelera en esta sesión.
 RNF-002/RNF-004 siguen **PENDING**; originales y capturas quedan bajo `tmp/` ignorado.
 
+Se probó además `SurfaceFlinger --latency`/`gfxinfo` con Lumapse en primer plano. El
+display global informó periodos/timestamps, pero las capas de la actividad y WebView
+no devolvieron frames atribuibles; esos datos no se convierten en FPS o latencia F3.
+La serie formal queda bloqueada hasta acordar una fuente física verificable.
+
 ## Primer análisis de una sesión física — pendiente del autor
 
 Con el artefacto/espacio seguro acordados, revisar las trazas capturadas **manualmente**

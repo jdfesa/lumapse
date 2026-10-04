@@ -46,7 +46,8 @@ El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de
 - [ ] F3 sesión 1: medir RNF-002/004; **en curso, sin cierre cuantitativo**. [Protocolo](docs/beta-core-validation/protocolo.md) y [avance comprobado](docs/beta-core-validation/README.md#preparación-física-f3-1--2026-10-04).
   - [x] Verificar APK instalada y cargar/validar el fixture pequeño (50 notas), con respaldo recuperable (2026-10-04).
   - [x] Comprobar creación sintética y exportar dos trazas piloto; restablecer el fixture limpio. No son muestras de latencia/FPS aceptadas.
-  - [ ] Resolver el enlace entrada → contenido correcto → presentación y la atribución de frames antes de medir.
+  - [x] Probar la atribución física con SurfaceFlinger/gfxinfo en el dispositivo: el display global expone periodos, pero la capa WebView de Lumapse no devuelve frames atribuibles.
+  - [ ] Resolver el enlace entrada → contenido correcto → presentación y la atribución de frames antes de medir. Los datos globales de SurfaceFlinger/gfxinfo no sustituyen este requisito.
   - [ ] Ejecutar los calentamientos y las 180 muestras CRUD a 50/500 notas, más los 3 × 10 tramos de scroll a 500 resultados.
   - [ ] Registrar y cotejar los resultados con el autor; cerrar RNF-002/004 solo con evidencia suficiente.
 - [ ] F3 sesión 2: OFF-01–05 y CON-01–04, borradores nuevos/edición y ventana real de 500 ms, solo tras cerrar la sesión anterior y con operaciones pertinentes autorizadas. No optimizar sin medición/aprobación.
