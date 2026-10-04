@@ -2,7 +2,30 @@
 
 Esta carpeta contiene scripts de shell (`.sh`) y Python (`.py`) diseñados para automatizar y estandarizar flujos de trabajo repetitivos o propensos a errores durante el desarrollo local de Lumapse.
 
-> **Criterio de uso:** Los comandos expuestos en `package.json` son el flujo operativo vigente. El catálogo también conserva utilidades experimentales o históricas; cada una debe contrastarse con el esquema y los requisitos actuales antes de utilizar su salida como evidencia de defensa.
+> **Criterio de uso:** Consultar el estado y los límites de cada herramienta antes de
+> ejecutarla. La existencia de un archivo o de un comando npm no autoriza su uso
+> fuera del alcance acordado.
+
+## Estado de las herramientas
+
+- **Vigente:** corresponde al runtime o al control actual; utilizar el punto de
+  entrada documentado para la tarea.
+- **Auxiliar:** aporta diagnóstico o experimentación; no sustituye el control canónico.
+- **Histórica o prototipo:** se conserva como antecedente, fuera del flujo operativo.
+  No usarla para modificar el producto ni acreditar requisitos actuales.
+- **Deprecada o con uso suspendido:** no ejecutar. Su entrada debe indicar motivo y
+  reemplazo vigente; si no existe reemplazo, declarar la actualización pendiente.
+
+Si se detecta una herramienta desactualizada, informar al autor y explicitar la
+restricción en su entrada del catálogo. Actualizar su código requiere un objetivo
+puntual, pruebas y revisión conforme a [CONTRIBUTING.md](../CONTRIBUTING.md#plan-acotado-por-rama);
+no reactivarla ni sustituirla automáticamente durante el diagnóstico.
+
+Contrastar cabeceras, invocaciones reales y la decisión vigente antes de declarar
+una deprecación. Los relatos de `scripts/docs/` conservan etapas anteriores a
+[ADR-010](../docs/adr/ADR-010-gate-portable-y-entorno-canonico.md): sus referencias a
+checks «reemplazados por Rust» no describen el gate actual. Un sufijo histórico
+como `.replaced` tampoco demuestra que el archivo haya dejado de utilizarse.
 
 ## Por qué usamos scripts
 
@@ -112,6 +135,10 @@ Implementa un único gate para `npm run verify`, `npm run quality` y CI, según 
 ### 5. `check-traceability.py`
 Audita la coherencia y consistencia entre los documentos de trazabilidad del proyecto (RF, HU, ADR, CHANGELOG, BACKLOG) y el código fuente.
 
+- **Estado: vigente.** `npm run check:traceability` invoca este wrapper, que ejecuta
+  `check-traceability.py.replaced`. Ese archivo es una dependencia interna activa:
+  no eliminarlo ni invocarlo directamente como alternativa al punto de entrada.
+
 - **Problema que resuelve:** El proyecto depende de una estricta coherencia documental. Este script automatiza la verificación para asegurar que ningún requisito, historia de usuario o registro de decisión (ADR) quede "huérfano" o desactualizado respecto al código implementado.
 - **Qué verifica (6 chequeos automáticos):**
   1. RFs mencionados en el código que no existen en los documentos formales.
@@ -180,17 +207,15 @@ Instala hooks locales de Git para ejecutar automáticamente los chequeos mínimo
   ./scripts/install-hooks.sh
   ```
 
-### 10. `generate-migration.sh` _(Legacy / prototipo no consumido por el runtime)_
-Genera el formato experimental de una migración SQLite versionada.
+### 10. `generate-migration.sh` _(Histórico / fuera del flujo vigente)_
 
-- **Estado actual:** No forma parte del flujo de persistencia ni del quality gate vigente. El runtime no consume archivos de `src/store/migrations/`.
-- **Qué genera:** Un archivo `.sql` de prototipo en `src/store/migrations/`, con secciones `UP` y `DOWN`.
-- **Migraciones reales:** El esquema y las migraciones idempotentes que ejecuta la aplicación viven inline en `src/services/sqlite/connection.js`.
-- **Cuándo usarlo:** Solo para estudiar el formato legacy o experimentar fuera del flujo real. No usarlo para documentar ni implementar una migración de producción vigente.
-- **Uso:**
-  ```bash
-  ./scripts/generate-migration.sh create_notes_table
-  ```
+**No usar para migraciones actuales.** Genera archivos SQL con secciones `UP`/`DOWN`
+en `src/store/migrations/`, un formato experimental que el runtime no consume.
+
+No existe un generador equivalente aprobado. El esquema y las migraciones ejecutadas
+por la aplicación se mantienen en
+[`src/services/sqlite/connection.js`](../src/services/sqlite/connection.js); cualquier
+cambio de persistencia debe trabajar sobre esa implementación y sus pruebas.
 
 ### 11. `project-metrics.py`
 Calcula métricas cuantitativas del proyecto para el informe final académico.
@@ -208,20 +233,15 @@ Calcula métricas cuantitativas del proyecto para el informe final académico.
   python3 scripts/project-metrics.py
   ```
 
-### 12. `check-sql-migrations.py` _(Legacy / prototipo no consumido por el runtime)_
-Audita el formato experimental generado en `src/store/migrations/`.
+### 12. `check-sql-migrations.py` _(Histórico / fuera del flujo vigente)_
 
-- **Estado actual:** No valida las migraciones que ejecuta la aplicación ni integra el quality gate vigente; solo inspecciona el formato legacy de archivos `.sql`.
-- **Límite:** Las migraciones reales son bloques inline e idempotentes de `src/services/sqlite/connection.js`; se controlan mediante la auditoría de schema y el smoke test de base de datos.
-- **Qué verifica:**
-  - Que los archivos `.sql` en `src/store/migrations/` sigan el formato `YYYYMMDD_HHMMSS_nombre.sql`.
-  - Que cada migración tenga secciones `-- UP` y `-- DOWN`.
-  - Que no aparezca `DROP TABLE` dentro del bloque `UP`, porque sería una operación destructiva durante la aplicación normal de cambios.
-- **Cuándo usarlo:** Solo para revisar ejemplos legacy o experimentar con ese prototipo. Su resultado no es evidencia de que el schema runtime esté actualizado.
-- **Uso:**
-  ```bash
-  python3 scripts/check-sql-migrations.py
-  ```
+**No usar para validar el schema actual.** Solo inspecciona el prototipo de archivos
+SQL en `src/store/migrations/`: nombres, secciones `UP`/`DOWN` y ausencia de `DROP TABLE`
+en `UP`. No comprueba las migraciones ejecutadas por la aplicación.
+
+Para el schema vigente, utilizar `npm run check:schema` y `npm run check:db-smoke`,
+además de los tests de persistencia pertinentes. Estos controles cubren el esquema
+real; no son una validación del formato experimental.
 
 ### 13. `check-schema-sync.py`
 Compara el esquema SQLite implementado en código contra el DDL documentado.
@@ -334,16 +354,14 @@ Audita las dependencias del proyecto y documenta el resultado automáticamente.
   ./scripts/generate-security-report.sh
   ```
 
-### 21. `generate-mock-data.py` _(Legacy / prototipo; nunca seed de producción)_
-Generador experimental de datos ficticios en formato SQL.
+### 21. `generate-mock-data.py` _(Histórico / fuera del flujo vigente)_
 
-- **Estado actual:** El runtime no consume el archivo generado y Lumapse no tiene un mecanismo de seed de producción.
-- **Qué hace:** Escribe `src/store/migrations/99999999_999999_seed_mock_data.sql` con sentencias `INSERT` ficticias (títulos, fechas, contenido Markdown y UUIDs).
-- **Cuándo usarlo:** Solo en experimentos aislados sobre bases descartables. No ejecutar ni presentar como seed, migración o carga de producción; para evidencia de rendimiento se necesita un protocolo que use el runtime/dispositivo real.
-- **Uso:**
-  ```bash
-  python3 scripts/generate-mock-data.py
-  ```
+**No usar como seed ni para preparar evidencia Android.** Escribe datos ficticios en
+`src/store/migrations/99999999_999999_seed_mock_data.sql`, que el runtime no consume.
+
+Para datos sintéticos actuales, utilizar [`generate-test-fixture.py`](generate-test-fixture.py)
+y el [protocolo de fixtures F3](../docs/beta-core-validation/protocolo.md).
+Generar un fixture no autoriza importarlo en un dispositivo ni demuestra rendimiento.
 
 ### 22. `check-seo-metadata.py`
 Analizador estático de metadatos del shell web empaquetado.
@@ -392,28 +410,26 @@ Generador de diagramas DBML a partir del DDL real implementado en JavaScript.
   python3 scripts/generate-dbml-from-code.py --check
   ```
 
-### 26. `generate-defense-cheatsheet.py`
-Genera una hoja de trucos consolidada (Cheat Sheet) de cara a la defensa del proyecto ante el tribunal.
+### 26. `generate-defense-cheatsheet.py` _(Uso suspendido / actualización pendiente)_
 
-- **Problema que resuelve:** Automatiza la recopilación de estadísticas del producto (líneas de código, requisitos, hitos, etc.) y sintetiza las justificaciones y preguntas difíciles más frecuentes del jurado en un único lugar de consulta rápida.
-- **Qué hace:** Escanea el código fuente y las carpetas de documentación, calcula estadísticas en tiempo de ejecución, y escribe el resultado en `docs/gestion/cheatsheet-defensa.md`.
-- **Estado al 2026-07-15:** No regenerar todavía. El cheat sheet fue curado para reflejar Hito 06 y la política de título vigente, mientras el generador conserva respuestas hardcodeadas anteriores. La plantilla debe sincronizarse en una tarea de tooling antes del congelamiento final.
-- **Uso:**
-  ```bash
-  python3 scripts/generate-defense-cheatsheet.py
-  ```
+**No regenerar el documento de defensa con la plantilla actual.** Combina métricas
+dinámicas con respuestas fijas desactualizadas: todavía presenta RF-018 como pendiente
+y una reducción de CPU del 55 % como evidencia, sin representar la validación vigente.
 
-### 27. `export-database-bundle.py`
-Utilidad histórica que simula un bundle SQLite genérico.
+Sin `--force` omite la generación; con esa opción sobrescribe
+[`docs/gestion/cheatsheet-defensa.md`](../docs/gestion/cheatsheet-defensa.md), cuyo contenido
+fue revisado manualmente. Mantener esa fuente hasta actualizar y validar el generador
+en una tarea específica. No hay un generador sustituto aprobado.
 
-- **Alcance:** Busca una base SQLite o crea una mock con `subjects`, `notes` y `metadata`, genera un hash y empaqueta una copia junto con notas Markdown.
-- **Límite:** No implementa ni valida `RF-017`/`RF-018`, no incluye `academic_events` y su formato no es el contrato ZIP vigente de la aplicación. El flujo de producto vive en `src/services/backup/` y se verifica con su suite de tests y en Android.
-- **Cuándo usarlo:** Solo para experimentar con una copia SQLite o estudiar integridad de archivos, nunca como backup importable ni como evidencia del caso de uso actual.
-- **Uso:**
-  ```bash
-  python3 scripts/export-database-bundle.py
-  python3 scripts/export-database-bundle.py ruta/a/lumapse.db --output-dir tmp/
-  ```
+### 27. `export-database-bundle.py` _(Histórico / fuera del flujo vigente)_
+
+**No usar como backup de Lumapse ni como evidencia de RF-017/RF-018.** Simula un ZIP
+con una copia SQLite y notas Markdown; puede crear una base mock, omite
+`academic_events` y no implementa el contrato ZIP de la aplicación.
+
+El reemplazo funcional es el flujo Backup de la app, implementado en
+[`src/services/backup/`](../src/services/backup/), no un exportador CLI equivalente.
+Validar ese flujo con sus tests y con el dispositivo autorizado.
 
 ### 28. `run-load-tests.py`
 Ejecuta una comparación sintética entre lectura de `title` y extracción de un H1 desde Markdown.
@@ -535,28 +551,37 @@ Orquestador maestro del flujo de trabajo diario. Centraliza los scripts de inici
 
 ## Flujo de trabajo resultante
 
-```
-Al empezar a trabajar:
-  npm run doctor
-  ./scripts/daily-workflow.sh start
+El orden obligatorio antes de editar está en [AGENTS.md](../AGENTS.md). Esta sección
+indica qué herramienta usar durante ese procedimiento; el catálogo anterior describe
+cada script, sus opciones y sus efectos.
 
-Durante el desarrollo:
-  - ESLint advierte si un archivo supera 300 LOC
-  - Pre-commit ejecuta lint y auditoria rapida de codigo con lumapse-audit
+### Verificaciones iniciales
 
-Cuando un archivo crece demasiado:
-  python3 scripts/split-guide.py <archivo>
-  python3 scripts/split-guide.py --all --md    # Para agregar al BACKLOG
+Ejecutar los comandos desde la raíz del repositorio, después de comprobar GitHub y
+leer el contexto de la tarea. Elegir únicamente los controles pertinentes:
 
-Al cerrar la sesion:
-  ./scripts/daily-workflow.sh end
+| Condición | Comando | Alcance y límite |
+|---|---|---|
+| Antes de instalar dependencias o ejecutar controles npm | `npm run check:runtime` | Verifica los pins y las versiones de Node/npm, sin requerir `node_modules`. Si falta el runtime o no coincide, informar antes de continuar. |
+| Entorno desconocido o fallo de herramientas | `npm run doctor` | Diagnóstico general; consulta `adb devices` si ADB está disponible. No instala ni corrige el entorno; sus advertencias se interpretan según la tarea. No sustituye `check:runtime`. |
+| Se necesita un resumen local del código, con dependencias disponibles | `npm run check:session` | Informa Git local, tamaño de archivos y lint. No consulta GitHub ni valida PR; el mensaje final o exit 0 no acreditan que todos los controles hayan pasado. |
+| Cambios documentales | `npm run check:docs` y `npm run check:traceability` | Referencia inicial de enlaces y trazabilidad; no comprueba la veracidad de la evidencia ni reemplaza la revisión editorial. |
+| Cambios en el catálogo o en las herramientas | `npm run check:toolchain` | Comprueba documentación, referencias y convenciones de scripts; no prueba el comportamiento de todas las herramientas. |
+| Trabajo Android en el equipo/dispositivo acordado, con inspección autorizada | `npm run doctor:android` | Consulta ADB, instalación y directorios de bases de los dispositivos conectados; no instala ni modifica datos. No es requisito para documentación ni equivale a una prueba funcional. |
+| Corrección de un defecto o cambio de comportamiento | Test focalizado o control existente indicado en el plan | Establece la referencia previa o reproduce el defecto. Conservar el resultado inicial para compararlo con la verificación posterior. |
 
-Para un reporte completo de salud:
-  ./scripts/daily-workflow.sh health --save
+No aplicar automáticamente las sugerencias de los diagnósticos: algunas implican
+instalar, generar archivos o intervenir dispositivos. Los permisos y límites están
+en [CONTRIBUTING.md](../CONTRIBUTING.md#límites-operativos). Las salidas con rutas,
+identificadores o información privada no deben incorporarse sin anonimizar.
 
-Antes de tocar Android:
-  npm run doctor:android
-```
+### Verificación de la entrega
+
+Aplicar los controles de [CONTRIBUTING.md](../CONTRIBUTING.md#5-verificación) según el
+tipo de cambio. `daily-workflow.sh`, los dashboards y los hooks son auxiliares; no
+sustituyen el gate canónico definido en [ADR-010](../docs/adr/ADR-010-gate-portable-y-entorno-canonico.md)
+ni autorizan el merge. Los generadores, limpieza, despliegue y reportes con `--save`
+se ejecutan solo cuando forman parte del alcance acordado.
 
 ---
 
