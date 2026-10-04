@@ -180,6 +180,8 @@ pendientes está en [TODO](../../TODO). No se modificó la app ni se inició F3-
 - [x] Creación sintética: formulario limpio y tarjeta correcta visible. Dos trazas
   piloto (menú y Guardar) exportadas por CDP del WebView, sin throttling.
 - [x] Perfil limpio recargado tras los pilotos; forwards temporales retirados.
+- [x] Perfil `f3-500` comprobado en búsqueda (500 resultados) y recorrido exploratorio
+  de scroll; no es FPS aceptado porque no hay atribución física de frames.
 
 **Hallazgo relevante:** la fecha histórica `2026-09-13` provocó la purga automática
 de cuatro filas de papelera (>30 días) y el loader rechazó la carga. Se restauró el
@@ -190,7 +192,7 @@ sin cambiar el protocolo ni sus umbrales.
 no como mediciones aceptadas. Los eventos de presentación Chromium no establecen
 todavía entrada → contenido correcto → primera presentación física Android ni FPS
 atribuibles; la captura CDP exploratoria no sustituye la manual prevista. No se
-ejecutaron las series formales ni las pruebas de edición/papelera en esta sesión.
+ejecutaron las series formales CRUD/FPS ni las pruebas de edición/papelera en esta sesión.
 RNF-002/RNF-004 siguen **PENDING**; originales y capturas quedan bajo `tmp/` ignorado.
 
 Se probó además `SurfaceFlinger --latency`/`gfxinfo` con Lumapse en primer plano. El
