@@ -91,93 +91,9 @@ El cargador `load-test-fixture-android.sh` exige `main` limpio/sincronizado y au
 destructiva `--yes`. **No ejecutarlo en esta rama ni relajar sus guardias**. Su self-test
 Python usa un DDL copiado; la integración F3 adicional prueba el DDL productivo real.
 
-### Piloto nativo experimental — autorización acotada del 2026-10-03
-
-Ante la exportación manual sin archivo, el autor autorizó un **piloto de observabilidad**
-con `androidTest`, script USB y **solo la APK auxiliar de pruebas**, si resulta necesario.
-No autorizó reemplazar Lumapse, cambiar producción, firmas, sistema o dependencias,
-ni adoptar por anticipado una equivalencia de métricas. El procedimiento y argumentos
-están en [scripts](../../scripts/README.md#47-capture-webview-pilot-androidpy).
-Se usa la API pública [TracingController](https://developer.android.com/reference/android/webkit/TracingController)
-y [TracingConfig](https://developer.android.com/reference/android/webkit/TracingConfig),
-disponibles desde API 28. No accede a Chrome Desktop ni rescata su traza anterior;
-no usa CDP, sockets WebView, forwards, proxy, consola DevTools o captura global del sistema.
-
-- **Precondición:** terminal interactiva, USB/serial explícito, mismo usuario Android 0,
-  checkout revisado limpio y sincronizado, Node/npm canónicos, JDK 21 y SDK/caché Gradle
-  ya existentes. Solo datos sintéticos de Lumapse con el respaldo/procedimiento acordados;
-  no presupone cobertura completa de WebStorage. No otra instrumentación/grabación
-  de Lumapse activa. La instrumentación **puede reiniciar el proceso**: preparar la UI
-  después de `READY`, fuera de la traza, y registrar el efecto real sobre borradores/UI.
-  `isTracing()` se comprueba en el proceso instrumentado y otra vez antes de iniciar;
-  una traza ya activa aborta sin detenerla. Esto no recupera una sesión del proceso anterior.
-- **Identidad y aislamiento:** manifest del helper esperado `com.lumapse.app.test`, runner
-  existente y `targetPackage=com.lumapse.app`, certificado igual al APK instalado.
-  El test exige paquete, UID y proceso de Lumapse antes de usar el singleton WebView;
-  sus WebViews/renderers son el alcance, no las demás apps. No añade receivers ni hooks
-  productivos. La atribución de procesos/superficies del JSON real aún debe cotejarse.
-  El script verifica versión, certificado, SHA-256 y ruta instalada del **APK original antes y después**;
-  fuente E5 del target y commit/hash del helper se registran por separado.
-- **Una captura, no la serie:** preparación con plazos, luego una operación CRUD sintética
-  y un scroll breve manuales. Solicitud de **8 s como máximo**, con margen para stop;
-  un intervalo observado hasta retorno de stop superior a **10 s invalida el piloto**.
-  Categorías `FRAME_VIEWER`, `INPUT_LATENCY`, `RENDERING`, sin categorías custom,
-  modo `RECORD_UNTIL_FULL`; sin throttling/screencast ni flags globales. Overhead sin
-  calibrar. El límite del búfer puede perder eventos: no declarar ausencia de pérdidas
-  por silencio del JSON. Un bloqueo del UI thread/SDK puede impedir stop; si el cierre
-  no se confirma, queda error/PENDING y se requiere intervención, no un éxito inferido.
-- **Salida:** JSON original privado, sin reserializar, solo después del cierre confirmado
-  del `OutputStream` por el SDK, byte count y SHA-256 coincidentes; metadatos, offsets
-  temporales de llamadas/flush y un inventario estructural separado. No equiparar esos
-  relojes con `ts` de Chromium sin verificar dominio/offset. El executor se cierra después
-  del callback de cierre, no inmediatamente al retorno de stop; un error conserva límites
-  honestos, sin limpiar/desinstalar/forzar parada del target ni usar root.
-
-**Permiso posterior y stop rule vigentes:** tras dos fallos previos a READY se corrigió
-la clasificación de archivo aún ausente. El tercer piloto (script a8792de, reuso exacto
-helper 43e1…/fuente e4bef6b, sin compilación/instalación) llegó a READY pero quedó bloqueado en
-readline del host; JUnit PREPARATION_TIMEOUT, sin start/traza/métricas. Target intacto;
-[evidencia y causas diferenciadas](./README.md#tercer-piloto--bloqueo-stdin-y-entrega-de-tooling).
-La entrega inicial detuvo el método: no otro piloto ni series por aquel permiso.
-[La continuación posterior autorizada](./README.md#reparación-host-y-continuidad-local--2026-10-03)
-corrige preparación/aborto del host con 59 regresiones y gate completo, sin cambiar
-el helper ni aportar validación física nueva. El [cuarto piloto local](./README.md#cuarto-piloto--captura-completada-semántica-pendiente)
-completó handshake/captura/cierre/hash con reuso exacto y target intacto, sin build/install.
-Falta revisar input→feedback/relojes/pérdidas/scroll; sin otras capturas/series automáticas. El autor autorizó **PR DRAFT de tooling
-con bloqueo registrado**, no F3/RNF completadas. Este ajuste específico reemplaza la
-prohibición anterior de PR checkpoint para este entregable; mantiene una rama y el
-circuito de revisión/decisión del autor. Aquel permiso inicial no autorizaba código
-correctivo ni otra captura; la reparación host posterior tiene su autorización
-separada indicada arriba. Se mantienen sin autorización merge/ready/otra rama/series.
-La prueba posterior requiere evidencia auténtica, sin atribuir consumo de Enter
-a ADB/proxy por hipótesis.
-RNF-009/010 solo después de revisión, integración autorizada y limpieza de este frente,
-acordando prioridad sin cerrar RNF-002/004. Sin umbrales menores, técnicas nuevas,
-reinicios automáticos ni equivalencias inventadas.
-
-El [diagnóstico offline del piloto 04](./README.md#diagnóstico-semántico-acotado--piloto-04)
-separa estados de reportes de frames físicos únicos y de feedback correcto; no valida
-una equivalencia SDK con §4–5. La [consulta estructural local](./README.md#consulta-estructural-local--resultado)
-ya se realizó sin operar Android y no demostró la cadena funcional/relojes/completitud.
-La [evaluación posterior del ajuste mínimo](./README.md#evaluación-del-ajuste-mínimo--frontera-de-presentación),
-autorizada condicionalmente sin instalación/piloto, no justificó la primera presentación
-correcta: visual-state, commit, copia del búfer y categorías no cubren ese extremo.
-Helper/host quedan intactos. Ampliar el diseño del método exige nueva autorización,
-no otro piloto a ciegas. No se completa un CSV ni se inicia una serie por disponer
-de nombres de eventos o pares completos.
-
-**Criterio falsable del piloto:** el build/helper/manifiesto/firma pasan, el target permanece
-idéntico, el SDK cierra y entrega JSON no vacío con `traceEvents`, y se pueden inspeccionar
-entrada → **primer frame presentado con resultado correcto**, atribución a Lumapse y
-clasificación completos/parciales/perdidos. La captura estructural exitosa no prueba la
-última parte. Si falta esa semántica, dejar latencias/FPS/desgloses **vacíos y PENDING**,
-describir la frontera ausente y detenerse antes de 180 muestras. El inventario nunca
-cuenta `doFrame`, buffers enviados, promesas, rAF o INP como sustitutos.
-
-El piloto **no cuenta** para los 30 calentamientos, 180 muestras CRUD ni 3 × 10 tramos
-FPS de §4–5. Antes de una serie completa se requiere revisar el JSON real, calibración,
-equivalencia/alcance de cualquier ajuste del método y aprobación; se conservan todos
-los umbrales, originales/hashes/offsets y el cotejo del autor. Sin datos físicos, no cierre RNF.
+**Compatibilidad observada (2026-10-03):** el autor exportó trazas del WebView Android
+con Microsoft Edge 154.0.4258.53; la ausencia de vista espejo no impidió esa exportación.
+Es el método DevTools previsto, no una equivalencia metrológica nueva; [evidencia y límites](./README.md#evidencia-de-la-sesión-1).
 
 ## 3. Importación y precondición visible
 

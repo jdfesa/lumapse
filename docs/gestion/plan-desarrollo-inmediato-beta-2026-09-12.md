@@ -145,26 +145,14 @@ permanece histórico: no rellenarlo con mediciones inexistentes.
 | 1 | RNF-002/004: latencia CRUD y FPS | Perfiles 50/500; 5 calentamientos por operación/perfil (30); 30 × 3 CRUD × 2 perfiles (180) muestras válidas, **todas ≤ 200 ms**; 3 recorridos × 10 tramos con 500 resultados, **cada tramo ≥ 55 FPS**. Trazas originales/hashes/offsets, CSV y JSON cotejados por el autor. | Commit `test(validation): record Android CRUD and frame evidence`; docs/traceability y enlaces, PR inglés, revisión de evidencia, checks HEAD exacto y autorización de merge, main sincronizado y rama eliminada. |
 | 2 | RNF-009/010: offline y continuidad | OFF-01–05, CON-01–04; borradores nuevos y de edición; cambio de app, bloqueo y terminación autorizada con ventana real de 500 ms. Esperado/real, IDs/conteos/contenido, método/fecha/dispositivo y confirmación auténtica. | Solo tras cerrar sesión 1 y acordar prioridad según sus resultados. Commit `test(validation): record Android offline and draft continuity evidence`; mismo ciclo de tests/docs/PR/autorización/limpieza. |
 
-**Ajuste acotado de entrega aprobado el 2026-10-03:** ante el
-[bloqueo real del tercer piloto](../beta-core-validation/README.md#tercer-piloto--bloqueo-stdin-y-entrega-de-tooling),
-el autor autorizó PR DRAFT de **herramientas + bloqueo**, no cierre cuantitativo de sesión 1.
-Tras revisión, integración expresamente autorizada y limpieza de ese frente, acordar
-prioridad para offline/continuidad; RNF-002/004 permanecen PENDING. No iniciar sesión 2,
-reparación stdin o nueva captura en aquella entrega documental. La [continuación
-posterior autorizada](../beta-core-validation/README.md#reparación-host-y-continuidad-local--2026-10-03)
-repara el host en la misma rama; el [cuarto piloto](../beta-core-validation/README.md#cuarto-piloto--captura-completada-semántica-pendiente)
-completó captura/cierre/hash con reuso exacto y target intacto. El
-[diagnóstico semántico](../beta-core-validation/README.md#diagnóstico-semántico-acotado--piloto-04)
-identifica fronteras aún no demostradas; la [consulta offline local](../beta-core-validation/README.md#consulta-estructural-local--resultado)
-ya se completó (44 reportes / 36 identidades distintas), sin demostrar cadena funcional,
-relojes o completitud. La [evaluación autorizada del ajuste mínimo](../beta-core-validation/README.md#evaluación-del-ajuste-mínimo--frontera-de-presentación)
-no justificó la primera presentación correcta; no hay parche de helper/categorías ni
-otro piloto. Ampliar el diseño de observabilidad requiere una nueva decisión del autor;
-APK principal intacto. No cambia umbrales
-ni el ciclo general de una rama/revisión/autorización.
+**Entrega acotada aprobada (2026-10-03):** [PR #23](https://github.com/jdfesa/lumapse/pull/23)
+DRAFT conserva [evidencia funcional/exportación y pendientes](../beta-core-validation/README.md#evidencia-de-la-sesión-1),
+retirando código/tests/ADR experimentales SDK/Artemis y su diario operativo.
+Esto cierra solo una unidad de entrega, no F3/RNF ni autoriza ready/merge, release,
+otro frente o nuevas operaciones. La secuencia y los umbrales originales no cambian.
 
 Seguir el [protocolo F3](../beta-core-validation/protocolo.md) y su matriz canónica.
-**Captura diagnóstica identificada; muestras/métricas de esta continuidad: PENDING.** El analizador existente sale
+**Artefacto identificado/exportación comprobada; muestras/métricas de esta continuidad: PENDING.** El analizador existente sale
 0 también para FAIL/PENDING estructuralmente válidos: no mide ni demuestra PASS.
 Sin captura fiable o permiso, registrar PENDING; con fallo real, registrar FAIL y
 acordar tratamiento antes de otro frente, sin bajar umbrales u optimizar por intuición.
