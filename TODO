@@ -43,7 +43,12 @@ El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de
 - [x] Refrescos vecinos de F2: crear materia/sección y editar/eliminar fecha fueron probados en Android por el autor e integrados en [PR #19](https://github.com/jdfesa/lumapse/pull/19) el 2026-09-18 (`34b2900`), con regresiones SQLite/UI y recuperación solo de lectura. Mover/eliminar notas y otras acciones de materias/papelera permanecen como deuda media, a revisar con evidencia; este cierre no completa F3. [Plan y evidencia](docs/gestion/plan-refrescos-vecinos-2026-09-16.md).
 - [x] F3: perfiles/ZIP de 50/500 notas, integración SQLite y protocolo aceptados e integrados en PR #16; confirmación general del teléfono recibida el 2026-09-15, sin nuevas muestras crudas ni identidad APK.
 - [x] Identificación de build: smoke Acerca/navegación aceptado y merge/limpieza autorizados para PR #22. Fuente Android E5; cierre documental sin cambios de producto ni métricas F3. Integración comprobable en el PR, sin cierre cuantitativo de F3.
-- [ ] F3 sesión 1: acordar con el autor el [handoff de preparación](docs/beta-core-validation/README.md#preparación-f3-1--handoff-al-autor); identificar entrada/contenido/primera presentación, relojes y frames fiables antes de completar series/umbrales del [protocolo](docs/beta-core-validation/protocolo.md). RNF-002/004 PENDING; [evidencia y límites](docs/beta-core-validation/README.md#evidencia-de-la-sesión-1).
+- [ ] F3 sesión 1: medir RNF-002/004; **en curso, sin cierre cuantitativo**. [Protocolo](docs/beta-core-validation/protocolo.md) y [avance comprobado](docs/beta-core-validation/README.md#preparación-física-f3-1--2026-10-04).
+  - [x] Verificar APK instalada y cargar/validar el fixture pequeño (50 notas), con respaldo recuperable (2026-10-04).
+  - [x] Comprobar creación sintética y exportar dos trazas piloto; restablecer el fixture limpio. No son muestras de latencia/FPS aceptadas.
+  - [ ] Resolver el enlace entrada → contenido correcto → presentación y la atribución de frames antes de medir.
+  - [ ] Ejecutar los calentamientos y las 180 muestras CRUD a 50/500 notas, más los 3 × 10 tramos de scroll a 500 resultados.
+  - [ ] Registrar y cotejar los resultados con el autor; cerrar RNF-002/004 solo con evidencia suficiente.
 - [ ] F3 sesión 2: OFF-01–05 y CON-01–04, borradores nuevos/edición y ventana real de 500 ms, solo tras cerrar la sesión anterior y con operaciones pertinentes autorizadas. No optimizar sin medición/aprobación.
 
 ## Checklist de trabajo
@@ -76,7 +81,8 @@ El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de
 - [ ] Medir el factor de ajuste real y redactar recomendaciones para futuros equipos.
 - [x] Reforzar `scripts/release-helper.py` para sincronizar y verificar `versionName`/`versionCode` Android con la versión declarada; aplicado en PR #10.
 - [x] Sincronizar README, CHANGELOG, Hito 06, líneas base, velocidad, cheatsheet e informe académico con la publicación de `v0.5.0`.
-- [x] Publicar y preservar la segunda beta `v0.5.0`; próximo corte correspondiente (objetivo `0.6.0+`) separado y expresamente autorizado antes del cierre final del informe/defensa.
+- [x] Publicar y preservar la segunda beta `v0.5.0`.
+- [ ] Al terminar lo importante, generar y validar el nuevo APK del corte final autorizado (objetivo `0.6.0+`); fijar fuente, versión/code y hash como base del informe/defensa y repetir las pruebas pertinentes sobre ese artefacto.
 
 ## Criterios de salida de Hito 06
 

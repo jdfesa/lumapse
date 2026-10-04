@@ -167,46 +167,31 @@ vacías. Revisar esta preparación no acredita ningún RNF ni cierra F3.
 
 ## Preparación física F3-1 — 2026-10-04
 
-Esta ejecución acotada retoma el handoff anterior en la rama
-`test/f3-session-1-rnf-measurements`, desde `main`/`origin/main` en `93e8967`. El
-objetivo fue preparar un único perfil sintético y comprobar, con pilotos fuera de la
-serie formal, si el WebView expone señales útiles para revisar CRUD y frames. No se
-modificó el código productivo ni se inició F3-2.
+**Estado:** rama `test/f3-session-1-rnf-measurements` desde `93e8967`, **en curso**.
+El objetivo de medir RNF-002/RNF-004 no está concluido; el control de avances y
+pendientes está en [TODO](../../TODO). No se modificó la app ni se inició F3-2.
 
-### Perfil y precondiciones verificadas
+- [x] Runtime `22.20.0/10.9.3`, controles de versión, documentación y trazabilidad;
+  gate local: 77 archivos/1167 tests aprobados, con avisos conocidos de lint/tamaño.
+- [x] APK instalada `com.lumapse.app` `0.5.0/500`, hash coincidente con la referencia;
+  Samsung SM-G965F, Android 10/API 29, WebView `153.0.8010.36`. Sin APK nueva.
+- [x] Fixture pequeño validado exactamente: 10 materias, 20 secciones, 50 visibles,
+  18 archivadas, 12 en papelera y 20 fechas; backups recuperables conservados.
+- [x] Creación sintética: formulario limpio y tarjeta correcta visible. Dos trazas
+  piloto (menú y Guardar) exportadas por CDP del WebView, sin throttling.
+- [x] Perfil limpio recargado tras los pilotos; forwards temporales retirados.
 
-- Runtime local: Node `22.20.0`, npm `10.9.3`; `check:runtime`, `check:version` y el
-  quality gate de `npm run verify` reportaron controles OK.
-- Artefacto instalado: `com.lumapse.app` `0.5.0/500`, en Samsung SM-G965F,
-  Android 10/API 29 y WebView `153.0.8010.36`. La APK y su hash coinciden con el
-  artefacto de referencia de esta página; no se generó ni instaló una APK nueva.
-- El perfil `f3-small` generado para la fecha de la prueba validó exactamente **10
-  materias, 20 secciones, 50 notas visibles, 18 archivadas, 12 en papelera y 20
-  fechas**. Se conservó un backup recuperable antes de cada carga; las copias y
-  capturas permanecen bajo `tmp/` ignorado.
+**Hallazgo relevante:** la fecha histórica `2026-09-13` provocó la purga automática
+de cuatro filas de papelera (>30 días) y el loader rechazó la carga. Se restauró el
+respaldo y `--seed-date 2026-10-04` pasó la validación exacta. Ajuste de esta sesión,
+sin cambiar el protocolo ni sus umbrales.
 
-La primera carga usando la fecha histórica `2026-09-13` fue rechazada correctamente:
-la purga automática de papelera de más de 30 días eliminó cuatro filas y el contenido
-materializado dejó de coincidir con el dataset. El rollback restauró el estado previo.
-La misma distribución, cargada con `--seed-date 2026-10-04`, pasó la validación exacta.
-Este ajuste de fecha queda registrado como límite de la sesión; todavía no cambia el
-protocolo canónico ni sus umbrales.
-
-### Pilotos de trazabilidad (no son muestras aceptadas)
-
-Se capturó una interacción de menú y una única creación sintética con el endpoint
-DevTools del WebView, sin throttling. Las trazas conservaron eventos
-`AnimationFrame::Presentation`, estados `STATE_PRESENTED_ALL/PARTIAL/DROPPED` de
-`PipelineReporter` y flujos `LatencyInfo`; el piloto CRUD terminó con el formulario
-limpio y la tarjeta correcta visible. Esto demuestra que existe una señal candidata
-para explorar, pero no enlaza por sí sola el contenido correcto con el primer scan-out
-físico de Android ni sustituye la captura manual prevista. Por lo tanto no se calculan
-latencias/FPS y RNF-002/RNF-004 continúan **PENDING**.
-
-Después de ambos pilotos se volvió a cargar el perfil limpio y se retiraron los
-forwards CDP temporales. Las series de **30 muestras por operación/perfil** y **3 × 10
-tramos de scroll** aún no comenzaron; el siguiente paso requiere acordar el límite de
-presentación física y conservar las trazas originales, offsets y cotejo del autor.
+**Utilidad y límite:** estos pilotos sirven como preparación/control funcional,
+no como mediciones aceptadas. Los eventos de presentación Chromium no establecen
+todavía entrada → contenido correcto → primera presentación física Android ni FPS
+atribuibles; la captura CDP exploratoria no sustituye la manual prevista. No se
+ejecutaron las series formales ni las pruebas de edición/papelera en esta sesión.
+RNF-002/RNF-004 siguen **PENDING**; originales y capturas quedan bajo `tmp/` ignorado.
 
 ## Primer análisis de una sesión física — pendiente del autor
 
