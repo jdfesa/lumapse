@@ -1,108 +1,97 @@
 # Instrucciones para agentes — Lumapse
 
-Leer este archivo antes de modificar el repositorio, independientemente del equipo o
-de la memoria disponible. Es una entrada operativa; [CONTRIBUTING.md](CONTRIBUTING.md)
-contiene la guía completa. No convertirlo en un historial de sesiones o versiones.
+**Primera acción obligatoria: leer este archivo completo.** Antes de editar código,
+documentación o configuración, completar las secciones 1 a 4, en ese orden. Este
+procedimiento se aplica al iniciar y al retomar una tarea, independientemente del
+equipo o de la memoria disponible.
 
-## 1. Sincronizar antes de trabajar
+Este archivo define el inicio operativo. [CONTRIBUTING.md](CONTRIBUTING.md) reúne las
+reglas de contribución; [scripts/README.md](scripts/README.md), el uso y los límites
+de las herramientas. Consultar esas fuentes en lugar de duplicar sus instrucciones.
 
-**GitHub (`origin`) es la fuente de verdad del trabajo compartido.** Antes de iniciar
-cambios, comprobar el estado local, las ramas y los PR; no confiar solo en Engram.
+## 1. Comprobar y sincronizar el repositorio
+
+**GitHub (`origin`) es la fuente de verdad del trabajo compartido.** Desde la raíz
+del repositorio:
 
 1. Inspeccionar `git status --short --branch`, `git branch -vv` y `git remote -v`.
-2. Ejecutar `git fetch --prune origin` y comprobar en GitHub qué PR siguen abiertos
-   y qué ramas ya fueron integradas.
-3. Si hay cambios locales, commits sin publicar, divergencias o conflictos, informar
-   y acordar cómo preservarlos. No usar `reset --hard`, `clean`, stash automático
-   ni force-push para imponer el estado remoto sobre trabajo local.
-4. Si existe una tarea/PR pendiente, retomar su rama cuando corresponda al pedido,
-   sincronizando su upstream con `git pull --ff-only`; no abrir una segunda tarea.
-   Si el pedido corresponde a otro frente, consultar antes de cambiar de rama.
-5. Para una tarea nueva, con el árbol limpio y sin otro frente activo, ejecutar
-   `git switch main` y `git pull --ff-only origin main`. Verificar que `main`
-   coincida con `origin/main` antes de crear la rama de trabajo.
-6. Limpiar únicamente las ramas locales/remotas cuya integración esté comprobada
-   y que no contengan trabajo pendiente. Una rama remota ausente no prueba un merge;
-   ante un squash o dudas, verificar el PR y sus cambios antes de borrar.
+2. Ejecutar `git fetch --prune origin` y consultar en GitHub los PR abiertos y el
+   estado de integración de las ramas relacionadas con la tarea.
+3. Ante cambios locales, commits sin publicar, divergencias o conflictos, informar
+   y acordar cómo preservarlos antes de continuar. No usar `reset --hard`, `clean`,
+   stash automático ni force-push para imponer el estado remoto.
+4. Si existe una rama/PR pendiente del mismo objetivo, retomarla y sincronizar su
+   upstream con `git pull --ff-only`. Si el pedido corresponde a otro frente,
+   consultar antes de cambiar de rama.
+5. Para una tarea nueva, solo con árbol limpio y sin otro frente activo, ejecutar
+   `git switch main` y `git pull --ff-only origin main`. Comprobar que `main` y
+   `origin/main` coincidan; crear la rama de tarea recién en la
+   [sección 4](#4-acordar-el-objetivo-y-habilitar-la-edición).
 
-Si no se puede consultar GitHub o completar el pull, informar la limitación y pedir
-instrucciones antes de iniciar cambios nuevos. No afirmar que el checkout está al día.
+Si no se puede consultar GitHub o completar la sincronización, informar la
+limitación y pedir instrucciones antes de editar. No declarar actualizado un
+checkout que no se pudo verificar.
 
-## 2. Ciclo de rama, commits, PR y aprobación
+## 2. Recuperar el contexto y localizar las fuentes vigentes
 
-- Mantener **una sola rama de tarea activa**, incluida la etapa de revisión. No
-  desarrollar directamente en `main` ni iniciar otro frente mientras el PR esté abierto.
-- Crear la rama desde `main` actualizado: `feat/<descripcion-en-ingles>` o
-  `fix/<descripcion-en-ingles>`; usar `docs/`, `refactor/`, `test/` o `chore/` cuando
-  describan mejor la tarea. Usar nombres breves en inglés y kebab-case.
-- Hacer commits incrementales por unidad verificable, con **Conventional Commits
-  en inglés**, por ejemplo `fix(editor): preserve draft on save failure`.
-- Al completar el alcance, ejecutar las verificaciones pertinentes, hacer push y
-  abrir un PR hacia `main`. Título y descripción del PR en inglés; comunicación
-  con el autor y documentación del proyecto en español.
-- El PR debe explicar alcance, pruebas ejecutadas, limitaciones, pendientes y pasos
-  para la revisión/validación Android. No presentar pruebas previstas como realizadas.
-- **No hacer merge ni habilitar auto-merge sin autorización explícita del autor.**
-  Esperar su revisión del PR y su confirmación de la prueba en el dispositivo cuando
-  corresponda al cambio. CI verde, ausencia de comentarios o una prueba exitosa
-  no constituyen por sí solos autorización de merge.
-- El teléfono puede estar conectado a otro equipo. No asumir acceso local ni sustituir
-  la confirmación del autor por tests web. Si falta validación, dejarla pendiente.
-- Tras la autorización explícita, verificar el estado actual del PR y sus checks,
-  integrar a `main`, actualizar el checkout con fetch/pull y eliminar su rama local
-  y remota ya integradas. Si el autor hizo el merge, verificarlo y completar la limpieza.
-  Cerrar con árbol limpio, `main` sincronizado y sin ramas residuales de esa tarea.
+1. Consultar Engram al comenzar o retomar; buscar antecedentes específicos si hace
+   falta. Contrastar la memoria con GitHub, código y documentación: no asumir que
+   la memoria de otro equipo está sincronizada.
+2. Leer [CONTRIBUTING.md](CONTRIBUTING.md), el mapa de
+   [docs/README.md](docs/README.md), [TODO](TODO) y las secciones pertinentes de
+   [BACKLOG.md](BACKLOG.md).
+3. Seguir desde allí el hito y el plan aceptados. Leer requisitos, ADR y evidencia
+   técnica según el objetivo; no interpretar una idea del backlog como tarea aprobada.
+   Ante contradicciones, informar y resolver cuál es la fuente vigente antes de actuar.
 
-## 3. Qué leer y dónde registrar cada cosa
+## 3. Verificar las condiciones iniciales
 
-Después de sincronizar, leer [CONTRIBUTING.md](CONTRIBUTING.md), el mapa de
-[docs/README.md](docs/README.md), [TODO](TODO) y las secciones pertinentes de
-[BACKLOG.md](BACKLOG.md). Seguir desde allí el hito y el plan vigentes; consultar
-el detalle técnico solo según el alcance de la tarea.
+Leer [.nvmrc](.nvmrc), [package.json](package.json) y
+[ADR-010](docs/adr/ADR-010-gate-portable-y-entorno-canonico.md). Luego seleccionar y
+ejecutar los controles pertinentes de la
+[guía de verificaciones iniciales](scripts/README.md#verificaciones-iniciales),
+antes de editar. Comprobar la [vigencia](scripts/README.md#estado-de-las-herramientas)
+y los efectos del script antes de invocarlo; no ejecutar todo el catálogo
+indiscriminadamente ni usar herramientas retiradas del flujo vigente.
 
-| Información | Fuente que consultar y actualizar cuando corresponda |
-|---|---|
-| Producto, alcance, RF/RNF e historias de usuario | [docs/producto/](docs/producto/README.md) |
-| Decisiones de arquitectura y sus motivos | [docs/adr/](docs/adr/README.md); crear un ADR para decisiones nuevas relevantes |
-| Tareas inmediatas | [TODO](TODO), sin convertirlo en un historial |
-| Deuda, límites de alcance e ideas futuras | [BACKLOG.md](BACKLOG.md); una idea no equivale a una tarea aprobada |
-| Planes, evidencia y aceptación del autor | [docs/gestion/](docs/gestion/README.md), el checklist/plan pertinente y [validación del núcleo](docs/beta-core-validation/README.md) |
-| Cambios y versiones | [CHANGELOG.md](CHANGELOG.md), solo cuando el cambio lo amerite |
-| Comandos, herramientas y flujo nativo | [scripts/README.md](scripts/README.md) y [flujo Android](docs/flujo-desarrollo-android.md) |
-| Reglas estables para contribuir | [CONTRIBUTING.md](CONTRIBUTING.md); este archivo conserva solo las instrucciones esenciales y sus enlaces |
+Registrar comando, resultado y limitaciones de cada control, distinguiendo defectos
+previos de problemas del entorno. Si falla una condición necesaria para la tarea,
+informar el bloqueo y acordar cómo resolverlo; no omitirlo ni ampliar el alcance para
+corregirlo automáticamente. Un dashboard informativo no sustituye la comprobación de
+GitHub, los controles obligatorios ni la autorización del autor.
 
-- Registrar cada hecho en su fuente canónica dentro del mismo cambio que lo origina.
-  No crear documentos paralelos ni copiar estados de PR, versiones o conteos aquí.
-- Consultar Engram al comenzar o retomar: contexto reciente y búsqueda específica
-  cuando haga falta. Guardar decisiones, hallazgos y un resumen al cerrar la sesión.
-  No asumir que la memoria de otro equipo está sincronizada: los acuerdos importantes
-  también deben quedar en la documentación versionada, no únicamente en Engram.
-- Contrastar recuerdos con GitHub, código y documentación vigente. Los ADR reemplazados
-  y documentos históricos explican la evolución, no la arquitectura actual. Informar
-  contradicciones; no inventar decisiones ni reescribir evidencia histórica.
+## 4. Acordar el objetivo y habilitar la edición
 
-## 4. Límites y verificación
+Presentar al autor el estado comprobado y el
+[plan acotado de la rama](CONTRIBUTING.md#plan-acotado-por-rama). Si ya existe un plan
+aceptado, confirmar que el pedido sigue dentro de sus límites; no crear otro plan
+paralelo ni solicitar de nuevo decisiones que no cambiaron.
 
-- Consultar al autor antes de adoptar cambios de flujo o ajustes operativos que no
-  hayan sido aprobados previamente; presentar alcance e impacto antes de aplicarlos.
-- Lumapse es una aplicación Android offline-first con Capacitor, SQLite, módulos ES
-  y TypeScript gradual. PWA/IndexedDB son antecedentes, no el producto vigente.
-- Respetar el alcance del hito activo. No abrir refactors amplios, migraciones, nuevas
-  dependencias o funciones postergadas sin justificar y acordar el cambio. El backup
-  vigente es ZIP manual; no incorporar OAuth, Drive API ni sincronización automática
-  sin una nueva decisión explícita.
-- Leer [.nvmrc](.nvmrc), [package.json](package.json) y
-  [ADR-010](docs/adr/ADR-010-gate-portable-y-entorno-canonico.md) antes de instalar o
-  validar. Usar el runtime canónico; no modificar el runtime global para resolver
-  diferencias entre equipos sin autorización.
-- Para cambios de código, usar tests focalizados y `npm run verify`. Para documentación
-  pura, como mínimo `npm run check:docs` y `npm run check:traceability`; comprobar también
-  los enlaces de archivos nuevos si el descubrimiento del auditor no los incluye.
-- Distinguir evidencia local, CI y Android. Registrar comando, resultado, limitaciones
-  y, para pruebas nativas, dispositivo/artefacto y confirmación del autor. No declarar
-  cerrado un requisito con métricas inferidas o con un dispositivo no probado.
-- No instalar APK, reemplazar/borrar datos del teléfono, publicar releases ni manejar
-  claves de firma sin autorización específica. No versionar secretos, bases personales,
-  logs privados o artefactos temporales; usar las fuentes y herramientas existentes.
-- Mantener estas instrucciones portables: rutas relativas al repositorio, sin nombres
-  de usuario, IP, rutas de un equipo ni dependencia obligatoria de herramientas personales.
+Solo comenzar a editar cuando:
+
+- El trabajo local esté preservado y la rama/base correspondiente, sincronizada.
+- Las fuentes vigentes y las verificaciones iniciales necesarias estén revisadas;
+  cualquier limitación relevante tenga un tratamiento acordado.
+- El objetivo puntual, las exclusiones, las pruebas y la aceptación estén acordados.
+- Se esté en la única rama de tarea, nunca en `main`. Para una tarea nueva, crearla
+  desde la base verificada, conforme a [Flujo de trabajo](CONTRIBUTING.md#2-flujo-de-trabajo).
+
+La preparación inicial no autoriza instalaciones, cambios de datos o publicaciones.
+Respetar los [límites operativos](CONTRIBUTING.md#límites-operativos) también durante
+el diagnóstico.
+
+## 5. Ejecutar y entregar la unidad acordada
+
+Aplicar las reglas de [commits](CONTRIBUTING.md#3-commits),
+[verificación](CONTRIBUTING.md#5-verificación) y
+[PR, aprobación e integración](CONTRIBUTING.md#6-pull-request).
+Actualizar cada hecho en su [fuente canónica](docs/README.md#cómo-leer-la-documentación)
+dentro del mismo cambio, sin reescribir evidencia histórica ni crear registros paralelos.
+
+Al cerrar, informar cambios, pruebas realizadas, limitaciones, estado de la rama/PR y
+siguiente paso pendiente. Guardar decisiones, hallazgos y resumen en Engram; los
+acuerdos compartidos deben quedar también en la documentación versionada pertinente.
+
+Mantener estas instrucciones estables y portables: no agregar historiales de sesiones,
+estados de PR, versiones, rutas de un equipo, datos privados ni herramientas personales
+obligatorias.
