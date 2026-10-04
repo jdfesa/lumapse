@@ -24,6 +24,34 @@ No deben incluirse credenciales, keystores, contraseñas, bases de datos persona
 Consultar al autor antes de adoptar cambios de flujo o ajustes operativos no aprobados
 previamente. Las mejoras propuestas no se convierten automáticamente en nuevas tareas.
 
+### Plan acotado por rama
+
+**Una rama y su PR deben resolver un único objetivo concreto y verificable.** Una
+fase del proyecto, una auditoría completa o una lista de mejoras independientes no
+constituyen por sí solas una unidad de trabajo. El límite no es la cantidad de
+archivos: cada cambio debe ser necesario para el mismo resultado y su validación.
+
+Antes de modificar archivos, presentar y acordar con el autor un plan breve:
+
+- **Objetivo:** qué comportamiento, defecto o entrega puntual se aborda.
+- **Alcance y exclusiones:** qué se puede cambiar y qué queda expresamente fuera.
+- **Pasos:** acciones específicas necesarias para ese objetivo, sin sumar otros frentes.
+- **Pruebas:** verificaciones focalizadas y gate pertinente; para cambios de la app,
+  casos concretos de revisión en el dispositivo y artefacto a identificar.
+- **Aceptación:** resultado observable y evidencia que revisará el autor antes de
+  autorizar expresamente el merge. La aprobación del plan no autoriza el merge.
+
+Si aparecen hallazgos ajenos al objetivo, registrarlos en la fuente canónica y
+consultar al autor, sin corregirlos por arrastre. Si el objetivo exige ampliar el
+alcance, detener esa ampliación y acordar un nuevo límite antes de implementarla.
+No abrir otra rama mientras la actual siga activa, incluida su revisión.
+
+El PR debe conservar ese alcance y separar pruebas ejecutadas de pendientes. Para
+cambios de la app, esperar la confirmación del autor sobre los casos acordados en
+el dispositivo; los tests locales o CI no la sustituyen. Después de la aceptación
+y la autorización explícita de merge, integrar, sincronizar `main` y limpiar solo
+la rama cuya integración esté comprobada, antes de abordar otro objetivo.
+
 ## 3. Commits
 
 Se utiliza Conventional Commits con el formato:

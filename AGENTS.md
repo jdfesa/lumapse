@@ -32,6 +32,11 @@ instrucciones antes de iniciar cambios nuevos. No afirmar que el checkout está 
 
 - Mantener **una sola rama de tarea activa**, incluida la etapa de revisión. No
   desarrollar directamente en `main` ni iniciar otro frente mientras el PR esté abierto.
+- Cada rama resuelve **un único objetivo concreto y verificable**, no una fase completa
+  ni una lista de mejoras independientes. Antes de modificar archivos, acordar un plan
+  acotado con objetivo, alcance/exclusiones, pasos, pruebas y criterio de aceptación,
+  según [CONTRIBUTING.md](CONTRIBUTING.md#plan-acotado-por-rama). Un hallazgo ajeno al
+  objetivo se registra y consulta; no se incorpora por arrastre ni habilita otro frente.
 - Crear la rama desde `main` actualizado: `feat/<descripcion-en-ingles>` o
   `fix/<descripcion-en-ingles>`; usar `docs/`, `refactor/`, `test/` o `chore/` cuando
   describan mejor la tarea. Usar nombres breves en inglés y kebab-case.
