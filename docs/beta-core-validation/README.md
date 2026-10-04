@@ -65,6 +65,27 @@ la ausencia de vista espejo no impidió exportar. Es el método ya previsto en e
   Imágenes originales revisadas **en Mac** muestran nota sintética preparada,
   «Guardando…» y luego formulario limpio/Guardar deshabilitado/nota correcta visible.
 
+### Cotejo offline de Guardar — 2026-10-04
+
+Debian cotejó una copia privada autorizada del **mismo diagnóstico**, sin otra captura
+ni instalación. Se identificó el primer screenshot correcto **observado**: formulario
+limpio y tarjeta cuyo título/cuerpo coinciden con lo preparado; las imágenes anteriores
+muestran preparación o «Guardando…». Esta última no se acepta como resultado final.
+
+La identidad de esa imagen coincide con un `AnimationFrame::Presentation` y un reporte
+`STATE_PRESENTED_ALL`, con el mismo timestamp final; otro reporte de esa identidad es
+`NO_UPDATE_DESIRED`, no un segundo frame contado. El enlace nuevo es **contenido correcto
+observado → candidato de feedback Chromium**, no primera presentación física acreditada.
+[AnimationFrameTimingMonitor](https://chromium.googlesource.com/chromium/src/third_party/+/refs/heads/main/blink/renderer/core/frame/animation_frame_timing_monitor.cc)
+registra el timestamp del feedback; [PresentationFeedback](https://chromium.googlesource.com/chromium/src/+/refs/heads/main/ui/gfx/presentation_feedback.h)
+distingue mediante flags su procedencia/calidad. El candidato inspeccionado no conserva
+esos flags, y las revisiones consultadas no se cotejaron con el binario WebView exacto.
+Falta enlazar ese contenido al **primer scan-out real de la superficie Android**, con
+reloj y completitud verificables. Los índices/identidades e imágenes quedan privados;
+**latencia Guardar PENDING**, sin convertir offsets de screenshots o EventTiming en
+una medición física ni cerrar una serie RNF. El cotejo visual de este artefacto ya está
+hecho; otra captura o método requiere decisión y autorización específicas.
+
 Lo anterior corrobora Guardar funcional y exportación. Las parejas de eventos, identidades
 frame/surface y capturas presentes no establecen aún entrada→**primer frame realmente
 presentado con contenido correcto**, relojes/offsets, deduplicación, pérdida/completitud
