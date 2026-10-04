@@ -692,27 +692,53 @@ histórica de septiembre permanece intacta.
 
 ### Ensayo local de Artemis — instalación, no métricas
 
-**2026-10-03:** el autor autorizó instalar Artemis y eligió una primera verificación
-local **sin API ni envío de capturas**. Se completaron instalación Python aislada,
-comprobación de sus 176 paquetes, CLI y dos handshakes MCP; cero llamadas a herramientas
-del teléfono. Su servidor directo publica toque/scroll sin lanzar el agente autónomo,
-pero **aún no se probó el control del Samsung**. El helper se instaló posteriormente
-con permiso específico: `com.artemis.helper` 1.2.0/código 6, APK/firma identificados en
-ADR-012; principal y auxiliar de trazas de Lumapse intactos y otros servicios preservados.
-El ping oficial informó enabled/reachable true y protocolo 2 soportado, **token_set false**;
-no demuestra lectura ni provisión segura del token. El postguard previo observó componente
-relativo y `accessibility_enabled=0`: no se da esa discrepancia por resuelta.
-El registro MCP es local, ignorado y con aprobación por herramienta; la conexión del
-cliente debe comprobarse antes de operar. Pin, aislamiento, compatibilidad y siguiente
-paso están en [ADR-012](../adr/ADR-012-ensayo-local-artemis.md). Se prepara un launcher
-portable con pin obligatorio/entorno aislado, no un instalador. Próximo paso único en Mac:
-conectarlo en el cliente y comprobar initialize/list_tools **sin herramientas UI**;
-lectura/captura sintética visible y aprobación real siguen pendientes, sin Guardar/CRUD.
+**Primera fase, 2026-10-03:** instalación aislada, 176 paquetes, CLI y handshakes MCP
+sin API; cero herramientas del teléfono en ese checkpoint. Helper instalado/ping
+comprobado posteriormente con autorización específica; `token_set=false` no acreditaba
+provisión segura ni lectura. Se conservan identidad, discrepancia inicial de settings
+y límites históricos en [ADR-012](../adr/ADR-012-ensayo-local-artemis.md).
 
-Este ensayo no cambia APK/datos de Lumapse, no ejecuta otro piloto y no demuestra
-Guardar → primer frame correcto presentado ni FPS. RNF-002/RNF-004 **PENDING**;
-la propuesta anterior de solo diseño no limita la instalación aquí autorizada,
-pero no se adopta un método metrológico ni se modifica el protocolo de aceptación.
+**Control nativo posterior comprobado (fecha local 2026-10-03):** las nueve herramientas
+se cargaron tras reiniciar el cliente. Launcher `fa5c94b`, un USB privado pinneado y MCP
+normal; no migración global ni bypass. Tras resolver el estado de pantalla, el operador
+observó el borrador sintético recuperado y ejecutó **un Guardar autorizado**; la imagen
+posterior confirmó formulario limpio/Guardar deshabilitado y nota correcta visible.
+Stay-on USB temporal restaurado/verificado `0`. Postguard Samsung/API 29/usuario 0
+PASS: principal, auxiliar de trazas y helper Artemis intactos, sin root ni instalación
+en esa prueba. JPEG originales privados, tamaños/hashes y timeout de lanzamiento
+sin crash inferido registrados en ADR-012. Una auxiliar creada; total final no consultado,
+**500 no cargado**. La conexión/lectura/control ya no quedan pendientes.
+
+**Cero muestras cuantitativas:** control y screenshots no prueban Guardar→primer frame
+correcto presentado ni FPS. RNF-002/RNF-004 **PENDING**, protocolo y umbrales intactos;
+no otra captura/serie ni ejecución autónoma por esta evidencia.
+
+### Gate root acotado — SurfaceFlinger
+
+Dato nuevo del host USB: `su -c id -u` devolvió `0`; la lista de SurfaceFlinger contiene
+**dos superficies Lumapse**, no una identidad de frame. `perfetto --version` salió `1`
+sin versión: no se infiere ausencia ni se instala nada. No se efectuó traza global.
+
+Única vía examinada: historial por capa de **AOSP Android 10/API 29**, no callbacks WebView.
+[BufferLayer::onPostComposition](https://android.googlesource.com/platform/frameworks/native/+/refs/tags/android-10.0.0_r47/services/surfaceflinger/BufferLayer.cpp)
+registra el present fence válido, pero puede sustituirlo por timestamp de refresco HWC.
+[FrameTracker::dumpStats/processFencesLocked](https://android.googlesource.com/platform/frameworks/native/+/refs/tags/android-10.0.0_r47/services/surfaceflinger/FrameTracker.cpp)
+exporta desired/actual/ready; no indica qué rama produjo actual ni identidad de frame,
+entrada o contenido. El ring puede sobrescribir registros/fences pendientes; no demuestra
+pérdida cero, cobertura completa ni clasificación full/partial/lost. La correspondencia
+exacta con SurfaceFlinger del Samsung no está probada.
+
+**Gate no aprobado como medición.** Un sondeo readonly propuesto, no ejecutado aquí:
+consultar `dumpsys SurfaceFlinger --latency` una vez por cada nombre exacto privado ya
+identificado, mismo USB/usuario 0; sin `--latency-clear`, UI ni trazado global. Devolver
+solo alias S1/S2, exit/bytes/hash privado, periodo, conteos de filas/cero/sentinel,
+hasta tres triples sin nombres y presencia/ausencia de IDs/procedencia. Un formato
+más rico del vendor decidiría si existe evidencia adicional; triples solos son NO-GO.
+No sumar las dos superficies ni deduplicar por coincidencia temporal. No se acreditan
+relojes monotonic/uptime/offsets, calibración/overhead ni entrada→contenido correcto→
+**primera presentación**. El sondeo no habilita implementación ni series automáticamente.
+La investigación se detiene en este checkpoint; la siguiente acción es revisar ese
+único sondeo Mac, no otra hipótesis ni un parser especulativo.
 
 ## Entrega revisable
 

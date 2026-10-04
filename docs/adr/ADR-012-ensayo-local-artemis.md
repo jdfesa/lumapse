@@ -2,11 +2,12 @@
 
 **Fecha:** 2026-10-03
 
-**Estado:** Ensayo autorizado; helper instalado/ping comprobado en el host USB.
-Lectura/control mediante el cliente aún pendientes; no se acepta como metrología.
+**Estado:** Conexión, lectura y control nativo comprobados en el host USB.
+RNF-002/RNF-004 pendientes; no se acepta como metrología.
 
 **Alcance:** Tooling externo y aislado para la sesión 1 de F3; sin dependencias nuevas
-de Lumapse, cambios de producto, APK, datos, umbrales o runtime global.
+de Lumapse ni cambios de producto, APK, umbrales o runtime global. Las operaciones
+sintéticas autorizadas y su efecto sobre datos se distinguen abajo.
 
 ## Contexto
 
@@ -34,7 +35,7 @@ Automatizar un toque no demuestra esa correlación.
   proveedor/API para sus tareas; `artemis.mcp.adb_server` publica herramientas
   **directas** de interacción. Su arranque y catálogo se comprobaron sin claves,
   sin iniciar agentes y sin llamar herramientas del dispositivo. No se exige otra
-  API para ese handshake; tampoco se ha probado aún una interacción real.
+  API para ese handshake; en esa primera fase no se probó interacción real.
 - Registrar solo el servidor directo en `.codex/config.toml` **local e ignorado**,
   con nueve herramientas permitidas y aprobación `prompt` para cada llamada.
   No se modifican otros servidores ni la configuración global. Los paths de cada
@@ -47,7 +48,7 @@ Automatizar un toque no demuestra esa correlación.
   advierte que puede instalar APK propios y desinstalar Maestro. No se permite ese
   fallback en este ensayo. No se usan root, trazado global ni ADB remoto.
 
-## Verificación efectuada en el host USB
+## Verificación inicial efectuada en el host USB
 
 - Instalación aislada: exit 0, 176 paquetes; compilación de cryptography en 2 min
   18 s. `uv pip check` con caché local: exit 0, 176 paquetes compatibles.
@@ -60,9 +61,8 @@ Automatizar un toque no demuestra esa correlación.
 - Configuración local con modo 0600; estado privado 0700. Configuración, launcher,
   logs y resultados de instalación/handshake están ignorados, no en el PR.
 - `codex mcp get artemis_direct --json`: exit 0; reconoce registro stdio habilitado
-  y las nueve herramientas permitidas. No prueba carga en el chat ni un diálogo
-  real de aprobación, porque no se llamó ninguna herramienta; comprobar ambos
-  antes de operar.
+  y las nueve herramientas permitidas. En esa fase no probó carga en el chat ni un diálogo
+  real de aprobación, porque no se llamó ninguna herramienta.
 - Auditorías del repositorio con Node 22.20.0/npm 10.9.3: `npm run check:docs`
   (97 archivos / 830 enlaces), `npm run check:traceability` y `git diff --check`:
   exit 0. No equivalen a validación Android.
@@ -72,8 +72,8 @@ Automatizar un toque no demuestra esa correlación.
 
 Ese primer checkpoint prueba instalación host e inicialización del protocolo, **no**
 pantallas observadas, control del Samsung, pruebas funcionales ni métricas Android.
-Registrar un servidor tampoco garantiza que el catálogo del chat actual ya lo haya
-cargado: comprobar su conexión en el cliente antes de usarlo.
+Registrar un servidor por sí solo no garantiza su carga en el cliente; la comprobación
+física posterior se registra separadamente abajo.
 
 ## Siguiente paso y límites
 
@@ -81,9 +81,9 @@ cargado: comprobar su conexión en el cliente antes de usarlo.
 autorizó instalar/activar solo el helper identificado y una lectura/captura de pantalla
 sintética visible en el chat. Instalación oficial sin force/root: exit 0 en Samsung
 SM-G965F/Android 10/API 29/usuario 0; path/hash/versión del principal y auxiliar de trazas
-de Lumapse sin cambios, otros servicios de accesibilidad preservados. No hubo llamadas
-de captura/jerarquía/control. La conexión/catálogo del cliente y el diálogo real de
-aprobación siguen sin comprobar; no hay permiso de Guardar/CRUD/piloto/series.
+de Lumapse sin cambios, otros servicios de accesibilidad preservados. En esa fase no hubo llamadas
+de captura/jerarquía/control: conexión, catálogo y aprobación real quedaban sin comprobar;
+el permiso inicial no incluía Guardar/CRUD/piloto/series.
 
 El checkout incluye `ArtemisAccessibilityHelper.apk`, 37 353 bytes. Su SHA-256 real
 `133e373fe03615c251cd74b03a38539c844d09a074954bca2d2dde6684561969` coincide con
@@ -116,6 +116,38 @@ la ejecución con aprobación normal pasó sin cambiar controles/hooks/runtime g
 Auditoría suplementaria de estas tres fuentes: 54 enlaces, cero problemas;
 docs/traceability/diff se revalidan tras anotar el resultado. No se instaló ni importó
 Artemis real en Arch ni hubo ADB/Android; mocks no validan conexión, token o lectura.
+
+### Control nativo comprobado — 2026-10-03
+
+Evidencia suministrada por el host USB; reporte finalizado el
+**2026-10-04T00:27:12.809266Z** (fecha local Argentina: 2026-10-03):
+
+- Tras reiniciar el cliente, las **nueve herramientas** quedaron expuestas en el chat.
+  El panel trata los servidores de configuración PROJECT como solo lectura: el control
+  gris no era instalación fallida; no se migró a configuración global. Launcher
+  publicado `fa5c94b`, pin privado cotejado con un único USB autorizado y llamadas MCP
+  normales, sin bypass de SDK/aprobaciones.
+- La primera captura fue negra; despertar mostró bloqueo y el éxito inicial del swipe
+  no acreditó desbloqueo. `launch_app(com.lumapse.app)` agotó 30 s del cliente; luego
+  se observó Lumapse en primer plano, sin inferir un crash. Consulta readonly: pantalla
+  1440×2560, override 720×1280, timeout 120000 ms y Dozing. Se habilitó temporalmente
+  stay-on USB (`0→2`) y se **restauró/verificó `0`** al terminar.
+- Con autorización específica, se recuperó un borrador **sintético** y se hizo **un tap
+  Guardar**. La captura posterior confirmó formulario limpio, Guardar deshabilitado y
+  nota correcta en la lista; no se descartó otro borrador. Una auxiliar creada; total
+  final no consultado, **500 no cargado**. No se usó root para control/Guardar.
+- Postguard nativo **PASS**, Samsung SM-G965F/API 29/usuario 0: principal y auxiliar de
+  trazas con hashes de baseline intactos; helper Artemis conserva hash/firma/versión/minSDK
+  anteriores. Sin instalación ni cambios de APK, fuente, claves o dependencias.
+
+JPEG originales solo en Mac: antes **61608 B**, SHA-256
+`9633ef3c511b9d6bd70570f42feaf931b60ffd5df78c9677f0862cd9fbbfdc7c`;
+después **39786 B**, SHA-256
+`6af81c256644e9c92cdc357e5f80359d3d6e7afa2904340e3ae48b3866da9913`.
+No se transfirieron imágenes, seriales, contenido ni DB. Esto acredita lectura/control,
+**cero muestras cuantitativas**: screenshots/éxito API no identifican entrada→primer
+frame correcto presentado ni FPS; tampoco prueban provisión segura del token.
+El gate root de adquisición se distingue en el [seguimiento F3](../beta-core-validation/README.md#gate-root-acotado--surfaceflinger).
 
 La eventual ejecución autónoma requiere elegir proveedor, límites de pasos/coste y
 destino de las capturas; no reutilizar credenciales de Codex ni asumir que su cuota
