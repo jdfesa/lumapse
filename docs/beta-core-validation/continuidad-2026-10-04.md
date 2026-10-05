@@ -79,8 +79,9 @@ completar el lanzamiento. Sin desinstalación ni borrado.
   contenían `Native baselineZ`; al reabrir ambos volvieron a `Native baseline`.
   La captura inmediata funciona, pero **no garantiza conservar el último cambio
   ante esta terminación**. No es ya una escritura esperando el debounce.
-- Descarte con espera de 10 s y reapertura: PASS. Red restaurada y borrador de
-  prueba limpio. El resto de CON/controles de limpieza no se repitió en este APK;
+- Descarte con espera de 10 s y reapertura: PASS. Las **83 notas presentes antes
+  del deploy permanecen idénticas**, `integrity_check=ok`; red restaurada y borrador
+  de prueba limpio. El resto de CON/controles de limpieza no se repitió en este APK;
   los PASS de la tabla anterior pertenecen al artefacto anterior.
 - Resultado privado SHA-256:
   `0ed82a51c844ce276862207ee46492428568473cdf1bc6c924b43a83fc8980b2`.
