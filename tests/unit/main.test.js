@@ -1,11 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mocks = vi.hoisted(() => ({
-  initDatabase: vi.fn(), closeDatabaseForReload: vi.fn(), load: vi.fn(), mount: vi.fn(),
+  initializeDraftStorage: vi.fn(), initDatabase: vi.fn(), closeDatabaseForReload: vi.fn(), load: vi.fn(), mount: vi.fn(),
   subscribe: vi.fn(() => vi.fn()),
   subscribeToPendingRefreshes: vi.fn(() => vi.fn()),
 }))
 vi.mock('../../src/services/sqlite/connection.js', () => ({ initDatabase: mocks.initDatabase, closeDatabaseForReload: mocks.closeDatabaseForReload }))
+vi.mock('../../src/services/EditorDraftService.ts', () => ({ initializeDraftStorage: mocks.initializeDraftStorage }))
 vi.mock('../../src/store/NoteStore.js', () => ({
   loadSubjects: mocks.load, loadNotes: mocks.load, loadAcademicEvents: mocks.load,
   loadAcademicEventsByMonth: mocks.load, loadUpcomingAcademicEvents: mocks.load,
@@ -29,6 +30,7 @@ beforeEach(() => {
   vi.resetModules()
   vi.clearAllMocks()
   document.body.innerHTML = '<div id="app"></div>'
+  mocks.initializeDraftStorage.mockResolvedValue(undefined)
   mocks.initDatabase.mockResolvedValue(undefined)
   mocks.closeDatabaseForReload.mockResolvedValue(undefined)
   mocks.load.mockResolvedValue(undefined)
@@ -101,4 +103,23 @@ it('conecta el cierre SQLite al reintento de un montaje parcial fallido', async 
   await vi.dynamicImportSettled()
   expect(document.querySelector('#startup-retry').disabled).toBe(false)
   expect(mocks.mount).toHaveBeenCalledTimes(1)
+})
+
+
+it('espera la migración del borrador y permite reintentar un fallo sin montar el editor', async () => {
+  const migration = deferred()
+  mocks.initializeDraftStorage.mockReturnValueOnce(migration.promise)
+  await import('../../src/main.js')
+  expect(mocks.initDatabase).toHaveBeenCalledTimes(1)
+  expect(mocks.initializeDraftStorage).toHaveBeenCalledTimes(1)
+  expect(mocks.mount).not.toHaveBeenCalled()
+  expect(mocks.load).not.toHaveBeenCalled()
+  migration.reject(new Error('draft migration failed'))
+  await vi.dynamicImportSettled()
+  expect(mocks.mount).not.toHaveBeenCalled()
+  expect(document.querySelector('[role="alert"]')).not.toBeNull()
+  document.querySelector('#startup-retry').click()
+  await vi.dynamicImportSettled()
+  expect(mocks.initializeDraftStorage).toHaveBeenCalledTimes(2)
+  expect(mocks.mount).toHaveBeenCalledTimes(5)
 })

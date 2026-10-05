@@ -1,7 +1,8 @@
+import { editorDraftStorage, EDITOR_DRAFT_KEY } from './sqlite/editorDrafts.js'
 import type { EntityId, ISODateTimeString } from '../domain/primitives'
 
 export const DRAFT_VERSION = 1
-export const STORAGE_KEY = 'lumapse-editor-draft-v1'
+export const STORAGE_KEY = EDITOR_DRAFT_KEY
 export const MODES = Object.freeze({ CREATE: 'create', EDIT: 'edit' } as const)
 
 export type EditorDraftMode = (typeof MODES)[keyof typeof MODES]
@@ -38,14 +39,6 @@ export type EditorDraftInput = EditorDraftInputFields & (
 
 interface NormalizeDraftOptions {
   stampSavedAt?: boolean
-}
-
-function getStorage(): Storage | null {
-  try {
-    return globalThis.localStorage || null
-  } catch {
-    return null
-  }
 }
 
 function nullableString(value: unknown): string | null {
@@ -92,62 +85,87 @@ function normalizeStoredDraft(payload: unknown): EditorDraft | null {
   return normalizeDraft(payload, { stampSavedAt: false })
 }
 
-export function saveDraft(draft: EditorDraftInput): EditorDraft | null {
-  const storage = getStorage()
-  if (!storage) return null
+interface DraftStorage {
+  read(): Promise<string | undefined>
+  write(value: string, scope?: object): Promise<unknown>
+  transaction<T>(action: (scope: object) => Promise<T>): Promise<T>
+}
 
-  const normalized = normalizeDraft(draft)
-  if (!normalized) {
-    clearDraft()
-    return null
+export function createEditorDraftService(
+  storage: DraftStorage = editorDraftStorage,
+  legacyStorage: () => Storage | undefined = () => globalThis.localStorage,
+) {
+  let cached: EditorDraft | null = null
+  let initialized = false
+  let initialization: Promise<void> | null = null
+
+  function requireInitialized() {
+    if (!initialized) throw new Error('Editor draft storage is not initialized')
   }
 
-  try {
-    storage.setItem(STORAGE_KEY, JSON.stringify(normalized))
-    return normalized
-  } catch {
-    return null
+  function removeLegacy() {
+    // SQLite ya es autoritativo. Un fallo de limpieza no habilita reimportación.
+    try { legacyStorage()?.removeItem(STORAGE_KEY) } catch { /* limpieza best-effort */ }
+  }
+
+  async function initialize() {
+    const stored = await storage.read()
+    let draft: EditorDraft | null = null
+    if (stored === undefined) {
+      // No confundir una lectura fallida con la ausencia de un borrador anterior.
+      const raw = legacyStorage()?.getItem(STORAGE_KEY)
+      if (raw) {
+        try { draft = normalizeStoredDraft(JSON.parse(raw)) } catch { /* legacy inválido */ }
+      }
+      await storage.write(JSON.stringify(draft))
+    } else if (stored !== 'null') {
+      draft = normalizeStoredDraft(JSON.parse(stored))
+      if (!draft) throw new Error('Invalid persisted editor draft')
+    }
+    cached = draft
+    initialized = true
+    removeLegacy()
+  }
+
+  return {
+    initializeDraftStorage(): Promise<void> {
+      if (initialized) return Promise.resolve()
+      if (!initialization) {
+        initialization = initialize().catch(error => {
+          initialization = null
+          throw error
+        })
+      }
+      return initialization
+    },
+    loadDraft(): EditorDraft | null {
+      requireInitialized()
+      return cached ? { ...cached } : null
+    },
+    async saveDraft(input: EditorDraftInput): Promise<EditorDraft> {
+      requireInitialized()
+      const draft = normalizeDraft(input)
+      if (!draft) throw new Error('Invalid editor draft input')
+      await storage.write(JSON.stringify(draft))
+      cached = draft
+      return { ...draft }
+    },
+    async clearDraft(): Promise<void> {
+      requireInitialized()
+      await storage.write('null')
+      cached = null
+    },
+    async consumeDraft<T>(writeNote: (scope: object) => Promise<T>): Promise<T> {
+      requireInitialized()
+      const result = await storage.transaction(async scope => {
+        const note = await writeNote(scope)
+        await storage.write('null', scope)
+        return note
+      })
+      cached = null
+      return result
+    },
   }
 }
 
-export function loadDraft(): EditorDraft | null {
-  const storage = getStorage()
-  if (!storage) return null
-
-  let rawDraft: string | null
-  try {
-    rawDraft = storage.getItem(STORAGE_KEY)
-  } catch {
-    return null
-  }
-
-  if (!rawDraft) return null
-
-  let payload: unknown
-  try {
-    payload = JSON.parse(rawDraft)
-  } catch {
-    clearDraft()
-    return null
-  }
-
-  const normalized = normalizeStoredDraft(payload)
-  if (!normalized) {
-    clearDraft()
-    return null
-  }
-
-  return normalized
-}
-
-export function clearDraft(): boolean {
-  const storage = getStorage()
-  if (!storage) return false
-
-  try {
-    storage.removeItem(STORAGE_KEY)
-    return true
-  } catch {
-    return false
-  }
-}
+export const { initializeDraftStorage, saveDraft, loadDraft, clearDraft, consumeDraft } = createEditorDraftService()

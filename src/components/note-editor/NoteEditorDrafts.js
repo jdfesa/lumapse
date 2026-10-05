@@ -1,42 +1,52 @@
 import { clearDraft, loadDraft, saveDraft } from '../../services/EditorDraftService.ts';
 
 export class EditorDraftCapture {
-  constructor({ createPayload, isBlocked }) {
-    this.createPayload = createPayload;
-    this.isBlocked = isBlocked;
+  constructor({ createPayload, isBlocked, onError = () => {} }) {
+    Object.assign(this, { createPayload, isBlocked, onError });
     this.hasChanges = false;
+    this.revision = 0;
+    this.pending = null;
   }
 
   schedule() {
     if (this.isBlocked()) return;
-
+    this.payload = this.createPayload();
     this.hasChanges = true;
-    // Capturar antes de que una terminacion abrupta omita los eventos de salida.
-    // Esto actualiza solo el borrador, no la nota definitiva.
-    this.persist();
+    // Snapshot inmediato; la cola SQLite ordena cada escritura sin debounce.
+    return this.persist();
   }
 
   flush() {
-    if (this.hasChanges && !this.isBlocked()) {
-      this.persist();
-    }
+    if (this.isBlocked()) return this.pending;
+    return this.pending || (this.hasChanges ? this.persist() : null);
   }
 
   persist() {
-    const draft = this.createPayload();
-
-    if (draft) {
-      saveDraft(draft);
-    } else {
-      clearDraft();
-    }
-
-    this.hasChanges = false;
+    const revision = ++this.revision;
+    const write = this.payload ? saveDraft(this.payload) : clearDraft();
+    this.pending = Promise.resolve(write).then(() => {
+      if (revision !== this.revision) return;
+      this.pending = null;
+      this.hasChanges = false;
+    }, error => {
+      if (revision !== this.revision) return;
+      this.pending = null;
+      // Conservar el snapshot para reintentar, sin rechazos huérfanos en eventos DOM.
+      this.onError(error);
+    });
+    return this.pending;
   }
 
-  discard() {
+  async discard() {
+    await clearDraft();
+    this.markSaved();
+  }
+
+  markSaved() {
+    this.revision++;
+    this.pending = null;
     this.hasChanges = false;
-    clearDraft();
+    this.payload = null;
   }
 }
 

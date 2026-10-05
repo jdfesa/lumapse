@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { deferred } from '../../services/sqlite/sqliteFixture.js'
 import { DatabaseError } from '../../../../src/services/sqlite/errors.js'
 
 vi.mock('../../../../src/store/NoteStore.js', () => ({
@@ -48,6 +49,8 @@ beforeEach(() => {
   document.body.innerHTML = ''
   vi.clearAllMocks()
   confirmDialog.mockResolvedValue(true)
+  EditorDraftService.saveDraft.mockResolvedValue(null)
+  EditorDraftService.clearDraft.mockResolvedValue(undefined)
   EditorDraftService.loadDraft.mockReturnValue(null)
   NoteStore.createNote.mockResolvedValue({ id: 'created-note' })
   NoteStore.updateNote.mockResolvedValue({ id: 'updated-note' })
@@ -113,7 +116,7 @@ describe('NoteEditor separate title UX', () => {
 
     await editor.handleSave()
 
-    expect(NoteStore.createNote).toHaveBeenCalledWith('Clase 1', '', null)
+    expect(NoteStore.createNote).toHaveBeenCalledWith('Clase 1', '', null, { clearDraft: true })
 
     editor.destroy()
   })
@@ -127,7 +130,7 @@ describe('NoteEditor separate title UX', () => {
 
     await editor.handleSave()
 
-    expect(NoteStore.createNote).toHaveBeenCalledWith('Algebra lineal', 'Matrices', null)
+    expect(NoteStore.createNote).toHaveBeenCalledWith('Algebra lineal', 'Matrices', null, { clearDraft: true })
 
     editor.destroy()
   })
@@ -141,7 +144,7 @@ describe('NoteEditor separate title UX', () => {
 
     await editor.handleSave()
 
-    expect(NoteStore.createNote).toHaveBeenCalledWith('Sin título', 'Apuntes de la clase', null)
+    expect(NoteStore.createNote).toHaveBeenCalledWith('Sin título', 'Apuntes de la clase', null, { clearDraft: true })
 
     editor.destroy()
   })
@@ -567,7 +570,7 @@ describe('NoteEditor draft restoration', () => {
       title: 'Resumen pendiente',
       content: 'Cambios sin actualizar',
       subjectId: 'subj-math',
-    })
+    }, { clearDraft: true })
     expect(NoteStore.createNote).not.toHaveBeenCalled()
 
     editor.destroy()
@@ -696,7 +699,7 @@ describe('NoteEditor draft cleanup on save', () => {
       subjectId: null,
       baseUpdatedAt: null,
     })
-    expect(EditorDraftService.clearDraft).toHaveBeenCalled()
+    expect(EditorDraftService.clearDraft).not.toHaveBeenCalled()
     expect(editor.container.querySelector('#composer-input').value).toBe('')
     expect(editor.container.querySelector('#composer-draft-actions').hidden).toBe(true)
 
@@ -815,8 +818,8 @@ describe('NoteEditor draft cleanup on save', () => {
       title: 'Resumen',
       content: 'Cuerpo actualizado',
       subjectId: null,
-    })
-    expect(EditorDraftService.clearDraft).toHaveBeenCalled()
+    }, { clearDraft: true })
+    expect(EditorDraftService.clearDraft).not.toHaveBeenCalled()
     expect(editor.container.querySelector('#composer-input').value).toBe('')
 
     editor.destroy()
@@ -1026,7 +1029,7 @@ describe('NoteEditor draft edge cases', () => {
 
     await editor.handleSave()
 
-    expect(NoteStore.createNote).toHaveBeenCalledWith('Resumen', 'Cambio pendiente', null)
+    expect(NoteStore.createNote).toHaveBeenCalledWith('Resumen', 'Cambio pendiente', null, { clearDraft: true })
     expect(NoteStore.updateNote).not.toHaveBeenCalled()
 
     editor.destroy()
@@ -1154,7 +1157,7 @@ describe('NoteEditor draft edge cases', () => {
 
     await editor.handleSave()
 
-    expect(NoteStore.createNote).toHaveBeenCalledWith('Algebra lineal', 'Matrices', null)
+    expect(NoteStore.createNote).toHaveBeenCalledWith('Algebra lineal', 'Matrices', null, { clearDraft: true })
 
     editor.destroy()
   })
@@ -1482,6 +1485,71 @@ describe('NoteEditor Markdown list continuation', () => {
     expect(event.defaultPrevented).toBe(false)
     expect(input.value).toBe('texto normal')
 
+    editor.destroy()
+  })
+})
+
+
+describe('NoteEditor confirmación asíncrona de borradores', () => {
+  it('bloquea cambios y descarte durante guardado y no reencola el borrador al notificar el store', async () => {
+    let subscriber
+    NoteStore.subscribe.mockImplementationOnce(callback => { subscriber = callback; return vi.fn() })
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+    input.value = 'Texto pendiente'
+    input.dispatchEvent(new window.Event('input'))
+    const commit = deferred()
+    NoteStore.createNote.mockReturnValueOnce(commit.promise)
+    const saving = editor.handleSave()
+    expect(input.disabled).toBe(true)
+    expect(editor.container.querySelector('#composer-subject-trigger').disabled).toBe(true)
+    await editor.handleDiscardDraft()
+    expect(confirmDialog).not.toHaveBeenCalled()
+    subscriber({ activeNoteId: null, notes: [], subjects: { tree: [] }, viewMode: 'inbox' })
+    expect(input.value).toBe('Texto pendiente')
+    commit.resolve({ id: 'committed' })
+    await saving
+    expect(input.disabled).toBe(false)
+    expect(input.value).toBe('')
+    expect(EditorDraftService.saveDraft).toHaveBeenCalledTimes(1)
+    expect(EditorDraftService.clearDraft).not.toHaveBeenCalled()
+    editor.destroy()
+  })
+
+  it('no vacía campos antes de confirmar el descarte ni cuando este falla', async () => {
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+    input.value = 'Conservar'
+    input.dispatchEvent(new window.Event('input'))
+    const commit = deferred()
+    EditorDraftService.clearDraft.mockReturnValueOnce(commit.promise)
+    const discarding = editor.discardDraft()
+    expect(input.value).toBe('Conservar')
+    expect(input.disabled).toBe(true)
+    const rejected = expect(discarding).rejects.toThrow('clear failed')
+    commit.reject(new Error('clear failed'))
+    await rejected
+    expect(input.disabled).toBe(false)
+    expect(input.value).toBe('Conservar')
+    expect(editor.container.querySelector('#composer-draft-status').textContent).toContain('No se pudo descartar')
+    await editor.discardDraft()
+    expect(input.value).toBe('')
+    editor.destroy()
+  })
+
+  it('avisa si falla la captura sin perder el texto y reintenta al ocultarse', async () => {
+    const editor = createEditor()
+    const input = editor.container.querySelector('#composer-input')
+    EditorDraftService.saveDraft.mockRejectedValueOnce(new Error('capture failed'))
+    input.value = 'Recuperable'
+    input.dispatchEvent(new window.Event('input'))
+    await editor.draftCapture.pending
+    expect(input.value).toBe('Recuperable')
+    expect(editor.container.querySelector('#composer-draft-status').textContent).toContain('No se pudo guardar')
+    editor.handlePageHide()
+    await editor.draftCapture.pending
+    expect(EditorDraftService.saveDraft).toHaveBeenCalledTimes(2)
+    expect(NoteStore.createNote).not.toHaveBeenCalled()
     editor.destroy()
   })
 })

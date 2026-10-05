@@ -9,6 +9,7 @@
 
 import './styles/main.css'
 import { initDatabase, closeDatabaseForReload } from './services/sqlite/connection.js'
+import { initializeDraftStorage } from './services/EditorDraftService.ts'
 import * as NoteStore from './store/NoteStore.js'
 import * as ThemeService from './services/ThemeService.ts'
 import { SUBJECT_COLORS, autoPurge } from './services/SubjectService.js'
@@ -26,6 +27,7 @@ import { createAppStartup } from './layout/appStartup.js'
 
 async function prepareApp() {
   await initDatabase()
+  await initializeDraftStorage()
   // Preparar datos antes de crear componentes o suscripciones.
   await NoteStore.loadSubjects()
   await NoteStore.loadNotes()

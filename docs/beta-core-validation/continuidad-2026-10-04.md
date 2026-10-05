@@ -86,8 +86,14 @@ completar el lanzamiento. Sin desinstalación ni borrado.
 - Resultado privado SHA-256:
   `0ed82a51c844ce276862207ee46492428568473cdf1bc6c924b43a83fc8980b2`.
 
-**Pendiente de la misma rama:** acordar la corrección de persistencia durable y
-limpieza Android; cualquier cambio de backend/arquitectura requiere decisión y ADR
-antes de implementarlo. Después, regresiones, CON-01–04 y Guardar/Descartar sobre
-APK identificada y revisión del autor. **RNF-010 conserva evidencia parcial con
-fallos abiertos**, sin cierre del requisito/rama; RNF-009/OFF-01–05 siguen separados.
+## Persistencia SQLite autorizada — 2026-10-05
+
+El autor aprobó completar la misma unidad con SQLite, migración segura y guardado
+atómico de nota/limpieza; decisión en [ADR-012](../adr/ADR-012-borrador-sqlite-y-guardado-atomico.md).
+Se conserva la tabla `metadata` existente, sin nuevas dependencias ni versión.
+
+**Pendiente de la misma rama:** terminar regresiones/gate, repetir CON-01–04 y
+Guardar/Descartar sobre APK identificada y obtener revisión del autor. **RNF-010
+conserva evidencia parcial con fallos abiertos** hasta esa revalidación; no se
+atribuye un PASS nativo al nuevo backend por tests de escritorio.
+RNF-009/OFF-01–05 siguen separados.
