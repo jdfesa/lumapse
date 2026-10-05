@@ -3,6 +3,13 @@
 **Inicio:** 2026-09-14. **Estado:** preparación aceptada e integrada en [PR #16](https://github.com/jdfesa/lumapse/pull/16), `90fd21e`; F3 **sin cierre cuantitativo**, mediciones Android pendientes.
 **Rama de preparación:** `docs/beta-core-validation`, eliminada local y remotamente tras el merge autorizado. No hay nueva release ni cambios productivos de esta preparación.
 
+**Prioridad vigente — 2026-10-04:** el autor difiere RNF-002/RNF-004 a
+[backlog post-presentación](../../BACKLOG.md#rendimiento-post-presentación), sin
+más pilotos ni equipamiento adicional exigido. La falta de métricas no bloquea
+la entrega por sí sola; ambos requisitos siguen **PENDING**, sin cambiar umbrales
+ni reescribir la evidencia histórica. RNF-009/RNF-010 no quedan postergados por
+esta decisión. La revisión y aprobación del PR actual siguen pendientes.
+
 El 2026-09-15 el autor informó que probó en el dispositivo y aparentemente todo funciona
 bien; autorizó el merge y la limpieza. Esta confirmación general no aporta muestras CRUD/FPS,
 identidad/hash del APK ni resultados detallados por caso. No se completan las plantillas ni
@@ -167,9 +174,12 @@ vacías. Revisar esta preparación no acredita ningún RNF ni cierra F3.
 
 ## Preparación física F3-1 — 2026-10-04
 
-**Estado:** rama `test/f3-session-1-rnf-measurements` desde `93e8967`, **en curso**.
-El objetivo de medir RNF-002/RNF-004 no está concluido; el control de avances y
-pendientes está en [TODO](../../TODO). No se modificó la app ni se inició F3-2.
+**Estado:** rama `test/f3-session-1-rnf-measurements` desde `93e8967`, en revisión
+documental; **mediciones diferidas a post-presentación** por decisión del autor.
+El objetivo cuantitativo RNF-002/RNF-004 no está concluido ni se declara aprobado;
+el control del PR está en [TODO](../../TODO) y la deuda en
+[BACKLOG](../../BACKLOG.md#rendimiento-post-presentación). No se modificó la app
+ni se inició F3-2.
 
 - [x] Runtime `22.20.0/10.9.3`, controles de versión, documentación y trazabilidad;
   gate local: 77 archivos/1167 tests aprobados, con avisos conocidos de lint/tamaño.
@@ -198,7 +208,9 @@ RNF-002/RNF-004 siguen **PENDING**; originales y capturas quedan bajo `tmp/` ign
 Se probó además `SurfaceFlinger --latency`/`gfxinfo` con Lumapse en primer plano. El
 display global informó periodos/timestamps, pero las capas de la actividad y WebView
 no devolvieron frames atribuibles; esos datos no se convierten en FPS o latencia F3.
-La serie formal queda bloqueada hasta acordar una fuente física verificable.
+Este límite impide aceptar una serie formal con esos datos, no demuestra un defecto
+de rendimiento de la app. Por decisión del autor, resolverlo y medir queda para
+post-presentación; no bloquea por sí solo la entrega ni se continúan pilotos.
 
 ## Primer análisis de una sesión física — pendiente del autor
 
@@ -260,7 +272,8 @@ corrección se prioriza por separado. El filtro oculto quedó resuelto por PR #1
 (`3898db8`); quitar los filtros visibles activos y verificar 50/500 resultados antes
 de medir. El reporte de septiembre conserva la observación histórica, no reabre esa deuda.
 
-Las próximas dos sesiones aprobadas son **RNF-002/004** y después **RNF-009/010**,
-con revisión, autorización, integración y limpieza entre frentes. Seguir el
-[plan vigente](../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#continuidad-aprobada--2026-10-02);
-las muestras cuantitativas F3 siguen **PENDING**.
+El orden original era **RNF-002/004** y después **RNF-009/010**. La
+[prioridad actual](../../BACKLOG.md#rendimiento-post-presentación) difiere solo
+CRUD/FPS a post-presentación; la prioridad del siguiente frente se acuerda después
+de la revisión, autorización, integración y limpieza del PR actual, sin abrir otro
+en paralelo. Las muestras cuantitativas F3 siguen **PENDING**.

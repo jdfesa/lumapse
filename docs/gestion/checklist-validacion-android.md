@@ -108,6 +108,14 @@ Para F3, seguir el [protocolo](../beta-core-validation/protocolo.md) y completar
 La preparación local y CI **no marcan estas casillas**. El corte `v0.5.0` y la historia
 siguiente se conservan sin cambios: no trasladar sus resultados al candidato F3.
 
+**Actualización de prioridad — 2026-10-04:** el autor difiere únicamente las
+métricas RNF-002/RNF-004 a [post-presentación](../../BACKLOG.md#rendimiento-post-presentación).
+Las casillas cuantitativas anteriores permanecen pendientes, no bloquean la entrega
+por esa ausencia y no se completan con confirmaciones funcionales. No más pilotos
+ni otra cámara/dispositivo exigidos; OFF/CON y la validación funcional del artefacto
+mantienen su estado y se acuerdan por separado. Esta decisión no aprueba el PR ni
+autoriza su merge.
+
 ---
 
 ## Corte vigente — v0.5.0
