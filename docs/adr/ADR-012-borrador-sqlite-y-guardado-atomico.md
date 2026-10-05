@@ -2,7 +2,7 @@
 
 **Fecha:** 2026-10-05
 
-**Estado:** Aceptado por el autor para RNF-010; gate y validación técnica Android PASS. Revisión final del autor pendiente.
+**Estado:** Aceptado; gate y Android PASS. El autor confirmó funcionamiento en el teléfono y autorizó el cierre de [PR #29](https://github.com/jdfesa/lumapse/pull/29) el 2026-10-05.
 
 ## Contexto
 

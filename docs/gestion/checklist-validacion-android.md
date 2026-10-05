@@ -2,7 +2,7 @@
 
 **Hito:** 06 — Entrega Final<br>
 **Objetivo:** registrar evidencia reproducible de cada APK y distinguir la verificación del asset firmado de las pruebas sobre builds equivalentes.<br>
-**Estado:** `v0.5.0` publicada y aceptada; smoke de identificación de PR #22 aceptado. F3 sin métricas CRUD/FPS nuevas; RNF-010 con validación técnica SQLite PASS y aceptación del autor pendiente.
+**Estado:** `v0.5.0` publicada y aceptada; smoke de identificación de PR #22 aceptado. F3 sin métricas CRUD/FPS nuevas; RNF-010 verificado en debug identificado y aceptado por el autor; cierre aprobado en PR #29.
 
 ---
 
@@ -18,7 +18,7 @@ Los fallos del diagnóstico en WebStorage no se borran ni se transfieren a esta 
 - [x] CON-01–04, creación/edición, PASS en modo avión. CON-04 a 217/209 ms; repetición nativa a 285 ms PASS.
 - [x] Guardar/Descartar y terminación cercana PASS: no reaparece el borrador ni se duplica la nota.
 - [x] Control final de integridad, conservación de notas ajenas a las pruebas, borrador limpio y red restaurada.
-- [ ] Confirmación del autor en esta APK y autorización de merge. RNF-010 aún con evidencia parcial; OFF-01–05 pendientes por separado.
+- [x] El autor confirmó funcionamiento en esta APK y autorizó merge/limpieza de [PR #29](https://github.com/jdfesa/lumapse/pull/29). RNF-010 verificado para el alcance registrado; OFF-01–05 pendientes por separado. No repetir las pruebas aceptadas.
 
 ---
 

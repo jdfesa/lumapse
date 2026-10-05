@@ -2,7 +2,7 @@
 
 **Fase Design Thinking:** Idear / Prototipar / Testear
 **Formulación inicial:** Abril 2026
-**Última revisión:** 2026-10-04 — RNF-002/RNF-004 diferidos a post-presentación; estados y umbrales conservados
+**Última revisión:** 2026-10-05 — RNF-010 verificado y aceptado en debug identificado; RNF-002/RNF-004 siguen diferidos a post-presentación
 **Autor:** José David Sandoval
 
 > **Nota de evolución:** Estos RNF se definieron originalmente para una PWA con IndexedDB. Después del relevamiento, Lumapse pivotó a una aplicación Android híbrida empaquetada con Capacitor, con persistencia SQLite y distribución por APK ([ADR-005](../adr/ADR-005-pivote-app-nativa.md), [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md)). La revisión conserva los criterios originales, pero distingue cuáles siguen vigentes, cuáles requieren evidencia y cuáles quedaron obsoletos o no aplican al artefacto Android.
@@ -24,13 +24,13 @@
 
 > Un build correcto, la ausencia de crashes o una auditoría estática no se consideran por sí solos evidencia suficiente para métricas de tiempo, FPS, contraste, touch targets o pruebas con usuarios.
 
-> El estado se revisa sobre el tag `v0.5.0` (`5840755`) y la documentación de su publicación. La validación ejecutada sobre un build equivalente no se atribuye automáticamente al APK firmado de GitHub.
+> La base publicada es el tag `v0.5.0` (`5840755`). La evidencia posterior identifica su propio artefacto: RNF-010 corresponde al debug `dbc8940` aceptado en PR #29, no al APK firmado de GitHub. Las validaciones no se transfieren automáticamente entre binarios.
 
 > **Seguimiento F3:** [protocolo y matriz incremental](../beta-core-validation/README.md)
 > preparados con perfiles reproducibles de 50/500 notas e integración SQLite local.
 > RNF-002/RNF-004 continúan sin métricas nuevas y RNF-009 conserva evidencia parcial.
 > [Diagnóstico RNF-010 del 2026-10-04](../beta-core-validation/continuidad-2026-10-04.md):
-> Fallos de WebStorage corregidos y matriz SQLite PASS el 2026-10-05; aceptación del autor pendiente.
+> Fallos de WebStorage corregidos y matriz SQLite PASS el 2026-10-05; el autor confirmó el teléfono y aprobó el cierre de PR #29. RNF-010 verificado en ese alcance.
 
 > **Prioridad vigente (2026-10-04):** por [decisión del autor](../../BACKLOG.md#rendimiento-post-presentación),
 > RNF-002/RNF-004 quedan **Pendientes, post-presentación**, sin bloquear la entrega
@@ -66,7 +66,7 @@
 | ID | Requisito original / vigente | Métrica | Estado actual | Evidencia / siguiente paso |
 |---|---|---|---|---|
 | RNF-009 | La aplicación instalada debe funcionar **100% offline**; en la formulación PWA se expresaba como “después de la primera visita”. | Flujos principales disponibles sin red | Evidencia parcial | VM-02 confirma apertura offline en `v0.4.8` y el gate de `v0.5.0` controla assets remotos. La aceptación general del asset publicado `v0.5.0` está cerrada, sin evidencia granular de todos los flujos; los casos OFF-01–05 de F3 siguen pendientes sobre el artefacto acordado. Ver [checklist Android](../gestion/checklist-validacion-android.md). |
-| RNF-010 | El trabajo en curso no debe perderse ante pausa, bloqueo, cambio temporal de app o cierre inesperado. | Pérdida de borrador = 0 en flujos principales | Evidencia parcial | [SQLite: migración, CON-01–04 y limpieza PASS](../beta-core-validation/continuidad-2026-10-04.md) en debug `dbc8940`; repetición nativa a 285 ms PASS. Pendiente aceptación del autor. No garantiza la última tecla antes del commit ni equivale a apagado físico. |
+| RNF-010 | El trabajo en curso no debe perderse ante pausa, bloqueo, cambio temporal de app o cierre inesperado. | Pérdida de borrador = 0 en flujos principales | Verificado | [SQLite: migración, CON-01–04 y limpieza PASS, aceptados por el autor](../beta-core-validation/continuidad-2026-10-04.md) en debug `dbc8940`; repetición nativa a 285 ms PASS y cierre aprobado en PR #29. Verificado en los casos/artefacto registrados: no garantiza la última tecla antes del commit ni equivale a apagado físico. |
 | RNF-011 | El Service Worker debe cachear todos los assets estáticos. | Cache hit rate = 100% | Obsoleto | Service Worker y `vite-plugin-pwa` fueron eliminados por ADR-005. La disponibilidad offline vigente se obtiene empaquetando assets dentro del APK y se controla mediante RNF-009. |
 
 ---
@@ -131,8 +131,8 @@
 
 | Estado | Cantidad | IDs |
 |---|---:|---|
-| Verificado | 5 | RNF-003, RNF-018, RNF-023 a RNF-025 |
-| Evidencia parcial | 7 | RNF-009, RNF-010, RNF-012, RNF-013, RNF-020, RNF-022, RNF-026 |
+| Verificado | 6 | RNF-003, RNF-010, RNF-018, RNF-023 a RNF-025 |
+| Evidencia parcial | 6 | RNF-009, RNF-012, RNF-013, RNF-020, RNF-022, RNF-026 |
 | Pendiente | 8 | RNF-002, RNF-004 a RNF-008, RNF-019, RNF-021 |
 | Obsoleto por pivote | 3 | RNF-001, RNF-011, RNF-017 |
 | No aplica al APK | 3 | RNF-014 a RNF-016 |
@@ -144,19 +144,23 @@
 
 La planificación inicial asignaba grupos de RNF a los Hitos 03, 04 y 05. El pivote arquitectónico volvió inválidas varias verificaciones basadas en PWA, hosting y Service Worker. Las betas `v0.4.8` y `v0.5.0` aportan evidencia técnica sin completar todas las métricas de usuario, rendimiento y accesibilidad; por eso el estado de las tablas anteriores reemplaza cualquier inferencia basada únicamente en el hito originalmente asignado.
 
-### Cierre técnico de Hito 05
+### Cierre técnico de Hito 05 (histórico)
 
 - Conservar como evidencia verificada los RNF-003, RNF-018, RNF-023 y RNF-025.
 - Mantener RNF-009, RNF-010, RNF-012, RNF-013, RNF-020, RNF-022 y RNF-026 como evidencia parcial; no presentarlos como cumplimiento total.
 - Registrar que RNF-002, RNF-004, RNF-019 y RNF-024, originalmente vinculados al Hito 05, no tienen todavía la medición completa requerida.
 - Tratar RNF-015 como no aplicable al APK, en vez de dejarlo implícitamente pendiente.
 
+**Seguimiento posterior:** RNF-010 pasó de evidencia parcial a verificado en Hito 06,
+con la APK debug SQLite identificada y aceptada en [PR #29](https://github.com/jdfesa/lumapse/pull/29).
+El listado histórico anterior no es una tarea por repetir.
+
 ### Plan final de Hito 06
 
 1. **Diferido a post-presentación:** medir latencia CRUD/FPS con un volumen reproducible de notas (RNF-002, RNF-004); emitir la matriz de entrega con estos requisitos pendientes y la postergación explícita, sin afirmar cumplimiento.
 2. Ejecutar pruebas con usuarios y revisar profundidad de navegación (RNF-005, RNF-006).
 3. Auditar tipografía, touch targets, contraste y navegación accesible (RNF-007, RNF-008, RNF-019 a RNF-022).
-4. Repetir los flujos principales en modo avión y cubrir bloqueo/terminación inesperada del editor (RNF-009, RNF-010).
+4. Completar los flujos offline OFF-01–05 de RNF-009. RNF-010 ya está verificado y aceptado en la APK debug registrada; conservar su evidencia sin repetir la tarea. La validación de un nuevo candidato final se acuerda por separado.
 5. Registrar tráfico de red y un reporte específico de dependencias/trackers para completar RNF-012 y RNF-013.
 6. [Completado 2026-08-21] Incorporar archivos TypeScript al reporte de coverage y volver a medir RNF-024; repetir la medición en el commit candidato para incorporarla a la matriz final.
 7. Confirmar o reformular formalmente los RNF obsoletos/no aplicables, sin reutilizar evidencia PWA como si perteneciera al APK.

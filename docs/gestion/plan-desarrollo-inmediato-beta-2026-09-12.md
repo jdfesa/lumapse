@@ -73,6 +73,12 @@ acordar la prioridad del siguiente frente solo después de integrar y limpiar el
 actual, sin exigir antes completar las métricas ahora diferidas. Esta decisión no
 autoriza cambios de producto, instalación o publicación ni cierra todo F3/Hito 06.
 
+**Seguimiento al 2026-10-05:** la postergación anterior se integró en PR #28.
+RNF-010 ya fue implementado, probado en Android y aceptado por el autor en
+[PR #29](https://github.com/jdfesa/lumapse/pull/29); no interpretar «no iniciados»
+como estado vigente de esa tarea. [Evidencia y cierre](../beta-core-validation/continuidad-2026-10-04.md).
+RNF-009 permanece pendiente como siguiente frente por acordar.
+
 ### Continuidad aprobada — 2026-10-02
 
 El diseño de sesiones siguiente se conserva como antecedente y protocolo de las

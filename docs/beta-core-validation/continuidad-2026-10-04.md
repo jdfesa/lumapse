@@ -142,9 +142,21 @@ matriz `93bb0bfa3fb5970e61968eced5d7fcb57faf54016416f41f49c4c1010471a87f`;
 nativa completa `baf0d76b9d0308b772286594cdd4de787811dd29afcdc87c695c1c4ce9366e58`;
 control final `73e1581c0e154449827abe99a95e2a49db999b0d934aec0c20f3f89696eaebc0`.
 
-**Aceptación pendiente:** revisión del autor en esta APK (crear/editar, salir/bloquear,
-volver, guardar/descartar y reabrir) y autorización explícita de merge del PR.
-Los fallos reproducidos están corregidos en los casos ejecutados; RNF-010 conserva
-estado de evidencia parcial hasta esa aceptación. No se garantiza la última tecla
-si el proceso muere antes del commit: SIGKILL en estas ventanas no equivale a apagado
-físico, todos los LMK ni medición CRUD. RNF-009/OFF-01–05 siguen separados.
+## Aceptación y cierre — 2026-10-05
+
+El autor confirmó «listo si funciona en el telefono tambien» y autorizó explícitamente
+merge a `main`, limpieza local/remota y actualización documental de
+[PR #29](https://github.com/jdfesa/lumapse/pull/29). Se acepta la APK debug identificada
+arriba y la evidencia técnica ya realizada, sin repetir las pruebas del teléfono.
+La confirmación del autor es general: no agrega nuevas ejecuciones ni métricas por caso.
+
+**RNF-010 verificado y cerrado para los flujos y el artefacto registrados.**
+Las pruebas no detectaron pérdida ni reaparición en la corrección SQLite; se conservan
+los fallos históricos de WebStorage, sin atribuirlos al artefacto aceptado ni borrar evidencia.
+Los controles finales de enlaces/trazabilidad se ejecutan sobre esta aceptación;
+el estado de CI/integración se consulta en el PR, sin confundirlo con el gate local.
+
+No se garantiza la última tecla si el proceso muere antes del commit: SIGKILL en estas
+ventanas no equivale a apagado físico, todos los LMK ni medición CRUD. El cierre no
+publica una nueva APK ni transfiere esta evidencia al asset inmutable `v0.5.0`.
+RNF-009/OFF-01–05 y el corte final de entrega siguen separados y pendientes.
