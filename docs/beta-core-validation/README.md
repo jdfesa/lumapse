@@ -8,7 +8,16 @@
 más pilotos ni equipamiento adicional exigido. La falta de métricas no bloquea
 la entrega por sí sola; ambos requisitos siguen **PENDING**, sin cambiar umbrales
 ni reescribir la evidencia histórica. RNF-009/RNF-010 no quedan postergados por
-esta decisión. La revisión y aprobación del PR actual siguen pendientes.
+esta decisión. La postergación se integró en [PR #28](https://github.com/jdfesa/lumapse/pull/28), `b646571`.
+
+**Frente cerrado y aceptado — RNF-010, 2026-10-05:** [diagnóstico, corrección y revalidación](./continuidad-2026-10-04.md).
+Persistencia SQLite y limpieza atómica implementadas: gate (1189 tests), migración,
+CON-01–04 y Guardar/Descartar **PASS** en APK debug identificada, incluida entrada
+nativa antes de 500 ms. Los fallos de WebStorage anteriores se conservan en el reporte.
+El autor confirmó funcionamiento en el teléfono y autorizó merge/limpieza de
+[PR #29](https://github.com/jdfesa/lumapse/pull/29). RNF-010 queda verificado para
+este artefacto y los flujos ejecutados; no repetir la tarea. RNF-009 sigue separado,
+sin reabrir CRUD/FPS ni inferir garantías antes del commit.
 
 El 2026-09-15 el autor informó que probó en el dispositivo y aparentemente todo funciona
 bien; autorizó el merge y la limpieza. Esta confirmación general no aporta muestras CRUD/FPS,
@@ -174,8 +183,8 @@ vacías. Revisar esta preparación no acredita ningún RNF ni cierra F3.
 
 ## Preparación física F3-1 — 2026-10-04
 
-**Estado:** rama `test/f3-session-1-rnf-measurements` desde `93e8967`, en revisión
-documental; **mediciones diferidas a post-presentación** por decisión del autor.
+**Estado:** rama `test/f3-session-1-rnf-measurements` desde `93e8967`, integrada en
+PR #28 (`b646571`); **mediciones diferidas a post-presentación** por decisión del autor.
 El objetivo cuantitativo RNF-002/RNF-004 no está concluido ni se declara aprobado;
 el control del PR está en [TODO](../../TODO) y la deuda en
 [BACKLOG](../../BACKLOG.md#rendimiento-post-presentación). No se modificó la app

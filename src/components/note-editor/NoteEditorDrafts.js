@@ -1,60 +1,52 @@
 import { clearDraft, loadDraft, saveDraft } from '../../services/EditorDraftService.ts';
 
-const DRAFT_SAVE_DEBOUNCE_MS = 500;
-
 export class EditorDraftCapture {
-  constructor({ createPayload, isBlocked }) {
-    this.createPayload = createPayload;
-    this.isBlocked = isBlocked;
-    this.timer = null;
+  constructor({ createPayload, isBlocked, onError = () => {} }) {
+    Object.assign(this, { createPayload, isBlocked, onError });
     this.hasChanges = false;
+    this.revision = 0;
+    this.pending = null;
   }
 
   schedule() {
     if (this.isBlocked()) return;
-
+    this.payload = this.createPayload();
     this.hasChanges = true;
-    if (this.timer) {
-      clearTimeout(this.timer);
-    }
-
-    this.timer = setTimeout(() => {
-      this.timer = null;
-      this.persist();
-    }, DRAFT_SAVE_DEBOUNCE_MS);
+    // Snapshot inmediato; la cola SQLite ordena cada escritura sin debounce.
+    return this.persist();
   }
 
   flush() {
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = null;
-    }
-
-    if (this.hasChanges && !this.isBlocked()) {
-      this.persist();
-    }
+    if (this.isBlocked()) return this.pending;
+    return this.pending || (this.hasChanges ? this.persist() : null);
   }
 
   persist() {
-    const draft = this.createPayload();
-
-    if (draft) {
-      saveDraft(draft);
-    } else {
-      clearDraft();
-    }
-
-    this.hasChanges = false;
+    const revision = ++this.revision;
+    const write = this.payload ? saveDraft(this.payload) : clearDraft();
+    this.pending = Promise.resolve(write).then(() => {
+      if (revision !== this.revision) return;
+      this.pending = null;
+      this.hasChanges = false;
+    }, error => {
+      if (revision !== this.revision) return;
+      this.pending = null;
+      // Conservar el snapshot para reintentar, sin rechazos huérfanos en eventos DOM.
+      this.onError(error);
+    });
+    return this.pending;
   }
 
-  discard() {
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = null;
-    }
+  async discard() {
+    await clearDraft();
+    this.markSaved();
+  }
 
+  markSaved() {
+    this.revision++;
+    this.pending = null;
     this.hasChanges = false;
-    clearDraft();
+    this.payload = null;
   }
 }
 

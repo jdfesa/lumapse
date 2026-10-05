@@ -392,7 +392,7 @@
 | **RF asociados** | [RF-005](./requisitos-funcionales.md) |
 | **Persona** | [Lucía](./personas.md#persona-1--lucía-la-estudiante-organizada) |
 | **Prioridad** | MUST |
-| **Story Points** | **5 SP** — Persistencia local con debounce, restauración de nota nueva y edición, indicador visual, descarte explícito y edge cases de navegación/cierre. |
+| **Story Points** | **5 SP** — Persistencia local SQLite por cambio (sin debounce), restauración de nota nueva y edición, indicador visual, descarte explícito y edge cases de navegación/cierre. |
 | **Hito** | 05 |
 
 **Criterios de Aceptación:**

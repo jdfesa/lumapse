@@ -18,12 +18,12 @@
 
 El [plan de desarrollo inmediato de la beta](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) fue aceptado e integrado en PR #13. **F1 y F2 aprobadas e integradas** en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`). **Preparación F3 aceptada e integrada** en PR #16 (`90fd21e`) tras la confirmación general del teléfono; ramas eliminadas. [Protocolo, fixtures y matriz](docs/beta-core-validation/README.md): las métricas Android siguen pendientes, sin declarar F3 cerrada.
 
-**Último frente aceptado:** identificación de build y smoke E5 de [PR #22](https://github.com/jdfesa/lumapse/pull/22), integrado mediante `8215541`; [artefacto y límites](docs/gestion/checklist-validacion-android.md#identificación-de-build--smoke-aceptado-de-pr-22).
+**Último frente aceptado:** continuidad del borrador SQLite (`RNF-010`) en [PR #29](https://github.com/jdfesa/lumapse/pull/29): pruebas técnicas y teléfono aceptados por el autor; merge y limpieza autorizados. [Artefacto, resultados y límites](docs/beta-core-validation/continuidad-2026-10-04.md).
 **Sesión 1 RNF-002/004: métricas diferidas a post-presentación** por decisión del autor
 (2026-10-04), sin cumplimiento cuantitativo ni bloqueo de entrega por esta ausencia.
 Control/exportación comprobados;
 [evidencia canónica](docs/beta-core-validation/README.md#evidencia-de-la-sesión-1).
-[PR #23](https://github.com/jdfesa/lumapse/pull/23) se acota a evidencia/retirada experimental. Sesión 2 RNF-009/010 **no iniciada**;
+[PR #23](https://github.com/jdfesa/lumapse/pull/23) se acota a evidencia/retirada experimental. RNF-009 **pendiente**; RNF-010 **verificado y aceptado**, [diagnóstico, corrección y cierre](docs/beta-core-validation/continuidad-2026-10-04.md);
 seguir el [ajuste de prioridad vigente](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#ajuste-de-prioridad-aprobado--2026-10-04).
 Los filtros quedaron cerrados en PR #18 (`3898db8`); no sustituyen F3.
 
@@ -31,7 +31,7 @@ Los filtros quedaron cerrados en PR #18 (`3898db8`); no sustituyen F3.
 |---|---|---|
 | F1 | Gate portable — AUD-008/AUD-009 | Node 22.20.0/npm 10.9.3 fijados y mismo `verify` local/CI, sin depender de workaround, binario ignorado o falsos positivos CSP |
 | F2 | Creación confirmada — AUD-014 | No duplicar notas/fechas al fallar una recarga posterior a la escritura; regresiones y smoke Android |
-| F3 | Validación del núcleo | Preparación de 500 notas preservada; CRUD/FPS pendientes en backlog post-presentación. Offline/continuidad pendientes por separado, sin cierre inferido |
+| F3 | Validación del núcleo | Preparación de 500 notas preservada; CRUD/FPS pendientes en backlog post-presentación. RNF-009 pendiente; RNF-010 verificado y aceptado en debug identificado, sin cierre global de F3 |
 
 El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de línea base final **siguen pendientes** en la checklist, después del APK validado. F3 no los sustituye ni obliga a publicar `1.0.0`. WIP 2 es techo entre En Curso y En Revisión, no permiso para dos ramas/frentes técnicos.
 
@@ -45,12 +45,13 @@ El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de
 - [x] Refrescos vecinos de F2: crear materia/sección y editar/eliminar fecha fueron probados en Android por el autor e integrados en [PR #19](https://github.com/jdfesa/lumapse/pull/19) el 2026-09-18 (`34b2900`), con regresiones SQLite/UI y recuperación solo de lectura. Mover/eliminar notas y otras acciones de materias/papelera permanecen como deuda media, a revisar con evidencia; este cierre no completa F3. [Plan y evidencia](docs/gestion/plan-refrescos-vecinos-2026-09-16.md).
 - [x] F3: perfiles/ZIP de 50/500 notas, integración SQLite y protocolo aceptados e integrados en PR #16; confirmación general del teléfono recibida el 2026-09-15, sin nuevas muestras crudas ni identidad APK.
 - [x] Identificación de build: smoke Acerca/navegación aceptado y merge/limpieza autorizados para PR #22. Fuente Android E5; cierre documental sin cambios de producto ni métricas F3. Integración comprobable en el PR, sin cierre cuantitativo de F3.
-- [ ] Cerrar la revisión documental del frente F3-1: preservar preparación/evidencia y la [postergación aceptada de RNF-002/004](BACKLOG.md#rendimiento-post-presentación), sin afirmar métricas cumplidas. [Avance comprobado](docs/beta-core-validation/README.md#preparación-física-f3-1--2026-10-04); aprobación/merge todavía pendientes.
+- [x] Cerrar la revisión documental de F3-1: [PR #28](https://github.com/jdfesa/lumapse/pull/28) integrado mediante `b646571`; ramas eliminadas, sin métricas cumplidas. [Postergación aceptada de RNF-002/004](BACKLOG.md#rendimiento-post-presentación) preservada.
   - [x] Verificar APK instalada y cargar/validar el fixture pequeño (50 notas), con respaldo recuperable (2026-10-04).
   - [x] Comprobar creación sintética y exportar dos trazas piloto; restablecer el fixture limpio. No son muestras de latencia/FPS aceptadas.
   - [x] Probar la atribución física con SurfaceFlinger/gfxinfo en el dispositivo: el display global expone periodos, pero la capa WebView de Lumapse no devuelve frames atribuibles.
   - [x] Cargar y comprobar el perfil `f3-500` (500 resultados) y ejecutar un recorrido exploratorio de scroll; no es FPS aceptado por falta de atribución física.
-- [ ] F3 sesión 2: OFF-01–05 y CON-01–04, borradores nuevos/edición y ventana real de 500 ms; prioridad a acordar tras integrar/limpiar el PR actual y con operaciones pertinentes autorizadas. No queda postergada por la decisión sobre CRUD/FPS ni se inicia automáticamente.
+- [x] RNF-010: persistencia SQLite, migración y limpieza atómica verificadas; 1189 tests, CON-01–04 y Guardar/Descartar PASS en debug `dbc8940`. El autor confirmó funcionamiento en el teléfono y aprobó el cierre de [PR #29](https://github.com/jdfesa/lumapse/pull/29). [Resultados, aceptación y límites](docs/beta-core-validation/continuidad-2026-10-04.md). No repetir esta tarea ni las pruebas ya realizadas.
+- [ ] RNF-009: OFF-01–05 como siguiente frente por acordar; no queda completado por el cierre de RNF-010 ni iniciado automáticamente.
 
 Las series CRUD/FPS y la resolución de su método ya no son trabajo inmediato:
 quedan en el [backlog post-presentación](BACKLOG.md#rendimiento-post-presentación),
@@ -78,7 +79,7 @@ con muestras y umbrales conservados. No se harán más pilotos en este frente.
 - [ ] **Post-presentación, no bloqueante:** medir latencia CRUD/FPS de `RNF-002`/`RNF-004`, según [backlog](BACKLOG.md#rendimiento-post-presentación). Importar 500 notas no constituye una medición de rendimiento.
 - [ ] Ejecutar pruebas de uso con estudiantes y verificar profundidad de navegación (`RNF-005`, `RNF-006`).
 - [ ] Completar la auditoría manual de tipografía, touch targets, contraste y navegación accesible (`RNF-007`, `RNF-008`, `RNF-019` a `RNF-022`).
-- [ ] Repetir flujos principales en modo avión y comprobar recuperación ante cierre/terminación inesperada (`RNF-009`, `RNF-010`).
+- [ ] Completar OFF-01–05 de funcionamiento offline (`RNF-009`). La recuperación del borrador ante pausa/bloqueo/terminación (`RNF-010`) ya está verificada y aceptada; conservar su evidencia para la matriz final.
 - [ ] Registrar tráfico de red y revisar dependencias/trackers (`RNF-012`, `RNF-013`).
 - [x] Incorporar TypeScript al reporte de coverage y volver a medir `RNF-024`: 92,43% de statements en `src/services/**` sobre la fuente actual (2026-08-21).
 - [ ] Emitir la matriz RNF final con requisito, método, comando, dispositivo, fecha, artefacto, resultado y evidencia.

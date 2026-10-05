@@ -2,7 +2,23 @@
 
 **Hito:** 06 — Entrega Final<br>
 **Objetivo:** registrar evidencia reproducible de cada APK y distinguir la verificación del asset firmado de las pruebas sobre builds equivalentes.<br>
-**Estado:** `v0.5.0` publicada y aceptada; smoke de identificación de build de PR #22 aceptado y merge autorizado. F3 sigue sin mediciones nuevas; integración/limpieza se corroboran en el PR.
+**Estado:** `v0.5.0` publicada y aceptada; smoke de identificación de PR #22 aceptado. F3 sin métricas CRUD/FPS nuevas; RNF-010 verificado en debug identificado y aceptado por el autor; cierre aprobado en PR #29.
+
+---
+
+## Continuidad del borrador — 2026-10-04/05
+
+[Evidencia canónica, hashes y límites](../beta-core-validation/continuidad-2026-10-04.md).
+Los fallos del diagnóstico en WebStorage no se borran ni se transfieren a esta APK.
+
+- [x] Persistencia SQLite y limpieza atómica aprobadas; [ADR-012](../adr/ADR-012-borrador-sqlite-y-guardado-atomico.md).
+- [x] Gate completo PASS: 1189 tests, build, tipos y controles del proyecto.
+- [x] Debug `0.5.0/500`, fuente `dbc8940` limpia, instalada con firma original mediante deploy habitual, sin desinstalación ni borrado.
+- [x] Migración real del borrador anterior PASS, sin crear nota final; 83 notas idénticas tras instalar.
+- [x] CON-01–04, creación/edición, PASS en modo avión. CON-04 a 217/209 ms; repetición nativa a 285 ms PASS.
+- [x] Guardar/Descartar y terminación cercana PASS: no reaparece el borrador ni se duplica la nota.
+- [x] Control final de integridad, conservación de notas ajenas a las pruebas, borrador limpio y red restaurada.
+- [x] El autor confirmó funcionamiento en esta APK y autorizó merge/limpieza de [PR #29](https://github.com/jdfesa/lumapse/pull/29). RNF-010 verificado para el alcance registrado; OFF-01–05 pendientes por separado. No repetir las pruebas aceptadas.
 
 ---
 

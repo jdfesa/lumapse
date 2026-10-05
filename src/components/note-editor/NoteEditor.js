@@ -37,6 +37,7 @@ export class NoteEditor {
     this.draftCapture = new EditorDraftCapture({
       createPayload: () => this.createDraftPayload(),
       isBlocked: () => this.isApplyingState || this.isSaving,
+      onError: () => this.showDraftStatus('No se pudo guardar el borrador. Conservá el texto y reintentá.'),
     });
 
     document.addEventListener('visibilitychange', this.handleVisibilityChange);
@@ -73,7 +74,7 @@ export class NoteEditor {
     input.addEventListener('keydown', this.handleKeyDown);
     subjectInput.addEventListener('change', this.handleSubjectChange);
     saveBtn.addEventListener('click', () => this.handleSave().catch(handleStoreMutationError));
-    discardBtn.addEventListener('click', this.handleDiscardDraft);
+    discardBtn.addEventListener('click', () => this.handleDiscardDraft().catch(handleStoreMutationError));
 
     this.slashHandler = new SlashCommandHandler(input, composer);
 
@@ -143,6 +144,7 @@ export class NoteEditor {
   }
 
   async handleDiscardDraft() {
+    if (this.isSaving) return;
     const confirmed = await confirmDialog({
       title: 'Descartar borrador',
       message: '¿Descartar este borrador?',
@@ -150,25 +152,44 @@ export class NoteEditor {
       cancelText: 'Conservar',
       danger: true,
     });
-    if (!confirmed) return;
+    if (!confirmed || this.isSaving) return;
 
-    this.discardDraft();
+    await this.discardDraft();
   }
 
-  discardDraft() {
-    this.isApplyingState = true;
-    this.draftCapture.discard();
-
-    if (this.currentEditId) {
-      NoteStore.selectNote(null);
+  async discardDraft() {
+    if (this.isSaving) return;
+    this.setBusy(true);
+    try {
+      await this.draftCapture.discard();
+      if (this.currentEditId) NoteStore.selectNote(null);
+      this.currentEditId = null;
+      this.currentEditBaseUpdatedAt = null;
+      this.restoredDraftActive = false;
+      this.restoredDraftSubjectId = null;
+      this.resetEditorForCreate();
+    } catch (error) {
+      this.showDraftStatus('No se pudo descartar el borrador. Intentá de nuevo.');
+      throw error;
+    } finally {
+      this.setBusy(false);
     }
+  }
 
-    this.currentEditId = null;
-    this.currentEditBaseUpdatedAt = null;
-    this.restoredDraftActive = false;
-    this.restoredDraftSubjectId = null;
-    this.resetEditorForCreate();
-    this.isApplyingState = false;
+  setBusy(busy) {
+    this.isSaving = busy;
+    if (busy) {
+      this.plusPopup?.hide();
+      this.formatPopup?.hide();
+      this.subjectPicker?.close();
+      this.slashHandler?.deactivate();
+      this.busyControls = [...this.container.querySelectorAll('input, textarea, select, button')]
+        .map(control => [control, control.disabled]);
+      for (const [control] of this.busyControls) control.disabled = true;
+    } else {
+      for (const [control, disabled] of this.busyControls || []) control.disabled = disabled;
+      this.updateSaveState();
+    }
   }
 
   handleVisibilityChange() {
@@ -256,45 +277,30 @@ export class NoteEditor {
     const content = stripRedundantTitleFromContent(rawContent, title);
     const subjectId = this.subjectPicker?.getValue() || null;
 
-    let persistedNote;
     const editingNoteId = this.currentEditId;
     const idleSaveLabel = editingNoteId ? 'Actualizar' : 'Guardar';
-
-    this.isSaving = true;
-    saveBtn.disabled = true;
+    this.setBusy(true);
     saveBtn.textContent = 'Guardando...';
     try {
-      if (editingNoteId) {
-        persistedNote = await NoteStore.updateNote(editingNoteId, { content, title, subjectId });
-      } else {
-        persistedNote = await NoteStore.createNote(title, content, subjectId);
-      }
+      const options = { clearDraft: true };
+      const persistedNote = editingNoteId
+        ? await NoteStore.updateNote(editingNoteId, { content, title, subjectId }, options)
+        : await NoteStore.createNote(title, content, subjectId, options);
+      if (!persistedNote) return;
+
+      // La nota y la limpieza ya se confirmaron en una única transacción.
+      this.draftCapture.markSaved();
+      if (editingNoteId) NoteStore.selectNote(null);
+      this.currentEditId = null;
+      this.currentEditBaseUpdatedAt = null;
+      this.restoredDraftActive = false;
+      this.restoredDraftSubjectId = null;
+      this.resetEditorForCreate();
+      this.exitFocusMode();
     } finally {
-      this.isSaving = false;
-      saveBtn.textContent = idleSaveLabel;
-      this.updateSaveState();
+      if (saveBtn.textContent === 'Guardando...') saveBtn.textContent = idleSaveLabel;
+      this.setBusy(false);
     }
-
-    if (!persistedNote) return;
-
-    if (editingNoteId) {
-      NoteStore.selectNote(null);
-    }
-
-    this.draftCapture.discard();
-
-    titleInput.value = '';
-    input.value = '';
-    input.style.height = 'auto';
-    saveBtn.textContent = 'Guardar';
-    saveBtn.disabled = true;
-    this.currentEditId = null;
-    this.currentEditBaseUpdatedAt = null;
-    this.restoredDraftActive = false;
-    this.restoredDraftSubjectId = null;
-    this.hideDraftStatus();
-
-    this.exitFocusMode();
   }
 
   extractTitle(content) {
@@ -304,6 +310,7 @@ export class NoteEditor {
   onStateChange(state) {
     const { activeNoteId, notes, subjects } = state;
     this.lastState = state;
+    if (this.isSaving) return;
 
     this.updateSubjectSelect(subjects);
     if (this.tryRestoreDraft(state)) return;

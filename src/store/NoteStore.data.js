@@ -2,6 +2,7 @@
 // NoteStore.data.js — Operaciones de persistencia y datos
 // =============================================================
 
+import { consumeDraft } from '../services/EditorDraftService.ts'
 import * as NoteService from '../services/sqlite/notes.js'
 import * as SubjectService from '../services/SubjectService.js'
 import {
@@ -46,7 +47,7 @@ export async function loadTrashCount() {
   notify()
 }
 
-export async function createNote(title = 'Sin título', content = '', subjectId = undefined) {
+export async function createNote(title = 'Sin título', content = '', subjectId = undefined, { clearDraft = false } = {}) {
   const newNote = await runStoreAction('createNote', 'No se pudo crear la nota. Intenta de nuevo.', async () => {
     if (!content && title === 'Sin título') {
       content = '# '
@@ -56,7 +57,9 @@ export async function createNote(title = 'Sin título', content = '', subjectId 
       ? subjectId
       : (state.viewMode === 'subject' ? state.activeSubjectId : null)
 
-    return NoteService.createNote(title, content, resolvedSubjectId)
+    return clearDraft
+      ? consumeDraft(scope => NoteService.createNote(title, content, resolvedSubjectId, scope))
+      : NoteService.createNote(title, content, resolvedSubjectId)
   })
 
   state.notes = [newNote, ...state.notes]
@@ -71,9 +74,11 @@ export async function createNote(title = 'Sin título', content = '', subjectId 
   return newNote
 }
 
-export async function updateNote(id, changes) {
+export async function updateNote(id, changes, { clearDraft = false } = {}) {
   return runStoreAction('updateNote', 'No se pudo actualizar la nota. Intenta de nuevo.', async () => {
-    const updatedNote = await NoteService.updateNote(id, changes)
+    const updatedNote = await (clearDraft
+      ? consumeDraft(scope => NoteService.updateNote(id, changes, scope))
+      : NoteService.updateNote(id, changes))
 
     state.notes = state.notes.map(note => note.id === id ? updatedNote : note)
 

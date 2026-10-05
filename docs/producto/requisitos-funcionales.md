@@ -110,6 +110,11 @@ La decisión protege la intención del usuario: Lumapse debe evitar pérdida de 
 
 El borrador conserva localmente título, contenido, materia/sección seleccionada y, cuando corresponde, la nota original que se está editando. Se restaura al volver al editor, muestra un indicador sutil de cambios pendientes y puede descartarse explícitamente. El borrador se limpia solo después de guardar/actualizar con éxito o de confirmar el descarte. Si la nota original editada desaparece antes de restaurar, el contenido pendiente se conserva como borrador de nota nueva para no perder texto.
 
+La continuidad ante terminación abrupta se aborda con SQLite y limpieza atómica según
+[ADR-012](../adr/ADR-012-borrador-sqlite-y-guardado-atomico.md); su evidencia y límites
+pertenecen a [RNF-010](../beta-core-validation/continuidad-2026-10-04.md), sin inferir
+durabilidad nativa a partir del flujo manual original.
+
 Validación manual: el flujo fue probado saliendo de Lumapse para consultar un PDF, copiar texto y volver al editor, manteniendo el borrador disponible y editable como se esperaba.
 
 ## Decisión de revisión — Exportación/importación local
