@@ -28,8 +28,9 @@
 
 > **Seguimiento F3:** [protocolo y matriz incremental](../beta-core-validation/README.md)
 > preparados con perfiles reproducibles de 50/500 notas e integración SQLite local.
-> Sin mediciones Android nuevas: RNF-002/RNF-004 continúan pendientes y RNF-009/RNF-010
-> conservan evidencia parcial. Los estados/umbrales de esta matriz no cambian.
+> RNF-002/RNF-004 continúan sin métricas nuevas y RNF-009 conserva evidencia parcial.
+> [Diagnóstico RNF-010 del 2026-10-04](../beta-core-validation/continuidad-2026-10-04.md):
+> CON-01–03 PASS, CON-04 y limpieza inmediata FAIL en el APK anterior; no cierre inferido.
 
 > **Prioridad vigente (2026-10-04):** por [decisión del autor](../../BACKLOG.md#rendimiento-post-presentación),
 > RNF-002/RNF-004 quedan **Pendientes, post-presentación**, sin bloquear la entrega
@@ -65,7 +66,7 @@
 | ID | Requisito original / vigente | Métrica | Estado actual | Evidencia / siguiente paso |
 |---|---|---|---|---|
 | RNF-009 | La aplicación instalada debe funcionar **100% offline**; en la formulación PWA se expresaba como “después de la primera visita”. | Flujos principales disponibles sin red | Evidencia parcial | VM-02 confirma apertura offline en `v0.4.8` y el gate de `v0.5.0` controla assets remotos. La aceptación general del asset publicado `v0.5.0` está cerrada, sin evidencia granular de todos los flujos; los casos OFF-01–05 de F3 siguen pendientes sobre el artefacto acordado. Ver [checklist Android](../gestion/checklist-validacion-android.md). |
-| RNF-010 | El trabajo en curso no debe perderse ante pausa, bloqueo, cambio temporal de app o cierre inesperado. | Pérdida de borrador = 0 en flujos principales | Evidencia parcial | `RF-005 / HU-005` cuenta con tests y prueba manual de salida a otra app/PDF y restauración del borrador. Falta cubrir de forma explícita bloqueo y terminación inesperada para satisfacer todo el RNF. |
+| RNF-010 | El trabajo en curso no debe perderse ante pausa, bloqueo, cambio temporal de app o cierre inesperado. | Pérdida de borrador = 0 en flujos principales | Evidencia parcial | [CON-01–03 PASS y CON-04 FAIL en debug E5](../beta-core-validation/continuidad-2026-10-04.md). Captura inmediata revalidada en debug posterior: CON-04 nativo sigue FAIL a 255 ms pese a registrar el cambio en localStorage. Persistencia durable/limpieza y repetición de la matriz pendientes; no verificado. |
 | RNF-011 | El Service Worker debe cachear todos los assets estáticos. | Cache hit rate = 100% | Obsoleto | Service Worker y `vite-plugin-pwa` fueron eliminados por ADR-005. La disponibilidad offline vigente se obtiene empaquetando assets dentro del APK y se controla mediante RNF-009. |
 
 ---

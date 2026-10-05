@@ -8,7 +8,14 @@
 más pilotos ni equipamiento adicional exigido. La falta de métricas no bloquea
 la entrega por sí sola; ambos requisitos siguen **PENDING**, sin cambiar umbrales
 ni reescribir la evidencia histórica. RNF-009/RNF-010 no quedan postergados por
-esta decisión. La revisión y aprobación del PR actual siguen pendientes.
+esta decisión. La postergación se integró en [PR #28](https://github.com/jdfesa/lumapse/pull/28), `b646571`.
+
+**Frente activo — RNF-010, 2026-10-04:** [diagnóstico de continuidad y corrección
+acotada](./continuidad-2026-10-04.md). CON-01–03 pasan en el APK anterior; CON-04
+pierde la última escritura antes del debounce y los controles de limpieza inmediata
+fallan al reabrir. Captura inmediata implementada y APK debug instalada con firma
+compatible: CON-04 nativo sigue FAIL aunque localStorage ya capturó la última letra.
+Persistencia durable/limpieza y aceptación pendientes. RNF-009 sigue pendiente, sin reabrir CRUD/FPS.
 
 El 2026-09-15 el autor informó que probó en el dispositivo y aparentemente todo funciona
 bien; autorizó el merge y la limpieza. Esta confirmación general no aporta muestras CRUD/FPS,
@@ -174,8 +181,8 @@ vacías. Revisar esta preparación no acredita ningún RNF ni cierra F3.
 
 ## Preparación física F3-1 — 2026-10-04
 
-**Estado:** rama `test/f3-session-1-rnf-measurements` desde `93e8967`, en revisión
-documental; **mediciones diferidas a post-presentación** por decisión del autor.
+**Estado:** rama `test/f3-session-1-rnf-measurements` desde `93e8967`, integrada en
+PR #28 (`b646571`); **mediciones diferidas a post-presentación** por decisión del autor.
 El objetivo cuantitativo RNF-002/RNF-004 no está concluido ni se declara aprobado;
 el control del PR está en [TODO](../../TODO) y la deuda en
 [BACKLOG](../../BACKLOG.md#rendimiento-post-presentación). No se modificó la app
