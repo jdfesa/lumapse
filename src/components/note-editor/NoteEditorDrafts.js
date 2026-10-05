@@ -1,12 +1,9 @@
 import { clearDraft, loadDraft, saveDraft } from '../../services/EditorDraftService.ts';
 
-const DRAFT_SAVE_DEBOUNCE_MS = 500;
-
 export class EditorDraftCapture {
   constructor({ createPayload, isBlocked }) {
     this.createPayload = createPayload;
     this.isBlocked = isBlocked;
-    this.timer = null;
     this.hasChanges = false;
   }
 
@@ -14,22 +11,12 @@ export class EditorDraftCapture {
     if (this.isBlocked()) return;
 
     this.hasChanges = true;
-    if (this.timer) {
-      clearTimeout(this.timer);
-    }
-
-    this.timer = setTimeout(() => {
-      this.timer = null;
-      this.persist();
-    }, DRAFT_SAVE_DEBOUNCE_MS);
+    // Capturar antes de que una terminacion abrupta omita los eventos de salida.
+    // Esto actualiza solo el borrador, no la nota definitiva.
+    this.persist();
   }
 
   flush() {
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = null;
-    }
-
     if (this.hasChanges && !this.isBlocked()) {
       this.persist();
     }
@@ -48,11 +35,6 @@ export class EditorDraftCapture {
   }
 
   discard() {
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = null;
-    }
-
     this.hasChanges = false;
     clearDraft();
   }

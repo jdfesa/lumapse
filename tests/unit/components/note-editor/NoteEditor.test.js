@@ -226,17 +226,13 @@ describe('NoteEditor subject picker', () => {
 })
 
 describe('NoteEditor draft capture', () => {
-  it('guarda un borrador de nota nueva al cambiar el titulo luego del debounce', () => {
+  it('guarda inmediatamente el borrador al cambiar el titulo sin guardar la nota', () => {
     vi.useFakeTimers()
     const editor = createEditor()
     const titleInput = editor.container.querySelector('#composer-title-input')
 
     titleInput.value = 'Clase 1'
     titleInput.dispatchEvent(new window.Event('input'))
-
-    expect(EditorDraftService.saveDraft).not.toHaveBeenCalled()
-
-    vi.advanceTimersByTime(500)
 
     expect(EditorDraftService.saveDraft).toHaveBeenCalledWith({
       mode: 'create',
@@ -246,6 +242,8 @@ describe('NoteEditor draft capture', () => {
       subjectId: null,
       baseUpdatedAt: null,
     })
+    expect(NoteStore.createNote).not.toHaveBeenCalled()
+    expect(NoteStore.updateNote).not.toHaveBeenCalled()
 
     editor.destroy()
   })
@@ -257,8 +255,6 @@ describe('NoteEditor draft capture', () => {
 
     input.value = '   '
     input.dispatchEvent(new window.Event('input'))
-
-    vi.advanceTimersByTime(500)
 
     expect(EditorDraftService.saveDraft).not.toHaveBeenCalled()
     expect(EditorDraftService.clearDraft).toHaveBeenCalledTimes(1)
@@ -285,8 +281,6 @@ describe('NoteEditor draft capture', () => {
     editor.container
       .querySelector('.composer__subject-option[data-subject-id="sec-borges"]')
       .click()
-
-    vi.advanceTimersByTime(500)
 
     expect(EditorDraftService.saveDraft).toHaveBeenCalledWith({
       mode: 'create',
@@ -330,8 +324,6 @@ describe('NoteEditor draft capture', () => {
     const input = editor.container.querySelector('#composer-input')
     input.value = 'Cuerpo editado'
     input.dispatchEvent(new window.Event('input'))
-    vi.advanceTimersByTime(500)
-
     expect(EditorDraftService.saveDraft).toHaveBeenCalledWith({
       mode: 'edit',
       noteId: 'note-1',
@@ -344,7 +336,7 @@ describe('NoteEditor draft capture', () => {
     editor.destroy()
   })
 
-  it('fuerza el guardado pendiente en pagehide sin esperar el debounce', () => {
+  it('conserva el borrador capturado al recibir pagehide', () => {
     vi.useFakeTimers()
     const editor = createEditor()
     const input = editor.container.querySelector('#composer-input')
