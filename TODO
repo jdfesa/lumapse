@@ -19,17 +19,19 @@
 El [plan de desarrollo inmediato de la beta](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) fue aceptado e integrado en PR #13. **F1 y F2 aprobadas e integradas** en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`). **Preparación F3 aceptada e integrada** en PR #16 (`90fd21e`) tras la confirmación general del teléfono; ramas eliminadas. [Protocolo, fixtures y matriz](docs/beta-core-validation/README.md): las métricas Android siguen pendientes, sin declarar F3 cerrada.
 
 **Último frente aceptado:** identificación de build y smoke E5 de [PR #22](https://github.com/jdfesa/lumapse/pull/22), integrado mediante `8215541`; [artefacto y límites](docs/gestion/checklist-validacion-android.md#identificación-de-build--smoke-aceptado-de-pr-22).
-**Sesión 1 RNF-002/004 iniciada:** control/exportación comprobados, sin métricas aceptadas;
+**Sesión 1 RNF-002/004: métricas diferidas a post-presentación** por decisión del autor
+(2026-10-04), sin cumplimiento cuantitativo ni bloqueo de entrega por esta ausencia.
+Control/exportación comprobados;
 [evidencia canónica](docs/beta-core-validation/README.md#evidencia-de-la-sesión-1).
 [PR #23](https://github.com/jdfesa/lumapse/pull/23) se acota a evidencia/retirada experimental. Sesión 2 RNF-009/010 **no iniciada**;
-seguir el [plan vigente](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#continuidad-aprobada--2026-10-02).
+seguir el [ajuste de prioridad vigente](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#ajuste-de-prioridad-aprobado--2026-10-04).
 Los filtros quedaron cerrados en PR #18 (`3898db8`); no sustituyen F3.
 
 | Orden | Frente | Criterio de cierre |
 |---|---|---|
 | F1 | Gate portable — AUD-008/AUD-009 | Node 22.20.0/npm 10.9.3 fijados y mismo `verify` local/CI, sin depender de workaround, binario ignorado o falsos positivos CSP |
 | F2 | Creación confirmada — AUD-014 | No duplicar notas/fechas al fallar una recarga posterior a la escritura; regresiones y smoke Android |
-| F3 | Validación del núcleo | Fixture compatible de 500 notas, mediciones CRUD/FPS y casos offline/continuidad con evidencia del artefacto |
+| F3 | Validación del núcleo | Preparación de 500 notas preservada; CRUD/FPS pendientes en backlog post-presentación. Offline/continuidad pendientes por separado, sin cierre inferido |
 
 El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de línea base final **siguen pendientes** en la checklist, después del APK validado. F3 no los sustituye ni obliga a publicar `1.0.0`. WIP 2 es techo entre En Curso y En Revisión, no permiso para dos ramas/frentes técnicos.
 
@@ -43,8 +45,16 @@ El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de
 - [x] Refrescos vecinos de F2: crear materia/sección y editar/eliminar fecha fueron probados en Android por el autor e integrados en [PR #19](https://github.com/jdfesa/lumapse/pull/19) el 2026-09-18 (`34b2900`), con regresiones SQLite/UI y recuperación solo de lectura. Mover/eliminar notas y otras acciones de materias/papelera permanecen como deuda media, a revisar con evidencia; este cierre no completa F3. [Plan y evidencia](docs/gestion/plan-refrescos-vecinos-2026-09-16.md).
 - [x] F3: perfiles/ZIP de 50/500 notas, integración SQLite y protocolo aceptados e integrados en PR #16; confirmación general del teléfono recibida el 2026-09-15, sin nuevas muestras crudas ni identidad APK.
 - [x] Identificación de build: smoke Acerca/navegación aceptado y merge/limpieza autorizados para PR #22. Fuente Android E5; cierre documental sin cambios de producto ni métricas F3. Integración comprobable en el PR, sin cierre cuantitativo de F3.
-- [ ] F3 sesión 1: acordar con el autor el [handoff de preparación](docs/beta-core-validation/README.md#preparación-f3-1--handoff-al-autor); identificar entrada/contenido/primera presentación, relojes y frames fiables antes de completar series/umbrales del [protocolo](docs/beta-core-validation/protocolo.md). RNF-002/004 PENDING; [evidencia y límites](docs/beta-core-validation/README.md#evidencia-de-la-sesión-1).
-- [ ] F3 sesión 2: OFF-01–05 y CON-01–04, borradores nuevos/edición y ventana real de 500 ms, solo tras cerrar la sesión anterior y con operaciones pertinentes autorizadas. No optimizar sin medición/aprobación.
+- [ ] Cerrar la revisión documental del frente F3-1: preservar preparación/evidencia y la [postergación aceptada de RNF-002/004](BACKLOG.md#rendimiento-post-presentación), sin afirmar métricas cumplidas. [Avance comprobado](docs/beta-core-validation/README.md#preparación-física-f3-1--2026-10-04); aprobación/merge todavía pendientes.
+  - [x] Verificar APK instalada y cargar/validar el fixture pequeño (50 notas), con respaldo recuperable (2026-10-04).
+  - [x] Comprobar creación sintética y exportar dos trazas piloto; restablecer el fixture limpio. No son muestras de latencia/FPS aceptadas.
+  - [x] Probar la atribución física con SurfaceFlinger/gfxinfo en el dispositivo: el display global expone periodos, pero la capa WebView de Lumapse no devuelve frames atribuibles.
+  - [x] Cargar y comprobar el perfil `f3-500` (500 resultados) y ejecutar un recorrido exploratorio de scroll; no es FPS aceptado por falta de atribución física.
+- [ ] F3 sesión 2: OFF-01–05 y CON-01–04, borradores nuevos/edición y ventana real de 500 ms; prioridad a acordar tras integrar/limpiar el PR actual y con operaciones pertinentes autorizadas. No queda postergada por la decisión sobre CRUD/FPS ni se inicia automáticamente.
+
+Las series CRUD/FPS y la resolución de su método ya no son trabajo inmediato:
+quedan en el [backlog post-presentación](BACKLOG.md#rendimiento-post-presentación),
+con muestras y umbrales conservados. No se harán más pilotos en este frente.
 
 ## Checklist de trabajo
 
@@ -65,7 +75,7 @@ El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de
 - [x] Ejecutar el gate final de `v0.5.0`: 67 archivos y 1065 tests aprobados con un worker; CI de PR #10 en verde y versiones web/Android verificadas como `0.5.0/500`.
 - [x] APK firmada/publicada `v0.5.0` probada y aceptada por el autor en al menos tres dispositivos; [aceptación general canónica](docs/gestion/checklist-validacion-android.md#aceptación-general-de-la-apk-publicada-v050). Sin inventar resultados por caso/F3 ni volver a pedir esa prueba.
 - [x] Corregir y validar la interacción `Mover a` en PR #9: destinos con toque normal, acciones de materia/sección visibles y cierre consistente de menús contextuales.
-- [ ] Medir latencia CRUD y rendimiento percibido con al menos 500 notas y registrar el resultado; importar correctamente esa cantidad no constituye por sí solo una medición de `RNF-002`/`RNF-004`.
+- [ ] **Post-presentación, no bloqueante:** medir latencia CRUD/FPS de `RNF-002`/`RNF-004`, según [backlog](BACKLOG.md#rendimiento-post-presentación). Importar 500 notas no constituye una medición de rendimiento.
 - [ ] Ejecutar pruebas de uso con estudiantes y verificar profundidad de navegación (`RNF-005`, `RNF-006`).
 - [ ] Completar la auditoría manual de tipografía, touch targets, contraste y navegación accesible (`RNF-007`, `RNF-008`, `RNF-019` a `RNF-022`).
 - [ ] Repetir flujos principales en modo avión y comprobar recuperación ante cierre/terminación inesperada (`RNF-009`, `RNF-010`).
@@ -76,7 +86,8 @@ El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de
 - [ ] Medir el factor de ajuste real y redactar recomendaciones para futuros equipos.
 - [x] Reforzar `scripts/release-helper.py` para sincronizar y verificar `versionName`/`versionCode` Android con la versión declarada; aplicado en PR #10.
 - [x] Sincronizar README, CHANGELOG, Hito 06, líneas base, velocidad, cheatsheet e informe académico con la publicación de `v0.5.0`.
-- [x] Publicar y preservar la segunda beta `v0.5.0`; próximo corte correspondiente (objetivo `0.6.0+`) separado y expresamente autorizado antes del cierre final del informe/defensa.
+- [x] Publicar y preservar la segunda beta `v0.5.0`.
+- [ ] Al terminar lo importante, generar y validar el nuevo APK del corte final autorizado (objetivo `0.6.0+`); fijar fuente, versión/code y hash como base del informe/defensa y repetir las pruebas pertinentes sobre ese artefacto.
 
 ## Criterios de salida de Hito 06
 
@@ -91,6 +102,6 @@ El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de
 ## Observaciones heredadas no bloqueantes
 
 - `Mover a`: la fricción observada en la primera beta fue corregida y validada en PR #9; queda como antecedente resuelto, no como bloqueo abierto.
-- Rendimiento: la importación funcional de 500 notas fue aprobada, pero todavía faltan mediciones de latencia CRUD y rendimiento percibido con ese volumen.
+- Rendimiento: la importación funcional de 500 notas fue aprobada; CRUD/FPS permanecen pendientes y diferidos a post-presentación por el autor. No bloquean la entrega por esa ausencia ni prueban rendimiento óptimo.
 
 Estas observaciones forman parte de la validación final; las reglas de alcance que las gobiernan están centralizadas en [`BACKLOG.md`](BACKLOG.md#política-de-alcance--hito-06).

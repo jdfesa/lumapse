@@ -2,7 +2,7 @@
 
 **Fase Design Thinking:** Idear / Prototipar / Testear
 **Formulación inicial:** Abril 2026
-**Última revisión:** 2026-09-14 — enlace a preparación F3, sin cambiar estados por pruebas no ejecutadas
+**Última revisión:** 2026-10-04 — RNF-002/RNF-004 diferidos a post-presentación; estados y umbrales conservados
 **Autor:** José David Sandoval
 
 > **Nota de evolución:** Estos RNF se definieron originalmente para una PWA con IndexedDB. Después del relevamiento, Lumapse pivotó a una aplicación Android híbrida empaquetada con Capacitor, con persistencia SQLite y distribución por APK ([ADR-005](../adr/ADR-005-pivote-app-nativa.md), [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md)). La revisión conserva los criterios originales, pero distingue cuáles siguen vigentes, cuáles requieren evidencia y cuáles quedaron obsoletos o no aplican al artefacto Android.
@@ -31,6 +31,11 @@
 > Sin mediciones Android nuevas: RNF-002/RNF-004 continúan pendientes y RNF-009/RNF-010
 > conservan evidencia parcial. Los estados/umbrales de esta matriz no cambian.
 
+> **Prioridad vigente (2026-10-04):** por [decisión del autor](../../BACKLOG.md#rendimiento-post-presentación),
+> RNF-002/RNF-004 quedan **Pendientes, post-presentación**, sin bloquear la entrega
+> por falta de métricas. Funcionamiento satisfactorio no equivale a cumplimiento
+> temporal/FPS ni a rendimiento óptimo demostrado. No se posterga el resto de los RNF.
+
 ---
 
 ## Rendimiento (Performance)
@@ -38,9 +43,9 @@
 | ID | Requisito original | Métrica | Estado actual | Evidencia / siguiente paso |
 |---|---|---|---|---|
 | RNF-001 | La aplicación debe cargar y ser interactiva en menos de **3 segundos** en una conexión 3G simulada. | TTI ≤ 3s bajo 3G | Obsoleto | La conexión dejó de condicionar el arranque: los assets se incluyen en el APK. El equivalente vigente es apertura offline, cubierto por RNF-009. |
-| RNF-002 | El tiempo de respuesta al crear, editar o eliminar una nota no debe superar **200ms**. | Latencia CRUD ≤ 200ms | Pendiente | No hay una medición temporal registrada. Medir sobre el APK y un conjunto de datos definido en Hito 06. |
+| RNF-002 | El tiempo de respuesta al crear, editar o eliminar una nota no debe superar **200ms**. | Latencia CRUD ≤ 200ms | Pendiente | Sin muestras temporales aceptadas. Medición sobre APK/perfiles definidos diferida a [post-presentación](../../BACKLOG.md#rendimiento-post-presentación); no bloqueante por esta ausencia. |
 | RNF-003 | El bundle de producción, sin assets estáticos, no debe superar **500 KB** comprimido. | Bundle ≤ 500 KB gzip | Verificado | `npm run check:size` aplica presupuestos más estrictos mediante `scripts/bundle-budget.sh` y pasó en el gate final de `v0.5.0`. |
-| RNF-004 | La aplicación debe mantener rendimiento fluido al desplazar un listado con al menos **500 notas**. | FPS ≥ 55 durante scroll | Pendiente | La importación funcional de una fixture de 500 notas fue aprobada antes de `v0.5.0`, pero falta una medición reproducible de FPS o fluidez sobre ese volumen. |
+| RNF-004 | La aplicación debe mantener rendimiento fluido al desplazar un listado con al menos **500 notas**. | FPS ≥ 55 durante scroll | Pendiente | Importación funcional de 500 notas aprobada, sin FPS aceptados. Medición reproducible diferida a [post-presentación](../../BACKLOG.md#rendimiento-post-presentación); no bloqueante por esta ausencia. |
 
 ---
 
@@ -147,7 +152,7 @@ La planificación inicial asignaba grupos de RNF a los Hitos 03, 04 y 05. El piv
 
 ### Plan final de Hito 06
 
-1. Medir latencia CRUD y rendimiento con un volumen reproducible de notas (RNF-002, RNF-004).
+1. **Diferido a post-presentación:** medir latencia CRUD/FPS con un volumen reproducible de notas (RNF-002, RNF-004); emitir la matriz de entrega con estos requisitos pendientes y la postergación explícita, sin afirmar cumplimiento.
 2. Ejecutar pruebas con usuarios y revisar profundidad de navegación (RNF-005, RNF-006).
 3. Auditar tipografía, touch targets, contraste y navegación accesible (RNF-007, RNF-008, RNF-019 a RNF-022).
 4. Repetir los flujos principales en modo avión y cubrir bloqueo/terminación inesperada del editor (RNF-009, RNF-010).

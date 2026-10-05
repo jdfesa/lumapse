@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 06 — Entrega Final
 > **Hito 05:** Cerrado documentalmente el 2026-07-15 sobre la beta operativa `v0.4.8`
-> **Última actualización:** 2026-10-03 — PR #21/#22 integrados; [sesión 1 F3](docs/beta-core-validation/README.md#evidencia-de-la-sesión-1) con control/exportación comprobados y RNF-002/004 PENDING. PR #23 acotado a evidencia/retirada experimental; RNF-009/010 no iniciados.
+> **Última actualización:** 2026-10-04 — RNF-002/004 pendientes y [diferidos a post-presentación](#rendimiento-post-presentación) por decisión del autor; no bloquean la entrega por falta de métricas. Evidencia F3 preservada; RNF-009/010 no iniciados.
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -39,13 +39,13 @@ La trazabilidad de `v0.4.8` y `v0.5.0` queda distribuida entre `docs/gestion/lin
 
 **Plan aceptado e integrado en [PR #13](https://github.com/jdfesa/lumapse/pull/13):** F1 y F2 fueron aprobadas e integradas en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`). La preparación de F3 fue aceptada tras la confirmación general del teléfono e integrada en PR #16 (`90fd21e`); sus ramas ya se eliminaron. Las mediciones cuantitativas siguen pendientes y F3 no se declara cerrada. Ver [protocolo y evidencia](docs/beta-core-validation/README.md) y [plan inmediato](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md).
 
-**Objetivo vigente:** identificación de build aceptada e integrada en [PR #22](https://github.com/jdfesa/lumapse/pull/22); sesiones secuenciales RNF-002/004 **iniciada, métricas PENDING**, y RNF-009/010 **no iniciada**, según el [plan canónico](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#continuidad-aprobada--2026-10-02). Producto/bloqueantes → APK correspondiente generada/validada (objetivo `0.6.0+`) → informe/defensa. Filtros visibles cerrados en PR #18 (`3898db8`); no se agrega una F4 retroactiva ni se promete cerrar todo en dos sesiones.
+**Objetivo vigente:** producto/bloqueantes → APK correspondiente generada/validada (objetivo `0.6.0+`) → informe/defensa. Identificación de build aceptada e integrada en [PR #22](https://github.com/jdfesa/lumapse/pull/22). RNF-002/004 **PENDING, post-presentación**, según la [decisión del autor](#rendimiento-post-presentación); RNF-009/010 **no iniciados**, sin postergación automática. Cerrar la revisión de la rama actual antes de acordar otro frente. Filtros visibles cerrados en PR #18 (`3898db8`); no se agrega una F4 retroactiva ni se promete cerrar todo en dos sesiones.
 
 | Orden | Tarea | Criterio de cierre |
 |---|---|---|
 | F1 | Gate portable y Node explícito — AUD-008/AUD-009 | Mismo `verify` local/CI, Node 22.20.0/npm 10.9.3 fijados, sin falsos positivos CSP ni aceptación de crashes |
 | F2 | Confirmación de creación — AUD-014 | Una escritura confirmada no se informa como fallida por una recarga; regresiones y smoke Android proporcionales |
-| F3 | Evidencia del núcleo y 500 notas | Resultados trazables de CRUD/FPS, offline y continuidad; optimizaciones solo si una medición las justifica y se aprueba otro PR |
+| F3 | Evidencia del núcleo y 500 notas | CRUD/FPS diferidos a post-presentación, sin afirmar cumplimiento; offline y continuidad pendientes por separado. Optimizaciones solo si una medición las justifica y se aprueba otro PR |
 
 Continúan los pendientes de **congelamiento editorial/visual**, **validación RNF restante**, **presentación/defensa** y **línea base final**. No quedan completados ni descartados por esta secuencia técnica. No se fuerza una versión estable o `1.0.0` al terminar F3.
 
@@ -101,7 +101,7 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Área | Tarea | Prioridad | Notas |
 |---|---|---|---|
 | UX / filtros | Hacer visible y predecible la combinación de fecha con materia/sección | Cerrada en PR #18 | Detectado el 2026-09-14 con 500 notas en Android, sin pérdida de datos. [Plan y evidencia](docs/gestion/plan-filtros-visibles-2026-09-15.md): comparadas limpieza automática, chips y conteos; elegidos filtros removibles fuera del calendario con alcance explícito y conteos totales conservados. El autor confirmó la prueba Android y el cambio se integró en `3898db8`. |
-| Evidencia F3 | Correlacionar entrada, contenido correcto y primera presentación; frames/relojes/completitud | Alta / mediciones PENDING | DevTools ya exporta; no hay latencia/FPS aceptados ni defecto productivo demostrado. [Registro único y criterio de cierre](docs/beta-core-validation/README.md#evidencia-de-la-sesión-1). Sin reabrir experimentos ni iniciar otro frente automáticamente. |
+| Evidencia F3 | Correlacionar entrada, contenido correcto y primera presentación; frames/relojes/completitud | Post-presentación / PENDING | [Postergación aceptada](#rendimiento-post-presentación): no hay latencia/FPS aceptados ni defecto productivo demostrado. [Evidencia preservada](docs/beta-core-validation/README.md#evidencia-de-la-sesión-1). Sin más pilotos ni equipamiento adicional exigido para la entrega. |
 | Arquitectura UI | Separar responsabilidades restantes en componentes grandes | Media | Priorizar `NoteEditor`, `NoteList`, `Heatmap` y `BackupView` solo cuando haya cambios funcionales relacionados |
 | Tipado gradual | Aplicar estrategia JS/TS por fases | Media | Plan definido en [`docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md`](docs/gestion/plan-mantenibilidad-tipado-gradual-2026-06-12.md): typecheck, contratos, primera tanda de modulos puros, `AcademicEventTypes`, registro de comandos del editor, `AcademicEventService`, capa de backup —incluidos adaptadores nativos—, `ExportService`, `SubjectService.crud`, `SubjectService.trash` y auditorias `.ts` completadas |
 | Tipado gradual | Continuar servicios de dominio/backup archivo por archivo | Baja/Media | No avanzar en bloque; proximos candidatos requieren evaluar bordes nativos/share/storage o store con contratos mas claros |
@@ -115,11 +115,40 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Diagramas | Revisar Mermaid de casos de uso, secuencia y dominio | Baja | Completado el 2026-07-03 contra `v0.4.8`; reabrir solo si cambia el alcance o durante la exportacion final a PDF/LaTeX |
 | Informe final | Preparar conversion LaTeX/PDF | Media | Consideraciones registradas en `docs/informe-final/README.md`; mantener Markdown como fuente de verdad y abrir pipeline LaTeX solo cuando el contenido este congelado |
 | Release | Definir el cierre estable | Alta | `v0.5.0` es la segunda beta publicada y contiene AUD-001 a AUD-007; producto/bloqueantes y evidencia primero; luego APK correspondiente `0.6.0+` según avance/autorización, antes del informe final/defensa; no reemplazar el corte publicado |
-| Rendimiento | Medir crecimiento real de notas | Media | La importación funcional de una fixture de 500 notas fue aprobada; todavía deben medirse latencia CRUD y rendimiento percibido para cerrar `RNF-002`/`RNF-004` |
+| Rendimiento | Medir crecimiento real de notas | Post-presentación | La importación funcional de 500 notas fue aprobada; latencia CRUD/FPS siguen pendientes, [no bloqueantes por decisión del autor](#rendimiento-post-presentación). No equivale a rendimiento óptimo demostrado |
 | Adjuntos | Planificar adjuntos de imagen post-release | Media | Valor alto para fotos de pizarrón; debe implementarse sin cargar SQLite ni saturar el feed |
 | Backup | Restauracion avanzada y Drive API directa | Alta | Exportacion e importacion ZIP manual ya estan integradas; quedan reemplazo/merge avanzado de workspace y subida directa a Drive como fases futuras |
 
 ---
+
+## Rendimiento post-presentación
+
+**Decisión del autor — 2026-10-04:** diferir las mediciones cuantitativas de
+`RNF-002` y `RNF-004` hasta **después de la presentación**. El teléfono de pruebas
+está disponible, pero las herramientas ensayadas no han establecido un método
+rápido y verificable para la latencia hasta el resultado visible y los FPS
+atribuibles a Lumapse. No continuar pilotos ni exigir otra cámara o dispositivo
+para presentar la app.
+
+La falta de estas métricas **no bloquea por sí sola la entrega ni el cierre
+documental del frente actual**. Los requisitos siguen **Pendientes**: no se
+rebajan los umbrales de **≤ 200 ms** y **≥ 55 FPS**, ni se presentan la importación,
+el funcionamiento satisfactorio informado por el autor o los pilotos como prueba
+de cumplimiento cuantitativo o de rendimiento óptimo. La
+[evidencia existente](docs/beta-core-validation/README.md) se conserva sin convertir
+las capturas exploratorias en muestras válidas.
+
+- [ ] **Post-presentación:** acordar un método reproducible y proporcionado con
+  el entorno disponible; ejecutar las series de 50/500 notas del
+  [protocolo](docs/beta-core-validation/protocolo.md), conservar muestras/trazas y
+  registrar resultados reales, incluidos fallos e incertidumbres. Cualquier cambio
+  de método o protocolo se acuerda expresamente; no sustituir la medición por
+  tiempos de promesas, callbacks o frames del display global.
+
+Esta decisión no posterga otros RNF, no acepta defectos funcionales ni de seguridad,
+no cierra F3 cuantitativamente y no autoriza instalación, publicación o merge.
+El PR actual sigue sujeto a revisión, controles finales y aprobación del autor;
+la comprobación funcional acordada del dispositivo se registra por separado.
 
 ## Política de Alcance — Hito 06
 

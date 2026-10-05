@@ -10,7 +10,7 @@
 
 **Estado:** Activo — segunda beta `v0.5.0` publicada; cierre académico, matriz RNF y presentación pendientes
 
-**Última actualización:** 2026-10-02
+**Última actualización:** 2026-10-04
 
 ---
 
@@ -22,6 +22,12 @@ Cerrar Lumapse con documentación coherente, evidencia técnica reproducible, di
 de la versión correspondiente (objetivo `0.6.0+`, condicionado al avance/autorización)
 → completar informe final y defensa. Meta fines de octubre 2026, sujeta a evidencia y
 disponibilidad del autor/dispositivo; no se promete todo en las próximas dos sesiones.
+
+**Ajuste aprobado — 2026-10-04:** las métricas CRUD/FPS de RNF-002/RNF-004 quedan
+en [backlog post-presentación](../../BACKLOG.md#rendimiento-post-presentación), sin
+bloquear la entrega por esa ausencia. Se conservan pendientes y sin rebajar
+umbrales; no se exige otra cámara/dispositivo ni se continúan pilotos. Los demás
+RNF, la validación funcional y los controles de seguridad no quedan postergados.
 
 ## Punto de Partida
 
@@ -68,7 +74,7 @@ disponibilidad del autor/dispositivo; no se promete todo en las próximas dos se
 - [x] Cerrar AUD-006: ownership de Papelera y caches académicos, 1057 tests locales con un worker, controles individuales y Android aprobados; integrado mediante [PR #8](https://github.com/jdfesa/lumapse/pull/8), con limitación del gate local documentada.
 - [x] Ejecutar el quality gate del corte `v0.5.0`: 67 archivos y 1065 tests aprobados, CI de PR #10 en verde y metadatos `0.5.0/500` verificados.
 - [x] Aceptación general del asset firmado/publicado `lumapse-v0.5.0.apk` recibida; no se rellenan casos históricos ni se reabre esa prueba. F3 sigue pendiente.
-- [ ] Medir latencia CRUD y rendimiento con al menos 500 notas (`RNF-002`, `RNF-004`); la importación funcional de esa cantidad no constituye una medición de rendimiento.
+- [ ] **Post-presentación, no bloqueante:** medir latencia CRUD/FPS con al menos 500 notas (`RNF-002`, `RNF-004`), según [decisión del autor](../../BACKLOG.md#rendimiento-post-presentación). La importación funcional no acredita rendimiento cuantitativo.
 - [ ] Ejecutar pruebas con estudiantes y revisar profundidad de navegación (`RNF-005`, `RNF-006`). La fricción técnica de `Mover a` ya fue corregida y validada en PR #9.
 - [ ] Auditar tipografía, touch targets, contraste y navegación accesible (`RNF-007`, `RNF-008`, `RNF-019` a `RNF-022`).
 - [ ] Repetir los flujos principales en modo avión y cubrir cierre o terminación inesperada del editor (`RNF-009`, `RNF-010`).
@@ -121,12 +127,12 @@ fecha para `1.0.0`; los pendientes académicos y la matriz RNF completa siguen a
 
 | Orden | Frente | Salida esperada |
 |---|---|---|
-| 1 | Producto y bloqueantes | Identificación de build revisada; F3 en dos sesiones secuenciales y tratamiento aprobado de hallazgos reales |
+| 1 | Producto y bloqueantes | Identificación de build revisada y tratamiento aprobado de hallazgos reales; CRUD/FPS diferidos a post-presentación, resto de F3 pendiente de prioridad/revisión |
 | 2 | APK correspondiente | Gate/auditorías y validación Android del artefacto exacto; corte `0.6.0+` según avance/autorización |
 | 3 | Informe y diagramas | Evidencia final incorporada, bibliografía/maquetación y contenido congelados |
 | 4 | Defensa y línea base | Deck, demo, contingencia y decisión académica verificables |
 
-Detalle/prerrequisitos en la [continuidad aprobada](../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#continuidad-aprobada--2026-10-02).
+Detalle/prerrequisitos en el [ajuste de prioridad aprobado](../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#ajuste-de-prioridad-aprobado--2026-10-04); el diseño de pruebas original se conserva sin afirmar que fue ejecutado.
 
 Se mantiene WIP 2 como techo entre `En Curso` y `En Revisión`, según la [`Definition of Workflow`](../gestion/definicion-flujo-kanban.md), con una sola rama/frente técnico activo incluyendo revisión; no abrir el siguiente antes de aceptación, integración y limpieza.
 
@@ -139,7 +145,7 @@ Se mantiene WIP 2 como techo entre `En Curso` y `En Revisión`, según la [`Defi
 | AUD-006 — resultados async obsoletos | Cerrado / publicado | 1057 tests locales, controles individuales, Android y merge de PR #8; incluido en `v0.5.0` |
 | Versionado web/Android | Mitigado en `v0.5.0` | `check:version` compara package, `versionName` y `versionCode`; repetir en cada corte |
 | `Mover a` requería pulsación prolongada | Cerrado en PR #9 | Toque normal y menús contextuales validados en Android; conservar como antecedente resuelto |
-| Rendimiento con mayor volumen de notas | Riesgo medio de evidencia | Medición de latencia y percepción con al menos 500 notas; no solo importación funcional |
+| Rendimiento con mayor volumen de notas | Evidencia pendiente, diferida a post-presentación | Postergación aceptada por el autor; no bloqueante por falta de métricas. No equivale a cumplimiento de latencia/FPS ni descarta un defecto funcional futuro |
 | AUD-008/AUD-009 — gate portable | Cerrados en F1 / PR #14 | Mantener entorno canónico y gate único; aceptación y evidencia por entorno en el reporte de F1 |
 | AUD-014 — creación confirmada y recarga fallida | F2 aceptada e integrada en PR #15 | Autor confirmó funcionamiento e hizo merge el 2026-09-14; regresiones SQLite/UI. PR #19 cerró por separado crear materia/sección y editar/eliminar fecha (`34b2900`, 2026-09-18); otras mutaciones vecinas quedan como deuda media |
 
@@ -154,7 +160,7 @@ Se mantiene WIP 2 como techo entre `En Curso` y `En Revisión`, según la [`Defi
 - [x] Quality gate de `v0.5.0` sin fallos: 67 archivos, 1065 tests y CI aprobado.
 - [ ] Validación Android final documentada y sin bloqueantes.
 - [ ] Matriz RNF final emitida con evidencia reproducible y límites explícitos.
-- [ ] Observaciones pendientes resueltas o aceptadas explícitamente; `Mover a` ya quedó cerrado, rendimiento sigue abierto.
+- [ ] Observaciones pendientes resueltas o aceptadas explícitamente; `Mover a` cerrado y métricas CRUD/FPS aceptadas como deuda post-presentación, sin declararlas cumplidas. Revisar las restantes por separado.
 - [ ] Presentación, demo y contingencia ensayadas.
 - [ ] Factor de ajuste y recomendaciones finales registrados.
 - [x] Segunda beta posterior a `v0.4.8` publicada como `v0.5.0`, con versión web/Android, firma, hash y distribución inequívocos.

@@ -6,7 +6,7 @@
 
 **Base inspeccionada original:** `origin/main` en `91723d6` (2026-09-07), posterior a la publicación de `v0.5.0`. Para el frente actual: `5ef1f911d593f7fbd689d304432bfed47586fff6`, posterior al merge de PR #21.
 
-**Horizonte original:** tres a cuatro sesiones. La continuidad aprobada vigente se limita a las dos sesiones descritas abajo, después del frente de identificación de build; no promete la entrega final en ellas.
+**Horizonte original:** tres a cuatro sesiones; la continuidad de 2026-10-02 definió dos sesiones después de identificar el build, sin prometer la entrega final en ellas. La prioridad vigente se ajustó el 2026-10-04 como se indica abajo.
 
 **Responsable:** autor del proyecto, con asistencia técnica; la aceptación y el merge requieren su autorización.
 
@@ -58,7 +58,25 @@ Esto **no demuestra pérdida de datos, frecuencia del fallo en teléfonos ni una
 
 ## 4. Secuencia de las próximas sesiones
 
+### Ajuste de prioridad aprobado — 2026-10-04
+
+El autor decide [diferir RNF-002/RNF-004 a post-presentación](../../BACKLOG.md#rendimiento-post-presentación)
+ante la falta de un método rápido y verificable con el teléfono conectado. No más
+pilotos ni equipamiento adicional exigido para la entrega. La falta de métricas
+no bloquea por sí sola el cierre documental del frente actual ni la presentación;
+ambos requisitos siguen pendientes y sus muestras/umbrales se conservan.
+
+La rama actual entrega preparación, límites y esta postergación, no cumplimiento
+cuantitativo. Su revisión, comprobación funcional acordada, controles y autorización
+de merge siguen siendo necesarios. RNF-009/RNF-010 no quedan postergados ni iniciados:
+acordar la prioridad del siguiente frente solo después de integrar y limpiar el PR
+actual, sin exigir antes completar las métricas ahora diferidas. Esta decisión no
+autoriza cambios de producto, instalación o publicación ni cierra todo F3/Hito 06.
+
 ### Continuidad aprobada — 2026-10-02
+
+El diseño de sesiones siguiente se conserva como antecedente y protocolo de las
+pruebas pendientes; su orden inmediato está ajustado por la decisión de 2026-10-04.
 
 El autor aprobó las próximas **dos sesiones**, los ajustes mínimos de documentación
 y la identificación de builds en Acerca de. Son acuerdos vigentes, no otra auditoría
