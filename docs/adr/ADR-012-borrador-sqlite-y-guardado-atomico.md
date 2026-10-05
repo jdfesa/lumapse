@@ -2,7 +2,7 @@
 
 **Fecha:** 2026-10-05
 
-**Estado:** Aceptado por el autor para RNF-010; validación Android y revisión final pendientes.
+**Estado:** Aceptado por el autor para RNF-010; gate y validación técnica Android PASS. Revisión final del autor pendiente.
 
 ## Contexto
 

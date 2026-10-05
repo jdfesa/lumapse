@@ -2,21 +2,23 @@
 
 **Hito:** 06 — Entrega Final<br>
 **Objetivo:** registrar evidencia reproducible de cada APK y distinguir la verificación del asset firmado de las pruebas sobre builds equivalentes.<br>
-**Estado:** `v0.5.0` publicada y aceptada; smoke de identificación de PR #22 aceptado. F3 sin métricas CRUD/FPS nuevas; diagnóstico de continuidad RNF-010 con fallos abiertos.
+**Estado:** `v0.5.0` publicada y aceptada; smoke de identificación de PR #22 aceptado. F3 sin métricas CRUD/FPS nuevas; RNF-010 con validación técnica SQLite PASS y aceptación del autor pendiente.
 
 ---
 
-## Continuidad del borrador — 2026-10-04
+## Continuidad del borrador — 2026-10-04/05
 
-[Evidencia canónica](../beta-core-validation/continuidad-2026-10-04.md), APK debug
-E5 identificada, Samsung conectado al host Linux; pruebas autorizadas, sin reinstalar.
+[Evidencia canónica, hashes y límites](../beta-core-validation/continuidad-2026-10-04.md).
+Los fallos del diagnóstico en WebStorage no se borran ni se transfieren a esta APK.
 
-- [x] CON-01–04 ejecutados en creación/edición: CON-01–03 PASS; CON-04 FAIL antes de 500 ms, confirmado también con entrada nativa.
-- [x] Guardar/Descartar comprobados: guardado SQLite correcto, pero borrador reaparece tras terminación cercana; no se marca limpieza como aprobada.
-- [x] Notas originales intactas, red restaurada y borrador de prueba descartado.
-- [x] APK con captura inmediata y firma debug compatible instalada mediante el deploy habitual, sin desinstalación/borrado; hash y fuente en la evidencia canónica.
-- [ ] Resolver CON-04 nativo: sigue FAIL en esta APK aunque la última letra ya estaba en localStorage antes de terminar; no se atribuye este fallo al debounce eliminado.
-- [ ] Repetir la matriz y recibir confirmación del autor tras resolver persistencia/limpieza. RNF-010 no verificado; OFF-01–05 pendientes por separado.
+- [x] Persistencia SQLite y limpieza atómica aprobadas; [ADR-012](../adr/ADR-012-borrador-sqlite-y-guardado-atomico.md).
+- [x] Gate completo PASS: 1189 tests, build, tipos y controles del proyecto.
+- [x] Debug `0.5.0/500`, fuente `dbc8940` limpia, instalada con firma original mediante deploy habitual, sin desinstalación ni borrado.
+- [x] Migración real del borrador anterior PASS, sin crear nota final; 83 notas idénticas tras instalar.
+- [x] CON-01–04, creación/edición, PASS en modo avión. CON-04 a 217/209 ms; repetición nativa a 285 ms PASS.
+- [x] Guardar/Descartar y terminación cercana PASS: no reaparece el borrador ni se duplica la nota.
+- [x] Control final de integridad, conservación de notas ajenas a las pruebas, borrador limpio y red restaurada.
+- [ ] Confirmación del autor en esta APK y autorización de merge. RNF-010 aún con evidencia parcial; OFF-01–05 pendientes por separado.
 
 ---
 

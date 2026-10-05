@@ -92,8 +92,59 @@ El autor aprobó completar la misma unidad con SQLite, migración segura y guard
 atómico de nota/limpieza; decisión en [ADR-012](../adr/ADR-012-borrador-sqlite-y-guardado-atomico.md).
 Se conserva la tabla `metadata` existente, sin nuevas dependencias ni versión.
 
-**Pendiente de la misma rama:** terminar regresiones/gate, repetir CON-01–04 y
-Guardar/Descartar sobre APK identificada y obtener revisión del autor. **RNF-010
-conserva evidencia parcial con fallos abiertos** hasta esa revalidación; no se
-atribuye un PASS nativo al nuevo backend por tests de escritorio.
-RNF-009/OFF-01–05 siguen separados.
+## Revalidación SQLite — 2026-10-05
+
+`npm run verify`: **PASS**, Node 22.20.0/npm 10.9.3, **1189 tests en 78 archivos**,
+build, tipos y controles completos; avisos de complejidad/tamaño, sin errores.
+Las regresiones cubren orden de capturas, migración/reintento, marcador vacío,
+rollback de nota/limpieza, aviso de error y bloqueo temporal del editor.
+El primer gate detectó mocks de arranque desactualizados; corregidos y gate repetido.
+No se presenta este resultado local como CI ni como evidencia Android.
+
+Deploy habitual **exit 0**, sin `--clean`, desinstalación, cambio global de runtime,
+versión ni release. Mismo Samsung/Android/WebView y certificado debug del diagnóstico.
+Acerca identifica `0.5.0/500`, **Android debug · prueba privada**, fuente
+`dbc8940e9b46bb19f145d9c090cf506dd6ae2aaa`, **sin cambios locales**.
+APK generada e instalada con SHA-256 coincidente:
+`50bb5ee2f7670ddf7a6efeb9bddd470eba0be87f92691f7103ed7009ff173a71`.
+Los cambios posteriores a ese commit son documentación, no otro binario.
+
+| Caso sobre esta APK | Creación | Edición |
+|---|---|---|
+| CON-01: otra app y volver | PASS | PASS |
+| CON-02: bloquear/desbloquear | PASS | PASS |
+| CON-03: esperar 1 s, SIGKILL/reabrir | PASS | PASS |
+| CON-04: última escritura, SIGKILL/reabrir | PASS (217 ms) | PASS (209 ms) |
+| Descartar, SIGKILL/reabrir tras UI limpia | PASS | PASS |
+| Guardar/Actualizar, SIGKILL/reabrir tras UI limpia | PASS | PASS |
+
+- **Migración real PASS:** borrador sintético preparado en la APK anterior, restaurado
+  exactamente desde SQLite al instalar encima; legacy eliminado, sin crear nota final.
+  Las **83 notas previas al deploy permanecieron idénticas** en ese control.
+- Serie de **12 casos PASS** en modo avión, Wi-Fi/datos apagados. Verificación de
+  texto, materia/sección, identidad de edición, fila SQLite y ausencia de auto-guardado.
+  Los controles de limpieza terminaron el proceso 109–192 ms después de observar UI
+  limpia; fila `null` y editor limpio al reabrir, sin duplicar la nota guardada.
+- Repetición **nativa PASS**, `adb shell input text Z`, `isTrusted=true`: el timestamp
+  anterior al SIGKILL fue **285 ms** después de la entrada; recuperó `Native baselineZ`
+  tanto en UI como en SQLite. Descarte final y nueva reapertura limpios.
+- Una primera repetición nativa también recuperó el texto (216 ms), pero su runner
+  terminó con error al comprobar el descarte tras una espera fija de 200 ms. La
+  inspección posterior encontró UI limpia. Se corrigió **solo el runner privado**
+  para esperar confirmación observable; repetición completa anterior, exit 0.
+- Estado final: **84 notas**, una nueva sintética y la nota de control actualizada;
+  las **82 notas no seleccionadas para edición siguen idénticas**. `integrity_check=ok`,
+  borrador vacío, red restaurada. No se borraron notas para limpiar las pruebas.
+
+Originales privados/ignorados, sin bases, capturas, seriales ni claves en Git.
+SHA-256: migración `dacdb17266535dc700349cd3d4c459158f8294d0abb56a08ee10106720b5503d`;
+matriz `93bb0bfa3fb5970e61968eced5d7fcb57faf54016416f41f49c4c1010471a87f`;
+nativa completa `baf0d76b9d0308b772286594cdd4de787811dd29afcdc87c695c1c4ce9366e58`;
+control final `73e1581c0e154449827abe99a95e2a49db999b0d934aec0c20f3f89696eaebc0`.
+
+**Aceptación pendiente:** revisión del autor en esta APK (crear/editar, salir/bloquear,
+volver, guardar/descartar y reabrir) y autorización explícita de merge del PR.
+Los fallos reproducidos están corregidos en los casos ejecutados; RNF-010 conserva
+estado de evidencia parcial hasta esa aceptación. No se garantiza la última tecla
+si el proceso muere antes del commit: SIGKILL en estas ventanas no equivale a apagado
+físico, todos los LMK ni medición CRUD. RNF-009/OFF-01–05 siguen separados.

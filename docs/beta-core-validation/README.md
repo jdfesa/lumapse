@@ -10,12 +10,12 @@ la entrega por sí sola; ambos requisitos siguen **PENDING**, sin cambiar umbral
 ni reescribir la evidencia histórica. RNF-009/RNF-010 no quedan postergados por
 esta decisión. La postergación se integró en [PR #28](https://github.com/jdfesa/lumapse/pull/28), `b646571`.
 
-**Frente activo — RNF-010, 2026-10-04:** [diagnóstico de continuidad y corrección
-acotada](./continuidad-2026-10-04.md). CON-01–03 pasan en el APK anterior; CON-04
-pierde la última escritura antes del debounce y los controles de limpieza inmediata
-fallan al reabrir. Captura inmediata implementada y APK debug instalada con firma
-compatible: CON-04 nativo sigue FAIL aunque localStorage ya capturó la última letra.
-Persistencia durable/limpieza y aceptación pendientes. RNF-009 sigue pendiente, sin reabrir CRUD/FPS.
+**Frente activo — RNF-010, 2026-10-05:** [diagnóstico, corrección y revalidación](./continuidad-2026-10-04.md).
+Persistencia SQLite y limpieza atómica implementadas: gate (1189 tests), migración,
+CON-01–04 y Guardar/Descartar **PASS** en APK debug identificada, incluida entrada
+nativa antes de 500 ms. Los fallos de WebStorage anteriores se conservan en el reporte.
+Pendientes revisión del autor y autorización de merge. RNF-009 sigue separado,
+sin reabrir CRUD/FPS ni inferir garantías antes del commit.
 
 El 2026-09-15 el autor informó que probó en el dispositivo y aparentemente todo funciona
 bien; autorizó el merge y la limpieza. Esta confirmación general no aporta muestras CRUD/FPS,

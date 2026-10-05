@@ -50,7 +50,7 @@ El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de
   - [x] Comprobar creación sintética y exportar dos trazas piloto; restablecer el fixture limpio. No son muestras de latencia/FPS aceptadas.
   - [x] Probar la atribución física con SurfaceFlinger/gfxinfo en el dispositivo: el display global expone periodos, pero la capa WebView de Lumapse no devuelve frames atribuibles.
   - [x] Cargar y comprobar el perfil `f3-500` (500 resultados) y ejecutar un recorrido exploratorio de scroll; no es FPS aceptado por falta de atribución física.
-- [ ] RNF-010, única rama `test/android-draft-continuity`: captura inmediata implementada, gate PASS y APK debug instalada con firma compatible; [resultados](docs/beta-core-validation/continuidad-2026-10-04.md). CON-04 nativo sigue FAIL pese a capturar el cambio en localStorage. Acordar corrección de persistencia durable/limpieza, revalidar y revisar; sin cierre inferido.
+- [ ] RNF-010, única rama `test/android-draft-continuity`: persistencia SQLite y limpieza atómica implementadas; gate (1189 tests), migración, CON-01–04 y Guardar/Descartar PASS en APK debug identificada. [Resultados y límites](docs/beta-core-validation/continuidad-2026-10-04.md). Pendientes revisión del autor y autorización de merge; RNF-009 separado.
 - [ ] RNF-009: OFF-01–05 en un siguiente frente acordado, sin postergación automática ni inicio en paralelo.
 
 Las series CRUD/FPS y la resolución de su método ya no son trabajo inmediato:

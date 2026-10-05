@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 06 — Entrega Final
 > **Hito 05:** Cerrado documentalmente el 2026-07-15 sobre la beta operativa `v0.4.8`
-> **Última actualización:** 2026-10-04 — RNF-002/004 pendientes y [diferidos a post-presentación](#rendimiento-post-presentación); no bloquean por falta de métricas. RNF-009 pendiente; [RNF-010 en curso con fallos abiertos](docs/beta-core-validation/continuidad-2026-10-04.md).
+> **Última actualización:** 2026-10-05 — RNF-002/004 pendientes y [diferidos a post-presentación](#rendimiento-post-presentación); no bloquean por falta de métricas. RNF-009 pendiente; [RNF-010 con validación técnica PASS, aceptación pendiente](docs/beta-core-validation/continuidad-2026-10-04.md).
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -39,7 +39,7 @@ La trazabilidad de `v0.4.8` y `v0.5.0` queda distribuida entre `docs/gestion/lin
 
 **Plan aceptado e integrado en [PR #13](https://github.com/jdfesa/lumapse/pull/13):** F1 y F2 fueron aprobadas e integradas en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`). La preparación de F3 fue aceptada tras la confirmación general del teléfono e integrada en PR #16 (`90fd21e`); sus ramas ya se eliminaron. Las mediciones cuantitativas siguen pendientes y F3 no se declara cerrada. Ver [protocolo y evidencia](docs/beta-core-validation/README.md) y [plan inmediato](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md).
 
-**Objetivo vigente:** producto/bloqueantes → APK correspondiente generada/validada (objetivo `0.6.0+`) → informe/defensa. Identificación de build aceptada e integrada en [PR #22](https://github.com/jdfesa/lumapse/pull/22). RNF-002/004 **PENDING, post-presentación**, según la [decisión del autor](#rendimiento-post-presentación), integrada en PR #28. RNF-009 pendiente; **RNF-010 en curso**: captura inmediata implementada y APK debug instalada con firma compatible, pero CON-04 nativo sigue FAIL pese al registro inmediato en localStorage. Acordar corrección de persistencia durable/limpieza y revalidar. [Evidencia y límites](docs/beta-core-validation/continuidad-2026-10-04.md). Cerrar esta única rama antes de otro frente. Filtros cerrados en PR #18 (`3898db8`); sin F4 retroactiva ni promesa de cierre en dos sesiones.
+**Objetivo vigente:** producto/bloqueantes → APK correspondiente generada/validada (objetivo `0.6.0+`) → informe/defensa. Identificación de build aceptada e integrada en [PR #22](https://github.com/jdfesa/lumapse/pull/22). RNF-002/004 **PENDING, post-presentación**, según la [decisión del autor](#rendimiento-post-presentación), integrada en PR #28. RNF-009 pendiente; **RNF-010 en curso**: persistencia SQLite y limpieza atómica implementadas; gate, migración y matriz Android PASS, incluida entrada nativa antes de 500 ms. Pendientes revisión del autor y autorización de merge. [Evidencia y límites](docs/beta-core-validation/continuidad-2026-10-04.md). Cerrar esta única rama antes de otro frente. Filtros cerrados en PR #18 (`3898db8`); sin F4 retroactiva ni promesa de cierre en dos sesiones.
 
 | Orden | Tarea | Criterio de cierre |
 |---|---|---|
