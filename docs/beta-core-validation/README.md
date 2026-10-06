@@ -1,8 +1,8 @@
 # F3 — Validación del núcleo de la beta
 
 **Frente activo — RNF-009, 2026-10-06:** [flujos OFF-01–05 y fallo del ZIP local offline](./offline-2026-10-06.md).
-Rama acotada autorizada; corrección con regresiones locales, validación Android del
-debug nuevo pendiente. No repite RNF-010 ni reabre CRUD/FPS.
+Rama acotada autorizada; fix del ZIP local, gate y OFF-01–05 PASS en debug `348da88`.
+Datos previos preservados; revisión del autor/PR pendiente. No repite RNF-010 ni reabre CRUD/FPS.
 
 **Inicio:** 2026-09-14. **Estado:** preparación aceptada e integrada en [PR #16](https://github.com/jdfesa/lumapse/pull/16), `90fd21e`; F3 **sin cierre cuantitativo**, mediciones Android pendientes.
 **Rama de preparación:** `docs/beta-core-validation`, eliminada local y remotamente tras el merge autorizado. No hay nueva release ni cambios productivos de esta preparación.

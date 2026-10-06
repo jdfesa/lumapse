@@ -36,7 +36,7 @@
 | ID | Requisito | Prioridad | Persona | Hito | Estado |
 |---|---|---|---|---|---|
 | RF-007 | El sistema debe almacenar todas las notas de forma **local en el dispositivo**, sin enviar datos automáticamente a ningún servidor. La primera implementación utilizó IndexedDB; el producto vigente persiste en SQLite mediante Capacitor, según [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md). | MUST | Lucía, Martín | 02 / 04 | Implementado |
-| RF-008 | El sistema debe disponer de un **mecanismo offline** después de la instalación: los assets (HTML, CSS, JS, fuentes) se empaquetan dentro del APK Android y el núcleo persiste localmente. El mecanismo está implementado; la verificación integral de todos los flujos sin red corresponde a `RNF-009` y continúa pendiente de cierre. | MUST | Lucía | 03 | Implementado |
+| RF-008 | El sistema debe disponer de un **mecanismo offline** después de la instalación: los assets (HTML, CSS, JS, fuentes) se empaquetan dentro del APK Android y el núcleo persiste localmente. Los casos OFF-01–05 de `RNF-009` fueron verificados en el [debug identificado](../beta-core-validation/offline-2026-10-06.md); su revisión y la validación del futuro candidato final permanecen separadas. | MUST | Lucía | 03 | Implementado |
 | RF-009 | ~~El sistema debe registrar **Service Workers** para cachear los assets.~~ Obsoleto: la arquitectura migró a una APK Android híbrida con Capacitor ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)). Los assets son locales por diseño; `vite-plugin-pwa` fue removido en `ee90559`. | MUST | Lucía | 03 | Obsoleto (ADR-005) |
 
 ---

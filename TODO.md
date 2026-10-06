@@ -25,7 +25,7 @@ El [plan de desarrollo inmediato de la beta](docs/gestion/plan-desarrollo-inmedi
 (2026-10-04), sin cumplimiento cuantitativo ni bloqueo de entrega por esta ausencia.
 Control/exportación comprobados;
 [evidencia canónica](docs/beta-core-validation/README.md#evidencia-de-la-sesión-1).
-[PR #23](https://github.com/jdfesa/lumapse/pull/23) se acota a evidencia/retirada experimental. RNF-009 **pendiente**; RNF-010 **verificado y aceptado**, [diagnóstico, corrección y cierre](docs/beta-core-validation/continuidad-2026-10-04.md);
+[PR #23](https://github.com/jdfesa/lumapse/pull/23) se acota a evidencia/retirada experimental. RNF-009 **verificado en debug `348da88`, revisión pendiente**; RNF-010 **verificado y aceptado**, [diagnóstico, corrección y cierre](docs/beta-core-validation/continuidad-2026-10-04.md);
 seguir el [ajuste de prioridad vigente](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#ajuste-de-prioridad-aprobado--2026-10-04).
 Los filtros quedaron cerrados en PR #18 (`3898db8`); no sustituyen F3.
 
@@ -33,7 +33,7 @@ Los filtros quedaron cerrados en PR #18 (`3898db8`); no sustituyen F3.
 |---|---|---|
 | F1 | Gate portable — AUD-008/AUD-009 | Node 22.20.0/npm 10.9.3 fijados y mismo `verify` local/CI, sin depender de workaround, binario ignorado o falsos positivos CSP |
 | F2 | Creación confirmada — AUD-014 | No duplicar notas/fechas al fallar una recarga posterior a la escritura; regresiones y smoke Android |
-| F3 | Validación del núcleo | Preparación de 500 notas preservada; CRUD/FPS pendientes en backlog post-presentación. RNF-009 pendiente; RNF-010 verificado y aceptado en debug identificado, sin cierre global de F3 |
+| F3 | Validación del núcleo | Preparación de 500 notas preservada; CRUD/FPS pendientes en backlog post-presentación. RNF-009 verificado en debug `348da88`; RNF-010 verificado y aceptado en debug identificado, sin cierre global de F3 |
 
 El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de línea base final **siguen pendientes** en la checklist, después del APK validado. F3 no los sustituye ni obliga a publicar `1.0.0`. WIP 2 es techo entre En Curso y En Revisión, no permiso para dos ramas/frentes técnicos.
 
@@ -53,7 +53,7 @@ El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de
   - [x] Probar la atribución física con SurfaceFlinger/gfxinfo en el dispositivo: el display global expone periodos, pero la capa WebView de Lumapse no devuelve frames atribuibles.
   - [x] Cargar y comprobar el perfil `f3-500` (500 resultados) y ejecutar un recorrido exploratorio de scroll; no es FPS aceptado por falta de atribución física.
 - [x] RNF-010: persistencia SQLite, migración y limpieza atómica verificadas; 1189 tests, CON-01–04 y Guardar/Descartar PASS en debug `dbc8940`. El autor confirmó funcionamiento en el teléfono y aprobó el cierre de [PR #29](https://github.com/jdfesa/lumapse/pull/29). [Resultados, aceptación y límites](docs/beta-core-validation/continuidad-2026-10-04.md). No repetir esta tarea ni las pruebas ya realizadas.
-- [ ] RNF-009: OFF-01–05 en la rama acotada autorizada `test/android-offline-core`; [fallo de exportación offline, corrección y validación pendiente](docs/beta-core-validation/offline-2026-10-06.md). No queda completado por RNF-010 ni por tests locales.
+- [ ] Revisar y aceptar RNF-009/PR de `test/android-offline-core`: [OFF-01–05 PASS en debug `348da88`, fix del ZIP local y datos preservados](docs/beta-core-validation/offline-2026-10-06.md). No hay autorización de merge todavía.
 
 Las series CRUD/FPS y la resolución de su método ya no son trabajo inmediato:
 quedan en el [backlog post-presentación](BACKLOG.md#rendimiento-post-presentación),
@@ -83,7 +83,7 @@ con muestras y umbrales conservados. No se harán más pilotos en este frente.
 
 ### Antes del corte APK final — núcleo y riesgos
 
-- [ ] Completar OFF-01–05 de funcionamiento offline (`RNF-009`) en el [frente activo](docs/beta-core-validation/offline-2026-10-06.md). `RNF-010` ya está verificado y aceptado en el debug registrado; conservar esa evidencia sin repetir la tarea cerrada.
+- [x] Ejecutar OFF-01–05 de funcionamiento offline (`RNF-009`): [PASS en debug identificado, revisión del autor pendiente](docs/beta-core-validation/offline-2026-10-06.md). `RNF-010` ya está verificado y aceptado en el debug registrado; conservar esa evidencia sin repetir la tarea cerrada.
 - [ ] Registrar tráfico de red y revisar dependencias/trackers (`RNF-012`, `RNF-013`), distinguiendo transmisión automática de una exportación explícita del usuario.
 - [ ] Ejecutar una prueba acotada de uso con estudiantes y revisar profundidad de navegación (`RNF-005`, `RNF-006`), sin inferir tiempos, éxito o adopción a partir de la encuesta o de las pruebas del autor.
 - [ ] Revisar tipografía, touch targets, contraste, teclado cuando corresponda y nombres accesibles (`RNF-007`, `RNF-008`, `RNF-020` a `RNF-022`). Medir los criterios aplicables; la inspección visual o el checker estático no bastan para declararlos cumplidos.

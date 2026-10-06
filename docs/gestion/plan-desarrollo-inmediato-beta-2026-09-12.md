@@ -79,8 +79,8 @@ RNF-010 ya fue implementado, probado en Android y aceptado por el autor en
 como estado vigente de esa tarea. [Evidencia y cierre](../beta-core-validation/continuidad-2026-10-04.md).
 **Seguimiento al 2026-10-06:** RNF-009 se aborda en la rama acotada autorizada
 `test/android-offline-core`; [fallo OFF-05 reproducido, corrección y resultados](../beta-core-validation/offline-2026-10-06.md).
-La validación Android del debug nuevo está pendiente; no se reabre RNF-010 ni se
-amplía este plan a otro frente.
+OFF-01–05 pasaron en debug `348da88`; revisión del autor/PR pendiente. No se reabre
+RNF-010 ni se amplía este plan a otro frente.
 
 **Recorte de cierre acordado — octubre 2026:** [imprescindibles y deuda postdefensa](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa)
 precisan este mismo plan, no crean otro ciclo de producto. Para finales de octubre

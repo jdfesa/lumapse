@@ -2,7 +2,7 @@
 
 **Hito:** 06 — Entrega Final<br>
 **Objetivo:** registrar evidencia reproducible de cada APK y distinguir la verificación del asset firmado de las pruebas sobre builds equivalentes.<br>
-**Estado:** `v0.5.0` publicada y aceptada; smoke de identificación de PR #22 aceptado. F3 sin métricas CRUD/FPS nuevas; RNF-010 verificado en debug identificado y aceptado por el autor; cierre aprobado en PR #29.
+**Estado:** `v0.5.0` publicada y aceptada; smoke de identificación de PR #22 aceptado. F3 sin métricas CRUD/FPS nuevas; OFF-01–05 de RNF-009 verificados en debug `348da88`, revisión del autor pendiente. RNF-010 verificado en debug identificado y aceptado por el autor; cierre aprobado en PR #29.
 
 ---
 
@@ -10,12 +10,12 @@
 
 [Fallo OFF-05 reproducido, corrección y matriz del debug nuevo](../beta-core-validation/offline-2026-10-06.md).
 El autor autorizó la unidad OFF-01–05 y el debug conservando datos y firma. La
-validación de la corrección permanece pendiente; no completar estas casillas por
-los tests locales ni por la aceptación anterior de RNF-010.
+validación de la corrección pasó en el debug `348da88`; la revisión del autor
+permanece pendiente. No se atribuyen resultados al asset publicado ni a un candidato nuevo.
 
 - [x] Identificar APK inicial y reproducir bloqueo de exportación ZIP sin red.
 - [x] Incorporar fix acotado y regresiones de disponibilidad/exportación/cancelación.
-- [ ] Identificar y validar el debug nuevo: OFF-01–05, integridad y datos preservados.
+- [x] Identificar y validar el debug nuevo: OFF-01–05 PASS, integridad y datos preservados.
 - [ ] Revisión y aceptación del autor; sin autorización de merge todavía.
 
 ---
