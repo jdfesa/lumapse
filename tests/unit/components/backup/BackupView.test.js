@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 vi.mock('../../../../src/services/backup/BackupFlowService.ts', () => ({
   BACKUP_FLOW_STATUS: {
     READY: 'ready',
-    BLOCKED_OFFLINE: 'blocked-offline',
+    OFFLINE_READY: 'offline-ready',
     REQUIRES_WARNING: 'requires-warning',
     CANCELLED: 'cancelled',
     SHARED: 'shared',
@@ -61,8 +61,8 @@ const CELLULAR_READINESS = {
 }
 
 const OFFLINE_READINESS = {
-  status: BACKUP_FLOW_STATUS.BLOCKED_OFFLINE,
-  ready: false,
+  status: BACKUP_FLOW_STATUS.OFFLINE_READY,
+  ready: true,
   message: 'Sin conexion.',
   networkState: {
     connectionType: 'none',
@@ -176,7 +176,7 @@ describe('BackupView', () => {
     view.destroy()
   })
 
-  it('renderiza estado offline con accion deshabilitada', async () => {
+  it('sin conexion habilita exportar ZIP local y advierte solo sobre la nube', async () => {
     getExternalBackupReadiness.mockResolvedValue(OFFLINE_READINESS)
     const container = createContainer()
     const view = new BackupView(container)
@@ -184,7 +184,14 @@ describe('BackupView', () => {
     await view.init()
 
     expect(container.textContent).toContain('Sin conexion')
-    expect(container.querySelector('.js-btn-create-backup').disabled).toBe(true)
+    expect(container.textContent).toContain('destino local')
+    expect(container.textContent).toContain('nube necesitan conexión')
+    expect(container.querySelector('.js-btn-create-backup').disabled).toBe(false)
+    container.querySelector('.js-btn-create-backup').click()
+    await flushPromises()
+    expect(confirmDialog).not.toHaveBeenCalled()
+    expect(createAndShareCurrentBackup).toHaveBeenCalledExactlyOnceWith({ acceptNetworkWarning: false })
+    expect(container.textContent).toContain('ZIP preparado')
 
     view.destroy()
   })

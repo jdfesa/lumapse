@@ -2,7 +2,8 @@
 // backup/BackupFlowService
 //
 // Responsabilidad: orquestar el flujo manual de backup externo:
-// conectividad -> ZIP actual -> cache -> share sheet.
+// estado de red -> ZIP local -> cache -> share sheet.
+// La conectividad limita el destino en nube, no la creación del ZIP local.
 // =============================================================
 
 import { getCurrentBackupNetworkState } from './BackupNativeNetworkService'
@@ -22,7 +23,7 @@ import type { BackupNetworkState } from './BackupNetworkService'
 
 export const BACKUP_FLOW_STATUS = Object.freeze({
   READY: 'ready',
-  BLOCKED_OFFLINE: 'blocked-offline',
+  OFFLINE_READY: 'offline-ready',
   REQUIRES_WARNING: 'requires-warning',
   CANCELLED: 'cancelled',
   SHARED: 'shared',
@@ -34,7 +35,7 @@ export type BackupFlowStatus =
 export interface BackupReadiness {
   status:
     | typeof BACKUP_FLOW_STATUS.READY
-    | typeof BACKUP_FLOW_STATUS.BLOCKED_OFFLINE
+    | typeof BACKUP_FLOW_STATUS.OFFLINE_READY
     | typeof BACKUP_FLOW_STATUS.REQUIRES_WARNING
   ready: boolean
   networkState: BackupNetworkState
@@ -111,8 +112,8 @@ export interface CreateAndShareBackupOptions extends BackupStorageOptions {
 function readinessFromNetwork(networkState: BackupNetworkState): BackupReadiness {
   if (!networkState.externalBackupAllowed) {
     return {
-      status: BACKUP_FLOW_STATUS.BLOCKED_OFFLINE,
-      ready: false,
+      status: BACKUP_FLOW_STATUS.OFFLINE_READY,
+      ready: true,
       networkState,
       message: networkState.message,
     }
@@ -136,7 +137,7 @@ function readinessFromNetwork(networkState: BackupNetworkState): BackupReadiness
 }
 
 /**
- * Consulta si el backup externo puede iniciarse sin advertencias.
+ * Consulta si el ZIP y el selector pueden iniciarse; la nube puede requerir red.
  * @param {object} deps Dependencias inyectables para tests/UI
  * @param {Function} deps.readNetworkState Lector de estado de red ya traducido
  * @returns {Promise<{status: string, ready: boolean, networkState: object, message: string}>}
@@ -205,7 +206,7 @@ function shareWasCancelled(share: BackupShareResult): boolean {
 }
 
 /**
- * Crea el backup actual y abre el share sheet si la red lo permite.
+ * Crea el ZIP local y abre el share sheet incluso sin conexión.
  * No avanza en datos moviles/red desconocida salvo confirmacion explicita.
  * @param {object} options Opciones del flujo
  * @param {boolean} options.acceptNetworkWarning Permite continuar si la red requiere advertencia
@@ -225,10 +226,6 @@ export async function createAndShareCurrentBackup(
   const persistBackupAt = options.persistBackupCreatedAt || setLastBackupCreatedAt
   const networkState = await readNetworkState()
   const readiness = readinessFromNetwork(networkState)
-
-  if (readiness.status === BACKUP_FLOW_STATUS.BLOCKED_OFFLINE) {
-    return readiness
-  }
 
   if (readiness.status === BACKUP_FLOW_STATUS.REQUIRES_WARNING && !options.acceptNetworkWarning) {
     return readiness

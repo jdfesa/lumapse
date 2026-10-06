@@ -53,7 +53,7 @@ El cierre editorial/visual, la matriz RNF restante, la defensa y la decisión de
   - [x] Probar la atribución física con SurfaceFlinger/gfxinfo en el dispositivo: el display global expone periodos, pero la capa WebView de Lumapse no devuelve frames atribuibles.
   - [x] Cargar y comprobar el perfil `f3-500` (500 resultados) y ejecutar un recorrido exploratorio de scroll; no es FPS aceptado por falta de atribución física.
 - [x] RNF-010: persistencia SQLite, migración y limpieza atómica verificadas; 1189 tests, CON-01–04 y Guardar/Descartar PASS en debug `dbc8940`. El autor confirmó funcionamiento en el teléfono y aprobó el cierre de [PR #29](https://github.com/jdfesa/lumapse/pull/29). [Resultados, aceptación y límites](docs/beta-core-validation/continuidad-2026-10-04.md). No repetir esta tarea ni las pruebas ya realizadas.
-- [ ] RNF-009: OFF-01–05 como siguiente frente por acordar; no queda completado por el cierre de RNF-010 ni iniciado automáticamente.
+- [ ] RNF-009: OFF-01–05 en la rama acotada autorizada `test/android-offline-core`; [fallo de exportación offline, corrección y validación pendiente](docs/beta-core-validation/offline-2026-10-06.md). No queda completado por RNF-010 ni por tests locales.
 
 Las series CRUD/FPS y la resolución de su método ya no son trabajo inmediato:
 quedan en el [backlog post-presentación](BACKLOG.md#rendimiento-post-presentación),
@@ -83,7 +83,7 @@ con muestras y umbrales conservados. No se harán más pilotos en este frente.
 
 ### Antes del corte APK final — núcleo y riesgos
 
-- [ ] Completar OFF-01–05 de funcionamiento offline (`RNF-009`) como próximo frente técnico por acordar. `RNF-010` ya está verificado y aceptado en el debug registrado; conservar esa evidencia sin repetir la tarea cerrada.
+- [ ] Completar OFF-01–05 de funcionamiento offline (`RNF-009`) en el [frente activo](docs/beta-core-validation/offline-2026-10-06.md). `RNF-010` ya está verificado y aceptado en el debug registrado; conservar esa evidencia sin repetir la tarea cerrada.
 - [ ] Registrar tráfico de red y revisar dependencias/trackers (`RNF-012`, `RNF-013`), distinguiendo transmisión automática de una exportación explícita del usuario.
 - [ ] Ejecutar una prueba acotada de uso con estudiantes y revisar profundidad de navegación (`RNF-005`, `RNF-006`), sin inferir tiempos, éxito o adopción a partir de la encuesta o de las pruebas del autor.
 - [ ] Revisar tipografía, touch targets, contraste, teclado cuando corresponda y nombres accesibles (`RNF-007`, `RNF-008`, `RNF-020` a `RNF-022`). Medir los criterios aplicables; la inspección visual o el checker estático no bastan para declararlos cumplidos.

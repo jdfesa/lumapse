@@ -88,12 +88,12 @@ describe('BackupFlowService', () => {
       })
     })
 
-    it('retorna blocked-offline sin conexion', async () => {
+    it('sin conexion habilita el ZIP local sin declarar disponible la nube', async () => {
       readNetworkState.mockResolvedValue(OFFLINE_STATE)
 
       await expect(getExternalBackupReadiness({ readNetworkState })).resolves.toMatchObject({
-        status: BACKUP_FLOW_STATUS.BLOCKED_OFFLINE,
-        ready: false,
+        status: BACKUP_FLOW_STATUS.OFFLINE_READY,
+        ready: true,
         networkState: OFFLINE_STATE,
       })
     })
@@ -185,8 +185,9 @@ describe('BackupFlowService', () => {
       expect(persistBackupCreatedAt).toHaveBeenCalledTimes(1)
     })
 
-    it('sin conexion bloquea el flujo y no genera ZIP', async () => {
+    it('sin conexion genera ZIP y abre el selector para un destino local', async () => {
       readNetworkState.mockResolvedValue(OFFLINE_STATE)
+      shareBackup.mockResolvedValue({ ...SHARE_RESULT, shareResult: { activityType: 'local-test' } })
 
       const result = await createAndShareCurrentBackup({
         readNetworkState,
@@ -196,12 +197,26 @@ describe('BackupFlowService', () => {
       })
 
       expect(result).toMatchObject({
-        status: BACKUP_FLOW_STATUS.BLOCKED_OFFLINE,
-        ready: false,
+        status: BACKUP_FLOW_STATUS.SHARED,
+        ready: true,
         networkState: OFFLINE_STATE,
       })
-      expect(createBackup).not.toHaveBeenCalled()
-      expect(shareBackup).not.toHaveBeenCalled()
+      expect(createBackup).toHaveBeenCalledExactlyOnceWith({ type: 'arraybuffer' })
+      expect(shareBackup).toHaveBeenCalledExactlyOnceWith(BACKUP_RESULT, {})
+      expect(persistBackupCreatedAt).toHaveBeenCalledTimes(1)
+    })
+
+    it('cancelar el selector offline conserva el ZIP y no registra backup exitoso', async () => {
+      readNetworkState.mockResolvedValue(OFFLINE_STATE)
+      shareBackup.mockResolvedValue({ ...SHARE_RESULT, shareResult: { cancelled: true } })
+
+      const result = await createAndShareCurrentBackup({
+        readNetworkState, createBackup, shareBackup, persistBackupCreatedAt,
+      })
+
+      expect(result).toMatchObject({ status: BACKUP_FLOW_STATUS.CANCELLED, backup: BACKUP_RESULT })
+      expect(createBackup).toHaveBeenCalledTimes(1)
+      expect(shareBackup).toHaveBeenCalledTimes(1)
       expect(persistBackupCreatedAt).not.toHaveBeenCalled()
     })
 

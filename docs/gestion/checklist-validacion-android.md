@@ -6,6 +6,20 @@
 
 ---
 
+## Flujos offline — 2026-10-06
+
+[Fallo OFF-05 reproducido, corrección y matriz del debug nuevo](../beta-core-validation/offline-2026-10-06.md).
+El autor autorizó la unidad OFF-01–05 y el debug conservando datos y firma. La
+validación de la corrección permanece pendiente; no completar estas casillas por
+los tests locales ni por la aceptación anterior de RNF-010.
+
+- [x] Identificar APK inicial y reproducir bloqueo de exportación ZIP sin red.
+- [x] Incorporar fix acotado y regresiones de disponibilidad/exportación/cancelación.
+- [ ] Identificar y validar el debug nuevo: OFF-01–05, integridad y datos preservados.
+- [ ] Revisión y aceptación del autor; sin autorización de merge todavía.
+
+---
+
 ## Continuidad del borrador — 2026-10-04/05
 
 [Evidencia canónica, hashes y límites](../beta-core-validation/continuidad-2026-10-04.md).

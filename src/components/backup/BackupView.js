@@ -195,7 +195,7 @@ export class BackupView {
         ...this.state,
         uiState: UI_STATE.ERROR,
         title: 'No se pudo exportar el ZIP',
-        message: 'Revisá la conexión o intentá nuevamente.',
+        message: 'Intentá nuevamente o elegí un destino local.',
         actionLabel: 'Reintentar exportación',
         disabled: false,
         showRefresh: true,
@@ -208,7 +208,7 @@ export class BackupView {
   }
 
   updateAfterBackupFlow(result) {
-    if (result.status === BACKUP_FLOW_STATUS.REQUIRES_WARNING || result.status === BACKUP_FLOW_STATUS.BLOCKED_OFFLINE) {
+    if (result.status === BACKUP_FLOW_STATUS.REQUIRES_WARNING) {
       this.state = {
         ...this.state,
         ...statusCopy(result.status),
