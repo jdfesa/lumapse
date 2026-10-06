@@ -5,7 +5,7 @@
 > **Criterio de prioridad:** realismo académico — memos es una app madura, Lumapse es un MVP enfocado.  
 > **Fecha:** 2026-05-15
 
-> **Estado documental:** Snapshot histórico del corte indicado. No es el backlog vigente ni compromete hitos, versiones o funcionalidades actuales. Los estados y horizontes de cada idea solo son válidos para el análisis del 2026-05-15; la prioridad canónica se consulta en [`BACKLOG.md`](../../BACKLOG.md) y [`TODO`](../../TODO).
+> **Estado documental:** Snapshot histórico del corte indicado. No es el backlog vigente ni compromete hitos, versiones o funcionalidades actuales. Los estados y horizontes de cada idea solo son válidos para el análisis del 2026-05-15; la prioridad canónica se consulta en [`BACKLOG.md`](../../BACKLOG.md) y [`TODO.md`](../../TODO.md).
 
 ---
 

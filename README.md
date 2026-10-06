@@ -275,9 +275,10 @@ Cerrar el proyecto con documentación coherente, evidencia final y presentación
 - Segunda beta `v0.5.0` publicada con AUD-001 a AUD-007, mejoras táctiles y versionado Android `0.5.0/500`
 - Revisión editorial y congelamiento de la documentación técnica y académica
 - Gráficos de base de datos regenerados y verificados contra el schema real; resta validar su maquetación en PDF y diapositivas
-- Quality gate del corte aprobado con 67 archivos y 1065 tests; resta completar la matriz RNF y la instalación manual del asset firmado cuando el dispositivo lo permita
-- Decisión explícita sobre la línea base académica final: conservar `v0.5.0` como referencia de defensa o publicar un corte estable posterior
-- Preparación de presentación, demo y respuestas para el tribunal evaluador
+- Quality gate histórico de `v0.5.0` aprobado con 67 archivos y 1065 tests; el asset firmado fue [aceptado por el autor](./docs/gestion/checklist-validacion-android.md#aceptación-general-de-la-apk-publicada-v050). Restan controles y validación del nuevo corte, no repetir esa aceptación
+- [Recorte de entrega y deuda postdefensa](./BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa): núcleo offline, privacidad, uso/accesibilidad y matriz RNF pendientes; continuidad del borrador aceptada en PR #29 y CRUD/FPS diferidos, sin afirmar cumplimiento cuantitativo
+- Preparar para finales de octubre de 2026 el APK final identificado/validado, informe, manual adaptado desde `v0.5.0`, presentación y demo; seguimiento en [`TODO.md`](./TODO.md)
+- Fijar la línea base académica sobre ese artefacto, sin forzar una versión estable o afirmar adopción real
 
 > **Nota sobre la planificación:** Los meses asociados a cada hito constituyen estimaciones formuladas al inicio del proyecto. El desarrollo es iterativo: los plazos pueden ajustarse al profundizar la complejidad o aparecer hallazgos que cambian el alcance. El relevamiento por conveniencia aportó evidencia para priorizar móvil, offline y organización por materias; las decisiones de plataforma se justifican por separado en los ADR técnicos. El avance real se registra en los [informes de hito](./docs/hitos/), el [Changelog](./CHANGELOG.md) y el historial de commits.
 
@@ -303,7 +304,7 @@ Paralelamente al desarrollo se realizó un relevamiento con potenciales usuarios
 - [Portal documental](./docs/README.md) — Jerarquía, fuentes canónicas y criterio editorial
 - [Informe final ensamblado](./docs/informe-final/INFORME-FINAL-COMPLETO.md) — Checkpoint académico generado desde los capítulos fuente
 - [Hito 06 — Entrega Final](./docs/hitos/hito-06-octubre.md) — Alcance y criterios de cierre vigentes
-- [Plan de desarrollo inmediato de la beta](./docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) — Propuesta para próximas sesiones, con evidencia y criterios de aceptación; pendiente de revisión por PR
+- [Plan de desarrollo inmediato de la beta](./docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) — Plan aceptado, seguimiento y ajuste vigente del cierre; no acredita pruebas pendientes
 - [Cheat sheet de defensa](./docs/gestion/cheatsheet-defensa.md) — Métricas y respuestas verificables para la presentación
 - [Architecture Decision Records](./docs/adr/) — Decisiones técnicas justificadas
 - [Diagramas UML](./docs/diagramas/) — Casos de Uso, Secuencia, Modelo de Dominio (Mermaid)

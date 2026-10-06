@@ -20,7 +20,7 @@ El plan descompone el frente de **validación final de Hito 06**. No reemplaza e
 
 ## 2. Qué se revisó y qué no
 
-Se partió de [`README.md`](../../README.md), [`BACKLOG.md`](../../BACKLOG.md), [`TODO`](../../TODO), [Hito 06](../hitos/hito-06-octubre.md), la [auditoría anterior](./revision-tecnica-priorizada-2026-09-01.md), los [RNF](../producto/requisitos-no-funcionales.md) y las reglas de contribución. La inspección de código fue acotada a cambios recientes y a las dependencias necesarias para contrastar sus pendientes:
+Se partió de [`README.md`](../../README.md), [`BACKLOG.md`](../../BACKLOG.md), [`TODO.md`](../../TODO.md), [Hito 06](../hitos/hito-06-octubre.md), la [auditoría anterior](./revision-tecnica-priorizada-2026-09-01.md), los [RNF](../producto/requisitos-no-funcionales.md) y las reglas de contribución. La inspección de código fue acotada a cambios recientes y a las dependencias necesarias para contrastar sus pendientes:
 
 | Recorte | Archivos y motivo |
 |---|---|
@@ -78,6 +78,12 @@ RNF-010 ya fue implementado, probado en Android y aceptado por el autor en
 [PR #29](https://github.com/jdfesa/lumapse/pull/29); no interpretar «no iniciados»
 como estado vigente de esa tarea. [Evidencia y cierre](../beta-core-validation/continuidad-2026-10-04.md).
 RNF-009 permanece pendiente como siguiente frente por acordar.
+
+**Recorte de cierre acordado — octubre 2026:** [imprescindibles y deuda postdefensa](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa)
+precisan este mismo plan, no crean otro ciclo de producto. Para finales de octubre
+deben estar preparados APK final validado, informe, manual adaptado desde la versión
+externa `0.5.0` y defensa. Las pruebas y decisiones pendientes se siguen en
+[`TODO.md`](../../TODO.md); este acuerdo no acredita RNF, adopción ni una release estable.
 
 ### Continuidad aprobada — 2026-10-02
 

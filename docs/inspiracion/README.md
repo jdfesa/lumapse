@@ -41,7 +41,7 @@ general lo mantiene dentro del mapa comparativo junto con las demás apps.
 [`ideas-ux-roadmap.md`](./ideas-ux-roadmap.md) conserva la capa accionable del corte en que se escribió:
 toma ideas de los benchmarks y las ordena por horizonte temporal. Sus rótulos de corto/mediano/largo
 plazo son históricos; una idea solo vuelve a ser trabajo comprometido si aparece en el `BACKLOG.md` o
-en el `TODO` vigente.
+en el `TODO.md` vigente.
 
 ---
 

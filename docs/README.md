@@ -9,7 +9,7 @@ Este directorio reúne la documentación viva de Lumapse. La referencia técnica
 | Entender el producto y su alcance actual | [`producto/`](./producto/) |
 | Entender la arquitectura y sus decisiones | [`adr/`](./adr/) y [`diagramas/arquitectura-componentes.md`](./diagramas/arquitectura-componentes.md) |
 | Consultar el modelo de datos | [`diagramas/database/`](./diagramas/database/) |
-| Seguir el trabajo pendiente y los hitos | [`../BACKLOG.md`](../BACKLOG.md), [`../TODO`](../TODO), [`gestion/`](./gestion/) e [`hitos/`](./hitos/) |
+| Seguir el trabajo pendiente y los hitos | [`../BACKLOG.md`](../BACKLOG.md), [`../TODO.md`](../TODO.md), [`gestion/`](./gestion/) e [`hitos/`](./hitos/) |
 | Redactar el informe académico | capítulos fuente de [`informe-final/`](./informe-final/) |
 | Revisar la evolución por versión | [`../CHANGELOG.md`](../CHANGELOG.md) |
 
@@ -39,6 +39,12 @@ Los documentos deben distinguir explícitamente entre:
 - **Pendiente externo:** artefacto que requiere una herramienta fuera del repositorio, como la exportación gráfica de los modelos de base de datos.
 
 El informe completo se ensambla a partir de sus capítulos fuente. La migración editorial a LaTeX queda deliberadamente para una etapa posterior, una vez estabilizados contenido, gráficos y referencias.
+
+Para el cierre público, distinguir resultados comprobados, pendientes, limitaciones
+y postergaciones conforme al [recorte de entrega](../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa).
+Ni un plan aceptado ni una casilla del tablero sustituyen la evidencia. Los capítulos
+y el informe ensamblado conservan su checkpoint hasta la revisión final; no se
+reescriben resultados históricos para aparentar cumplimiento del APK nuevo.
 
 ## Estado documental actual
 

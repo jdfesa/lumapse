@@ -40,7 +40,7 @@ La evaluación se realizó después de leer la documentación técnica y de prod
 - [Secuencia de creación/edición de notas](../diagramas/secuencia-crear-nota.md).
 - [Requisitos no funcionales](../producto/requisitos-no-funcionales.md).
 - [Plan de mantenibilidad y tipado gradual](./plan-mantenibilidad-tipado-gradual-2026-06-12.md).
-- [`BACKLOG.md`](../../BACKLOG.md), [`TODO`](../../TODO), `README.md`, guía de contribución,
+- [`BACKLOG.md`](../../BACKLOG.md), [`TODO.md`](../../TODO.md), `README.md`, guía de contribución,
   scripts de calidad y workflow de CI.
 
 ## 4. Evaluación arquitectónica

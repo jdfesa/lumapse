@@ -3,7 +3,7 @@
 > **Proyecto:** Lumapse  
 > **Referencia:** Gómez, J. (2014), Sección 6. Guía de Estudio PP3 (Ing. Mauricio Parada, 2026).  
 > **Fecha de creación:** 2026-05-15  
-> **Última actualización:** 2026-09-05 — publicación de la segunda beta `v0.5.0`.
+> **Última actualización:** Octubre 2026 — próximo corte académico; líneas base publicadas preservadas.
 > **Autor:** José David Sandoval
 
 ---
@@ -257,9 +257,14 @@ Una vez establecida una LB, todo cambio en el alcance debe pasar por un proceso 
 
 | Tag | Hito | Momento esperado | Contenido |
 |---|---|---|---|
-| `LB-PROD-v1.0.0` o tag estable equivalente | 06 — Entrega Final | Solo si el cierre académico exige un artefacto posterior a `v0.5.0` | Documentación congelada, matriz RNF, diagramas revisados y materiales de defensa |
+| Identificador/tag del corte final autorizado, por acordar | 06 — Entrega Final | Después de validar el nuevo APK y antes de congelar la entrega | Fuente, versión/code, firma y hash del artefacto; matriz RNF, informe, manual y demo coherentes con ese corte |
 
 No se creó una línea base `0.4.9`: la evolución posterior a `v0.4.8` se publicó como `v0.5.0`. El nombre y número de un eventual corte estable se decidirán con evidencia completa, sin modificar ni reutilizar ninguna de las betas publicadas.
+
+El [recorte de entrega](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa) prevé
+preparar el APK final y los entregables para finales de octubre de 2026. Su condición
+de beta y las limitaciones aceptadas deben quedar explícitas: no se exige `1.0.0` ni
+se registra esta línea base como creada antes de producir y aceptar el artefacto.
 
 ---
 

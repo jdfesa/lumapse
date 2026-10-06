@@ -102,7 +102,7 @@ npm run check:traceability
 ```
 
 Comprobar además los enlaces de los archivos modificados que el auditor no descubre
-automáticamente, incluidos `AGENTS.md`, `CONTRIBUTING.md` y `TODO`. Los controles
+automáticamente, incluidos `AGENTS.md`, `CONTRIBUTING.md` y `TODO.md`. Los controles
 iniciales establecen una referencia previa; repetir las verificaciones pertinentes
 sobre el cambio terminado, sin presentar la ejecución anterior como validación final.
 
