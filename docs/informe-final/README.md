@@ -44,6 +44,12 @@ Los pendientes explícitos del Hito 06 son:
 
 ### Manual de usuario y consistencia de la entrega
 
+**Evidencia posterior al checkpoint:** [OFF-01–05 de RNF-009](../beta-core-validation/offline-2026-10-06.md)
+pasaron en el debug `348da88` el 2026-10-06, tras corregir el bloqueo del ZIP local
+sin red. El autor aceptó [PR #31](https://github.com/jdfesa/lumapse/pull/31); este resultado
+todavía no modifica capítulos ni informe ensamblado y no pertenece al asset publicado
+ni al futuro APK final.
+
 El autor informa que conserva fuera del repositorio un manual de `v0.5.0`. No fue
 inspeccionado en este recorte: falta compartirlo, estudiar sus instrucciones y adaptar
 contenido, capturas e identificación de versión al APK final validado. No se redacta

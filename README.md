@@ -276,7 +276,7 @@ Cerrar el proyecto con documentación coherente, evidencia final y presentación
 - Revisión editorial y congelamiento de la documentación técnica y académica
 - Gráficos de base de datos regenerados y verificados contra el schema real; resta validar su maquetación en PDF y diapositivas
 - Quality gate histórico de `v0.5.0` aprobado con 67 archivos y 1065 tests; el asset firmado fue [aceptado por el autor](./docs/gestion/checklist-validacion-android.md#aceptación-general-de-la-apk-publicada-v050). Restan controles y validación del nuevo corte, no repetir esa aceptación
-- [Recorte de entrega y deuda postdefensa](./BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa): núcleo offline, privacidad, uso/accesibilidad y matriz RNF pendientes; continuidad del borrador aceptada en PR #29 y CRUD/FPS diferidos, sin afirmar cumplimiento cuantitativo
+- [Recorte de entrega y deuda postdefensa](./BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa): offline verificado en debug `348da88` y aceptado en PR #31; privacidad, uso/accesibilidad y matriz RNF pendientes; continuidad del borrador aceptada en PR #29 y CRUD/FPS diferidos, sin afirmar cumplimiento cuantitativo
 - Preparar para finales de octubre de 2026 el APK final identificado/validado, informe, manual adaptado desde `v0.5.0`, presentación y demo; seguimiento en [`TODO.md`](./TODO.md)
 - Fijar la línea base académica sobre ese artefacto, sin forzar una versión estable o afirmar adopción real
 

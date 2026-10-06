@@ -19,13 +19,13 @@ function escapeHtml(value) {
 }
 
 export function statusCopy(status) {
-  if (status === BACKUP_FLOW_STATUS.BLOCKED_OFFLINE) {
+  if (status === BACKUP_FLOW_STATUS.OFFLINE_READY) {
     return {
       uiState: UI_STATE.OFFLINE,
       title: 'Sin conexion',
-      message: 'Tus notas siguen disponibles. Para exportar un ZIP a Google Drive u otro destino necesitás internet.',
+      message: 'Podés crear el ZIP y guardarlo en un destino local. Google Drive u otros destinos en nube necesitan conexión.',
       actionLabel: 'Exportar ZIP',
-      disabled: true,
+      disabled: false,
     }
   }
 
@@ -42,7 +42,7 @@ export function statusCopy(status) {
   return {
     uiState: UI_STATE.READY,
     title: 'Listo para exportar ZIP',
-    message: 'Lumapse va a crear un ZIP restaurable y abrir el selector de Android para elegir Google Drive u otro destino.',
+    message: 'Lumapse va a crear un ZIP restaurable y abrir el selector de Android para elegir un destino local o en nube.',
     actionLabel: 'Exportar ZIP',
     disabled: false,
   }
