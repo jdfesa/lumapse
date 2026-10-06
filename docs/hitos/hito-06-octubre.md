@@ -80,7 +80,7 @@ RNF, la validación funcional y los controles de seguridad no quedan postergados
 - [ ] **Post-presentación, no bloqueante:** medir latencia CRUD/FPS con al menos 500 notas (`RNF-002`, `RNF-004`), según [decisión del autor](../../BACKLOG.md#rendimiento-post-presentación). La importación funcional no acredita rendimiento cuantitativo.
 - [ ] Ejecutar pruebas con estudiantes y revisar profundidad de navegación (`RNF-005`, `RNF-006`). La fricción técnica de `Mover a` ya fue corregida y validada en PR #9.
 - [ ] Auditar tipografía, touch targets, contraste y navegación accesible (`RNF-007`, `RNF-008`, `RNF-019` a `RNF-022`).
-- [x] OFF-01–05 de `RNF-009` PASS en [debug `348da88` identificado](../beta-core-validation/offline-2026-10-06.md), con fix del ZIP local y datos preservados; revisión del autor/PR pendiente, sin transferencia al APK final.
+- [x] OFF-01–05 de `RNF-009` PASS en [debug `348da88` identificado](../beta-core-validation/offline-2026-10-06.md), con fix del ZIP local y datos preservados; autor aceptó [PR #31](https://github.com/jdfesa/lumapse/pull/31) y autorizó merge/limpieza, sin transferencia al APK final.
 - [x] `RNF-010`: continuidad SQLite verificada y aceptada en [PR #29](https://github.com/jdfesa/lumapse/pull/29); [evidencia y límites](../beta-core-validation/continuidad-2026-10-04.md). No repetir la tarea cerrada ni trasladar automáticamente sus pruebas a un APK nuevo.
 - [ ] Registrar tráfico de red y revisar dependencias/trackers (`RNF-012`, `RNF-013`).
 - [x] Incorporar TypeScript al reporte de coverage y volver a medir `RNF-024`: 92,43% de statements en `src/services/**` sobre la fuente actual (2026-08-21); repetir en el commit candidato para la matriz final.
