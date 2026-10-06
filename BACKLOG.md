@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 06 — Entrega Final
 > **Hito 05:** Cerrado documentalmente el 2026-07-15 sobre la beta operativa `v0.4.8`
-> **Última actualización:** 2026-10-05 — RNF-002/004 pendientes y [diferidos a post-presentación](#rendimiento-post-presentación); no bloquean por falta de métricas. RNF-009 pendiente; [RNF-010 verificado y aceptado por el autor en PR #29](docs/beta-core-validation/continuidad-2026-10-04.md).
+> **Última actualización:** Octubre 2026 — [recorte de entrega y deuda postdefensa](#cierre-de-entrega-y-deuda-postdefensa) acordado; sin nuevas verificaciones RNF. RNF-002/004 pendientes y [diferidos a post-presentación](#rendimiento-post-presentación); RNF-009 pendiente y [RNF-010 verificado y aceptado en PR #29](docs/beta-core-validation/continuidad-2026-10-04.md).
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -48,6 +48,69 @@ La trazabilidad de `v0.4.8` y `v0.5.0` queda distribuida entre `docs/gestion/lin
 | F3 | Evidencia del núcleo y 500 notas | CRUD/FPS diferidos a post-presentación, sin afirmar cumplimiento; RNF-009 offline pendiente; RNF-010 continuidad verificado y aceptado en debug identificado. Optimizaciones solo si una medición las justifica y se aprueba otro PR |
 
 Continúan los pendientes de **congelamiento editorial/visual**, **validación RNF restante**, **presentación/defensa** y **línea base final**. No quedan completados ni descartados por esta secuencia técnica. No se fuerza una versión estable o `1.0.0` al terminar F3.
+
+---
+
+## Cierre de entrega y deuda postdefensa
+
+**Acuerdo de cierre — octubre 2026:** para finales de octubre deben estar preparados
+el APK de presentación, el informe terminado, el manual actualizado y la defensa.
+Se mantiene el plan vigente: **núcleo y bloqueantes → APK final validado → informe,
+manual y defensa**, con una sola rama por objetivo. Esta clasificación acota el
+trabajo; no agrega funciones ni acredita pruebas que todavía no se ejecutaron.
+
+La entrega busca una **beta defendible**, con flujos probados, riesgos tratados y
+límites explícitos; no obliga a anunciar `1.0.0`, estabilidad comercial o adopción.
+La encuesta y la aceptación del autor no demuestran que personas reales ya utilicen
+la app. El repositorio público debe permitir a futuras cohortes distinguir:
+
+- **Comprobado:** resultado con fuente, fecha, método, artefacto y alcance identificados;
+  una prueba debug no verifica automáticamente el APK publicado ni un candidato nuevo.
+- **Pendiente:** falta una acción o evidencia; no significa éxito ni defecto demostrado.
+- **Limitación:** borde o cobertura no demostrados; se registra su impacto y la decisión
+  del autor, sin convertirlo en cumplimiento ni ocultarlo por el plazo.
+- **Postergado:** trabajo excluido de este cierre; permanece abierto y no vuelve al
+  tablero inmediato sin un nuevo acuerdo. No equivale a requisito verificado.
+
+### Imprescindibles para la entrega
+
+| Momento | Frente acotado | Pendiente y aceptación requerida |
+|---|---|---|
+| Antes del corte | Núcleo offline y conservación de datos | Ejecutar OFF-01–05 de `RNF-009` con datos/dispositivo autorizados y registrar resultados. Preservar el cierre de `RNF-010` y sus límites; no repetirlo como tarea. Resolver pérdidas, corrupción, duplicaciones o fallos bloqueantes confirmados. |
+| Antes del corte | Privacidad y seguridad | Completar evidencia de tráfico y revisión de dependencias/trackers (`RNF-012`/`RNF-013`); diferenciar la salida externa iniciada por el usuario de la transmisión automática. Repetir auditorías sobre el candidato: los cierres anteriores no acreditan ausencia actual de advisories. |
+| Antes del corte | Uso y accesibilidad del núcleo | Prueba acotada con estudiantes y revisión de navegación, texto, controles, contraste, foco y nombres accesibles (`RNF-005` a `RNF-008`, `RNF-020` a `RNF-022`). `RNF-019` exige la medición prevista o un tratamiento formal acordado para el APK, no un score inferido. Registrar barreras reales y decidir su severidad sin rediseño general. |
+| Corte autorizado | APK inequívoco | `verify`, auditorías y coverage de servicios repetidos; versión/code nuevos, fuente, canal, firma y hash identificados. Validación Android pertinente y aceptación sobre el binario final, sin reemplazar betas publicadas ni atribuirle pruebas de otro artefacto. |
+| Después del APK validado | Matriz e informe final | Emitir matriz RNF con estados, métodos, evidencia y límites; actualizar capítulos fuente, bibliografía y corte documental, congelar y ensamblar. Revisar tablas y legibilidad de figuras en PDF. Los capítulos y el checkpoint de `v0.5.0` son una base, no la entrega final. |
+| Después del APK validado | Manual y defensa | Estudiar el manual externo de `v0.5.0` informado por el autor —aún no revisado aquí— y adaptarlo al artefacto final. Preparar capturas, demo, contingencia y respuestas; reservar tiempo para estudio y ensayo. APK, matriz, informe y manual deben identificar el mismo corte. |
+
+No se entrega con bloqueantes funcionales, de integridad o de seguridad confirmados
+sin resolver. Una observación menor o evidencia incompleta requiere revisión y
+aceptación **expresa** del autor para el corte, con su impacto visible en la matriz;
+no se acepta automáticamente por el calendario. Fuera de CRUD/FPS, este recorte no
+posterga los RNF restantes ni cambia sus estados o umbrales. Una revisión acotada
+tampoco equivale a certificación exhaustiva de usabilidad o accesibilidad.
+
+El cierre de gestión documenta el flujo real y las recomendaciones para futuros
+equipos. Fechas de trabajo, factor de ajuste y SLE se calculan solo con datos
+confiables; si faltan, se declara la limitación, no se reconstruyen métricas ficticias.
+Las acciones se siguen en [`TODO.md`](TODO.md); los estados por requisito permanecen
+en [RNF](docs/producto/requisitos-no-funcionales.md) y las pruebas en sus reportes.
+
+### Diferido hasta después de la defensa
+
+| Trabajo abierto | Motivo y límite de la postergación |
+|---|---|
+| Métricas CRUD/FPS y optimizaciones de consultas/notificaciones sin cuello demostrado | `RNF-002`/`RNF-004` conservan la [postergación aceptada](#rendimiento-post-presentación), umbrales y estado pendiente. AUD-010/AUD-011 no justifican optimizar por intuición; un defecto funcional nuevo se evalúa por separado. |
+| Refactors de componentes grandes, migraciones adicionales de tipado/framework y ampliaciones exploratorias de tests | No corrigen un bloqueo demostrado de entrega. Incluye ampliar el smoke de `academic_events`; su cobertura actual no se presenta como exhaustiva. Se conservan los controles y regresiones existentes. |
+| Caracterización de mutaciones vecinas no cubiertas por F2/PR #19 | Deuda registrada sin fallo reproducido; reabrir al tocar el flujo o ante evidencia. No difiere corregir un fallo bloqueante que aparezca durante la validación final. |
+| Estudios extensos o longitudinales con usuarios y adopción | Exceden la comprobación acotada del núcleo prevista para este corte; **no postergan automáticamente RNF-005/RNF-006** ni prueban que haya uso real. |
+| Recalibración de SLE sin cinco elementos confiables | Esperar datos suficientes; mantener políticas de flujo y registrar fechas reales ahora, sin inventar tiempos históricos. |
+| Funciones nuevas: adjuntos, nube/sincronización, Drive API, restauración avanzada, notas individuales, escritorio y onboarding | Permanecen en el [backlog post-defensa](#evolución-registrada-y-backlog-post-defensa) y las decisiones de diseño; no compiten con el APK, informe, manual ni defensa. |
+
+Estas postergaciones no autorizan su implementación futura automáticamente. Si el
+plazo o una dependencia amenaza un imprescindible, se informa y acuerda el tratamiento
+antes de modificar alcance o aceptación; no se presume que todas las casillas se
+cerrarán en una cantidad fija de sesiones.
 
 ---
 
@@ -98,6 +161,10 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 
 ## Deuda Técnica Viva
 
+Las prioridades de esta tabla son relativas a cada deuda, no compromisos de entrega.
+El [recorte de cierre](#cierre-de-entrega-y-deuda-postdefensa) determina qué se atiende
+ahora y qué permanece postdefensa; una prioridad alta no habilita por sí sola una tarea.
+
 | Área | Tarea | Prioridad | Notas |
 |---|---|---|---|
 | UX / filtros | Hacer visible y predecible la combinación de fecha con materia/sección | Cerrada en PR #18 | Detectado el 2026-09-14 con 500 notas en Android, sin pérdida de datos. [Plan y evidencia](docs/gestion/plan-filtros-visibles-2026-09-15.md): comparadas limpieza automática, chips y conteos; elegidos filtros removibles fuera del calendario con alcance explícito y conteos totales conservados. El autor confirmó la prueba Android y el cambio se integró en `3898db8`. |
@@ -114,7 +181,7 @@ Estas tareas no bloquean el MVP. Se conservan como decisiones trazables para rea
 | Tooling DB | Ampliar el smoke test a `academic_events` y constraints relevantes | Media | El DDL completo se ejecuta, pero las aserciones explícitas de tablas/columnas/relaciones se concentran en materias, notas y metadata; decidir su ampliación antes de presentar cobertura exhaustiva |
 | Diagramas | Revisar Mermaid de casos de uso, secuencia y dominio | Baja | Completado el 2026-07-03 contra `v0.4.8`; reabrir solo si cambia el alcance o durante la exportacion final a PDF/LaTeX |
 | Informe final | Preparar conversion LaTeX/PDF | Media | Consideraciones registradas en `docs/informe-final/README.md`; mantener Markdown como fuente de verdad y abrir pipeline LaTeX solo cuando el contenido este congelado |
-| Release | Definir el cierre estable | Alta | `v0.5.0` es la segunda beta publicada y contiene AUD-001 a AUD-007; producto/bloqueantes y evidencia primero; luego APK correspondiente `0.6.0+` según avance/autorización, antes del informe final/defensa; no reemplazar el corte publicado |
+| Release | Definir el corte de presentación | Alta | `v0.5.0` es la segunda beta publicada y contiene AUD-001 a AUD-007; producto/bloqueantes y evidencia primero; luego APK correspondiente `0.6.0+` según avance/autorización, antes del informe final/manual/defensa; no reemplazar el corte publicado ni forzar una declaración de versión estable |
 | Rendimiento | Medir crecimiento real de notas | Post-presentación | La importación funcional de 500 notas fue aprobada; latencia CRUD/FPS siguen pendientes, [no bloqueantes por decisión del autor](#rendimiento-post-presentación). No equivale a rendimiento óptimo demostrado |
 | Adjuntos | Planificar adjuntos de imagen post-release | Media | Valor alto para fotos de pizarrón; debe implementarse sin cargar SQLite ni saturar el feed |
 | Backup | Restauracion avanzada y Drive API directa | Alta | Exportacion e importacion ZIP manual ya estan integradas; quedan reemplazo/merge avanzado de workspace y subida directa a Drive como fases futuras |
@@ -171,7 +238,7 @@ Hito 06 es un hito de cierre. No incorporar salvo que un bloqueo de entrega lo e
 - No publicar un nuevo artefacto sin repetir auditorías sobre el corte candidato ni mientras exista cualquier bloqueo de seguridad confirmado.
 - Todo cambio de comportamiento debe cerrar con tests focalizados, `npm run verify`, trazabilidad y nueva validación Android proporcional al riesgo.
 - Preservar `v0.4.8`, `v0.5.0` y sus SHA-256 como evidencia inmutable de las betas publicadas.
-- Las ideas postergadas permanecen en este backlog; no vuelven al `TODO` operativo hasta que Hito 06 haya terminado.
+- Las ideas postergadas permanecen en este backlog; no vuelven al `TODO.md` operativo hasta que Hito 06 haya terminado y se acuerde retomarlas.
 
 ---
 

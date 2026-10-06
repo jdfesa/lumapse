@@ -38,14 +38,14 @@ Adoptar un **enfoque ágil, iterativo e incremental, con un sistema de gestión 
 La definición operativa vigente se mantiene en [`../gestion/definicion-flujo-kanban.md`](../gestion/definicion-flujo-kanban.md). Sus elementos principales son:
 
 1. **Visualización:** `Backlog | En Curso | En Revisión | Hecho`.
-2. **Unidad de trabajo:** elemento trazable con objetivo y criterio de cierre; puede estar respaldado por un issue de GitHub, un ítem del proyecto o una tarea versionada en `TODO`/`BACKLOG.md`.
+2. **Unidad de trabajo:** elemento trazable con objetivo y criterio de cierre; puede estar respaldado por un issue de GitHub, un ítem del proyecto o una tarea versionada en `TODO.md`/`BACKLOG.md`.
 3. **Sistema pull:** no se inicia un elemento nuevo si no existe capacidad disponible.
 4. **Control WIP vigente:** máximo dos elementos activos en total entre `En Curso` y `En Revisión`.
 5. **Políticas explícitas:** prioridad por valor, riesgo y dependencia; revisión antes de terminar; validación y trazabilidad como condición de cierre.
 6. **Hitos académicos:** puntos de revisión, línea base y entrega; no son Sprints ni alteran el flujo continuo.
 7. **Mejora continua:** informes de hito, retrospectiva individual y ajuste del backlog.
 
-GitHub Projects proporciona la vista del flujo. `TODO`, `BACKLOG.md`, `CHANGELOG.md`, los informes de hito, los ADR y el historial Git aportan evidencia versionada complementaria; no deben utilizarse para presentar estados contradictorios del mismo trabajo.
+GitHub Projects proporciona la vista del flujo. `TODO.md`, `BACKLOG.md`, `CHANGELOG.md`, los informes de hito, los ADR y el historial Git aportan evidencia versionada complementaria; no deben utilizarse para presentar estados contradictorios del mismo trabajo.
 
 ## Alcance y límites de la adopción
 
@@ -78,7 +78,7 @@ No se adopta la etiqueta Scrumban porque Lumapse no usa Sprints ni los eventos y
 
 - [`../gestion/definicion-flujo-kanban.md`](../gestion/definicion-flujo-kanban.md) — definición del flujo, políticas y métricas.
 - [`../informe-final/02-marco-metodologico.md`](../informe-final/02-marco-metodologico.md) — fundamentación académica.
-- [`../../TODO`](../../TODO) y [`../../BACKLOG.md`](../../BACKLOG.md) — trabajo activo y deuda priorizada.
+- [`../../TODO.md`](../../TODO.md) y [`../../BACKLOG.md`](../../BACKLOG.md) — trabajo activo y deuda priorizada.
 - [`../hitos/`](../hitos/) — revisiones y entregas incrementales.
 - [`../../CHANGELOG.md`](../../CHANGELOG.md) — incrementos y cambios publicados/no publicados.
 - [`.github/ISSUE_TEMPLATE/`](../../.github/ISSUE_TEMPLATE/) — plantillas de trabajo y trazabilidad.

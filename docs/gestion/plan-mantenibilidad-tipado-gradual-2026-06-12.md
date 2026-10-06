@@ -3,7 +3,7 @@
 > Estado: linea base historica y referencia de la migracion gradual iniciada el 2026-06-12.
 > Alcance: mejorar mantenibilidad, cohesion y escalabilidad del codigo sin reescrituras grandes.  
 > Cierre operativo: Hito 05 cerrado documentalmente el 2026-07-15.
-> Relacion: Hito 05, `TODO`, `BACKLOG.md`, ADR-007. No constituye un compromiso activo de version `0.4.9`.
+> Relacion: Hito 05, `TODO.md`, `BACKLOG.md`, ADR-007. No constituye un compromiso activo de version `0.4.9`.
 
 > **Lectura vigente:** Este plan documenta la estrategia y la primera ola ya realizada. Las fases de store y componentes grandes son deuda opcional futura, posterior a la presentacion, y solo deben retomarse si existe un beneficio concreto; no forman parte del cierre obligatorio de Hito 06.
 
@@ -98,7 +98,7 @@ Estado: completada con este documento.
 Criterio de cierre:
 
 - Plan operativo documentado.
-- `TODO`, `BACKLOG.md` y `CHANGELOG.md` apuntan a la estrategia.
+- `TODO.md`, `BACKLOG.md` y `CHANGELOG.md` apuntan a la estrategia.
 - Las fases posteriores quedan separadas en unidades pequenas.
 
 ### Fase 1 - Espejar Tests por Feature

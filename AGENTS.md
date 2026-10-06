@@ -38,7 +38,7 @@ checkout que no se pudo verificar.
    falta. Contrastar la memoria con GitHub, código y documentación: no asumir que
    la memoria de otro equipo está sincronizada.
 2. Leer [CONTRIBUTING.md](CONTRIBUTING.md), el mapa de
-   [docs/README.md](docs/README.md), [TODO](TODO) y las secciones pertinentes de
+   [docs/README.md](docs/README.md), [TODO.md](TODO.md) y las secciones pertinentes de
    [BACKLOG.md](BACKLOG.md).
 3. Seguir desde allí el hito y el plan aceptados. Leer requisitos, ADR y evidencia
    técnica según el objetivo; no interpretar una idea del backlog como tarea aprobada.

@@ -1,7 +1,7 @@
 # Cheat Sheet de Defensa — Lumapse
-**Última actualización:** 2026-09-05 — publicación y línea base de la segunda beta
+**Última actualización:** Octubre 2026 — alcance de cierre; métricas históricas de la segunda beta preservadas
 
-> Hito 05 está cerrado y Hito 06 activo. Este documento refleja el corte operativo `v0.5.0`; las métricas de usuario y RNF pendientes deben recibir una última verificación al congelar la entrega académica.
+> Hito 05 está cerrado y Hito 06 activo. Las cifras de este documento corresponden a `v0.5.0`, no al `main` actual ni a un APK final aún no generado. El [recorte vigente](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa) distingue imprescindibles y deuda postdefensa; métricas nuevas se incorporan solo después de ejecutarlas.
 
 ## Métricas del Proyecto
 
@@ -13,7 +13,7 @@
 | Tag / commit | `v0.5.0` / `5840755` |
 | APK firmado | `lumapse-v0.5.0.apk` |
 | SHA-256 del APK | `d48338e04021a6096fcaeaced5fde411911d403c9ea95407891d2b034515a884` |
-| Validación Android | Build equivalente `0.5.0/500` aprobado en Samsung `SM_G965F` con datos conservados; instalación del asset firmado pendiente |
+| Validación Android | Asset firmado/publicado `v0.5.0` aceptado por el autor en al menos tres dispositivos; [alcance general y límites](./checklist-validacion-android.md#aceptación-general-de-la-apk-publicada-v050), sin completar casos no reportados |
 | Tests del corte | 67 archivos / 1065 tests; gate local y CI de PR #10 aprobados |
 | Archivos de código (JS/TS/CSS) | 129 en `src/` al tag `v0.5.0` |
 | Líneas de código fuente | 19.648 en `src/` al tag `v0.5.0` |
@@ -86,9 +86,10 @@ Los meses de Hitos 02 a 06 son etiquetas del calendario académico planificado; 
 - **¿Por qué no mostrás online/offline?** → RF-024 quedó postergado porque el núcleo local no depende de la red y un chip global podría sugerir una sincronización inexistente. El backup sí informa de manera contextual y únicamente dentro de su flujo cuando la conectividad afecta la salida externa.
 - **¿Por qué no hay onboarding o tutorial Markdown?** → DP-006: la beta no registró un bloqueo de descubrimiento que justificara un tutorial obligatorio. Lumapse permite escribir texto plano; Markdown es una mejora, no una barrera de entrada.
 - **¿Export/import está implementado?** → Sí para backups de workspace: `RF-017` exporta un `.zip` legible/restaurable con salida externa y `RF-018` importa ZIPs generados por Lumapse con preview, transacción y duplicados no destructivos. Sigue postergado `RF-016`, que es compartir/exportar una nota individual, y también la importación `.md` de una nota suelta.
-- **¿La APK ya está disponible?** → Sí. `lumapse-v0.5.0.apk` se publicó como pre-release con firma v2 y SHA-256 verificable. Un build equivalente `0.5.0/500` fue validado en Android conservando datos; la instalación manual específica del asset firmado sigue registrada como pendiente y no se oculta.
+- **¿La APK ya está disponible?** → Sí. `lumapse-v0.5.0.apk` se publicó como pre-release con firma v2 y SHA-256 verificable; el autor confirmó su aceptación general en al menos tres dispositivos. Eso no verifica los RNF pendientes ni el nuevo APK de presentación, que debe identificarse y validarse por separado.
 - **¿Qué ocurrió con `0.4.9`?** → No se publicó. El trabajo posterior a `v0.4.8` se consolidó directamente en la segunda beta `v0.5.0`, con tag, APK y hash propios. `v0.4.8` se conserva como evidencia histórica inmutable.
-- **¿Qué queda antes de defender?** → Revisión editorial y de maquetación final —incluida la legibilidad de los gráficos DB ya incorporados—, matriz RNF, instalación manual del asset firmado, rendimiento con volumen realista y preparación de presentación, demo y contingencia. La fricción de `Mover a` ya fue corregida y validada en PR #9.
+- **¿Qué queda antes de defender?** → Validar núcleo offline, privacidad y uso/accesibilidad; tratar bloqueantes reales; producir el APK final autorizado y completar matriz, informe, manual adaptado y demo/contingencia para finales de octubre. CRUD/FPS están pendientes y diferidos a post-presentación; `Mover a` y continuidad ya tienen sus cierres registrados.
+- **¿Cómo se presentan los límites de la beta?** → Separando lo comprobado por artefacto, lo pendiente, las limitaciones aceptadas y la deuda postdefensa. No se afirma que todos los RNF estén cumplidos, que haya estabilidad comercial o que personas reales ya utilicen la app; el plazo no sustituye evidencia.
 
 ## Fuentes
 

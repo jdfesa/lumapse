@@ -10,7 +10,7 @@
 
 **Estado:** Activo — segunda beta `v0.5.0` publicada; cierre académico, matriz RNF y presentación pendientes
 
-**Última actualización:** 2026-10-04
+**Última actualización:** Octubre 2026
 
 ---
 
@@ -20,8 +20,11 @@ Cerrar Lumapse con documentación coherente, evidencia técnica reproducible, di
 
 **Prioridad aprobada vigente:** terminar producto/bloqueantes → generar y validar APK
 de la versión correspondiente (objetivo `0.6.0+`, condicionado al avance/autorización)
-→ completar informe final y defensa. Meta fines de octubre 2026, sujeta a evidencia y
-disponibilidad del autor/dispositivo; no se promete todo en las próximas dos sesiones.
+→ completar informe final, manual y defensa. Para finales de octubre de 2026 deben
+estar preparados todos esos entregables; no se promete cerrarlos en dos sesiones.
+El [recorte de entrega y deuda postdefensa](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa)
+precisa los imprescindibles y límites de este mismo hito: beta defendible, sin
+afirmar estabilidad comercial, cumplimiento no medido ni adopción real.
 
 **Ajuste aprobado — 2026-10-04:** las métricas CRUD/FPS de RNF-002/RNF-004 quedan
 en [backlog post-presentación](../../BACKLOG.md#rendimiento-post-presentación), sin
@@ -51,7 +54,7 @@ RNF, la validación funcional y los controles de seguridad no quedan postergados
 - [x] Incorporar una sección de referencias y metadatos de portada reproducibles, sin leer información desde el artefacto generado.
 - [x] Revisar el marco metodológico: corregir la comparación con Scrum, distinguir RUP de sus artefactos y formalizar el flujo Kanban sin inventar métricas históricas.
 - [x] Reconciliar `CHANGELOG.md`, backlog, `TODO`, líneas base, informe y material de defensa con la publicación de `v0.5.0`, preservando `v0.4.8` como evidencia histórica.
-- [ ] Alinear el tablero con la Definition of Workflow y registrar fechas de inicio/fin de los elementos restantes para recalibrar la SLE con evidencia.
+- [ ] Alinear el tablero con la Definition of Workflow y registrar fechas reales de inicio/fin; recalibrar la SLE solo con cinco elementos confiables, sin inventar tiempos para cerrar el hito.
 - [ ] Verificar contra los originales los datos bibliográficos incompletos de los materiales de cátedra.
 - [ ] Consolidar la evidencia final; luego verificar referencias, tablas, terminología, legibilidad de las figuras y congelar el contenido. Las exportaciones gráficas DB ya fueron incorporadas.
 
@@ -77,7 +80,8 @@ RNF, la validación funcional y los controles de seguridad no quedan postergados
 - [ ] **Post-presentación, no bloqueante:** medir latencia CRUD/FPS con al menos 500 notas (`RNF-002`, `RNF-004`), según [decisión del autor](../../BACKLOG.md#rendimiento-post-presentación). La importación funcional no acredita rendimiento cuantitativo.
 - [ ] Ejecutar pruebas con estudiantes y revisar profundidad de navegación (`RNF-005`, `RNF-006`). La fricción técnica de `Mover a` ya fue corregida y validada en PR #9.
 - [ ] Auditar tipografía, touch targets, contraste y navegación accesible (`RNF-007`, `RNF-008`, `RNF-019` a `RNF-022`).
-- [ ] Repetir los flujos principales en modo avión y cubrir cierre o terminación inesperada del editor (`RNF-009`, `RNF-010`).
+- [ ] Completar OFF-01–05 de los flujos principales sin red (`RNF-009`), con resultados por caso y artefacto.
+- [x] `RNF-010`: continuidad SQLite verificada y aceptada en [PR #29](https://github.com/jdfesa/lumapse/pull/29); [evidencia y límites](../beta-core-validation/continuidad-2026-10-04.md). No repetir la tarea cerrada ni trasladar automáticamente sus pruebas a un APK nuevo.
 - [ ] Registrar tráfico de red y revisar dependencias/trackers (`RNF-012`, `RNF-013`).
 - [x] Incorporar TypeScript al reporte de coverage y volver a medir `RNF-024`: 92,43% de statements en `src/services/**` sobre la fuente actual (2026-08-21); repetir en el commit candidato para la matriz final.
 - [ ] Confirmar o reformular los RNF obsoletos/no aplicables sin reutilizar evidencia PWA para el APK.
@@ -90,6 +94,8 @@ RNF, la validación funcional y los controles de seguridad no quedan postergados
 - Actualizar el cheatsheet con métricas finales y respuestas verificables.
 - Preparar una demo de contingencia y evidencia alternativa si falla el dispositivo.
 - Ensayar instalación, apertura, nota, organización, búsqueda, fechas y backup/importación.
+- Revisar el manual externo de `v0.5.0` informado por el autor y adaptarlo al APK final; no presumir que ya está revisado o actualizado.
+- Reservar tiempo de estudio del autor y mantener coherencia entre artefacto, informe, manual y demo.
 
 ### 5. Corte y línea base final
 
@@ -98,7 +104,7 @@ RNF, la validación funcional y los controles de seguridad no quedan postergados
 - No reemplazar el asset `v0.5.0`. Un debug privado autorizado se identifica por canal/origen/hash sin bump por prueba; nuevo candidato/entrega requiere versión/code nuevos y permiso específico. [Flujo Android](../flujo-desarrollo-android.md#identificación-de-compilaciones-en-acerca-de).
 - `scripts/release-helper.py` ya sincroniza package/changelog, `versionName` y `versionCode`, distingue artefactos firmados/unsigned y expone `check:version` en el gate.
 - En el próximo corte entregable autorizado, actualizar versión, código Android, hash, changelog, README y línea base; después reconciliar informe y material de defensa.
-- Crear `LB-PROD-v1.0.0` o un tag estable equivalente solo cuando documentación, validación y artefacto sean definitivos.
+- Registrar la línea base académica del artefacto definitivo y su condición de beta; un tag estable o `1.0.0` requiere evidencia y decisión explícita, no se fuerza por la fecha de defensa.
 
 ## Fuera de Alcance
 
@@ -129,7 +135,7 @@ fecha para `1.0.0`; los pendientes académicos y la matriz RNF completa siguen a
 |---|---|---|
 | 1 | Producto y bloqueantes | Identificación de build revisada y tratamiento aprobado de hallazgos reales; CRUD/FPS diferidos a post-presentación, resto de F3 pendiente de prioridad/revisión |
 | 2 | APK correspondiente | Gate/auditorías y validación Android del artefacto exacto; corte `0.6.0+` según avance/autorización |
-| 3 | Informe y diagramas | Evidencia final incorporada, bibliografía/maquetación y contenido congelados |
+| 3 | Informe, manual y diagramas | Evidencia final incorporada, manual adaptado, bibliografía/maquetación y contenido congelados |
 | 4 | Defensa y línea base | Deck, demo, contingencia y decisión académica verificables |
 
 Detalle/prerrequisitos en el [ajuste de prioridad aprobado](../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#ajuste-de-prioridad-aprobado--2026-10-04); el diseño de pruebas original se conserva sin afirmar que fue ejecutado.
@@ -155,6 +161,7 @@ Se mantiene WIP 2 como techo entre `En Curso` y `En Revisión`, según la [`Defi
 - [x] Fuentes de base de datos sincronizadas con el schema ejecutable.
 - [x] AUD-001, AUD-002 y AUD-003 corregidos, validados e integrados.
 - [ ] Informe final revisado, referenciado y exportable.
+- [ ] Manual de usuario revisado y adaptado al mismo APK final.
 - [x] Gráficos de base de datos actualizados y consistentes con el schema.
 - [x] AUD-004 resuelto y auditorías completa/productiva sin vulnerabilidades al 2026-09-02.
 - [x] Quality gate de `v0.5.0` sin fallos: 67 archivos, 1065 tests y CI aprobado.
@@ -162,13 +169,13 @@ Se mantiene WIP 2 como techo entre `En Curso` y `En Revisión`, según la [`Defi
 - [ ] Matriz RNF final emitida con evidencia reproducible y límites explícitos.
 - [ ] Observaciones pendientes resueltas o aceptadas explícitamente; `Mover a` cerrado y métricas CRUD/FPS aceptadas como deuda post-presentación, sin declararlas cumplidas. Revisar las restantes por separado.
 - [ ] Presentación, demo y contingencia ensayadas.
-- [ ] Factor de ajuste y recomendaciones finales registrados.
+- [ ] Factor de ajuste sustentado por datos fiables, o limitación de medición explícita; recomendaciones finales registradas.
 - [x] Segunda beta posterior a `v0.4.8` publicada como `v0.5.0`, con versión web/Android, firma, hash y distribución inequívocos.
-- [ ] Decisión de línea base académica final documentada: usar `v0.5.0` o producir un corte estable posterior.
+- [ ] Línea base académica final documentada sobre el APK autorizado, con fuente, versión/code, firma y hash; sin obligación de declararlo estable.
 
 ## Documentos de Control
 
-- [`../../TODO`](../../TODO) — tareas inmediatas.
+- [`../../TODO.md`](../../TODO.md) — tareas inmediatas.
 - [`../../BACKLOG.md`](../../BACKLOG.md) — deuda, políticas e ideas postergadas.
 - [`../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md`](../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) — propuesta de próximas sesiones, evidencia y criterios de aceptación; sin implementación.
 - [`../gestion/lineas-base.md`](../gestion/lineas-base.md) — cortes congelados y futura línea base final.

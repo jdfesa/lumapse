@@ -50,7 +50,7 @@ lumapse/
 ├── package.json            # Dependencias y scripts
 ├── README.md               # Portal de entrada
 ├── BACKLOG.md              # Trabajo planificado y priorizado
-├── TODO                    # Próximas acciones operativas
+├── TODO.md                 # Próximas acciones operativas
 └── CHANGELOG.md            # Historial por versión
 ```
 

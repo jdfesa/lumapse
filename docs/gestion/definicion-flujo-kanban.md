@@ -13,7 +13,7 @@ El autor del proyecto es el único miembro operativo del sistema. Docentes, estu
 
 ## 2. Unidad de trabajo
 
-Un **elemento de trabajo** es una tarea trazable que produce una salida verificable. Puede estar representado por un issue de GitHub, un ítem de GitHub Projects o una tarea versionada en `TODO`/`BACKLOG.md`, pero debe aparecer en la vista de flujo activa para consumir capacidad.
+Un **elemento de trabajo** es una tarea trazable que produce una salida verificable. Puede estar representado por un issue de GitHub, un ítem de GitHub Projects o una tarea versionada en `TODO.md`/`BACKLOG.md`, pero debe aparecer en la vista de flujo activa para consumir capacidad.
 
 Cada elemento debe declarar, como mínimo:
 
@@ -108,7 +108,7 @@ La formulación defendible es: **“Lumapse utilizó un enfoque ágil incrementa
 ## 11. Fuentes de evidencia
 
 - Vista activa de GitHub Projects — estado visual del flujo.
-- [`../../TODO`](../../TODO) — trabajo operativo inmediato.
+- [`../../TODO.md`](../../TODO.md) — trabajo operativo inmediato.
 - [`../../BACKLOG.md`](../../BACKLOG.md) — deuda y decisiones postergadas.
 - [`seguimiento-velocidad.md`](./seguimiento-velocidad.md) — SP entregados por hito, separados de métricas Kanban.
 - [`../hitos/`](../hitos/) — inspección y adaptación por hitos.

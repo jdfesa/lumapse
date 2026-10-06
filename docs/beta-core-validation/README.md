@@ -178,7 +178,7 @@ de datos, terminación de procesos, código o instrumentación nuevos, reactivar
 optimizaciones, dependencias, cambios de versión, APK/release y merge. No se ejecutan
 las operaciones físicas del protocolo por esta autorización documental. Sesión 2
 (RNF-009/RNF-010) no se inicia; la aceptación general previa de `v0.5.0` no se reabre.
-La entrega versionada es este handoff y su enlace en TODO; las plantillas quedan
+La entrega versionada es este handoff y su enlace en TODO.md; las plantillas quedan
 vacías. Revisar esta preparación no acredita ningún RNF ni cierra F3.
 
 ## Preparación física F3-1 — 2026-10-04
@@ -186,7 +186,7 @@ vacías. Revisar esta preparación no acredita ningún RNF ni cierra F3.
 **Estado:** rama `test/f3-session-1-rnf-measurements` desde `93e8967`, integrada en
 PR #28 (`b646571`); **mediciones diferidas a post-presentación** por decisión del autor.
 El objetivo cuantitativo RNF-002/RNF-004 no está concluido ni se declara aprobado;
-el control del PR está en [TODO](../../TODO) y la deuda en
+el control del PR está en [TODO.md](../../TODO.md) y la deuda en
 [BACKLOG](../../BACKLOG.md#rendimiento-post-presentación). No se modificó la app
 ni se inició F3-2.
 

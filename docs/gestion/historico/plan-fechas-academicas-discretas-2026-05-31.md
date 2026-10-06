@@ -1,7 +1,7 @@
 # Plan cerrado — Fechas academicas discretas
 
 > **Archivo historico:** plan operativo preservado el 2026-06-01 luego de completar RF-027 / HU-027 / DP-007.
-> **Fuente vigente:** [`../../../TODO`](../../../TODO)
+> **Fuente vigente:** [`../../../TODO.md`](../../../TODO.md)
 
 Lumapse debe mantener su foco: captura rapida, notas por materia y organizacion liviana. Las fechas academicas existen para recordar parciales, finales, trabajos practicos y exposiciones dentro del mismo contexto donde el estudiante ya toma apuntes. No deben competir con las notas ni introducir una experiencia de calendario completa.
 

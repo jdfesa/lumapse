@@ -10,7 +10,9 @@
 
 **Versión publicada:** `v0.5.0` (`versionCode 500`), tag anotado sobre `5840755`. Las betas publicadas son inmutables; debug privado autorizado no exige bump por prueba. Un candidato/entrega posterior requiere versión/code nuevos: [flujo Android](docs/flujo-desarrollo-android.md#identificación-de-compilaciones-en-acerca-de).
 
-**Objetivo:** producto y bloqueantes → APK de versión correspondiente generada/validada (objetivo `0.6.0+` según avance y autorización) → informe final/defensa. Meta fines de octubre 2026 condicionada a evidencia y disponibilidad, sin ampliar el producto.
+**Objetivo:** producto y bloqueantes → APK de versión correspondiente generada/validada (objetivo `0.6.0+` según avance y autorización) → informe final, manual actualizado y defensa. Para finales de octubre de 2026 deben estar preparados todos esos entregables, sin ampliar el producto ni prometer una versión estable o adopción real.
+
+**Recorte de cierre acordado:** [imprescindibles, límites y deuda postdefensa](BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa). Este tablero registra acciones, no certifica cumplimiento: una casilla pendiente o una postergación no se convierte en evidencia. Los estados RNF permanecen en su [fuente canónica](docs/producto/requisitos-no-funcionales.md).
 
 ## Prioridad inmediata — plan aceptado
 
@@ -67,8 +69,6 @@ con muestras y umbrales conservados. No se harán más pilotos en este frente.
 - [x] Corregir AUD-001 y AUD-002: conservar borradores ante fallos, serializar guardados concurrentes y diferenciar el descarte (PR #2, 2026-09-01).
 - [x] Corregir AUD-003: acotar y validar la importación ZIP, proteger jerarquías/renderizado y aprobar los checkpoints Android acumulativos (PR #3, 2026-09-02).
 - [x] Completar la sincronización documental posterior a las auditorías en `CHANGELOG.md`, backlog, `TODO` e Hito 06 (2026-09-02).
-- [ ] Alinear el tablero de GitHub Projects con la Definition of Workflow: WIP global 2, bloqueos y fechas `startedAt`/`finishedAt`; recalibrar la SLE al completar cinco elementos confiables.
-- [ ] Contrastar los metadatos bibliográficos de Gómez (2014) y Parada (2026) contra los originales de cátedra y cerrar la sección de referencias.
 - [x] Resolver AUD-004 en un PR separado: DOMPurify y siete dependencias de tooling parcheadas, auditorías 0/0, 955 tests, build, quality gate y Android 0.4.8/408 aprobados (2026-09-02).
 - [x] Resolver AUD-007 en PR #6: contrato de errores de mutaciones unificado, límites UI adaptados, 989 tests, quality gate y prueba manual Android aprobados (2026-09-03).
 - [x] Cerrar AUD-005 mediante PR #7: SHA de código validado `0832a75`, 1035 tests, gate y funcionamiento general Android aprobados. Ver [evidencia](docs/gestion/analisis-aud-005-coordinacion-sqlite-2026-09-04.md).
@@ -76,23 +76,46 @@ con muestras y umbrales conservados. No se harán más pilotos en este frente.
 - [x] Ejecutar el gate final de `v0.5.0`: 67 archivos y 1065 tests aprobados con un worker; CI de PR #10 en verde y versiones web/Android verificadas como `0.5.0/500`.
 - [x] APK firmada/publicada `v0.5.0` probada y aceptada por el autor en al menos tres dispositivos; [aceptación general canónica](docs/gestion/checklist-validacion-android.md#aceptación-general-de-la-apk-publicada-v050). Sin inventar resultados por caso/F3 ni volver a pedir esa prueba.
 - [x] Corregir y validar la interacción `Mover a` en PR #9: destinos con toque normal, acciones de materia/sección visibles y cierre consistente de menús contextuales.
-- [ ] **Post-presentación, no bloqueante:** medir latencia CRUD/FPS de `RNF-002`/`RNF-004`, según [backlog](BACKLOG.md#rendimiento-post-presentación). Importar 500 notas no constituye una medición de rendimiento.
-- [ ] Ejecutar pruebas de uso con estudiantes y verificar profundidad de navegación (`RNF-005`, `RNF-006`).
-- [ ] Completar la auditoría manual de tipografía, touch targets, contraste y navegación accesible (`RNF-007`, `RNF-008`, `RNF-019` a `RNF-022`).
-- [ ] Completar OFF-01–05 de funcionamiento offline (`RNF-009`). La recuperación del borrador ante pausa/bloqueo/terminación (`RNF-010`) ya está verificada y aceptada; conservar su evidencia para la matriz final.
-- [ ] Registrar tráfico de red y revisar dependencias/trackers (`RNF-012`, `RNF-013`).
 - [x] Incorporar TypeScript al reporte de coverage y volver a medir `RNF-024`: 92,43% de statements en `src/services/**` sobre la fuente actual (2026-08-21).
-- [ ] Emitir la matriz RNF final con requisito, método, comando, dispositivo, fecha, artefacto, resultado y evidencia.
-- [ ] Preparar presentación, guion de demo, respuestas de defensa y checklist de contingencia.
-- [ ] Medir el factor de ajuste real y redactar recomendaciones para futuros equipos.
 - [x] Reforzar `scripts/release-helper.py` para sincronizar y verificar `versionName`/`versionCode` Android con la versión declarada; aplicado en PR #10.
 - [x] Sincronizar README, CHANGELOG, Hito 06, líneas base, velocidad, cheatsheet e informe académico con la publicación de `v0.5.0`.
 - [x] Publicar y preservar la segunda beta `v0.5.0`.
-- [ ] Al terminar lo importante, generar y validar el nuevo APK del corte final autorizado (objetivo `0.6.0+`); fijar fuente, versión/code y hash como base del informe/defensa y repetir las pruebas pertinentes sobre ese artefacto.
+
+### Antes del corte APK final — núcleo y riesgos
+
+- [ ] Completar OFF-01–05 de funcionamiento offline (`RNF-009`) como próximo frente técnico por acordar. `RNF-010` ya está verificado y aceptado en el debug registrado; conservar esa evidencia sin repetir la tarea cerrada.
+- [ ] Registrar tráfico de red y revisar dependencias/trackers (`RNF-012`, `RNF-013`), distinguiendo transmisión automática de una exportación explícita del usuario.
+- [ ] Ejecutar una prueba acotada de uso con estudiantes y revisar profundidad de navegación (`RNF-005`, `RNF-006`), sin inferir tiempos, éxito o adopción a partir de la encuesta o de las pruebas del autor.
+- [ ] Revisar tipografía, touch targets, contraste, teclado cuando corresponda y nombres accesibles (`RNF-007`, `RNF-008`, `RNF-020` a `RNF-022`). Medir los criterios aplicables; la inspección visual o el checker estático no bastan para declararlos cumplidos.
+- [ ] Resolver el método de `RNF-019`: ejecutar la medición prevista o acordar formalmente un tratamiento adecuado al APK; no atribuir un score Lighthouse inexistente.
+- [ ] Clasificar los hallazgos: resolver bloqueantes confirmados y someter las observaciones menores o la evidencia incompleta a aceptación explícita, sin ampliar automáticamente el producto ni postergar otros RNF.
+
+### Corte APK final — artefacto de presentación
+
+- [ ] Repetir `npm run verify`, auditorías completa/productiva y coverage de servicios en el corte candidato; registrar resultados reales, no reutilizar cifras históricas como mediciones nuevas.
+- [ ] Generar y validar el nuevo APK autorizado (objetivo `0.6.0+`); fijar fuente, versión/code, canal, firma y hash, preservar las betas publicadas y registrar la revisión Android pertinente sobre ese binario exacto.
+
+### Después del APK validado — cierre académico y defensa
+
+- [ ] Emitir la matriz RNF final con requisito, método, comando, dispositivo, fecha, artefacto, resultado, evidencia y limitaciones aceptadas; mantener CRUD/FPS pendientes y diferidos según el backlog.
+- [ ] Incorporar el corte y la evidencia final en los capítulos fuente del informe; revisar coherencia, referencias y diagramas antes de congelar y ensamblar.
+- [ ] Contrastar los metadatos bibliográficos de Gómez (2014) y Parada (2026) contra los originales de cátedra y cerrar la sección de referencias.
+- [ ] Revisar el manual externo de `v0.5.0` informado por el autor y adaptarlo al APK final, con capturas coherentes y límites de backup/borradores/papelera. Su existencia no acredita que ya esté actualizado o revisado.
+- [ ] Revisar PDF, tablas y legibilidad de figuras; dejar informe y manual preparados para la entrega.
+- [ ] Alinear GitHub Projects con la Definition of Workflow: WIP global 2, bloqueos y fechas reales `startedAt`/`finishedAt`, sin reconstruir tiempos inexistentes.
+- [ ] Registrar el factor de ajuste solo si hay datos fiables, o declarar la limitación de medición; redactar recomendaciones para futuras cohortes sin inventar métricas.
+- [ ] Preparar y ensayar presentación, guion de demo, respuestas de defensa y contingencia; reservar tiempo del autor para estudiar el proyecto.
+- [ ] Fijar la línea base final: APK, matriz, informe, manual y demo identifican el mismo corte.
+
+Las mediciones CRUD/FPS, los refactors y las demás mejoras no comprometidas quedan
+en el [backlog postdefensa](BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa), no como
+una lista adicional de trabajo inmediato. La revisión acotada de otros RNF sigue
+pendiente: cualquier limitación o postergación nueva exige una decisión explícita.
 
 ## Criterios de salida de Hito 06
 
 - Documentación técnica y académica revisada y congelada.
+- Manual de usuario revisado y adaptado al artefacto final.
 - Diagramas de base de datos exportados y consistentes con el schema real.
 - Quality gate y validación Android final sin bloqueantes abiertos.
 - Matriz RNF final emitida, con estados verificados, parciales, obsoletos o no aplicables sustentados por evidencia.

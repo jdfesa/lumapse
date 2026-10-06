@@ -17,6 +17,6 @@ Esta carpeta conserva artefactos operativos cerrados para mantener evidencia del
 Los documentos históricos no son la fuente operativa vigente. Para el estado actual del proyecto, consultar:
 
 - [`../../../BACKLOG.md`](../../../BACKLOG.md)
-- [`../../../TODO`](../../../TODO)
+- [`../../../TODO.md`](../../../TODO.md)
 - [`../../hitos/`](../../hitos/)
 - [`../../../CHANGELOG.md`](../../../CHANGELOG.md)

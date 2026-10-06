@@ -30,13 +30,30 @@ El Hito 05 quedó cerrado con la primera beta `v0.4.8`. El Hito 06 publicó la s
 
 `INFORME-FINAL-COMPLETO.md` se regeneró como checkpoint después de reconciliar los capítulos con `v0.5.0`. Los capítulos siguen siendo la fuente de verdad y el artefacto deberá ensamblarse otra vez si se incorpora nueva evidencia antes del cierre académico.
 
+El tablero único vigente es [`TODO.md`](../../TODO.md). El nombre anterior `TODO`
+se conserva en menciones históricas del checkpoint; no representa otro tablero ni
+una ruta de navegación vigente.
+
 Los pendientes explícitos del Hito 06 son:
 
 - Revisión editorial de congelamiento después de incorporar las evidencias finales; la reconciliación transversal y las figuras DB del checkpoint ya están completadas.
 - Verificación de legibilidad de las imágenes de base de datos dentro del PDF y las diapositivas. El conceptual Chen y el lógico relacional ya fueron exportados, revisados e incorporados desde sus fuentes DOT y DBML sincronizadas.
 - Verificación de los metadatos bibliográficos incompletos de Gómez (2014) y Parada (2026) contra los originales de cátedra; la sección de referencias ya existe y no inventa los datos ausentes.
-- Ejecución del plan RNF de Hito 06: uso y navegación, accesibilidad, rendimiento, offline/cierre inesperado, tráfico/dependencias, coverage TypeScript y matriz final por artefacto; la portabilidad del gate fue cerrada en F1/PR #14, con sus límites por entorno documentados.
-- Producto/bloqueantes y validación RNF pendiente → APK correspondiente generada/validada (objetivo `0.6.0+` según avance/autorización) → informe final y defensa, según el [plan vigente](../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#continuidad-aprobada--2026-10-02). El asset firmado `v0.5.0` ya fue aceptado en al menos tres dispositivos: [registro general](../gestion/checklist-validacion-android.md#aceptación-general-de-la-apk-publicada-v050). No rehacer el checkpoint histórico ahora ni reabrir esa aceptación.
+- Ejecución del plan RNF de Hito 06: uso y navegación, accesibilidad, offline, tráfico/dependencias, coverage en el candidato y matriz final por artefacto. `RNF-010` ya fue [verificado y aceptado](../beta-core-validation/continuidad-2026-10-04.md); CRUD/FPS siguen pendientes y [diferidos a post-presentación](../../BACKLOG.md#rendimiento-post-presentación). La portabilidad del gate fue cerrada en F1/PR #14, con sus límites por entorno documentados.
+- Producto/bloqueantes y validación RNF pendiente → APK correspondiente generada/validada (objetivo `0.6.0+` según avance/autorización) → informe, manual y defensa. El [recorte vigente](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa) exige preparar todos los entregables para finales de octubre de 2026, sin prometer estabilidad comercial o adopción. El asset firmado `v0.5.0` ya fue aceptado en al menos tres dispositivos: [registro general](../gestion/checklist-validacion-android.md#aceptación-general-de-la-apk-publicada-v050). No rehacer el checkpoint histórico ahora ni reabrir esa aceptación.
+
+### Manual de usuario y consistencia de la entrega
+
+El autor informa que conserva fuera del repositorio un manual de `v0.5.0`. No fue
+inspeccionado en este recorte: falta compartirlo, estudiar sus instrucciones y adaptar
+contenido, capturas e identificación de versión al APK final validado. No se redacta
+desde cero ni se presume que ya refleje el comportamiento nuevo.
+
+La revisión debe explicar los flujos existentes y sus límites: guardado explícito,
+borradores, archivo/papelera y backup ZIP local, que no incluye borradores ni papelera.
+Informe, manual, matriz RNF y demo deben describir el mismo artefacto. La adaptación
+y el congelamiento final siguen pendientes; este acuerdo no regenera los capítulos
+ni el informe ensamblado de `v0.5.0`.
 
 ### Checklist antes del próximo ensamblado
 
