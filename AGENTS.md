@@ -85,6 +85,12 @@ el diagnóstico.
 Aplicar las reglas de [commits](CONTRIBUTING.md#3-commits),
 [verificación](CONTRIBUTING.md#5-verificación) y
 [PR, aprobación e integración](CONTRIBUTING.md#6-pull-request).
+
+Al integrar un PR, usar como título del commit `<título descriptivo del PR> (#N)`,
+respetando el estilo de commits de CONTRIBUTING. Omitir el propietario y la ruta de
+la rama del título automático; conservar el número del PR para trazabilidad, sin
+cambiar por ello el método de integración ni reescribir el historial.
+
 Actualizar cada hecho en su [fuente canónica](docs/README.md#cómo-leer-la-documentación)
 dentro del mismo cambio, sin reescribir evidencia histórica ni crear registros paralelos.
 
