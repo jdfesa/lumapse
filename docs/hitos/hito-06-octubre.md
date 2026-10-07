@@ -83,7 +83,7 @@ RNF, la validación funcional y los controles de seguridad no quedan postergados
 - [x] OFF-01–05 de `RNF-009` PASS en [debug `348da88` identificado](../beta-core-validation/offline-2026-10-06.md), con fix del ZIP local y datos preservados; autor aceptó [PR #31](https://github.com/jdfesa/lumapse/pull/31) y autorizó merge/limpieza, sin transferencia al APK final.
 - [x] `RNF-010`: continuidad SQLite verificada y aceptada en [PR #29](https://github.com/jdfesa/lumapse/pull/29); [evidencia y límites](../beta-core-validation/continuidad-2026-10-04.md). No repetir la tarea cerrada ni trasladar automáticamente sus pruebas a un APK nuevo.
 - [x] Revalidar dependencias tras el advisory crítico de Capacitor: `@capacitor/android`/`core` 8.5.2 y `source-map-js` 1.2.2, auditorías completa/productiva 0/0. [Evidencia y límites](../gestion/validacion-parche-capacitor-2026-10-07.md).
-- [ ] Registrar tráfico de red y revisar trackers durante los flujos completos (`RNF-012`, `RNF-013`); la remediación de dependencias no sustituye esta evidencia.
+- [x] Registrar tráfico de red y revisar trackers durante los flujos capturados (`RNF-012`, `RNF-013`): [PASS en debug `0.5.0/500`, 2026-10-07](../gestion/validacion-trafico-trackers-2026-10-07.md). Repetir sobre el APK candidato final; la remediación de dependencias no sustituye esta evidencia.
 - [x] Incorporar TypeScript al reporte de coverage y volver a medir `RNF-024`: 92,43% de statements en `src/services/**` sobre la fuente actual (2026-08-21); repetir en el commit candidato para la matriz final.
 - [ ] Confirmar o reformular los RNF obsoletos/no aplicables sin reutilizar evidencia PWA para el APK.
 - [ ] Emitir una matriz final con RNF, método, comando, dispositivo, fecha, artefacto, resultado y evidencia.

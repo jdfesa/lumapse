@@ -85,7 +85,7 @@ con muestras y umbrales conservados. No se harán más pilotos en este frente.
 
 - [x] Ejecutar OFF-01–05 de funcionamiento offline (`RNF-009`): [PASS en debug identificado, aceptados en PR #31](docs/beta-core-validation/offline-2026-10-06.md). `RNF-010` ya está verificado y aceptado en el debug registrado; conservar esa evidencia sin repetir la tarea cerrada.
 - [x] Remediar los advisories actuales de dependencias: `@capacitor/android`/`core` 8.5.2 y `source-map-js` 1.2.2; auditorías completa/productiva en 0/0. [Evidencia y límites](docs/gestion/validacion-parche-capacitor-2026-10-07.md). Esto no cierra la captura de tráfico ni `RNF-012/013`.
-- [ ] Registrar tráfico de red y revisar trackers durante los flujos completos (`RNF-012`, `RNF-013`), distinguiendo transmisión automática de una exportación explícita del usuario.
+- [x] Registrar tráfico de red y revisar trackers durante los flujos capturados (`RNF-012`, `RNF-013`): [PASS en debug `0.5.0/500`, 2026-10-07](docs/gestion/validacion-trafico-trackers-2026-10-07.md). La evidencia debe repetirse sobre el APK candidato final.
 - [ ] Ejecutar una prueba acotada de uso con estudiantes y revisar profundidad de navegación (`RNF-005`, `RNF-006`), sin inferir tiempos, éxito o adopción a partir de la encuesta o de las pruebas del autor.
 - [ ] Revisar tipografía, touch targets, contraste, teclado cuando corresponda y nombres accesibles (`RNF-007`, `RNF-008`, `RNF-020` a `RNF-022`). Medir los criterios aplicables; la inspección visual o el checker estático no bastan para declararlos cumplidos.
 - [ ] Resolver el método de `RNF-019`: ejecutar la medición prevista o acordar formalmente un tratamiento adecuado al APK; no atribuir un score Lighthouse inexistente.
