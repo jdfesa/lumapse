@@ -77,7 +77,7 @@
 | ID | Requisito original / vigente | Métrica | Estado actual | Evidencia / siguiente paso |
 |---|---|---|---|---|
 | RNF-012 | La aplicación no debe transmitir automáticamente datos del usuario a servidores externos. Una exportación iniciada explícitamente por el usuario mediante share sheet no se considera transmisión automática. | Requests automáticos con payload de usuario = 0 | Evidencia parcial | La arquitectura no tiene backend y la auditoría offline bloquea dependencias externas en runtime; falta registrar una captura de tráfico durante los flujos completos. |
-| RNF-013 | La aplicación no debe incluir **tracking, analytics ni cookies de terceros**. | Integraciones de tracking de terceros = 0 | Evidencia parcial | No hay una integración de analytics declarada y el runtime se audita para recursos externos; falta conservar un reporte específico del bundle/dependencias para el cierre final. |
+| RNF-013 | La aplicación no debe incluir **tracking, analytics ni cookies de terceros**. | Integraciones de tracking de terceros = 0 | Evidencia parcial | No hay una integración de analytics declarada; la auditoría offline no detecta recursos externos bloqueantes y la auditoría de dependencias quedó en 0/0 tras el [parche de Capacitor del 2026-10-07](../gestion/validacion-parche-capacitor-2026-10-07.md). Falta conservar el reporte de runtime/tráfico y cerrar la revisión de trackers. |
 | RNF-014 | El sitio debe servirse exclusivamente sobre **HTTPS** en producción. | Certificado TLS válido | No aplica al APK | El producto distribuido no es un sitio alojado: el runtime se ejecuta localmente dentro de la APK. HTTPS sigue siendo deseable para el canal de descarga, pero no verifica el runtime. |
 | RNF-015 | Los headers web `X-Content-Type-Options` y `X-Frame-Options` deben estar presentes. | Headers presentes en response | No aplica al APK | No existe una respuesta HTTP de producción que controlar. La CSP local y la configuración del WebView son controles distintos; el criterio debe reformularse si se define un RNF nativo equivalente. |
 
@@ -162,7 +162,7 @@ El listado histórico anterior no es una tarea por repetir.
 2. Ejecutar pruebas con usuarios y revisar profundidad de navegación (RNF-005, RNF-006).
 3. Auditar tipografía, touch targets, contraste y navegación accesible (RNF-007, RNF-008, RNF-019 a RNF-022).
 4. OFF-01–05 de RNF-009 verificados en el debug `348da88` y aceptados por el autor en PR #31. RNF-010 conserva su aceptación y evidencia sin repetir la tarea. La validación de un nuevo candidato final se acuerda por separado.
-5. Registrar tráfico de red y un reporte específico de dependencias/trackers para completar RNF-012 y RNF-013.
+5. Registrar tráfico de red y un reporte específico de trackers durante los flujos completos para completar RNF-012 y RNF-013. La revisión de dependencias del 2026-10-07 quedó documentada en el [parche de Capacitor](../gestion/validacion-parche-capacitor-2026-10-07.md), pero no sustituye la captura de runtime.
 6. [Completado 2026-08-21] Incorporar archivos TypeScript al reporte de coverage y volver a medir RNF-024; repetir la medición en el commit candidato para incorporarla a la matriz final.
 7. Confirmar o reformular formalmente los RNF obsoletos/no aplicables, sin reutilizar evidencia PWA como si perteneciera al APK.
 8. Emitir una matriz final de cumplimiento con comando, dispositivo, fecha y artefacto para cada verificación realizada.
