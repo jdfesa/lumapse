@@ -76,8 +76,8 @@
 
 | ID | Requisito original / vigente | Métrica | Estado actual | Evidencia / siguiente paso |
 |---|---|---|---|---|
-| RNF-012 | La aplicación no debe transmitir automáticamente datos del usuario a servidores externos. Una exportación iniciada explícitamente por el usuario mediante share sheet no se considera transmisión automática. | Requests automáticos con payload de usuario = 0 | Evidencia parcial | La arquitectura no tiene backend y la auditoría offline bloquea dependencias externas en runtime; falta registrar una captura de tráfico durante los flujos completos. |
-| RNF-013 | La aplicación no debe incluir **tracking, analytics ni cookies de terceros**. | Integraciones de tracking de terceros = 0 | Evidencia parcial | No hay una integración de analytics declarada; la auditoría offline no detecta recursos externos bloqueantes y la auditoría de dependencias quedó en 0/0 tras el [parche de Capacitor del 2026-10-07](../gestion/validacion-parche-capacitor-2026-10-07.md). Falta conservar el reporte de runtime/tráfico y cerrar la revisión de trackers. |
+| RNF-012 | La aplicación no debe transmitir automáticamente datos del usuario a servidores externos. Una exportación iniciada explícitamente por el usuario mediante share sheet no se considera transmisión automática. | Requests automáticos con payload de usuario = 0 | Verificado | [Captura runtime y contadores UID, 2026-10-07](../gestion/validacion-trafico-trackers-2026-10-07.md): 0 bytes nuevos atribuibles a Lumapse durante los flujos capturados; la exportación explícita se canceló sin destino. Repetir sobre el APK candidato final. |
+| RNF-013 | La aplicación no debe incluir **tracking, analytics ni cookies de terceros**. | Integraciones de tracking de terceros = 0 | Verificado | [Inventario estático y captura runtime, 2026-10-07](../gestion/validacion-trafico-trackers-2026-10-07.md): sin SDK declarado ni tráfico atribuible al UID de Lumapse durante la corrida. Repetir sobre el APK candidato final. |
 | RNF-014 | El sitio debe servirse exclusivamente sobre **HTTPS** en producción. | Certificado TLS válido | No aplica al APK | El producto distribuido no es un sitio alojado: el runtime se ejecuta localmente dentro de la APK. HTTPS sigue siendo deseable para el canal de descarga, pero no verifica el runtime. |
 | RNF-015 | Los headers web `X-Content-Type-Options` y `X-Frame-Options` deben estar presentes. | Headers presentes en response | No aplica al APK | No existe una respuesta HTTP de producción que controlar. La CSP local y la configuración del WebView son controles distintos; el criterio debe reformularse si se define un RNF nativo equivalente. |
 
@@ -132,8 +132,8 @@
 
 | Estado | Cantidad | IDs |
 |---|---:|---|
-| Verificado | 7 | RNF-003, RNF-009, RNF-010, RNF-018, RNF-023 a RNF-025 |
-| Evidencia parcial | 5 | RNF-012, RNF-013, RNF-020, RNF-022, RNF-026 |
+| Verificado | 9 | RNF-003, RNF-009, RNF-010, RNF-012, RNF-013, RNF-018, RNF-023 a RNF-025 |
+| Evidencia parcial | 3 | RNF-020, RNF-022, RNF-026 |
 | Pendiente | 8 | RNF-002, RNF-004 a RNF-008, RNF-019, RNF-021 |
 | Obsoleto por pivote | 3 | RNF-001, RNF-011, RNF-017 |
 | No aplica al APK | 3 | RNF-014 a RNF-016 |
