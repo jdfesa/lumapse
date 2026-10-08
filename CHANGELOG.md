@@ -12,6 +12,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 ### Changed
 
 - **Continuidad aprobada:** producto/bloqueantes → APK correspondiente validada (objetivo `0.6.0+` condicionado) → informe/defensa. Próximas dos sesiones F3 secuenciales, reglas de consulta previa y protección de datos; aceptación general de la APK publicada `v0.5.0` reconciliada sin inventar casos ni mediciones.
+- **Profundidad de navegación RNF-006:** revisión Android acotada sobre el debug `0.5.0/500` confirmó que crear, buscar y organizar se alcanzan en 0–2 taps desde la pantalla principal. La prueba con usuarios nuevos para `RNF-005` y las métricas de tiempo permanecen pendientes; no se modificó producto ni datos.
 
 ### Added
 

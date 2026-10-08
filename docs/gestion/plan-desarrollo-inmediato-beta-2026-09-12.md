@@ -293,7 +293,7 @@ y añadiendo los perfiles exactos de comparación F3. No hay mediciones Android 
 ## 5. Pendientes que se conservan fuera de este ciclo
 
 - **Cierre académico vigente:** originales bibliográficos, figuras en PDF/diapositivas, tablero y métricas de flujo, presentación/demo y contingencia. El ciclo técnico no los da por hechos ni vuelve a redactar todo el informe.
-- **Validación posterior aún necesaria:** usuarios y navegación (RNF-005/RNF-006), accesibilidad/tipografía/contraste, tráfico/trackers y matriz RNF completa. F3 es un subconjunto, no el cierre de todos los RNF.
+- **Validación posterior aún necesaria:** prueba con usuarios nuevos para `RNF-005`, accesibilidad/tipografía/contraste, tráfico/trackers y matriz RNF completa. `RNF-006` quedó verificado en la revisión de profundidad del 2026-10-07; F3 es un subconjunto, no el cierre de todos los RNF.
 - **Mejora técnica candidata siguiente:** ampliar el smoke SQLite con `academic_events`, columnas, índices, tipo inválido, FK/`ON DELETE SET NULL` e idempotencia. Sigue abierta; se priorizará al terminar este ciclo o si una regresión de schema la vuelve necesaria.
 - **Solo con mediciones de F3:** agregación de conteos o reducción de notificaciones (AUD-010/AUD-011), un cuello de botella por PR, preservando conteos y semántica de archivo/papelera.
 - **No activar ahora:** refactor de routing, migración masiva a TypeScript/framework, Docker, adjuntos, compartir/importar notas individuales, nube/sincronización, onboarding y cambios de producto postergados.
