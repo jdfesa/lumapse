@@ -88,7 +88,8 @@ con muestras y umbrales conservados. No se harán más pilotos en este frente.
 - [x] Registrar tráfico de red y revisar trackers durante los flujos capturados (`RNF-012`, `RNF-013`): [PASS en debug `0.5.0/500`, 2026-10-07](docs/gestion/validacion-trafico-trackers-2026-10-07.md). La evidencia debe repetirse sobre el APK candidato final.
 - [x] Revisar la profundidad de entrada de crear, buscar y organizar (`RNF-006`) en el debug `0.5.0/500`, con evidencia de rutas de 0–2 taps y límites explícitos. [Registro](docs/gestion/validacion-usabilidad-navegacion-2026-10-07.md).
 - [ ] Ejecutar una prueba acotada de primera nota con estudiantes o usuarios nuevos (`RNF-005`); no inferir tiempo, éxito o adopción a partir de la encuesta ni de la revisión técnica del autor.
-- [ ] Revisar tipografía, touch targets, contraste, teclado cuando corresponda y nombres accesibles (`RNF-007`, `RNF-008`, `RNF-020` a `RNF-022`). Medir los criterios aplicables; la inspección visual o el checker estático no bastan para declararlos cumplidos.
+- [x] Verificar touch targets principales (`RNF-008`) en Android mediante medición de límites renderizados ≥44×44 CSS px. [Evidencia y límites](docs/gestion/validacion-touch-targets-rnf-008-2026-10-08.md).
+- [ ] Revisar tipografía, contraste, teclado cuando corresponda y nombres accesibles (`RNF-007`, `RNF-020` a `RNF-022`). Medir los criterios aplicables; la inspección visual o el checker estático no bastan para declararlos cumplidos.
 - [ ] Resolver el método de `RNF-019`: ejecutar la medición prevista o acordar formalmente un tratamiento adecuado al APK; no atribuir un score Lighthouse inexistente.
 - [ ] Clasificar los hallazgos: resolver bloqueantes confirmados y someter las observaciones menores o la evidencia incompleta a aceptación explícita, sin ampliar automáticamente el producto ni postergar otros RNF.
 
