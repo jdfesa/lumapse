@@ -65,9 +65,9 @@
 }
 
 .app-header__logo-icon-btn {
-  width: 36px;
-  height: 36px;
-  flex: 0 0 36px;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -180,8 +180,8 @@
   background: transparent;
   border: none;
   color: var(--color-text-muted);
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;

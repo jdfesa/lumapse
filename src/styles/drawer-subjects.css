@@ -24,8 +24,8 @@
   background: transparent;
   border: 1px solid var(--color-border);
   color: var(--color-text-muted);
-  width: 24px;
-  height: 24px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius-sm);
   font-size: 1rem;
   line-height: 1;
@@ -56,7 +56,7 @@
   font-family: var(--font-mono);
   font-size: 0.85rem;
   cursor: pointer;
-  min-height: 34px;
+  min-height: 44px;
   transition: all var(--transition);
   text-align: left;
 }
@@ -113,7 +113,7 @@
   display: flex;
   align-items: center;
   gap: 2px;
-  min-height: 34px;
+  min-height: 44px;
 }
 
 .drawer__subject-row .drawer__subject-btn {
@@ -132,7 +132,8 @@
 
 .drawer__subject-collapse {
   width: 32px;
-  height: 32px;
+  min-width: 44px;
+  height: 44px;
   border: none;
   border-radius: var(--radius-sm);
   background: transparent;
@@ -169,8 +170,8 @@
   background: transparent;
   border: none;
   color: var(--color-text-muted);
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   display: flex;
