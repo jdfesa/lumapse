@@ -26,6 +26,8 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ### Fixed
 
+- **Touch targets principales (RNF-008):** los controles de encabezado, búsqueda, materias, composer, guardado y opciones de materia alcanzan un área renderizada mínima de 44×44 CSS px en Android. El toolbar fija `flex: 0 0 44px` para evitar que el layout flex reduzca su ancho efectivo. [Medición y límites](docs/gestion/validacion-touch-targets-rnf-008-2026-10-08.md) para el debug privado `0.5.0/500`.
+
 - **ZIP local sin conexión (RF-017 / RNF-009):** el flujo deja de bloquear generación/cache/share sheet en modo offline y aclara la diferencia entre un destino local y la nube. Regresiones de disponibilidad, exportación y cancelación; sin cambiar formato/importación, versión ni firma. [Fallo Android, corrección y estado de validación](docs/beta-core-validation/offline-2026-10-06.md).
 
 - **Continuidad del borrador (RF-005 / RNF-010):** captura sin debounce persistida en SQLite, migración segura desde WebStorage y guardado/actualización de nota con limpieza del borrador en una única transacción. Evita la pérdida y reaparición reproducidas ante terminación abrupta; fallos conservan texto y muestran aviso, sin auto-guardar notas finales. Gate de 1189 tests, migración y 12 casos Android PASS, incluida entrada nativa a 285 ms; el autor confirmó funcionamiento y aprobó el cierre de [PR #29](https://github.com/jdfesa/lumapse/pull/29). [Artefacto, aceptación y límites](docs/beta-core-validation/continuidad-2026-10-04.md): debug privado `0.5.0/500`, sin nueva release ni garantía antes del commit.

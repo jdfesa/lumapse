@@ -9,6 +9,21 @@ Este archivo define el inicio operativo. [CONTRIBUTING.md](CONTRIBUTING.md) reú
 reglas de contribución; [scripts/README.md](scripts/README.md), el uso y los límites
 de las herramientas. Consultar esas fuentes en lugar de duplicar sus instrucciones.
 
+## Convenciones de idioma y factualidad
+
+- Los títulos, descripciones, comentarios de revisión y demás texto de los PR deben
+  escribirse en **inglés**.
+- La documentación versionada del repositorio (`docs/`, `TODO.md`, `BACKLOG.md`,
+  `CHANGELOG.md` y fuentes equivalentes) debe mantenerse en **español**, salvo que una
+  fuente o formato externo exija otro idioma.
+- No mezclar idiomas dentro de un mismo PR ni traducir parcialmente una descripción ya
+  acordada.
+- No inventar resultados, métricas, estados, dispositivos, comandos ni aceptación.
+  Informar únicamente evidencia comprobada y separar hechos, hipótesis y límites.
+- Un hallazgo incidental o una limitación no crea por sí solo una nueva tarea, rama o
+  alcance: registrarlo como límite y solicitar autorización antes de proponer o abrir
+  un frente distinto.
+
 ## 1. Comprobar y sincronizar el repositorio
 
 **GitHub (`origin`) es la fuente de verdad del trabajo compartido.** Desde la raíz

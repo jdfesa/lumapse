@@ -6,6 +6,21 @@
 
 ---
 
+## Touch targets — RNF-008 — 2026-10-08
+
+[Medición Android y límites](./validacion-touch-targets-rnf-008-2026-10-08.md).
+
+- [x] Debug `0.5.0/500` desplegado sin `--clean` sobre Samsung `SM-G965F`; datos locales conservados.
+- [x] Encabezado, búsqueda, materias, composer, guardado y opciones de materia con límites renderizados ≥44×44 CSS px.
+- [x] Smoke de apertura/cierre del drawer y del selector de materia sin crash ni mutaciones de datos.
+- [ ] Tipografía, contraste, foco, teclado y nombres accesibles permanecen en sus frentes RNF separados.
+
+La pestaña web de desarrollo quedó fuera de esta aceptación: `jeep-sqlite` falla al
+instanciar WebAssembly en el navegador de escritorio y la app permanece en «Iniciando
+Lumapse…». No se atribuye ese diagnóstico al APK Android.
+
+---
+
 ## Flujos offline — 2026-10-06
 
 [Fallo OFF-05 reproducido, corrección y matriz del debug nuevo](../beta-core-validation/offline-2026-10-06.md).

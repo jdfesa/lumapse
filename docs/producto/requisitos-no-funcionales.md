@@ -58,7 +58,7 @@
 | RNF-005 | Un usuario nuevo debe poder **crear su primera nota en menos de 10 segundos** desde la primera apertura, sin instrucciones previas. | Tiempo a primera nota ≤ 10s | Pendiente | La validación acotada del 2026-10-07 no incluyó participantes nuevos ni midió tiempo; requiere una prueba con usuarios del prototipo. [Evidencia y límites](../gestion/validacion-usabilidad-navegacion-2026-10-07.md). |
 | RNF-006 | Toda función principal actual (crear, buscar, organizar) debe ser accesible en **máximo 2 taps** desde la pantalla principal. | Profundidad de navegación ≤ 2 | Verificado | Crear queda visible en 0 taps; buscar y organizar se alcanzan en 2 taps en el debug `0.5.0/500` sobre Samsung SM-G965F. La evidencia cubre profundidad de entrada, no éxito de mutaciones ni adopción. [Registro de casos](../gestion/validacion-usabilidad-navegacion-2026-10-07.md). |
 | RNF-007 | La tipografía mínima legible debe ser **16px** en dispositivos móviles. | `font-size` ≥ 16px para texto de lectura/edición | Pendiente | Requiere inspección CSS consolidada y comprobación visual; el checker a11y actual no mide tamaños tipográficos. |
-| RNF-008 | Los controles principales deben tener un área táctil mínima de **44x44 px**. | Touch target ≥ 44x44 px | Pendiente | Requiere medición en viewport/dispositivo móvil; el checker estático actual no calcula dimensiones. |
+| RNF-008 | Los controles principales deben tener un área táctil mínima de **44x44 px**. | Touch target ≥ 44x44 px | Verificado | Medición CDP de `getBoundingClientRect()` sobre el debug `0.5.0/500` en Samsung SM-G965F: encabezado, búsqueda, materias, composer, guardado y 31 opciones de materia alcanzan ≥44×44 CSS px. [Evidencia y límites](../gestion/validacion-touch-targets-rnf-008-2026-10-08.md). |
 
 ---
 
@@ -132,9 +132,9 @@
 
 | Estado | Cantidad | IDs |
 |---|---:|---|
-| Verificado | 9 | RNF-003, RNF-009, RNF-010, RNF-012, RNF-013, RNF-018, RNF-023 a RNF-025 |
+| Verificado | 11 | RNF-003, RNF-006, RNF-008 a RNF-010, RNF-012, RNF-013, RNF-018, RNF-023 a RNF-025 |
 | Evidencia parcial | 3 | RNF-020, RNF-022, RNF-026 |
-| Pendiente | 8 | RNF-002, RNF-004 a RNF-008, RNF-019, RNF-021 |
+| Pendiente | 6 | RNF-002, RNF-004, RNF-005, RNF-007, RNF-019, RNF-021 |
 | Obsoleto por pivote | 3 | RNF-001, RNF-011, RNF-017 |
 | No aplica al APK | 3 | RNF-014 a RNF-016 |
 | **Total** | **26** | |
@@ -160,7 +160,7 @@ El listado histórico anterior no es una tarea por repetir.
 
 1. **Diferido a post-presentación:** medir latencia CRUD/FPS con un volumen reproducible de notas (RNF-002, RNF-004); emitir la matriz de entrega con estos requisitos pendientes y la postergación explícita, sin afirmar cumplimiento.
 2. Ejecutar pruebas con usuarios y revisar profundidad de navegación (RNF-005, RNF-006).
-3. Auditar tipografía, touch targets, contraste y navegación accesible (RNF-007, RNF-008, RNF-019 a RNF-022).
+3. Auditar tipografía, contraste y navegación accesible (RNF-007, RNF-019 a RNF-022). `RNF-008` quedó verificado en [la medición Android del 2026-10-08](../gestion/validacion-touch-targets-rnf-008-2026-10-08.md).
 4. OFF-01–05 de RNF-009 verificados en el debug `348da88` y aceptados por el autor en PR #31. RNF-010 conserva su aceptación y evidencia sin repetir la tarea. La validación de un nuevo candidato final se acuerda por separado.
 5. Registrar tráfico de red y un reporte específico de trackers durante los flujos completos para completar RNF-012 y RNF-013. La revisión de dependencias del 2026-10-07 quedó documentada en el [parche de Capacitor](../gestion/validacion-parche-capacitor-2026-10-07.md), pero no sustituye la captura de runtime.
 6. [Completado 2026-08-21] Incorporar archivos TypeScript al reporte de coverage y volver a medir RNF-024; repetir la medición en el commit candidato para incorporarla a la matriz final.

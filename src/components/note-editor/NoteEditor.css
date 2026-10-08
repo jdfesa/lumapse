@@ -93,8 +93,9 @@
   background: transparent;
   border: none;
   color: var(--color-text-muted);
-  width: 32px;
-  height: 32px;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
@@ -120,6 +121,7 @@
 }
 
 .composer__save-btn {
+  min-height: 44px;
   background-color: var(--color-accent);
   color: #fff;
   border: none;
@@ -198,7 +200,7 @@
 }
 
 .composer__subject-trigger {
-  height: 32px;
+  height: 44px;
   width: clamp(112px, 36vw, 150px);
   display: grid;
   grid-template-columns: 10px minmax(0, 1fr) 16px;
@@ -276,7 +278,7 @@
 .composer__subject-option {
   position: relative;
   width: 100%;
-  min-height: 34px;
+  min-height: 44px;
   display: grid;
   grid-template-columns: 10px minmax(0, 1fr);
   align-items: center;
@@ -308,7 +310,7 @@
 
 .composer__subject-option--child {
   padding-left: calc(var(--space-6) + var(--space-2));
-  min-height: 32px;
+  min-height: 44px;
   color: var(--color-text-muted);
 }
 
