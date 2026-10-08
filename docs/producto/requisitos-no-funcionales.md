@@ -55,8 +55,8 @@
 
 | ID | Requisito | Métrica | Estado actual | Evidencia / siguiente paso |
 |---|---|---|---|---|
-| RNF-005 | Un usuario nuevo debe poder **crear su primera nota en menos de 10 segundos** desde la primera apertura, sin instrucciones previas. | Tiempo a primera nota ≤ 10s | Pendiente | Requiere prueba con usuarios del prototipo. Se traslada explícitamente al Hito 06; la validación Android del autor no sustituye esta medición. |
-| RNF-006 | Toda función principal actual (crear, buscar, organizar) debe ser accesible en **máximo 2 taps** desde la pantalla principal. | Profundidad de navegación ≤ 2 | Pendiente | Falta registrar una revisión completa de flujos sobre la interfaz vigente. |
+| RNF-005 | Un usuario nuevo debe poder **crear su primera nota en menos de 10 segundos** desde la primera apertura, sin instrucciones previas. | Tiempo a primera nota ≤ 10s | Pendiente | La validación acotada del 2026-10-07 no incluyó participantes nuevos ni midió tiempo; requiere una prueba con usuarios del prototipo. [Evidencia y límites](../gestion/validacion-usabilidad-navegacion-2026-10-07.md). |
+| RNF-006 | Toda función principal actual (crear, buscar, organizar) debe ser accesible en **máximo 2 taps** desde la pantalla principal. | Profundidad de navegación ≤ 2 | Verificado | Crear queda visible en 0 taps; buscar y organizar se alcanzan en 2 taps en el debug `0.5.0/500` sobre Samsung SM-G965F. La evidencia cubre profundidad de entrada, no éxito de mutaciones ni adopción. [Registro de casos](../gestion/validacion-usabilidad-navegacion-2026-10-07.md). |
 | RNF-007 | La tipografía mínima legible debe ser **16px** en dispositivos móviles. | `font-size` ≥ 16px para texto de lectura/edición | Pendiente | Requiere inspección CSS consolidada y comprobación visual; el checker a11y actual no mide tamaños tipográficos. |
 | RNF-008 | Los controles principales deben tener un área táctil mínima de **44x44 px**. | Touch target ≥ 44x44 px | Pendiente | Requiere medición en viewport/dispositivo móvil; el checker estático actual no calcula dimensiones. |
 
