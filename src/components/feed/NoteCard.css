@@ -92,7 +92,7 @@
 
 .note-card__content {
   font-family: var(--font-note);
-  font-size: 0.96rem;
+  font-size: 1rem;
   line-height: 1.66;
   color: var(--color-text-bright);
 }

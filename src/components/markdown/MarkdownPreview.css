@@ -26,7 +26,7 @@
 .md-preview__content {
   font-family: var(--font-note);
   line-height: 1.75;
-  font-size: 0.98rem;
+  font-size: 1rem;
   color: var(--color-text-bright);
 }
 
