@@ -2,7 +2,7 @@
 
 **Fase Design Thinking:** Idear / Prototipar / Testear
 **Formulación inicial:** Abril 2026
-**Última revisión:** 2026-10-06 — OFF-01–05 de RNF-009 verificados en debug identificado y aceptados en PR #31; RNF-010 conserva su cierre y RNF-002/RNF-004 siguen diferidos
+**Última revisión:** 2026-10-09 — RNF-007 verificado en el alcance de lectura/edición del debug identificado; revisión del autor pendiente. RNF-009/010 conservan sus cierres y RNF-002/RNF-004 siguen diferidos
 **Autor:** José David Sandoval
 
 > **Nota de evolución:** Estos RNF se definieron originalmente para una PWA con IndexedDB. Después del relevamiento, Lumapse pivotó a una aplicación Android híbrida empaquetada con Capacitor, con persistencia SQLite y distribución por APK ([ADR-005](../adr/ADR-005-pivote-app-nativa.md), [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md)). La revisión conserva los criterios originales, pero distingue cuáles siguen vigentes, cuáles requieren evidencia y cuáles quedaron obsoletos o no aplican al artefacto Android.
@@ -57,7 +57,7 @@
 |---|---|---|---|---|
 | RNF-005 | Un usuario nuevo debe poder **crear su primera nota en menos de 10 segundos** desde la primera apertura, sin instrucciones previas. | Tiempo a primera nota ≤ 10s | Pendiente | La validación acotada del 2026-10-07 no incluyó participantes nuevos ni midió tiempo; requiere una prueba con usuarios del prototipo. [Evidencia y límites](../gestion/validacion-usabilidad-navegacion-2026-10-07.md). |
 | RNF-006 | Toda función principal actual (crear, buscar, organizar) debe ser accesible en **máximo 2 taps** desde la pantalla principal. | Profundidad de navegación ≤ 2 | Verificado | Crear queda visible en 0 taps; buscar y organizar se alcanzan en 2 taps en el debug `0.5.0/500` sobre Samsung SM-G965F. La evidencia cubre profundidad de entrada, no éxito de mutaciones ni adopción. [Registro de casos](../gestion/validacion-usabilidad-navegacion-2026-10-07.md). |
-| RNF-007 | La tipografía mínima legible debe ser **16px** en dispositivos móviles. | `font-size` ≥ 16px para texto de lectura/edición | Pendiente | Requiere inspección CSS consolidada y comprobación visual; el checker a11y actual no mide tamaños tipográficos. |
+| RNF-007 | La tipografía mínima legible debe ser **16px** en dispositivos móviles. | `font-size` ≥ 16px para texto de lectura/edición | Verificado | [Medición y revisión visual del 2026-10-09](../gestion/validacion-tipografia-rnf-007-2026-10-09.md): editor/feed, Markdown y modo enfoque ≥16 CSS px en debug `f2beef7`, Samsung SM-G965F. Preview comprobado como componente aislado, no vista activa. Excluye controles/metadatos y otros RNF; revisión del autor pendiente, sin transferencia al candidato final. |
 | RNF-008 | Los controles principales deben tener un área táctil mínima de **44x44 px**. | Touch target ≥ 44x44 px | Verificado | Medición CDP de `getBoundingClientRect()` sobre el debug `0.5.0/500` en Samsung SM-G965F: encabezado, búsqueda, materias, composer, guardado y 31 opciones de materia alcanzan ≥44×44 CSS px. [Evidencia y límites](../gestion/validacion-touch-targets-rnf-008-2026-10-08.md). |
 
 ---
@@ -132,9 +132,9 @@
 
 | Estado | Cantidad | IDs |
 |---|---:|---|
-| Verificado | 11 | RNF-003, RNF-006, RNF-008 a RNF-010, RNF-012, RNF-013, RNF-018, RNF-023 a RNF-025 |
+| Verificado | 12 | RNF-003, RNF-006 a RNF-010, RNF-012, RNF-013, RNF-018, RNF-023 a RNF-025 |
 | Evidencia parcial | 3 | RNF-020, RNF-022, RNF-026 |
-| Pendiente | 6 | RNF-002, RNF-004, RNF-005, RNF-007, RNF-019, RNF-021 |
+| Pendiente | 5 | RNF-002, RNF-004, RNF-005, RNF-019, RNF-021 |
 | Obsoleto por pivote | 3 | RNF-001, RNF-011, RNF-017 |
 | No aplica al APK | 3 | RNF-014 a RNF-016 |
 | **Total** | **26** | |

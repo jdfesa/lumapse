@@ -26,6 +26,8 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ### Fixed
 
+- **Tipografía de lectura y edición (RNF-007):** editor, tarjetas, contenido del componente preview, código, tablas y encabezados Markdown pequeños conservan un piso de `1rem`, sin ampliar metadatos/controles ni reducir títulos grandes. Siete regresiones fuente y [medición/revisión visual Android](docs/gestion/validacion-tipografia-rnf-007-2026-10-09.md) ≥16 CSS px en debug `f2beef7`; revisión del autor pendiente, sin nueva release ni extrapolación al APK final.
+
 - **Touch targets principales (RNF-008):** los controles de encabezado, búsqueda, materias, composer, guardado y opciones de materia alcanzan un área renderizada mínima de 44×44 CSS px en Android. El toolbar fija `flex: 0 0 44px` para evitar que el layout flex reduzca su ancho efectivo. [Medición y límites](docs/gestion/validacion-touch-targets-rnf-008-2026-10-08.md) para el debug privado `0.5.0/500`.
 
 - **ZIP local sin conexión (RF-017 / RNF-009):** el flujo deja de bloquear generación/cache/share sheet en modo offline y aclara la diferencia entre un destino local y la nube. Regresiones de disponibilidad, exportación y cancelación; sin cambiar formato/importación, versión ni firma. [Fallo Android, corrección y estado de validación](docs/beta-core-validation/offline-2026-10-06.md).
