@@ -3,7 +3,7 @@
 **Fecha:** 2026-10-09 (Argentina)  
 **Rama:** `test/rnf-007-typography`  
 **Fuente del ajuste y del debug probado:** `f2beef739a686d44a2d378657ccdc660e0896d20`  
-**Resultado:** RNF-007 verificado en el alcance de lectura y edición descrito aquí; revisión y aceptación del PR por el autor pendientes.
+**Resultado:** RNF-007 verificado en el alcance de lectura y edición descrito aquí; el autor aceptó PR #36 y autorizó su merge y limpieza de ramas.
 
 ## Objetivo, alcance y exclusiones
 
@@ -131,6 +131,14 @@ ese límite, sin modificar el runtime global.
 - Resultado para este dispositivo, artefacto, configuración y superficies: no
   acredita contraste, adopción, todo tamaño de la UI, otros dispositivos/escala
   del sistema ni el APK candidato final.
-- **Pendiente:** revisión y confirmación del autor sobre este debug y el PR.
-  El merge requiere autorización separada; la validación pertinente del candidato
-  final se acuerda sobre su propio binario.
+- La validación pertinente del candidato final se acuerda sobre su propio binario;
+  la aceptación de esta unidad no acredita ese artefacto posterior.
+
+## Aceptación del autor y cierre de la unidad
+
+El 2026-10-09 (Argentina), el autor aceptó [PR #36](https://github.com/jdfesa/lumapse/pull/36)
+y autorizó explícitamente merge a `main` y eliminación de la rama local/remota
+`test/rnf-007-typography`. Es una aceptación general del PR y de la evidencia
+registrada, no un nuevo resultado manual por caso ni una repetición de las mediciones.
+El estado de integración se comprueba en GitHub; este registro no anticipa su SHA.
+No cambia versión, no publica otra APK ni acepta automáticamente otros RNF.

@@ -15,7 +15,7 @@
 - [x] Debug `0.5.0/500`, fuente limpia `f2beef7`, instalado mediante script habitual sin `--clean`, con firma anterior y hash generado/instalado coincidentes.
 - [x] Editor/feed y modo enfoque ≥16 CSS px; Markdown en ambos temas y preview como componente aislado con sus CSS, sin habilitar una vista nueva.
 - [x] Revisión visual de capturas, hashes de borrador/contenidos visibles conservados, tema/modo originales restaurados y auxiliares/forward retirados.
-- [ ] Confirmación del autor y aceptación del PR; el merge necesita autorización separada.
+- [x] El autor aceptó [PR #36](https://github.com/jdfesa/lumapse/pull/36) y autorizó merge y limpieza de la rama el 2026-10-09. Aceptación general, sin nuevos resultados manuales por caso.
 
 El resultado verifica la métrica en el alcance registrado, no otros RNF ni el APK
 candidato final. No se guardaron, descartaron ni borraron notas para esta prueba.
