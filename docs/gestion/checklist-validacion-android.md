@@ -6,6 +6,22 @@
 
 ---
 
+## Tipografía de lectura/edición — RNF-007 — 2026-10-09
+
+[Mediciones, artefactos, revisión visual y límites](./validacion-tipografia-rnf-007-2026-10-09.md).
+
+- [x] Identificar el debug anterior y reproducir editor 15,68 px, feed 15,36 px y reducciones Markdown.
+- [x] Ajuste acotado y siete guardias CSS nuevas; `verify` con 1190 tests de app y 76 de tooling PASS.
+- [x] Debug `0.5.0/500`, fuente limpia `f2beef7`, instalado mediante script habitual sin `--clean`, con firma anterior y hash generado/instalado coincidentes.
+- [x] Editor/feed y modo enfoque ≥16 CSS px; Markdown en ambos temas y preview como componente aislado con sus CSS, sin habilitar una vista nueva.
+- [x] Revisión visual de capturas, hashes de borrador/contenidos visibles conservados, tema/modo originales restaurados y auxiliares/forward retirados.
+- [x] El autor aceptó [PR #36](https://github.com/jdfesa/lumapse/pull/36) y autorizó merge y limpieza de la rama el 2026-10-09. Aceptación general, sin nuevos resultados manuales por caso.
+
+El resultado verifica la métrica en el alcance registrado, no otros RNF ni el APK
+candidato final. No se guardaron, descartaron ni borraron notas para esta prueba.
+
+---
+
 ## Touch targets — RNF-008 — 2026-10-08
 
 [Medición Android y límites](./validacion-touch-targets-rnf-008-2026-10-08.md).
