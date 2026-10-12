@@ -2,7 +2,7 @@
 
 **Fase Design Thinking:** Idear / Prototipar / Testear
 **Formulación inicial:** Abril 2026
-**Última revisión:** 2026-10-09 — RNF-007 verificado en el alcance de lectura/edición del debug identificado y aceptado por el autor en PR #36. RNF-009/010 conservan sus cierres y RNF-002/RNF-004 siguen diferidos
+**Última revisión:** 2026-10-12 — RNF-021 verificado técnicamente en el alcance de texto y estados registrados del debug `803947e`, con revisión del autor pendiente. Se conservan los cierres anteriores y RNF-002/RNF-004 diferidos
 **Autor:** José David Sandoval
 
 > **Nota de evolución:** Estos RNF se definieron originalmente para una PWA con IndexedDB. Después del relevamiento, Lumapse pivotó a una aplicación Android híbrida empaquetada con Capacitor, con persistencia SQLite y distribución por APK ([ADR-005](../adr/ADR-005-pivote-app-nativa.md), [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md)). La revisión conserva los criterios originales, pero distingue cuáles siguen vigentes, cuáles requieren evidencia y cuáles quedaron obsoletos o no aplican al artefacto Android.
@@ -99,7 +99,7 @@
 |---|---|---|---|---|
 | RNF-019 | La formulación web exige score mínimo **90/100 en Lighthouse Accessibility**. | Lighthouse Accessibility ≥ 90 | Pendiente | No existe un resultado Lighthouse vigente registrado para la beta. En Hito 06 se debe ejecutar sobre la superficie web equivalente o reemplazar formalmente la métrica por una validación adecuada al APK. |
 | RNF-020 | Los elementos interactivos deben poder operarse por teclado cuando la superficie/dispositivo ofrece teclado. | Flujo navegable con Tab, Enter y Escape | Evidencia parcial | Hay componentes y tests focalizados de foco/teclado, pero no una prueba manual del flujo completo. |
-| RNF-021 | Los colores deben cumplir contraste mínimo **4.5:1** para texto normal. | Ratio ≥ 4.5:1 | Pendiente | Falta una medición consolidada de ambos temas. La inspección visual no sustituye una herramienta de contraste. |
+| RNF-021 | Los colores deben cumplir contraste mínimo **4.5:1** para texto normal. | Ratio ≥ 4.5:1 | Verificado | [Medición del 2026-10-12](../gestion/validacion-contraste-rnf-021-2026-10-12.md) en Samsung SM-G965F/debug `803947e`: 208 fixtures y 174 muestras de recorridos, ambos temas ≥4,5:1, con alfa/opacidad compuestos. Estados hover reproducidos mediante CSS del APK en fixtures, no hover físico. Verificado solo en el alcance registrado; revisión del autor pendiente, sin acreditar otros RNF ni el APK final. |
 | RNF-022 | Imágenes informativas y controles sin texto visible deben tener alternativa accesible. | Elementos relevantes sin nombre accesible = 0 | Evidencia parcial | `npm run check:a11y` inspecciona imágenes, botones y `tabindex`, pero es un checker estático acotado; falta revisión manual final. |
 
 ---
@@ -132,9 +132,9 @@
 
 | Estado | Cantidad | IDs |
 |---|---:|---|
-| Verificado | 12 | RNF-003, RNF-006 a RNF-010, RNF-012, RNF-013, RNF-018, RNF-023 a RNF-025 |
+| Verificado | 13 | RNF-003, RNF-006 a RNF-010, RNF-012, RNF-013, RNF-018, RNF-021, RNF-023 a RNF-025 |
 | Evidencia parcial | 3 | RNF-020, RNF-022, RNF-026 |
-| Pendiente | 5 | RNF-002, RNF-004, RNF-005, RNF-019, RNF-021 |
+| Pendiente | 4 | RNF-002, RNF-004, RNF-005, RNF-019 |
 | Obsoleto por pivote | 3 | RNF-001, RNF-011, RNF-017 |
 | No aplica al APK | 3 | RNF-014 a RNF-016 |
 | **Total** | **26** | |
@@ -160,7 +160,7 @@ El listado histórico anterior no es una tarea por repetir.
 
 1. **Diferido a post-presentación:** medir latencia CRUD/FPS con un volumen reproducible de notas (RNF-002, RNF-004); emitir la matriz de entrega con estos requisitos pendientes y la postergación explícita, sin afirmar cumplimiento.
 2. Ejecutar pruebas con usuarios y revisar profundidad de navegación (RNF-005, RNF-006).
-3. Auditar los pendientes de contraste y navegación accesible (RNF-019 a RNF-022). `RNF-007` quedó verificado y aceptado en [la evidencia de PR #36](../gestion/validacion-tipografia-rnf-007-2026-10-09.md); `RNF-008` quedó verificado en [la medición Android del 2026-10-08](../gestion/validacion-touch-targets-rnf-008-2026-10-08.md). No repetir la unidad cerrada ni extrapolar su evidencia al APK final.
+3. Auditar los pendientes de navegación accesible (RNF-019, RNF-020, RNF-022). `RNF-021` tiene [contraste verificado técnicamente en el debug `803947e`](../gestion/validacion-contraste-rnf-021-2026-10-12.md), pendiente de revisión del autor. `RNF-007` quedó verificado y aceptado en [la evidencia de PR #36](../gestion/validacion-tipografia-rnf-007-2026-10-09.md); `RNF-008` quedó verificado en [la medición Android del 2026-10-08](../gestion/validacion-touch-targets-rnf-008-2026-10-08.md). No extrapolar esas evidencias al APK final.
 4. OFF-01–05 de RNF-009 verificados en el debug `348da88` y aceptados por el autor en PR #31. RNF-010 conserva su aceptación y evidencia sin repetir la tarea. La validación de un nuevo candidato final se acuerda por separado.
 5. Registrar tráfico de red y un reporte específico de trackers durante los flujos completos para completar RNF-012 y RNF-013. La revisión de dependencias del 2026-10-07 quedó documentada en el [parche de Capacitor](../gestion/validacion-parche-capacitor-2026-10-07.md), pero no sustituye la captura de runtime.
 6. [Completado 2026-08-21] Incorporar archivos TypeScript al reporte de coverage y volver a medir RNF-024; repetir la medición en el commit candidato para incorporarla a la matriz final.

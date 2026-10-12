@@ -3,7 +3,8 @@
 **Inicio:** 2026-10-12 (Argentina)  
 **Rama:** `test/rnf-021-contrast`  
 **Base:** `81c438f7c5d0c82c55e8ef0d8d0055cc4f872c9e`  
-**Estado:** plan aceptado; medición y cierre pendientes.
+**Estado:** contraste verificado técnicamente en el alcance registrado; revisión
+del autor e integración pendientes.
 
 ## Objetivo y alcance acordados
 
@@ -60,8 +61,151 @@ pendientes hasta su confirmación expresa.
   preservando datos, sin `--clean` ni publicación. La identidad se verificará antes
   de intervenir.
 
-## Resultados y cierre
+## Artefactos identificados
 
-Pendientes. Este plan no modifica todavía el estado `Pendiente` de RNF-021.
-El corte APK de presentación se decidirá después de los imprescindibles; informe,
-manual y defensa siguen el [recorte vigente](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa).
+| Campo | Referencia anterior | Debug corregido |
+|---|---|---|
+| Fuente incrustada | `f2beef739a686d44a2d378657ccdc660e0896d20` | `803947edd1edef03a29bc4e60a50927da193d455` |
+| Canal / estado | `android-debug`, limpio | `android-debug`, limpio |
+| Versión / código | `0.5.0` / `500` | `0.5.0` / `500` |
+| SHA-256 APK | `c4cda1f1a1166c95cbdd4d06f00a45b39a8b9dceef23a33c940dc2cc2bace461` | `8b6e02263493343438d171fedd9d1ffd11f01cbfaf282d8ef4fb83dd878214a9` |
+
+- Samsung `SM-G965F`, Android 10/API 29, WebView `154.0.8037.106`.
+- Viewport: 411×707 CSS px; paquete: `com.lumapse.app`.
+- Certificado SHA-256 conservado:
+  `5ba36ca181d954a6dbe8a4a6afdb833429feb32a3a93dae9e8313191a0c782df`.
+- Hash de la APK compilada igual al de la copia instalada; certificado verificado
+  con `apksigner`. No se utilizó firma de release ni se publicó otro artefacto.
+- Deploy habitual autorizado, sin `--clean`, desinstalación ni bump. Se reutilizaron
+  Node/npm, JDK 21 y cachés locales existentes, sin alterar el entorno global.
+  El aviso inicial de Java se resolvió seleccionando el JDK existente en `PATH`.
+
+## Medición reproducible
+
+Se usó un forward ADB temporal al inspector del WebView y `Runtime.evaluate`.
+Los helpers y los casos sintéticos están versionados en
+[`rnf-021-contrast.mjs`](../../tests/tooling/fixtures/rnf-021-contrast.mjs) y
+[`rnf-021-cases.mjs`](../../tests/tooling/fixtures/rnf-021-cases.mjs).
+Son herramientas de prueba, no código añadido a la app ni datos persistidos.
+
+El fixture inserta una sección DOM con los estilos **del APK instalado**, sin
+invocar servicios ni eventos de guardado. Se cambió temporalmente `data-theme` y
+se esperó a que terminaran las transiciones antes de obtener `getComputedStyle`.
+Se compusieron fondos, alfa del texto y opacidades de grupo desde el elemento hasta
+el fondo opaco del documento. Los gradientes uniformes de los toasts se compusieron
+como otra capa; imágenes, filtros o fondos no resueltos producen un error, no PASS.
+
+**Estados declarados:** 11 casos por tema reproducen reglas `:hover` del CSS real
+sustituyendo ese pseudoselector por `[data-hover]` únicamente en el fixture.
+`hoverFixtureRules` encontró **58 reglas** y se comprobó el cambio al color
+`--color-on-accent`/`--color-on-danger` en los botones rellenos. No son interacciones
+hover físicas ni una prueba de teclado/foco. El estado deshabilitado de un control
+no se presenta como texto normal activo.
+
+Los intentos con `CSS.enable` y eventos de puntero no establecieron todos los
+estados de forma reproducible y **no se contabilizan como pruebas aprobadas**.
+Una primera recolección de reglas omitía los selectores porque `CSSStyleRule`
+también expone `cssRules` vacío en este WebView. Se invalidó esa corrida para los
+estados, se corrigió el helper y se añadió una regresión; los resultados siguientes
+corresponden a la repetición con las reglas efectivamente aplicadas.
+
+El [CSV de evidencia](./evidencia-contraste-rnf-021-2026-10-12.csv) conserva **208
+muestras**: 104 casos por tema, colores CSS, RGB efectivos, ratio completo y
+resultado. Los campos previos de los estados declarados quedan vacíos porque no
+se obtuvo una referencia anterior equivalente. No se reutiliza un estado normal
+como si fuera una medición hover previa.
+
+### Resultados de los fixtures y placeholders
+
+| Grupo | Oscuro | Claro | Resultado |
+|---|---:|---:|---|
+| 104 casos DOM por tema, incluidos estados declarados | mínimo 4,9291876348:1 | mínimo 5,1202262673:1 | Todos ≥4,5:1 |
+| 14 placeholders montados por tema | mínimo 7,5939144670:1 | mínimo 5,3009752455:1 | Todos ≥4,5:1 |
+
+Los placeholders incluyen campos de formularios montados pero ocultos; se midió
+su estilo computado, sin atribuirles un recorrido visual ejecutado. Otras 93
+muestras DOM por tema, incluidas superficies fuera del viewport, no presentaron
+fallos: mínimos 5,0941623565:1 oscuro y 5,0461221704:1 claro. No se confunden con
+los recorridos visibles que se detallan abajo.
+
+Ejemplos comparables de estado normal; valores resumidos, sin redondear antes de
+decidir PASS:
+
+| Caso | Oscuro antes → después | Claro antes → después |
+|---|---:|---:|
+| Texto secundario sobre superficie | 4,377 → 7,594 | 2,863 → 5,301 |
+| Guardar | 2,983 → 8,819 | 4,467 → 6,288 |
+| Contador de caracteres | 1,963 → 7,594 | 1,545 → 5,301 |
+| Contador de papelera | 2,766 → 6,356 | 3,763 → 6,470 |
+| Título de callout Info | 7,732 → 13,973 | 1,667 → 16,219 |
+| Enlace Markdown | 1,871 → 8,819 | 9,398 → 6,288 |
+| Mensaje de éxito del backup | 6,590 → 6,590 | 2,092 → 6,547 |
+
+### Superficies reales y revisión visual
+
+Se navegaron controles reales mediante clics DOM, sin ejecutar escrituras. En cada
+tema se obtuvieron muestras del viewport y capturas de principal, drawer, menú de
+opciones, vista Backup, Acerca de y Papelera: **12 escenas / 174 muestras**.
+
+| Superficie | Muestras por tema | Mínimo oscuro | Mínimo claro |
+|---|---:|---:|---:|
+| Principal: editor/feed visible | 11 | 5,094:1 | 5,301:1 |
+| Drawer: búsqueda/materias | 28 | 6,458:1 | 5,046:1 |
+| Opciones de Lumapse | 5 | 7,594:1 | 5,301:1 |
+| Backup, sin exportar/importar | 10 | 7,594:1 | 5,301:1 |
+| Acerca de | 16 | 7,707:1 | 5,343:1 |
+| Papelera, sin acciones destructivas | 17 | 6,356:1 | 5,449:1 |
+
+Las 174 muestras superaron el umbral, sin controles deshabilitados contabilizados.
+Se inspeccionaron visualmente las capturas de principal oscuro/claro, drawer claro,
+backup claro y papelera oscura. La medición es el criterio de contraste; esas
+capturas no certifican todas las pantallas ni sustituyen la revisión del autor.
+
+## Corrección y controles
+
+- Texto secundario: alfa 0,65 en ambos temas, sin otra reducción de opacidad en
+  contadores, fechas y etiquetas archivadas que fallaban.
+- Acento oscuro `#a5b4fc`, claro `#4f46e5`; peligro claro `#b91c1c`.
+  Texto sobre rellenos con tokens `--color-on-accent` y `--color-on-danger`.
+- Mensajes de éxito con `--color-success` adaptado al tema.
+- Texto de materia/tipo independiente de su color decorativo; fondos, puntos,
+  iconos y datos conservan sus colores. Títulos de callout legibles, con indicador
+  de color; enlaces Markdown usan el acento en lugar del azul del navegador.
+- Solo colores/opacidades en 13 CSS y pruebas. Sin cambios de tamaños, layout,
+  servicios, schema, versión, dependencias ni funciones nuevas.
+
+| Control | Resultado real |
+|---|---|
+| Caracterización definitiva del CSS anterior | 9 tests: 2 PASS de cálculo y 7 fallos de regresiones de contraste |
+| Regresión posterior del enlace, antes de corregirlo | Fallo detectado; ratio Android oscuro 1,871:1 |
+| Regresiones finales RNF-021 y guardias RNF-007/RNF-008 | Exit 0, 19 tests: 11 de contraste/helpers y 8 previos |
+| `npm run verify` del código `803947e` | Exit 0, 78 archivos/1190 tests de app y 86 de tooling |
+| `npm run verify` final con helper de estados y evidencia documental | Exit 0, 78 archivos/1190 tests de app y 87 de tooling; build, tipos y controles completos |
+| Enlaces y trazabilidad del registro final | Exit 0, 106 archivos/911 enlaces, sin errores ni advertencias de trazabilidad; suplemento TODO: 34 enlaces válidos |
+| `npm run deploy:android -- --target <dispositivo confirmado>` | Exit 0, script habitual y debug instalado conservando datos |
+| Verificación de firma/hash y mediciones WebView | Certificado preservado, hashes iguales, grupos anteriores PASS |
+
+El helper de estados se reforzó después en `741b5de`, sin modificar el código de
+la app instalada. Los controles documentales se repitieron después de incorporar
+el registro del resultado del gate, sin presentar la ejecución inicial como
+validación final.
+Se conservan tres warnings de lint y los avisos de tamaño preexistentes, fuera de
+alcance. Las limitaciones del inspector no son fallos de producto.
+
+## Conservación, límites y revisión pendiente
+
+- Borrador y cuatro contenidos visibles conservaron sus hashes antes del deploy
+  y después de los recorridos. Tema y preferencia almacenada originales (sin
+  valor explícito), foco normal y viewport restaurados; fixtures/globals y forward
+  temporal retirados. No se guardó, descartó, exportó, importó ni borró una nota.
+- Es una comparación del estado visible, no un snapshot ni una auditoría de toda
+  SQLite. Las APK, capturas y logs se mantienen locales, no versionados.
+- Resultado de texto en los temas/superficies/estados registrados. Excluye iconos,
+  gráficos, logos, controles inactivos, contenido con estilos arbitrarios ajenos
+  a los fixtures, otros dispositivos y configuraciones. No equivale a certificar
+  WCAG completa ni a verificar RNF-019/RNF-020/RNF-022.
+- RNF-021 queda verificado **en este alcance y debug**, no globalmente para todo
+  contenido posible ni para el candidato final. El autor aún debe revisar el PR
+  y las correcciones en su teléfono; no se presume su aceptación ni merge.
+- El corte APK de presentación se decidirá después de los imprescindibles;
+  informe, manual y defensa conservan el [recorte vigente](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa).
