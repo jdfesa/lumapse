@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import path from 'node:path'
 import test from 'node:test'
-import { rgba, over, contrastRatio, measureText } from './fixtures/rnf-021-contrast.mjs'
+import { rgba, over, contrastRatio, measureText, hoverFixtureRules } from './fixtures/rnf-021-contrast.mjs'
 
 const root = path.resolve(import.meta.dirname, '../..')
 const read = file => fs.readFileSync(path.join(root, file), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '')
@@ -69,6 +69,14 @@ test('el helper WebView compone opacidad de grupo y rechaza fondos sin resolver'
     if (previous) globalThis.getComputedStyle=previous
     else delete globalThis.getComputedStyle
   }
+})
+
+test('el fixture de estado lee selectores aunque CSSStyleRule tenga cssRules vacío', () => {
+  assert.deepEqual(hoverFixtureRules([
+    {selectorText:'.button:hover:not(:disabled)',style:{cssText:'opacity: 0.9;'},cssRules:[]},
+    {cssRules:[{selectorText:'.danger:hover',style:{cssText:'color: black;'},cssRules:[]}]},
+    {selectorText:'.static',style:{cssText:'color: white;'},cssRules:[]},
+  ]), ['.button[data-hover]:not(:disabled){opacity: 0.9;}','.danger[data-hover]{color: black;}'])
 })
 
 test('RNF-021 mantiene texto secundario y acentos sobre superficies de ambos temas', () => {

@@ -33,6 +33,19 @@ export function contrastRatio(front, back) {
   return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)
 }
 
+// Solo reproduce declaraciones de estado en fixtures con data-hover.
+// CSSStyleRule también expone cssRules vacío en WebView con CSS nesting.
+export function hoverFixtureRules(rules) {
+  const output = []
+  for (const rule of rules) {
+    if (rule.selectorText?.includes(':hover')) {
+      output.push(rule.selectorText.replace(/:hover\b/g, '[data-hover]') + `{${rule.style.cssText}}`)
+    }
+    if (rule.cssRules?.length) output.push(...hoverFixtureRules(rule.cssRules))
+  }
+  return output
+}
+
 // Se evalúa en el WebView con getComputedStyle, no en DOM simulado.
 // No interpreta imágenes, gradientes no uniformes ni filtros: los informa.
 export function measureText(element, pseudo = null) {
