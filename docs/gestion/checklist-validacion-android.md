@@ -6,6 +6,22 @@
 
 ---
 
+## Contraste de texto — RNF-021 — 2026-10-12
+
+[Artefactos, ratios, CSV, método y límites](./validacion-contraste-rnf-021-2026-10-12.md).
+
+- [x] Identificar debug previo `f2beef7` y reproducir fallos de texto secundario, rellenos, etiquetas y enlaces en ambos temas.
+- [x] Corregir únicamente colores/opacidades; regresiones focalizadas y gate de código aprobados.
+- [x] Debug `0.5.0/500`, fuente limpia `803947e`, instalado con script habitual, firma compatible y hash compilado/instalado iguales; sin `--clean` ni publicación.
+- [x] 208 fixtures, 28 placeholders y 174 muestras de 12 escenas de lectura ≥4,5:1. Los estados hover son declaraciones CSS reproducidas en fixtures, no hover físico.
+- [x] Revisar las capturas declaradas, preservar hashes de borrador/cuatro contenidos visibles, restaurar tema/foco y retirar auxiliares/forward.
+- [x] El autor aceptó [PR #37](https://github.com/jdfesa/lumapse/pull/37) y autorizó integración a `main` y limpieza de ramas integradas el 2026-10-12. Aceptación general del PR, sin nuevos resultados manuales por caso ni confirmación adicional de recorridos en el teléfono.
+
+No verifica teclado, nombres accesibles, Lighthouse ni el candidato final. No se
+guardaron, descartaron, exportaron, importaron ni borraron notas en esta unidad.
+
+---
+
 ## Tipografía de lectura/edición — RNF-007 — 2026-10-09
 
 [Mediciones, artefactos, revisión visual y límites](./validacion-tipografia-rnf-007-2026-10-09.md).

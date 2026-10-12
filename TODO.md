@@ -16,11 +16,22 @@
 
 ## Prioridad inmediata — plan aceptado
 
+**Cierre de contraste aceptado — 2026-10-12:** `RNF-021` en
+[PR #37](https://github.com/jdfesa/lumapse/pull/37), exclusivamente contraste del
+texto en ambos temas. Corrección mínima verificada en debug `803947e`, regresiones
+y evidencia Android completadas en el alcance del
+[reporte](docs/gestion/validacion-contraste-rnf-021-2026-10-12.md).
+El autor aceptó el PR y autorizó integración a `main` y limpieza de las ramas
+integradas; integración comprobable en GitHub. Aceptación general, sin nuevas
+pruebas manuales por caso. No se abre otro frente ni se autoriza una APK de entrega:
+después del cierre se continúa la conversación sobre el corte y la congelación,
+antes de comenzar el manual y el informe final.
+
 **Prerrequisito de seguridad cerrado (2026-10-02):** el autor aceptó los cambios nuevos instalados en Samsung y autorizó integrar [PR #21](docs/gestion/validacion-parches-dependencias-2026-10-02.md), fusionado mediante `5ef1f911`; rama eliminada y `main` sincronizado. Aceptación general, sin resultados manuales por caso ni mediciones nuevas. No cambia versión ni completa F3.
 
 El [plan de desarrollo inmediato de la beta](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) fue aceptado e integrado en PR #13. **F1 y F2 aprobadas e integradas** en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`). **Preparación F3 aceptada e integrada** en PR #16 (`90fd21e`) tras la confirmación general del teléfono; ramas eliminadas. [Protocolo, fixtures y matriz](docs/beta-core-validation/README.md): las métricas Android siguen pendientes, sin declarar F3 cerrada.
 
-**Cierre de tipografía aceptado:** `RNF-007` en [PR #36](https://github.com/jdfesa/lumapse/pull/36), un único objetivo. Ajuste y mediciones de lectura/edición verificados en debug `f2beef7`; [resultados, artefacto y límites](docs/gestion/validacion-tipografia-rnf-007-2026-10-09.md). El autor aceptó el PR y autorizó merge y limpieza de su rama el 2026-10-09; integración comprobable en GitHub. Aceptación general, sin nuevos resultados manuales por caso. No hay otro frente autorizado.
+**Cierre de tipografía aceptado:** `RNF-007` en [PR #36](https://github.com/jdfesa/lumapse/pull/36), un único objetivo. Ajuste y mediciones de lectura/edición verificados en debug `f2beef7`; [resultados, artefacto y límites](docs/gestion/validacion-tipografia-rnf-007-2026-10-09.md). El autor aceptó el PR y autorizó merge y limpieza de su rama el 2026-10-09; integración comprobable en GitHub. Aceptación general, sin nuevos resultados manuales por caso; no se reabre esta unidad.
 
 **Cierre offline aceptado:** flujos offline (`RNF-009`) en [PR #31](https://github.com/jdfesa/lumapse/pull/31): el autor aceptó el PR el 2026-10-06 y autorizó merge y limpieza. [Artefacto, resultados y límites](docs/beta-core-validation/offline-2026-10-06.md). El cierre de `RNF-010` en PR #29 se conserva sin repetirlo.
 **Sesión 1 RNF-002/004: métricas diferidas a post-presentación** por decisión del autor
@@ -92,7 +103,8 @@ con muestras y umbrales conservados. No se harán más pilotos en este frente.
 - [ ] Ejecutar una prueba acotada de primera nota con estudiantes o usuarios nuevos (`RNF-005`); no inferir tiempo, éxito o adopción a partir de la encuesta ni de la revisión técnica del autor.
 - [x] Verificar touch targets principales (`RNF-008`) en Android mediante medición de límites renderizados ≥44×44 CSS px. [Evidencia y límites](docs/gestion/validacion-touch-targets-rnf-008-2026-10-08.md).
 - [x] Medir y ajustar tipografía de lectura/edición (`RNF-007`): ≥16 CSS px en editor/feed, Markdown y enfoque del debug `f2beef7`, con [evidencia y límites](docs/gestion/validacion-tipografia-rnf-007-2026-10-09.md). El autor aceptó [PR #36](https://github.com/jdfesa/lumapse/pull/36) y autorizó merge/limpieza, sin dar por probado el APK final.
-- [ ] Revisar contraste, teclado cuando corresponda y nombres accesibles (`RNF-020` a `RNF-022`). Medir los criterios aplicables; la inspección visual o el checker estático no bastan para declararlos cumplidos.
+- [x] Medir y corregir contraste de texto en ambos temas (`RNF-021`): [208 fixtures, placeholders y recorridos Android](docs/gestion/validacion-contraste-rnf-021-2026-10-12.md) ≥4,5:1 en el debug `803947e`; el autor aceptó PR #37 y autorizó merge/limpieza, sin nuevas pruebas por caso ni transferencia al APK final.
+- [ ] Revisar teclado cuando corresponda y nombres accesibles (`RNF-020`, `RNF-022`). Medir los criterios aplicables; el cierre de contraste no verifica estos requisitos.
 - [ ] Resolver el método de `RNF-019`: ejecutar la medición prevista o acordar formalmente un tratamiento adecuado al APK; no atribuir un score Lighthouse inexistente.
 - [ ] Clasificar los hallazgos: resolver bloqueantes confirmados y someter las observaciones menores o la evidencia incompleta a aceptación explícita, sin ampliar automáticamente el producto ni postergar otros RNF.
 
