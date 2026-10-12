@@ -1,8 +1,8 @@
 # Validación acotada de contraste — RNF-021
 
-**Inicio:** 2026-10-12 (Argentina)  
-**Rama:** `test/rnf-021-contrast`  
-**Base:** `81c438f7c5d0c82c55e8ef0d8d0055cc4f872c9e`  
+**Inicio:** 2026-10-12 (Argentina)<br>
+**Rama:** `test/rnf-021-contrast`<br>
+**Base:** `81c438f7c5d0c82c55e8ef0d8d0055cc4f872c9e`<br>
 **Estado:** contraste verificado técnicamente en el alcance registrado; revisión
 del autor e integración pendientes.
 
