@@ -15,7 +15,7 @@
 - [x] Debug `0.5.0/500`, fuente limpia `803947e`, instalado con script habitual, firma compatible y hash compilado/instalado iguales; sin `--clean` ni publicación.
 - [x] 208 fixtures, 28 placeholders y 174 muestras de 12 escenas de lectura ≥4,5:1. Los estados hover son declaraciones CSS reproducidas en fixtures, no hover físico.
 - [x] Revisar las capturas declaradas, preservar hashes de borrador/cuatro contenidos visibles, restaurar tema/foco y retirar auxiliares/forward.
-- [ ] Revisión del autor sobre el PR y las correcciones en el teléfono; autorización de integración no recibida.
+- [x] El autor aceptó [PR #37](https://github.com/jdfesa/lumapse/pull/37) y autorizó integración a `main` y limpieza de ramas integradas el 2026-10-12. Aceptación general del PR, sin nuevos resultados manuales por caso ni confirmación adicional de recorridos en el teléfono.
 
 No verifica teclado, nombres accesibles, Lighthouse ni el candidato final. No se
 guardaron, descartaron, exportaron, importaron ni borraron notas en esta unidad.

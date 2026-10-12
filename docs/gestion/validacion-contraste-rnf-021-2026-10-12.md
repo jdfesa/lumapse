@@ -3,16 +3,18 @@
 **Inicio:** 2026-10-12 (Argentina)<br>
 **Rama:** `test/rnf-021-contrast`<br>
 **Base:** `81c438f7c5d0c82c55e8ef0d8d0055cc4f872c9e`<br>
-**Estado:** contraste verificado técnicamente en el alcance registrado; revisión
-del autor e integración pendientes.
+**Estado:** contraste verificado técnicamente en el alcance registrado;
+[PR #37](https://github.com/jdfesa/lumapse/pull/37) aceptado por el autor, con
+integración y limpieza autorizadas. El estado de integración se comprueba en GitHub.
 
 ## Objetivo y alcance acordados
 
 El autor aceptó comprobar el contraste del texto en los temas claro y oscuro y
 corregir únicamente incumplimientos demostrados de `RNF-021` (ratio **≥4,5:1**).
 Esta es la única unidad activa: no se abren otros frentes ni se rediseña la app.
-Se autorizan commits Conventional Commits en inglés, push final y preparación de
-un PR; no merge ni publicación.
+La autorización inicial comprendía commits Conventional Commits en inglés, push
+final y preparación de un PR, sin merge ni publicación. La autorización posterior
+de integración se registra en el cierre de este reporte; no habilita una APK nueva.
 
 El recorte incluye texto de lectura/edición, etiquetas, metadatos, placeholders,
 menús, avisos y diálogos existentes. Los fondos con transparencia y las opacidades
@@ -44,8 +46,8 @@ inactivos y los iconos/decoraciones sin texto, no evaluados como texto normal.
 
 La aceptación requiere pares de colores, ratios, superficies/estados y artefacto
 reproducibles, con cobertura y límites explícitos. Si la cobertura es parcial,
-no se declara cumplimiento global. La revisión del autor y el merge permanecen
-pendientes hasta su confirmación expresa.
+no se declara cumplimiento global. La aceptación y la autorización de merge
+requieren confirmación expresa; el acuerdo recibido se registra al final.
 
 ## Preparación comprobada
 
@@ -192,7 +194,7 @@ validación final.
 Se conservan tres warnings de lint y los avisos de tamaño preexistentes, fuera de
 alcance. Las limitaciones del inspector no son fallos de producto.
 
-## Conservación, límites y revisión pendiente
+## Conservación, límites y aceptación
 
 - Borrador y cuatro contenidos visibles conservaron sus hashes antes del deploy
   y después de los recorridos. Tema y preferencia almacenada originales (sin
@@ -205,7 +207,20 @@ alcance. Las limitaciones del inspector no son fallos de producto.
   a los fixtures, otros dispositivos y configuraciones. No equivale a certificar
   WCAG completa ni a verificar RNF-019/RNF-020/RNF-022.
 - RNF-021 queda verificado **en este alcance y debug**, no globalmente para todo
-  contenido posible ni para el candidato final. El autor aún debe revisar el PR
-  y las correcciones en su teléfono; no se presume su aceptación ni merge.
+  contenido posible ni para el candidato final. La aceptación general del PR no
+  agrega pruebas manuales por caso ni nuevas mediciones Android.
 - El corte APK de presentación se decidirá después de los imprescindibles;
   informe, manual y defensa conservan el [recorte vigente](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa).
+
+### Aceptación del autor — 2026-10-12
+
+El autor aceptó expresamente PR #37 y autorizó integrar la rama a `main` y eliminar
+las ramas locales/remotas cuya integración esté comprobada. Es aceptación general
+del PR: no se comunicaron nuevas pruebas por caso ni confirmación adicional de
+recorridos en el teléfono. Se conservan los resultados y límites anteriores.
+
+La actualización de cierre es documental, sin cambios adicionales en la app. El
+estado de integración se consulta en el PR antes de borrar las ramas; no se infiere
+de su desaparición. Después del cierre se continúa la conversación sobre el último
+APK y la congelación antes del manual y el informe; este acuerdo no autoriza otro
+frente, una compilación nueva ni comenzar esos entregables.
