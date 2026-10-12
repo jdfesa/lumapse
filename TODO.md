@@ -16,11 +16,18 @@
 
 ## Prioridad inmediata — plan aceptado
 
+**Unidad activa aceptada — 2026-10-12:** `test/rnf-021-contrast`, exclusivamente
+contraste del texto en ambos temas (`RNF-021`), con correcciones mínimas de fallos
+comprobados, regresiones, evidencia Android y documentación. [Plan y seguimiento](docs/gestion/validacion-contraste-rnf-021-2026-10-12.md).
+Se autorizan commits en inglés, push y PR, no merge ni APK de entrega. No se abre
+otro frente: primero imprescindibles, luego decidir el corte APK y finalmente
+adaptar el manual y cerrar el informe/defensa.
+
 **Prerrequisito de seguridad cerrado (2026-10-02):** el autor aceptó los cambios nuevos instalados en Samsung y autorizó integrar [PR #21](docs/gestion/validacion-parches-dependencias-2026-10-02.md), fusionado mediante `5ef1f911`; rama eliminada y `main` sincronizado. Aceptación general, sin resultados manuales por caso ni mediciones nuevas. No cambia versión ni completa F3.
 
 El [plan de desarrollo inmediato de la beta](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) fue aceptado e integrado en PR #13. **F1 y F2 aprobadas e integradas** en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`). **Preparación F3 aceptada e integrada** en PR #16 (`90fd21e`) tras la confirmación general del teléfono; ramas eliminadas. [Protocolo, fixtures y matriz](docs/beta-core-validation/README.md): las métricas Android siguen pendientes, sin declarar F3 cerrada.
 
-**Cierre de tipografía aceptado:** `RNF-007` en [PR #36](https://github.com/jdfesa/lumapse/pull/36), un único objetivo. Ajuste y mediciones de lectura/edición verificados en debug `f2beef7`; [resultados, artefacto y límites](docs/gestion/validacion-tipografia-rnf-007-2026-10-09.md). El autor aceptó el PR y autorizó merge y limpieza de su rama el 2026-10-09; integración comprobable en GitHub. Aceptación general, sin nuevos resultados manuales por caso. No hay otro frente autorizado.
+**Cierre de tipografía aceptado:** `RNF-007` en [PR #36](https://github.com/jdfesa/lumapse/pull/36), un único objetivo. Ajuste y mediciones de lectura/edición verificados en debug `f2beef7`; [resultados, artefacto y límites](docs/gestion/validacion-tipografia-rnf-007-2026-10-09.md). El autor aceptó el PR y autorizó merge y limpieza de su rama el 2026-10-09; integración comprobable en GitHub. Aceptación general, sin nuevos resultados manuales por caso; no se reabre esta unidad.
 
 **Cierre offline aceptado:** flujos offline (`RNF-009`) en [PR #31](https://github.com/jdfesa/lumapse/pull/31): el autor aceptó el PR el 2026-10-06 y autorizó merge y limpieza. [Artefacto, resultados y límites](docs/beta-core-validation/offline-2026-10-06.md). El cierre de `RNF-010` en PR #29 se conserva sin repetirlo.
 **Sesión 1 RNF-002/004: métricas diferidas a post-presentación** por decisión del autor
