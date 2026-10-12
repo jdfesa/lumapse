@@ -123,7 +123,7 @@
 .composer__save-btn {
   min-height: 44px;
   background-color: var(--color-accent);
-  color: #fff;
+  color: var(--color-on-accent);
   border: none;
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-sm);
@@ -181,13 +181,13 @@
 }
 
 .composer__discard-btn:hover {
-  color: var(--color-text-bright);
+  color: var(--color-on-danger);
   background: var(--color-danger);
   transform: translateY(-1px);
 }
 
 .composer__discard-btn:focus-visible {
-  color: var(--color-text-bright);
+  color: var(--color-on-danger);
   background: var(--color-danger);
   outline: 2px solid var(--color-danger);
   outline-offset: 2px;

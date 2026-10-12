@@ -3,7 +3,7 @@
   font-size: 0.7rem;
   font-weight: 600;
   background: var(--color-danger, #ef4444);
-  color: #fff;
+  color: var(--color-on-danger);
   min-width: 18px;
   height: 18px;
   padding: 0 5px;
@@ -59,7 +59,7 @@
 
 .trash-toast__action {
   background: var(--color-danger, #ef4444);
-  color: #fff;
+  color: var(--color-on-danger);
   border: none;
   padding: var(--space-1) var(--space-3);
   border-radius: var(--radius-sm);

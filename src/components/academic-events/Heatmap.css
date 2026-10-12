@@ -208,7 +208,7 @@
 }
 
 .academic-event-item__type {
-  color: var(--academic-event-color);
+  color: var(--color-text);
   font-weight: 600;
 }
 
@@ -231,7 +231,6 @@
 }
 
 .academic-event-item__subject--archived {
-  opacity: 0.72;
   font-style: italic;
 }
 

@@ -8,6 +8,11 @@
   overflow-wrap: break-word;
 }
 
+/* RNF-021: el azul nativo de los enlaces no contrasta en tema oscuro. */
+:is(.md-preview__content, .note-card__content) a {
+  color: var(--color-accent);
+}
+
 /* RNF-007: h5/h6 no deben heredar el tamaño reducido del navegador. */
 :is(.md-preview__content, .note-card__content) :is(h4, h5, h6) {
   font-size: 1rem;

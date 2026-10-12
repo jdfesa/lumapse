@@ -76,7 +76,7 @@
 }
 
 .dialog__btn--confirm:hover {
-  color: var(--color-text-bright);
+  color: var(--color-on-accent);
   background: var(--color-accent);
 }
 
@@ -87,7 +87,7 @@
 }
 
 .dialog__btn--danger:hover {
-  color: var(--color-text-bright);
+  color: var(--color-on-danger);
   background: var(--color-danger);
 }
 

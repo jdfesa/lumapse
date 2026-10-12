@@ -163,13 +163,11 @@
   font-family: var(--font-mono);
   font-size: 0.64rem;
   line-height: 1.2;
-  opacity: 0.46;
   transition: color var(--transition), opacity var(--transition);
 }
 
 .academic-event-dialog__char-counter--near-limit {
   color: var(--color-accent);
-  opacity: 0.72;
 }
 
 .academic-event-dialog__subject-picker {
@@ -367,7 +365,7 @@
 }
 
 .academic-event-dialog__btn--save:hover:not(:disabled) {
-  color: var(--color-text-bright);
+  color: var(--color-on-accent);
   background: var(--color-accent);
 }
 

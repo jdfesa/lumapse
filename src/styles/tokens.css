@@ -43,14 +43,17 @@
   
   /* Text Colors */
   --color-text:          rgba(255, 255, 255, 0.85);
-  --color-text-muted:    rgba(255, 255, 255, 0.45);
+  --color-text-muted:    rgba(255, 255, 255, 0.65);
   --color-text-bright:   #ffffff;
   
   /* Brand/Accent Colors */
-  --color-accent:        #818cf8;
+  --color-accent:        #a5b4fc;
   --color-accent-dim:    rgba(129, 140, 248, 0.15);
+  --color-on-accent:     #191919;
   --color-danger:        #f87171;
   --color-danger-dim:    rgba(248, 113, 113, 0.1);
+  --color-on-danger:     #191919;
+  --color-success:       #22c55e;
 
   /* Semantic: shadows, overlays, glows */
   --color-header-bg:     rgba(25, 25, 25, 0.8);
@@ -103,13 +106,16 @@
   --color-border-hover:  rgba(0, 0, 0, 0.15);
 
   --color-text:          rgba(25, 25, 25, 0.85);
-  --color-text-muted:    rgba(25, 25, 25, 0.45);
+  --color-text-muted:    rgba(25, 25, 25, 0.65);
   --color-text-bright:   #191919;
 
-  --color-accent:        #6366f1;
+  --color-accent:        #4f46e5;
   --color-accent-dim:    rgba(99, 102, 241, 0.1);
-  --color-danger:        #ef4444;
+  --color-on-accent:     #ffffff;
+  --color-danger:        #b91c1c;
   --color-danger-dim:    rgba(239, 68, 68, 0.08);
+  --color-on-danger:     #ffffff;
+  --color-success:       #166534;
 
   --color-header-bg:     rgba(255, 255, 255, 0.85);
   --color-shadow:        rgba(0, 0, 0, 0.08);

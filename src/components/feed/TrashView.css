@@ -23,7 +23,7 @@
   font-size: 0.75rem;
   font-weight: 600;
   background: var(--color-danger, #ef4444);
-  color: #fff;
+  color: var(--color-on-danger);
   min-width: 20px;
   height: 20px;
   padding: 0 6px;
@@ -47,7 +47,7 @@
 
 .trash-header__empty:hover {
   background: var(--color-danger, #ef4444);
-  color: #fff;
+  color: var(--color-on-danger);
 }
 
 .trash-section__label {
@@ -121,7 +121,6 @@
 .trash-item__date {
   font-size: 0.7rem;
   color: var(--color-text-muted);
-  opacity: 0.7;
 }
 
 .trash-item__actions {
