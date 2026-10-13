@@ -15,7 +15,7 @@
 - [x] Debug `0.5.0/500`, fuente limpia `b7c3d31`, instalado mediante script habitual sin `--clean`; firma conservada y hashes compilado/instalado iguales.
 - [x] Capturar 24 escenas/2188 muestras AX sin nombres vacíos o de símbolo solo; revisar nombres/contexto y seis capturas del debug definitivo.
 - [x] Conservar hashes de 85 notas/30 materias y secciones/20 fechas/2 filas de metadata; borrador y cuatro contenidos visibles iguales. Restaurar tema/contexto/plegado y configuración temporal de pantalla; retirar forward ADB.
-- [ ] Revisión del PR y confirmación del autor sobre las correcciones en el teléfono; integración no autorizada.
+- [x] El autor aceptó [PR #38](https://github.com/jdfesa/lumapse/pull/38) y autorizó integración a `main` y limpieza de ramas integradas el 2026-10-13. Aceptación general del PR, sin nuevas pruebas manuales por caso ni confirmación adicional de recorridos en el teléfono.
 
 El menú de estados se expuso con foco programático, no como prueba RNF-020; el
 aviso de papelera se mostró como estado DOM aislado. No se guardó, descartó,

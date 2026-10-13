@@ -4,7 +4,8 @@
 **Rama:** `test/rnf-022-accessible-names`<br>
 **Base:** `21624e0`<br>
 **Estado:** RNF-022 verificado técnicamente en el alcance registrado del debug
-`b7c3d31`; revisión y aceptación del autor pendientes, sin autorización de merge.
+`b7c3d31`; [PR #38](https://github.com/jdfesa/lumapse/pull/38) aceptado por el autor,
+con integración y limpieza autorizadas. El estado de integración se comprueba en GitHub.
 
 ## Objetivo y alcance acordados
 
@@ -12,7 +13,8 @@ Comprobar nombres accesibles de controles sin texto visible y alternativas de
 imágenes informativas en las superficies existentes de Lumapse. Corregir solo
 fallos demostrados de RNF-022, sin rediseño ni cambios de comportamiento funcional.
 El autor autorizó rama, commits Conventional Commits en inglés, push y PR para
-revisión. No autorizó merge, APK final ni publicación.
+revisión. La autorización inicial no comprendía merge, APK final ni publicación;
+la autorización posterior de integración se registra al final de este reporte.
 
 El autor confirmó teléfono de pruebas conectado a este equipo, con notas de prueba,
 desbloqueado y root; permite su uso y despertar la pantalla. Se preservan notas,
@@ -41,7 +43,8 @@ nuevas funciones y otros cambios de producto.
 La aceptación requiere **cero elementos relevantes sin nombre accesible en el
 alcance revisado**, alternativas que describan su propósito, evidencia reproducible
 y límites visibles. Si la cobertura es incompleta no se declara cumplimiento
-global. La revisión y autorización de integración del autor siguen pendientes.
+global. La aceptación posterior del autor se registra al final; no se infiere del
+gate ni de las mediciones.
 
 Referencias: [WCAG 2.2 — alternativas de contenido no textual](https://www.w3.org/WAI/WCAG22/Understanding/non-text-content.html),
 [nombres de controles](https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html)
@@ -198,7 +201,7 @@ restauraron y compararon las 10 etiquetas de plegado originales. No se afirma un
 snapshot inicial byte a byte de todas las preferencias ni restauración del caret.
 No se guardó, descartó, exportó, importó, restauró ni borró una nota/fecha/materia.
 
-## Límites y aceptación pendiente
+## Límites y aceptación
 
 - Verifica nombres/alternativas en las superficies, estados y contenido sintético
   registrados, en este dispositivo/WebView/debug. No certifica contenido arbitrario,
@@ -210,6 +213,19 @@ No se guardó, descartó, exportó, importó, restauró ni borró una nota/fecha
 - RNF-022 queda **verificado técnicamente en este alcance**, sin transferir la
   evidencia al asset publicado ni al futuro APK final. La documentación posterior
   no cambia la app instalada; no se generó una nueva versión entregable.
-- El autor debe revisar el PR y confirmar las correcciones acordadas en el teléfono.
-  Su aceptación y cualquier integración a `main` siguen pendientes; no se infieren
-  del gate, las mediciones o la autorización inicial de trabajar.
+- El autor aceptó PR #38 y autorizó integración y limpieza como se registra abajo.
+  No comunicó nuevas pruebas por caso ni resultados Android adicionales; esta
+  aceptación general no amplía los resultados ni elimina los límites anteriores.
+
+### Aceptación del autor — 2026-10-13
+
+El autor aceptó expresamente [PR #38](https://github.com/jdfesa/lumapse/pull/38) y
+autorizó unir la rama a `main` y eliminar su rama local y remota **solo después de
+comprobar la integración**. Es aceptación general del PR, sin nuevas pruebas
+manuales por caso ni confirmación adicional de recorridos en el teléfono.
+
+Este cierre es exclusivamente documental: conserva la evidencia del debug
+`b7c3d31`, no modifica la app instalada ni autoriza una versión, APK final o
+publicación. HEAD y checks del PR se vuelven a comprobar antes de integrar; no se
+infiere el merge de que desaparezca la rama. Los otros RNF y el corte de
+presentación siguen el plan vigente, sin abrir otro frente automáticamente.
