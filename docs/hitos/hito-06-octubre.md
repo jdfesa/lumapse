@@ -16,21 +16,28 @@
 
 ## Objetivo
 
-Cerrar Lumapse con documentación coherente, evidencia técnica reproducible, diagramas finales y una presentación académica preparada. Hito 06 no abre una nueva etapa de producto: convierte la beta operativa en una entrega defendible y decide el corte final solo después de validar todos los artefactos.
+Cerrar Lumapse con documentación coherente, evidencia técnica reproducible, diagramas finales y una presentación académica preparada. Hito 06 no abre una nueva etapa de producto: convierte la beta operativa en una entrega defendible. El corte APK se decide tras los controles técnicos acordados; manual, informe y defensa se preparan después sobre ese artefacto.
 
-**Prioridad aprobada vigente:** terminar producto/bloqueantes → generar y validar APK
+**Prioridad aprobada vigente:** cerrar tareas técnicas imprescindibles → generar y validar APK
 de la versión correspondiente (objetivo `0.6.0+`, condicionado al avance/autorización)
-→ completar informe final, manual y defensa. Para finales de octubre de 2026 deben
+→ congelar desarrollo → manual basado en ese APK → informe final y defensa.
+Para finales de octubre de 2026 deben
 estar preparados todos esos entregables; no se promete cerrarlos en dos sesiones.
 El [recorte de entrega y deuda postdefensa](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa)
 precisa los imprescindibles y límites de este mismo hito: beta defendible, sin
 afirmar estabilidad comercial, cumplimiento no medido ni adopción real.
 
+**Ajuste aprobado — 2026-10-12:** distribución y encuesta voluntaria de usuarios
+después del corte, no bloqueantes para APK, congelación ni entregables. `RNF-005`
+conserva su métrica pendiente; no se esperan respuestas ni se abren correcciones
+automáticas. [Acuerdo y límites](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa).
+
 **Ajuste aprobado — 2026-10-04:** las métricas CRUD/FPS de RNF-002/RNF-004 quedan
 en [backlog post-presentación](../../BACKLOG.md#rendimiento-post-presentación), sin
 bloquear la entrega por esa ausencia. Se conservan pendientes y sin rebajar
 umbrales; no se exige otra cámara/dispositivo ni se continúan pilotos. Los demás
-RNF, la validación funcional y los controles de seguridad no quedan postergados.
+RNF, la validación funcional y los controles de seguridad no quedan postergados
+por esa decisión; RNF-005 sigue el ajuste posterior del 2026-10-12.
 
 ## Punto de Partida
 
@@ -78,7 +85,7 @@ RNF, la validación funcional y los controles de seguridad no quedan postergados
 - [x] Ejecutar el quality gate del corte `v0.5.0`: 67 archivos y 1065 tests aprobados, CI de PR #10 en verde y metadatos `0.5.0/500` verificados.
 - [x] Aceptación general del asset firmado/publicado `lumapse-v0.5.0.apk` recibida; no se rellenan casos históricos ni se reabre esa prueba. F3 sigue pendiente.
 - [ ] **Post-presentación, no bloqueante:** medir latencia CRUD/FPS con al menos 500 notas (`RNF-002`, `RNF-004`), según [decisión del autor](../../BACKLOG.md#rendimiento-post-presentación). La importación funcional no acredita rendimiento cuantitativo.
-- [ ] Ejecutar una prueba con estudiantes o usuarios nuevos para el tiempo a primera nota (`RNF-005`). La revisión técnica de profundidad de `RNF-006` quedó verificada en [el registro del 2026-10-07](../gestion/validacion-usabilidad-navegacion-2026-10-07.md); la fricción técnica de `Mover a` ya fue corregida y validada en PR #9.
+- [ ] **Después del corte APK, no bloqueante:** recoger feedback voluntario de estudiantes/usuarios nuevos (`RNF-005`), sin inferir el tiempo ≤10 s ni condicionar la entrega o abrir correcciones automáticas. La revisión técnica de profundidad de `RNF-006` quedó verificada en [el registro del 2026-10-07](../gestion/validacion-usabilidad-navegacion-2026-10-07.md); la fricción técnica de `Mover a` ya fue corregida y validada en PR #9.
 - [x] Verificar touch targets principales (`RNF-008`) en Android mediante medición de límites renderizados ≥44×44 CSS px. [Evidencia](../gestion/validacion-touch-targets-rnf-008-2026-10-08.md).
 - [x] Medir y ajustar tipografía de lectura/edición (`RNF-007`) ≥16 CSS px en el debug `f2beef7`; [artefacto, resultados, aceptación y límites](../gestion/validacion-tipografia-rnf-007-2026-10-09.md). El autor aceptó PR #36 y autorizó merge/limpieza; no acredita el APK final.
 - [x] Medir y corregir contraste de texto (`RNF-021`) en ambos temas del debug `803947e`; [evidencia, aceptación y límites](../gestion/validacion-contraste-rnf-021-2026-10-12.md). El autor aceptó PR #37 y autorizó merge/limpieza el 2026-10-12, sin nuevas pruebas manuales por caso ni transferencia al APK final.
@@ -139,7 +146,7 @@ fecha para `1.0.0`; los pendientes académicos y la matriz RNF completa siguen a
 |---|---|---|
 | 1 | Producto y bloqueantes | Identificación de build revisada y tratamiento aprobado de hallazgos reales; CRUD/FPS diferidos a post-presentación, resto de F3 pendiente de prioridad/revisión |
 | 2 | APK correspondiente | Gate/auditorías y validación Android del artefacto exacto; corte `0.6.0+` según avance/autorización |
-| 3 | Informe, manual y diagramas | Evidencia final incorporada, manual adaptado, bibliografía/maquetación y contenido congelados |
+| 3 | Congelación, manual e informe | Desarrollo congelado, manual del APK validado y después informe con evidencia disponible, bibliografía/diagramas/maquetación; feedback voluntario no bloqueante |
 | 4 | Defensa y línea base | Deck, demo, contingencia y decisión académica verificables |
 
 Detalle/prerrequisitos en el [ajuste de prioridad aprobado](../gestion/plan-desarrollo-inmediato-beta-2026-09-12.md#ajuste-de-prioridad-aprobado--2026-10-04); el diseño de pruebas original se conserva sin afirmar que fue ejecutado.

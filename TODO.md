@@ -10,11 +10,18 @@
 
 **Versión publicada:** `v0.5.0` (`versionCode 500`), tag anotado sobre `5840755`. Las betas publicadas son inmutables; debug privado autorizado no exige bump por prueba. Un candidato/entrega posterior requiere versión/code nuevos: [flujo Android](docs/flujo-desarrollo-android.md#identificación-de-compilaciones-en-acerca-de).
 
-**Objetivo:** producto y bloqueantes → APK de versión correspondiente generada/validada (objetivo `0.6.0+` según avance y autorización) → informe final, manual actualizado y defensa. Para finales de octubre de 2026 deben estar preparados todos esos entregables, sin ampliar el producto ni prometer una versión estable o adopción real.
+**Objetivo:** tareas técnicas imprescindibles → último APK de presentación generado/validado (versión por acordar; objetivo previo `0.6.0+`) → congelar desarrollo → manual basado en ese APK → informe final y defensa. El feedback voluntario se recoge después del corte, sin bloquear estos entregables. Para finales de octubre de 2026 deben estar preparados, sin ampliar el producto ni prometer una versión estable o adopción real.
 
 **Recorte de cierre acordado:** [imprescindibles, límites y deuda postdefensa](BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa). Este tablero registra acciones, no certifica cumplimiento: una casilla pendiente o una postergación no se convierte en evidencia. Los estados RNF permanecen en su [fuente canónica](docs/producto/requisitos-no-funcionales.md).
 
 ## Prioridad inmediata — plan aceptado
+
+**Ajuste aprobado — 2026-10-12:** se sigue el flujo de cierre anterior y el
+[recorte vigente](BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa). `RNF-005` pasa
+a evaluación posterior al corte, no bloqueante; conserva estado pendiente y
+umbral, sin inferir tiempos de una encuesta. No se esperan respuestas para
+congelar ni preparar manual/informe, y el feedback no abre correcciones o ramas
+automáticamente. La versión y la generación del APK aún requieren acuerdo.
 
 **Cierre de contraste aceptado — 2026-10-12:** `RNF-021` en
 [PR #37](https://github.com/jdfesa/lumapse/pull/37), exclusivamente contraste del
@@ -100,7 +107,6 @@ con muestras y umbrales conservados. No se harán más pilotos en este frente.
 - [x] Remediar los advisories actuales de dependencias: `@capacitor/android`/`core` 8.5.2 y `source-map-js` 1.2.2; auditorías completa/productiva en 0/0. [Evidencia y límites](docs/gestion/validacion-parche-capacitor-2026-10-07.md). Esto no cierra la captura de tráfico ni `RNF-012/013`.
 - [x] Registrar tráfico de red y revisar trackers durante los flujos capturados (`RNF-012`, `RNF-013`): [PASS en debug `0.5.0/500`, 2026-10-07](docs/gestion/validacion-trafico-trackers-2026-10-07.md). La evidencia debe repetirse sobre el APK candidato final.
 - [x] Revisar la profundidad de entrada de crear, buscar y organizar (`RNF-006`) en el debug `0.5.0/500`, con evidencia de rutas de 0–2 taps y límites explícitos. [Registro](docs/gestion/validacion-usabilidad-navegacion-2026-10-07.md).
-- [ ] Ejecutar una prueba acotada de primera nota con estudiantes o usuarios nuevos (`RNF-005`); no inferir tiempo, éxito o adopción a partir de la encuesta ni de la revisión técnica del autor.
 - [x] Verificar touch targets principales (`RNF-008`) en Android mediante medición de límites renderizados ≥44×44 CSS px. [Evidencia y límites](docs/gestion/validacion-touch-targets-rnf-008-2026-10-08.md).
 - [x] Medir y ajustar tipografía de lectura/edición (`RNF-007`): ≥16 CSS px en editor/feed, Markdown y enfoque del debug `f2beef7`, con [evidencia y límites](docs/gestion/validacion-tipografia-rnf-007-2026-10-09.md). El autor aceptó [PR #36](https://github.com/jdfesa/lumapse/pull/36) y autorizó merge/limpieza, sin dar por probado el APK final.
 - [x] Medir y corregir contraste de texto en ambos temas (`RNF-021`): [208 fixtures, placeholders y recorridos Android](docs/gestion/validacion-contraste-rnf-021-2026-10-12.md) ≥4,5:1 en el debug `803947e`; el autor aceptó PR #37 y autorizó merge/limpieza, sin nuevas pruebas por caso ni transferencia al APK final.
@@ -112,13 +118,20 @@ con muestras y umbrales conservados. No se harán más pilotos en este frente.
 
 - [ ] Repetir `npm run verify`, auditorías completa/productiva y coverage de servicios en el corte candidato; registrar resultados reales, no reutilizar cifras históricas como mediciones nuevas.
 - [ ] Generar y validar el nuevo APK autorizado (objetivo `0.6.0+`); fijar fuente, versión/code, canal, firma y hash, preservar las betas publicadas y registrar la revisión Android pertinente sobre ese binario exacto.
+- [ ] Congelar el desarrollo sobre el APK aceptado: sin funciones, mejoras ni correcciones automáticas motivadas por feedback; cualquier excepción requiere una decisión expresa.
+
+### Feedback posterior al corte — no bloqueante
+
+- [ ] Distribuir el APK de presentación a compañeros y otros usuarios e invitar a una encuesta voluntaria; registrar versión, fecha y resultados disponibles, sin condicionar manual, informe o defensa a recibir respuestas.
+- [ ] Recoger observaciones sobre primera nota (`RNF-005`), funcionalidad y fricciones. El umbral ≤10 s sigue pendiente si no se realiza una medición específica; opiniones no acreditan tiempos ni adopción.
+- [ ] Incorporar, cuando se reciban, las observaciones de los dos docentes que el autor informa están probando `v0.5.0`; atribuirlas a esa versión, no al APK posterior. Documentar hallazgos y trabajo futuro sin reabrir automáticamente el desarrollo.
 
 ### Después del APK validado — cierre académico y defensa
 
+- [ ] Revisar el manual externo de `v0.5.0` informado por el autor y adaptarlo al APK final, con capturas coherentes y límites de backup/borradores/papelera. Su existencia no acredita que ya esté actualizado o revisado.
 - [ ] Emitir la matriz RNF final con requisito, método, comando, dispositivo, fecha, artefacto, resultado, evidencia y limitaciones aceptadas; mantener CRUD/FPS pendientes y diferidos según el backlog.
 - [ ] Incorporar el corte y la evidencia final en los capítulos fuente del informe; revisar coherencia, referencias y diagramas antes de congelar y ensamblar.
 - [ ] Contrastar los metadatos bibliográficos de Gómez (2014) y Parada (2026) contra los originales de cátedra y cerrar la sección de referencias.
-- [ ] Revisar el manual externo de `v0.5.0` informado por el autor y adaptarlo al APK final, con capturas coherentes y límites de backup/borradores/papelera. Su existencia no acredita que ya esté actualizado o revisado.
 - [ ] Revisar PDF, tablas y legibilidad de figuras; dejar informe y manual preparados para la entrega.
 - [ ] Alinear GitHub Projects con la Definition of Workflow: WIP global 2, bloqueos y fechas reales `startedAt`/`finishedAt`, sin reconstruir tiempos inexistentes.
 - [ ] Registrar el factor de ajuste solo si hay datos fiables, o declarar la limitación de medición; redactar recomendaciones para futuras cohortes sin inventar métricas.

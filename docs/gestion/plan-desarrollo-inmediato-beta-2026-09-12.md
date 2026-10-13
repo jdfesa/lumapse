@@ -292,6 +292,12 @@ y añadiendo los perfiles exactos de comparación F3. No hay mediciones Android 
 
 ## 5. Pendientes que se conservan fuera de este ciclo
 
+**Ajuste vigente — 2026-10-12:** el [recorte de cierre](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa)
+sitúa el feedback voluntario y `RNF-005` después del último APK, sin bloquear corte
+ni entrega o abrir correcciones automáticas. Se congela el desarrollo y se prepara
+el manual de ese binario, luego el informe, sin esperar respuestas. Se conservan
+los protocolos y resultados históricos; no se declara medida la primera nota.
+
 - **Cierre académico vigente:** originales bibliográficos, figuras en PDF/diapositivas, tablero y métricas de flujo, presentación/demo y contingencia. El ciclo técnico no los da por hechos ni vuelve a redactar todo el informe.
 - **Validación posterior aún necesaria:** prueba con usuarios nuevos para `RNF-005`, accesibilidad/tipografía/contraste, tráfico/trackers y matriz RNF completa. `RNF-006` quedó verificado en la revisión de profundidad del 2026-10-07; F3 es un subconjunto, no el cierre de todos los RNF.
 - **Mejora técnica candidata siguiente:** ampliar el smoke SQLite con `academic_events`, columnas, índices, tipo inválido, FK/`ON DELETE SET NULL` e idempotencia. Sigue abierta; se priorizará al terminar este ciclo o si una regresión de schema la vuelve necesaria.

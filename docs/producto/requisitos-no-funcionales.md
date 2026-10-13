@@ -36,7 +36,12 @@
 > **Prioridad vigente (2026-10-04):** por [decisión del autor](../../BACKLOG.md#rendimiento-post-presentación),
 > RNF-002/RNF-004 quedan **Pendientes, post-presentación**, sin bloquear la entrega
 > por falta de métricas. Funcionamiento satisfactorio no equivale a cumplimiento
-> temporal/FPS ni a rendimiento óptimo demostrado. No se posterga el resto de los RNF.
+> temporal/FPS ni a rendimiento óptimo demostrado. Esa decisión no posterga otros RNF.
+
+> **Ajuste aprobado (2026-10-12):** [flujo de corte y feedback](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa):
+> RNF-005 se evalúa después del APK de presentación, sin bloquear corte, congelación
+> ni entrega. Conserva estado pendiente y umbral ≤10 s; la encuesta voluntaria no
+> acredita tiempos ni obliga a corregir. Los demás RNF conservan su tratamiento.
 
 ---
 
@@ -55,7 +60,7 @@
 
 | ID | Requisito | Métrica | Estado actual | Evidencia / siguiente paso |
 |---|---|---|---|---|
-| RNF-005 | Un usuario nuevo debe poder **crear su primera nota en menos de 10 segundos** desde la primera apertura, sin instrucciones previas. | Tiempo a primera nota ≤ 10s | Pendiente | La validación acotada del 2026-10-07 no incluyó participantes nuevos ni midió tiempo; requiere una prueba con usuarios del prototipo. [Evidencia y límites](../gestion/validacion-usabilidad-navegacion-2026-10-07.md). |
+| RNF-005 | Un usuario nuevo debe poder **crear su primera nota en menos de 10 segundos** desde la primera apertura, sin instrucciones previas. | Tiempo a primera nota ≤ 10s | Pendiente | Sin medición con participantes nuevos; [evidencia previa y límites](../gestion/validacion-usabilidad-navegacion-2026-10-07.md). Por [decisión del autor del 2026-10-12](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa), evaluación posterior al corte APK, no bloqueante para congelación o entrega. Feedback voluntario no verifica ≤10 s; el estado y umbral se conservan. |
 | RNF-006 | Toda función principal actual (crear, buscar, organizar) debe ser accesible en **máximo 2 taps** desde la pantalla principal. | Profundidad de navegación ≤ 2 | Verificado | Crear queda visible en 0 taps; buscar y organizar se alcanzan en 2 taps en el debug `0.5.0/500` sobre Samsung SM-G965F. La evidencia cubre profundidad de entrada, no éxito de mutaciones ni adopción. [Registro de casos](../gestion/validacion-usabilidad-navegacion-2026-10-07.md). |
 | RNF-007 | La tipografía mínima legible debe ser **16px** en dispositivos móviles. | `font-size` ≥ 16px para texto de lectura/edición | Verificado | [Medición, revisión visual y aceptación del 2026-10-09](../gestion/validacion-tipografia-rnf-007-2026-10-09.md): editor/feed, Markdown y modo enfoque ≥16 CSS px en debug `f2beef7`, Samsung SM-G965F. Preview comprobado como componente aislado, no vista activa. Excluye controles/metadatos y otros RNF; PR #36 aceptado por el autor, sin transferencia al candidato final. |
 | RNF-008 | Los controles principales deben tener un área táctil mínima de **44x44 px**. | Touch target ≥ 44x44 px | Verificado | Medición CDP de `getBoundingClientRect()` sobre el debug `0.5.0/500` en Samsung SM-G965F: encabezado, búsqueda, materias, composer, guardado y 31 opciones de materia alcanzan ≥44×44 CSS px. [Evidencia y límites](../gestion/validacion-touch-targets-rnf-008-2026-10-08.md). |
@@ -159,7 +164,7 @@ El listado histórico anterior no es una tarea por repetir.
 ### Plan final de Hito 06
 
 1. **Diferido a post-presentación:** medir latencia CRUD/FPS con un volumen reproducible de notas (RNF-002, RNF-004); emitir la matriz de entrega con estos requisitos pendientes y la postergación explícita, sin afirmar cumplimiento.
-2. Ejecutar pruebas con usuarios y revisar profundidad de navegación (RNF-005, RNF-006).
+2. **Posterior al corte APK, no bloqueante:** recoger feedback voluntario de usuarios (RNF-005), sin esperar respuestas para congelar, preparar manual/informe o entregar. La métrica ≤10 s permanece pendiente sin medición específica. Conservar la revisión técnica ya verificada de profundidad de RNF-006, sin reabrirla ni inferir adopción.
 3. Auditar los pendientes de navegación accesible (RNF-019, RNF-020, RNF-022). `RNF-021` tiene [contraste verificado técnicamente en el debug `803947e` y aceptación del autor en PR #37](../gestion/validacion-contraste-rnf-021-2026-10-12.md). `RNF-007` quedó verificado y aceptado en [la evidencia de PR #36](../gestion/validacion-tipografia-rnf-007-2026-10-09.md); `RNF-008` quedó verificado en [la medición Android del 2026-10-08](../gestion/validacion-touch-targets-rnf-008-2026-10-08.md). No extrapolar esas evidencias al APK final.
 4. OFF-01–05 de RNF-009 verificados en el debug `348da88` y aceptados por el autor en PR #31. RNF-010 conserva su aceptación y evidencia sin repetir la tarea. La validación de un nuevo candidato final se acuerda por separado.
 5. Registrar tráfico de red y un reporte específico de trackers durante los flujos completos para completar RNF-012 y RNF-013. La revisión de dependencias del 2026-10-07 quedó documentada en el [parche de Capacitor](../gestion/validacion-parche-capacitor-2026-10-07.md), pero no sustituye la captura de runtime.

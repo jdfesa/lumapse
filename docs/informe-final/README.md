@@ -40,9 +40,16 @@ Los pendientes explícitos del Hito 06 son:
 - Verificación de legibilidad de las imágenes de base de datos dentro del PDF y las diapositivas. El conceptual Chen y el lógico relacional ya fueron exportados, revisados e incorporados desde sus fuentes DOT y DBML sincronizadas.
 - Verificación de los metadatos bibliográficos incompletos de Gómez (2014) y Parada (2026) contra los originales de cátedra; la sección de referencias ya existe y no inventa los datos ausentes.
 - Ejecución del plan RNF de Hito 06: uso y navegación, accesibilidad, offline, tráfico/dependencias, coverage en el candidato y matriz final por artefacto. `RNF-010` ya fue [verificado y aceptado](../beta-core-validation/continuidad-2026-10-04.md); CRUD/FPS siguen pendientes y [diferidos a post-presentación](../../BACKLOG.md#rendimiento-post-presentación). La portabilidad del gate fue cerrada en F1/PR #14, con sus límites por entorno documentados.
-- Producto/bloqueantes y validación RNF pendiente → APK correspondiente generada/validada (objetivo `0.6.0+` según avance/autorización) → informe, manual y defensa. El [recorte vigente](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa) exige preparar todos los entregables para finales de octubre de 2026, sin prometer estabilidad comercial o adopción. El asset firmado `v0.5.0` ya fue aceptado en al menos tres dispositivos: [registro general](../gestion/checklist-validacion-android.md#aceptación-general-de-la-apk-publicada-v050). No rehacer el checkpoint histórico ahora ni reabrir esa aceptación.
+- Tareas técnicas imprescindibles → último APK de presentación generado/validado (versión por acordar; objetivo previo `0.6.0+`) → congelar desarrollo → manual basado en ese APK → informe final y defensa. El [recorte vigente](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa) exige preparar todos los entregables para finales de octubre de 2026, sin prometer estabilidad comercial o adopción. El asset firmado `v0.5.0` ya fue aceptado en al menos tres dispositivos: [registro general](../gestion/checklist-validacion-android.md#aceptación-general-de-la-apk-publicada-v050). No rehacer el checkpoint histórico ahora ni reabrir esa aceptación.
 
 ### Manual de usuario y consistencia de la entrega
+
+**Acuerdo posterior — 2026-10-12:** la encuesta voluntaria y la evaluación con
+usuarios se realizan después del corte, sin bloquear manual, informe ni defensa.
+Incorporar el feedback disponible con versión/fecha, fricciones y límites, sin
+inferir la métrica de RNF-005 ni abrir correcciones automáticamente. Las futuras
+observaciones de los dos docentes que el autor informa prueban `v0.5.0` pertenecen
+a esa versión, no al APK posterior. No esperar respuestas para cerrar entregables.
 
 **Evidencia posterior al checkpoint:** [OFF-01–05 de RNF-009](../beta-core-validation/offline-2026-10-06.md)
 pasaron en el debug `348da88` el 2026-10-06, tras corregir el bloqueo del ZIP local

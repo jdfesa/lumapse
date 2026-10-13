@@ -55,9 +55,29 @@ Continúan los pendientes de **congelamiento editorial/visual**, **validación R
 
 **Acuerdo de cierre — octubre 2026:** para finales de octubre deben estar preparados
 el APK de presentación, el informe terminado, el manual actualizado y la defensa.
-Se mantiene el plan vigente: **núcleo y bloqueantes → APK final validado → informe,
-manual y defensa**, con una sola rama por objetivo. Esta clasificación acota el
+El flujo de cierre aprobado es **tareas técnicas imprescindibles → último APK de
+presentación validado → congelar desarrollo → manual de ese APK → informe final
+y defensa**, con una sola rama por objetivo. Esta clasificación acota el
 trabajo; no agrega funciones ni acredita pruebas que todavía no se ejecutaron.
+
+**Ajuste aprobado — 2026-10-12:** la distribución a compañeros y otros usuarios y
+la encuesta voluntaria de feedback ocurren **después del corte APK**. No son
+prerrequisitos del binario, la congelación, el manual, el informe ni la defensa;
+no se espera una cantidad de respuestas ni se mueve el plazo de entrega.
+`RNF-005` pasa a evaluación posterior al corte, no bloqueante, conservando estado
+pendiente y umbral ≤10 s. Una encuesta de opiniones no verifica ese tiempo.
+
+El feedback disponible se incorpora como evidencia del artefacto probado, con
+fricciones, bugs reportados, límites y trabajo futuro honestamente identificados.
+No obliga a corregir sobre la marcha, generar otra APK ni abrir ramas o mejoras.
+Un hallazgo grave se comunica al autor para una decisión expresa, sin retomar el
+desarrollo automáticamente. Esto no elimina los controles técnicos del corte ni
+posterga los otros RNF pendientes.
+
+El autor informa que dos docentes del instituto están probando `v0.5.0`; sus
+observaciones aún no fueron recibidas/revisadas aquí. Cuando estén disponibles,
+se atribuirán a esa versión, sin transferirlas al APK posterior. La versión del
+último APK y su generación siguen por acordar; no se declara congelado el código.
 
 La entrega busca una **beta defendible**, con flujos probados, riesgos tratados y
 límites explícitos; no obliga a anunciar `1.0.0`, estabilidad comercial o adopción.
@@ -78,16 +98,19 @@ la app. El repositorio público debe permitir a futuras cohortes distinguir:
 |---|---|---|
 | Antes del corte | Núcleo offline y conservación de datos | OFF-01–05 de `RNF-009` verificados en debug `348da88` y aceptados en PR #31. La validación del candidato final se acuerda por separado. Preservar el cierre de `RNF-010` y sus límites; no repetirlo como tarea. Resolver pérdidas, corrupción, duplicaciones o fallos bloqueantes confirmados. |
 | Antes del corte | Privacidad y seguridad | Completar evidencia de tráfico y revisión de dependencias/trackers (`RNF-012`/`RNF-013`); diferenciar la salida externa iniciada por el usuario de la transmisión automática. Repetir auditorías sobre el candidato: los cierres anteriores no acreditan ausencia actual de advisories. |
-| Antes del corte | Uso y accesibilidad del núcleo | `RNF-006` verificado en revisión Android de profundidad de entrada (0–2 taps) y `RNF-008` verificado mediante medición de touch targets; consultar [la evidencia de navegación del 2026-10-07](docs/gestion/validacion-usabilidad-navegacion-2026-10-07.md) y [la medición de controles del 2026-10-08](docs/gestion/validacion-touch-targets-rnf-008-2026-10-08.md). `RNF-007` verificado en el alcance de lectura/edición del debug `f2beef7`, con [evidencia y aceptación del 2026-10-09](docs/gestion/validacion-tipografia-rnf-007-2026-10-09.md) en PR #36, sin transferir las pruebas al APK final. `RNF-021` tiene [contraste verificado técnicamente en el debug `803947e` y aceptación del autor](docs/gestion/validacion-contraste-rnf-021-2026-10-12.md) en PR #37, con merge/limpieza autorizados y límites explícitos; sin nuevas pruebas por caso ni transferencia al APK final. Sigue pendiente la prueba con estudiantes o usuarios nuevos de `RNF-005`, junto con foco/teclado y nombres accesibles (`RNF-020`, `RNF-022`). `RNF-019` exige la medición prevista o un tratamiento formal acordado para el APK, no un score inferido. Registrar barreras reales y decidir su severidad sin rediseño general. |
+| Antes del corte | Uso y accesibilidad del núcleo | `RNF-006` verificado en revisión Android de profundidad de entrada (0–2 taps) y `RNF-008` verificado mediante medición de touch targets; consultar [la evidencia de navegación del 2026-10-07](docs/gestion/validacion-usabilidad-navegacion-2026-10-07.md) y [la medición de controles del 2026-10-08](docs/gestion/validacion-touch-targets-rnf-008-2026-10-08.md). `RNF-007` verificado en el alcance de lectura/edición del debug `f2beef7`, con [evidencia y aceptación del 2026-10-09](docs/gestion/validacion-tipografia-rnf-007-2026-10-09.md) en PR #36, sin transferir las pruebas al APK final. `RNF-021` tiene [contraste verificado técnicamente en el debug `803947e` y aceptación del autor](docs/gestion/validacion-contraste-rnf-021-2026-10-12.md) en PR #37, con merge/limpieza autorizados y límites explícitos; sin nuevas pruebas por caso ni transferencia al APK final. Siguen pendientes foco/teclado y nombres accesibles (`RNF-020`, `RNF-022`). `RNF-019` exige la medición prevista o un tratamiento formal acordado para el APK, no un score inferido. Registrar barreras reales y decidir su severidad sin rediseño general; `RNF-005` se trata después del corte, sin bloquearlo. |
 | Corte autorizado | APK inequívoco | `verify`, auditorías y coverage de servicios repetidos; versión/code nuevos, fuente, canal, firma y hash identificados. Validación Android pertinente y aceptación sobre el binario final, sin reemplazar betas publicadas ni atribuirle pruebas de otro artefacto. |
+| Después del APK validado | Congelación y feedback no bloqueante | Congelar el desarrollo; distribuir ese APK con encuesta voluntaria e incorporar las respuestas disponibles como evidencia y límites. `RNF-005` no condiciona el corte ni la entrega y no se marca cumplido sin medición. No esperar feedback para preparar manual/informe ni abrir correcciones automáticamente. |
 | Después del APK validado | Matriz e informe final | Emitir matriz RNF con estados, métodos, evidencia y límites; actualizar capítulos fuente, bibliografía y corte documental, congelar y ensamblar. Revisar tablas y legibilidad de figuras en PDF. Los capítulos y el checkpoint de `v0.5.0` son una base, no la entrega final. |
 | Después del APK validado | Manual y defensa | Estudiar el manual externo de `v0.5.0` informado por el autor —aún no revisado aquí— y adaptarlo al artefacto final. Preparar capturas, demo, contingencia y respuestas; reservar tiempo para estudio y ensayo. APK, matriz, informe y manual deben identificar el mismo corte. |
 
-No se entrega con bloqueantes funcionales, de integridad o de seguridad confirmados
-sin resolver. Una observación menor o evidencia incompleta requiere revisión y
+Los controles técnicos previos al corte no aceptan bloqueantes funcionales, de
+integridad o de seguridad confirmados sin resolver. Una observación menor o
+evidencia incompleta requiere revisión y
 aceptación **expresa** del autor para el corte, con su impacto visible en la matriz;
-no se acepta automáticamente por el calendario. Fuera de CRUD/FPS, este recorte no
-posterga los RNF restantes ni cambia sus estados o umbrales. Una revisión acotada
+no se acepta automáticamente por el calendario. Salvo CRUD/FPS y el tratamiento
+posterior al corte de RNF-005 aprobado arriba, este recorte no posterga los RNF
+restantes ni cambia sus estados o umbrales. Una revisión acotada
 tampoco equivale a certificación exhaustiva de usabilidad o accesibilidad.
 
 El cierre de gestión documenta el flujo real y las recomendaciones para futuros
@@ -103,7 +126,7 @@ en [RNF](docs/producto/requisitos-no-funcionales.md) y las pruebas en sus report
 | Métricas CRUD/FPS y optimizaciones de consultas/notificaciones sin cuello demostrado | `RNF-002`/`RNF-004` conservan la [postergación aceptada](#rendimiento-post-presentación), umbrales y estado pendiente. AUD-010/AUD-011 no justifican optimizar por intuición; un defecto funcional nuevo se evalúa por separado. |
 | Refactors de componentes grandes, migraciones adicionales de tipado/framework y ampliaciones exploratorias de tests | No corrigen un bloqueo demostrado de entrega. Incluye ampliar el smoke de `academic_events`; su cobertura actual no se presenta como exhaustiva. Se conservan los controles y regresiones existentes. |
 | Caracterización de mutaciones vecinas no cubiertas por F2/PR #19 | Deuda registrada sin fallo reproducido; reabrir al tocar el flujo o ante evidencia. No difiere corregir un fallo bloqueante que aparezca durante la validación final. |
-| Estudios extensos o longitudinales con usuarios y adopción | Exceden la comprobación acotada del núcleo prevista para este corte; **no postergan automáticamente RNF-005/RNF-006** ni prueban que haya uso real. |
+| Estudios extensos o longitudinales con usuarios y adopción | Exceden el feedback voluntario posterior al APK, no bloqueante, acordado arriba. `RNF-005` conserva su métrica pendiente; `RNF-006` conserva su evidencia de profundidad, sin acreditar adopción. |
 | Recalibración de SLE sin cinco elementos confiables | Esperar datos suficientes; mantener políticas de flujo y registrar fechas reales ahora, sin inventar tiempos históricos. |
 | Funciones nuevas: adjuntos, nube/sincronización, Drive API, restauración avanzada, notas individuales, escritorio y onboarding | Permanecen en el [backlog post-defensa](#evolución-registrada-y-backlog-post-defensa) y las decisiones de diseño; no compiten con el APK, informe, manual ni defensa. |
 
