@@ -188,6 +188,9 @@ describe('drawerSubjects collapse', () => {
     contextMenu.querySelector('.js-ctx-rename').click()
 
     expect(subjectRow.querySelector('.js-rename-input')?.dataset.subjectId).toBe('subj-1')
+    expect(subjectRow.querySelector('.js-rename-input')?.getAttribute('aria-label')).toBe('Nuevo nombre de materia o sección')
+    expect([...document.querySelectorAll('.drawer__color-dot')].map(button => button.getAttribute('aria-label')))
+      .toEqual(SUBJECT_COLORS.map(color => `Elegir color ${color}`))
     expect(actionsButton.getAttribute('aria-expanded')).toBe('false')
   })
 

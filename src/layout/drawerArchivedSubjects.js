@@ -29,7 +29,7 @@ export function renderArchivedSubjects(archivedData) {
                   data-is-section="false"
                   data-subject-name="${escapeHtmlAttribute(subject.name)}"
                   title="Desarchivar materia">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <polyline points="21 8 21 21 3 21 3 8"></polyline>
               <rect x="1" y="3" width="22" height="5"></rect>
               <line x1="12" y1="12" x2="12" y2="18"></line>
@@ -57,7 +57,7 @@ export function renderArchivedSubjects(archivedData) {
                   data-is-section="true"
                   data-subject-name="${escapeHtmlAttribute(child.name)}"
                   title="Desarchivar sección">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <polyline points="21 8 21 21 3 21 3 8"></polyline>
               <rect x="1" y="3" width="22" height="5"></rect>
               <line x1="12" y1="12" x2="12" y2="18"></line>

@@ -6,6 +6,24 @@
 
 ---
 
+## Nombres y alternativas accesibles — RNF-022 — 2026-10-13
+
+[Artefacto, CSV, método, resultados y límites](./validacion-nombres-accesibles-rnf-022-2026-10-13.md).
+
+- [x] Reproducir nombres ausentes de cerrar drawer, casillas y renombrado; identificar nombres de símbolo y de color sin propósito claro.
+- [x] Añadir etiquetas mínimas y ocultar SVG decorativos; regresiones y gate del código definitivo PASS (1194 tests de app/92 de tooling).
+- [x] Debug `0.5.0/500`, fuente limpia `b7c3d31`, instalado mediante script habitual sin `--clean`; firma conservada y hashes compilado/instalado iguales.
+- [x] Capturar 24 escenas/2188 muestras AX sin nombres vacíos o de símbolo solo; revisar nombres/contexto y seis capturas del debug definitivo.
+- [x] Conservar hashes de 85 notas/30 materias y secciones/20 fechas/2 filas de metadata; borrador y cuatro contenidos visibles iguales. Restaurar tema/contexto/plegado y configuración temporal de pantalla; retirar forward ADB.
+- [x] El autor aceptó [PR #38](https://github.com/jdfesa/lumapse/pull/38) y autorizó integración a `main` y limpieza de ramas integradas el 2026-10-13. Aceptación general del PR, sin nuevas pruebas manuales por caso ni confirmación adicional de recorridos en el teléfono.
+
+El menú de estados se expuso con foco programático, no como prueba RNF-020; el
+aviso de papelera se mostró como estado DOM aislado. No se guardó, descartó,
+importó, exportó ni borró contenido. No verifica TalkBack, Lighthouse, navegación
+por teclado, contenido arbitrario ni el futuro APK final.
+
+---
+
 ## Contraste de texto — RNF-021 — 2026-10-12
 
 [Artefactos, ratios, CSV, método y límites](./validacion-contraste-rnf-021-2026-10-12.md).

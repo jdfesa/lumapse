@@ -203,6 +203,7 @@ export function renderMarkdown(markdown: unknown, options: MarkdownRenderOptions
   //    ─────────────────────────────────────────────
 
   const cleanHtml = DOMPurify.sanitize(rawHtml, {
+    RETURN_DOM_FRAGMENT: true,
     // Whitelist estricta: solo tags necesarios para notas de texto
     ALLOWED_TAGS: [
       'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
@@ -249,18 +250,25 @@ export function renderMarkdown(markdown: unknown, options: MarkdownRenderOptions
   // Post-proceso: habilitar checkboxes interactivos con número de línea real.
   // El handler usa data-line para togglear la línea exacta del markdown.
   const taskLineNumbers = getTaskLineNumbers(markdown)
-  let checkboxIndex = 0
-  const processedHtml = cleanHtml.replace(
-    /<input\b([^>]*\btype=["']?checkbox["']?[^>]*)>/gi,
-    (_match: string, attrs: string) => {
-      const lineNumber = (taskLineNumbers[checkboxIndex] ?? checkboxIndex) + lineOffset
-      checkboxIndex++
-      const isChecked = attrs.includes('checked')
-      return `<input type="checkbox" data-line="${lineNumber}"${isChecked ? ' checked' : ''}>`
-    }
-  )
+  cleanHtml.querySelectorAll('input[type="checkbox"]').forEach((checkbox, checkboxIndex) => {
+    const lineNumber = (taskLineNumbers[checkboxIndex] ?? checkboxIndex) + lineOffset
+    // Nombre desde contenido ya sanitizado; no incluir tareas descendientes.
+    const item = checkbox.closest('li')?.cloneNode(true) as HTMLElement | undefined
+    item?.querySelectorAll('ul,ol,input').forEach(node => node.remove())
+    item?.querySelectorAll('img').forEach(img => img.replaceWith(img.getAttribute('alt') || ''))
+    item?.querySelectorAll('br').forEach(br => br.replaceWith(' '))
+    const label = item?.textContent?.replace(/\s+/g, ' ').trim() || `Tarea de la línea ${lineNumber + 1}`
+    const input = cleanHtml.ownerDocument.createElement('input')
+    input.type = 'checkbox'
+    input.dataset.line = String(lineNumber)
+    input.setAttribute('aria-label', label)
+    if (checkbox.hasAttribute('checked')) input.setAttribute('checked', '')
+    checkbox.replaceWith(input)
+  })
 
-  return processedHtml
+  const container = cleanHtml.ownerDocument.createElement('div')
+  container.appendChild(cleanHtml)
+  return container.innerHTML
 }
 
 

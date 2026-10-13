@@ -228,10 +228,10 @@ export class Heatmap {
           <h3 class="heatmap-title">${monthNames[this.currentMonth]} ${this.currentYear}</h3>
           <div class="heatmap-controls">
             <button class="heatmap-btn" id="hm-prev" title="Mes anterior">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
             </button>
             <button class="heatmap-btn" id="hm-next" title="Mes siguiente">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </button>
           </div>
         </div>

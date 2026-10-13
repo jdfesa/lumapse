@@ -12,6 +12,15 @@ function pathValues(container, selector) {
 }
 
 describe('appShell', () => {
+  it('nombra las acciones de símbolo y oculta los SVG decorativos (RNF-022)', () => {
+    const container = renderShellDocument()
+
+    expect(container.querySelector('#btn-close-drawer').getAttribute('aria-label')).toBe('Cerrar menú de notas')
+    expect(container.querySelector('#btn-add-subject').getAttribute('aria-label')).toBe('Nueva materia')
+    expect(container.querySelector('#btn-dismiss-toast').getAttribute('aria-label')).toBe('Cerrar aviso de papelera')
+    expect([...container.querySelectorAll('svg')].every(svg => svg.getAttribute('aria-hidden') === 'true')).toBe(true)
+  })
+
   it('usa iconos coherentes para exportar e importar ZIP', () => {
     const container = renderShellDocument()
 

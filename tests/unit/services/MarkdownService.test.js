@@ -110,6 +110,34 @@ describe('renderMarkdown()', () => {
       expect(html).toContain('data-line="2"')
     })
 
+    it('nombra cada casilla por su texto renderizado sin incluir tareas hijas (RNF-022)', () => {
+      const container = document.createElement('div')
+      container.innerHTML = MarkdownService.renderMarkdown('- [ ] **Leer** & repasar\n  - [x] `Unidad 2`')
+      const inputs = [...container.querySelectorAll('input')]
+
+      expect(inputs.map(input => input.getAttribute('aria-label'))).toEqual(['Leer & repasar', 'Unidad 2'])
+      expect(inputs.map(input => input.dataset.line)).toEqual(['0', '1'])
+      expect(inputs.map(input => input.checked)).toEqual([false, true])
+    })
+
+    it('escapa etiquetas de casilla y mantiene la sanitización del contenido', () => {
+      const container = document.createElement('div')
+      container.innerHTML = MarkdownService.renderMarkdown('- [ ] "Revisar" <img src=x onerror=alert(1) alt="diagrama"> <script>alert(2)</script>')
+
+      expect(container.querySelector('input').getAttribute('aria-label')).toBe('"Revisar" diagrama')
+      expect(container.querySelector('[onerror],script')).toBeNull()
+      expect(container.querySelectorAll('input')).toHaveLength(1)
+    })
+
+    it('da nombre de respaldo a una casilla sin texto y respeta lineOffset', () => {
+      const container = document.createElement('div')
+      container.innerHTML = MarkdownService.renderMarkdown('- [ ] <span></span>', { lineOffset: 8 })
+
+      expect(container.querySelector('input').getAttribute('aria-label')).toBe('Tarea de la línea 9')
+      expect(container.querySelector('input').dataset.line).toBe('8')
+    })
+
+
     it('renderiza callout note con clase, titulo e icono', () => {
       const html = MarkdownService.renderMarkdown('> [!note]\n> Como este.')
 
