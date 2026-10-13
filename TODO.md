@@ -16,6 +16,12 @@
 
 ## Prioridad inmediata — plan aceptado
 
+**Unidad activa — 2026-10-13:** `test/rnf-022-accessible-names`, exclusivamente
+nombres/alternativas accesibles (`RNF-022`). El autor aceptó revisión Android,
+correcciones mínimas de fallos comprobados, regresiones, gate, commits, push y PR;
+[plan, método y evidencia](docs/gestion/validacion-nombres-accesibles-rnf-022-2026-10-13.md).
+Resultados y revisión del PR pendientes; sin teclado/Lighthouse, merge ni APK final.
+
 **Ajuste aprobado — 2026-10-12:** se sigue el flujo de cierre anterior y el
 [recorte vigente](BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa). `RNF-005` pasa
 a evaluación posterior al corte, no bloqueante; conserva estado pendiente y
