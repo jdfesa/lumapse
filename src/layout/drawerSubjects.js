@@ -293,6 +293,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
     const input = document.createElement('input')
     input.type = 'text'
     input.className = 'drawer__rename-input js-rename-input'
+    input.setAttribute('aria-label', 'Nuevo nombre de materia o sección')
     input.value = currentName
     input.dataset.subjectId = subjectId
     input.dataset.originalName = currentName

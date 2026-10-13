@@ -21,7 +21,8 @@ correcciones utiliza el script habitual, sin `--clean`, bump ni firma de release
 Se revisarán principal/editor/feed, menús, organización/búsqueda, fechas, Backup,
 Acerca de, Papelera y diálogos disponibles, separando recorridos reales de pruebas
 aisladas. Contenido arbitrario del usuario y destinos externos no se certifican.
-Quedan fuera teclado/foco (RNF-020), Lighthouse (RNF-019), contraste, rendimiento,+nuevas funciones y otros cambios de producto.
+Quedan fuera teclado/foco (RNF-020), Lighthouse (RNF-019), contraste, rendimiento,
+nuevas funciones y otros cambios de producto.
 
 ## Método, pruebas y aceptación
 
