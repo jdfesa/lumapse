@@ -53,7 +53,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
     <button class="drawer__color-dot${i === 0 ? ' drawer__color-dot--active' : ''}" 
             data-color="${color}" 
             style="background-color: ${color}" 
-            title="${color}"></button>
+            title="${color}" aria-label="Elegir color ${color}"></button>
   `).join('')
 
   colorPickerContainer.addEventListener('click', (e) => {
