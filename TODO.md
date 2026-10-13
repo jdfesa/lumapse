@@ -20,7 +20,9 @@
 nombres/alternativas accesibles (`RNF-022`). El autor aceptó revisión Android,
 correcciones mínimas de fallos comprobados, regresiones, gate, commits, push y PR;
 [plan, método y evidencia](docs/gestion/validacion-nombres-accesibles-rnf-022-2026-10-13.md).
-Resultados y revisión del PR pendientes; sin teclado/Lighthouse, merge ni APK final.
+RNF-022 verificado técnicamente en el alcance del debug `b7c3d31`: 24 escenas,
+2188 muestras AX, nombres y propósito revisados; datos conservados. Revisión y
+aceptación del autor pendientes; sin teclado/Lighthouse, merge ni APK final.
 
 **Ajuste aprobado — 2026-10-12:** se sigue el flujo de cierre anterior y el
 [recorte vigente](BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa). `RNF-005` pasa
@@ -116,7 +118,8 @@ con muestras y umbrales conservados. No se harán más pilotos en este frente.
 - [x] Verificar touch targets principales (`RNF-008`) en Android mediante medición de límites renderizados ≥44×44 CSS px. [Evidencia y límites](docs/gestion/validacion-touch-targets-rnf-008-2026-10-08.md).
 - [x] Medir y ajustar tipografía de lectura/edición (`RNF-007`): ≥16 CSS px en editor/feed, Markdown y enfoque del debug `f2beef7`, con [evidencia y límites](docs/gestion/validacion-tipografia-rnf-007-2026-10-09.md). El autor aceptó [PR #36](https://github.com/jdfesa/lumapse/pull/36) y autorizó merge/limpieza, sin dar por probado el APK final.
 - [x] Medir y corregir contraste de texto en ambos temas (`RNF-021`): [208 fixtures, placeholders y recorridos Android](docs/gestion/validacion-contraste-rnf-021-2026-10-12.md) ≥4,5:1 en el debug `803947e`; el autor aceptó PR #37 y autorizó merge/limpieza, sin nuevas pruebas por caso ni transferencia al APK final.
-- [ ] Revisar teclado cuando corresponda y nombres accesibles (`RNF-020`, `RNF-022`). Medir los criterios aplicables; el cierre de contraste no verifica estos requisitos.
+- [x] Verificar nombres/alternativas accesibles (`RNF-022`): [24 escenas y 2188 muestras AX](docs/gestion/validacion-nombres-accesibles-rnf-022-2026-10-13.md) del debug `b7c3d31`, con correcciones mínimas y datos conservados. Revisión y aceptación del autor pendientes; no verifica TalkBack, teclado/Lighthouse ni el APK final.
+- [ ] Revisar teclado cuando corresponda (`RNF-020`). Medir los criterios aplicables; contraste y nombres accesibles no verifican este requisito.
 - [ ] Resolver el método de `RNF-019`: ejecutar la medición prevista o acordar formalmente un tratamiento adecuado al APK; no atribuir un score Lighthouse inexistente.
 - [ ] Clasificar los hallazgos: resolver bloqueantes confirmados y someter las observaciones menores o la evidencia incompleta a aceptación explícita, sin ampliar automáticamente el producto ni postergar otros RNF.
 
