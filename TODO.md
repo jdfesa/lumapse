@@ -16,6 +16,13 @@
 
 ## Prioridad inmediata — plan aceptado
 
+**En curso — RNF-020 (2026-10-19):** revisar navegación por teclado en
+`test/rnf-020-keyboard-navigation`, con [plan, evidencia y límites](docs/gestion/validacion-teclado-rnf-020-2026-10-19.md).
+El autor aprobó rama, commits en inglés y PR; teléfono local y entrada mediante
+ADB autorizados, sin teclado físico. Correcciones solo ante barreras reproducidas;
+no incluye RNF-019, APK final ni merge. RNF-020 conserva evidencia parcial hasta
+completar la validación, sin anticipar aceptación.
+
 **Cierre de nombres accesibles aceptado — 2026-10-13:** `RNF-022` en
 [PR #38](https://github.com/jdfesa/lumapse/pull/38), exclusivamente nombres y
 alternativas accesibles. [24 escenas/2188 muestras AX del debug `b7c3d31`,
