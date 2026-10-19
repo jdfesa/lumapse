@@ -154,6 +154,42 @@ describe('drawerSubjects mutation failures', () => {
 })
 
 describe('drawerSubjects collapse', () => {
+  it('cancela materia con Escape sin cerrar el panel ni perder el disparador (RNF-020)', () => {
+    const { NoteStore } = setupSubjectsDrawer()
+    const trigger = document.getElementById('btn-add-subject')
+    trigger.click()
+    const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
+    document.getElementById('subject-name-input').dispatchEvent(event)
+    expect(event.defaultPrevented).toBe(true)
+    expect(document.activeElement).toBe(trigger)
+    expect(document.getElementById('subject-form-container').style.display).toBe('none')
+    expect(NoteStore.createSubject).not.toHaveBeenCalled()
+  })
+
+  it('cancela sección con Escape y retorna al botón de agregar (RNF-020)', () => {
+    const { subjectsList, NoteStore } = setupSubjectsDrawer()
+    const trigger = subjectsList.querySelector('.js-btn-add-section')
+    trigger.click()
+    const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
+    subjectsList.querySelector('.js-section-name-input').dispatchEvent(event)
+    expect(event.defaultPrevented).toBe(true)
+    expect(document.activeElement).toBe(trigger)
+    expect(NoteStore.createSubject).not.toHaveBeenCalled()
+  })
+
+  it('cancela renombrado con Escape sin guardar y retorna a opciones (RNF-020)', () => {
+    const { subjectsList, NoteStore } = setupSubjectsDrawer()
+    const trigger = subjectsList.querySelector('.js-subject-actions')
+    trigger.click()
+    document.querySelector('.js-ctx-rename').click()
+    const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
+    subjectsList.querySelector('.js-rename-input').dispatchEvent(event)
+    expect(event.defaultPrevented).toBe(true)
+    expect(document.activeElement).toBe(trigger)
+    expect(subjectsList.querySelector('.js-rename-input')).toBeNull()
+    expect(NoteStore.updateSubject).not.toHaveBeenCalled()
+  })
+
   it('enfoca y recorre el menú por teclado, Escape retorna sin mutar (RNF-020)', () => {
     const { subjectsList, NoteStore } = setupSubjectsDrawer()
     const trigger = subjectsList.querySelector('.js-subject-actions')
