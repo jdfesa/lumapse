@@ -1,0 +1,17 @@
+caso,resultado,tab_adb,enter_adb,escape_adb,flecha_abajo_adb,shift_tab_cdp,sesion
+K01-drawer-y-retorno,PASS,4,1,1,0,1,definitiva
+K02-opciones-y-retorno,PASS,2,1,1,0,1,definitiva
+K03-busqueda,PASS,4,1,1,0,0,definitiva
+K04-menu-materia,PASS,11,2,1,0,1,definitiva
+K05-nueva-materia-cancelar,PASS,5,2,1,0,0,definitiva
+K06-seccion-cancelar,PASS,9,2,1,0,0,definitiva
+K07-renombrar-cancelar,PASS,10,3,1,0,0,definitiva
+K08-calendario-fecha,PASS,47,5,3,1,1,definitiva
+K09-editor-campos,PASS,10,1,1,0,0,repeticion-K09
+K10-insertar-y-formato,PASS,10,2,2,1,0,definitiva
+K11-enfoque,PASS,11,2,0,0,2,definitiva
+K12-menu-nota-y-mover,PASS,23,2,2,0,0,definitiva
+K13-backup,PASS,8,3,0,0,0,definitiva
+K14-acerca,PASS,7,2,0,0,0,definitiva
+K15-confirmacion-cancelar,PASS,7,3,1,0,2,definitiva
+K16-calendario-limpiar,PASS,38,3,1,0,0,definitiva
