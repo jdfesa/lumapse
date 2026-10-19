@@ -5,8 +5,9 @@
 **Base:** `af974459976534570af399116d24253c6fc08e2e`<br>
 **Estado:** revisión técnica completada en el alcance registrado: 16 casos PASS
 sobre el debug identificado. RNF-020 conserva **evidencia parcial**, sin certificar
-teclado físico ni mutaciones completas. Revisión y aceptación del autor pendientes;
-no hay autorización de merge ni APK final.
+teclado físico ni mutaciones completas. El autor revisó y aprobó el
+[PR #39](https://github.com/jdfesa/lumapse/pull/39) y autorizó merge a `main` y
+limpieza de sus ramas integradas. No autoriza APK final.
 
 ## Objetivo y alcance acordados
 
@@ -28,8 +29,10 @@ ratificó terminar esta unidad ya iniciada. El teclado externo se considera uso
 posible y ocasional, no el modo principal ni una certificación de toda la app.
 
 Quedan fuera RNF-019/Lighthouse, nuevas funciones, rediseños, refactors ajenos,
-rendimiento, APK final y merge. No se modifican bases personales ni se importa un
-fixture para obtener evidencia. Las pruebas canceladas no acreditan mutaciones.
+rendimiento y APK final. El merge y la limpieza de ramas se autorizaron tras la
+revisión del PR, como se registra al cierre. No se modifican bases personales ni
+se importa un fixture para obtener evidencia. Las pruebas canceladas no acreditan
+mutaciones.
 
 ## Método, pruebas y aceptación
 
@@ -201,13 +204,16 @@ La verificación automática no sustituye los recorridos Android anteriores ni
 acredita hardware de teclado. No se midieron coverage nuevo, tráfico ni rendimiento
 como parte de esta unidad; se conservan los controles propios del corte candidato.
 
-## Límites y revisión pendiente
+## Límites y aceptación del autor
 
 - **RNF-020 permanece en evidencia parcial:** la navegación observada pasa en
   este debug con entrada inyectada, pero no hubo teclado físico, ensayo completo
   de mutaciones, TalkBack, contenido arbitrario ni prueba de otro dispositivo.
 - No se extrapola al asset publicado `v0.5.0`, al futuro APK final ni a RNF-019.
   No se obtiene un score Lighthouse ni certificación exhaustiva de accesibilidad.
-- La revisión técnica de esta unidad terminó; falta que el autor revise el PR,
-  los cambios y estos límites y decida si acepta su integración. Los PASS y el
-  gate no sustituyen su aceptación ni postergan automáticamente otros requisitos.
+- El 2026-10-19 el autor confirmó que revisó el PR #39, lo aprobó y autorizó merge
+  a `main` y eliminación de las ramas local y remota una vez integrada la tarea.
+  Es aceptación general del PR con los límites registrados, sin nuevas pruebas
+  manuales por caso ni certificación de hardware o mutaciones. RNF-020 conserva
+  evidencia parcial. La integración es comprobable en GitHub; esta autorización
+  no habilita APK final, otro frente ni postergación de otros requisitos.

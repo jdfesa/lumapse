@@ -16,13 +16,15 @@
 
 ## Prioridad inmediata — plan aceptado
 
-**Revisión técnica completada — RNF-020 (2026-10-19):** navegación por teclado en
-`test/rnf-020-keyboard-navigation`, con [plan, evidencia y límites](docs/gestion/validacion-teclado-rnf-020-2026-10-19.md).
+**Revisión acotada aceptada — RNF-020 (2026-10-19):** navegación por teclado en
+[PR #39](https://github.com/jdfesa/lumapse/pull/39), con [plan, evidencia y límites](docs/gestion/validacion-teclado-rnf-020-2026-10-19.md).
 El autor aprobó rama, commits en inglés y PR; teléfono local y entrada mediante
 ADB autorizados, sin teclado físico. Debug `538c906` con 16 casos PASS, gate de
 1206 tests de app/92 de tooling y datos/borrador conservados. RNF-020 permanece en
-evidencia parcial: no se certifican hardware ni mutaciones completas. Revisión del
-PR y aceptación de límites pendientes; no incluye RNF-019, APK final ni merge.
+evidencia parcial: no se certifican hardware ni mutaciones completas. El autor
+revisó y aprobó el PR y autorizó merge a `main` y limpieza de sus ramas integradas;
+integración comprobable en GitHub. Aceptación general, sin nuevas pruebas manuales
+por caso; no incluye RNF-019 ni APK final.
 
 **Cierre de nombres accesibles aceptado — 2026-10-13:** `RNF-022` en
 [PR #38](https://github.com/jdfesa/lumapse/pull/38), exclusivamente nombres y
@@ -128,7 +130,7 @@ con muestras y umbrales conservados. No se harán más pilotos en este frente.
 - [x] Medir y ajustar tipografía de lectura/edición (`RNF-007`): ≥16 CSS px en editor/feed, Markdown y enfoque del debug `f2beef7`, con [evidencia y límites](docs/gestion/validacion-tipografia-rnf-007-2026-10-09.md). El autor aceptó [PR #36](https://github.com/jdfesa/lumapse/pull/36) y autorizó merge/limpieza, sin dar por probado el APK final.
 - [x] Medir y corregir contraste de texto en ambos temas (`RNF-021`): [208 fixtures, placeholders y recorridos Android](docs/gestion/validacion-contraste-rnf-021-2026-10-12.md) ≥4,5:1 en el debug `803947e`; el autor aceptó PR #37 y autorizó merge/limpieza, sin nuevas pruebas por caso ni transferencia al APK final.
 - [x] Verificar nombres/alternativas accesibles (`RNF-022`): [24 escenas y 2188 muestras AX](docs/gestion/validacion-nombres-accesibles-rnf-022-2026-10-13.md) del debug `b7c3d31`, con correcciones mínimas y datos conservados. El autor aceptó [PR #38](https://github.com/jdfesa/lumapse/pull/38) y autorizó merge/limpieza; aceptación general sin nuevas pruebas por caso. No verifica TalkBack, teclado/Lighthouse ni el APK final.
-- [x] Ejecutar la revisión acotada de teclado (`RNF-020`): [16 casos PASS y límites](docs/gestion/validacion-teclado-rnf-020-2026-10-19.md) en debug `538c906`; evidencia parcial conservada, sin teclado físico ni mutaciones completas. Revisión/aceptación del autor pendientes, sin autorizar el corte.
+- [x] Ejecutar la revisión acotada de teclado (`RNF-020`): [16 casos PASS y límites](docs/gestion/validacion-teclado-rnf-020-2026-10-19.md) en debug `538c906`; evidencia parcial conservada, sin teclado físico ni mutaciones completas. El autor revisó y aprobó PR #39 y autorizó merge/limpieza; aceptación general sin nuevas pruebas por caso ni autorización del corte.
 - [ ] Resolver el método de `RNF-019`: ejecutar la medición prevista o acordar formalmente un tratamiento adecuado al APK; no atribuir un score Lighthouse inexistente.
 - [ ] Clasificar los hallazgos: resolver bloqueantes confirmados y someter las observaciones menores o la evidencia incompleta a aceptación explícita, sin ampliar automáticamente el producto ni postergar otros RNF.
 

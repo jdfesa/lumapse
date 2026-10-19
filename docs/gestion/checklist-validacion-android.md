@@ -16,7 +16,7 @@
 - [x] Ejecutar 16 casos PASS con Tab/Enter/Escape por ADB y Shift+Tab complementario por CDP; revisar cinco capturas. K09 repetido por parada Tab del contenedor, sin saltos programáticos de foco en el recorrido.
 - [x] Smoke táctil complementario: cuatro recorridos/diez toques ADB en paneles, calendario y selector, sin escrituras; no certifica ergonomía ni uso táctil exhaustivo.
 - [x] Conservar hashes de 82 notas/30 materias-secciones/20 fechas/2 metadata, valores del borrador y localStorage; restaurar plegado/pantalla y retirar forward ADB.
-- [ ] Revisión y aceptación del autor del PR y de los límites. No hay autorización de merge ni de APK final.
+- [x] El autor revisó y aprobó [PR #39](https://github.com/jdfesa/lumapse/pull/39) y autorizó merge a `main` y limpieza de sus ramas integradas el 2026-10-19; aceptación general con los límites registrados, sin nuevas pruebas por caso. No autoriza APK final.
 
 RNF-020 conserva **evidencia parcial**: no hubo teclado físico ni ensayo completo
 de mutaciones. El borrador preexistente no se editó, guardó ni descartó; tampoco se
