@@ -21,6 +21,10 @@ físico: se registrará esa limitación, sin certificar USB/Bluetooth ni TalkBac
 Si hay correcciones, autorizó debug privado mediante el script habitual, solo con
 firma compatible y datos preservados; sin desinstalar, borrar ni publicar.
 
+Tras consultar la pertinencia para una app principalmente táctil, el autor
+ratificó terminar esta unidad ya iniciada. El teclado externo se considera uso
+posible y ocasional, no el modo principal ni una certificación de toda la app.
+
 Quedan fuera RNF-019/Lighthouse, nuevas funciones, rediseños, refactors ajenos,
 rendimiento, APK final y merge. No se modifican bases personales ni se importa un
 fixture para obtener evidencia. Las pruebas canceladas no acreditan mutaciones.

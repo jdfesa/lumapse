@@ -154,6 +154,27 @@ describe('drawerSubjects mutation failures', () => {
 })
 
 describe('drawerSubjects collapse', () => {
+  it('enfoca y recorre el menú por teclado, Escape retorna sin mutar (RNF-020)', () => {
+    const { subjectsList, NoteStore } = setupSubjectsDrawer()
+    const trigger = subjectsList.querySelector('.js-subject-actions')
+    trigger.focus()
+    trigger.click()
+    const menu = document.getElementById('subject-context-menu')
+    const items = [...menu.querySelectorAll('button')]
+    expect(document.activeElement).toBe(items[0])
+    items[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, cancelable: true }))
+    expect(document.activeElement).toBe(items[2])
+    const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
+    document.activeElement.dispatchEvent(escape)
+    expect(escape.defaultPrevented).toBe(true)
+    expect(document.activeElement).toBe(trigger)
+    expect(menu.style.display).toBe('none')
+    expect(trigger.getAttribute('aria-expanded')).toBe('false')
+    expect(NoteStore.updateSubject).not.toHaveBeenCalled()
+    expect(NoteStore.archiveSubject).not.toHaveBeenCalled()
+    expect(NoteStore.deleteSubject).not.toHaveBeenCalled()
+  })
+
   it('muestra acciones directas sin ofrecer subsecciones dentro de una sección', () => {
     const { subjectsList } = setupSubjectsDrawer()
 

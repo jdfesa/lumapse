@@ -23,6 +23,7 @@ import { handleStoreMutationError } from './components/common/storeActionErrors.
 import { renderAppShell } from './layout/appShell.js'
 import { initDrawer } from './layout/drawerController.js'
 import { createAppStartup } from './layout/appStartup.js'
+import { createKeyboardPanel } from './layout/keyboardPanel.js'
 // import { seedTiktokData, seedStressTest } from './utils/seeder.js'
 
 async function prepareApp() {
@@ -69,10 +70,11 @@ function mountApp() {
   // 5. Calendar popup toggle (DP-006)
   const btnCalendar = document.getElementById('btn-toggle-calendar')
   const calendarPopup = document.getElementById('calendar-popup')
+  const calendarPanel = createKeyboardPanel({ panel: calendarPopup, trigger: btnCalendar, initialFocus: '#hm-prev' })
 
   btnCalendar.addEventListener('click', (e) => {
     e.stopPropagation()
-    calendarPopup.classList.toggle('is-open')
+    calendarPanel.toggle()
   })
 
   calendarPopup.addEventListener('click', (e) => {
@@ -91,7 +93,7 @@ function mountApp() {
   */
 
   document.addEventListener('click', () => {
-    calendarPopup.classList.remove('is-open')
+    calendarPanel.close({ restoreFocus: false })
   })
   
   // 9. Toast de alerta de papelera (RF-026)

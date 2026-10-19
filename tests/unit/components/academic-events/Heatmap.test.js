@@ -109,6 +109,25 @@ afterEach(() => {
 })
 
 describe('Heatmap eventos academicos read-only', () => {
+  it('ofrece días nativos por teclado y conserva el foco al actualizar el filtro (RNF-020)', () => {
+    const heatmap = createHeatmap()
+    const day = document.querySelector('[data-date="2026-06-14"]')
+    expect(day.tagName).toBe('BUTTON')
+    expect(day.type).toBe('button')
+    expect(day.tabIndex).toBe(0)
+    expect(day.getAttribute('aria-label')).toContain('2026-06-14')
+    day.focus()
+    day.click()
+    expect(storeMock.setDateFilter).toHaveBeenCalledWith('2026-06-14')
+    storeMock.subscriber(defaultState({ dateFilter: '2026-06-14' }))
+    expect(document.activeElement).toBe(document.querySelector('[data-date="2026-06-14"]'))
+    expect(document.activeElement.getAttribute('aria-pressed')).toBe('true')
+    document.querySelector('#hm-next').focus()
+    document.querySelector('#hm-next').click()
+    expect(document.activeElement.id).toBe('hm-next')
+    heatmap.destroy()
+  })
+
   it('ignora timestamps persistidos invalidos y conserva toda actividad valida', () => {
     storeMock.state = defaultState({
       notes: [

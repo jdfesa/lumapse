@@ -10,6 +10,7 @@
 import { initSubjects } from './drawerSubjects.js'
 import { initTheme } from './drawerTheme.js'
 import { showErrorToast } from '../components/common/Toast.js'
+import { createKeyboardPanel } from './keyboardPanel.js'
 
 /**
  * Inicializa toda la lógica interactiva del drawer.
@@ -31,35 +32,30 @@ export function initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS }) {
   const btnOpenAppMenu = document.getElementById('btn-open-app-menu')
   const btnCloseAppMenu = document.getElementById('btn-close-app-menu')
 
-  function closeAppMenu() {
-    appMenuDrawer.classList.remove('is-open')
-    appMenuBackdrop.classList.remove('is-visible')
-    appMenuDrawer.setAttribute('aria-hidden', 'true')
-    btnOpenAppMenu.setAttribute('aria-expanded', 'false')
-    document.body.style.overflow = ''
+  const main = document.querySelector('.main-layout')
+  const panelChange = backdropElement => open => {
+    backdropElement.classList.toggle('is-visible', open)
+    main.toggleAttribute('inert', open)
+    document.body.style.overflow = open ? 'hidden' : ''
   }
+  const notesPanel = createKeyboardPanel({ panel: drawer, trigger: btnOpen,
+    initialFocus: '#btn-close-drawer', modal: true, onChange: panelChange(backdrop) })
+  const appPanel = createKeyboardPanel({ panel: appMenuDrawer, trigger: btnOpenAppMenu,
+    initialFocus: '#btn-close-app-menu', modal: true, onChange: panelChange(appMenuBackdrop) })
+  const closeAppMenu = () => appPanel.close()
 
   function openAppMenu() {
-    closeDrawer()
-    appMenuDrawer.classList.add('is-open')
-    appMenuBackdrop.classList.add('is-visible')
-    appMenuDrawer.setAttribute('aria-hidden', 'false')
-    btnOpenAppMenu.setAttribute('aria-expanded', 'true')
-    document.body.style.overflow = 'hidden'
+    notesPanel.close({ restoreFocus: false })
+    appPanel.open()
   }
   
   function openDrawer() {
-    closeAppMenu()
-    drawer.classList.add('is-open')
-    backdrop.classList.add('is-visible')
-    document.body.style.overflow = 'hidden'
+    appPanel.close({ restoreFocus: false })
+    notesPanel.open()
   }
   
   function closeDrawer() {
-    drawer.classList.remove('is-open')
-    backdrop.classList.remove('is-visible')
-    document.body.style.overflow = ''
-    closeAppMenu()
+    notesPanel.close()
   }
 
   btnOpenAppMenu.addEventListener('click', openAppMenu)
@@ -68,13 +64,6 @@ export function initDrawer({ NoteStore, ThemeService, SUBJECT_COLORS }) {
   btnOpen.addEventListener('click', openDrawer)
   btnClose.addEventListener('click', closeDrawer)
   backdrop.addEventListener('click', closeDrawer)
-
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') {
-      closeDrawer()
-      closeAppMenu()
-    }
-  })
 
   // --- Search Logic ---
   const searchInput = document.getElementById('drawer-search-input')

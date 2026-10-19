@@ -203,15 +203,18 @@ export class Heatmap {
     const isActive = dateStr === this.selectedDate ? 'heatmap-day--active' : ''
 
     return `
-      <div class="heatmap-day ${isToday} ${isActive}" data-date="${dateStr}" data-level="${level}" data-event-count="${events.length}">
+      <button type="button" class="heatmap-day ${isToday} ${isActive}" data-date="${dateStr}" data-level="${level}" data-event-count="${events.length}" aria-label="Filtrar por ${dateStr}" aria-pressed="${dateStr === this.selectedDate}">
         <span class="heatmap-day__number">${day}</span>
         ${this.renderEventDots(events)}
-      </div>
+      </button>
     `
   }
 
   render() {
     if (!this.container) return
+    const focused = this.container.contains(document.activeElement) ? document.activeElement : null
+    const focusId = focused?.id
+    const focusDate = focused?.dataset.date
 
     const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
     const dayNames = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa']
@@ -294,6 +297,10 @@ export class Heatmap {
         if (date) this.handleDayClick(date)
       })
     })
+    // El store vuelve a renderizar al filtrar y cargar el mes; no perder la posición.
+    const nextFocus = [...this.container.querySelectorAll('button')].find(element =>
+      (focusId && element.id === focusId) || (focusDate && element.dataset.date === focusDate))
+    nextFocus?.focus({ preventScroll: true })
   }
 
   destroy() {

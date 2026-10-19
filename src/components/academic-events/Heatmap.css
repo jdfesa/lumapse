@@ -69,6 +69,7 @@
 }
 
 .heatmap-day {
+  padding: 0;
   aspect-ratio: 1;
   display: flex;
   align-items: center;
