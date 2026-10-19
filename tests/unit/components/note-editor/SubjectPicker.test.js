@@ -25,6 +25,18 @@ beforeEach(() => {
 })
 
 describe('SubjectPicker presentation hardening', () => {
+  it('consume Escape al cerrar y conserva el foco en el disparador (RNF-020)', () => {
+    const picker = createPicker()
+    picker.open()
+    picker.menu.querySelector('button').focus()
+    const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
+    document.activeElement.dispatchEvent(event)
+    expect(event.defaultPrevented).toBe(true)
+    expect(picker.isOpen()).toBe(false)
+    expect(document.activeElement).toBe(picker.trigger)
+    picker.destroy()
+  })
+
   it('preserva texto e IDs, descarta CSS arbitrario y conserva hex historico', () => {
     const picker = createPicker()
     const legitimateLabel = 'Materia "A" <B> & 😀'

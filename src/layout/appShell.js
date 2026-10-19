@@ -15,7 +15,7 @@
 export function renderAppShell() {
   return `
     <!-- Drawer (Sidebar derecho para búsqueda y navegación de notas) -->
-    <aside id="drawer" class="drawer">
+    <aside id="drawer" class="drawer" role="dialog" aria-label="Menú de notas" aria-modal="true" aria-hidden="true" inert>
       <div class="drawer__header">
         <div class="app-logo">
           <img src="icons/icon-144x144.png" width="24" height="24" alt="Lumapse" class="app-logo__icon" loading="eager">
@@ -85,7 +85,7 @@ export function renderAppShell() {
     <div id="drawer-backdrop" class="drawer-backdrop"></div>
 
     <!-- App Menu (mantenimiento y configuración) -->
-    <aside id="app-menu-drawer" class="app-menu-drawer" aria-label="Opciones de Lumapse" aria-hidden="true">
+    <aside id="app-menu-drawer" class="app-menu-drawer" role="dialog" aria-modal="true" aria-label="Opciones de Lumapse" aria-hidden="true" inert>
       <div class="app-menu-drawer__header">
         <div class="app-logo">
           <img src="icons/icon-144x144.png" width="24" height="24" alt="Lumapse" class="app-logo__icon" loading="eager">
@@ -132,17 +132,17 @@ export function renderAppShell() {
             <span class="app-logo__text">Lumapse</span>
           </div>
           <div class="app-header__actions">
-            <button id="btn-toggle-calendar" class="icon-btn" title="Calendario">
+            <button id="btn-toggle-calendar" class="icon-btn" title="Calendario" aria-controls="calendar-popup" aria-expanded="false">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
             </button>
-            <button id="btn-open-drawer" class="icon-btn" title="Menú">
+            <button id="btn-open-drawer" class="icon-btn" title="Menú" aria-controls="drawer" aria-expanded="false">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </button>
           </div>
         </header>
 
         <!-- Calendar Popup (DP-006) -->
-        <div id="calendar-popup" class="calendar-popup">
+        <div id="calendar-popup" class="calendar-popup" aria-hidden="true" inert>
           <div id="heatmap-container"></div>
           <div id="upcoming-academic-events-container"></div>
         </div>

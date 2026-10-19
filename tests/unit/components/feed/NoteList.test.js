@@ -69,6 +69,29 @@ function createList() {
   return new NoteList(container)
 }
 
+it('Escape cierra primero Mover a y luego Opciones, retornando el foco (RNF-020)', () => {
+  const list = createList()
+  list.feedContainer.innerHTML = list.renderCard(makeNote(), {
+    tree: [{ id: 'math', name: 'Matemática', color: '#818cf8', children: [] }],
+  })
+  const trigger = list.feedContainer.querySelector('.js-btn-menu')
+  trigger.click()
+  const move = list.feedContainer.querySelector('.js-btn-move-trigger')
+  move.click()
+  const target = list.feedContainer.querySelector('.js-btn-move-to:not([disabled])')
+  target.focus()
+  const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
+  target.dispatchEvent(escape)
+  expect(escape.defaultPrevented).toBe(true)
+  expect(document.activeElement).toBe(move)
+  expect(move.getAttribute('aria-expanded')).toBe('false')
+  expect(list.feedContainer.querySelector('.note-card__dropdown.is-open')).not.toBeNull()
+  move.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }))
+  expect(list.feedContainer.querySelector('.note-card__dropdown.is-open')).toBeNull()
+  expect(document.activeElement).toBe(trigger)
+  list.destroy()
+})
+
 function deferred() {
   let resolve
   let reject

@@ -6,6 +6,26 @@
 
 ---
 
+## Navegación por teclado — RNF-020 — 2026-10-19
+
+[Artefactos, CSV, casos, método y límites](./validacion-teclado-rnf-020-2026-10-19.md).
+
+- [x] Reproducir barreras de foco/retorno en paneles, cancelaciones, menús y calendario; conservar regresiones previas fallidas y corregir solo esas barreras.
+- [x] Gate del código definitivo: 79 archivos/1206 tests de app y 92 de tooling PASS; tres avisos previos de lint, sin errores.
+- [x] Instalar debug `0.5.0/500` desde fuente limpia `538c906`, script habitual sin `--clean`, firma conservada y hashes compilado/instalado iguales.
+- [x] Ejecutar 16 casos PASS con Tab/Enter/Escape por ADB y Shift+Tab complementario por CDP; revisar cinco capturas. K09 repetido por parada Tab del contenedor, sin saltos programáticos de foco en el recorrido.
+- [x] Smoke táctil complementario: cuatro recorridos/diez toques ADB en paneles, calendario y selector, sin escrituras; no certifica ergonomía ni uso táctil exhaustivo.
+- [x] Conservar hashes de 82 notas/30 materias-secciones/20 fechas/2 metadata, valores del borrador y localStorage; restaurar plegado/pantalla y retirar forward ADB.
+- [x] El autor revisó y aprobó [PR #39](https://github.com/jdfesa/lumapse/pull/39) y autorizó merge a `main` y limpieza de sus ramas integradas el 2026-10-19; aceptación general con los límites registrados, sin nuevas pruebas por caso. No autoriza APK final.
+
+RNF-020 conserva **evidencia parcial**: no hubo teclado físico ni ensayo completo
+de mutaciones. El borrador preexistente no se editó, guardó ni descartó; tampoco se
+escribieron notas/fechas ni se vació Papelera. No verifica TalkBack, Lighthouse,
+otros dispositivos o el candidato final. No reutilizar los PASS como evidencia de
+esas operaciones o como aceptación del autor.
+
+---
+
 ## Nombres y alternativas accesibles — RNF-022 — 2026-10-13
 
 [Artefacto, CSV, método, resultados y límites](./validacion-nombres-accesibles-rnf-022-2026-10-13.md).

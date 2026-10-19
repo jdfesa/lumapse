@@ -77,6 +77,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
   btnSubjectCancel.addEventListener('click', () => {
     subjectFormContainer.style.display = 'none'
     subjectNameInput.value = ''
+    btnAddSubject.focus()
   })
 
   btnSubjectSave.addEventListener('click', async () => {
@@ -97,6 +98,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
       e.preventDefault()
       btnSubjectSave.click()
     } else if (e.key === 'Escape') {
+      e.preventDefault()
       btnSubjectCancel.click()
     }
   })
@@ -181,6 +183,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
         e.preventDefault()
         saveRenameSubject(renameInput.dataset.subjectId, renameInput.value)
       } else if (e.key === 'Escape') {
+        e.preventDefault()
         cancelRenameSubject(renameInput.dataset.subjectId, renameInput.dataset.originalName)
       }
       return
@@ -199,6 +202,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
       e.preventDefault()
       saveSectionForm(input.dataset.parentId, input.dataset.parentColor)
     } else if (e.key === 'Escape') {
+      e.preventDefault()
       closeSectionForm(input.dataset.parentId)
     }
   })
@@ -282,6 +286,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
   function closeSectionForm(parentId) {
     const form = findSectionForm(parentId)
     if (form) form.style.display = 'none'
+    findByDataset('.js-btn-add-section', 'parentId', parentId)?.focus()
   }
 
   /** Activa el modo edición inline para renombrar una materia/sección */
@@ -341,6 +346,7 @@ export function initSubjects({ NoteStore, SUBJECT_COLORS, closeDrawer, getShowin
     span.dataset.nameId = subjectId
     span.textContent = originalName
     input.replaceWith(span)
+    findByDataset('.js-subject-actions', 'subject', subjectId)?.focus()
   }
 
   /** Actualiza qué botón de materia tiene la clase --active */

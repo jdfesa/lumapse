@@ -38,6 +38,22 @@ beforeEach(() => {
 })
 
 describe('AUD-005: composition root recuperable', () => {
+  it('no oculta el calendario detrás de un diálogo que debe retornar a él (RNF-020)', async () => {
+    await import('../../src/main.js')
+    await vi.dynamicImportSettled()
+    const calendar = document.getElementById('calendar-popup')
+    calendar.innerHTML = '<button id="hm-prev">Mes anterior</button>'
+    document.getElementById('btn-toggle-calendar').click()
+    const modal = document.createElement('div')
+    modal.className = 'academic-event-dialog-backdrop'
+    modal.innerHTML = '<button>Materia de la fecha</button>'
+    document.body.appendChild(modal)
+    modal.querySelector('button').click()
+    expect(calendar.classList.contains('is-open')).toBe(true)
+    expect(calendar.hasAttribute('inert')).toBe(false)
+    modal.remove()
+  })
+
   it('no monta componentes ni suscripciones antes de completar los datos iniciales', async () => {
     const data = deferred()
     mocks.load.mockReturnValueOnce(data.promise)

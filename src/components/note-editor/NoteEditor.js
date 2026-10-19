@@ -107,6 +107,7 @@ export class NoteEditor {
     const composer = this.container.querySelector('.composer');
     const focusHeader = this.container.querySelector('.composer__focus-header');
     if (!composer) return;
+    const wasFocused = composer.classList.contains('composer--focus');
 
     composer.classList.remove('composer--focus');
     document.body.classList.remove('focus-mode-active');
@@ -117,6 +118,7 @@ export class NoteEditor {
       input.style.height = 'auto';
       input.style.height = (input.scrollHeight) + 'px';
     }
+    if (wasFocused) this.container.querySelector('#composer-focus-btn')?.focus();
   }
 
   handleInput(e) {

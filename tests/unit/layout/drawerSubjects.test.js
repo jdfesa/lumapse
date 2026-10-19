@@ -154,6 +154,63 @@ describe('drawerSubjects mutation failures', () => {
 })
 
 describe('drawerSubjects collapse', () => {
+  it('cancela materia con Escape sin cerrar el panel ni perder el disparador (RNF-020)', () => {
+    const { NoteStore } = setupSubjectsDrawer()
+    const trigger = document.getElementById('btn-add-subject')
+    trigger.click()
+    const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
+    document.getElementById('subject-name-input').dispatchEvent(event)
+    expect(event.defaultPrevented).toBe(true)
+    expect(document.activeElement).toBe(trigger)
+    expect(document.getElementById('subject-form-container').style.display).toBe('none')
+    expect(NoteStore.createSubject).not.toHaveBeenCalled()
+  })
+
+  it('cancela sección con Escape y retorna al botón de agregar (RNF-020)', () => {
+    const { subjectsList, NoteStore } = setupSubjectsDrawer()
+    const trigger = subjectsList.querySelector('.js-btn-add-section')
+    trigger.click()
+    const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
+    subjectsList.querySelector('.js-section-name-input').dispatchEvent(event)
+    expect(event.defaultPrevented).toBe(true)
+    expect(document.activeElement).toBe(trigger)
+    expect(NoteStore.createSubject).not.toHaveBeenCalled()
+  })
+
+  it('cancela renombrado con Escape sin guardar y retorna a opciones (RNF-020)', () => {
+    const { subjectsList, NoteStore } = setupSubjectsDrawer()
+    const trigger = subjectsList.querySelector('.js-subject-actions')
+    trigger.click()
+    document.querySelector('.js-ctx-rename').click()
+    const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
+    subjectsList.querySelector('.js-rename-input').dispatchEvent(event)
+    expect(event.defaultPrevented).toBe(true)
+    expect(document.activeElement).toBe(trigger)
+    expect(subjectsList.querySelector('.js-rename-input')).toBeNull()
+    expect(NoteStore.updateSubject).not.toHaveBeenCalled()
+  })
+
+  it('enfoca y recorre el menú por teclado, Escape retorna sin mutar (RNF-020)', () => {
+    const { subjectsList, NoteStore } = setupSubjectsDrawer()
+    const trigger = subjectsList.querySelector('.js-subject-actions')
+    trigger.focus()
+    trigger.click()
+    const menu = document.getElementById('subject-context-menu')
+    const items = [...menu.querySelectorAll('button')]
+    expect(document.activeElement).toBe(items[0])
+    items[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, cancelable: true }))
+    expect(document.activeElement).toBe(items[2])
+    const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
+    document.activeElement.dispatchEvent(escape)
+    expect(escape.defaultPrevented).toBe(true)
+    expect(document.activeElement).toBe(trigger)
+    expect(menu.style.display).toBe('none')
+    expect(trigger.getAttribute('aria-expanded')).toBe('false')
+    expect(NoteStore.updateSubject).not.toHaveBeenCalled()
+    expect(NoteStore.archiveSubject).not.toHaveBeenCalled()
+    expect(NoteStore.deleteSubject).not.toHaveBeenCalled()
+  })
+
   it('muestra acciones directas sin ofrecer subsecciones dentro de una sección', () => {
     const { subjectsList } = setupSubjectsDrawer()
 

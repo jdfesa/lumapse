@@ -1262,6 +1262,7 @@ describe('NoteEditor insert menu', () => {
     expect(document.body.classList.contains('focus-mode-active')).toBe(true)
 
     editor.exitFocusMode()
+    expect(document.activeElement).toBe(editor.container.querySelector('#composer-focus-btn'))
     editor.destroy()
   })
 })

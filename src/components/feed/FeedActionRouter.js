@@ -13,6 +13,26 @@ import { handleStoreMutationError } from '../common/storeActionErrors.js'
 const TASK_LINE_REGEX = /^(\s*[-*+]\s+\[)([ xX])(\]\s+)/
 const pendingCheckboxToggles = new Set()
 
+// Escape cierra la superficie más interna sin salir de la app en Android.
+export function handleFeedEscape(event) {
+  if (event.key !== 'Escape' || event.defaultPrevented) return
+  const card = event.target.closest('.note-card')
+  const menu = card?.querySelector('.note-card__dropdown.is-open')
+  if (!menu) return
+  event.preventDefault()
+  event.stopPropagation()
+  const submenu = menu.querySelector('.note-card__move-submenu.is-open')
+  if (submenu) {
+    submenu.classList.remove('is-open')
+    const trigger = menu.querySelector('.js-btn-move-trigger')
+    trigger.setAttribute('aria-expanded', 'false')
+    trigger.focus()
+  } else {
+    menu.classList.remove('is-open')
+    card.querySelector('.js-btn-menu').focus()
+  }
+}
+
 function refreshTrash(deps) {
   if (typeof deps.refreshTrash !== 'function') {
     throw new TypeError('FeedActionRouter requires an owned refreshTrash callback')

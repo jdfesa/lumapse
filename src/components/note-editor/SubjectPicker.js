@@ -75,6 +75,8 @@ export class SubjectPicker {
   handleKeyDown(event) {
     if (event.key !== 'Escape' || !this.isOpen()) return;
 
+    event.preventDefault();
+    event.stopPropagation();
     this.close();
     this.trigger?.focus();
   }

@@ -82,10 +82,12 @@ export function setupSubjectContextMenu({ subjectsList, NoteStore, startRenameSu
   }
 
   function closeCtxMenu() {
+    const returnFocus = ctxMenu.contains(document.activeElement)
     ctxMenu.style.display = 'none'
     ctxMenu.style.visibility = ''
     ctxTarget = null
     activeTrigger?.setAttribute('aria-expanded', 'false')
+    if (returnFocus) activeTrigger?.focus()
     activeTrigger = null
   }
 
@@ -104,6 +106,7 @@ export function setupSubjectContextMenu({ subjectsList, NoteStore, startRenameSu
       subjectBtn.dataset.isSection === 'true',
       subjectBtn.dataset.subjectName || ''
     )
+    ctxMenu.querySelector('button')?.focus()
   })
 
   subjectsList.addEventListener('click', (e) => {
@@ -125,6 +128,7 @@ export function setupSubjectContextMenu({ subjectsList, NoteStore, startRenameSu
       trigger.dataset.subjectName || '',
       trigger,
     )
+    if (e.detail === 0) ctxMenu.querySelector('button')?.focus()
   })
 
   subjectsList.addEventListener('touchstart', (e) => {
@@ -174,8 +178,18 @@ export function setupSubjectContextMenu({ subjectsList, NoteStore, startRenameSu
     if (!ctxMenu.contains(e.target)) closeCtxMenu()
   })
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeCtxMenu()
+  ctxMenu.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      e.preventDefault()
+      e.stopPropagation()
+      closeCtxMenu()
+    } else if (e.key === 'Tab') {
+      const items = [...ctxMenu.querySelectorAll('button')]
+      const index = items.indexOf(document.activeElement)
+      const next = e.shiftKey ? (index <= 0 ? items.length - 1 : index - 1) : (index + 1) % items.length
+      e.preventDefault()
+      items[next].focus()
+    }
   })
 
   ctxMenu.querySelector('.js-ctx-rename').addEventListener('click', () => {

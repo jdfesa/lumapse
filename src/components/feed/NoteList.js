@@ -9,7 +9,7 @@ import { getNoteContentPresentation } from '../../services/NoteTitleService.ts';
 import { escapeHtmlAttribute, escapeHtmlText } from '../common/htmlEscaping.js';
 import { getSafeHexColor } from '../common/presentationValidation.js';
 import { formatRelativeDate, findSubject, buildMoveMenu } from './NoteCardRenderer.js';
-import { createFeedActionRouter } from './FeedActionRouter.js';
+import { createFeedActionRouter, handleFeedEscape } from './FeedActionRouter.js';
 import { createTrashRequestOwner } from './TrashRequestOwner.js';
 import { BackupView } from '../backup/BackupView.js';
 import { renderAboutView } from '../about/AboutView.js';
@@ -81,6 +81,7 @@ export class NoteList {
       refreshTrash: () => this.trashRequests.refresh()
     });
     this.feedContainer.addEventListener('click', router);
+    this.feedContainer.addEventListener('keydown', handleFeedEscape);
 
     // Suscribirse al store
     this.unsubscribe = NoteStore.subscribe((state) => {
