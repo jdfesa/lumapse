@@ -300,7 +300,7 @@ export class Heatmap {
     // El store vuelve a renderizar al filtrar y cargar el mes; no perder la posición.
     const nextFocus = [...this.container.querySelectorAll('button')].find(element =>
       (focusId && element.id === focusId) || (focusDate && element.dataset.date === focusDate))
-    nextFocus?.focus({ preventScroll: true })
+    if (focused) (nextFocus || this.container.querySelector('#hm-prev'))?.focus({ preventScroll: true })
   }
 
   destroy() {

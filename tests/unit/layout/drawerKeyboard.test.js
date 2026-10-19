@@ -63,4 +63,15 @@ describe('paneles de navegación por teclado (RNF-020)', () => {
     expect(get('drawer').classList.contains('is-open')).toBe(true)
     expect(document.activeElement).toBe(dialogButton)
   })
+
+  it('intercambia paneles sin dejar el fondo habilitado ni mover foco a uno oculto', () => {
+    get('btn-open-drawer').click()
+    get('btn-open-app-menu').click()
+    expect(get('drawer').hasAttribute('inert')).toBe(true)
+    expect(get('app-menu-drawer').hasAttribute('inert')).toBe(false)
+    expect(document.querySelector('.main-layout').hasAttribute('inert')).toBe(true)
+    expect(document.activeElement).toBe(get('btn-close-app-menu'))
+    get('btn-close-app-menu').click()
+    expect(document.activeElement).toBe(get('btn-open-app-menu'))
+  })
 })

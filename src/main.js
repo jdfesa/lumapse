@@ -92,7 +92,8 @@ function mountApp() {
   })
   */
 
-  document.addEventListener('click', () => {
+  document.addEventListener('click', (event) => {
+    if (event.target.closest('.academic-event-dialog-backdrop, .dialog-backdrop')) return
     calendarPanel.close({ restoreFocus: false })
   })
   
