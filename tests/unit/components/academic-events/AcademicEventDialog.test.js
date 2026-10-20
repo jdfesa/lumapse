@@ -81,6 +81,23 @@ afterEach(() => {
 })
 
 describe('AcademicEventDialog', () => {
+  it('conserva el texto visible de la materia en el nombre accesible al cambiar la selección (RNF-019)', async () => {
+    const promise = openAcademicEventDialog({ date: '2026-06-14' })
+    const trigger = document.querySelector('.academic-event-dialog__subject-trigger')
+    expect(trigger.getAttribute('aria-label')).toBe('Seleccionar materia: Sin materia')
+    trigger.click()
+    document.querySelector('.academic-event-dialog__subject-option[data-subject-id="subj-1"]').click()
+    expect(trigger.getAttribute('aria-label')).toBe('Seleccionar materia: Algebra')
+    trigger.click()
+    document.querySelector('.academic-event-dialog__subject-option[data-subject-id=""]').click()
+    expect(trigger.getAttribute('aria-label')).toBe('Seleccionar materia: Sin materia')
+    document.querySelector('.academic-event-dialog__btn--cancel').click()
+    await finishAnimation()
+    await expect(promise).resolves.toBeNull()
+    expect(storeMock.createAcademicEvent).not.toHaveBeenCalled()
+    expect(storeMock.updateAcademicEvent).not.toHaveBeenCalled()
+  })
+
   it('bloquea envíos concurrentes, cancelación en curso y reenvíos durante el cierre', async () => {
     let resolveSave
     storeMock.createAcademicEvent.mockReturnValueOnce(new Promise(resolve => { resolveSave = resolve }))

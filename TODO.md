@@ -16,6 +16,17 @@
 
 ## Prioridad inmediata — plan aceptado
 
+**Revisión acotada aceptada — RNF-019 (2026-10-20):** resolver el método y la
+evidencia de Lighthouse Accessibility en `test/rnf-019-lighthouse-accessibility`,
+con [alcance, preparación y criterios](docs/gestion/validacion-lighthouse-rnf-019-2026-10-20.md).
+Medición técnica completada: 40 snapshots en ambos temas (96–100/100) del debug
+`92deffd`, etiquetas corregidas y datos conservados. El autor aprobó el
+[PR #40](https://github.com/jdfesa/lumapse/pull/40) y autorizó merge a `main` y
+limpieza de sus ramas integradas. Aceptación general con los límites documentados,
+sin nuevas pruebas manuales por caso ni autorización del APK final. La clasificación
+de observaciones antes del corte sigue pendiente; no se reformula la métrica ni
+se abren otras correcciones automáticamente.
+
 **Revisión acotada aceptada — RNF-020 (2026-10-19):** navegación por teclado en
 [PR #39](https://github.com/jdfesa/lumapse/pull/39), con [plan, evidencia y límites](docs/gestion/validacion-teclado-rnf-020-2026-10-19.md).
 El autor aprobó rama, commits en inglés y PR; teléfono local y entrada mediante
@@ -131,7 +142,7 @@ con muestras y umbrales conservados. No se harán más pilotos en este frente.
 - [x] Medir y corregir contraste de texto en ambos temas (`RNF-021`): [208 fixtures, placeholders y recorridos Android](docs/gestion/validacion-contraste-rnf-021-2026-10-12.md) ≥4,5:1 en el debug `803947e`; el autor aceptó PR #37 y autorizó merge/limpieza, sin nuevas pruebas por caso ni transferencia al APK final.
 - [x] Verificar nombres/alternativas accesibles (`RNF-022`): [24 escenas y 2188 muestras AX](docs/gestion/validacion-nombres-accesibles-rnf-022-2026-10-13.md) del debug `b7c3d31`, con correcciones mínimas y datos conservados. El autor aceptó [PR #38](https://github.com/jdfesa/lumapse/pull/38) y autorizó merge/limpieza; aceptación general sin nuevas pruebas por caso. No verifica TalkBack, teclado/Lighthouse ni el APK final.
 - [x] Ejecutar la revisión acotada de teclado (`RNF-020`): [16 casos PASS y límites](docs/gestion/validacion-teclado-rnf-020-2026-10-19.md) en debug `538c906`; evidencia parcial conservada, sin teclado físico ni mutaciones completas. El autor revisó y aprobó PR #39 y autorizó merge/limpieza; aceptación general sin nuevas pruebas por caso ni autorización del corte.
-- [ ] Resolver el método de `RNF-019`: ejecutar la medición prevista o acordar formalmente un tratamiento adecuado al APK; no atribuir un score Lighthouse inexistente.
+- [x] Ejecutar la medición de `RNF-019`: [40 snapshots Lighthouse 96–100/100](docs/gestion/validacion-lighthouse-rnf-019-2026-10-20.md) en el WebView del debug `92deffd`, ambos temas y sin errores de Lighthouse. Se conserva el umbral ≥90, con hallazgos de controles cubiertos y revisión incompleta explícitos; el autor aprobó PR #40 y autorizó merge/limpieza, sin nuevas pruebas por caso ni certificar accesibilidad global o el APK final. La clasificación de observaciones antes del corte sigue pendiente.
 - [ ] Clasificar los hallazgos: resolver bloqueantes confirmados y someter las observaciones menores o la evidencia incompleta a aceptación explícita, sin ampliar automáticamente el producto ni postergar otros RNF.
 
 ### Corte APK final — artefacto de presentación

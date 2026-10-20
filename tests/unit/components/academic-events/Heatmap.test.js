@@ -109,6 +109,18 @@ afterEach(() => {
 })
 
 describe('Heatmap eventos academicos read-only', () => {
+  it('incluye el número visible del día sin cero inicial en su nombre accesible (RNF-019)', () => {
+    const heatmap = createHeatmap()
+    for (const number of [1, 2, 9, 10, 14, 30]) {
+      const date = `2026-06-${String(number).padStart(2, '0')}`
+      const day = document.querySelector(`[data-date="${date}"]`)
+      expect(day.querySelector('.heatmap-day__number').textContent).toBe(String(number))
+      expect(day.getAttribute('aria-label')).toBe(`Filtrar por el día ${number} (${date})`)
+    }
+    expect(storeMock.setDateFilter).not.toHaveBeenCalled()
+    heatmap.destroy()
+  })
+
   it('ofrece días nativos por teclado y conserva el foco al actualizar el filtro (RNF-020)', () => {
     const heatmap = createHeatmap()
     const day = document.querySelector('[data-date="2026-06-14"]')

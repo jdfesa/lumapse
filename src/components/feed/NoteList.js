@@ -275,7 +275,7 @@ export class NoteList {
                 ${archiveLabel}
               </button>
               <div class="note-card__move-wrapper">
-                <button class="note-card__dropdown-btn js-btn-move-trigger" type="button" title="Mover nota" aria-label="Elegir destino de la nota" aria-haspopup="menu" aria-expanded="false">
+                <button class="note-card__dropdown-btn js-btn-move-trigger" type="button" title="Mover nota" aria-label="Mover a: elegir destino de la nota" aria-haspopup="menu" aria-expanded="false">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
                   Mover a
                   <svg class="note-card__move-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>

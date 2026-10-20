@@ -69,6 +69,15 @@ function createList() {
   return new NoteList(container)
 }
 
+it('conserva el texto visible Mover a en su nombre accesible (RNF-019)', () => {
+  const list = createList()
+  list.feedContainer.innerHTML = list.renderCard(makeNote(), { tree: [] })
+  const trigger = list.feedContainer.querySelector('.js-btn-move-trigger')
+  expect(trigger.textContent.trim()).toBe('Mover a')
+  expect(trigger.getAttribute('aria-label')).toBe('Mover a: elegir destino de la nota')
+  list.destroy()
+})
+
 it('Escape cierra primero Mover a y luego Opciones, retornando el foco (RNF-020)', () => {
   const list = createList()
   list.feedContainer.innerHTML = list.renderCard(makeNote(), {

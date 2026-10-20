@@ -16,6 +16,8 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ### Added
 
+- **Medición RNF-019:** Lighthouse 13.5.0 sobre el WebView Android real del debug `92deffd`: 40 snapshots en ambos temas, 96–100/100, umbral ≥90 conservado. [Método, CSV, artefacto y límites](docs/gestion/validacion-lighthouse-rnf-019-2026-10-20.md); observaciones de controles cubiertos y revisión incompleta explícitas. El autor aprobó [PR #40](https://github.com/jdfesa/lumapse/pull/40) y autorizó merge/limpieza; aceptación general sin nuevas pruebas por caso. La clasificación de observaciones antes del corte sigue pendiente. No genera release ni certifica accesibilidad exhaustiva o el APK final.
+
 - **Identificación de builds en Acerca de (RF-023):** versión base, compilación y origen Git calculados por Vite. Deploy habitual identificado como debug privado; helper de release como candidato sin acreditar firma/publicación. Estado local y fallback honesto sin Git; no cambia `0.5.0/500`, no genera una release ni sustituye el hash/evidencia del APK. Smoke Android E5 y navegación aceptados; cierre de [PR #22](https://github.com/jdfesa/lumapse/pull/22) autorizado, [evidencia y límites](docs/gestion/checklist-validacion-android.md#identificación-de-build--smoke-aceptado-de-pr-22), sin mediciones F3.
 
 ### Security
@@ -25,6 +27,8 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Parche del tooling de tests:** Vitest y coverage-v8 suben a 4.1.11 para corregir `GHSA-82fw-gwwq-j7x9`; nueve paquetes de desarrollo alineados, sin cambios al grafo productivo, Vite, Node ni versión Android. Cuatro regresiones sintéticas verifican redirects permitidos/restringidos y la desactivación del canal de registro. Auditorías del 2026-09-15 en cero; autor confirmó pruebas e integró PR #17 (`7dc105c`). [Evidencia y límites](docs/gestion/validacion-parche-vitest-2026-09-15.md).
 
 ### Fixed
+
+- **Etiquetas detectadas por Lighthouse:** nombres accesibles de días/calendario, encabezado Próximas fechas, selector académico, Mover a y pestañas ZIP incluyen su texto visible. Correcciones autorizadas por el autor, cinco regresiones rojo/verde y validación del debug identificado; sin cambios de apariencia, acciones, datos, versión ni dependencias del proyecto.
 
 - **Navegación por teclado (RNF-020):** foco de entrada/retorno y paneles cerrados inertes, cancelaciones que consumen Escape, menús anidados y calendario con días nativos y foco conservado al actualizarse. [16 casos Android y límites](docs/gestion/validacion-teclado-rnf-020-2026-10-19.md) sobre debug `538c906`, con datos/borrador conservados y gate de 1206 tests de app/92 de tooling. RNF-020 permanece en evidencia parcial, sin teclado físico ni mutaciones completas; el autor revisó y aprobó PR #39 y autorizó merge/limpieza, sin nuevas pruebas por caso. No incluye RNF-019, nueva release ni APK final.
 - **Nombres accesibles (RNF-022):** acciones de símbolo, renombrado, paleta de colores y casillas Markdown tienen etiquetas descriptivas; SVG decorativos no se exponen como imágenes anónimas. Las casillas conservan sanitización, línea y estado. [Revisión Android y límites](docs/gestion/validacion-nombres-accesibles-rnf-022-2026-10-13.md): 24 escenas/2188 muestras AX sin nombres vacíos en debug `b7c3d31`, datos conservados; el autor aceptó [PR #38](https://github.com/jdfesa/lumapse/pull/38) y autorizó merge/limpieza, sin nuevas pruebas por caso. Sin nueva release ni certificación de TalkBack, teclado o accesibilidad completa.
