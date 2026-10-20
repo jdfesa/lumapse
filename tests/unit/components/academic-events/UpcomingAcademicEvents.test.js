@@ -119,6 +119,23 @@ describe('getUpcomingEvents()', () => {
 })
 
 describe('UpcomingAcademicEvents', () => {
+  it('incluye título y conteo visibles en el nombre del botón al plegar y actualizar (RNF-019)', () => {
+    storeMock.state = defaultState({ upcomingAcademicEvents: [event()] })
+    const component = createUpcoming()
+    const toggle = () => document.getElementById('upcoming-academic-events-toggle')
+    expect(toggle().getAttribute('aria-label')).toBe('Ocultar Proximas fechas 1')
+    toggle().click()
+    expect(toggle().getAttribute('aria-label')).toBe('Mostrar Proximas fechas 1')
+    expect(toggle().getAttribute('aria-expanded')).toBe('false')
+    storeMock.subscriber(defaultState({ upcomingAcademicEvents: [event(), event({ id: 'event-2' })] }))
+    expect(toggle().getAttribute('aria-label')).toBe('Mostrar Proximas fechas 2')
+    toggle().click()
+    expect(toggle().getAttribute('aria-label')).toBe('Ocultar Proximas fechas 2')
+    expect(toggle().getAttribute('aria-expanded')).toBe('true')
+    expect(storeMock.deleteAcademicEvent).not.toHaveBeenCalled()
+    component.destroy()
+  })
+
   it('no ocupa espacio si no hay eventos futuros', () => {
     const component = createUpcoming()
     const container = document.getElementById('upcoming')

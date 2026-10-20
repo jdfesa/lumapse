@@ -203,7 +203,7 @@ export class Heatmap {
     const isActive = dateStr === this.selectedDate ? 'heatmap-day--active' : ''
 
     return `
-      <button type="button" class="heatmap-day ${isToday} ${isActive}" data-date="${dateStr}" data-level="${level}" data-event-count="${events.length}" aria-label="Filtrar por ${dateStr}" aria-pressed="${dateStr === this.selectedDate}">
+      <button type="button" class="heatmap-day ${isToday} ${isActive}" data-date="${dateStr}" data-level="${level}" data-event-count="${events.length}" aria-label="Filtrar por el día ${day} (${dateStr})" aria-pressed="${dateStr === this.selectedDate}">
         <span class="heatmap-day__number">${day}</span>
         ${this.renderEventDots(events)}
       </button>
