@@ -37,6 +37,7 @@ import {
 import { confirmDialog } from '../../../../src/components/common/ConfirmDialog.js'
 import { showErrorToast } from '../../../../src/components/common/Toast.js'
 import { BackupView } from '../../../../src/components/backup/BackupView.js'
+import { renderBackupPanelTabs } from '../../../../src/components/backup/BackupViewPanels.js'
 
 const WIFI_READINESS = {
   status: BACKUP_FLOW_STATUS.READY,
@@ -162,6 +163,18 @@ beforeEach(() => {
 })
 
 describe('BackupView', () => {
+  it('incluye el texto visible de las pestañas ZIP en sus nombres accesibles (RNF-019)', () => {
+    const container = createContainer()
+    for (const panel of ['export', 'import']) {
+      container.innerHTML = renderBackupPanelTabs(panel)
+      for (const tab of container.querySelectorAll('[role="tab"]')) {
+        expect(tab.getAttribute('aria-label')).toBe(`${tab.textContent.trim()} de backup`)
+        expect(tab.getAttribute('aria-selected')).toBe(String(tab.dataset.panel === panel))
+      }
+    }
+    expect(createAndShareCurrentBackup).not.toHaveBeenCalled()
+  })
+
   it('renderiza estado disponible cuando hay WiFi', async () => {
     const container = createContainer()
     const view = new BackupView(container)
