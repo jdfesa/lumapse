@@ -16,6 +16,13 @@
 
 ## Prioridad inmediata — plan aceptado
 
+**Revisión acotada aceptada — RNF-019 (2026-10-20):** resolver el método y la
+evidencia de Lighthouse Accessibility en `test/rnf-019-lighthouse-accessibility`,
+con [alcance, preparación y criterios](docs/gestion/validacion-lighthouse-rnf-019-2026-10-20.md).
+El autor autorizó rama, commits en inglés, pushes, pruebas en el teléfono y PR;
+sin merge ni APK final. Mediciones y aceptación de resultados pendientes; no se
+reformula la métrica ni se abren correcciones ajenas automáticamente.
+
 **Revisión acotada aceptada — RNF-020 (2026-10-19):** navegación por teclado en
 [PR #39](https://github.com/jdfesa/lumapse/pull/39), con [plan, evidencia y límites](docs/gestion/validacion-teclado-rnf-020-2026-10-19.md).
 El autor aprobó rama, commits en inglés y PR; teléfono local y entrada mediante
