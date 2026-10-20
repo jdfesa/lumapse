@@ -6,6 +6,22 @@
 
 ---
 
+## Lighthouse Accessibility — RNF-019 — 2026-10-20
+
+[Método, artefacto, CSV, observaciones y límites](./validacion-lighthouse-rnf-019-2026-10-20.md).
+Medición automatizada sobre el WebView real, no certificación manual exhaustiva.
+
+- [x] Conservar la métrica ≥90 y ejecutar Lighthouse 13.5.0 mediante snapshots, sin emular viewport/UA, recargar ni limpiar storage.
+- [x] Corregir únicamente las etiquetas detectadas y autorizadas; cinco regresiones rojo/verde, 82 tests focalizados en cinco archivos.
+- [x] Gate del código definitivo `92deffd`: 79 archivos/1211 tests de app y 92 de tooling PASS; tres avisos previos de lint, cero errores.
+- [x] Deploy habitual sin `--clean`, bump ni firma de release: debug `0.5.0/500`, APK compilada/instalada SHA-256 `bd0f33c69e779e4623d2f5e747bf5f251778a08f49f4b7c10ef7738a94b29b41`, certificado debug original y origen limpio confirmados.
+- [x] Obtener 40 LHR válidos —20 escenas por tema—: 34 scores de 100 y seis de 96; todos ≥90. Sin errores/avisos de Lighthouse, pero con hallazgos de contraste/targets subyacentes y revisión incompleta explícitos en el reporte.
+- [x] Comparar hashes de 82 notas/30 materias-secciones/20 fechas/dos metadata, borrador y localStorage; restaurar vista/tema y retirar el forward propio. El runner terminó en 1 durante la limpieza posterior a los 40 LHR; restauración comprobada por separado, sin ocultar ese resultado.
+- [ ] Revisión y aceptación del autor del PR, sus resultados y observaciones; sin autorización de merge ni corte APK.
+
+No transfiere evidencia a otro binario ni cierra automáticamente RNF-020, RNF-026,
+las auditorías manuales o la clasificación de observaciones previa al corte.
+
 ## Navegación por teclado — RNF-020 — 2026-10-19
 
 [Artefactos, CSV, casos, método y límites](./validacion-teclado-rnf-020-2026-10-19.md).
