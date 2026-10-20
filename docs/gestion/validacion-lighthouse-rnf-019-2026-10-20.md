@@ -4,7 +4,9 @@
 **Rama:** `test/rnf-019-lighthouse-accessibility`<br>
 **Base:** `ee55b2684c8dc94389c4d61abe1b3c9102380583`<br>
 **Estado:** RNF-019 verificado técnicamente para la métrica y el alcance registrados;
-aceptación del PR y clasificación de las observaciones pendientes.
+el autor aprobó el [PR #40](https://github.com/jdfesa/lumapse/pull/40) y autorizó
+merge a `main` y limpieza de sus ramas integradas. La clasificación de las
+observaciones antes del corte sigue pendiente; no autoriza APK final.
 
 ## Objetivo y alcance acordados
 
@@ -20,7 +22,8 @@ El autor autorizó esta única rama, commits Conventional Commits en inglés,
 pushes y PR después de verificar. Confirmó teléfono conectado, desbloqueado,
 root y datos de prueba, con permiso para probar y borrar si fuera necesario.
 Se prioriza conservar el estado existente; el ZIP no recupera borradores ni
-papelera. No se autorizaron merge, APK final ni publicación.
+papelera. Al inicio no se autorizaron merge, APK final ni publicación; la
+autorización posterior de integración y limpieza se registra al cierre.
 
 Quedan fuera nuevas funciones, rediseños, cambios de arquitectura, las métricas
 CRUD/FPS, la reapertura de RNF-020 y una certificación exhaustiva de accesibilidad.
@@ -297,10 +300,16 @@ antes del corte, sin postergar otros RNF por esta medición.
 ## Aceptación y siguiente paso
 
 RNF-019 queda **verificado técnicamente para la métrica Lighthouse ≥90 y estas
-escenas del debug `92deffd`**; no se reemplazó ni rebajó el umbral. Las autorizaciones
-del autor cubren ejecución y correcciones de etiquetas, **no aceptación de los
-resultados, de las observaciones, del PR o del APK final**.
+escenas del debug `92deffd`**; no se reemplazó ni rebajó el umbral.
 
-Corresponde revisar el PR, los CSV, las etiquetas en el teléfono y los límites
-anteriores. La autorización de merge sigue pendiente; no se publica una APK, no
-se congela el desarrollo ni se inicia otra tarea automáticamente.
+El 2026-10-20 el autor aprobó el [PR #40](https://github.com/jdfesa/lumapse/pull/40)
+y autorizó integrar la rama a `main` y borrar sus ramas residuales local y remota
+una vez comprobada la integración. Es una **aceptación general del PR con los
+límites documentados**, sin nuevos resultados manuales por caso ni confirmación
+adicional de recorridos en el teléfono. No convierte las auditorías manuales o
+incompletas en PASS ni descarta los seis fallos ponderados registrados.
+
+La clasificación de las observaciones para el corte permanece pendiente en el
+tablero; esta aprobación no autoriza nuevas correcciones, APK final, publicación
+ni congelación. La integración se comprueba en GitHub después de verificar el
+HEAD definitivo y sus checks; no se inicia otra tarea automáticamente.

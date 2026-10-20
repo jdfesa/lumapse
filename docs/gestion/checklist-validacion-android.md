@@ -17,7 +17,7 @@ Medición automatizada sobre el WebView real, no certificación manual exhaustiv
 - [x] Deploy habitual sin `--clean`, bump ni firma de release: debug `0.5.0/500`, APK compilada/instalada SHA-256 `bd0f33c69e779e4623d2f5e747bf5f251778a08f49f4b7c10ef7738a94b29b41`, certificado debug original y origen limpio confirmados.
 - [x] Obtener 40 LHR válidos —20 escenas por tema—: 34 scores de 100 y seis de 96; todos ≥90. Sin errores/avisos de Lighthouse, pero con hallazgos de contraste/targets subyacentes y revisión incompleta explícitos en el reporte.
 - [x] Comparar hashes de 82 notas/30 materias-secciones/20 fechas/dos metadata, borrador y localStorage; restaurar vista/tema y retirar el forward propio. El runner terminó en 1 durante la limpieza posterior a los 40 LHR; restauración comprobada por separado, sin ocultar ese resultado.
-- [ ] Revisión y aceptación del autor del PR, sus resultados y observaciones; sin autorización de merge ni corte APK.
+- [x] El autor aprobó [PR #40](https://github.com/jdfesa/lumapse/pull/40) y autorizó merge a `main` y limpieza de sus ramas integradas el 2026-10-20. Aceptación general con los límites documentados, sin nuevas pruebas manuales por caso ni autorización del corte APK. La clasificación de observaciones antes del corte sigue pendiente; no se convierten auditorías incompletas/manuales en PASS ni se descartan los fallos registrados.
 
 No transfiere evidencia a otro binario ni cierra automáticamente RNF-020, RNF-026,
 las auditorías manuales o la clasificación de observaciones previa al corte.

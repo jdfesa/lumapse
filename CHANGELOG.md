@@ -16,7 +16,7 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ### Added
 
-- **Medición RNF-019:** Lighthouse 13.5.0 sobre el WebView Android real del debug `92deffd`: 40 snapshots en ambos temas, 96–100/100, umbral ≥90 conservado. [Método, CSV, artefacto y límites](docs/gestion/validacion-lighthouse-rnf-019-2026-10-20.md); observaciones de controles cubiertos y revisión incompleta explícitas, aceptación del PR pendiente. No genera release ni certifica accesibilidad exhaustiva o el APK final.
+- **Medición RNF-019:** Lighthouse 13.5.0 sobre el WebView Android real del debug `92deffd`: 40 snapshots en ambos temas, 96–100/100, umbral ≥90 conservado. [Método, CSV, artefacto y límites](docs/gestion/validacion-lighthouse-rnf-019-2026-10-20.md); observaciones de controles cubiertos y revisión incompleta explícitas. El autor aprobó [PR #40](https://github.com/jdfesa/lumapse/pull/40) y autorizó merge/limpieza; aceptación general sin nuevas pruebas por caso. La clasificación de observaciones antes del corte sigue pendiente. No genera release ni certifica accesibilidad exhaustiva o el APK final.
 
 - **Identificación de builds en Acerca de (RF-023):** versión base, compilación y origen Git calculados por Vite. Deploy habitual identificado como debug privado; helper de release como candidato sin acreditar firma/publicación. Estado local y fallback honesto sin Git; no cambia `0.5.0/500`, no genera una release ni sustituye el hash/evidencia del APK. Smoke Android E5 y navegación aceptados; cierre de [PR #22](https://github.com/jdfesa/lumapse/pull/22) autorizado, [evidencia y límites](docs/gestion/checklist-validacion-android.md#identificación-de-build--smoke-aceptado-de-pr-22), sin mediciones F3.
 
