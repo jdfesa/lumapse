@@ -44,7 +44,6 @@ export class AcademicEventSubjectPicker {
     this.trigger.setAttribute('aria-haspopup', 'listbox')
     this.trigger.setAttribute('aria-expanded', 'false')
     this.trigger.setAttribute('aria-controls', 'academic-event-dialog-subject-menu')
-    this.trigger.setAttribute('aria-label', 'Seleccionar materia')
 
     this.dot.className = 'academic-event-dialog__subject-trigger-dot'
     this.label.className = 'academic-event-dialog__subject-trigger-label'
@@ -113,6 +112,7 @@ export class AcademicEventSubjectPicker {
     this.selectedSubjectId = option.id
     this.input.value = option.id
     this.label.textContent = option.label
+    this.trigger.setAttribute('aria-label', `Seleccionar materia: ${option.label}`)
     this.trigger.style.setProperty('--subject-color', option.color || 'var(--color-accent)')
     this.trigger.classList.toggle('academic-event-dialog__subject-trigger--empty', !option.id)
     this.trigger.classList.toggle('academic-event-dialog__subject-trigger--unavailable', option.unavailable)
