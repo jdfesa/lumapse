@@ -103,7 +103,7 @@ test('Vite dev y builds reales consumen metadata; production no se convierte en 
     for (const [channel, label] of [
       [undefined, 'Prueba optimizada (variante no declarada)'],
       ['android-debug', 'Android debug · prueba privada'],
-      ['android-candidate', 'Android · candidato (firma/publicación no verificadas)'],
+      ['android-candidate', 'Android · candidato'],
     ]) {
       if (channel === undefined) delete process.env.LUMAPSE_BUILD_CHANNEL
       else process.env.LUMAPSE_BUILD_CHANNEL = channel
