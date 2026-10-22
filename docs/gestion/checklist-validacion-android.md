@@ -6,6 +6,19 @@
 
 ---
 
+## Revisión precorte — 2026-10-22
+
+[Clasificación PC-01–10, artefacto, controles y aceptación](./revision-precorte-2026-10-22.md).
+
+- [x] Reproducir contraste de «Agregar fecha» tras Escape y clasificar la superposición de menús sin ejecutar mutaciones.
+- [x] Comprobar AX de paneles abiertos/cerrados y relación del selector de materia; conservar límites semánticos y de tecnologías de asistencia, sin convertir `incomplete` en PASS.
+- [x] Regresiones focalizadas 20/20 tras los parches mínimos; auditorías completa/productiva en cero.
+- [x] Registrar el incidente PC-11: firma distinta, fallback de desinstalación y datos borrados; recuperación autorizada con tablas/borrador/preferencias exactamente iguales al estado anterior.
+- [x] Proteger el script: sin `native-run`, certificados comprobados y ADB sin fallback; ocho regresiones sintéticas PASS.
+- [x] Actualizar con script protegido: debug limpio `e0700f6`, hash compilado/instalado iguales y certificado debug nuevo identificado; 82/30/20/2 filas, borrador y preferencias conservados por hash/valor. No equivale a actualización de release.
+- [x] Recorrido definitivo exit 0: seis snapshots Lighthouse 100/100 en ambos temas; contraste tras Escape 8,82:1 oscuro/6,29:1 claro, foco/menús y estado final conservados. Artefacto y límites en el reporte.
+- [x] El autor aceptó PR #41 con los límites documentados y autorizó merge y limpieza tras comprobar integración. Aceptación general sin nuevos resultados manuales por caso; no autoriza APK final ni acredita el candidato.
+
 ## Lighthouse Accessibility — RNF-019 — 2026-10-20
 
 [Método, artefacto, CSV, observaciones y límites](./validacion-lighthouse-rnf-019-2026-10-20.md).
@@ -17,7 +30,7 @@ Medición automatizada sobre el WebView real, no certificación manual exhaustiv
 - [x] Deploy habitual sin `--clean`, bump ni firma de release: debug `0.5.0/500`, APK compilada/instalada SHA-256 `bd0f33c69e779e4623d2f5e747bf5f251778a08f49f4b7c10ef7738a94b29b41`, certificado debug original y origen limpio confirmados.
 - [x] Obtener 40 LHR válidos —20 escenas por tema—: 34 scores de 100 y seis de 96; todos ≥90. Sin errores/avisos de Lighthouse, pero con hallazgos de contraste/targets subyacentes y revisión incompleta explícitos en el reporte.
 - [x] Comparar hashes de 82 notas/30 materias-secciones/20 fechas/dos metadata, borrador y localStorage; restaurar vista/tema y retirar el forward propio. El runner terminó en 1 durante la limpieza posterior a los 40 LHR; restauración comprobada por separado, sin ocultar ese resultado.
-- [x] El autor aprobó [PR #40](https://github.com/jdfesa/lumapse/pull/40) y autorizó merge a `main` y limpieza de sus ramas integradas el 2026-10-20. Aceptación general con los límites documentados, sin nuevas pruebas manuales por caso ni autorización del corte APK. La clasificación de observaciones antes del corte sigue pendiente; no se convierten auditorías incompletas/manuales en PASS ni se descartan los fallos registrados.
+- [x] El autor aprobó [PR #40](https://github.com/jdfesa/lumapse/pull/40) y autorizó merge a `main` y limpieza de sus ramas integradas el 2026-10-20. Aceptación general con los límites documentados, sin nuevas pruebas manuales por caso ni autorización del corte APK. La clasificación posterior se registra en el precorte del 2026-10-22; aceptación general posterior del autor en PR #41, sin nuevos resultados manuales por caso. No se convierten auditorías incompletas/manuales en PASS ni se descartan los fallos registrados.
 
 No transfiere evidencia a otro binario ni cierra automáticamente RNF-020, RNF-026,
 las auditorías manuales o la clasificación de observaciones previa al corte.

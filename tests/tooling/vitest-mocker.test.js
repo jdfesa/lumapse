@@ -33,6 +33,14 @@ async function mocker(t, options = {}) {
   })
   return {
     handlers,
+    async manual(url, keys) {
+      const id = join(root, 'manual.js')
+      handlers.get('vitest:interceptor:register')({ type: 'manual', raw: './manual.js', id, url })
+      const loading = plugin.load.handler(id)
+      // La fábrica registra este callback sincrónicamente antes de esperar su respuesta.
+      handlers.get('vitest:interceptor:resolved')({ url, keys })
+      return loading
+    },
     async redirect(target) {
       const register = handlers.get('vitest:interceptor:register')
       assert.equal(typeof register, 'function')
@@ -62,4 +70,30 @@ test('el mocker de Vitest respeta fs.deny incluso dentro de la raíz', async t =
 test('el mocker permite desactivar el registro por WebSocket', async t => {
   const client = await mocker(t, { registerWebSocketEvents: false })
   assert.equal(client.handlers.size, 0)
+})
+
+test('el mocker normaliza backslashes antes de validar un redirect', async t => {
+  const client = await mocker(t)
+  // En POSIX la versión vulnerable intenta leer un nombre literal inexistente;
+  // el rechazo antes de leer debe ser portable, sin simular un host Windows.
+  assert.equal(await client.redirect('fixture:..\\outside.js'), undefined)
+})
+
+test('el mocker conserva la URL manual como dato, sin ejecutar su contenido', async t => {
+  const key = '__lumapse_manual_mock_test__'
+  const previous = Object.getOwnPropertyDescriptor(globalThis, key)
+  const calls = []
+  const scope = { injected: false, getFactoryModule: url => { calls.push(url); return { value: 42 } } }
+  Object.defineProperty(globalThis, key, { value: scope, configurable: true })
+  t.after(() => {
+    if (previous) Object.defineProperty(globalThis, key, previous)
+    else delete globalThis[key]
+  })
+  const client = await mocker(t, { globalThisAccessor: JSON.stringify(key) })
+  const url = `x"); globalThis[${JSON.stringify(key)}].injected = true; void("`
+  const source = await client.manual(url, ['value'])
+  const result = await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`)
+  assert.equal(scope.injected, false)
+  assert.deepEqual(calls, [url])
+  assert.equal(result.value, 42)
 })

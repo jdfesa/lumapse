@@ -5,8 +5,9 @@
 **Base:** `ee55b2684c8dc94389c4d61abe1b3c9102380583`<br>
 **Estado:** RNF-019 verificado técnicamente para la métrica y el alcance registrados;
 el autor aprobó el [PR #40](https://github.com/jdfesa/lumapse/pull/40) y autorizó
-merge a `main` y limpieza de sus ramas integradas. La clasificación de las
-observaciones antes del corte sigue pendiente; no autoriza APK final.
+merge a `main` y limpieza de sus ramas integradas. La clasificación posterior está
+en el [precorte del 2026-10-22](revision-precorte-2026-10-22.md), aceptado de forma
+general por el autor en PR #41; sin nuevas pruebas por caso ni APK final.
 
 ## Objetivo y alcance acordados
 
@@ -313,3 +314,12 @@ La clasificación de las observaciones para el corte permanece pendiente en el
 tablero; esta aprobación no autoriza nuevas correcciones, APK final, publicación
 ni congelación. La integración se comprueba en GitHub después de verificar el
 HEAD definitivo y sus checks; no se inicia otra tarea automáticamente.
+
+## Seguimiento precorte — 2026-10-22
+
+La [revisión posterior](./revision-precorte-2026-10-22.md) clasifica las observaciones
+y reproduce un caso adicional: el hover de «Agregar fecha» permanece visible tras
+Escape con contraste insuficiente. Se corrige y valida por separado; no se
+reescriben los resultados históricos de este reporte ni se transfieren al APK
+final. El autor aceptó PR #41 con los límites documentados y autorizó merge/limpieza;
+aceptación general, sin nuevas pruebas por caso ni autorización del APK final.

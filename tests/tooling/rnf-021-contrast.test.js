@@ -115,6 +115,7 @@ test('RNF-021 conecta los botones rellenos con su texto de contraste específico
     ['src/components/common/ConfirmDialog.css','.dialog__btn--confirm:hover','accent'],
     ['src/components/common/ConfirmDialog.css','.dialog__btn--danger:hover','danger'],
     ['src/components/academic-events/AcademicEventDialog.css','.academic-event-dialog__btn--save:hover:not(:disabled)','accent'],
+    ['src/components/academic-events/Heatmap.css','.heatmap-add-event:hover','accent'],
     ['src/components/note-editor/NoteEditor.css','.composer__discard-btn:hover','danger'],
     ['src/components/note-editor/NoteEditor.css','.composer__discard-btn:focus-visible','danger'],
     ['src/components/feed/TrashView.css','.trash-header__count','danger'],
@@ -123,6 +124,13 @@ test('RNF-021 conecta los botones rellenos con su texto de contraste específico
     ['src/styles/drawer-trash.css','.trash-toast__action','danger'],
   ]) assert.equal(rule(file,selector).color,`var(--color-on-${type})`,selector)
 })
+
+for (const [name, tokens] of Object.entries(themes)) {
+  test(`Agregar fecha conserva contraste al quedar en hover tras cerrar el diálogo (${name})`, () => {
+    const hover = rule('src/components/academic-events/Heatmap.css', '.heatmap-add-event:hover')
+    minimum(value(hover.color, tokens), value(hover.background, tokens), `Agregar fecha ${name}`)
+  })
+}
 
 test('RNF-021 evita una segunda reducción de opacidad en metadatos legibles', () => {
   for (const [file,selectors] of [

@@ -63,14 +63,18 @@ Los scripts internos más usados también están expuestos desde `package.json` 
 ### 1. `deploy-android.sh`
 Automatiza el ciclo de compilación y despliegue de la aplicación en un dispositivo Android físico.
 
-- **Problema que resuelve:** Permite instalar builds de Lumapse en Android sin repetir manualmente build, sync y ejecución de Capacitor. Desde el 2026-05-26 el modo normal preserva los datos locales de la app para no borrar accidentalmente la base SQLite durante pruebas de archivado, papelera o restauración.
-- **Cambio importante:** Antes este script desinstalaba siempre la app para limpiar caché del WebView. Eso era útil para forzar assets frescos, pero también borraba SQLite y podía destruir exactamente el estado de prueba que se quería investigar. Ahora la desinstalación es explícita con `--clean`.
+- **Problema que resuelve:** Compila, verifica e instala un debug de Lumapse sin desinstalaciones implícitas. El modo normal exige certificados iguales y conserva los datos; ante incompatibilidad o downgrade rechazado aborta, sin convertir el error en una instalación limpia.
+- **Corrección del 2026-10-22:** se descubrió que `npx cap run` delegaba en `native-run`, cuyo fallback desinstalaba ante firma incompatible o downgrade incluso sin `--clean`. Esto borró datos de prueba durante el precorte; se recuperaron y verificaron por hash. Se elimina ese camino y se documenta el [incidente, recuperación y validación](../docs/gestion/revision-precorte-2026-10-22.md#incidente-de-despliegue-y-recuperación).
 - **Funcionamiento:** 
   1. Verifica conexión ADB.
   2. Elige el dispositivo destino: si hay uno solo, lo usa automáticamente; si hay varios, exige `--target <deviceId>`.
   3. Ejecuta el build web (`npm run build`) declarando automáticamente el canal `android-debug` para Acerca de.
   4. Sincroniza el proyecto nativo (`npx cap sync`).
-  5. Construye el APK y lo instala/lanza en el teléfono (`npx cap run android --target <deviceId>`).
+  5. Construye el APK con `android/gradlew assembleDebug`, sin invocar `cap run`/`native-run`.
+  6. Verifica el APK con `apksigner`; si ya existe la app, extrae/verifica su APK y compara los SHA-256 de firmantes. Si no puede verificar o las firmas difieren, aborta antes de instalar. La igualdad es conservadora: rotaciones de clave requieren un flujo acordado, no un bypass.
+  7. Instala con `adb install -r -t`, comprueba `Success` y abre la actividad. Un rechazo no dispara desinstalación ni segundo intento. Solo `--clean` autoriza desinstalar, y únicamente después de build/verificación exitosos.
+- **Entorno:** Java y `apksigner` de los Android SDK Build-Tools; este último debe estar en `PATH` o bajo `ANDROID_HOME`/`ANDROID_SDK_ROOT`. El script no instala herramientas ni gestiona claves. No sustituye la autorización del responsable, un respaldo recuperable ni la prueba de actualización del candidato firmado.
+- **Regresiones:** `tests/tooling/android-deploy.test.js` usa comandos simulados y datos sintéticos: firmas compatibles/distintas/ilegibles, downgrade, error ADB con exit cero, fallo previo a `--clean`, borrado explícito e instalación inicial. No toca teléfonos ni claves reales y se ejecuta mediante `npm run test:tooling`/`verify`.
 - **Uso:**
   ```bash
   # Deploy normal: conserva SQLite, preferencias y estado local
