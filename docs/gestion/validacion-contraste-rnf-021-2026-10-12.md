@@ -224,3 +224,11 @@ estado de integración se consulta en el PR antes de borrar las ramas; no se inf
 de su desaparición. Después del cierre se continúa la conversación sobre el último
 APK y la congelación antes del manual y el informe; este acuerdo no autoriza otro
 frente, una compilación nueva ni comenzar esos entregables.
+
+## Seguimiento precorte — 2026-10-22
+
+La [revisión posterior](./revision-precorte-2026-10-22.md) clasifica las observaciones
+y reproduce un caso adicional: el hover de «Agregar fecha» permanece visible tras
+Escape con contraste insuficiente. Se corrige y valida por separado; no se
+reescriben los resultados históricos de este reporte ni se transfieren al APK
+final. Las propuestas de aceptación de otros límites siguen pendientes del autor.

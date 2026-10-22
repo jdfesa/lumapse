@@ -1,0 +1,170 @@
+# Revisión de preparación del corte — 2026-10-22
+
+**Rama:** `test/pre-cut-acceptance`<br>
+**Base:** `7adea77dd9f9b4a009c4b9d90440bee3af6b48f8`<br>
+**Estado:** clasificación y correcciones mínimas en revisión; aceptación del autor
+y corte APK pendientes. No es una release ni una autorización de merge.
+
+## Objetivo, alcance y aceptación
+
+Preparar una decisión finita de corte, no iniciar otro ciclo de mejoras. El autor
+autorizó esta rama, Conventional Commits en inglés, push final y PR; confirmó
+teléfono local de pruebas con root y datos eliminables si hiciera falta. Se
+prioriza conservarlos. Al retomar pidió continuar con los dos tratamientos
+mínimos presentados: contraste de «Agregar fecha» y parches de Vite/Vitest.
+
+Se revisan las observaciones pendientes de Lighthouse, los límites de teclado,
+la trazabilidad ADR y los controles técnicos del precorte. Las correcciones no
+cambian funciones, layout, arquitectura, schema ni `0.5.0/500`. Quedan fuera las
+tareas ya diferidas, refactors, estudios extensos, manual/informe finales,
+publicación y generación del APK de presentación.
+
+Pruebas: reproducción y regresiones rojo/verde, auditorías actuales, gate completo,
+coverage de servicios y revisión Android proporcional sobre debug identificado.
+El autor revisa el PR, el teléfono y los límites propuestos al final. Una prueba
+automatizada no sustituye esa aceptación ni valida un candidato futuro.
+
+## Preparación comprobada
+
+- GitHub sin PR abiertos al iniciar; PR #40 integrado. `main` coincidía con
+  `origin/main`, sin cambios locales; rama creada desde la base indicada. Al
+  retomar se conservaron las regresiones propias sin stash ni cambios de rama.
+- Node 22.20.0/npm 10.9.3 existentes: `check:runtime` pasa. Enlaces iniciales:
+  109 Markdown/941 enlaces, cero errores; trazabilidad sin advertencias.
+- Samsung SM-G965F, Android 10/API 29, root y SQLite comprobados. Doctor Android
+  pasa seleccionando SDK/JDK existentes, sin instalaciones ni cambios globales.
+- APK inicial: debug privado `92deffdbde07b5ac6a5e9430167970bc9089de5b`,
+  `0.5.0/500`; SHA-256
+  `bd0f33c69e779e4623d2f5e747bf5f251778a08f49f4b7c10ef7738a94b29b41`.
+  Su código de producto coincide con la base de esta rama. Certificado SHA-256:
+  `5ba36ca181d954a6dbe8a4a6afdb833429feb32a3a93dae9e8313191a0c782df`.
+- Referencia inicial: 82 notas, 30 materias/secciones, 20 fechas y 2 filas de
+  metadata, con borrador existente. Se comparan hashes de tablas y campos del
+  editor, no solo conteos. Los temporales contienen datos y no se publican.
+
+## Clasificación de observaciones
+
+Se conserva la [medición original RNF-019](validacion-lighthouse-rnf-019-2026-10-20.md):
+40 snapshots, 96–100/100. No se reescriben sus informes ni se equipara `incomplete`
+a aprobado. Esta tabla distingue reproducción, impacto y decisión pendiente.
+
+| ID | Observación y comprobación | Tratamiento para el corte |
+|---|---|---|
+| PC-01 | `color-contrast`, «Agregar fecha», L07: el hover persiste **visible** tras cerrar el diálogo con Escape; no es solo contenido de fondo. Ratio inicial oscuro 1,99:1 y claro 2,80:1. | Defecto concreto a corregir en esta rama; usar el token existente de texto sobre acento, sin rediseño. |
+| PC-02 | `target-size`, L13/L14: el menú abierto de una tarjeta cubre el botón de la siguiente. Sin menús abiertos ambos botones miden 28×28 CSS px y los nueve puntos muestreados están libres; con menú abierto el segundo queda cubierto. Escape cierra submenú y menú; una vez estabilizado el cierre se recupera el acceso y abre el segundo menú. | Observación contextual menor propuesta para aceptación, **no** cumplimiento general de 44×44. No se amplía el alcance histórico de RNF-008 ni se rediseñan tarjetas. |
+| PC-03 | `aria-allowed-role`: los paneles usan `aside role="dialog"`. Cerrados están `inert`/`aria-hidden` y no se exponen como diálogos en AX; abiertos AX expone un diálogo con nombre correcto. | Advertencia semántica conservada, sin bloqueo funcional reproducido. Propuesta de aceptación del límite; no se declara conformidad ARIA/WCAG ni compatibilidad TalkBack. |
+| PC-04 | `aria-valid-attr-value`: el selector del editor referencia un único `composer-subject-menu` existente, `role="listbox"`; al abrir/cerrar cambian coherentemente `hidden` y `aria-expanded`. | No se reprodujo referencia rota. La revisión manual global de tecnologías de asistencia continúa fuera de la evidencia; propuesta de aceptación del límite. |
+| PC-05 | `label-content-name-mismatch` incompleto en símbolos `Aa`/`+`: los controles tienen nombres de propósito; no se ejecutó control por voz. | Límite menor propuesto para aceptación, no fallo de nombre vacío ni prueba de voz aprobada. Conservar evidencia de RNF-022. |
+| PC-06 | `color-contrast` incompleto por texto recortado/solapado en drawer, estado de borrador, submenú y confirmación. El instrumento no pudo resolver esos casos; PC-01 se separó y reprodujo como defecto real. | No se inventa un ratio ni se descarta como falso positivo. Revisión exhaustiva no demostrada, propuesta de aceptación explícita como límite de cobertura. |
+| PC-07 | `aria-prohibited-attr`: el contenedor `span` de acciones académicas tiene `aria-label` sin rol de agrupación; los botones hijos tienen nombres individuales de editar/eliminar. | Observación semántica menor propuesta para aceptación; no se atribuye significado accesible al contenedor ni se certifica lectura en TalkBack. |
+| PC-08 | RNF-020: los 16 casos registrados usan entrada ADB/CDP; no hubo teclado físico ni ensayo completo de mutaciones. En esta revisión 12 Tab por tema permanecieron dentro del diálogo y Escape devolvió foco a «Agregar fecha». | Mantener **Evidencia parcial**. Propuesta de aceptar ese alcance para presentación Android, sin afirmar teclado completo ni abrir más pilotos. |
+| PC-09 | RNF-026: inventario de decisiones, código e historia contrastados, con ADR retrospectivos identificados. | Revisión documental completada en el [índice ADR](../adr/README.md#revisión-de-trazabilidad-precorte--2026-10-22); no crea decisiones ni reconstruye fechas. |
+| PC-10 | Auditoría actual: cuatro paquetes de tooling afectados (tres moderados/un alto); producción en cero. | Parche mínimo de Vite/Vitest en esta rama; no presentar estos advisories de desarrollo como explotación del APK. |
+
+Las propuestas de aceptación **no son postergaciones aprobadas**. El autor debe
+aceptarlas o indicar un caso concreto que impida el corte. No se deriva de ellas
+una nueva tarea automática ni se cambian los umbrales RNF.
+
+## Correcciones y regresiones
+
+### Contraste localizado
+
+`.heatmap-add-event:hover` usaba `--color-text-bright` sobre `--color-accent`:
+blanco sobre violeta claro en oscuro y texto oscuro sobre violeta oscuro en claro.
+Se sustituye únicamente por `--color-on-accent`. Las dos regresiones numéricas por
+tema y el guard de token fallaron antes; pasan después. No cambia tamaño, foco,
+diálogo ni persistencia. La evidencia anterior de RNF-021 conserva su alcance;
+este caso adicional no estaba acreditado por sus fixtures.
+
+### Dependencias de desarrollo
+
+Vite 6.4.3 → **6.4.4**; Vitest y los ocho paquetes `@vitest/*` 4.1.11 →
+**4.1.12**. Cambian diez nodos de desarrollo y tres mínimos directos; las 356
+entradas del lockfile se conservan y el grafo productivo es idéntico. Sin majors,
+dependencias nuevas, overrides permanentes ni cambios de runtime.
+
+Referencias primarias consultadas:
+
+- [Vite: rutas fuera de `server.fs.allow`](https://github.com/vitejs/vite/security/advisories/GHSA-rq7h-c2jc-7f22),
+  condicionado a servidor de desarrollo alcanzable y coincidencia de rutas en
+  hosts no Windows.
+- [Vitest: URL de mock manual como código](https://github.com/vitest-dev/vitest/security/advisories/GHSA-qxg6-89mg-rqv8)
+  y [bypass por backslash en Windows](https://github.com/vitest-dev/vitest/security/advisories/GHSA-xp26-3454-mjgp).
+  Lumapse no registra esos plugins como servidor de la app; el APK no los ejecuta.
+
+La auditoría inicial también listaba los demás avisos de Vite corregidos por
+6.4.4; sus condiciones no se prueban aquí. La configuración del proyecto no
+declara `server.host` ni middleware personalizado. Esto limita aplicabilidad,
+no justifica conservar dependencias afectadas.
+
+Tres regresiones nuevas usan solo fixtures: permiso de archivo externo en Vite,
+normalización de redirect y URL manual tratada como dato en Vitest. Fallaron en
+las versiones iniciales; las cuatro regresiones anteriores del mocker siguen
+pasando. No se abren puertos, no se leen archivos reales externos ni se simula
+una ejecución nativa Windows. En POSIX el bypass inicial intenta leer un nombre
+literal con backslash y falla con ENOENT: eso no es prueba de exfiltración Windows.
+
+npm 10.9.3 reprodujo el fallo previo de Arborist (`edgesOut`) al explorar peers
+opcionales fuera del objetivo. Se generó el candidato en un temporal con pins
+exactos y override temporal de Vite; se retiró el override, restauraron rangos,
+validó instalación normal del lock y exigió la diferencia estructural mínima
+antes de adoptarlo. `npm ci` normal y `npm ls --all --json` pasan. No se usaron
+`audit fix`, `--force`, `--legacy-peer-deps` ni otro npm.
+
+## Verificación del cambio
+
+Con Node/npm canónicos:
+
+```bash
+npm ci
+npm ls --all --json
+node --test tests/tooling/rnf-021-contrast.test.js tests/tooling/vitest-mocker.test.js tests/tooling/vite-file-allowlist.test.js
+npm audit --json
+npm audit --omit=dev --json
+npm run verify
+npm run test:coverage -- --maxWorkers=1 --allowOnly=false
+git diff --check
+```
+
+| Control | Resultado |
+|---|---|
+| Regresiones focalizadas antes → después | 14 PASS/6 FAIL → **20/20 PASS**; incluye el guard existente ampliado y cinco casos nuevos |
+| Auditoría completa antes → después | 4 paquetes afectados → **0** |
+| Auditoría de producción antes → después | **0 → 0** |
+| Gate completo inicial, antes de las regresiones nuevas | PASS; no sustituye el gate final |
+| Gate completo del código corregido | PASS, 79 archivos/1211 tests de app y 97 de tooling; tres warnings previos de lint, cero errores. Repetición documental final pendiente |
+| Coverage de servicios | **96,06% statements (2095/2181)** en 42 archivos de `src/services/**`, JS/TS y subdirectorios incluidos; supera el 70%. Suite 1211/1211 PASS |
+| Android del debug corregido | Pendiente de registrar tras instalación/recorrido |
+
+## No negociables y decisión de corte
+
+La propuesta para que esta sea la última rama técnica antes del corte se limita a:
+
+1. **Sin bloqueantes confirmados** de pérdidas, corrupción, duplicación, núcleo
+   offline, seguridad o privacidad abiertos. No equivale a ausencia universal de bugs.
+2. **Controles sobre la fuente candidata:** `verify` completo, auditorías completa
+   y productiva sin vulnerabilidades conocidas pendientes y coverage de servicios
+   ≥70%; repetir en el corte, sin heredar cifras como nuevas.
+3. **Límites explícitos:** aceptar PC-02 a PC-08 con su impacto visible, sin
+   marcar RNF-020 como verificado ni certificar accesibilidad exhaustiva.
+4. **APK nuevo autorizado e inequívoco:** acordar versión/code nuevos, fuente,
+   canal, firma y SHA-256; preservar las betas publicadas. Este PR no genera ese corte.
+5. **Validar y aceptar ese binario exacto:** instalación/apertura, núcleo offline,
+   conservación de datos/borrador, organización/búsqueda, fechas y ZIP local;
+   repetir tráfico/trackers de RNF-012/013 y los casos afectados por cambios.
+   Registrar la aceptación del autor; no repetir investigaciones de tareas cerradas.
+
+Tras eso corresponde congelar desarrollo y trabajar en manual, matriz, informe y
+defensa sobre el mismo APK. No hace falta abrir otra rama de mejoras por rutina.
+Las métricas CRUD/FPS y RNF-005 conservan sus tratamientos ya acordados; ninguna
+otra ausencia se considera diferida por silencio.
+
+### Aceptación pendiente del autor
+
+- [ ] Revisar el PR y comprobar «Agregar fecha» en ambos temas, incluido retorno
+  desde el diálogo; confirmar funcionamiento general del debug.
+- [ ] Aceptar expresamente los límites PC-02 a PC-08 y los cinco criterios de corte.
+- [ ] Autorizar integración, si corresponde; **sin auto-merge**.
+- [ ] Después de integrar, acordar versión y autorizar la preparación del candidato.
+
+No se registra todavía aceptación manual, merge, congelación ni APK final.

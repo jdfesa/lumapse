@@ -10,6 +10,12 @@
 
 **Responsable:** autor del proyecto, con asistencia técnica; la aceptación y el merge requieren su autorización.
 
+**Seguimiento vigente — 2026-10-22:** la [revisión precorte](./revision-precorte-2026-10-22.md)
+clasifica observaciones y propone cinco mínimos concretos antes del candidato,
+sin inventar otra fase F4 ni retomar lo diferido. Su aceptación y la versión/generación
+del APK final siguen pendientes. La base inspeccionada original de este plan se
+conserva como evidencia histórica, no como HEAD actual.
+
 ## 1. Decisión aceptada
 
 Trabajar en **tres entregables secuenciales y revisables**: hacer reproducible la verificación sobre Node 22.20.0/npm 10.9.3, corregir una ambigüedad de guardado confirmada y medir/validar el núcleo en Android. No agregar funcionalidades ni cambiar de arquitectura.

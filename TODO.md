@@ -16,6 +16,14 @@
 
 ## Prioridad inmediata — plan aceptado
 
+**Revisión precorte — 2026-10-22:** `test/pre-cut-acceptance` reúne la
+[clasificación y los cinco criterios concretos de corte](docs/gestion/revision-precorte-2026-10-22.md).
+Se corrige únicamente el hover de «Agregar fecha» y el tooling afectado de
+Vite/Vitest; no se retoman tareas diferidas. La revisión ADR está documentada.
+La aceptación de límites menores, la revisión Android del autor y el merge siguen
+pendientes; no se ha generado ni autorizado el APK final. Objetivo: última rama
+técnica antes de preparar el candidato, si se aceptan sus resultados y límites.
+
 **Revisión acotada aceptada — RNF-019 (2026-10-20):** resolver el método y la
 evidencia de Lighthouse Accessibility en `test/rnf-019-lighthouse-accessibility`,
 con [alcance, preparación y criterios](docs/gestion/validacion-lighthouse-rnf-019-2026-10-20.md).
@@ -23,9 +31,9 @@ Medición técnica completada: 40 snapshots en ambos temas (96–100/100) del de
 `92deffd`, etiquetas corregidas y datos conservados. El autor aprobó el
 [PR #40](https://github.com/jdfesa/lumapse/pull/40) y autorizó merge a `main` y
 limpieza de sus ramas integradas. Aceptación general con los límites documentados,
-sin nuevas pruebas manuales por caso ni autorización del APK final. La clasificación
-de observaciones antes del corte sigue pendiente; no se reformula la métrica ni
-se abren otras correcciones automáticamente.
+sin nuevas pruebas manuales por caso ni autorización del APK final. Las observaciones
+se clasifican en la revisión precorte indicada arriba; su aceptación expresa sigue
+pendiente, sin reformular la métrica ni abrir más correcciones automáticamente.
 
 **Revisión acotada aceptada — RNF-020 (2026-10-19):** navegación por teclado en
 [PR #39](https://github.com/jdfesa/lumapse/pull/39), con [plan, evidencia y límites](docs/gestion/validacion-teclado-rnf-020-2026-10-19.md).
@@ -142,10 +150,14 @@ con muestras y umbrales conservados. No se harán más pilotos en este frente.
 - [x] Medir y corregir contraste de texto en ambos temas (`RNF-021`): [208 fixtures, placeholders y recorridos Android](docs/gestion/validacion-contraste-rnf-021-2026-10-12.md) ≥4,5:1 en el debug `803947e`; el autor aceptó PR #37 y autorizó merge/limpieza, sin nuevas pruebas por caso ni transferencia al APK final.
 - [x] Verificar nombres/alternativas accesibles (`RNF-022`): [24 escenas y 2188 muestras AX](docs/gestion/validacion-nombres-accesibles-rnf-022-2026-10-13.md) del debug `b7c3d31`, con correcciones mínimas y datos conservados. El autor aceptó [PR #38](https://github.com/jdfesa/lumapse/pull/38) y autorizó merge/limpieza; aceptación general sin nuevas pruebas por caso. No verifica TalkBack, teclado/Lighthouse ni el APK final.
 - [x] Ejecutar la revisión acotada de teclado (`RNF-020`): [16 casos PASS y límites](docs/gestion/validacion-teclado-rnf-020-2026-10-19.md) en debug `538c906`; evidencia parcial conservada, sin teclado físico ni mutaciones completas. El autor revisó y aprobó PR #39 y autorizó merge/limpieza; aceptación general sin nuevas pruebas por caso ni autorización del corte.
-- [x] Ejecutar la medición de `RNF-019`: [40 snapshots Lighthouse 96–100/100](docs/gestion/validacion-lighthouse-rnf-019-2026-10-20.md) en el WebView del debug `92deffd`, ambos temas y sin errores de Lighthouse. Se conserva el umbral ≥90, con hallazgos de controles cubiertos y revisión incompleta explícitos; el autor aprobó PR #40 y autorizó merge/limpieza, sin nuevas pruebas por caso ni certificar accesibilidad global o el APK final. La clasificación de observaciones antes del corte sigue pendiente.
-- [ ] Clasificar los hallazgos: resolver bloqueantes confirmados y someter las observaciones menores o la evidencia incompleta a aceptación explícita, sin ampliar automáticamente el producto ni postergar otros RNF.
+- [x] Ejecutar la medición de `RNF-019`: [40 snapshots Lighthouse 96–100/100](docs/gestion/validacion-lighthouse-rnf-019-2026-10-20.md) en el WebView del debug `92deffd`, ambos temas y sin errores de Lighthouse. Se conserva el umbral ≥90, con hallazgos de controles cubiertos y revisión incompleta explícitos; el autor aprobó PR #40 y autorizó merge/limpieza, sin nuevas pruebas por caso ni certificar accesibilidad global o el APK final. La clasificación posterior está en el [reporte de precorte](docs/gestion/revision-precorte-2026-10-22.md); aceptación de límites pendiente.
+- [x] Clasificar observaciones Lighthouse/teclado y revisar trazabilidad ADR: [evidencia y tratamiento PC-01–10](docs/gestion/revision-precorte-2026-10-22.md), sin reabrir lo diferido.
+- [ ] Revisar/aceptar el PR de precorte, el debug corregido y los límites PC-02 a PC-08; resolver cualquier bloqueante confirmado antes de integrar. La clasificación no equivale a aceptación.
 
 ### Corte APK final — artefacto de presentación
+
+Aplicar los [cinco no negociables](docs/gestion/revision-precorte-2026-10-22.md#no-negociables-y-decisión-de-corte),
+una vez aceptada e integrada la revisión precorte. No abrir otra ronda de mejoras por rutina.
 
 - [ ] Repetir `npm run verify`, auditorías completa/productiva y coverage de servicios en el corte candidato; registrar resultados reales, no reutilizar cifras históricas como mediciones nuevas.
 - [ ] Generar y validar el nuevo APK autorizado (objetivo `0.6.0+`); fijar fuente, versión/code, canal, firma y hash, preservar las betas publicadas y registrar la revisión Android pertinente sobre ese binario exacto.

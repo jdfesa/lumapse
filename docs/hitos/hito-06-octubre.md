@@ -39,6 +39,12 @@ umbrales; no se exige otra cámara/dispositivo ni se continúan pilotos. Los dem
 RNF, la validación funcional y los controles de seguridad no quedan postergados
 por esa decisión; RNF-005 sigue el ajuste posterior del 2026-10-12.
 
+**Revisión precorte — 2026-10-22:** [clasificación y criterios finitos](../gestion/revision-precorte-2026-10-22.md)
+en `test/pre-cut-acceptance`, con ajuste localizado de contraste y parches mínimos
+de tooling; RNF-026 revisado documentalmente. Se propone como última rama técnica
+antes de preparar el candidato. Los límites PC-02 a PC-08, revisión del teléfono y
+merge requieren aceptación expresa; no se declara congelación ni APK final.
+
 ## Punto de Partida
 
 - Hitos 00 a 05 cerrados documentalmente.
@@ -91,7 +97,7 @@ por esa decisión; RNF-005 sigue el ajuste posterior del 2026-10-12.
 - [x] Medir y corregir contraste de texto (`RNF-021`) en ambos temas del debug `803947e`; [evidencia, aceptación y límites](../gestion/validacion-contraste-rnf-021-2026-10-12.md). El autor aceptó PR #37 y autorizó merge/limpieza el 2026-10-12, sin nuevas pruebas manuales por caso ni transferencia al APK final.
 - [x] Verificar nombres/alternativas (`RNF-022`) en el debug `b7c3d31`: [24 escenas/2188 muestras AX y límites](../gestion/validacion-nombres-accesibles-rnf-022-2026-10-13.md), datos conservados. El autor aceptó [PR #38](https://github.com/jdfesa/lumapse/pull/38) y autorizó merge/limpieza, sin nuevas pruebas por caso; no acredita TalkBack, teclado/Lighthouse ni el APK final.
 - [x] Ejecutar revisión acotada de teclado (`RNF-020`): [16 casos PASS en debug `538c906`](../gestion/validacion-teclado-rnf-020-2026-10-19.md), correcciones reproducidas y datos/borrador conservados. Evidencia parcial por falta de teclado físico y mutaciones completas; el autor revisó y aprobó [PR #39](https://github.com/jdfesa/lumapse/pull/39) y autorizó merge/limpieza. Aceptación general, sin nuevas pruebas por caso ni autorización del APK final.
-- [x] Medir `RNF-019` con Lighthouse real: [40 snapshots 96–100/100](../gestion/validacion-lighthouse-rnf-019-2026-10-20.md) en ambos temas del debug `92deffd`, umbral ≥90 conservado. Etiquetas corregidas con autorización, gate/Android y datos preservados; observaciones y límites explícitos. El autor aprobó [PR #40](https://github.com/jdfesa/lumapse/pull/40) y autorizó merge/limpieza; aceptación general sin nuevas pruebas por caso ni certificar accesibilidad exhaustiva o el APK final. La clasificación de observaciones antes del corte sigue pendiente.
+- [x] Medir `RNF-019` con Lighthouse real: [40 snapshots 96–100/100](../gestion/validacion-lighthouse-rnf-019-2026-10-20.md) en ambos temas del debug `92deffd`, umbral ≥90 conservado. Etiquetas corregidas con autorización, gate/Android y datos preservados; observaciones y límites explícitos. El autor aprobó [PR #40](https://github.com/jdfesa/lumapse/pull/40) y autorizó merge/limpieza; aceptación general sin nuevas pruebas por caso ni certificar accesibilidad exhaustiva o el APK final. La clasificación posterior está en el [reporte de precorte](../gestion/revision-precorte-2026-10-22.md), con aceptación de límites pendiente.
 - [x] OFF-01–05 de `RNF-009` PASS en [debug `348da88` identificado](../beta-core-validation/offline-2026-10-06.md), con fix del ZIP local y datos preservados; autor aceptó [PR #31](https://github.com/jdfesa/lumapse/pull/31) y autorizó merge/limpieza, sin transferencia al APK final.
 - [x] `RNF-010`: continuidad SQLite verificada y aceptada en [PR #29](https://github.com/jdfesa/lumapse/pull/29); [evidencia y límites](../beta-core-validation/continuidad-2026-10-04.md). No repetir la tarea cerrada ni trasladar automáticamente sus pruebas a un APK nuevo.
 - [x] Revalidar dependencias tras el advisory crítico de Capacitor: `@capacitor/android`/`core` 8.5.2 y `source-map-js` 1.2.2, auditorías completa/productiva 0/0. [Evidencia y límites](../gestion/validacion-parche-capacitor-2026-10-07.md).
@@ -99,7 +105,9 @@ por esa decisión; RNF-005 sigue el ajuste posterior del 2026-10-12.
 - [x] Incorporar TypeScript al reporte de coverage y volver a medir `RNF-024`: 92,43% de statements en `src/services/**` sobre la fuente actual (2026-08-21); repetir en el commit candidato para la matriz final.
 - [ ] Confirmar o reformular los RNF obsoletos/no aplicables sin reutilizar evidencia PWA para el APK.
 - [ ] Emitir una matriz final con RNF, método, comando, dispositivo, fecha, artefacto, resultado y evidencia.
-- [ ] Clasificar cada hallazgo como bloqueante, mejora menor aceptada o trabajo post-defensa.
+- [x] Revisar RNF-026 mediante [inventario de decisiones/ADR y temporalidad](../adr/README.md#revisión-de-trazabilidad-precorte--2026-10-22).
+- [x] Clasificar hallazgos pendientes en [PC-01–10](../gestion/revision-precorte-2026-10-22.md), sin dar por aceptadas las propuestas.
+- [ ] Recibir aceptación expresa de los límites menores y de los criterios de corte, tras revisar el PR/debug de precorte.
 
 ### 4. Presentación y defensa
 
