@@ -15,7 +15,8 @@
 - [x] Regresiones focalizadas 20/20 tras los parches mínimos; auditorías completa/productiva en cero.
 - [x] Registrar el incidente PC-11: firma distinta, fallback de desinstalación y datos borrados; recuperación autorizada con tablas/borrador/preferencias exactamente iguales al estado anterior.
 - [x] Proteger el script: sin `native-run`, certificados comprobados y ADB sin fallback; ocho regresiones sintéticas PASS.
-- [ ] Validar actualización compatible con datos recuperados y registrar revisión Android final del debug corregido.
+- [x] Actualizar con script protegido: debug limpio `e0700f6`, hash compilado/instalado iguales y certificado debug nuevo identificado; 82/30/20/2 filas, borrador y preferencias conservados por hash/valor. No equivale a actualización de release.
+- [x] Recorrido definitivo exit 0: seis snapshots Lighthouse 100/100 en ambos temas; contraste tras Escape 8,82:1 oscuro/6,29:1 claro, foco/menús y estado final conservados. Artefacto y límites en el reporte.
 - [ ] Recibir revisión del autor y aceptación explícita de límites PC-02 a PC-08, separadas del APK final y del merge.
 
 ## Lighthouse Accessibility — RNF-019 — 2026-10-20

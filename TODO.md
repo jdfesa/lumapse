@@ -21,7 +21,7 @@
 Se corrigen el hover de «Agregar fecha» y el tooling afectado de Vite/Vitest.
 El incidente de firma/desinstalación PC-11 motivó una ampliación expresa: datos
 recuperados por hash y protección del script contra borrados implícitos; actualización
-compatible a comprobar. No se retoman tareas diferidas. La revisión ADR está documentada.
+compatible comprobada, con tablas/borrador/preferencias conservados. No se retoman tareas diferidas. La revisión ADR está documentada.
 La aceptación de límites menores, la revisión Android del autor y el merge siguen
 pendientes; no se ha generado ni autorizado el APK final. Objetivo: última rama
 técnica antes de preparar el candidato, si se aceptan sus resultados y límites.
@@ -154,7 +154,7 @@ con muestras y umbrales conservados. No se harán más pilotos en este frente.
 - [x] Ejecutar la revisión acotada de teclado (`RNF-020`): [16 casos PASS y límites](docs/gestion/validacion-teclado-rnf-020-2026-10-19.md) en debug `538c906`; evidencia parcial conservada, sin teclado físico ni mutaciones completas. El autor revisó y aprobó PR #39 y autorizó merge/limpieza; aceptación general sin nuevas pruebas por caso ni autorización del corte.
 - [x] Ejecutar la medición de `RNF-019`: [40 snapshots Lighthouse 96–100/100](docs/gestion/validacion-lighthouse-rnf-019-2026-10-20.md) en el WebView del debug `92deffd`, ambos temas y sin errores de Lighthouse. Se conserva el umbral ≥90, con hallazgos de controles cubiertos y revisión incompleta explícitos; el autor aprobó PR #40 y autorizó merge/limpieza, sin nuevas pruebas por caso ni certificar accesibilidad global o el APK final. La clasificación posterior está en el [reporte de precorte](docs/gestion/revision-precorte-2026-10-22.md); aceptación de límites pendiente.
 - [x] Clasificar observaciones Lighthouse/teclado y revisar trazabilidad ADR: [evidencia y tratamiento PC-01–10](docs/gestion/revision-precorte-2026-10-22.md), sin reabrir lo diferido.
-- [ ] Cerrar PC-11: validar el instalador protegido mediante actualización compatible sin pérdida de tablas, borrador ni preferencias; registrar artefacto exacto.
+- [x] Cerrar técnicamente PC-11: instalador protegido y actualización debug compatible sin pérdida de tablas, borrador ni preferencias; [artefacto/evidencia](docs/gestion/revision-precorte-2026-10-22.md#debug-definitivo-y-comprobación-posterior-a-la-recuperación). La actualización del candidato firmado sigue siendo obligatoria.
 - [ ] Revisar/aceptar el PR de precorte, el debug corregido y los límites PC-02 a PC-08; resolver cualquier bloqueante confirmado antes de integrar. La clasificación no equivale a aceptación.
 
 ### Corte APK final — artefacto de presentación
@@ -186,8 +186,8 @@ una vez aceptada e integrada la revisión precorte. No abrir otra ronda de mejor
 
 Las mediciones CRUD/FPS, los refactors y las demás mejoras no comprometidas quedan
 en el [backlog postdefensa](BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa), no como
-una lista adicional de trabajo inmediato. La revisión acotada de otros RNF sigue
-pendiente: cualquier limitación o postergación nueva exige una decisión explícita.
+una lista adicional de trabajo inmediato. La aceptación de los límites precorte y los controles del candidato siguen
+pendientes: cualquier limitación o postergación nueva exige una decisión explícita.
 
 ## Criterios de salida de Hito 06
 

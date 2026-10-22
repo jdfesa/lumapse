@@ -105,7 +105,7 @@ ampliado expresamente por el autor, sin aceptar pérdida de datos por ser beta.
 - [x] Revalidar dependencias tras el advisory crítico de Capacitor: `@capacitor/android`/`core` 8.5.2 y `source-map-js` 1.2.2, auditorías completa/productiva 0/0. [Evidencia y límites](../gestion/validacion-parche-capacitor-2026-10-07.md).
 - [x] Registrar tráfico de red y revisar trackers durante los flujos capturados (`RNF-012`, `RNF-013`): [PASS en debug `0.5.0/500`, 2026-10-07](../gestion/validacion-trafico-trackers-2026-10-07.md). Repetir sobre el APK candidato final; la remediación de dependencias no sustituye esta evidencia.
 - [x] Incorporar TypeScript al reporte de coverage y volver a medir `RNF-024`: 92,43% de statements en `src/services/**` sobre la fuente actual (2026-08-21); repetir en el commit candidato para la matriz final.
-- [ ] Confirmar o reformular los RNF obsoletos/no aplicables sin reutilizar evidencia PWA para el APK.
+- [x] Confirmar en la revisión precorte los RNF obsoletos/no aplicables contra ADR-005/006 y el canal APK, sin reutilizar evidencia PWA ni modificar métricas.
 - [ ] Emitir una matriz final con RNF, método, comando, dispositivo, fecha, artefacto, resultado y evidencia.
 - [x] Revisar RNF-026 mediante [inventario de decisiones/ADR y temporalidad](../adr/README.md#revisión-de-trazabilidad-precorte--2026-10-22).
 - [x] Clasificar hallazgos pendientes en [PC-01–10](../gestion/revision-precorte-2026-10-22.md), sin dar por aceptadas las propuestas.

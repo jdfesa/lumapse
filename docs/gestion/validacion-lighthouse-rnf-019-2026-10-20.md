@@ -5,8 +5,9 @@
 **Base:** `ee55b2684c8dc94389c4d61abe1b3c9102380583`<br>
 **Estado:** RNF-019 verificado técnicamente para la métrica y el alcance registrados;
 el autor aprobó el [PR #40](https://github.com/jdfesa/lumapse/pull/40) y autorizó
-merge a `main` y limpieza de sus ramas integradas. La clasificación de las
-observaciones antes del corte sigue pendiente; no autoriza APK final.
+merge a `main` y limpieza de sus ramas integradas. La clasificación posterior está
+en el [precorte del 2026-10-22](revision-precorte-2026-10-22.md), con aceptación de
+límites pendiente; no autoriza APK final.
 
 ## Objetivo y alcance acordados
 

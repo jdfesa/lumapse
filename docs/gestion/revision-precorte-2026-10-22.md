@@ -2,7 +2,7 @@
 
 **Rama:** `test/pre-cut-acceptance`<br>
 **Base:** `7adea77dd9f9b4a009c4b9d90440bee3af6b48f8`<br>
-**Estado:** clasificación y correcciones mínimas en revisión; aceptación del autor
+**Estado:** clasificación, correcciones y validación técnica completadas; aceptación del autor
 y corte APK pendientes. No es una release ni una autorización de merge.
 
 ## Objetivo, alcance y aceptación
@@ -23,6 +23,7 @@ publicación y generación del APK de presentación.
 antes de seguir y autorizó corregir los scripts utilizados, explicando la causa.
 Se añade la protección de despliegue PC-11 y la prueba de actualización compatible;
 no se acepta como normal una pérdida involuntaria por tratarse de una beta.
+La decisión de tooling adicional queda en [ADR-013](../adr/ADR-013-despliegue-android-sin-desinstalacion-implicita.md).
 
 Pruebas: reproducción y regresiones rojo/verde, auditorías actuales, gate completo,
 coverage de servicios y revisión Android proporcional sobre debug identificado.
@@ -65,7 +66,7 @@ a aprobado. Esta tabla distingue reproducción, impacto y decisión pendiente.
 | PC-08 | RNF-020: los 16 casos registrados usan entrada ADB/CDP; no hubo teclado físico ni ensayo completo de mutaciones. En esta revisión 12 Tab por tema permanecieron dentro del diálogo y Escape devolvió foco a «Agregar fecha». | Mantener **Evidencia parcial**. Propuesta de aceptar ese alcance para presentación Android, sin afirmar teclado completo ni abrir más pilotos. |
 | PC-09 | RNF-026: inventario de decisiones, código e historia contrastados, con ADR retrospectivos identificados. | Revisión documental completada en el [índice ADR](../adr/README.md#revisión-de-trazabilidad-precorte--2026-10-22); no crea decisiones ni reconstruye fechas. |
 | PC-10 | Auditoría actual: cuatro paquetes de tooling afectados (tres moderados/un alto); producción en cero. | Parche mínimo de Vite/Vitest en esta rama; no presentar estos advisories de desarrollo como explotación del APK. |
-| PC-11 | El despliegue anterior delegaba en `native-run`, que desinstala/reinstala ante firma distinta o downgrade. El debug nuevo tenía otra firma y desaparecieron los datos locales. | Bloqueo operativo confirmado: corregir el instalador, recuperar datos y probar actualización compatible con hashes conservados antes del cierre. No es una observación menor aceptable. |
+| PC-11 | El despliegue anterior delegaba en `native-run`, que desinstala/reinstala ante firma distinta o downgrade. El debug nuevo tenía otra firma y desaparecieron los datos locales. | Bloqueo operativo confirmado: Instalador protegido y recuperación/actualización compatible verificadas con hashes conservados. Cierre técnico comprobado; revisión del autor y actualización de release pendientes. No es una observación menor aceptable. |
 
 Las propuestas de aceptación **no son postergaciones aprobadas**. El autor debe
 aceptarlas o indicar un caso concreto que impida el corte. No se deriva de ellas
@@ -138,9 +139,9 @@ git diff --check
 | Auditoría completa antes → después | 4 paquetes afectados → **0** |
 | Auditoría de producción antes → después | **0 → 0** |
 | Gate completo inicial, antes de las regresiones nuevas | PASS; no sustituye el gate final |
-| Gate completo del código corregido | PASS, 79 archivos/1211 tests de app y 97 de tooling; tres warnings previos de lint, cero errores. Repetición documental final pendiente |
+| Gate completo con protección de despliegue | PASS, 79 archivos/1211 tests de app y **105 de tooling**; tres warnings previos de lint, cero errores. Repetido al cierre con el mismo resultado; enlaces 111 Markdown/1006 referencias y trazabilidad sin errores |
 | Coverage de servicios | **96,06% statements (2095/2181)** en 42 archivos de `src/services/**`, JS/TS y subdirectorios incluidos; supera el 70%. Suite 1211/1211 PASS |
-| Android del debug corregido | Pendiente de registrar tras instalación/recorrido |
+| Android del debug corregido | Actualización compatible y recorrido en ambos temas PASS en el binario identificado abajo; datos/borrador/preferencias conservados tras recuperación |
 
 ## Incidente de despliegue y recuperación
 
@@ -193,7 +194,63 @@ Un harness adicional usa los dos APK reales (firmas distintas), `apksigner` real
 y ADB limitado a lectura; el script aborta por incompatibilidad **sin emitir
 ninguna llamada install/uninstall**. El build de ese harness usa el APK anterior
 como fixture y no se presenta como una instalación real. La comprobación nativa
-compatible posterior sigue pendiente de registrar.
+compatible posterior pasa y se identifica a continuación.
+
+## Debug definitivo y comprobación posterior a la recuperación
+
+- **Fuente limpia:** `e0700f6c36c5a3187a9f0b9ef4c14d8c0e781127`, confirmada en
+  Acerca de como Android debug · prueba privada, sin cambios locales.
+- **Versión/code:** `0.5.0/500`; no es el asset de GitHub ni un candidato de release.
+- **SHA-256 compilado e instalado, iguales:**
+  `0fd3f92922b4cebb93d338c20f4fc7d82f7b21476aa712685ffcb051fdb85542`.
+- **Certificado SHA-256:**
+  `c03d6fa99cbce0709aa711e2ae95b7f81e0eae17e1aff0c788bf7270b9d8d093`.
+  Es el certificado del debug nuevo del incidente, **no** el original ni una
+  identidad de firma aprobada para distribución.
+- **Actualización real con script corregido:** exit 0, Gradle/ADB sin `--clean`,
+  sin desinstalación; `firstInstallTime` permanece `2026-10-22 12:26:07` y
+  `lastUpdateTime` pasa a `12:48:28` (Argentina). Antes/después coinciden hashes
+  de las cuatro tablas, borrador y preferencias; 82/30/20/2 filas conservadas.
+  Esto verifica actualización debug compatible, no desde la beta firmada pública.
+
+Se repitieron calendario, diálogo, retorno con Escape y menús en ambos temas
+sobre ese binario. Se midió contraste con colores computados y composición alfa,
+con el helper sRGB ya probado; Lighthouse usa las mismas versiones y opciones
+sin emulación, recarga ni limpieza de storage del [método RNF-019](validacion-lighthouse-rnf-019-2026-10-20.md#método-ejecutado-y-reproducción).
+Los snapshots son **seis nuevos**, no una repetición de las cuarenta escenas.
+
+| Tema | Escena | Ratio «Agregar fecha» | Lighthouse | Puntos libres del botón |
+|---|---|---:|---:|---:|
+| Oscuro | Antes de abrir diálogo | 6,50:1 | 100 | 9/9 |
+| Oscuro | Diálogo abierto, botón subyacente | 8,82:1 | 100 | 0/9 |
+| Oscuro | Diálogo cerrado con Escape, hover/foco persistentes | 8,82:1 | 100 | 9/9 |
+| Claro | Antes de abrir diálogo | 5,19:1 | 100 | 9/9 |
+| Claro | Diálogo abierto, botón subyacente | 6,29:1 | 100 | 0/9 |
+| Claro | Diálogo cerrado con Escape, hover/foco persistentes | 6,29:1 | 100 | 9/9 |
+
+Sin errores de runtime/auditoría ni avisos Lighthouse en los seis snapshots.
+Se revisaron visualmente las dos capturas tras Escape. Doce Tab por tema
+permanecieron dentro del diálogo y Escape retornó a «Agregar fecha». Tras cerrar
+los menús y esperar su transición, los dos botones de tarjeta recuperan 9/9
+puntos libres en ambos temas; no cambia su geometría de 28×28 ni se ejecutan
+mutaciones de notas/fechas. PC-02 a PC-08 conservan los límites propuestos.
+
+El runner definitivo terminó en exit 0. Al finalizar se retiró únicamente la
+preferencia de tema introducida por la prueba y el forward ADB propio; Entrada,
+tema oscuro y posición inicial restaurados. Tras consultar Acerca de y volver,
+se comprobó otra vez igualdad completa con la referencia **anterior al incidente**
+de tablas, borrador y localStorage. No queda pantalla de error de arranque.
+
+Una ejecución intermedia del gate rechazó la aserción histórica que exigía
+literalmente `cap run` en la prueba de metadata. Se actualizó para exigir canal
+debug, ADB sin fallback y ausencia de release; los controles no se omitieron.
+La suite de instalador/metadata pasa 15/15 y el gate completo posterior 105/1211.
+Las evidencias privadas permanecen ignoradas bajo `tmp/pre-cut-acceptance-2026-10-22/`;
+no se versionan bases, borradores, claves, APK ni capturas con contenido.
+
+Se confirmaron también, contra ADR-005/006 y el canal APK actual, los RNF obsoletos
+001/011/017 y no aplicables al APK 014/015/016; no se cambiaron criterios ni se
+reutilizaron pruebas de hosting/PWA. La matriz final se emitirá sobre el candidato.
 
 ## No negociables y decisión de corte
 
@@ -217,6 +274,11 @@ La propuesta para que esta sea la última rama técnica antes del corte se limit
    conservación de datos/borrador, organización/búsqueda, fechas y ZIP local;
    repetir tráfico/trackers de RNF-012/013 y los casos afectados por cambios.
    Registrar la aceptación del autor; no repetir investigaciones de tareas cerradas.
+
+**Recomendación técnica:** esta puede ser la última rama de correcciones previa
+al corte. PC-01, PC-10 y PC-11 tienen tratamiento técnico verificado; no se
+identificó otro bloqueante confirmado en el alcance revisado. Esto no sustituye
+la aceptación de límites ni los controles/actualización del candidato firmado.
 
 Tras eso corresponde congelar desarrollo y trabajar en manual, matriz, informe y
 defensa sobre el mismo APK. No hace falta abrir otra rama de mejoras por rutina.
