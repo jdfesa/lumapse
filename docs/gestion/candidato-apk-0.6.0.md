@@ -3,8 +3,9 @@
 **Fecha:** 2026-10-22<br>
 **Rama:** `chore/presentation-rc1`<br>
 **Base integrada:** `9ab9c006bc38dd59d9e275968aa583a3ba1e56b6` (PR #41)<br>
-**Estado:** APK local generada y firmada; controles de fuente, firma y contenido
-aprobados. Validación Android, aceptación, tag y publicación pendientes.
+**Estado:** APK firmada instalada mediante actualización desde la beta pública;
+apertura y conservación del conjunto de prueba verificadas. Resto de validación
+Android, aceptación, tag y publicación pendientes.
 
 ## Objetivo y alcance acordados
 
@@ -18,8 +19,12 @@ temporal privado fuera del repositorio. La identidad pública del certificado se
 comprobó contra la [beta publicada](firma-apk-android.md#resultado-publicado-050);
 no se creó ni sustituyó una clave. No se versionan secretos ni sus ubicaciones.
 
-Quedan fuera publicación, creación de tag, merge, instalación en dispositivo,
-desinstalación y cambios de datos. Los permisos necesarios se solicitan aparte.
+La autorización inicial no incluía instalación, desinstalación ni cambios de datos.
+Después, el autor autorizó preparar el teléfono retirando la debug de prueba,
+instalar la APK pública `0.5.0`, crear datos representativos y actualizar a esta
+RC1 sin borrar ni restaurar entre versiones. La retirada inicial de la debug es
+preparación del banco, no un paso del procedimiento del usuario final.
+Continúan fuera publicación, creación de tag y merge.
 Las betas publicadas no se reemplazan. El título previsto para una eventual
 publicación es `Lumapse v0.6.0 — Release Candidate 1`, tag `v0.6.0`, marcada
 **Pre-release**; esto no acredita que existan el tag o la publicación.
@@ -96,17 +101,96 @@ No se empaquetaron la keystore ni su configuración. No se abrió Acerca de en u
 teléfono: la verificación de metadata anterior es estática sobre el binario.
 Los commits posteriores de evidencia documental no cambian la fuente ni ese APK.
 
+## Actualización pública 0.5.0 a 0.6.0 — 2026-10-22
+
+**Resultado:** PASS en Samsung SM-G965F, Android 10. Es una prueba real entre
+binarios firmados de distribución, no un debug equivalente ni una restauración
+posterior a una instalación limpia.
+
+### Preparación y ejecución
+
+1. Descargar el asset oficial `lumapse-v0.5.0.apk` de la release publicada;
+   comprobar su SHA-256 `d48338e04021a6096fcaeaced5fde411911d403c9ea95407891d2b034515a884`,
+   versión/code `0.5.0/500`, ausencia de depuración y certificado igual al candidato.
+2. Retirar la debug anterior y sus datos de prueba, con autorización expresa del
+   autor. Instalar la pública `0.5.0` y extraer su APK instalada: hash idéntico al asset.
+3. Crear desde la UI cinco notas, incluida una fijada, una archivada, una en
+   papelera y una organizada con Markdown; una materia con sección y color elegido;
+   una fecha académica; un borrador de creación sin guardar como nota y tema claro.
+4. Fijar la referencia: copia SQLite consistente cuyo hash coincide con el
+   original del teléfono, filas completas, relaciones y JSON de borrador persistido
+   en el almacenamiento legado. No se inyectó SQL ni se importaron fixtures.
+5. Ejecutar únicamente la actualización del candidato exacto:
+
+   ```bash
+   adb -s <dispositivo> install -r releases/v0.6.0/lumapse-v0.6.0.apk
+   ```
+
+   Resultado `Success`, sin fallback. Extraer el APK instalado: SHA-256 idéntico
+   al candidato de la tabla anterior. Abrir la app y comparar datos y capturas.
+
+Desde la referencia pública no se ejecutaron desinstalación, limpieza de datos,
+importación ni restauración. No hubo recompilación ni cambios de código del producto.
+La fecha de primera instalación permanece `2026-10-22 14:50:31` y el UID de la app
+es el mismo; `lastUpdateTime` cambia a `2026-10-22 15:19:01` (reloj del dispositivo).
+
+### Comparación antes y después
+
+| Datos | Antes → después | Comprobación |
+|---|---|---|
+| Notas | 5 → 5 | Todas las columnas idénticas: contenido, IDs, fechas, materia/sección, pin, archivo y papelera |
+| Materia y sección | 2 → 2 | Filas completas, relación padre/hija y color idénticos |
+| Fecha académica | 1 → 1 | Fila completa, tipo, fecha, título y asociación idénticos |
+| Metadata anterior | 1 → 1 conservada | `indexeddb_migrated=true` sin cambios |
+| Borrador | localStorage → SQLite | JSON completo idéntico, incluido `savedAt`, en la nueva fila `lumapse-editor-draft-v1`; título/contenido visibles como «Borrador recuperado» |
+| Tema | Claro → claro | Comparación visual de capturas antes/después; no equivale a inventario exhaustivo de preferencias |
+| Integridad | `ok` → `ok` | `PRAGMA integrity_check` en copias verificadas; `foreign_key_check` sin filas en ambas |
+
+Hashes de las filas canónicas, iguales antes y después; no solo conteos:
+
+| Tabla | SHA-256 antes = después |
+|---|---|
+| `notes` | `9efc05fcaaab9e5c0f45630388b59fd8928e8b112c373cbe922545a0abc316e3` |
+| `subjects` | `8dbb527a94cbf807b4790b81e8ad5f86976feb77d0faf00b1f1f423629497756` |
+| `academic_events` | `7427f2d90ce77c760e9c2764e30d59ba2086dedc62c036764b543d3306313842` |
+
+Para cada tabla se leen todas las columnas, se ordenan las filas por su JSON con
+claves ordenadas y se calcula SHA-256 del array JSON UTF-8 con claves ordenadas,
+`ensure_ascii=False` y separadores `(',', ':')`. La metadata pasa de una a dos
+filas únicamente por la migración del borrador; no se exige igualdad del formato
+físico entre almacenamientos distintos. El borrador no se convirtió en una sexta nota.
+
+### Método de lectura y límites
+
+La consola root transformó saltos de línea al intentar una primera copia binaria
+de lectura, produciendo una copia local inválida. Se descartó para el análisis;
+no era evidencia de corrupción de la base del producto. La lectura definitiva usa
+copias auxiliares privadas fuera de la app y `adb pull`, con SHA-256 origen/copia
+coincidentes y estabilidad comprobada antes/después. No se normalizan bytes para
+dar por válida una base; la inspección no ejecutó SQL de escritura ni restauró
+la base de la app.
+
+Se inspeccionaron las capturas previas y posteriores. Se retiraron solo las copias
+auxiliares propias del teléfono, fuera de los datos de Lumapse; logs, capturas,
+referencias y comparaciones permanecen privados fuera del repositorio.
+La RC1 queda instalada con los cinco registros de prueba y el borrador sin guardar
+ni descartar para la revisión del autor.
+
+El resultado cubre un dispositivo y este conjunto pequeño, no garantiza toda
+actualización, tamaño de base, dispositivo o interrupción posible. No sustituye
+los recorridos offline/ZIP, la captura de tráfico/trackers ni la aceptación del autor.
+
 ## Aceptación del binario y congelación
 
 Aplican los [cinco no negociables del precorte](revision-precorte-2026-10-22.md#no-negociables-y-decisión-de-corte).
 Esta preparación no convierte los resultados debug en pruebas del candidato ni
 certifica ausencia universal de defectos.
 
-- [ ] Autorizar y comprobar actualización desde la beta firmada pública, sin
-  desinstalar ni perder notas, borrador o preferencias. Una firma incompatible
-  detiene la operación; no se pide borrar datos como solución.
-- [ ] Comprobar instalación/apertura, núcleo offline, conservación de datos y
-  borrador, organización/búsqueda, fechas y ZIP local sobre este binario exacto.
+- [x] Autorizar y comprobar actualización desde la beta firmada pública, con
+  apertura, datos, borrador y tema conservados en el conjunto anterior. Sin
+  desinstalación ni restauración después de la referencia `0.5.0`.
+- [ ] Completar los recorridos del núcleo offline, organización/búsqueda, fechas
+  y ZIP local sobre este binario exacto; no deducirlos de la comparación de datos.
 - [ ] Repetir tráfico/trackers de RNF-012/013 sobre este binario exacto.
 - [ ] Registrar aceptación del autor, con límites PC-02 a PC-08 conservados y
   RNF-020 en evidencia parcial; RNF-002/004 y RNF-005 mantienen su tratamiento.

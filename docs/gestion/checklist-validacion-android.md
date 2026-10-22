@@ -14,15 +14,21 @@
   gate y auditorías del corte aprobados, coverage de servicios 96,06%.
 - [x] APK generada con firma de distribución original; certificado, hash,
   manifest no-debuggable, alineación y assets web comprobados estáticamente.
-- [ ] Autorizar instalación y comprobar actualización desde la beta firmada pública
-  sin desinstalar ni perder notas, borrador o preferencias; detener ante firma incompatible.
-- [ ] Ejecutar apertura, núcleo offline, conservación, organización/búsqueda,
-  fechas y ZIP local sobre este binario exacto, con dispositivo y resultados registrados.
+- [x] Autorizar la preparación del banco retirando únicamente la debug de prueba,
+  instalar la APK pública exacta `0.5.0` y crear datos desde su UI.
+- [x] Actualizar con `adb install -r` a la RC1 exacta, sin desinstalar/limpiar/importar/
+  restaurar desde la referencia pública. Samsung SM-G965F/Android 10: misma primera
+  instalación/UID, APK instalada con hash esperado, apertura y datos conservados.
+  Cinco notas, materia/sección y fecha con filas/hashes idénticos; borrador legado
+  migrado con JSON completo intacto y visible; tema claro conservado. Integridad OK/FK sin filas.
+- [ ] Completar núcleo offline, organización/búsqueda, fechas y ZIP local sobre
+  este binario exacto, sin deducir funcionalidad global de la comparación de datos.
 - [ ] Repetir tráfico/trackers de RNF-012/013 sobre este binario exacto.
 - [ ] Registrar aceptación del autor antes de fijar el artefacto definitivo y publicar.
 
-No se instaló esta APK ni se atribuyen PASS nativos nuevos. Se conservan los
-límites del precorte y las postergaciones ya aceptadas, sin certificar otros RNF.
+La prueba nueva cubre la actualización y apertura descritas en el registro;
+no equivale a aceptación manual del autor ni a validación exhaustiva. Se conservan
+los límites del precorte y las postergaciones ya aceptadas, sin certificar otros RNF.
 
 ## Revisión precorte — 2026-10-22
 

@@ -16,8 +16,9 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 > APK local `0.6.0/600` generada y firmada como Release Candidate 1, sin anunciar
 > estabilidad ni publicar todavía. Identidad del APK y controles propios del corte
 > en el [registro del candidato](docs/gestion/candidato-apk-0.6.0.md). Los resultados
-> debug anteriores conservan su alcance; la validación Android y aceptación de este
-> binario siguen pendientes.
+> debug anteriores conservan su alcance. La actualización desde la APK pública
+> `0.5.0`, apertura y conservación del conjunto de prueba fueron verificadas en
+> Android; los recorridos restantes y la aceptación del autor siguen pendientes.
 
 ### Changed
 

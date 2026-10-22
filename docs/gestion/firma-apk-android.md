@@ -3,8 +3,9 @@
 **Hito:** 06 — Entrega Final  
 **Versión publicada vigente:** 0.5.0<br>
 **Candidato local:** 0.6.0/600 — Release Candidate 1<br>
-**Estado:** beta publicada preservada; candidato firmado generado, sin instalación,
-aceptación ni publicación todavía.
+**Estado:** beta publicada preservada; candidato firmado instalado mediante
+actualización desde la pública `0.5.0`, con apertura y conservación del conjunto
+de prueba verificadas. Resto de validación, aceptación y publicación pendientes.
 
 ---
 
@@ -91,7 +92,9 @@ Se reutilizó la identidad de distribución existente; claves y configuración s
 mantienen en almacenamiento temporal privado fuera del repositorio. No se generó
 otra clave ni se modificaron los assets de `v0.4.8`/`v0.5.0`. La coincidencia del
 certificado **no** verifica por sí sola una actualización conservando datos.
-La instalación y actualización desde la beta pública, los flujos del candidato,
+La [actualización desde la beta pública](candidato-apk-0.6.0.md#actualización-pública-050-a-060--2026-10-22)
+se comprobó después con la APK exacta, sin borrar/restaurar desde la referencia:
+apertura, datos, borrador y tema conservados. Los recorridos restantes del candidato,
 tráfico/trackers y aceptación del autor permanecen pendientes antes de publicar.
 
 ## Resultado publicado 0.5.0

@@ -22,9 +22,11 @@ y recuperar la firma de distribución existente en almacenamiento temporal priva
 APK local generada y firmada desde `3068455`; controles de fuente y verificación
 estática del binario aprobados. Identidad y pendientes se registran en el
 [registro del candidato](docs/gestion/candidato-apk-0.6.0.md).
-No se autorizaron publicación, tag, merge ni instalación por este pedido; la
-validación y aceptación del binario exacto siguen siendo necesarias antes de
-considerar definitiva la congelación del artefacto.
+Después, el autor autorizó preparar la beta pública `0.5.0` en el teléfono y
+actualizar a la RC1 sin borrar/restaurar desde esa referencia: actualización,
+apertura y conservación del conjunto de prueba PASS. La revisión manual del autor
+y los restantes controles del binario siguen pendientes; sin publicación, tag o
+merge autorizados ni congelación definitiva del artefacto por deducción.
 
 **Revisión precorte — 2026-10-22:** `test/pre-cut-acceptance` reúne la
 [clasificación y los cinco criterios concretos de corte](docs/gestion/revision-precorte-2026-10-22.md).
@@ -175,8 +177,9 @@ Aplicar los [cinco no negociables](docs/gestion/revision-precorte-2026-10-22.md#
 una vez aceptada e integrada la revisión precorte. No abrir otra ronda de mejoras por rutina.
 
 - [x] Repetir `npm run verify`, auditorías completa/productiva y coverage de servicios en la fuente candidata `0.6.0/600`: 1211 tests de app/105 de tooling, auditorías 0/0 y servicios 96,06%; [resultados del corte](docs/gestion/candidato-apk-0.6.0.md#controles-de-la-fuente-candidata), sin atribuir pruebas Android todavía no ejecutadas.
-- [x] Generar el APK autorizado `0.6.0/600` (RC1) desde fuente limpia `3068455`; firma de distribución original, manifest no-debuggable, canal, assets y hash comprobados. [Identidad del binario](docs/gestion/candidato-apk-0.6.0.md#identidad-del-binario). Sin tag, publicación ni instalación.
-- [ ] Validar y aceptar ese APK exacto en Android: actualización desde la beta firmada sin desinstalar ni perder datos, núcleo offline, flujos y tráfico/trackers; registrar dispositivo y resultado sin trasladar pruebas de otro binario.
+- [x] Generar el APK autorizado `0.6.0/600` (RC1) desde fuente limpia `3068455`; firma de distribución original, manifest no-debuggable, canal, assets y hash comprobados. [Identidad del binario](docs/gestion/candidato-apk-0.6.0.md#identidad-del-binario). Sin tag ni publicación; instalación y prueba registradas aparte.
+- [x] Probar actualización real desde la APK pública `0.5.0/500` a la RC1 exacta: apertura, cinco notas con estados, materia/sección, fecha académica, borrador y tema conservados; [filas/hashes y límites](docs/gestion/candidato-apk-0.6.0.md#actualización-pública-050-a-060--2026-10-22). Sin desinstalar, limpiar, importar ni restaurar desde la referencia pública.
+- [ ] Completar recorridos del núcleo offline/organización/búsqueda/fechas/ZIP, tráfico/trackers y aceptación del autor sobre ese APK exacto, sin deducir esos resultados de la actualización.
 - [ ] Congelar el desarrollo sobre el APK aceptado: sin funciones, mejoras ni correcciones automáticas motivadas por feedback; cualquier excepción requiere una decisión expresa.
 
 ### Feedback posterior al corte — no bloqueante
