@@ -4,7 +4,7 @@ Este documento funciona como bandeja viva de tareas, deuda y decisiones pendient
 
 > **Hito activo:** 06 — Entrega Final
 > **Hito 05:** Cerrado documentalmente el 2026-07-15 sobre la beta operativa `v0.4.8`
-> **Última actualización:** Octubre 2026 — [recorte de entrega y deuda postdefensa](#cierre-de-entrega-y-deuda-postdefensa) acordado; OFF-01–05 verificados en debug identificado y aceptados en [PR #31](https://github.com/jdfesa/lumapse/pull/31). RNF-002/004 pendientes y [diferidos a post-presentación](#rendimiento-post-presentación); RNF-009 verificado en debug `348da88` y [RNF-010 verificado y aceptado en PR #29](docs/beta-core-validation/continuidad-2026-10-04.md).
+> **Última actualización:** 2026-10-22 — RC1 `v0.6.0` publicada con validación parcial aceptada; [desarrollo y nuevas comprobaciones congelados hasta después de la presentación](#congelación-académica--2026-10-22). Sólo documentación: manual, luego informe/defensa. Los RNF y su evidencia previa conservan sus estados, sin convertir comprobaciones diferidas en aprobadas.
 > **Snapshot histórico:** [`docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md`](docs/gestion/historico/backlog-historico-hito-04-2026-06-01.md)
 
 ---
@@ -15,7 +15,7 @@ Hito 04 quedó cerrado formalmente como bloque de Organización y UX. El cierre 
 
 Hito 05 quedó cerrado documentalmente el 2026-07-15. Entregó el quality gate, APK firmada, validación inicial en Android real y publicación de la beta controlada [`v0.4.8`](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8), junto con mejoras funcionales acotadas: borradores persistentes (`RF-005`), backup manual (`RF-017`), importación ZIP (`RF-018`), Acerca de (`RF-023`), fechas académicas discretas (`RF-027`) y editor enriquecido (`RF-028`). Las observaciones sobre `Mover a` y rendimiento con más notas no bloquearon ese cierre.
 
-Hito 06 queda activo para completar la documentación final, verificar la maquetación de los gráficos de base de datos, cerrar la matriz RNF y preparar la presentación. La segunda beta [`v0.5.0`](https://github.com/jdfesa/lumapse/releases/tag/v0.5.0) ya está publicada: fija el commit `5840755`, distribuye `lumapse-v0.5.0.apk` y reúne AUD-001 a AUD-007, las correcciones táctiles de organización y el tooling de release sincronizado. Este corte es la referencia operativa vigente, pero no se presenta todavía como versión estable ni como cierre académico definitivo.
+Hito 06 queda activo para completar la documentación final, verificar la maquetación de los gráficos de base de datos, cerrar la matriz RNF y preparar la presentación. La segunda beta [`v0.5.0`](https://github.com/jdfesa/lumapse/releases/tag/v0.5.0) ya está publicada: fija el commit `5840755`, distribuye `lumapse-v0.5.0.apk` y reúne AUD-001 a AUD-007, las correcciones táctiles de organización y el tooling de release sincronizado. Ese corte fue la referencia operativa anterior a la RC1 `v0.6.0`, publicada y congelada con validación parcial por la decisión registrada abajo; no se presenta como estable ni como cierre académico definitivo.
 
 La revisión técnica priorizada del 2026-09-01 abrió trece hallazgos trazables. AUD-001 y AUD-002 quedaron resueltos mediante PR #2; AUD-003 mediante PR #3; AUD-004 mediante PR #5; AUD-007 mediante PR #6; AUD-005 mediante PR #7 y AUD-006 mediante PR #8. Los siete cierres forman parte de `v0.5.0`. El gate del corte aprobó 67 archivos y 1065 tests; la limitación local de Node 26 quedó registrada como AUD-009 y no invalidaba la ejecución canónica con Node 22.20.0/npm 10.9.3; F1 ahora diagnostica y rechaza ese entorno no soportado. La validación funcional de 500 notas de AUD-003 no sustituye las mediciones de latencia y rendimiento exigidas por `RNF-002` y `RNF-004`. Los hallazgos restantes mantienen sus prioridades y no se incorporan automáticamente al alcance de Hito 06.
 
@@ -39,7 +39,7 @@ La trazabilidad de `v0.4.8` y `v0.5.0` queda distribuida entre `docs/gestion/lin
 
 **Plan aceptado e integrado en [PR #13](https://github.com/jdfesa/lumapse/pull/13):** F1 y F2 fueron aprobadas e integradas en PR #14 (`7d4ceda`) y PR #15 (`8e25dcd`). La preparación de F3 fue aceptada tras la confirmación general del teléfono e integrada en PR #16 (`90fd21e`); sus ramas ya se eliminaron. Las mediciones cuantitativas siguen pendientes y F3 no se declara cerrada. Ver [protocolo y evidencia](docs/beta-core-validation/README.md) y [plan inmediato](docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md).
 
-**Objetivo vigente:** producto/bloqueantes → APK correspondiente generada/validada (objetivo `0.6.0+`) → informe/defensa. Identificación de build aceptada e integrada en [PR #22](https://github.com/jdfesa/lumapse/pull/22). RNF-002/004 **PENDING, post-presentación**, según la [decisión del autor](#rendimiento-post-presentación), integrada en PR #28. RNF-009 verificado en debug `348da88` y aceptado en [PR #31](https://github.com/jdfesa/lumapse/pull/31), con merge/limpieza autorizados; **RNF-010 cerrado por aceptación del autor** en [PR #29](https://github.com/jdfesa/lumapse/pull/29): persistencia SQLite y limpieza atómica, gate, migración y matriz Android PASS, incluida entrada nativa antes de 500 ms. El autor confirmó funcionamiento en el teléfono y autorizó merge/limpieza. [Evidencia y límites](docs/beta-core-validation/continuidad-2026-10-04.md). No reabrir estas pruebas; RNF-009 conserva [fallo OFF-05, corrección y OFF-01–05 PASS](docs/beta-core-validation/offline-2026-10-06.md). Filtros cerrados en PR #18 (`3898db8`); sin F4 retroactiva ni promesa de cierre en dos sesiones.
+**Objetivo vigente:** RC1 publicada y desarrollo congelado → próxima sesión, manual de usuario → luego informe final y defensa; sólo documentación, sin más pruebas de app hasta después de la presentación oficial. Identificación de build aceptada e integrada en [PR #22](https://github.com/jdfesa/lumapse/pull/22). RNF-002/004 **PENDING, post-presentación**, según la [decisión del autor](#rendimiento-post-presentación), integrada en PR #28. RNF-009 verificado en debug `348da88` y aceptado en [PR #31](https://github.com/jdfesa/lumapse/pull/31), con merge/limpieza autorizados; **RNF-010 cerrado por aceptación del autor** en [PR #29](https://github.com/jdfesa/lumapse/pull/29): persistencia SQLite y limpieza atómica, gate, migración y matriz Android PASS, incluida entrada nativa antes de 500 ms. El autor confirmó funcionamiento en el teléfono y autorizó merge/limpieza. [Evidencia y límites](docs/beta-core-validation/continuidad-2026-10-04.md). No reabrir estas pruebas; RNF-009 conserva [fallo OFF-05, corrección y OFF-01–05 PASS](docs/beta-core-validation/offline-2026-10-06.md). Filtros cerrados en PR #18 (`3898db8`); sin F4 retroactiva ni promesa de cierre en dos sesiones.
 
 | Orden | Tarea | Criterio de cierre |
 |---|---|---|
@@ -47,11 +47,44 @@ La trazabilidad de `v0.4.8` y `v0.5.0` queda distribuida entre `docs/gestion/lin
 | F2 | Confirmación de creación — AUD-014 | Una escritura confirmada no se informa como fallida por una recarga; regresiones y smoke Android proporcionales |
 | F3 | Evidencia del núcleo y 500 notas | CRUD/FPS diferidos a post-presentación, sin afirmar cumplimiento; RNF-009 offline verificado en debug `348da88` y aceptado en PR #31; RNF-010 continuidad verificado y aceptado en debug identificado. Optimizaciones solo si una medición las justifica y se aprueba otro PR |
 
-Continúan los pendientes de **congelamiento editorial/visual**, **validación RNF restante**, **presentación/defensa** y **línea base final**. No quedan completados ni descartados por esta secuencia técnica. No se fuerza una versión estable o `1.0.0` al terminar F3.
+Continúan los pendientes de **congelamiento editorial/visual**, **matriz RNF documental con cobertura diferida explícita**, **presentación/defensa** y **línea base final**. No quedan completados ni descartados por esta secuencia técnica. No se fuerza una versión estable o `1.0.0` al terminar F3.
 
 ---
 
 ## Cierre de entrega y deuda postdefensa
+
+### Congelación académica — 2026-10-22
+
+**Decisión expresa del autor, vigente hasta después de la presentación académica
+oficial:** se acepta `v0.6.0/600` como **Release Candidate 1 con validación parcial**,
+se publica tal como está y se congela el desarrollo de la app. No se busca un
+producto perfecto ni una versión estable `1.0.0`.
+
+- **Artefacto congelado:** `lumapse-v0.6.0.apk`, fuente `bcefe6a`, SHA-256
+  `15f8ede5b78387e3fcac1a53eb3bc78dbb1e30df9acf7f4f20c771c48739e042`.
+  [Publicación Pre-release](https://github.com/jdfesa/lumapse/releases/tag/v0.6.0),
+  tag sobre `ac2a747`; [identidad y evidencia](docs/gestion/candidato-apk-0.6.0.md#binario-corregido).
+- **Sin más trabajo técnico antes de la presentación:** no modificar código,
+  funcionalidades, comportamiento, interfaz, persistencia, dependencias, assets
+  ni configuración que pueda afectar la app; no recompilar, instalar, sustituir
+  la APK ni abrir nuevas rondas de comprobación funcional, Android o del binario.
+- **Diferido, no aprobado:** no se completan ahora los recorridos restantes del
+  núcleo offline, organización/búsqueda, fechas, ZIP y tráfico/trackers sobre la
+  APK exacta, ni se repite directamente pública `0.5.0` → APK corregida. Quedan
+  como cobertura no demostrada y trabajo postpresentación, no como pruebas PASS.
+  Los RNF conservan sus estados, umbrales, artefactos y límites de evidencia.
+- **Único trabajo autorizado en las siguientes sesiones:** documentación.
+  Primero manual de usuario basado en este corte; después informe final y
+  material de defensa, utilizando la evidencia existente. La matriz RNF final
+  deberá declarar las limitaciones, sin generar nuevas mediciones para cerrarlas.
+- El feedback o un hallazgo documental se registra como límite o trabajo futuro;
+  no reactiva correcciones ni comprobaciones de la app antes de la presentación.
+  Después de ella, cualquier reanudación técnica requiere un nuevo acuerdo.
+
+Esta decisión **reemplaza el requisito anterior de completar las comprobaciones
+restantes antes de publicar/congelar**. No equivale a validación exhaustiva,
+ausencia de errores o cierre del manual, informe y Hito 06. Se permiten controles
+de enlaces y coherencia de documentos, sin intervenir el APK o el teléfono.
 
 **Acuerdo de cierre — octubre 2026:** para finales de octubre deben estar preparados
 el APK de presentación, el informe terminado, el manual actualizado y la defensa.
@@ -71,8 +104,8 @@ El feedback disponible se incorpora como evidencia del artefacto probado, con
 fricciones, bugs reportados, límites y trabajo futuro honestamente identificados.
 No obliga a corregir sobre la marcha, generar otra APK ni abrir ramas o mejoras.
 Un hallazgo grave se comunica al autor para una decisión expresa, sin retomar el
-desarrollo automáticamente. Esto no elimina los controles técnicos del corte ni
-posterga los otros RNF pendientes.
+desarrollo automáticamente. Los controles restantes del corte se rigen ahora por
+la decisión de congelación anterior; no se convierten en resultados aprobados.
 
 El autor informa que dos docentes del instituto están probando `v0.5.0`; sus
 observaciones aún no fueron recibidas/revisadas aquí. Cuando estén disponibles,
@@ -84,8 +117,9 @@ pública `0.5.0` → `0.6.0` con datos conservados en el APK inicial. El autor a
 PR #42 y autorizó merge/limpieza, además del ajuste mínimo de etiqueta y DOMPurify
 3.4.17. El [APK corregido](docs/gestion/candidato-apk-0.6.0.md#binario-corregido)
 también se verificó por actualización en sitio, con tablas/borrador conservados y
-Acerca de comprobado. Los recorridos Android restantes y la aceptación manual final
-siguen pendientes; no se declara congelado el artefacto ni publicada una release.
+Acerca de comprobado. Posteriormente el autor aceptó expresamente la cobertura
+parcial, difirió las comprobaciones restantes y congeló el artefacto. `v0.6.0` ya
+está publicada como Pre-release; no se repite ni amplía la validación para ese corte.
 
 La entrega busca una **beta defendible**, con flujos probados, riesgos tratados y
 límites explícitos; no obliga a anunciar `1.0.0`, estabilidad comercial o adopción.
@@ -102,15 +136,19 @@ la app. El repositorio público debe permitir a futuras cohortes distinguir:
 
 ### Imprescindibles para la entrega
 
+La tabla conserva los criterios de preparación y su evidencia. La repetición de
+pruebas sobre la RC1 se difiere por la decisión vigente; no debe leerse como una
+lista de verificaciones que aún deban ejecutarse antes de manual/informe.
+
 | Momento | Frente acotado | Pendiente y aceptación requerida |
 |---|---|---|
-| Antes del corte | Núcleo offline y conservación de datos | OFF-01–05 de `RNF-009` verificados en debug `348da88` y aceptados en PR #31. La validación del candidato final se acuerda por separado. Preservar el cierre de `RNF-010` y sus límites; no repetirlo como tarea. Resolver pérdidas, corrupción, duplicaciones o fallos bloqueantes confirmados. |
-| Antes del corte | Privacidad y seguridad | Evidencia de tráfico/trackers de `RNF-012`/`RNF-013` [completada el 2026-10-07](docs/gestion/validacion-trafico-trackers-2026-10-07.md); repetirla sobre el candidato, distinguiendo salida externa explícita de transmisión automática. [Revisión precorte de Vite/Vitest](docs/gestion/revision-precorte-2026-10-22.md): parches mínimos y auditorías actuales en cero; repetir en el candidato, sin heredar cierres antiguos. |
+| Antes del corte | Núcleo offline y conservación de datos | OFF-01–05 de `RNF-009` verificados en debug `348da88` y aceptados en PR #31. La RC1 quedó aceptada con cobertura parcial; no se repiten recorridos durante el congelamiento. Preservar el cierre de `RNF-010` y sus límites; no repetirlo como tarea. Los resultados se conservan con sus límites; no se abre trabajo técnico adicional antes de la presentación. |
+| Antes del corte | Privacidad y seguridad | Evidencia de tráfico/trackers de `RNF-012`/`RNF-013` [completada el 2026-10-07](docs/gestion/validacion-trafico-trackers-2026-10-07.md); la repetición sobre la RC1 exacta se difiere por decisión del autor, sin atribuirle ese resultado. [Revisión precorte de Vite/Vitest](docs/gestion/revision-precorte-2026-10-22.md): parches mínimos; auditorías del candidato ya registradas en cero, sin nuevas consultas durante el congelamiento. |
 | Antes del corte | Uso y accesibilidad del núcleo | `RNF-006` verificado en revisión Android de profundidad de entrada (0–2 taps) y `RNF-008` verificado mediante medición de touch targets; consultar [la evidencia de navegación del 2026-10-07](docs/gestion/validacion-usabilidad-navegacion-2026-10-07.md) y [la medición de controles del 2026-10-08](docs/gestion/validacion-touch-targets-rnf-008-2026-10-08.md). `RNF-007` verificado en el alcance de lectura/edición del debug `f2beef7`, con [evidencia y aceptación del 2026-10-09](docs/gestion/validacion-tipografia-rnf-007-2026-10-09.md) en PR #36, sin transferir las pruebas al APK final. `RNF-021` tiene [contraste verificado técnicamente en el debug `803947e` y aceptación del autor](docs/gestion/validacion-contraste-rnf-021-2026-10-12.md) en PR #37, con merge/limpieza autorizados y límites explícitos; sin nuevas pruebas por caso ni transferencia al APK final. `RNF-022` tiene [nombres/alternativas verificados técnicamente en el debug `b7c3d31`](docs/gestion/validacion-nombres-accesibles-rnf-022-2026-10-13.md), con aceptación general del autor en [PR #38](https://github.com/jdfesa/lumapse/pull/38) y merge/limpieza autorizados, sin nuevas pruebas por caso ni certificar TalkBack o el APK final. La [revisión acotada de teclado (`RNF-020`)](docs/gestion/validacion-teclado-rnf-020-2026-10-19.md) completó 16 casos PASS en debug `538c906`, con datos/borrador conservados; mantiene evidencia parcial sin teclado físico ni mutaciones completas. El autor revisó y aprobó [PR #39](https://github.com/jdfesa/lumapse/pull/39) y autorizó merge/limpieza, con aceptación general y sin nuevas pruebas por caso ni transferencia al APK final. `RNF-019` tiene [40 snapshots Lighthouse 96–100/100](docs/gestion/validacion-lighthouse-rnf-019-2026-10-20.md) del WebView real del debug `92deffd`, ambos temas, con etiquetas corregidas y datos conservados. Verificado técnicamente para esa métrica/alcance; hallazgos de controles cubiertos y revisión incompleta explícitos. El autor aprobó [PR #40](https://github.com/jdfesa/lumapse/pull/40) y autorizó merge/limpieza; aceptación general con los límites documentados, sin nuevas pruebas por caso ni certificación global o transferencia al APK final. La [clasificación precorte PC-01–10](docs/gestion/revision-precorte-2026-10-22.md) separa el defecto de hover corregido, condiciones de superposición y límites semánticos/de cobertura; aceptación general del autor en [PR #41](https://github.com/jdfesa/lumapse/pull/41), sin nuevos resultados manuales por caso. Registrar barreras reales y decidir su severidad sin rediseño general; `RNF-005` se trata después del corte, sin bloquearlo. |
 | Corte autorizado | APK inequívoco | `verify`, auditorías y coverage de servicios repetidos; versión/code nuevos, fuente, canal, firma y hash identificados. Validación Android pertinente y aceptación sobre el binario final, sin reemplazar betas publicadas ni atribuirle pruebas de otro artefacto. |
-| Después del APK validado | Congelación y feedback no bloqueante | Congelar el desarrollo; distribuir ese APK con encuesta voluntaria e incorporar las respuestas disponibles como evidencia y límites. `RNF-005` no condiciona el corte ni la entrega y no se marca cumplido sin medición. No esperar feedback para preparar manual/informe ni abrir correcciones automáticamente. |
-| Después del APK validado | Matriz e informe final | Emitir matriz RNF con estados, métodos, evidencia y límites; actualizar capítulos fuente, bibliografía y corte documental, congelar y ensamblar. Revisar tablas y legibilidad de figuras en PDF. Los capítulos y el checkpoint de `v0.5.0` son una base, no la entrega final. |
-| Después del APK validado | Manual y defensa | Estudiar el manual externo de `v0.5.0` informado por el autor —aún no revisado aquí— y adaptarlo al artefacto final. Preparar capturas, demo, contingencia y respuestas; reservar tiempo para estudio y ensayo. APK, matriz, informe y manual deben identificar el mismo corte. |
+| Después del APK aceptado con límites | Congelación y feedback no bloqueante | Congelar el desarrollo; distribuir ese APK con encuesta voluntaria e incorporar las respuestas disponibles como evidencia y límites. `RNF-005` no condiciona el corte ni la entrega y no se marca cumplido sin medición. No esperar feedback para preparar manual/informe ni abrir correcciones automáticamente. |
+| Después del APK aceptado con límites | Matriz e informe final | Emitir matriz RNF con estados, métodos, evidencia y límites; actualizar capítulos fuente, bibliografía y corte documental, congelar y ensamblar. Revisar tablas y legibilidad de figuras en PDF. Los capítulos y el checkpoint de `v0.5.0` son una base, no la entrega final. |
+| Después del APK aceptado con límites | Manual y defensa | Estudiar el manual externo de `v0.5.0` informado por el autor —aún no revisado aquí— y adaptarlo al artefacto final. Preparar capturas, demo, contingencia y respuestas; reservar tiempo para estudio y ensayo. APK, matriz, informe y manual deben identificar el mismo corte. |
 
 **Revisión precorte — 2026-10-22:** el [reporte](docs/gestion/revision-precorte-2026-10-22.md)
 concreta los cinco mínimos: sin bloqueantes confirmados, controles del candidato,
@@ -130,9 +168,9 @@ Los controles técnicos previos al corte no aceptan bloqueantes funcionales, de
 integridad o de seguridad confirmados sin resolver. Una observación menor o
 evidencia incompleta requiere revisión y
 aceptación **expresa** del autor para el corte, con su impacto visible en la matriz;
-no se acepta automáticamente por el calendario. Salvo CRUD/FPS y el tratamiento
-posterior al corte de RNF-005 aprobado arriba, este recorte no posterga los RNF
-restantes ni cambia sus estados o umbrales. Una revisión acotada
+no se acepta automáticamente por el calendario. La decisión expresa de congelación
+posterior sí difiere las comprobaciones restantes indicadas, además de CRUD/FPS y
+RNF-005, sin cambiar estados, umbrales ni atribuir cumplimiento nuevo. Una revisión acotada
 tampoco equivale a certificación exhaustiva de usabilidad o accesibilidad.
 
 El cierre de gestión documenta el flujo real y las recomendaciones para futuros
@@ -145,9 +183,10 @@ en [RNF](docs/producto/requisitos-no-funcionales.md) y las pruebas en sus report
 
 | Trabajo abierto | Motivo y límite de la postergación |
 |---|---|
+| Comprobaciones restantes de la RC1 exacta: núcleo offline, organización/búsqueda, fechas, ZIP y tráfico/trackers | Diferidas expresamente por el autor hasta después de la presentación; cobertura no demostrada, no aprobada. Sin nuevas pruebas ni cambios de app durante el congelamiento. |
 | Métricas CRUD/FPS y optimizaciones de consultas/notificaciones sin cuello demostrado | `RNF-002`/`RNF-004` conservan la [postergación aceptada](#rendimiento-post-presentación), umbrales y estado pendiente. AUD-010/AUD-011 no justifican optimizar por intuición; un defecto funcional nuevo se evalúa por separado. |
 | Refactors de componentes grandes, migraciones adicionales de tipado/framework y ampliaciones exploratorias de tests | No corrigen un bloqueo demostrado de entrega. Incluye ampliar el smoke de `academic_events`; su cobertura actual no se presenta como exhaustiva. Se conservan los controles y regresiones existentes. |
-| Caracterización de mutaciones vecinas no cubiertas por F2/PR #19 | Deuda registrada sin fallo reproducido; reabrir al tocar el flujo o ante evidencia. No difiere corregir un fallo bloqueante que aparezca durante la validación final. |
+| Caracterización de mutaciones vecinas no cubiertas por F2/PR #19 | Deuda registrada sin fallo reproducido; reabrir al tocar el flujo o ante evidencia. Durante el congelamiento las observaciones sólo se registran, sin nuevas pruebas o correcciones de app. |
 | Estudios extensos o longitudinales con usuarios y adopción | Exceden el feedback voluntario posterior al APK, no bloqueante, acordado arriba. `RNF-005` conserva su métrica pendiente; `RNF-006` conserva su evidencia de profundidad, sin acreditar adopción. |
 | Recalibración de SLE sin cinco elementos confiables | Esperar datos suficientes; mantener políticas de flujo y registrar fechas reales ahora, sin inventar tiempos históricos. |
 | Funciones nuevas: adjuntos, nube/sincronización, Drive API, restauración avanzada, notas individuales, escritorio y onboarding | Permanecen en el [backlog post-defensa](#evolución-registrada-y-backlog-post-defensa) y las decisiones de diseño; no compiten con el APK, informe, manual ni defensa. |
@@ -264,6 +303,10 @@ la comprobación funcional acordada del dispositivo se registra por separado.
 
 ## Política de Alcance — Hito 06
 
+**Regla vigente:** la [congelación académica](#congelación-académica--2026-10-22)
+limita el trabajo previo a la presentación a documentación; las reglas técnicas
+siguientes no autorizan excepciones ni nuevos frentes durante ese período.
+
 Hito 06 es un hito de cierre. No incorporar salvo que un bloqueo de entrega lo exija y quede documentado:
 
 - Agenda completa.
@@ -282,7 +325,7 @@ Hito 06 es un hito de cierre. No incorporar salvo que un bloqueo de entrega lo e
 - No reemplazar el asset publicado `v0.5.0`. Debug privado autorizado usa el script habitual y origen/canal/hash sin bump por prueba; candidato/entrega posterior requiere versión/code nuevos y autorización. Ver [flujo Android](docs/flujo-desarrollo-android.md#identificación-de-compilaciones-en-acerca-de).
 - No publicar un nuevo artefacto sin repetir auditorías sobre el corte candidato ni mientras exista cualquier bloqueo de seguridad confirmado.
 - Todo cambio de comportamiento debe cerrar con tests focalizados, `npm run verify`, trazabilidad y nueva validación Android proporcional al riesgo.
-- Preservar `v0.4.8`, `v0.5.0` y sus SHA-256 como evidencia inmutable de las betas publicadas.
+- Preservar `v0.4.8`, `v0.5.0`, la RC1 `v0.6.0` y sus SHA-256 como evidencia inmutable de los cortes publicados.
 - Las ideas postergadas permanecen en este backlog; no vuelven al `TODO.md` operativo hasta que Hito 06 haya terminado y se acuerde retomarlas.
 
 ---
