@@ -8,7 +8,7 @@
 
 **Proyecto:** Lumapse
 
-**Estado:** Activo — segunda beta `v0.5.0` publicada; cierre académico, matriz RNF y presentación pendientes
+**Estado:** Activo — segunda beta `v0.5.0` publicada; candidato local `0.6.0/600` (RC1) generado y firmado, con validación Android/aceptación pendientes; cierre académico, matriz RNF y presentación pendientes
 
 **Última actualización:** Octubre 2026
 

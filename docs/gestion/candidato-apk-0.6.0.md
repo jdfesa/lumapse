@@ -3,8 +3,8 @@
 **Fecha:** 2026-10-22<br>
 **Rama:** `chore/presentation-rc1`<br>
 **Base integrada:** `9ab9c006bc38dd59d9e275968aa583a3ba1e56b6` (PR #41)<br>
-**Estado:** controles de fuente aprobados; generación firmada y validación del
-binario pendientes.
+**Estado:** APK local generada y firmada; controles de fuente, firma y contenido
+aprobados. Validación Android, aceptación, tag y publicación pendientes.
 
 ## Objetivo y alcance acordados
 
@@ -60,22 +60,41 @@ crudos quedan fuera del repositorio; no contienen ni publican la configuración 
 
 ## Identidad del binario
 
-Se compilará sin volver a incrementar la versión, desde fuente confirmada limpia:
-build web con canal `android-candidate`, `npx cap sync android` y
-`./gradlew assembleRelease` con la firma existente. No se usa el deploy debug ni
-se instala como parte de la compilación. Se verifican firma, manifest, metadata y
-hash antes de copiar al directorio local de releases.
+Se compiló sin volver a incrementar la versión, desde fuente confirmada limpia:
+build web con canal `android-candidate`, `npx cap sync android` y Gradle release
+con la firma existente. No se usó el deploy debug ni se instaló como parte de la
+compilación. El build web, sync y Gradle finalizaron en exit 0. Gradle utilizó
+SDK/JDK y dependencias existentes en modo offline, sin instalaciones:
+
+```bash
+./gradlew --offline --no-daemon --max-workers=1 \
+  '-Dorg.gradle.jvmargs=-Xmx768m -Dfile.encoding=UTF-8' \
+  -Dkotlin.compiler.execution.strategy=in-process assembleRelease
+```
+
+Gradle informó `BUILD SUCCESSFUL` (289 tareas, 283 ejecutadas y seis al día).
+Conserva avisos de repositorios `flatDir`, funciones deprecadas de Gradle y
+`downloadFile` del plugin Filesystem; no se abrió una migración de tooling o
+plugins por esos avisos. No hubo error de compilación.
 
 | Campo | Valor |
 |---|---|
-| Versión/code previstos | `0.6.0/600` |
-| Canal previsto | `android-candidate` |
-| Fuente incorporada en Acerca de | Pendiente |
-| APK local previsto | `releases/v0.6.0/lumapse-v0.6.0.apk` |
-| SHA-256 del APK | Pendiente |
-| Certificado SHA-256 esperado | `91d719826e632e10f331913c3835c51e38cf780eb139940eb3b0bf1ed6a157cd` |
-| Firma del APK y variante no-debuggable | Pendiente |
+| Versión/code del manifest | `0.6.0/600` |
+| Canal incorporado | `android-candidate` |
+| Fuente incorporada en metadata | `306845506163bf74a5cb9c79a813d68f66a4d5d9`, `dirty: false` |
+| APK local | `releases/v0.6.0/lumapse-v0.6.0.apk`, 25.766.718 bytes |
+| SHA-256 del APK | `70d98d5da883651fd9ce7a25ad2e5e15208424f6337dfb6d5b7ed42db9e278c7` |
+| Certificado SHA-256 comprobado | `91d719826e632e10f331913c3835c51e38cf780eb139940eb3b0bf1ed6a157cd` |
+| Firma del APK y variante no-debuggable | `apksigner verify` PASS, esquema v2; `aapt dump badging` confirma versión y ausencia de `application-debuggable` |
+| Alineación | `zipalign -c -p 4` PASS |
 | Tag/publicación | No creados |
+
+La copia local tiene el mismo SHA-256 que la salida de Gradle y un archivo
+`lumapse-v0.6.0.apk.sha256` adjunto; no reemplaza otro asset. Todos los assets web
+del APK se cotejaron byte a byte con `dist`, incluida la metadata de fuente limpia.
+No se empaquetaron la keystore ni su configuración. No se abrió Acerca de en un
+teléfono: la verificación de metadata anterior es estática sobre el binario.
+Los commits posteriores de evidencia documental no cambian la fuente ni ese APK.
 
 ## Aceptación del binario y congelación
 

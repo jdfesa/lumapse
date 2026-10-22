@@ -48,6 +48,11 @@ reescriben resultados históricos para aparentar cumplimiento del APK nuevo.
 
 ## Estado documental actual
 
+- [Candidato APK 0.6.0 — RC1](./gestion/candidato-apk-0.6.0.md): APK local generada
+  con firma de distribución original, fuente limpia identificada y controles del
+  corte aprobados. No publicada ni instalada; validación Android y aceptación
+  pendientes. La referencia publicada continúa siendo `v0.5.0`.
+
 - [Revisión precorte del 2026-10-22](./gestion/revision-precorte-2026-10-22.md): clasificación de observaciones, correcciones mínimas y cinco criterios de corte; aceptación general del autor en PR #41 y merge/limpieza autorizados, sin nuevos resultados por caso; APK final pendiente. El [índice ADR](./adr/README.md#revisión-de-trazabilidad-precorte--2026-10-22) contiene el inventario de RNF-026 y sus límites temporales.
 
 - La arquitectura y los patrones quedan formalizados en [ADR-008](./adr/ADR-008-arquitectura-modular-y-patrones.md).

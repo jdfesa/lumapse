@@ -13,10 +13,11 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ## [0.6.0] — 2026-10-22 — Candidato de presentación (RC1)
 
-> Corte `0.6.0/600` autorizado como Release Candidate 1, sin anunciar estabilidad
-> ni publicar todavía. Preparación, identidad del APK y controles propios del corte
+> APK local `0.6.0/600` generada y firmada como Release Candidate 1, sin anunciar
+> estabilidad ni publicar todavía. Identidad del APK y controles propios del corte
 > en el [registro del candidato](docs/gestion/candidato-apk-0.6.0.md). Los resultados
-> debug anteriores conservan su alcance; no verifican automáticamente este binario.
+> debug anteriores conservan su alcance; la validación Android y aceptación de este
+> binario siguen pendientes.
 
 ### Changed
 

@@ -6,6 +6,24 @@
 
 ---
 
+## Candidato local 0.6.0 — RC1 — 2026-10-22
+
+[Identidad, controles y límites del binario](candidato-apk-0.6.0.md).
+
+- [x] Fuente limpia `3068455`, versión/code `0.6.0/600`, canal `android-candidate`;
+  gate y auditorías del corte aprobados, coverage de servicios 96,06%.
+- [x] APK generada con firma de distribución original; certificado, hash,
+  manifest no-debuggable, alineación y assets web comprobados estáticamente.
+- [ ] Autorizar instalación y comprobar actualización desde la beta firmada pública
+  sin desinstalar ni perder notas, borrador o preferencias; detener ante firma incompatible.
+- [ ] Ejecutar apertura, núcleo offline, conservación, organización/búsqueda,
+  fechas y ZIP local sobre este binario exacto, con dispositivo y resultados registrados.
+- [ ] Repetir tráfico/trackers de RNF-012/013 sobre este binario exacto.
+- [ ] Registrar aceptación del autor antes de fijar el artefacto definitivo y publicar.
+
+No se instaló esta APK ni se atribuyen PASS nativos nuevos. Se conservan los
+límites del precorte y las postergaciones ya aceptadas, sin certificar otros RNF.
+
 ## Revisión precorte — 2026-10-22
 
 [Clasificación PC-01–10, artefacto, controles y aceptación](./revision-precorte-2026-10-22.md).

@@ -19,7 +19,8 @@
 **Candidato autorizado — 2026-10-22:** preparar `0.6.0/600` como Release Candidate 1
 en `chore/presentation-rc1`, sin mejoras nuevas. El autor autorizó generar la APK
 y recuperar la firma de distribución existente en almacenamiento temporal privado.
-Controles, identidad y pendientes se registran en el
+APK local generada y firmada desde `3068455`; controles de fuente y verificación
+estática del binario aprobados. Identidad y pendientes se registran en el
 [registro del candidato](docs/gestion/candidato-apk-0.6.0.md).
 No se autorizaron publicación, tag, merge ni instalación por este pedido; la
 validación y aceptación del binario exacto siguen siendo necesarias antes de
@@ -174,7 +175,8 @@ Aplicar los [cinco no negociables](docs/gestion/revision-precorte-2026-10-22.md#
 una vez aceptada e integrada la revisión precorte. No abrir otra ronda de mejoras por rutina.
 
 - [x] Repetir `npm run verify`, auditorías completa/productiva y coverage de servicios en la fuente candidata `0.6.0/600`: 1211 tests de app/105 de tooling, auditorías 0/0 y servicios 96,06%; [resultados del corte](docs/gestion/candidato-apk-0.6.0.md#controles-de-la-fuente-candidata), sin atribuir pruebas Android todavía no ejecutadas.
-- [ ] Generar y validar el nuevo APK autorizado `0.6.0/600` (RC1); fijar fuente, versión/code, canal, firma y hash, preservar las betas publicadas y registrar la revisión Android pertinente sobre ese binario exacto.
+- [x] Generar el APK autorizado `0.6.0/600` (RC1) desde fuente limpia `3068455`; firma de distribución original, manifest no-debuggable, canal, assets y hash comprobados. [Identidad del binario](docs/gestion/candidato-apk-0.6.0.md#identidad-del-binario). Sin tag, publicación ni instalación.
+- [ ] Validar y aceptar ese APK exacto en Android: actualización desde la beta firmada sin desinstalar ni perder datos, núcleo offline, flujos y tráfico/trackers; registrar dispositivo y resultado sin trasladar pruebas de otro binario.
 - [ ] Congelar el desarrollo sobre el APK aceptado: sin funciones, mejoras ni correcciones automáticas motivadas por feedback; cualquier excepción requiere una decisión expresa.
 
 ### Feedback posterior al corte — no bloqueante

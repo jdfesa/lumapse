@@ -1,8 +1,10 @@
 # Firma de APK Android — Lumapse
 
 **Hito:** 06 — Entrega Final  
-**Versión vigente:** 0.5.0<br>
-**Estado:** APK firmada y verificada; pre-release publicada el 2026-09-05
+**Versión publicada vigente:** 0.5.0<br>
+**Candidato local:** 0.6.0/600 — Release Candidate 1<br>
+**Estado:** beta publicada preservada; candidato firmado generado, sin instalación,
+aceptación ni publicación todavía.
 
 ---
 
@@ -71,6 +73,26 @@ apksigner verify --verbose --print-certs releases/vVERSION/lumapse-vVERSION.apk
 El resultado esperado debe indicar esquemas de firma verificados y mostrar el certificado usado. El hash SHA-256 del APK firmado se registra junto al corte.
 
 ---
+
+## Candidato local 0.6.0 — RC1
+
+La [fuente y verificación del candidato](candidato-apk-0.6.0.md#identidad-del-binario)
+identifican la APK generada el 2026-10-22, no una nueva publicación:
+
+| Campo | Valor |
+|---|---|
+| APK local | `releases/v0.6.0/lumapse-v0.6.0.apk` |
+| Versión/code | `0.6.0/600` |
+| SHA-256 APK | `70d98d5da883651fd9ce7a25ad2e5e15208424f6337dfb6d5b7ed42db9e278c7` |
+| Certificado SHA-256 | `91d719826e632e10f331913c3835c51e38cf780eb139940eb3b0bf1ed6a157cd` |
+| Verificación | `apksigner` PASS/v2, `zipalign` PASS, manifest no-debuggable |
+
+Se reutilizó la identidad de distribución existente; claves y configuración se
+mantienen en almacenamiento temporal privado fuera del repositorio. No se generó
+otra clave ni se modificaron los assets de `v0.4.8`/`v0.5.0`. La coincidencia del
+certificado **no** verifica por sí sola una actualización conservando datos.
+La instalación y actualización desde la beta pública, los flujos del candidato,
+tráfico/trackers y aceptación del autor permanecen pendientes antes de publicar.
 
 ## Resultado publicado 0.5.0
 
