@@ -12,8 +12,9 @@
 
 **Seguimiento vigente — 2026-10-22:** la [revisión precorte](./revision-precorte-2026-10-22.md)
 clasifica observaciones y propone cinco mínimos concretos antes del candidato,
-sin inventar otra fase F4 ni retomar lo diferido. Su aceptación y la versión/generación
-del APK final siguen pendientes. La base inspeccionada original de este plan se
+sin inventar otra fase F4 ni retomar lo diferido. El autor aceptó PR #41 de forma
+general, con merge/limpieza autorizados y sin nuevas pruebas por caso. La versión
+y generación del APK final siguen pendientes. La base inspeccionada original de este plan se
 conserva como evidencia histórica, no como HEAD actual.
 
 ## 1. Decisión aceptada

@@ -231,4 +231,5 @@ La [revisión posterior](./revision-precorte-2026-10-22.md) clasifica las observ
 y reproduce un caso adicional: el hover de «Agregar fecha» permanece visible tras
 Escape con contraste insuficiente. Se corrige y valida por separado; no se
 reescriben los resultados históricos de este reporte ni se transfieren al APK
-final. Las propuestas de aceptación de otros límites siguen pendientes del autor.
+final. El autor aceptó PR #41 con los límites documentados y autorizó merge/limpieza;
+aceptación general, sin nuevas pruebas por caso ni autorización del APK final.

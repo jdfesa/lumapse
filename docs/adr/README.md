@@ -18,7 +18,7 @@ Los ADR conservan decisiones importantes, sus alternativas y consecuencias. Un A
 | [ADR-010](./ADR-010-gate-portable-y-entorno-canonico.md) | Gate portable y entorno canónico (AUD-008/AUD-009) | Aceptado e integrado en PR #14 |
 | [ADR-011](./ADR-011-limite-guardado-y-refresco.md) | Confirmación de creación y recuperación de lecturas (AUD-014) | Aceptado e integrado en PR #15 |
 | [ADR-012](./ADR-012-borrador-sqlite-y-guardado-atomico.md) | Borrador SQLite, migración legacy y guardado atómico (RNF-010) | Aceptado; gate/Android PASS y cierre aprobado por el autor en PR #29 |
-| [ADR-013](./ADR-013-despliegue-android-sin-desinstalacion-implicita.md) | Instalación debug sin fallback de desinstalación | Implementación autorizada; revisión e integración pendientes |
+| [ADR-013](./ADR-013-despliegue-android-sin-desinstalacion-implicita.md) | Instalación debug sin fallback de desinstalación | Aceptación general en PR #41; merge/limpieza autorizados |
 
 ## Decisiones vigentes en una frase
 

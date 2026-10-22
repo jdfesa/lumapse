@@ -42,8 +42,9 @@ por esa decisión; RNF-005 sigue el ajuste posterior del 2026-10-12.
 **Revisión precorte — 2026-10-22:** [clasificación y criterios finitos](../gestion/revision-precorte-2026-10-22.md)
 en `test/pre-cut-acceptance`, con ajuste localizado de contraste y parches mínimos
 de tooling; RNF-026 revisado documentalmente. Se propone como última rama técnica
-antes de preparar el candidato. Los límites PC-02 a PC-08, revisión del teléfono y
-merge requieren aceptación expresa; no se declara congelación ni APK final. El
+antes de preparar el candidato. El autor aceptó PR #41 con los límites documentados y
+autorizó merge/limpieza tras comprobar integración; confirmación general sin nuevas
+pruebas manuales por caso. No se declara congelación ni APK final. El
 incidente PC-11 exige recuperación y despliegue sin fallback destructivo; alcance
 ampliado expresamente por el autor, sin aceptar pérdida de datos por ser beta.
 
@@ -99,7 +100,7 @@ ampliado expresamente por el autor, sin aceptar pérdida de datos por ser beta.
 - [x] Medir y corregir contraste de texto (`RNF-021`) en ambos temas del debug `803947e`; [evidencia, aceptación y límites](../gestion/validacion-contraste-rnf-021-2026-10-12.md). El autor aceptó PR #37 y autorizó merge/limpieza el 2026-10-12, sin nuevas pruebas manuales por caso ni transferencia al APK final.
 - [x] Verificar nombres/alternativas (`RNF-022`) en el debug `b7c3d31`: [24 escenas/2188 muestras AX y límites](../gestion/validacion-nombres-accesibles-rnf-022-2026-10-13.md), datos conservados. El autor aceptó [PR #38](https://github.com/jdfesa/lumapse/pull/38) y autorizó merge/limpieza, sin nuevas pruebas por caso; no acredita TalkBack, teclado/Lighthouse ni el APK final.
 - [x] Ejecutar revisión acotada de teclado (`RNF-020`): [16 casos PASS en debug `538c906`](../gestion/validacion-teclado-rnf-020-2026-10-19.md), correcciones reproducidas y datos/borrador conservados. Evidencia parcial por falta de teclado físico y mutaciones completas; el autor revisó y aprobó [PR #39](https://github.com/jdfesa/lumapse/pull/39) y autorizó merge/limpieza. Aceptación general, sin nuevas pruebas por caso ni autorización del APK final.
-- [x] Medir `RNF-019` con Lighthouse real: [40 snapshots 96–100/100](../gestion/validacion-lighthouse-rnf-019-2026-10-20.md) en ambos temas del debug `92deffd`, umbral ≥90 conservado. Etiquetas corregidas con autorización, gate/Android y datos preservados; observaciones y límites explícitos. El autor aprobó [PR #40](https://github.com/jdfesa/lumapse/pull/40) y autorizó merge/limpieza; aceptación general sin nuevas pruebas por caso ni certificar accesibilidad exhaustiva o el APK final. La clasificación posterior está en el [reporte de precorte](../gestion/revision-precorte-2026-10-22.md), con aceptación de límites pendiente.
+- [x] Medir `RNF-019` con Lighthouse real: [40 snapshots 96–100/100](../gestion/validacion-lighthouse-rnf-019-2026-10-20.md) en ambos temas del debug `92deffd`, umbral ≥90 conservado. Etiquetas corregidas con autorización, gate/Android y datos preservados; observaciones y límites explícitos. El autor aprobó [PR #40](https://github.com/jdfesa/lumapse/pull/40) y autorizó merge/limpieza; aceptación general sin nuevas pruebas por caso ni certificar accesibilidad exhaustiva o el APK final. La clasificación posterior está en el [reporte de precorte](../gestion/revision-precorte-2026-10-22.md), con aceptación general del autor en PR #41, sin nuevas pruebas por caso.
 - [x] OFF-01–05 de `RNF-009` PASS en [debug `348da88` identificado](../beta-core-validation/offline-2026-10-06.md), con fix del ZIP local y datos preservados; autor aceptó [PR #31](https://github.com/jdfesa/lumapse/pull/31) y autorizó merge/limpieza, sin transferencia al APK final.
 - [x] `RNF-010`: continuidad SQLite verificada y aceptada en [PR #29](https://github.com/jdfesa/lumapse/pull/29); [evidencia y límites](../beta-core-validation/continuidad-2026-10-04.md). No repetir la tarea cerrada ni trasladar automáticamente sus pruebas a un APK nuevo.
 - [x] Revalidar dependencias tras el advisory crítico de Capacitor: `@capacitor/android`/`core` 8.5.2 y `source-map-js` 1.2.2, auditorías completa/productiva 0/0. [Evidencia y límites](../gestion/validacion-parche-capacitor-2026-10-07.md).
@@ -109,7 +110,7 @@ ampliado expresamente por el autor, sin aceptar pérdida de datos por ser beta.
 - [ ] Emitir una matriz final con RNF, método, comando, dispositivo, fecha, artefacto, resultado y evidencia.
 - [x] Revisar RNF-026 mediante [inventario de decisiones/ADR y temporalidad](../adr/README.md#revisión-de-trazabilidad-precorte--2026-10-22).
 - [x] Clasificar hallazgos pendientes en [PC-01–10](../gestion/revision-precorte-2026-10-22.md), sin dar por aceptadas las propuestas.
-- [ ] Recibir aceptación expresa de los límites menores y de los criterios de corte, tras revisar el PR/debug de precorte.
+- [x] Registrar aceptación general del autor de PR #41 con límites y criterios documentados; merge/limpieza autorizados, sin nuevos resultados manuales por caso ni autorización del APK final.
 
 ### 4. Presentación y defensa
 

@@ -1,7 +1,7 @@
 # ADR-013: Despliegue Android sin desinstalación implícita
 
 **Fecha:** 2026-10-22<br>
-**Estado:** implementación autorizada por el autor; PR e integración pendientes.<br>
+**Estado:** aceptación general del autor en [PR #41](https://github.com/jdfesa/lumapse/pull/41); merge y limpieza autorizados. Integración efectiva verificable en GitHub.<br>
 **Alcance:** tooling de debug, PC-11 del [precorte](../gestion/revision-precorte-2026-10-22.md#incidente-de-despliegue-y-recuperación).
 
 ## Contexto

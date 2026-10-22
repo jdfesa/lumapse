@@ -48,7 +48,7 @@ reescriben resultados históricos para aparentar cumplimiento del APK nuevo.
 
 ## Estado documental actual
 
-- [Revisión precorte del 2026-10-22](./gestion/revision-precorte-2026-10-22.md): clasificación de observaciones, correcciones mínimas y cinco criterios de corte; aceptación del autor y APK final pendientes. El [índice ADR](./adr/README.md#revisión-de-trazabilidad-precorte--2026-10-22) contiene el inventario de RNF-026 y sus límites temporales.
+- [Revisión precorte del 2026-10-22](./gestion/revision-precorte-2026-10-22.md): clasificación de observaciones, correcciones mínimas y cinco criterios de corte; aceptación general del autor en PR #41 y merge/limpieza autorizados, sin nuevos resultados por caso; APK final pendiente. El [índice ADR](./adr/README.md#revisión-de-trazabilidad-precorte--2026-10-22) contiene el inventario de RNF-026 y sus límites temporales.
 
 - La arquitectura y los patrones quedan formalizados en [ADR-008](./adr/ADR-008-arquitectura-modular-y-patrones.md).
 - [ADR-009](./adr/ADR-009-propiedad-transaccional-sqlite.md) documenta la propiedad transaccional y el arranque recuperable incluidos en `v0.5.0`.

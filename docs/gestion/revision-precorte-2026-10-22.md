@@ -2,8 +2,10 @@
 
 **Rama:** `test/pre-cut-acceptance`<br>
 **Base:** `7adea77dd9f9b4a009c4b9d90440bee3af6b48f8`<br>
-**Estado:** clasificación, correcciones y validación técnica completadas; aceptación del autor
-y corte APK pendientes. No es una release ni una autorización de merge.
+**Estado:** el autor aceptó el [PR #41](https://github.com/jdfesa/lumapse/pull/41) y
+ordenó merge a `main` y posterior eliminación de sus ramas local/remota. Aceptación
+general con los límites documentados, sin nuevos resultados manuales por caso.
+La integración efectiva se comprueba en GitHub; el corte APK sigue pendiente.
 
 ## Objetivo, alcance y aceptación
 
@@ -66,11 +68,13 @@ a aprobado. Esta tabla distingue reproducción, impacto y decisión pendiente.
 | PC-08 | RNF-020: los 16 casos registrados usan entrada ADB/CDP; no hubo teclado físico ni ensayo completo de mutaciones. En esta revisión 12 Tab por tema permanecieron dentro del diálogo y Escape devolvió foco a «Agregar fecha». | Mantener **Evidencia parcial**. Propuesta de aceptar ese alcance para presentación Android, sin afirmar teclado completo ni abrir más pilotos. |
 | PC-09 | RNF-026: inventario de decisiones, código e historia contrastados, con ADR retrospectivos identificados. | Revisión documental completada en el [índice ADR](../adr/README.md#revisión-de-trazabilidad-precorte--2026-10-22); no crea decisiones ni reconstruye fechas. |
 | PC-10 | Auditoría actual: cuatro paquetes de tooling afectados (tres moderados/un alto); producción en cero. | Parche mínimo de Vite/Vitest en esta rama; no presentar estos advisories de desarrollo como explotación del APK. |
-| PC-11 | El despliegue anterior delegaba en `native-run`, que desinstala/reinstala ante firma distinta o downgrade. El debug nuevo tenía otra firma y desaparecieron los datos locales. | Bloqueo operativo confirmado: Instalador protegido y recuperación/actualización compatible verificadas con hashes conservados. Cierre técnico comprobado; revisión del autor y actualización de release pendientes. No es una observación menor aceptable. |
+| PC-11 | El despliegue anterior delegaba en `native-run`, que desinstala/reinstala ante firma distinta o downgrade. El debug nuevo tenía otra firma y desaparecieron los datos locales. | Bloqueo operativo confirmado: Instalador protegido y recuperación/actualización compatible verificadas con hashes conservados. Cierre técnico comprobado y aceptación general del autor en PR #41; actualización de release pendiente. No es una observación menor aceptable. |
 
-Las propuestas de aceptación **no son postergaciones aprobadas**. El autor debe
-aceptarlas o indicar un caso concreto que impida el corte. No se deriva de ellas
-una nueva tarea automática ni se cambian los umbrales RNF.
+Las propuestas se presentaron para aceptación, no como postergaciones aprobadas
+por silencio. El autor aceptó el PR con esos límites documentados; la aceptación
+es general, no una nueva medición ni certificación por caso. No se deriva de ellas
+una tarea automática, otro RNF diferido ni un cambio de umbral. El candidato final
+requiere todavía sus propios controles y aceptación.
 
 ## Correcciones y regresiones
 
@@ -285,12 +289,17 @@ defensa sobre el mismo APK. No hace falta abrir otra rama de mejoras por rutina.
 Las métricas CRUD/FPS y RNF-005 conservan sus tratamientos ya acordados; ninguna
 otra ausencia se considera diferida por silencio.
 
-### Aceptación pendiente del autor
+### Aceptación y continuidad
 
-- [ ] Revisar el PR y comprobar «Agregar fecha» en ambos temas, incluido retorno
-  desde el diálogo; confirmar funcionamiento general del debug.
-- [ ] Aceptar expresamente los límites PC-02 a PC-08 y los cinco criterios de corte.
-- [ ] Autorizar integración, si corresponde; **sin auto-merge**.
-- [ ] Después de integrar, acordar versión y autorizar la preparación del candidato.
+- [x] El autor acepta el PR #41 en su alcance y con los límites PC-02 a PC-08 y
+  criterios de corte documentados. Aceptación general; no se recibieron nuevos
+  resultados manuales de «Agregar fecha», teclado, TalkBack u otros casos.
+- [x] El autor ordena merge a `main` y, una vez comprobado, eliminar las ramas
+  local y remota. El HEAD y sus checks deben verificarse antes de integrar;
+  el estado efectivo de integración es el del PR en GitHub.
+- [ ] Tras comprobar el cierre, acordar versión y autorizar la preparación del
+  candidato firmado, incluyendo actualización con datos desde la beta publicada.
 
-No se registra todavía aceptación manual, merge, congelación ni APK final.
+Esta aceptación no autoriza APK final, publicación ni congelación y no transforma
+la evidencia parcial de RNF-020 en verificación completa. No se rellenan pruebas
+manuales por deducción ni se repiten mediciones ya cerradas.

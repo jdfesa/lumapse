@@ -6,8 +6,8 @@
 **Estado:** RNF-019 verificado técnicamente para la métrica y el alcance registrados;
 el autor aprobó el [PR #40](https://github.com/jdfesa/lumapse/pull/40) y autorizó
 merge a `main` y limpieza de sus ramas integradas. La clasificación posterior está
-en el [precorte del 2026-10-22](revision-precorte-2026-10-22.md), con aceptación de
-límites pendiente; no autoriza APK final.
+en el [precorte del 2026-10-22](revision-precorte-2026-10-22.md), aceptado de forma
+general por el autor en PR #41; sin nuevas pruebas por caso ni APK final.
 
 ## Objetivo y alcance acordados
 
@@ -321,4 +321,5 @@ La [revisión posterior](./revision-precorte-2026-10-22.md) clasifica las observ
 y reproduce un caso adicional: el hover de «Agregar fecha» permanece visible tras
 Escape con contraste insuficiente. Se corrige y valida por separado; no se
 reescriben los resultados históricos de este reporte ni se transfieren al APK
-final. Las propuestas de aceptación de otros límites siguen pendientes del autor.
+final. El autor aceptó PR #41 con los límites documentados y autorizó merge/limpieza;
+aceptación general, sin nuevas pruebas por caso ni autorización del APK final.
