@@ -35,6 +35,32 @@ describe('GHSA-p98j-92pf-mc4p — contrato de DOMPurify', () => {
   })
 })
 
+describe('GHSA-mrv2-3pqr-j5jr — neutralización de nodos vecinos', () => {
+  // Contrato upstream aislado, sin ejecutar handlers ni cargar recursos.
+  // La configuración productiva de Lumapse no usa IN_PLACE.
+  it.each(['parent', 'sibling'])('neutraliza el subárbol retirado por %s', (mode) => {
+    const purifier = createDOMPurify(window)
+    const root = document.createElement('div')
+    root.innerHTML = '<figure><img class="trigger"><img onerror="void 0"></figure>'
+    const image = root.querySelector('img[onerror]')
+
+    purifier.addHook('afterSanitizeAttributes', (node) => {
+      if (node.getAttribute?.('class') !== 'trigger') return
+      if (mode === 'parent') node.parentNode.remove()
+      else node.nextElementSibling.remove()
+    })
+
+    try {
+      purifier.sanitize(root, { IN_PLACE: true })
+
+      expect(root.contains(image)).toBe(false)
+      expect(image.hasAttribute('onerror')).toBe(false)
+    } finally {
+      purifier.removeAllHooks()
+    }
+  })
+})
+
 describe('MarkdownService — política productiva tras el parche', () => {
   it('conserva Markdown y sanitiza HTML peligroso en renders repetidos', () => {
     const markdown = [

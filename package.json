@@ -1,6 +1,6 @@
 {
   "name": "lumapse",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "App móvil offline-first de captura de notas y gestión del conocimiento personal",
   "private": true,
   "type": "module",
@@ -83,7 +83,7 @@
     "@capacitor/filesystem": "^8.1.2",
     "@capacitor/network": "^8.0.1",
     "@capacitor/share": "^8.0.1",
-    "dompurify": "^3.4.16",
+    "dompurify": "^3.4.17",
     "jeep-sqlite": "^2.8.0",
     "jszip": "^3.10.1",
     "marked": "^18.0.3",

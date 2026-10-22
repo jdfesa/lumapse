@@ -13,7 +13,7 @@ describe('build metadata', () => {
   it.each([
     ['test', 'Prueba optimizada (variante no declarada)'],
     ['android-debug', 'Android debug · prueba privada'],
-    ['android-candidate', 'Android · candidato (firma/publicación no verificadas)'],
+    ['android-candidate', 'Android · candidato'],
     ['production', 'No disponible'],
     ['__proto__', 'No disponible'],
   ])('etiqueta %s sin acreditar firma o validación', (compilation, expected) => {

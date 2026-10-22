@@ -10,11 +10,26 @@
 
 **Versión publicada:** `v0.5.0` (`versionCode 500`), tag anotado sobre `5840755`. Las betas publicadas son inmutables; debug privado autorizado no exige bump por prueba. Un candidato/entrega posterior requiere versión/code nuevos: [flujo Android](docs/flujo-desarrollo-android.md#identificación-de-compilaciones-en-acerca-de).
 
-**Objetivo:** tareas técnicas imprescindibles → último APK de presentación generado/validado (versión por acordar; objetivo previo `0.6.0+`) → congelar desarrollo → manual basado en ese APK → informe final y defensa. El feedback voluntario se recoge después del corte, sin bloquear estos entregables. Para finales de octubre de 2026 deben estar preparados, sin ampliar el producto ni prometer una versión estable o adopción real.
+**Objetivo:** tareas técnicas imprescindibles → último APK de presentación generado/validado (`0.6.0/600`, Release Candidate 1 autorizado) → congelar desarrollo → manual basado en ese APK → informe final y defensa. El feedback voluntario se recoge después del corte, sin bloquear estos entregables. Para finales de octubre de 2026 deben estar preparados, sin ampliar el producto ni prometer una versión estable o adopción real.
 
 **Recorte de cierre acordado:** [imprescindibles, límites y deuda postdefensa](BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa). Este tablero registra acciones, no certifica cumplimiento: una casilla pendiente o una postergación no se convierte en evidencia. Los estados RNF permanecen en su [fuente canónica](docs/producto/requisitos-no-funcionales.md).
 
 ## Prioridad inmediata — plan aceptado
+
+**Candidato autorizado — 2026-10-22:** preparar `0.6.0/600` como Release Candidate 1
+en `chore/presentation-rc1`, sin mejoras nuevas. El autor autorizó generar la APK
+y recuperar la firma de distribución existente en almacenamiento temporal privado.
+APK inicial generada y firmada desde `3068455`; después se autorizó corregir solo
+la etiqueta confusa de Acerca de y aplicar DOMPurify 3.4.17. La APK vigente procede
+de `bcefe6a`, con gate/auditorías, firma y etiqueta Android comprobados. Identidad y pendientes se registran en el
+[registro del candidato](docs/gestion/candidato-apk-0.6.0.md).
+Después, el autor autorizó preparar la beta pública `0.5.0` en el teléfono y
+actualizar a la RC1 sin borrar/restaurar desde esa referencia: actualización,
+apertura y conservación del conjunto de prueba PASS en el APK inicial. La
+actualización posterior al corregido también conservó todas las tablas y el borrador.
+El autor aceptó PR #42 y autorizó merge/limpieza tras comprobar integración. La
+aceptación manual final y los controles restantes siguen pendientes; publicación
+y tag se atenderán después, con asistencia, sin congelación definitiva por deducción.
 
 **Revisión precorte — 2026-10-22:** `test/pre-cut-acceptance` reúne la
 [clasificación y los cinco criterios concretos de corte](docs/gestion/revision-precorte-2026-10-22.md).
@@ -24,9 +39,9 @@ recuperados por hash y protección del script contra borrados implícitos; actua
 compatible comprobada, con tablas/borrador/preferencias conservados. No se retoman tareas diferidas. La revisión ADR está documentada.
 El autor aceptó [PR #41](https://github.com/jdfesa/lumapse/pull/41) y ordenó merge
 y limpieza de sus ramas una vez comprobada la integración. Aceptación general
-con los límites documentados, sin nuevos resultados manuales por caso. No se ha
-generado ni autorizado el APK final; corresponde acordar el candidato tras cerrar
-este PR, no abrir otra ronda de mejoras por rutina.
+con los límites documentados, sin nuevos resultados manuales por caso. Al cerrar
+ese PR no se había generado ni autorizado el APK final; la autorización posterior
+del candidato está registrada arriba. No abrir otra ronda de mejoras por rutina.
 
 **Revisión acotada aceptada — RNF-019 (2026-10-20):** resolver el método y la
 evidencia de Lighthouse Accessibility en `test/rnf-019-lighthouse-accessibility`,
@@ -164,8 +179,11 @@ con muestras y umbrales conservados. No se harán más pilotos en este frente.
 Aplicar los [cinco no negociables](docs/gestion/revision-precorte-2026-10-22.md#no-negociables-y-decisión-de-corte),
 una vez aceptada e integrada la revisión precorte. No abrir otra ronda de mejoras por rutina.
 
-- [ ] Repetir `npm run verify`, auditorías completa/productiva y coverage de servicios en el corte candidato; registrar resultados reales, no reutilizar cifras históricas como mediciones nuevas.
-- [ ] Generar y validar el nuevo APK autorizado (objetivo `0.6.0+`); fijar fuente, versión/code, canal, firma y hash, preservar las betas publicadas y registrar la revisión Android pertinente sobre ese binario exacto.
+- [x] Repetir `npm run verify`, auditorías completa/productiva y coverage de servicios en la fuente candidata `0.6.0/600`: 1211 tests de app/105 de tooling, auditorías 0/0 y servicios 96,06%; [resultados del corte](docs/gestion/candidato-apk-0.6.0.md#controles-de-la-fuente-candidata), sin atribuir pruebas Android todavía no ejecutadas.
+- [x] Generar el APK autorizado `0.6.0/600` (RC1), corregido desde fuente limpia `bcefe6a` por etiqueta neutral y parche DOMPurify autorizado; gate final de 1214 tests de app/105 tooling y auditorías 0/0. Firma original, manifest no-debuggable, canal, assets, hash y etiqueta Android comprobados. [Identidad vigente y evidencia inicial preservada](docs/gestion/candidato-apk-0.6.0.md#binario-corregido). Sin tag ni publicación.
+- [x] Probar actualización real desde la APK pública `0.5.0/500` a la RC1 exacta: apertura, cinco notas con estados, materia/sección, fecha académica, borrador y tema conservados; [filas/hashes y límites](docs/gestion/candidato-apk-0.6.0.md#actualización-pública-050-a-060--2026-10-22). Sin desinstalar, limpiar, importar ni restaurar desde la referencia pública.
+- [x] Verificar actualización del candidato inicial al corregido, con todas las filas y el borrador idénticos, y comprobar Acerca de en el teléfono. El autor acepta PR #42 y autoriza merge/limpieza; no acredita los controles restantes ni publica el APK.
+- [ ] Completar recorridos del núcleo offline/organización/búsqueda/fechas/ZIP, tráfico/trackers y aceptación del autor sobre ese APK exacto, sin deducir esos resultados de la actualización.
 - [ ] Congelar el desarrollo sobre el APK aceptado: sin funciones, mejoras ni correcciones automáticas motivadas por feedback; cualquier excepción requiere una decisión expresa.
 
 ### Feedback posterior al corte — no bloqueante

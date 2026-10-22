@@ -9,6 +9,19 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ## [Unreleased]
 
+> Sin cambios todavía.
+
+## [0.6.0] — 2026-10-22 — Candidato de presentación (RC1)
+
+> APK local `0.6.0/600` generada y firmada como Release Candidate 1, sin anunciar
+> estabilidad ni publicar todavía. Identidad del APK y controles propios del corte
+> en el [registro del candidato](docs/gestion/candidato-apk-0.6.0.md). Los resultados
+> debug anteriores conservan su alcance. La actualización desde la APK pública
+> `0.5.0` al candidato inicial, apertura y conservación del conjunto de prueba fueron
+> verificadas en Android. El corregido también pasó actualización desde el inicial,
+> con tablas conservadas y Acerca de comprobado. El autor aceptó PR #42 y autorizó
+> merge/limpieza; recorridos restantes y aceptación manual final siguen pendientes.
+
 ### Changed
 
 - **Preparación del corte:** [clasificación de observaciones y criterios concretos](docs/gestion/revision-precorte-2026-10-22.md), con trazabilidad ADR revisada y límites documentados incluidos en la aceptación general de PR #41, con merge/limpieza autorizados y sin nuevos resultados manuales por caso. No genera el APK final ni retoma tareas diferidas.
@@ -24,6 +37,8 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ### Security
 
+- **Parche mínimo autorizado del candidato:** DOMPurify 3.4.17 sustituye únicamente a 3.4.16 ante los avisos `GHSA-cg2g-xh64-v4q7`, `GHSA-mrv2-3pqr-j5jr` y `GHSA-c6gr-qvv4-5v3f`. Las configuraciones descritas no se usan en Lumapse; no se afirma una explotación comprobada. Se preserva la política productiva de Markdown y se agregan dos regresiones sintéticas sobre el contrato upstream de neutralización de subárboles.
+
 - **Parches del precorte:** Vite 6.4.4 y Vitest/coverage-v8 4.1.12 corrigen los advisories actuales del tooling. Diez nodos de desarrollo actualizados, grafo productivo intacto y auditorías completa/productiva en cero; tres regresiones nuevas verifican límites de archivos y mocks con fixtures. [Aplicabilidad, pruebas y límites](docs/gestion/revision-precorte-2026-10-22.md#dependencias-de-desarrollo); no demuestra explotación del APK ni cambia versión/runtime.
 
 - **Parche de Capacitor:** `@capacitor/android` y `@capacitor/core` suben de 8.3.4 a 8.5.2 para corregir `GHSA-rvm3-566m-v7fv` (CVSS 9.3, crítico); `source-map-js` transitive sube de 1.2.1 a 1.2.2 para `GHSA-68fv-2mgg-jv7q`. Auditorías completa y productiva quedan en 0/0 y `npm run verify` pasa. El cambio no genera APK, release ni evidencia de tráfico runtime. [Evidencia y límites](docs/gestion/validacion-parche-capacitor-2026-10-07.md).
@@ -31,6 +46,8 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 - **Parche del tooling de tests:** Vitest y coverage-v8 suben a 4.1.11 para corregir `GHSA-82fw-gwwq-j7x9`; nueve paquetes de desarrollo alineados, sin cambios al grafo productivo, Vite, Node ni versión Android. Cuatro regresiones sintéticas verifican redirects permitidos/restringidos y la desactivación del canal de registro. Auditorías del 2026-09-15 en cero; autor confirmó pruebas e integró PR #17 (`7dc105c`). [Evidencia y límites](docs/gestion/validacion-parche-vitest-2026-09-15.md).
 
 ### Fixed
+
+- **Identificación del candidato en Acerca de (RF-023):** etiqueta neutral «Android · candidato» en lugar de un texto fijo que podía confundirse con un fallo real de firma. No agrega una verificación de certificados dentro de la app ni cambia funcionalidades o persistencia.
 
 - **Despliegue sin borrado implícito:** el script elimina `cap run`/`native-run`, verifica certificados antes de actualizar y usa ADB sin fallback destructivo. Firma distinta/ilegible, downgrade rechazado o error de instalación abortan sin desinstalar; `--clean` solo borra por elección explícita tras un build válido. Ocho regresiones y [causa/recuperación del incidente](docs/gestion/revision-precorte-2026-10-22.md#incidente-de-despliegue-y-recuperación); no cambia persistencia de la app ni gestiona claves de release.
 

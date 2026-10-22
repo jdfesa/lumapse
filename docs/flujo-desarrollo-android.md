@@ -348,13 +348,15 @@ red ni telemetría en el teléfono:
 | `npm run dev` (incluso con modo production) | Desarrollo (servidor local) |
 | `npm run build` / CI sin variante declarada | Prueba optimizada (variante no declarada) |
 | `npm run deploy:android -- --target <DEVICE_ID>` | Android debug · prueba privada |
-| Build web de `scripts/release-helper.py` | Android · candidato (firma/publicación no verificadas) |
+| Build web de `scripts/release-helper.py` | Android · candidato |
 
 Los scripts declaran internamente `LUMAPSE_BUILD_CHANNEL`; no se exige una variable
 manual para cada prueba. Solo se aceptan los dos canales Android conocidos; otros
 valores no se exponen ni convierten un build Vite production en release. La etiqueta
 candidato **no** demuestra firma, publicación o validación, incluso si el helper
 produce un APK unsigned. No habilita debugging en release.
+La etiqueta identifica únicamente el canal: no muestra un resultado de firma
+porque Acerca de no consulta el certificado instalado.
 
 El estado incluye archivos seguidos y nuevos no ignorados de `src/`, `public/`,
 `android/`, package/lock, entrada/configuración de build y scripts participantes;

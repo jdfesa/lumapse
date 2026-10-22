@@ -2,7 +2,7 @@ const COMPILATIONS = Object.freeze({
   development: 'Desarrollo (servidor local)',
   test: 'Prueba optimizada (variante no declarada)',
   'android-debug': 'Android debug · prueba privada',
-  'android-candidate': 'Android · candidato (firma/publicación no verificadas)',
+  'android-candidate': 'Android · candidato',
 })
 
 export function formatBuildMetadata(metadata = {}) {

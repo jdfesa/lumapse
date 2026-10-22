@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { APP_METADATA } from '../../../../src/config/appMetadata.js'
+import { formatBuildMetadata } from '../../../../src/config/buildMetadata.js'
 import { renderAboutView } from '../../../../src/components/about/AboutView.js'
 
 function render(html) {
@@ -28,6 +29,17 @@ describe('AboutView', () => {
 
     expect(wrapper.textContent).toContain('Los datos viven en el dispositivo')
     expect(wrapper.textContent).toContain('no sincroniza ni envía datos automáticamente')
+  })
+
+  it('identifica el candidato sin mostrar un supuesto resultado de firma', () => {
+    const wrapper = render(renderAboutView({
+      ...APP_METADATA,
+      ...formatBuildMetadata({ compilation: 'android-candidate' }),
+    }))
+    const label = [...wrapper.querySelectorAll('dt')].find(item => item.textContent === 'Compilación')
+
+    expect(label.nextElementSibling.textContent).toBe('Android · candidato')
+    expect(wrapper.textContent).not.toContain('firma/publicación no verificadas')
   })
 
   it('escapa metadata dinamica', () => {
