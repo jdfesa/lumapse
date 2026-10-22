@@ -9,6 +9,15 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ## [Unreleased]
 
+> Sin cambios todavía.
+
+## [0.6.0] — 2026-10-22 — Candidato de presentación (RC1)
+
+> Corte `0.6.0/600` autorizado como Release Candidate 1, sin anunciar estabilidad
+> ni publicar todavía. Preparación, identidad del APK y controles propios del corte
+> en el [registro del candidato](docs/gestion/candidato-apk-0.6.0.md). Los resultados
+> debug anteriores conservan su alcance; no verifican automáticamente este binario.
+
 ### Changed
 
 - **Preparación del corte:** [clasificación de observaciones y criterios concretos](docs/gestion/revision-precorte-2026-10-22.md), con trazabilidad ADR revisada y límites documentados incluidos en la aceptación general de PR #41, con merge/limpieza autorizados y sin nuevos resultados manuales por caso. No genera el APK final ni retoma tareas diferidas.

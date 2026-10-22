@@ -76,8 +76,11 @@ posterga los otros RNF pendientes.
 
 El autor informa que dos docentes del instituto están probando `v0.5.0`; sus
 observaciones aún no fueron recibidas/revisadas aquí. Cuando estén disponibles,
-se atribuirán a esa versión, sin transferirlas al APK posterior. La versión del
-último APK y su generación siguen por acordar; no se declara congelado el código.
+se atribuirán a esa versión, sin transferirlas al APK posterior. El autor autorizó
+después el corte `0.6.0/600` como Release Candidate 1 y su generación con la firma
+de distribución existente; el [registro del candidato](docs/gestion/candidato-apk-0.6.0.md)
+distingue preparación, identidad, pruebas y aceptación pendientes. No se declara
+congelado el artefacto ni publicada una release antes de validar y aceptar ese binario.
 
 La entrega busca una **beta defendible**, con flujos probados, riesgos tratados y
 límites explícitos; no obliga a anunciar `1.0.0`, estabilidad comercial o adopción.
