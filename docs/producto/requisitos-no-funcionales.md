@@ -5,6 +5,14 @@
 **Última revisión:** 2026-10-22 — [revisión precorte](../gestion/revision-precorte-2026-10-22.md): observaciones clasificadas, corrección localizada de contraste y parches de tooling; aceptación general del autor en PR #41 y merge/limpieza autorizados, sin nuevos resultados manuales por caso ni APK final. RNF-026 verificado documentalmente por inventario de decisiones y ADR retrospectivos identificados; RNF-020 conserva evidencia parcial. No acredita el candidato final ni modifica las postergaciones de RNF-002/004/005.
 **Autor:** José David Sandoval
 
+> **Cierre académico — 2026-10-22:** el autor acepta la RC1 publicada `v0.6.0`
+> con validación parcial y [congela el desarrollo y las nuevas comprobaciones de app](../../BACKLOG.md#congelación-académica--2026-10-22)
+> hasta después de la presentación oficial. Las comprobaciones restantes de núcleo
+> offline, organización/búsqueda, fechas, ZIP y tráfico/trackers se difieren; no se
+> marcan verificadas. Las filas conservan sus métricas, estados y artefactos: una
+> evidencia debug no se transfiere al APK final. La matriz del informe utilizará la
+> evidencia existente y declarará lo no demostrado, sin nuevas mediciones.
+
 > **Nota de evolución:** Estos RNF se definieron originalmente para una PWA con IndexedDB. Después del relevamiento, Lumapse pivotó a una aplicación Android híbrida empaquetada con Capacitor, con persistencia SQLite y distribución por APK ([ADR-005](../adr/ADR-005-pivote-app-nativa.md), [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md)). La revisión conserva los criterios originales, pero distingue cuáles siguen vigentes, cuáles requieren evidencia y cuáles quedaron obsoletos o no aplican al artefacto Android.
 
 ---
@@ -24,7 +32,7 @@
 
 > Un build correcto, la ausencia de crashes o una auditoría estática no se consideran por sí solos evidencia suficiente para métricas de tiempo, FPS, contraste, touch targets o pruebas con usuarios.
 
-> La base publicada es el tag `v0.5.0` (`5840755`). La evidencia posterior identifica su propio artefacto: RNF-010 corresponde al debug `dbc8940` aceptado en PR #29; RNF-009, al debug `348da88`, aceptado en PR #31. No son el APK firmado de GitHub. Las validaciones no se transfieren automáticamente entre binarios.
+> La RC1 publicada es `v0.6.0` (tag sobre `ac2a747`, APK de fuente `bcefe6a`). La base anterior `v0.5.0` (`5840755`) y cada evidencia conservan su identidad: RNF-010 incluye el debug `dbc8940` aceptado en PR #29; RNF-009, el debug `348da88` aceptado en PR #31. No son la RC1 firmada de GitHub. Las validaciones no se transfieren automáticamente entre binarios.
 
 > **Seguimiento F3:** [protocolo y matriz incremental](../beta-core-validation/README.md)
 > preparados con perfiles reproducibles de 50/500 notas e integración SQLite local.

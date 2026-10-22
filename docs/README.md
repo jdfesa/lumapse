@@ -1,6 +1,6 @@
 # Documentación del Proyecto — Lumapse
 
-Este directorio reúne la documentación viva de Lumapse. La referencia técnica actual corresponde a la **pre-release `v0.5.0`**, segunda beta firmada e instalable en Android. El producto vigente es una aplicación móvil empaquetada con Capacitor, con persistencia local SQLite y funcionamiento offline; la PWA e IndexedDB pertenecen a la evolución histórica del proyecto.
+Este directorio reúne la documentación viva de Lumapse. El corte vigente es la **pre-release `v0.6.0` — Release Candidate 1**, aceptada con validación parcial y desarrollo congelado hasta después de la presentación académica oficial. El producto es Android/Capacitor con SQLite; PWA e IndexedDB pertenecen a su evolución histórica. La [decisión canónica](../BACKLOG.md#congelación-académica--2026-10-22) limita las próximas sesiones a documentación: primero manual de usuario, luego informe final y defensa, sin nuevas pruebas o cambios de app.
 
 ## Cómo leer la documentación
 
@@ -32,7 +32,7 @@ Cuando un documento histórico contradiga una decisión posterior, prevalece el 
 
 Los documentos deben distinguir explícitamente entre:
 
-- **Vigente:** describe la versión `v0.5.0` o declara explícitamente una evidencia histórica anterior y puede usarse en la defensa.
+- **Vigente:** describe el corte `v0.6.0` con sus límites o identifica explícitamente el artefacto histórico de una evidencia. Los capítulos del informe y el manual anterior aún requieren adaptación documental; no son entregables finales por deducción.
 - **Histórico:** registra una hipótesis o decisión reemplazada, sin presentarla como estado actual.
 - **Fuente:** archivo que se edita y del cual se deriva otro artefacto.
 - **Generado:** salida reproducible que no debe corregirse manualmente si existe una fuente.
@@ -53,11 +53,11 @@ reescriben resultados históricos para aparentar cumplimiento del APK nuevo.
   corte aprobados. Se preserva la prueba pública `0.5.0` → candidato inicial;
   el corregido (`bcefe6a`, etiqueta neutral y DOMPurify 3.4.17 autorizados) también
   quedó instalado por actualización, con datos conservados y Acerca de comprobado.
-  El autor aceptó PR #42 y autorizó merge/limpieza. Recorridos Android restantes y
-  aceptación manual final pendientes; no publicada. La referencia publicada
-  continúa siendo `v0.5.0`.
+  PR #42 quedó integrado; posteriormente el autor aceptó la cobertura parcial y
+  congeló el desarrollo. `v0.6.0` publicada como Pre-release; comprobaciones
+  restantes diferidas hasta después de la presentación, no aprobadas.
 
-- [Revisión precorte del 2026-10-22](./gestion/revision-precorte-2026-10-22.md): clasificación de observaciones, correcciones mínimas y cinco criterios de corte; aceptación general del autor en PR #41 y merge/limpieza autorizados, sin nuevos resultados por caso; APK final pendiente. El [índice ADR](./adr/README.md#revisión-de-trazabilidad-precorte--2026-10-22) contiene el inventario de RNF-026 y sus límites temporales.
+- [Revisión precorte del 2026-10-22](./gestion/revision-precorte-2026-10-22.md): evidencia histórica de clasificación, correcciones y criterios iniciales; al cerrar PR #41 aún no existía el APK final. La decisión posterior de publicación/congelación está en el registro de RC1, sin reescribir resultados previos. El [índice ADR](./adr/README.md#revisión-de-trazabilidad-precorte--2026-10-22) conserva el inventario de RNF-026 y sus límites temporales.
 
 - La arquitectura y los patrones quedan formalizados en [ADR-008](./adr/ADR-008-arquitectura-modular-y-patrones.md).
 - [ADR-009](./adr/ADR-009-propiedad-transaccional-sqlite.md) documenta la propiedad transaccional y el arranque recuperable incluidos en `v0.5.0`.

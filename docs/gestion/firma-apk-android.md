@@ -1,11 +1,10 @@
 # Firma de APK Android — Lumapse
 
 **Hito:** 06 — Entrega Final  
-**Versión publicada vigente:** 0.5.0<br>
-**Candidato local:** 0.6.0/600 — Release Candidate 1<br>
-**Estado:** beta publicada preservada; candidato firmado instalado mediante
-actualización desde la pública `0.5.0`, con apertura y conservación del conjunto
-de prueba verificadas. Resto de validación, aceptación y publicación pendientes.
+**Versión publicada vigente:** 0.6.0/600 — Release Candidate 1, Pre-release<br>
+**Estado:** RC1 publicada y aceptada con validación parcial; desarrollo congelado
+hasta después de la presentación académica oficial. Sólo documentación; controles
+restantes diferidos, sin nuevas verificaciones de firma, build o instalación.
 
 ---
 
@@ -75,10 +74,11 @@ El resultado esperado debe indicar esquemas de firma verificados y mostrar el ce
 
 ---
 
-## Candidato local 0.6.0 — RC1
+## Resultado publicado 0.6.0 — RC1
 
 La [fuente y verificación del candidato](candidato-apk-0.6.0.md#binario-corregido)
-identifican la APK generada el 2026-10-22, no una nueva publicación:
+identifican la APK generada y publicada el 2026-10-22; no se recompiló ni sustituyó
+en el cierre documental:
 
 | Campo | Valor |
 |---|---|
@@ -88,6 +88,7 @@ identifican la APK generada el 2026-10-22, no una nueva publicación:
 | Fuente incorporada | `bcefe6a2ad86ed3abef4f5789a6696143503600e`, sin cambios locales |
 | Certificado SHA-256 | `91d719826e632e10f331913c3835c51e38cf780eb139940eb3b0bf1ed6a157cd` |
 | Verificación | `apksigner` PASS/v2, `zipalign` PASS, manifest no-debuggable |
+| Publicación | [Lumapse v0.6.0 — Release Candidate 1](https://github.com/jdfesa/lumapse/releases/tag/v0.6.0), Pre-release; tag sobre `ac2a747` |
 
 Se reutilizó la identidad de distribución existente; claves y configuración se
 mantienen en almacenamiento temporal privado fuera del repositorio. No se generó
@@ -99,8 +100,9 @@ apertura, datos, borrador y tema conservados. El ajuste autorizado de etiqueta y
 DOMPurify 3.4.17 produjo el APK de la tabla vigente; también se verificó su
 actualización desde el candidato inicial, con todas las tablas conservadas y
 Acerca de comprobado. No se reatribuye la prueba pública directa al nuevo hash.
-El autor aceptó PR #42 y autorizó merge/limpieza. Recorridos restantes,
-tráfico/trackers y aceptación manual final permanecen pendientes antes de publicar.
+El autor aceptó PR #42 y, posteriormente, la validación parcial de la RC1 para
+publicar/congelar. Recorridos restantes y tráfico/trackers quedan diferidos hasta
+después de la presentación, no aprobados. [Decisión](../../BACKLOG.md#congelación-académica--2026-10-22).
 
 ## Resultado publicado 0.5.0
 

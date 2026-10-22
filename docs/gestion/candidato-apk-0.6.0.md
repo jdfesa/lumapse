@@ -3,10 +3,10 @@
 **Fecha:** 2026-10-22<br>
 **Rama:** `chore/presentation-rc1`<br>
 **Base integrada:** `9ab9c006bc38dd59d9e275968aa583a3ba1e56b6` (PR #41)<br>
-**Estado:** APK corregida firmada e instalada por actualización en sitio, con
-«Android · candidato» comprobado en Acerca de y datos conservados. El autor aceptó
-PR #42 y autorizó merge/limpieza; resto de validación Android, aceptación final del
-binario, tag y publicación pendientes. La identidad vigente figura en
+**Estado:** `v0.6.0` publicada como Pre-release, RC1 aceptada expresamente con
+validación parcial y desarrollo congelado hasta después de la presentación
+académica oficial. Comprobaciones restantes diferidas, no aprobadas; sólo
+documentación en las próximas sesiones. La identidad vigente figura en
 [binario corregido](#binario-corregido).
 
 ## Objetivo y alcance acordados
@@ -29,12 +29,11 @@ preparación del banco, no un paso del procedimiento del usuario final.
 Después aceptó PR #42 y autorizó merge a `main` y limpieza de sus ramas solo tras
 comprobar integración. Ante la confusión de Acerca de, autorizó únicamente la
 etiqueta neutral y su recompilación; también aprobó expresamente DOMPurify 3.4.17
-tras la nueva consulta de advisories. Publicación y tag se atenderán después con
-su asistencia; no se crearon durante este cierre. La aceptación general del PR no
-se convierte en nuevos resultados manuales ni en aceptación final del binario.
-Las betas publicadas no se reemplazan. El título previsto para una eventual
-publicación es `Lumapse v0.6.0 — Release Candidate 1`, tag `v0.6.0`, marcada
-**Pre-release**; esto no acredita que existan el tag o la publicación.
+tras la nueva consulta de advisories. Ese cierre no creó tag ni release; la
+aceptación posterior de la validación parcial y publicación se registra al final
+de este documento, sin convertirlas en nuevos resultados manuales por caso.
+Las betas publicadas y la RC1 no se reemplazan. El título publicado es
+`Lumapse v0.6.0 — Release Candidate 1`, tag `v0.6.0`, marcada **Pre-release**.
 
 ## Preparación inicial comprobada
 
@@ -244,7 +243,7 @@ presenta como una nueva ejecución del ajuste. No cambió el código de servicio
 | Versión/code y canal | `0.6.0/600`, `android-candidate` |
 | Certificado SHA-256 | `91d719826e632e10f331913c3835c51e38cf780eb139940eb3b0bf1ed6a157cd` |
 | Checksum adjunto | `lumapse-v0.6.0.apk.sha256`, actualizado al binario corregido |
-| Tag/release | No creados; las betas publicadas no se reemplazan |
+| Tag/release | `v0.6.0` sobre `ac2a747`; Pre-release publicada, sin reemplazar betas anteriores |
 
 ### Comprobación nativa del corregido
 
@@ -266,16 +265,34 @@ no se versionan APK, bases, capturas ni claves. Se retiraron solo copias auxilia
 propias del teléfono, fuera de los datos de la app.
 
 El recorrido nuevo es **0.6.0 inicial → 0.6.0 corregida**, no una repetición directa
-de 0.5.0 → corregida. El resultado no sustituye los recorridos offline/ZIP,
-tráfico/trackers ni la aceptación manual final pendientes.
+de 0.5.0 → corregida. El resultado no acredita los recorridos offline/ZIP o
+tráfico/trackers no ejecutados; el autor acepta después esa cobertura parcial.
 Los commits posteriores de documentación y merge no son la fuente incorporada en
 la APK y no requieren recompilarla por sí solos.
 
 ## Aceptación del binario y congelación
 
-Aplican los [cinco no negociables del precorte](revision-precorte-2026-10-22.md#no-negociables-y-decisión-de-corte).
-Esta preparación no convierte los resultados debug en pruebas del candidato ni
-certifica ausencia universal de defectos.
+**Decisión expresa del autor — 2026-10-22:** acepta publicar la RC1 tal como está,
+con las pruebas realizadas y la cobertura restante no demostrada. Ordena no hacer
+más comprobaciones ni cambios de la app hasta después de la presentación
+académica oficial. La [decisión canónica](../../BACKLOG.md#congelación-académica--2026-10-22)
+reemplaza el requisito previo de completar las comprobaciones restantes antes
+de publicar/congelar; no cambia métricas, umbrales ni estados de evidencia.
+
+No se tocarán código, funcionalidades, dependencias, persistencia, interfaz,
+recursos o configuración que puedan afectar la app; no se recompilará, instalará
+ni reemplazará este binario. El siguiente trabajo será sólo documental: próxima
+sesión, manual de usuario; luego informe final y defensa con la evidencia existente.
+Un hallazgo o feedback se registra como límite/trabajo futuro, no como permiso
+para iniciar otra comprobación o corrección antes de la presentación.
+
+GitHub registra la [publicación](https://github.com/jdfesa/lumapse/releases/tag/v0.6.0)
+el **2026-10-22 a las 19:28:37 UTC**, `draft=false`, `prerelease=true`, tag sobre
+`ac2a7473f41e4f3772d80ff8fdcb65a6067988f7`. Incluye `lumapse-v0.6.0.apk`
+(25.767.142 bytes) y `lumapse-v0.6.0.apk.sha256`. El digest del APK informado por
+la API es `sha256:15f8ede5b78387e3fcac1a53eb3bc78dbb1e30df9acf7f4f20c771c48739e042`,
+coincidente con la identidad ya registrada. Sólo se consultaron metadatos de la
+publicación: no se descargó, ejecutó o volvió a validar la APK en este cierre documental.
 
 - [x] Autorizar y comprobar actualización desde la beta firmada pública, con
   apertura, datos, borrador y tema conservados en el conjunto anterior. Sin
@@ -284,14 +301,16 @@ certifica ausencia universal de defectos.
   todas las tablas conservadas; recorrido y límites diferenciados arriba.
 - [x] Registrar aceptación general del autor de PR #42 y autorización de
   merge/limpieza una vez comprobada integración; sin publicación en este paso.
-- [ ] Completar los recorridos del núcleo offline, organización/búsqueda, fechas
-  y ZIP local sobre este binario exacto; no deducirlos de la comparación de datos.
-- [ ] Repetir tráfico/trackers de RNF-012/013 sobre este binario exacto.
-- [ ] Registrar aceptación manual final del binario, con límites PC-02 a PC-08 conservados y
-  RNF-020 en evidencia parcial; RNF-002/004 y RNF-005 mantienen su tratamiento.
-- [ ] Fijar el artefacto aceptado y su congelación; después adaptar manual,
-  emitir matriz RNF, actualizar informe y preparar defensa sobre el mismo corte.
+- [ ] **Diferido hasta después de la presentación:** recorridos restantes del núcleo
+  offline, organización/búsqueda, fechas y ZIP sobre este binario exacto; no aprobados.
+- [ ] **Diferido hasta después de la presentación:** tráfico/trackers de RNF-012/013
+  sobre este binario exacto; sin transferir resultados debug.
+- [x] Aceptación expresa del autor de la RC1 con validación parcial; límites
+  PC-02 a PC-08 conservados y RNF-020 en evidencia parcial. No hay nueva aceptación
+  manual por caso ni cambio en RNF-002/004/005.
+- [x] Fijar el APK identificado, publicar como Pre-release y congelar su desarrollo.
+  Manual, matriz RNF, informe y defensa permanecen como trabajo documental posterior.
 
-El feedback voluntario no bloquea esos entregables ni abre correcciones de forma
-automática. Solo un bloqueo grave confirmado justificaría consultar una excepción
-acotada; no se reabre el desarrollo por rutina.
+Esta decisión no certifica ausencia de errores ni cierra Hito 06: conserva las
+limitaciones para la defensa y excluye nuevas campañas de pruebas o cambios de
+app antes de la presentación. La reanudación posterior requiere un nuevo acuerdo.
