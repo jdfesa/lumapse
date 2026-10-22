@@ -19,14 +19,17 @@
 **Candidato autorizado — 2026-10-22:** preparar `0.6.0/600` como Release Candidate 1
 en `chore/presentation-rc1`, sin mejoras nuevas. El autor autorizó generar la APK
 y recuperar la firma de distribución existente en almacenamiento temporal privado.
-APK local generada y firmada desde `3068455`; controles de fuente y verificación
-estática del binario aprobados. Identidad y pendientes se registran en el
+APK inicial generada y firmada desde `3068455`; después se autorizó corregir solo
+la etiqueta confusa de Acerca de y aplicar DOMPurify 3.4.17. La APK vigente procede
+de `bcefe6a`, con gate/auditorías, firma y etiqueta Android comprobados. Identidad y pendientes se registran en el
 [registro del candidato](docs/gestion/candidato-apk-0.6.0.md).
 Después, el autor autorizó preparar la beta pública `0.5.0` en el teléfono y
 actualizar a la RC1 sin borrar/restaurar desde esa referencia: actualización,
-apertura y conservación del conjunto de prueba PASS. La revisión manual del autor
-y los restantes controles del binario siguen pendientes; sin publicación, tag o
-merge autorizados ni congelación definitiva del artefacto por deducción.
+apertura y conservación del conjunto de prueba PASS en el APK inicial. La
+actualización posterior al corregido también conservó todas las tablas y el borrador.
+El autor aceptó PR #42 y autorizó merge/limpieza tras comprobar integración. La
+aceptación manual final y los controles restantes siguen pendientes; publicación
+y tag se atenderán después, con asistencia, sin congelación definitiva por deducción.
 
 **Revisión precorte — 2026-10-22:** `test/pre-cut-acceptance` reúne la
 [clasificación y los cinco criterios concretos de corte](docs/gestion/revision-precorte-2026-10-22.md).
@@ -177,8 +180,9 @@ Aplicar los [cinco no negociables](docs/gestion/revision-precorte-2026-10-22.md#
 una vez aceptada e integrada la revisión precorte. No abrir otra ronda de mejoras por rutina.
 
 - [x] Repetir `npm run verify`, auditorías completa/productiva y coverage de servicios en la fuente candidata `0.6.0/600`: 1211 tests de app/105 de tooling, auditorías 0/0 y servicios 96,06%; [resultados del corte](docs/gestion/candidato-apk-0.6.0.md#controles-de-la-fuente-candidata), sin atribuir pruebas Android todavía no ejecutadas.
-- [x] Generar el APK autorizado `0.6.0/600` (RC1) desde fuente limpia `3068455`; firma de distribución original, manifest no-debuggable, canal, assets y hash comprobados. [Identidad del binario](docs/gestion/candidato-apk-0.6.0.md#identidad-del-binario). Sin tag ni publicación; instalación y prueba registradas aparte.
+- [x] Generar el APK autorizado `0.6.0/600` (RC1), corregido desde fuente limpia `bcefe6a` por etiqueta neutral y parche DOMPurify autorizado; gate final de 1214 tests de app/105 tooling y auditorías 0/0. Firma original, manifest no-debuggable, canal, assets, hash y etiqueta Android comprobados. [Identidad vigente y evidencia inicial preservada](docs/gestion/candidato-apk-0.6.0.md#binario-corregido). Sin tag ni publicación.
 - [x] Probar actualización real desde la APK pública `0.5.0/500` a la RC1 exacta: apertura, cinco notas con estados, materia/sección, fecha académica, borrador y tema conservados; [filas/hashes y límites](docs/gestion/candidato-apk-0.6.0.md#actualización-pública-050-a-060--2026-10-22). Sin desinstalar, limpiar, importar ni restaurar desde la referencia pública.
+- [x] Verificar actualización del candidato inicial al corregido, con todas las filas y el borrador idénticos, y comprobar Acerca de en el teléfono. El autor acepta PR #42 y autoriza merge/limpieza; no acredita los controles restantes ni publica el APK.
 - [ ] Completar recorridos del núcleo offline/organización/búsqueda/fechas/ZIP, tráfico/trackers y aceptación del autor sobre ese APK exacto, sin deducir esos resultados de la actualización.
 - [ ] Congelar el desarrollo sobre el APK aceptado: sin funciones, mejoras ni correcciones automáticas motivadas por feedback; cualquier excepción requiere una decisión expresa.
 

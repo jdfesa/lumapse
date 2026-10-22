@@ -10,21 +10,30 @@
 
 [Identidad, controles y límites del binario](candidato-apk-0.6.0.md).
 
-- [x] Fuente limpia `3068455`, versión/code `0.6.0/600`, canal `android-candidate`;
-  gate y auditorías del corte aprobados, coverage de servicios 96,06%.
+- [x] Fuente limpia inicial `3068455`, versión/code `0.6.0/600`, canal `android-candidate`;
+  gate y auditorías iniciales aprobados, coverage de servicios 96,06% en esa medición.
 - [x] APK generada con firma de distribución original; certificado, hash,
   manifest no-debuggable, alineación y assets web comprobados estáticamente.
 - [x] Autorizar la preparación del banco retirando únicamente la debug de prueba,
   instalar la APK pública exacta `0.5.0` y crear datos desde su UI.
-- [x] Actualizar con `adb install -r` a la RC1 exacta, sin desinstalar/limpiar/importar/
+- [x] Actualizar con `adb install -r` a la RC1 inicial `70d98d5d…`, sin desinstalar/limpiar/importar/
   restaurar desde la referencia pública. Samsung SM-G965F/Android 10: misma primera
   instalación/UID, APK instalada con hash esperado, apertura y datos conservados.
   Cinco notas, materia/sección y fecha con filas/hashes idénticos; borrador legado
   migrado con JSON completo intacto y visible; tema claro conservado. Integridad OK/FK sin filas.
+- [x] Ajuste mínimo autorizado: «Android · candidato» y solo DOMPurify 3.4.17;
+  80 tests focalizados, gate final de 1214 tests de app/105 tooling y auditorías 0/0.
+  [APK vigente](candidato-apk-0.6.0.md#binario-corregido): fuente limpia `bcefe6a`,
+  SHA `15f8ede5…`, firma original, manifest y assets comprobados.
+- [x] Actualizar al corregido sin borrar/restaurar: todas las tablas idénticas,
+  apertura e identidad instalada PASS. Acerca de inspeccionado en el teléfono con
+  etiqueta neutral y fuente esperada. No se repitió directamente pública → corregida.
+- [x] El autor acepta PR #42 y autoriza merge/limpieza tras comprobar integración;
+  publicación posterior con asistencia, sin nuevos resultados manuales por caso.
 - [ ] Completar núcleo offline, organización/búsqueda, fechas y ZIP local sobre
   este binario exacto, sin deducir funcionalidad global de la comparación de datos.
 - [ ] Repetir tráfico/trackers de RNF-012/013 sobre este binario exacto.
-- [ ] Registrar aceptación del autor antes de fijar el artefacto definitivo y publicar.
+- [ ] Registrar aceptación manual final del binario antes de fijarlo y publicar.
 
 La prueba nueva cubre la actualización y apertura descritas en el registro;
 no equivale a aceptación manual del autor ni a validación exhaustiva. Se conservan

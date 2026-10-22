@@ -17,8 +17,10 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 > estabilidad ni publicar todavía. Identidad del APK y controles propios del corte
 > en el [registro del candidato](docs/gestion/candidato-apk-0.6.0.md). Los resultados
 > debug anteriores conservan su alcance. La actualización desde la APK pública
-> `0.5.0`, apertura y conservación del conjunto de prueba fueron verificadas en
-> Android; los recorridos restantes y la aceptación del autor siguen pendientes.
+> `0.5.0` al candidato inicial, apertura y conservación del conjunto de prueba fueron
+> verificadas en Android. El corregido también pasó actualización desde el inicial,
+> con tablas conservadas y Acerca de comprobado. El autor aceptó PR #42 y autorizó
+> merge/limpieza; recorridos restantes y aceptación manual final siguen pendientes.
 
 ### Changed
 

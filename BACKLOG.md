@@ -80,9 +80,12 @@ se atribuirán a esa versión, sin transferirlas al APK posterior. El autor auto
 después el corte `0.6.0/600` como Release Candidate 1 y su generación con la firma
 de distribución existente; el [registro del candidato](docs/gestion/candidato-apk-0.6.0.md)
 distingue la APK firmada instalada, los controles aprobados y la actualización
-pública `0.5.0` → `0.6.0` con datos conservados. Los recorridos Android restantes
-y la aceptación del autor siguen pendientes; no se declara congelado el artefacto
-ni publicada una release antes de completar y aceptar ese binario.
+pública `0.5.0` → `0.6.0` con datos conservados en el APK inicial. El autor aceptó
+PR #42 y autorizó merge/limpieza, además del ajuste mínimo de etiqueta y DOMPurify
+3.4.17. El [APK corregido](docs/gestion/candidato-apk-0.6.0.md#binario-corregido)
+también se verificó por actualización en sitio, con tablas/borrador conservados y
+Acerca de comprobado. Los recorridos Android restantes y la aceptación manual final
+siguen pendientes; no se declara congelado el artefacto ni publicada una release.
 
 La entrega busca una **beta defendible**, con flujos probados, riesgos tratados y
 límites explícitos; no obliga a anunciar `1.0.0`, estabilidad comercial o adopción.

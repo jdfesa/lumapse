@@ -8,7 +8,7 @@
 
 **Proyecto:** Lumapse
 
-**Estado:** Activo — segunda beta `v0.5.0` publicada; candidato `0.6.0/600` (RC1) instalado por actualización desde la pública, con apertura y conservación del conjunto de prueba verificadas; validación restante/aceptación, cierre académico, matriz RNF y presentación pendientes
+**Estado:** Activo — segunda beta `v0.5.0` publicada; candidato `0.6.0/600` (RC1) corregido por etiqueta y DOMPurify 3.4.17 autorizados, instalado y verificado sin pérdida de tablas/borrador. Evidencia pública → candidato inicial conservada. El autor acepta PR #42 y autoriza merge/limpieza; validación restante/aceptación manual final, cierre académico, matriz RNF y presentación pendientes
 
 **Última actualización:** Octubre 2026
 

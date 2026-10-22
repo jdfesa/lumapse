@@ -3,9 +3,11 @@
 **Fecha:** 2026-10-22<br>
 **Rama:** `chore/presentation-rc1`<br>
 **Base integrada:** `9ab9c006bc38dd59d9e275968aa583a3ba1e56b6` (PR #41)<br>
-**Estado:** APK firmada instalada mediante actualización desde la beta pública;
-apertura y conservación del conjunto de prueba verificadas. Resto de validación
-Android, aceptación, tag y publicación pendientes.
+**Estado:** APK corregida firmada e instalada por actualización en sitio, con
+«Android · candidato» comprobado en Acerca de y datos conservados. El autor aceptó
+PR #42 y autorizó merge/limpieza; resto de validación Android, aceptación final del
+binario, tag y publicación pendientes. La identidad vigente figura en
+[binario corregido](#binario-corregido).
 
 ## Objetivo y alcance acordados
 
@@ -24,7 +26,12 @@ Después, el autor autorizó preparar el teléfono retirando la debug de prueba,
 instalar la APK pública `0.5.0`, crear datos representativos y actualizar a esta
 RC1 sin borrar ni restaurar entre versiones. La retirada inicial de la debug es
 preparación del banco, no un paso del procedimiento del usuario final.
-Continúan fuera publicación, creación de tag y merge.
+Después aceptó PR #42 y autorizó merge a `main` y limpieza de sus ramas solo tras
+comprobar integración. Ante la confusión de Acerca de, autorizó únicamente la
+etiqueta neutral y su recompilación; también aprobó expresamente DOMPurify 3.4.17
+tras la nueva consulta de advisories. Publicación y tag se atenderán después con
+su asistencia; no se crearon durante este cierre. La aceptación general del PR no
+se convierte en nuevos resultados manuales ni en aceptación final del binario.
 Las betas publicadas no se reemplazan. El título previsto para una eventual
 publicación es `Lumapse v0.6.0 — Release Candidate 1`, tag `v0.6.0`, marcada
 **Pre-release**; esto no acredita que existan el tag o la publicación.
@@ -43,6 +50,8 @@ publicación es `Lumapse v0.6.0 — Release Candidate 1`, tag `v0.6.0`, marcada
 
 ## Controles de la fuente candidata
 
+Referencia inicial `3068455`, conservada como evidencia histórica. Los controles
+del ajuste posterior están en [binario corregido](#binario-corregido).
 Ejecutados con el runtime canónico, sin reutilizar métricas de otro corte:
 
 ```bash
@@ -64,6 +73,12 @@ existentes y no produce cambios nativos seguidos adicionales. Los logs y resúme
 crudos quedan fuera del repositorio; no contienen ni publican la configuración de firma.
 
 ## Identidad del binario
+
+**Identidad inicial, no vigente para subir:** esta sección conserva el APK de
+fuente `3068455` y SHA-256 `70d98d5d…`, usado en la prueba pública de la sección
+siguiente. La copia inicial se preservó de forma privada antes de recompilar.
+La ruta local de entrega ahora contiene el [binario corregido](#binario-corregido);
+no debe usarse el checksum inicial para subirlo.
 
 Se compiló sin volver a incrementar la versión, desde fuente confirmada limpia:
 build web con canal `android-candidate`, `npx cap sync android` y Gradle release
@@ -102,6 +117,9 @@ teléfono: la verificación de metadata anterior es estática sobre el binario.
 Los commits posteriores de evidencia documental no cambian la fuente ni ese APK.
 
 ## Actualización pública 0.5.0 a 0.6.0 — 2026-10-22
+
+**Artefacto de esta prueba:** APK inicial `70d98d5da883651fd9ce7a25ad2e5e15208424f6337dfb6d5b7ed42db9e278c7`.
+No se reatribuye este recorrido directo al APK corregido posterior.
 
 **Resultado:** PASS en Samsung SM-G965F, Android 10. Es una prueba real entre
 binarios firmados de distribución, no un debug equivalente ni una restauración
@@ -173,12 +191,85 @@ la base de la app.
 Se inspeccionaron las capturas previas y posteriores. Se retiraron solo las copias
 auxiliares propias del teléfono, fuera de los datos de Lumapse; logs, capturas,
 referencias y comparaciones permanecen privados fuera del repositorio.
-La RC1 queda instalada con los cinco registros de prueba y el borrador sin guardar
-ni descartar para la revisión del autor.
+Al terminar esa prueba, la RC1 inicial quedó instalada con los cinco registros de
+prueba y el borrador sin guardar ni descartar para la revisión del autor.
 
 El resultado cubre un dispositivo y este conjunto pequeño, no garantiza toda
 actualización, tamaño de base, dispositivo o interrupción posible. No sustituye
 los recorridos offline/ZIP, la captura de tráfico/trackers ni la aceptación del autor.
+
+## Binario corregido
+
+**Ajuste autorizado — 2026-10-22:** el texto fijo de Acerca de podía interpretarse
+como una firma inválida. Se cambia únicamente a «Android · candidato», sin agregar
+una verificación interna de certificados. La firma se comprueba externamente.
+
+La nueva consulta npm reportó un paquete afectado, DOMPurify 3.4.16, con tres
+avisos: [SAFE_FOR_TEMPLATES/shadow root](https://github.com/advisories/GHSA-cg2g-xh64-v4q7),
+[IN_PLACE y subárboles retirados](https://github.com/advisories/GHSA-mrv2-3pqr-j5jr)
+y [SMIL en XHTML](https://github.com/advisories/GHSA-c6gr-qvv4-5v3f).
+La revisión de `MarkdownService.ts` no encontró esas condiciones: recibe una
+cadena HTML, no habilita SAFE_FOR_TEMPLATES ni IN_PLACE, usa el parser HTML y
+prohíbe SVG. El hook retira atributos, no nodos. Esto es análisis de aplicabilidad,
+no una prueba de explotación ni garantía de seguridad universal.
+
+El autor autorizó solo DOMPurify 3.4.17: cambian la declaración raíz y ese único
+nodo del lockfile; no se actualizaron otros paquetes, plugins ni el runtime.
+Dos fixtures de contrato upstream (retirada del padre/hermano con IN_PLACE)
+fallaron con 3.4.16 y pasaron con 3.4.17, sin ejecutar handlers ni hacer red.
+La regresión de Acerca de también reprodujo el mensaje anterior y pasó con la
+etiqueta neutral; se alinearon las expectativas de metadata y build real.
+
+| Control del ajuste | Resultado comprobado |
+|---|---|
+| Tests focalizados de metadata, Acerca de y Markdown | 4 archivos, 80 tests PASS |
+| `npm run verify` final | Exit 0; 79 archivos/1214 tests de app y 105 de tooling; tres avisos previos de lint, cero errores |
+| Auditorías completa/productiva tras el parche | Ambas exit 0, cero vulnerabilidades conocidas en esta consulta |
+| Build web candidato y sync Capacitor | Exit 0, cuatro plugins conservados; sin cambios nativos seguidos adicionales |
+| Gradle release offline con firma existente | Exit 0; 289 tareas, 40 ejecutadas y 249 al día |
+| Assets y metadata del APK | 11 archivos de `dist` idénticos byte a byte, canal candidato, fuente limpia, DOMPurify 3.4.17 y ausencia de la etiqueta anterior |
+| Firma, manifest y alineación | `apksigner` v2 PASS, certificado original, `0.6.0/600`, no-debuggable, `zipalign` PASS |
+| Documentación final | 112 Markdown/1022 enlaces sin errores; trazabilidad sin advertencias y `git diff --check` PASS |
+
+La primera ejecución del gate tras cambiar el texto detectó una expectativa unitaria
+antigua; se corrigió dentro del mismo ajuste y se repitió el gate completo en verde.
+El coverage 96,06% registrado arriba corresponde a la medición inicial; no se
+presenta como una nueva ejecución del ajuste. No cambió el código de servicios.
+
+| Identidad vigente para subir | Valor |
+|---|---|
+| APK local | `releases/v0.6.0/lumapse-v0.6.0.apk`, 25.767.142 bytes |
+| SHA-256 del APK | `15f8ede5b78387e3fcac1a53eb3bc78dbb1e30df9acf7f4f20c771c48739e042` |
+| Fuente incorporada | `bcefe6a2ad86ed3abef4f5789a6696143503600e`, `dirty: false` |
+| Versión/code y canal | `0.6.0/600`, `android-candidate` |
+| Certificado SHA-256 | `91d719826e632e10f331913c3835c51e38cf780eb139940eb3b0bf1ed6a157cd` |
+| Checksum adjunto | `lumapse-v0.6.0.apk.sha256`, actualizado al binario corregido |
+| Tag/release | No creados; las betas publicadas no se reemplazan |
+
+### Comprobación nativa del corregido
+
+Con autorización de actualización, se verificó primero el APK inicial instalado
+y su certificado; después se ejecutó solo `adb install -r` al corregido. Samsung
+SM-G965F/Android 10: `Success`, APK extraída con el nuevo hash exacto, UID y fecha
+de primera instalación iguales. No hubo desinstalación, limpieza, importación ni
+restauración. Apertura correcta y todas las filas de las cuatro tablas idénticas:
+cinco notas, dos materias/secciones, un evento y dos entradas de metadata,
+incluido el borrador. Los hashes de notas, materias y eventos coinciden con la
+prueba anterior; metadata antes/después:
+`571bd8a70f3c9e989ed1981d839b930304008e796d79293cf458f5c562f3d0ed`.
+Integridad `ok` y FK sin filas en ambas copias verificadas.
+
+Se abrió Acerca de y se inspeccionó su captura: «Android · candidato», versión
+0.6.0 y fuente `bcefe6a… · sin cambios locales`, en tema claro. El teléfono queda
+en esa pantalla, con el borrador sin guardar ni descartar. Evidencia cruda privada;
+no se versionan APK, bases, capturas ni claves. Se retiraron solo copias auxiliares
+propias del teléfono, fuera de los datos de la app.
+
+El recorrido nuevo es **0.6.0 inicial → 0.6.0 corregida**, no una repetición directa
+de 0.5.0 → corregida. El resultado no sustituye los recorridos offline/ZIP,
+tráfico/trackers ni la aceptación manual final pendientes.
+Los commits posteriores de documentación y merge no son la fuente incorporada en
+la APK y no requieren recompilarla por sí solos.
 
 ## Aceptación del binario y congelación
 
@@ -188,11 +279,15 @@ certifica ausencia universal de defectos.
 
 - [x] Autorizar y comprobar actualización desde la beta firmada pública, con
   apertura, datos, borrador y tema conservados en el conjunto anterior. Sin
-  desinstalación ni restauración después de la referencia `0.5.0`.
+  desinstalación ni restauración después de la referencia `0.5.0`; artefacto inicial.
+- [x] Comprobar la actualización al APK corregido y su etiqueta visible, con
+  todas las tablas conservadas; recorrido y límites diferenciados arriba.
+- [x] Registrar aceptación general del autor de PR #42 y autorización de
+  merge/limpieza una vez comprobada integración; sin publicación en este paso.
 - [ ] Completar los recorridos del núcleo offline, organización/búsqueda, fechas
   y ZIP local sobre este binario exacto; no deducirlos de la comparación de datos.
 - [ ] Repetir tráfico/trackers de RNF-012/013 sobre este binario exacto.
-- [ ] Registrar aceptación del autor, con límites PC-02 a PC-08 conservados y
+- [ ] Registrar aceptación manual final del binario, con límites PC-02 a PC-08 conservados y
   RNF-020 en evidencia parcial; RNF-002/004 y RNF-005 mantienen su tratamiento.
 - [ ] Fijar el artefacto aceptado y su congelación; después adaptar manual,
   emitir matriz RNF, actualizar informe y preparar defensa sobre el mismo corte.
