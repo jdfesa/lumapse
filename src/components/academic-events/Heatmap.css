@@ -295,7 +295,7 @@
 }
 
 .heatmap-add-event:hover {
-  color: var(--color-text-bright);
+  color: var(--color-on-accent);
   background: var(--color-accent);
 }
 
