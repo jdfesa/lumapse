@@ -78,10 +78,11 @@ test('HMR invalida metadata junto al código, pero no por documentos', () => {
   assert.deepEqual(invalidated, [metadata])
 })
 
-test('deploy habitual declara debug automáticamente sin cambiar ruta de instalación', () => {
+test('deploy habitual conserva canal debug con instalación ADB sin fallback', () => {
   const source = readFileSync('scripts/deploy-android.sh', 'utf8')
   assert.match(source, /LUMAPSE_BUILD_CHANNEL=android-debug npm run build/)
-  assert.match(source, /npx cap run android --target "\$TARGET_DEVICE"/)
+  assert.match(source, /adb -s "\$TARGET_DEVICE" install -r -t "\$APK_PATH"/)
+  assert.doesNotMatch(source, /npx cap run/)
   assert.ok(!source.includes('--release'))
 })
 

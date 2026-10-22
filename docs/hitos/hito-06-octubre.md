@@ -43,7 +43,9 @@ por esa decisión; RNF-005 sigue el ajuste posterior del 2026-10-12.
 en `test/pre-cut-acceptance`, con ajuste localizado de contraste y parches mínimos
 de tooling; RNF-026 revisado documentalmente. Se propone como última rama técnica
 antes de preparar el candidato. Los límites PC-02 a PC-08, revisión del teléfono y
-merge requieren aceptación expresa; no se declara congelación ni APK final.
+merge requieren aceptación expresa; no se declara congelación ni APK final. El
+incidente PC-11 exige recuperación y despliegue sin fallback destructivo; alcance
+ampliado expresamente por el autor, sin aceptar pérdida de datos por ser beta.
 
 ## Punto de Partida
 

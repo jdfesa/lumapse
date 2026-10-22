@@ -32,6 +32,8 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ### Fixed
 
+- **Despliegue sin borrado implícito:** el script elimina `cap run`/`native-run`, verifica certificados antes de actualizar y usa ADB sin fallback destructivo. Firma distinta/ilegible, downgrade rechazado o error de instalación abortan sin desinstalar; `--clean` solo borra por elección explícita tras un build válido. Ocho regresiones y [causa/recuperación del incidente](docs/gestion/revision-precorte-2026-10-22.md#incidente-de-despliegue-y-recuperación); no cambia persistencia de la app ni gestiona claves de release.
+
 - **Contraste de «Agregar fecha»:** el hover que puede permanecer visible al volver del diálogo usa el token de texto sobre acento en ambos temas. Dos regresiones de ratio y un guard ampliado reproducen el fallo anterior; ajuste de un color, sin layout, acciones ni datos. [Seguimiento del precorte](docs/gestion/revision-precorte-2026-10-22.md#contraste-localizado).
 
 - **Etiquetas detectadas por Lighthouse:** nombres accesibles de días/calendario, encabezado Próximas fechas, selector académico, Mover a y pestañas ZIP incluyen su texto visible. Correcciones autorizadas por el autor, cinco regresiones rojo/verde y validación del debug identificado; sin cambios de apariencia, acciones, datos, versión ni dependencias del proyecto.

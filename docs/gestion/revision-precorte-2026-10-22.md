@@ -19,6 +19,11 @@ cambian funciones, layout, arquitectura, schema ni `0.5.0/500`. Quedan fuera las
 tareas ya diferidas, refactors, estudios extensos, manual/informe finales,
 publicación y generación del APK de presentación.
 
+**Ampliación autorizada por el incidente:** el autor pidió recuperar los datos
+antes de seguir y autorizó corregir los scripts utilizados, explicando la causa.
+Se añade la protección de despliegue PC-11 y la prueba de actualización compatible;
+no se acepta como normal una pérdida involuntaria por tratarse de una beta.
+
 Pruebas: reproducción y regresiones rojo/verde, auditorías actuales, gate completo,
 coverage de servicios y revisión Android proporcional sobre debug identificado.
 El autor revisa el PR, el teléfono y los límites propuestos al final. Una prueba
@@ -60,6 +65,7 @@ a aprobado. Esta tabla distingue reproducción, impacto y decisión pendiente.
 | PC-08 | RNF-020: los 16 casos registrados usan entrada ADB/CDP; no hubo teclado físico ni ensayo completo de mutaciones. En esta revisión 12 Tab por tema permanecieron dentro del diálogo y Escape devolvió foco a «Agregar fecha». | Mantener **Evidencia parcial**. Propuesta de aceptar ese alcance para presentación Android, sin afirmar teclado completo ni abrir más pilotos. |
 | PC-09 | RNF-026: inventario de decisiones, código e historia contrastados, con ADR retrospectivos identificados. | Revisión documental completada en el [índice ADR](../adr/README.md#revisión-de-trazabilidad-precorte--2026-10-22); no crea decisiones ni reconstruye fechas. |
 | PC-10 | Auditoría actual: cuatro paquetes de tooling afectados (tres moderados/un alto); producción en cero. | Parche mínimo de Vite/Vitest en esta rama; no presentar estos advisories de desarrollo como explotación del APK. |
+| PC-11 | El despliegue anterior delegaba en `native-run`, que desinstala/reinstala ante firma distinta o downgrade. El debug nuevo tenía otra firma y desaparecieron los datos locales. | Bloqueo operativo confirmado: corregir el instalador, recuperar datos y probar actualización compatible con hashes conservados antes del cierre. No es una observación menor aceptable. |
 
 Las propuestas de aceptación **no son postergaciones aprobadas**. El autor debe
 aceptarlas o indicar un caso concreto que impida el corte. No se deriva de ellas
@@ -136,6 +142,59 @@ git diff --check
 | Coverage de servicios | **96,06% statements (2095/2181)** en 42 archivos de `src/services/**`, JS/TS y subdirectorios incluidos; supera el 70%. Suite 1211/1211 PASS |
 | Android del debug corregido | Pendiente de registrar tras instalación/recorrido |
 
+## Incidente de despliegue y recuperación
+
+El primer despliegue de esta rama (`6254495`) usó el script habitual sin
+`--clean`, terminó en exit 0 e instaló `0.5.0/500`, SHA-256
+`c7bcd98475ac11a61b1b476934939223105719cbd51e06c5f9bed70dc6ef568a`.
+Su certificado era `c03d6fa99cbce0709aa711e2ae95b7f81e0eae17e1aff0c788bf7270b9d8d093`,
+distinto del inicial. Debió verificarse **antes** de invocar el instalador.
+Después había 0 notas/0 materias/0 fechas y borrador vacío: no se conservó el estado.
+
+El código instalado de `native-run 2.0.3`,
+`dist/android/utils/run.js:installApkToDevice`, captura
+`ERR_INCOMPATIBLE_UPDATE`/`ERR_VERSION_DOWNGRADE`, llama `uninstallApp` y reintenta.
+La firma distinta, la nueva `firstInstallTime` y el estado vacío concuerdan con
+ese fallback; el log resumido de Capacitor no expuso la operación intermedia.
+No se atribuye la eliminación a la corrección CSS, a una migración SQLite ni al
+instalador normal de APK del usuario. Tampoco se utiliza el permiso sobre datos
+de prueba para presentar como intencional lo sucedido.
+
+El autor autorizó la recuperación antes de continuar. Se revisó una copia SQLite
+íntegra del 2026-10-13 (85 notas); excluyendo las tres notas de papelera ya
+ausentes en el estado inicial, **el conjunto de 82 notas coincide exactamente
+con su hash previo**. Materias, fechas y metadata ya coincidían. No se restauró
+un estado aproximado: las cuatro tablas se compararon antes de escribir.
+Se insertaron en una transacción sobre la base vacía; `integrity_check=ok` y
+`foreign_key_check` sin filas. Se recuperaron también preferencias y borrador.
+
+Durante la rehidratación se recargó la WebView sin cerrar antes el estado nativo,
+lo que produjo `CreateConnection: Connection lumapse-db already exists` y la
+pantalla segura de fallo de arranque. Las 82 notas seguían presentes y la base
+íntegra. Se cerró esa conexión y se usó Reintentar: la app volvió a montar el
+editor. **Las cuatro tablas, campos del borrador y localStorage coinciden por
+hash/valor con la referencia anterior al incidente.** No se borró ni recreó la
+base para resolver ese error; no se añade una corrección de producto no acordada
+por una recarga externa del procedimiento.
+
+El recorrido inicial posterior al despliegue alcanzó tres snapshots oscuros de
+100/100 y ratio hover 8,82:1, pero falló después al buscar tarjetas inexistentes
+en la base vacía; exit 1. No se presenta como validación final en ambos temas.
+Se conserva separado de la repetición posterior a recuperar los datos.
+
+**Corrección autorizada:** Gradle construye sin `native-run`; `apksigner` verifica
+firmantes del APK candidato y del instalado y exige igualdad antes de actualizar.
+Si no puede comprobarlos, aborta. La instalación directa `adb install -r -t`
+no tiene fallback; rechazos, downgrade y `Failure` incluso con exit 0 detienen
+el script. `--clean` continúa siendo destructivo y explícito, pero no ocurre
+antes de compilar/verificar. No se gestionaron claves privadas ni se firmó una release.
+Ocho regresiones sintéticas fallaron con el flujo anterior y pasan con el nuevo.
+Un harness adicional usa los dos APK reales (firmas distintas), `apksigner` real
+y ADB limitado a lectura; el script aborta por incompatibilidad **sin emitir
+ninguna llamada install/uninstall**. El build de ese harness usa el APK anterior
+como fixture y no se presenta como una instalación real. La comprobación nativa
+compatible posterior sigue pendiente de registrar.
+
 ## No negociables y decisión de corte
 
 La propuesta para que esta sea la última rama técnica antes del corte se limita a:
@@ -148,8 +207,13 @@ La propuesta para que esta sea la última rama técnica antes del corte se limit
 3. **Límites explícitos:** aceptar PC-02 a PC-08 con su impacto visible, sin
    marcar RNF-020 como verificado ni certificar accesibilidad exhaustiva.
 4. **APK nuevo autorizado e inequívoco:** acordar versión/code nuevos, fuente,
-   canal, firma y SHA-256; preservar las betas publicadas. Este PR no genera ese corte.
-5. **Validar y aceptar ese binario exacto:** instalación/apertura, núcleo offline,
+   canal, firma de distribución compatible con la beta publicada y SHA-256;
+   preservar las betas publicadas. Sin identidad compatible se detiene la entrega,
+   no se pide al usuario desinstalar. Este PR no genera ese corte.
+5. **Validar y aceptar ese binario exacto:** actualización compatible desde la
+   beta firmada con notas/borrador, **sin desinstalación y con datos conservados**;
+   abortar ante firma incompatible, sin pedir borrar como solución. Además,
+   instalación/apertura, núcleo offline,
    conservación de datos/borrador, organización/búsqueda, fechas y ZIP local;
    repetir tráfico/trackers de RNF-012/013 y los casos afectados por cambios.
    Registrar la aceptación del autor; no repetir investigaciones de tareas cerradas.

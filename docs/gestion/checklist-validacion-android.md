@@ -13,7 +13,9 @@
 - [x] Reproducir contraste de «Agregar fecha» tras Escape y clasificar la superposición de menús sin ejecutar mutaciones.
 - [x] Comprobar AX de paneles abiertos/cerrados y relación del selector de materia; conservar límites semánticos y de tecnologías de asistencia, sin convertir `incomplete` en PASS.
 - [x] Regresiones focalizadas 20/20 tras los parches mínimos; auditorías completa/productiva en cero.
-- [ ] Registrar la revisión Android del debug corregido y conservación final de datos en el reporte.
+- [x] Registrar el incidente PC-11: firma distinta, fallback de desinstalación y datos borrados; recuperación autorizada con tablas/borrador/preferencias exactamente iguales al estado anterior.
+- [x] Proteger el script: sin `native-run`, certificados comprobados y ADB sin fallback; ocho regresiones sintéticas PASS.
+- [ ] Validar actualización compatible con datos recuperados y registrar revisión Android final del debug corregido.
 - [ ] Recibir revisión del autor y aceptación explícita de límites PC-02 a PC-08, separadas del APK final y del merge.
 
 ## Lighthouse Accessibility — RNF-019 — 2026-10-20

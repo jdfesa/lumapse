@@ -108,6 +108,9 @@ la app. El repositorio público debe permitir a futuras cohortes distinguir:
 concreta los cinco mínimos: sin bloqueantes confirmados, controles del candidato,
 límites aceptados, APK inequívoco y validación/aceptación de ese binario. Se propone
 que esta sea la última rama técnica antes del corte, no una autorización de release.
+El incidente PC-11 de desinstalación implícita no es aceptable como límite menor:
+el autor autorizó recuperar los datos y proteger el despliegue. La actualización
+compatible con datos conservados se incorpora a la validación del candidato.
 PC-02 a PC-08 se someten a aceptación como observaciones menores o cobertura no
 demostrada; **no están automáticamente diferidos ni aprobados**. RNF-026 cuenta con
 [inventario trazable y temporalidad explícita](docs/adr/README.md#revisión-de-trazabilidad-precorte--2026-10-22).

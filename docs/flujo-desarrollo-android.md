@@ -308,6 +308,17 @@ Cuando se necesita probar funcionalidades nativas o validar la app como APK.
 
 > **Protección de datos:** usar el script habitual con autorización de instalación; el modo normal conserva SQLite y preferencias, siempre que la firma sea compatible. `--clean`, desinstalación, borrado o importación de datos requieren permiso específico y recuperación acordada, no son remedios automáticos para assets viejos. Un ZIP no respalda borradores ni papelera; ante firma incompatible, detenerse sin desinstalar.
 
+**Guardia de despliegue (2026-10-22):** el script construye con Gradle, verifica
+certificados con `apksigner` y usa `adb install -r -t` sin fallback. Ya no invoca
+`cap run`/`native-run`, que podía desinstalar automáticamente ante firma distinta
+o downgrade. Sin certificado comprobable/compatible se detiene antes de instalar;
+un rechazo ADB nunca autoriza borrar. Configurar Java y `apksigner` en PATH o
+Android SDK Build-Tools bajo `ANDROID_HOME`/`ANDROID_SDK_ROOT`. El
+[incidente de pruebas y recuperación](gestion/revision-precorte-2026-10-22.md#incidente-de-despliegue-y-recuperación)
+explica el cambio. Para usuarios, mantener la identidad de firma de distribución
+y validar una actualización del APK firmado sin desinstalar ni perder datos; un
+debug compatible no demuestra ese camino de release.
+
 ```bash
 # Flujo recomendado: build, sync e instalación conservando los datos
 npm run deploy:android
