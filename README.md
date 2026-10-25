@@ -89,10 +89,8 @@ SHA-256 del APK publicado:
 15f8ede5b78387e3fcac1a53eb3bc78dbb1e30df9acf7f4f20c771c48739e042
 ```
 
-**Desarrollo congelado hasta después de la presentación académica oficial:** sólo
-documentación, primero manual y luego informe/defensa. No más cambios o
-comprobaciones de la app; [decisión y cobertura diferida](./BACKLOG.md#congelación-académica--2026-10-22).
-Las instrucciones técnicas siguientes no autorizan a reabrir el desarrollo.
+**Desarrollo congelado para la presentación académica.** El alcance y las
+limitaciones del corte están en [BACKLOG.md](./BACKLOG.md#congelación-académica--2026-10-22).
 
 ### Requisitos previos — Web (desarrollo y contribución)
 
@@ -284,7 +282,7 @@ Cerrar el proyecto con documentación coherente, evidencia final y presentación
 - Gráficos de base de datos regenerados y verificados contra el schema real; resta validar su maquetación en PDF y diapositivas
 - RC1 `v0.6.0/600` publicada y desarrollo congelado por decisión del autor, con cobertura parcial explícita; no se repetirán los controles restantes antes de la presentación
 - [Recorte de entrega y deuda postdefensa](./BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa): offline verificado en debug `348da88` y aceptado en PR #31; privacidad, uso/accesibilidad y matriz RNF pendientes; continuidad del borrador aceptada en PR #29 y CRUD/FPS diferidos, sin afirmar cumplimiento cuantitativo
-- Próxima sesión: manual de usuario del corte publicado; luego informe final y defensa, sólo documentación y evidencia existente; seguimiento en [`TODO.md`](./TODO.md)
+- Planificación y tareas pendientes: [`TODO.md`](./TODO.md)
 - Fijar la línea base académica sobre ese artefacto, sin forzar una versión estable o afirmar adopción real
 
 > **Nota sobre la planificación:** Los meses asociados a cada hito constituyen estimaciones formuladas al inicio del proyecto. El desarrollo es iterativo: los plazos pueden ajustarse al profundizar la complejidad o aparecer hallazgos que cambian el alcance. El relevamiento por conveniencia aportó evidencia para priorizar móvil, offline y organización por materias; las decisiones de plataforma se justifican por separado en los ADR técnicos. El avance real se registra en los [informes de hito](./docs/hitos/), el [Changelog](./CHANGELOG.md) y el historial de commits.
