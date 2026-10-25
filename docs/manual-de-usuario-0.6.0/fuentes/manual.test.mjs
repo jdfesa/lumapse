@@ -7,7 +7,7 @@ import { relative, isAbsolute } from 'node:path'
 import { SCENES } from './model.mjs'
 
 const manual = new URL('../', import.meta.url)
-const entry = new URL('Manual-de-usuario-Lumapse.html', manual)
+const entry = new URL('manual-de-usuario-lumapse.html', manual)
 const html = readFileSync(entry, 'utf8')
 
 test('el HTML versionado se reproduce desde las fuentes sin escribir archivos', { timeout: 30000 }, () => {
@@ -32,7 +32,7 @@ test('todas las imágenes y anclas del manual son locales y existen', () => {
 })
 
 test('el lector encuentra una sola entrada HTML, sin enlaces al texto fuente', () => {
-  assert.deepEqual(readdirSync(manual).filter(name => name.endsWith('.html')), ['Manual-de-usuario-Lumapse.html'])
+  assert.deepEqual(readdirSync(manual).filter(name => name.endsWith('.html')), ['manual-de-usuario-lumapse.html'])
   assert.doesNotMatch(html, /Guardar el texto|href="[^"]+\.md"/)
   assert.equal((html.match(/<article class="chapter"/g) || []).length, 4)
 })

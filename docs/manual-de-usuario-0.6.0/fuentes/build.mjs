@@ -57,7 +57,7 @@ ${notice}<html lang="es-AR" data-theme="${theme || 'light'}"${theme ? ` data-ini
 <dialog class="image-dialog" data-image-dialog aria-labelledby="dialog-title"><div class="dialog-bar"><span id="dialog-title" data-dialog-title>Captura de Lumapse</span><button type="button" data-dialog-close>Cerrar ×</button></div><img src="assets/lumapse.png" alt="" width="720" height="1280"><a class="original" href="assets/lumapse.png" target="_blank" rel="noopener">Abrir imagen a tamaño original ↗</a></dialog>
 <script>${runtime}</script></body></html>`
 }
-const target = new URL('Manual-de-usuario-Lumapse.html', delivery)
+const target = new URL('manual-de-usuario-lumapse.html', delivery)
 const output = document()
 if (process.argv.includes('--check')) {
   if (!existsSync(target) || readFileSync(target, 'utf8') !== output) {

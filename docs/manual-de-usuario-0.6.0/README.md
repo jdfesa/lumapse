@@ -1,6 +1,6 @@
 # Manual de usuario de Lumapse 0.6.0
 
-**Para leer la guía, abrí [Manual-de-usuario-Lumapse.html](./Manual-de-usuario-Lumapse.html)
+**Para leer la guía, abrí [manual-de-usuario-lumapse.html](./manual-de-usuario-lumapse.html)
 en un navegador.** Conservá la carpeta `assets` a su lado. No necesita instalación
 ni internet; este archivo README no es el manual.
 
