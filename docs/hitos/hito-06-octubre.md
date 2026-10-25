@@ -8,7 +8,7 @@
 
 **Proyecto:** Lumapse
 
-**Estado:** Activo — segunda beta `v0.5.0` publicada; candidato `0.6.0/600` (RC1) corregido por etiqueta y DOMPurify 3.4.17 autorizados, instalado y verificado sin pérdida de tablas/borrador. Evidencia pública → candidato inicial conservada. El autor acepta PR #42 y autoriza merge/limpieza; validación restante/aceptación manual final, cierre académico, matriz RNF y presentación pendientes
+**Estado:** Activo sólo para cierre documental y defensa — RC1 `v0.6.0/600` publicada como Pre-release, aceptada con validación parcial; desarrollo y nuevas comprobaciones de app congelados hasta después de la presentación académica oficial. Próxima sesión: manual de usuario; luego informe final y defensa. Matriz RNF y entregables documentales pendientes, sin nuevas mediciones
 
 **Última actualización:** Octubre 2026
 
@@ -16,11 +16,11 @@
 
 ## Objetivo
 
-Cerrar Lumapse con documentación coherente, evidencia técnica reproducible, diagramas finales y una presentación académica preparada. Hito 06 no abre una nueva etapa de producto: convierte la beta operativa en una entrega defendible. El corte APK se decide tras los controles técnicos acordados; manual, informe y defensa se preparan después sobre ese artefacto.
+Cerrar Lumapse con documentación coherente, evidencia técnica existente, diagramas finales y una presentación académica preparada. El corte APK ya quedó fijado y publicado con cobertura parcial aceptada; no se reabre el desarrollo ni se repiten controles para manual/informe. La [decisión de congelación](../../BACKLOG.md#congelación-académica--2026-10-22) prevalece sobre la planificación técnica previa conservada a continuación.
 
-**Prioridad aprobada vigente:** cerrar tareas técnicas imprescindibles → generar y validar APK
-de la versión correspondiente (objetivo `0.6.0+`, condicionado al avance/autorización)
-→ congelar desarrollo → manual basado en ese APK → informe final y defensa.
+**Prioridad aprobada vigente:** conservar el APK publicado y el desarrollo congelado
+→ próxima sesión: manual de usuario → luego informe final y defensa. Sólo trabajo
+documental hasta después de la presentación, sin nuevas comprobaciones de la app.
 Para finales de octubre de 2026 deben
 estar preparados todos esos entregables; no se promete cerrarlos en dos sesiones.
 El [recorte de entrega y deuda postdefensa](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa)

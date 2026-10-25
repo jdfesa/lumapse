@@ -6,7 +6,7 @@
 
 ---
 
-## Candidato local 0.6.0 — RC1 — 2026-10-22
+## RC1 0.6.0 publicada — 2026-10-22
 
 [Identidad, controles y límites del binario](candidato-apk-0.6.0.md).
 
@@ -30,14 +30,20 @@
   etiqueta neutral y fuente esperada. No se repitió directamente pública → corregida.
 - [x] El autor acepta PR #42 y autoriza merge/limpieza tras comprobar integración;
   publicación posterior con asistencia, sin nuevos resultados manuales por caso.
-- [ ] Completar núcleo offline, organización/búsqueda, fechas y ZIP local sobre
-  este binario exacto, sin deducir funcionalidad global de la comparación de datos.
-- [ ] Repetir tráfico/trackers de RNF-012/013 sobre este binario exacto.
-- [ ] Registrar aceptación manual final del binario antes de fijarlo y publicar.
+- [ ] **Diferido hasta después de la presentación:** núcleo offline,
+  organización/búsqueda, fechas y ZIP sobre este binario exacto; no comprobados.
+- [ ] **Diferido hasta después de la presentación:** tráfico/trackers de
+  RNF-012/013 sobre este binario exacto; no transferir resultados de otro APK.
+- [x] El autor acepta expresamente la RC1 con validación parcial y difiere los
+  controles anteriores sin aprobarlos. [Decisión vigente](../../BACKLOG.md#congelación-académica--2026-10-22).
+- [x] `v0.6.0` publicada como Pre-release, APK `15f8ede5…` y checksum adjuntos;
+  se congela el desarrollo, sin más cambios ni comprobaciones de app hasta después
+  de la presentación. Próximas sesiones: sólo manual, luego informe/defensa.
 
-La prueba nueva cubre la actualización y apertura descritas en el registro;
-no equivale a aceptación manual del autor ni a validación exhaustiva. Se conservan
-los límites del precorte y las postergaciones ya aceptadas, sin certificar otros RNF.
+Las pruebas cubren únicamente los recorridos registrados. La aceptación expresa
+posterior es de cobertura parcial, no una nueva prueba manual por caso ni
+validación exhaustiva. Los límites y estados RNF se conservan; este checklist
+no autoriza retomar los controles diferidos durante el congelamiento.
 
 ## Revisión precorte — 2026-10-22
 

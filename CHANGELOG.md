@@ -9,18 +9,21 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ## [Unreleased]
 
-> Sin cambios todavía.
+### Changed
+
+- **Congelación académica decidida:** el autor acepta la RC1 publicada con validación parcial y difiere expresamente las comprobaciones restantes hasta después de la presentación oficial. No más código, dependencias, compilaciones o pruebas de la app; próximas sesiones sólo documentales, primero manual y luego informe/defensa. [Decisión y límites](BACKLOG.md#congelación-académica--2026-10-22), sin modificar el APK ni marcar pruebas no ejecutadas como aprobadas.
 
 ## [0.6.0] — 2026-10-22 — Candidato de presentación (RC1)
 
-> APK local `0.6.0/600` generada y firmada como Release Candidate 1, sin anunciar
-> estabilidad ni publicar todavía. Identidad del APK y controles propios del corte
+> APK `0.6.0/600` publicada como Pre-release, Release Candidate 1, sin anunciar
+> estabilidad. Identidad del APK y controles propios del corte
 > en el [registro del candidato](docs/gestion/candidato-apk-0.6.0.md). Los resultados
 > debug anteriores conservan su alcance. La actualización desde la APK pública
 > `0.5.0` al candidato inicial, apertura y conservación del conjunto de prueba fueron
 > verificadas en Android. El corregido también pasó actualización desde el inicial,
 > con tablas conservadas y Acerca de comprobado. El autor aceptó PR #42 y autorizó
-> merge/limpieza; recorridos restantes y aceptación manual final siguen pendientes.
+> merge/limpieza. Después aceptó expresamente la cobertura parcial para publicación
+> y congeló el desarrollo; los recorridos restantes quedan diferidos, no aprobados.
 
 ### Changed
 

@@ -6,15 +6,23 @@
 
 **Estado:** activo; AUD-001 a AUD-007 quedaron cerrados e integrados mediante PR #2, #3 y #5 a #8. La pre-release `v0.5.0` incorpora esos cierres, las correcciones táctiles de PR #9 y el tooling de release de PR #10.
 
-**Corte operativo vigente:** segunda beta [`v0.5.0`](https://github.com/jdfesa/lumapse/releases/tag/v0.5.0), publicada con APK firmada y validación automática/Android trazable.
+**Corte operativo vigente:** [`v0.6.0 — Release Candidate 1`](https://github.com/jdfesa/lumapse/releases/tag/v0.6.0), publicada como Pre-release, aceptada con validación parcial y desarrollo congelado hasta después de la presentación académica oficial.
 
-**Versión publicada:** `v0.5.0` (`versionCode 500`), tag anotado sobre `5840755`. Las betas publicadas son inmutables; debug privado autorizado no exige bump por prueba. Un candidato/entrega posterior requiere versión/code nuevos: [flujo Android](docs/flujo-desarrollo-android.md#identificación-de-compilaciones-en-acerca-de).
+**Versión publicada:** `v0.6.0/600`, tag sobre `ac2a747`; APK de fuente `bcefe6a`, SHA-256 `15f8ede5b78387e3fcac1a53eb3bc78dbb1e30df9acf7f4f20c771c48739e042`. No recompilar ni reemplazar el artefacto. `v0.5.0/500` se conserva como beta histórica inmutable.
 
-**Objetivo:** tareas técnicas imprescindibles → último APK de presentación generado/validado (`0.6.0/600`, Release Candidate 1 autorizado) → congelar desarrollo → manual basado en ese APK → informe final y defensa. El feedback voluntario se recoge después del corte, sin bloquear estos entregables. Para finales de octubre de 2026 deben estar preparados, sin ampliar el producto ni prometer una versión estable o adopción real.
+**Objetivo vigente:** desarrollo congelado → próxima sesión: manual de usuario del APK publicado → luego informe final y defensa. Sólo documentación hasta después de la presentación académica oficial; sin cambios de código, funcionalidades, dependencias o configuración que afecte la app y sin nuevas comprobaciones de la APK. No se promete estabilidad ni adopción real.
 
 **Recorte de cierre acordado:** [imprescindibles, límites y deuda postdefensa](BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa). Este tablero registra acciones, no certifica cumplimiento: una casilla pendiente o una postergación no se convierte en evidencia. Los estados RNF permanecen en su [fuente canónica](docs/producto/requisitos-no-funcionales.md).
 
 ## Prioridad inmediata — plan aceptado
+
+**Decisión de congelación — 2026-10-22:** el autor acepta la RC1 tal como está y
+su cobertura parcial; se publica sin completar los controles restantes. Núcleo
+offline, organización/búsqueda, fechas, ZIP y tráfico/trackers quedan **diferidos,
+no aprobados**, conforme a la [decisión canónica](BACKLOG.md#congelación-académica--2026-10-22).
+No más código ni pruebas del binario antes de la presentación. Esta decisión
+reemplaza el requisito previo de completar esos controles para publicar/congelar.
+No convertir el manual o el informe en otra ronda de pruebas o correcciones.
 
 **Candidato autorizado — 2026-10-22:** preparar `0.6.0/600` como Release Candidate 1
 en `chore/presentation-rc1`, sin mejoras nuevas. El autor autorizó generar la APK
@@ -27,9 +35,9 @@ Después, el autor autorizó preparar la beta pública `0.5.0` en el teléfono y
 actualizar a la RC1 sin borrar/restaurar desde esa referencia: actualización,
 apertura y conservación del conjunto de prueba PASS en el APK inicial. La
 actualización posterior al corregido también conservó todas las tablas y el borrador.
-El autor aceptó PR #42 y autorizó merge/limpieza tras comprobar integración. La
-aceptación manual final y los controles restantes siguen pendientes; publicación
-y tag se atenderán después, con asistencia, sin congelación definitiva por deducción.
+El autor aceptó PR #42, integrado en `ac2a747` con sus ramas eliminadas. La decisión
+posterior acepta la validación parcial, difiere los controles restantes y congela
+el desarrollo; `v0.6.0` ya está publicada, sin inferir resultados nuevos por caso.
 
 **Revisión precorte — 2026-10-22:** `test/pre-cut-acceptance` reúne la
 [clasificación y los cinco criterios concretos de corte](docs/gestion/revision-precorte-2026-10-22.md).
@@ -176,15 +184,17 @@ con muestras y umbrales conservados. No se harán más pilotos en este frente.
 
 ### Corte APK final — artefacto de presentación
 
-Aplicar los [cinco no negociables](docs/gestion/revision-precorte-2026-10-22.md#no-negociables-y-decisión-de-corte),
-una vez aceptada e integrada la revisión precorte. No abrir otra ronda de mejoras por rutina.
+Se conserva la evidencia de los [criterios originales](docs/gestion/revision-precorte-2026-10-22.md#no-negociables-y-decisión-de-corte).
+La aceptación parcial y congelación explícitas reemplazan la repetición pendiente
+de controles como condición de publicación. No abrir otra ronda técnica.
 
 - [x] Repetir `npm run verify`, auditorías completa/productiva y coverage de servicios en la fuente candidata `0.6.0/600`: 1211 tests de app/105 de tooling, auditorías 0/0 y servicios 96,06%; [resultados del corte](docs/gestion/candidato-apk-0.6.0.md#controles-de-la-fuente-candidata), sin atribuir pruebas Android todavía no ejecutadas.
-- [x] Generar el APK autorizado `0.6.0/600` (RC1), corregido desde fuente limpia `bcefe6a` por etiqueta neutral y parche DOMPurify autorizado; gate final de 1214 tests de app/105 tooling y auditorías 0/0. Firma original, manifest no-debuggable, canal, assets, hash y etiqueta Android comprobados. [Identidad vigente y evidencia inicial preservada](docs/gestion/candidato-apk-0.6.0.md#binario-corregido). Sin tag ni publicación.
+- [x] Generar el APK autorizado `0.6.0/600` (RC1), corregido desde fuente limpia `bcefe6a` por etiqueta neutral y parche DOMPurify autorizado; gate final de 1214 tests de app/105 tooling y auditorías 0/0. Firma original, manifest no-debuggable, canal, assets, hash y etiqueta Android comprobados. [Identidad vigente y evidencia inicial preservada](docs/gestion/candidato-apk-0.6.0.md#binario-corregido). Publicación posterior registrada abajo.
 - [x] Probar actualización real desde la APK pública `0.5.0/500` a la RC1 exacta: apertura, cinco notas con estados, materia/sección, fecha académica, borrador y tema conservados; [filas/hashes y límites](docs/gestion/candidato-apk-0.6.0.md#actualización-pública-050-a-060--2026-10-22). Sin desinstalar, limpiar, importar ni restaurar desde la referencia pública.
 - [x] Verificar actualización del candidato inicial al corregido, con todas las filas y el borrador idénticos, y comprobar Acerca de en el teléfono. El autor acepta PR #42 y autoriza merge/limpieza; no acredita los controles restantes ni publica el APK.
-- [ ] Completar recorridos del núcleo offline/organización/búsqueda/fechas/ZIP, tráfico/trackers y aceptación del autor sobre ese APK exacto, sin deducir esos resultados de la actualización.
-- [ ] Congelar el desarrollo sobre el APK aceptado: sin funciones, mejoras ni correcciones automáticas motivadas por feedback; cualquier excepción requiere una decisión expresa.
+- [ ] **Diferido hasta después de la presentación:** recorridos restantes del núcleo offline/organización/búsqueda/fechas/ZIP y tráfico/trackers sobre ese APK exacto. No ejecutarlos durante el congelamiento ni marcarlos como aprobados.
+- [x] Aceptación expresa de la RC1 con validación parcial y congelación del desarrollo hasta después de la presentación académica oficial. Sólo documentación; sin nuevos cambios o comprobaciones de app, sin recompilar ni sustituir APK.
+- [x] Publicar `v0.6.0` como Pre-release: `Lumapse v0.6.0 — Release Candidate 1`, con APK y checksum existentes. Publicación comprobada por metadatos de GitHub el 2026-10-22; sin nueva prueba o descarga del binario.
 
 ### Feedback posterior al corte — no bloqueante
 
@@ -192,7 +202,11 @@ una vez aceptada e integrada la revisión precorte. No abrir otra ronda de mejor
 - [ ] Recoger observaciones sobre primera nota (`RNF-005`), funcionalidad y fricciones. El umbral ≤10 s sigue pendiente si no se realiza una medición específica; opiniones no acreditan tiempos ni adopción.
 - [ ] Incorporar, cuando se reciban, las observaciones de los dos docentes que el autor informa están probando `v0.5.0`; atribuirlas a esa versión, no al APK posterior. Documentar hallazgos y trabajo futuro sin reabrir automáticamente el desarrollo.
 
-### Después del APK validado — cierre académico y defensa
+### Después del APK aceptado con límites — cierre académico y defensa
+
+Orden acordado: **próxima sesión, manual de usuario; luego informe final y defensa**.
+Sólo documentación, utilizando el corte publicado y la evidencia existente; no
+se reabre desarrollo ni se generan pruebas para completar métricas pendientes.
 
 - [ ] Revisar el manual externo de `v0.5.0` informado por el autor y adaptarlo al APK final, con capturas coherentes y límites de backup/borradores/papelera. Su existencia no acredita que ya esté actualizado o revisado.
 - [ ] Emitir la matriz RNF final con requisito, método, comando, dispositivo, fecha, artefacto, resultado, evidencia y limitaciones aceptadas; mantener CRUD/FPS pendientes y diferidos según el backlog.
@@ -206,15 +220,16 @@ una vez aceptada e integrada la revisión precorte. No abrir otra ronda de mejor
 
 Las mediciones CRUD/FPS, los refactors y las demás mejoras no comprometidas quedan
 en el [backlog postdefensa](BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa), no como
-una lista adicional de trabajo inmediato. Los controles del candidato siguen pendientes tras la aceptación general de PR #41:
-cualquier limitación o postergación nueva exige una decisión explícita.
+una lista adicional de trabajo inmediato. Las comprobaciones restantes del candidato
+se difieren por decisión expresa del autor; la falta de cobertura debe reflejarse
+en la matriz, manual, informe y defensa, sin inventar resultados ni reabrir pruebas.
 
 ## Criterios de salida de Hito 06
 
 - Documentación técnica y académica revisada y congelada.
 - Manual de usuario revisado y adaptado al artefacto final.
 - Diagramas de base de datos exportados y consistentes con el schema real.
-- Quality gate y validación Android final sin bloqueantes abiertos.
+- Quality gate y evidencia Android existentes trazados; aceptación parcial y comprobaciones diferidas explícitas, sin exigir nuevas pruebas ni afirmar validación exhaustiva.
 - Matriz RNF final emitida, con estados verificados, parciales, obsoletos o no aplicables sustentados por evidencia.
 - Observaciones menores documentadas con decisión explícita.
 - Presentación y demo preparadas.
