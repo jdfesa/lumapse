@@ -1,0 +1,74 @@
+name: Publicar manual de usuario
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/manual-de-usuario-0.6.0/manual-de-usuario-lumapse.html'
+      - 'docs/manual-de-usuario-0.6.0/assets/**'
+      - '.github/workflows/manual-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: manual-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Configurar Node.js para validar el manual
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Comprobar fuentes, imágenes e interacciones del manual
+        run: |
+          node docs/manual-de-usuario-0.6.0/fuentes/build.mjs --check
+          node --test docs/manual-de-usuario-0.6.0/fuentes/model.test.mjs docs/manual-de-usuario-0.6.0/fuentes/manual.test.mjs
+
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Preparar únicamente el manual y sus imágenes
+        shell: bash
+        run: |
+          manual="docs/manual-de-usuario-0.6.0"
+          site="$RUNNER_TEMP/manual-site"
+          mkdir -p "$site"
+          cp "$manual/manual-de-usuario-lumapse.html" "$site/"
+          cp -R "$manual/assets" "$site/assets"
+          # La raíz publicada redirige al único HTML del manual, sin duplicarlo.
+          printf '%s\n' \
+            '<!doctype html>' \
+            '<html lang="es"><head><meta charset="utf-8">' \
+            '<meta name="viewport" content="width=device-width, initial-scale=1">' \
+            '<meta http-equiv="refresh" content="0; url=manual-de-usuario-lumapse.html">' \
+            '<title>Manual de usuario de Lumapse</title></head>' \
+            '<body><a href="manual-de-usuario-lumapse.html">Abrir manual interactivo de Lumapse</a></body></html>' \
+            > "$site/index.html"
+
+      - name: Subir el sitio preparado
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ${{ runner.temp }}/manual-site
+
+      - name: Publicar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

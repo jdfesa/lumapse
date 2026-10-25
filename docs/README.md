@@ -6,7 +6,7 @@ Este directorio reúne la documentación viva de Lumapse. El corte vigente es la
 
 | Necesidad | Fuente canónica |
 |---|---|
-| Aprender a usar Lumapse | [Manual de usuario 0.6.0](./manual-de-usuario-0.6.0/manual-de-usuario-lumapse.html) |
+| Aprender a usar Lumapse | [Manual de usuario 0.6.0](https://jdfesa.github.io/lumapse/manual-de-usuario-lumapse.html) |
 | Editar y regenerar el manual | [Fuentes y regeneración](./manual-de-usuario-0.6.0/README.md#para-editar-y-regenerar) |
 | Entender el producto y su alcance actual | [`producto/`](./producto/) |
 | Entender la arquitectura y sus decisiones | [`adr/`](./adr/) y [`diagramas/arquitectura-componentes.md`](./diagramas/arquitectura-componentes.md) |
@@ -26,7 +26,7 @@ Cuando un documento histórico contradiga una decisión posterior, prevalece el 
 - [`hitos/`](./hitos/) — Informes de avance y cierre mensual.
 - [`informe-final/`](./informe-final/) — Capítulos fuente del informe académico final.
 - [`inspiracion/`](./inspiracion/) — Benchmarking y referencias externas; no constituye especificación del producto.
-- [Manual de usuario 0.6.0](./manual-de-usuario-0.6.0/manual-de-usuario-lumapse.html) — Guía HTML interactiva de uso, con capturas de la versión actual.
+- [Manual de usuario 0.6.0](https://jdfesa.github.io/lumapse/manual-de-usuario-lumapse.html) — Guía HTML interactiva de uso, con capturas de la versión actual.
 - [`producto/`](./producto/) — Problema, personas, requisitos, historias de usuario y evidencia del relevamiento.
 - [`flujo-desarrollo-android.md`](./flujo-desarrollo-android.md) — Build, despliegue y pruebas con dispositivos Android físicos desde macOS.
 - [`flujo-desarrollo-android-en-arch.md`](./flujo-desarrollo-android-en-arch.md) — Instalación y pruebas con Android Emulator en Arch Linux.
@@ -51,12 +51,12 @@ reescriben resultados históricos para aparentar cumplimiento del APK nuevo.
 
 ## Estado documental actual
 
-- [Manual de usuario 0.6.0](./manual-de-usuario-0.6.0/manual-de-usuario-lumapse.html):
-  guía breve e interactiva incorporada con siete capturas actuales. Para leerla,
-  abrir `manual-de-usuario-lumapse.html` en un navegador desde una copia local de
-  su carpeta, conservando `assets` a su lado; funciona sin instalar dependencias
-  ni conectarse a internet. No está publicada como sitio web. Su revisión final
-  queda pendiente y no acredita pruebas funcionales ni requisitos del APK.
+- [Manual de usuario 0.6.0](https://jdfesa.github.io/lumapse/manual-de-usuario-lumapse.html):
+  guía breve e interactiva con siete capturas actuales, disponible para leer
+  directamente en el navegador mediante GitHub Pages. También funciona sin conexión
+  abriendo `manual-de-usuario-lumapse.html` desde una copia local de su carpeta,
+  conservando `assets` a su lado; no requiere instalar dependencias. Su revisión
+  final queda pendiente y no acredita pruebas funcionales ni requisitos del APK.
   El texto, SVG editable y código del generador se conservan en
   `fuentes/`; el [README de la guía](./manual-de-usuario-0.6.0/README.md) indica
   cómo regenerar el HTML sin depender de archivos temporales de un equipo.

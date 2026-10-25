@@ -39,14 +39,15 @@
 
 ### Manual de usuario
 
-La [guía interactiva de Lumapse 0.6.0](./docs/manual-de-usuario-0.6.0/manual-de-usuario-lumapse.html)
-explica cómo escribir, organizar, consultar fechas y guardar una copia de tus notas.
+**[Abrir el manual interactivo de Lumapse 0.6.0](https://jdfesa.github.io/lumapse/manual-de-usuario-lumapse.html)**
 
-Para leerla, descargá o cloná el repositorio y abrí
+La guía explica cómo escribir, organizar, consultar fechas y guardar una copia de tus notas.
+Se abre directamente en el navegador, sin instalar nada.
+
+También podés leerla sin conexión: descargá o cloná el repositorio y abrí
 `docs/manual-de-usuario-0.6.0/manual-de-usuario-lumapse.html` en un navegador,
-conservando la carpeta `assets` a su lado. No requiere instalación ni conexión
-a internet. El enlace identifica el archivo del repositorio; la guía no está
-publicada como sitio web.
+conservando la carpeta `assets` a su lado. Las [instrucciones del manual](./docs/manual-de-usuario-0.6.0/README.md)
+explican cómo editarlo, regenerarlo y publicarlo.
 
 ---
 
