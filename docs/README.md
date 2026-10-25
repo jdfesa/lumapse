@@ -6,6 +6,8 @@ Este directorio reúne la documentación viva de Lumapse. El corte vigente es la
 
 | Necesidad | Fuente canónica |
 |---|---|
+| Aprender a usar Lumapse | [Manual de usuario 0.6.0](./manual-de-usuario-0.6.0/manual-de-usuario-lumapse.html) |
+| Editar y regenerar el manual | [Fuentes y regeneración](./manual-de-usuario-0.6.0/README.md#para-editar-y-regenerar) |
 | Entender el producto y su alcance actual | [`producto/`](./producto/) |
 | Entender la arquitectura y sus decisiones | [`adr/`](./adr/) y [`diagramas/arquitectura-componentes.md`](./diagramas/arquitectura-componentes.md) |
 | Consultar el modelo de datos | [`diagramas/database/`](./diagramas/database/) |
@@ -24,6 +26,7 @@ Cuando un documento histórico contradiga una decisión posterior, prevalece el 
 - [`hitos/`](./hitos/) — Informes de avance y cierre mensual.
 - [`informe-final/`](./informe-final/) — Capítulos fuente del informe académico final.
 - [`inspiracion/`](./inspiracion/) — Benchmarking y referencias externas; no constituye especificación del producto.
+- [Manual de usuario 0.6.0](./manual-de-usuario-0.6.0/manual-de-usuario-lumapse.html) — Guía HTML interactiva de uso, con capturas de la versión actual.
 - [`producto/`](./producto/) — Problema, personas, requisitos, historias de usuario y evidencia del relevamiento.
 - [`flujo-desarrollo-android.md`](./flujo-desarrollo-android.md) — Build, despliegue y pruebas con dispositivos Android físicos desde macOS.
 - [`flujo-desarrollo-android-en-arch.md`](./flujo-desarrollo-android-en-arch.md) — Instalación y pruebas con Android Emulator en Arch Linux.
@@ -32,7 +35,7 @@ Cuando un documento histórico contradiga una decisión posterior, prevalece el 
 
 Los documentos deben distinguir explícitamente entre:
 
-- **Vigente:** describe el corte `v0.6.0` con sus límites o identifica explícitamente el artefacto histórico de una evidencia. Los capítulos del informe y el manual anterior aún requieren adaptación documental; no son entregables finales por deducción.
+- **Vigente:** describe el corte `v0.6.0` con sus límites o identifica explícitamente el artefacto histórico de una evidencia. Los capítulos del informe aún requieren adaptación documental; la guía de usuario 0.6.0 está incorporada y pendiente de revisión final. Ninguno se considera un entregable final por deducción.
 - **Histórico:** registra una hipótesis o decisión reemplazada, sin presentarla como estado actual.
 - **Fuente:** archivo que se edita y del cual se deriva otro artefacto.
 - **Generado:** salida reproducible que no debe corregirse manualmente si existe una fuente.
@@ -47,6 +50,16 @@ y el informe ensamblado conservan su checkpoint hasta la revisión final; no se
 reescriben resultados históricos para aparentar cumplimiento del APK nuevo.
 
 ## Estado documental actual
+
+- [Manual de usuario 0.6.0](./manual-de-usuario-0.6.0/manual-de-usuario-lumapse.html):
+  guía breve e interactiva incorporada con siete capturas actuales. Para leerla,
+  abrir `manual-de-usuario-lumapse.html` en un navegador desde una copia local de
+  su carpeta, conservando `assets` a su lado; funciona sin instalar dependencias
+  ni conectarse a internet. No está publicada como sitio web. Su revisión final
+  queda pendiente y no acredita pruebas funcionales ni requisitos del APK.
+  El texto, SVG editable y código del generador se conservan en
+  `fuentes/`; el [README de la guía](./manual-de-usuario-0.6.0/README.md) indica
+  cómo regenerar el HTML sin depender de archivos temporales de un equipo.
 
 - [Candidato APK 0.6.0 — RC1](./gestion/candidato-apk-0.6.0.md): APK local generada
   con firma de distribución original, fuente limpia identificada y controles del

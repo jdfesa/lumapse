@@ -10,7 +10,7 @@
 
 **Versión publicada:** `v0.6.0/600`, tag sobre `ac2a747`; APK de fuente `bcefe6a`, SHA-256 `15f8ede5b78387e3fcac1a53eb3bc78dbb1e30df9acf7f4f20c771c48739e042`. No recompilar ni reemplazar el artefacto. `v0.5.0/500` se conserva como beta histórica inmutable.
 
-**Objetivo vigente:** desarrollo congelado → próxima sesión: manual de usuario del APK publicado → luego informe final y defensa. Sólo documentación hasta después de la presentación académica oficial; sin cambios de código, funcionalidades, dependencias o configuración que afecte la app y sin nuevas comprobaciones de la APK. No se promete estabilidad ni adopción real.
+**Objetivo vigente:** desarrollo congelado → revisión final del [manual de usuario 0.6.0](docs/manual-de-usuario-0.6.0/manual-de-usuario-lumapse.html) incorporado → luego informe final y defensa. Sólo documentación hasta después de la presentación académica oficial; sin cambios de código, funcionalidades, dependencias o configuración que afecte la app y sin nuevas comprobaciones de la APK. No se promete estabilidad ni adopción real.
 
 **Recorte de cierre acordado:** [imprescindibles, límites y deuda postdefensa](BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa). Este tablero registra acciones, no certifica cumplimiento: una casilla pendiente o una postergación no se convierte en evidencia. Los estados RNF permanecen en su [fuente canónica](docs/producto/requisitos-no-funcionales.md).
 
@@ -204,11 +204,11 @@ de controles como condición de publicación. No abrir otra ronda técnica.
 
 ### Después del APK aceptado con límites — cierre académico y defensa
 
-Orden acordado: **próxima sesión, manual de usuario; luego informe final y defensa**.
+Orden acordado: **revisión final del manual incorporado; luego informe final y defensa**.
 Sólo documentación, utilizando el corte publicado y la evidencia existente; no
 se reabre desarrollo ni se generan pruebas para completar métricas pendientes.
 
-- [ ] Revisar el manual externo de `v0.5.0` informado por el autor y adaptarlo al APK final, con capturas coherentes y límites de backup/borradores/papelera. Su existencia no acredita que ya esté actualizado o revisado.
+- [ ] Completar la revisión final del [manual de usuario 0.6.0](docs/manual-de-usuario-0.6.0/manual-de-usuario-lumapse.html) incorporado, con sus capturas y aclaraciones de backup, borradores y papelera, antes de congelarlo para la entrega.
 - [ ] Emitir la matriz RNF final con requisito, método, comando, dispositivo, fecha, artefacto, resultado, evidencia y limitaciones aceptadas; mantener CRUD/FPS pendientes y diferidos según el backlog.
 - [ ] Incorporar el corte y la evidencia final en los capítulos fuente del informe; revisar coherencia, referencias y diagramas antes de congelar y ensamblar.
 - [ ] Contrastar los metadatos bibliográficos de Gómez (2014) y Parada (2026) contra los originales de cátedra y cerrar la sección de referencias.
