@@ -5,6 +5,9 @@ documentación o configuración, completar las secciones 1 a 4, en ese orden. Es
 procedimiento se aplica al iniciar y al retomar una tarea, independientemente del
 equipo o de la memoria disponible.
 
+Si existe `tmp/SUBAGENTS.md`, leer sus instrucciones locales complementarias antes
+de continuar. Su ausencia no modifica este procedimiento.
+
 Este archivo define el inicio operativo. [CONTRIBUTING.md](CONTRIBUTING.md) reúne las
 reglas de contribución; [scripts/README.md](scripts/README.md), el uso y los límites
 de las herramientas. Consultar esas fuentes en lugar de duplicar sus instrucciones.
