@@ -1,18 +1,21 @@
 # Diagrama de Casos de Uso — Lumapse
 
 **Tipo:** Diagrama UML de Comportamiento  
-**Última actualización:** 2026-09-05<br>
+**Última actualización:** 2026-10-26<br>
 **Autor:** José David Sandoval
 
 ---
 
 ## Objetivo del diagrama
 
-Representar las funcionalidades principales del sistema desde la perspectiva del usuario, identificando los **actores** que interactúan con la aplicación y los **casos de uso** que Lumapse ofrece en el corte `v0.5.0`. Este diagrama muestra **qué hace el producto**, separando el alcance implementado de las funcionalidades futuras.
+Representar las funcionalidades principales del sistema desde la perspectiva del usuario, identificando los **actores** que interactúan con la aplicación y los **casos de uso** que Lumapse ofrece en el corte `v0.6.0`. Este diagrama muestra **qué hace el producto**, separando el alcance implementado de las funcionalidades futuras.
 
 > **Nota de evolución:** Desde el pivote a aplicación Android híbrida ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)), se eliminaron los casos de uso relacionados con PWA y Service Worker. En Hito 05 se incorporan borradores persistentes (`RF-005`), backup manual `.zip` (`RF-017`), importación de backups ZIP (`RF-018`), sección Acerca de (`RF-023`), fechas académicas discretas (`RF-027`) y editor enriquecido (`RF-028`). Compartir/exportar una nota individual e importar una nota `.md` quedan explícitamente como post-release.
 
-> **Frontera de versión:** Este documento afirma capacidades de la APK `v0.5.0`; sus enlaces apuntan a la documentación vigente reconciliada con el tag `5840755`.
+> **Frontera de versión:** Modelo funcional contrastado con los requisitos, el
+> manual 0.6.0 y la fuente del corte RC1. Describe capacidades y límites, no una
+> nueva validación de la APK. La [cobertura parcial aceptada](../../BACKLOG.md#congelación-académica--2026-10-22)
+> se conserva; no se cambian estados RF/RNF por actualizar este diagrama.
 
 ---
 
@@ -155,7 +158,7 @@ flowchart LR
 | ID | Caso de Uso | Descripción | RF asociado |
 |---|---|---|---|
 | UC-08 | Escribir en Markdown | El estudiante escribe contenido en texto plano o Markdown portable. | [RF-010](../producto/requisitos-funcionales.md), [RF-011](../producto/requisitos-funcionales.md) |
-| UC-09 | Previsualizar Nota | El estudiante visualiza el Markdown renderizado en modo lectura o en vista dividida. | [RF-012](../producto/requisitos-funcionales.md) |
+| UC-09 | Previsualizar Nota | El estudiante consulta Markdown renderizado en las tarjetas del listado. `MarkdownPreview` se conserva como componente aislado; no se presenta una vista dividida del editor como flujo activo de la RC1. | [RF-012](../producto/requisitos-funcionales.md) |
 | UC-19 | Usar Comandos de Formato | El estudiante usa comandos `/`, botón `+`, botón `Aa`, callouts y continuidad inteligente para enriquecer la nota sin formato propietario. | [RF-028](../producto/requisitos-funcionales.md) |
 
 ### Fechas Académicas

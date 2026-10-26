@@ -54,6 +54,12 @@ lumapse/
 └── CHANGELOG.md            # Historial por versión
 ```
 
+Este árbol resume la decisión estructural revisada en su fecha, no un inventario
+exhaustivo actual. El [mapa vigente del README](../../README.md#estructura-del-proyecto)
+incluye las áreas incorporadas después, como tests de tooling y manual de usuario.
+`releases/` representa almacenamiento **local e ignorado por Git** de artefactos,
+no una carpeta fuente versionada.
+
 No se consideran parte de la estructura fuente los directorios generados o locales como `node_modules/`, `dist/`, coberturas, entornos virtuales y temporales.
 
 ## Principios

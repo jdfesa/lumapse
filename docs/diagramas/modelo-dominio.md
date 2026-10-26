@@ -1,16 +1,20 @@
 # Modelo de Dominio — Lumapse
 
 **Tipo:** Diagrama UML de Estructura (Clases)  
-**Última actualización:** 2026-09-05 (dominio y referencias técnicas de `v0.5.0`)<br>
+**Última actualización:** 2026-10-26 (revisión estática del corte `v0.6.0`)<br>
 **Autor:** José David Sandoval
 
 ---
 
 ## Objetivo del diagrama
 
-Modelar las entidades principales, servicios de dominio y límites de persistencia que componen Lumapse en el corte `v0.5.0`. Este diagrama describe el modelo conceptual de la app y su relación con la persistencia local SQLite, sin reemplazar el detalle físico documentado en [`database/04-modelo-fisico-ddl.md`](./database/04-modelo-fisico-ddl.md).
+Modelar las entidades principales, servicios de dominio y límites de persistencia que componen Lumapse en el corte `v0.6.0`. Este diagrama describe el modelo conceptual de la app y su relación con la persistencia local SQLite, sin reemplazar el detalle físico documentado en [`database/04-modelo-fisico-ddl.md`](./database/04-modelo-fisico-ddl.md).
 
-> **Frontera de versión:** Las entidades, relaciones, rutas y tipos técnicos corresponden al tag publicado `v0.5.0` (`5840755`). AUD-005 y AUD-006 reforzaron la coordinación y vigencia de las operaciones sin modificar estas entidades persistidas.
+> **Frontera de versión:** Modelo contrastado con la fuente del corte `v0.6.0`
+> (APK de `bcefe6a`, tag sobre `ac2a747`). [ADR-012](../adr/ADR-012-borrador-sqlite-y-guardado-atomico.md)
+> movió el borrador a la tabla `metadata`, sin agregar una tabla ni cambiar las
+> entidades de notas, materias y fechas. Esta revisión estática no es una prueba
+> funcional ni transfiere al APK los resultados de otros artefactos.
 
 > **Nota de evolución:** El modelo original incluía `Tag` y persistencia IndexedDB. Tras el pivote mobile-first se adoptó SQLite ([ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md)) y organización por Materia/Sección. En Hito 05 se agregan `AcademicEvent`, borradores persistentes del editor y portabilidad por backup ZIP (`RF-017` / `RF-018`).
 
@@ -148,12 +152,6 @@ classDiagram
         +persistWeb()
     }
 
-    class LocalStorage {
-        +getItem()
-        +setItem()
-        +removeItem()
-    }
-
     Subject "0..1" --> "*" Subject : contiene secciones
     Subject "0..1" --> "*" Note : agrupa opcionalmente
     Subject "0..1" --> "*" AcademicEvent : referencia opcional
@@ -177,7 +175,7 @@ classDiagram
     BackupService ..> BackupData : serializa
     BackupImportService ..> BackupData : valida y aplica
     BackupImportService --> SQLite : escribe transaccionalmente
-    EditorDraftService --> LocalStorage : persiste borrador
+    EditorDraftService --> SQLite : persiste borrador en metadata
     MarkdownService ..> Note : renderiza contenido
 ```
 
@@ -230,7 +228,12 @@ Recordatorio visual pasivo asociado al calendario/Heatmap. No es una agenda comp
 
 ### EditorDraft (Borrador del editor)
 
-Entidad técnica local que protege trabajo en curso. Vive en `localStorage`, no en SQLite, y se elimina al guardar/actualizar con éxito o al descartar explícitamente.
+Entidad técnica local que protege trabajo en curso. Se persiste como JSON en
+`metadata`, clave `lumapse-editor-draft-v1`, y se captura sin debounce. El guardado
+o actualización desde el editor confirma la nota y el marcador JSON `null` en una
+misma transacción; descartar también espera la limpieza durable. `localStorage`
+sólo es origen de migración legacy, no un fallback actual. No se exporta en el ZIP
+ni se garantiza la última tecla si el proceso termina antes del commit.
 
 | Atributo | Tipo | Descripción |
 |---|---|---|
@@ -262,7 +265,7 @@ Modelo de portabilidad local del workspace. Un backup incluye datos estructurado
 | `AcademicEventService` | CRUD de fechas académicas, consultas por mes y próximas fechas. | SQLite |
 | `BackupService` | Reúne datos actuales y genera el ZIP restaurable/legible. | Lectura SQLite + ZIP |
 | `BackupImportService` | Valida ZIP, prepara preview y aplica importación no destructiva/transaccional. | ZIP + SQLite |
-| `EditorDraftService` | Guarda, carga y limpia el borrador local del editor. | `localStorage` |
+| `EditorDraftService` | Hidrata el cache, persiste snapshots y consume el borrador junto con la escritura de nota del editor. | SQLite (`metadata`); legacy migrado desde `localStorage` |
 | `MarkdownService` | Expone `renderMarkdown` y `hasMarkdownSyntax`; la sanitización del HTML ocurre internamente durante el renderizado. | Sin persistencia |
 | `SQLite` | Inicializa schema, ejecuta migraciones idempotentes y transacciones. | `@capacitor-community/sqlite` / `sql.js` web |
 

@@ -1,10 +1,17 @@
 # Flujo de Desarrollo Android — Lumapse
 
 > **Documento:** Guía operativa de desarrollo, compilación y testing en dispositivos Android.  
-> **Última actualización:** 2026-09-05 (`0.5.0`, versionado verificado y despliegue seguro con conservación de datos)
+> **Última actualización:** 2026-10-26 (coherencia con RC1 y despliegue de ADR-013, sin nuevas pruebas)
 > **Autor:** José David Sandoval
 
 ---
+
+> **Límite operativo vigente:** la RC1 `v0.6.0` está publicada y el
+> [desarrollo y nuevas pruebas de app están congelados](../BACKLOG.md#congelación-académica--2026-10-22).
+> Esta guía conserva el procedimiento para trabajo nativo futuro autorizado,
+> no una instrucción para compilar o instalar durante el cierre documental.
+> El despliegue usa el script habitual: `cap run`/`native-run` dejaron de formar
+> parte del flujo por el riesgo de desinstalación implícita de [ADR-013](./adr/ADR-013-despliegue-android-sin-desinstalacion-implicita.md).
 
 ## 1. Visión general
 
@@ -14,35 +21,22 @@ en dispositivos Android físicos conectados por USB.
 
 ### Diagrama del flujo
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│  DESARROLLO (macOS)                                          │
-│                                                              │
-│  Código JS/TS/CSS/HTML → npm run build → dist/              │
-│                                              │               │
-│                                     npx cap sync android     │
-│                                              │               │
-│                                              ▼               │
-│                                     android/app/src/main/    │
-│                                     assets/public/           │
-│                                              │               │
-│                                     npx cap run android      │
-│                                              │               │
-└──────────────────────────────────────────────┼───────────────┘
-                                               │ USB + ADB
-                                               ▼
-                                    ┌─────────────────────┐
-                                    │  DISPOSITIVO ANDROID │
-                                    │  com.lumapse.app     │
-                                    └─────────────────────┘
-                                               │
-                                          scrcpy (mirror)
-                                               │
-                                               ▼
-                                    ┌─────────────────────┐
-                                    │  PANTALLA EN macOS   │
-                                    │  (interacción real)  │
-                                    └─────────────────────┘
+```text
+Código fuente (macOS)
+        │
+        ▼
+npm run deploy:android — sólo con autorización
+        │
+        ├─ Build web con canal android-debug
+        ├─ Sync Capacitor y Gradle Wrapper: assembleDebug
+        ├─ Verificación de certificado del APK y del instalado
+        └─ adb install -r -t, sin fallback de desinstalación
+                │ USB + ADB
+                ▼
+        Dispositivo Android · com.lumapse.app
+                │
+                ▼
+        scrcpy (mirror opcional en macOS)
 ```
 
 ---
@@ -71,8 +65,9 @@ git --version     # v2+
 
 ### 2.2 Android Studio y SDK
 
-Android Studio incluye el SDK, Gradle embebido, el emulador y las herramientas de
-compilación. Es el único instalador que se necesita para la parte nativa:
+Android Studio permite instalar y gestionar el SDK, el emulador y las herramientas
+de compilación. Es el recorrido guiado de esta sección, no un requisito del build
+por CLI; el proyecto utiliza su propio Gradle Wrapper y requiere un JDK compatible:
 
 1. **Descargar** desde [developer.android.com/studio](https://developer.android.com/studio)
 2. **Instalar** arrastrando a `/Applications/`
@@ -152,8 +147,8 @@ npm run build
 # Sincronizar con el proyecto Android
 npx cap sync android
 
-# (Opcional) Correr en un dispositivo conectado
-npx cap run android
+# La instalación no forma parte de este paso de preparación.
+# Para un deploy autorizado, usar npm run deploy:android (no cap run).
 ```
 
 ### 2.7 Verificación del entorno
@@ -169,7 +164,7 @@ echo "=== Build Tools ===" && ls $ANDROID_HOME/build-tools/
 echo "=== Dispositivos ===" && adb devices
 ```
 
-| Herramienta | Versión mínima | Versión utilizada en este proyecto |
+| Herramienta | Requisito o referencia | Versión/configuración documentada |
 |---|---|---|
 | Node.js | v22.20.0 | v22.20.0 |
 | npm | v10.9.3 | v10.9.3 |
@@ -179,7 +174,7 @@ echo "=== Dispositivos ===" && adb devices
 | Build Tools | Compatible con API 36 | Verificar con Android Studio/SDK Manager |
 | ADB | 30+ | 36.0.2 |
 | scrcpy | 2.0+ | 3.3.4 |
-| Capacitor | 8.x | 8.3.x *(ver `package.json`)* |
+| Capacitor | 8.x | Android/core `^8.5.2`, CLI `^8.3.4`; resolución exacta en `package-lock.json` |
 
 ---
 
@@ -407,7 +402,7 @@ scrcpy --turn-screen-off -K
 | Problema | Causa probable | Solución |
 |---|---|---|
 | `adb devices` no muestra el celular | Cable USB o depuración USB desactivada | Verificar que "Depuración USB" esté activada en Opciones de Desarrollador |
-| `npx cap run android` falla con error de Gradle | Primera ejecución o caché corrupto | Ejecutar `cd android && ./gradlew clean && cd ..` y reintentar |
+| El build Gradle del script de despliegue falla | Entorno JDK/SDK o error de compilación | Revisar el error concreto y las rutas/versiones de JDK 21 y SDK 36 antes de acordar otro intento; no sustituirlo por `cap run` ni limpiar datos del dispositivo |
 | La app muestra pantalla en blanco | `dist/` no está generado o desactualizado | Ejecutar `npm run build` antes de `npx cap sync` |
 | La app muestra una versión vieja después del deploy | Assets anteriores o APK distinto | Comparar Acerca de/origen con la evidencia del APK y repetir el deploy habitual autorizado; no usar `--clean` sin permiso específico y recuperación acordada |
 | scrcpy no conecta | ADB no autorizado en el dispositivo | Verificar el popup de autorización en el celular (o usar `adb kill-server && adb start-server`) |
@@ -424,7 +419,7 @@ scrcpy --turn-screen-off -K
 | APK debug | `android/app/build/outputs/apk/debug/app-debug.apk` | APK para testing (no se commitea) |
 | Config de Capacitor | `capacitor.config.json` | AppId, webDir y plugins |
 
-La firma y publicación de un artefacto de release siguen un flujo separado, documentado en [`gestion/firma-apk-android.md`](./gestion/firma-apk-android.md). La beta firmada vigente es `v0.5.0`; no debe confundirse el asset publicado con un APK debug o con un build equivalente usado para preservar datos durante una validación incremental.
+La firma y publicación de un artefacto de release siguen un flujo separado, documentado en [`gestion/firma-apk-android.md`](./gestion/firma-apk-android.md). El corte firmado de presentación es la RC1 `v0.6.0/600`, aceptada con cobertura parcial y congelada; no debe confundirse el asset publicado con un APK debug o con un build equivalente usado para preservar datos durante una validación incremental.
 
 ---
 
