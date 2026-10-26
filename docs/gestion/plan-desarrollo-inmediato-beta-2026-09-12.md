@@ -4,18 +4,20 @@
 
 **Rama documental original:** `docs/immediate-beta-plan`, integrada y eliminada.
 
-**Base inspeccionada original:** `origin/main` en `91723d6` (2026-09-07), posterior a la publicación de `v0.5.0`. Para el frente actual: `5ef1f911d593f7fbd689d304432bfed47586fff6`, posterior al merge de PR #21.
+**Base inspeccionada original:** `origin/main` en `91723d6` (2026-09-07), posterior a la publicación de `v0.5.0`. La revisión del 2026-10-02 utilizó `5ef1f911d593f7fbd689d304432bfed47586fff6`, posterior al merge de PR #21; tampoco representa el HEAD actual.
 
 **Horizonte original:** tres a cuatro sesiones; la continuidad de 2026-10-02 definió dos sesiones después de identificar el build, sin prometer la entrega final en ellas. La prioridad vigente se ajustó el 2026-10-04 como se indica abajo.
 
 **Responsable:** autor del proyecto, con asistencia técnica; la aceptación y el merge requieren su autorización.
 
-**Seguimiento vigente — 2026-10-22:** la [revisión precorte](./revision-precorte-2026-10-22.md)
-clasifica observaciones y propone cinco mínimos concretos antes del candidato,
-sin inventar otra fase F4 ni retomar lo diferido. El autor aceptó PR #41 de forma
-general, con merge/limpieza autorizados y sin nuevas pruebas por caso. La versión
-y generación del APK final siguen pendientes. La base inspeccionada original de este plan se
-conserva como evidencia histórica, no como HEAD actual.
+**Seguimiento vigente:** la [RC1 `v0.6.0/600`](./candidato-apk-0.6.0.md) fue
+publicada el 2026-10-22 con validación parcial aceptada. La
+[congelación académica](../../BACKLOG.md#congelación-académica--2026-10-22)
+supersede las secuencias técnicas pendientes conservadas en este plan: no generar
+otra APK ni completar pruebas de app antes de la presentación. El manual 0.6.0
+ya está incorporado y publicado; restan su revisión final, matriz, informe y defensa.
+Las bases, propuestas y handoffs fechados de este documento son antecedentes, no
+el HEAD ni una autorización operativa actual. F3 cuantitativa sigue sin cerrar.
 
 ## 1. Decisión aceptada
 

@@ -74,7 +74,7 @@ reescriben resultados históricos para aparentar cumplimiento del APK nuevo.
 
 - La arquitectura y los patrones quedan formalizados en [ADR-008](./adr/ADR-008-arquitectura-modular-y-patrones.md).
 - [ADR-009](./adr/ADR-009-propiedad-transaccional-sqlite.md) documenta la propiedad transaccional y el arranque recuperable incluidos en `v0.5.0`.
-- El Hito 05 conserva el cierre de la primera beta `v0.4.8`; Hito 06 publicó `v0.5.0` y continúa con presentación, coherencia documental, matriz RNF y cierre académico.
+- El Hito 05 conserva el cierre de la primera beta `v0.4.8`; Hito 06 publicó la segunda beta `v0.5.0` y la RC1 `v0.6.0`, actualmente congelada. Continúan la revisión final del manual publicado, la matriz RNF, el informe y la defensa.
 - Las fuentes DOT, DBML y DDL del modelo de datos están sincronizadas; las imágenes conceptual y lógica fueron regeneradas externamente, verificadas e incorporadas al informe el 2026-07-15. Solo resta comprobar su legibilidad en la maquetación final de PDF y diapositivas. El alcance exacto está registrado en [`diagramas/database/README.md`](./diagramas/database/README.md).
 
 ## Documentación formal académica (PP3)

@@ -1,6 +1,6 @@
 # Documentación de Producto — Lumapse
 
-**Última actualización:** 2026-09-05
+**Última actualización:** 2026-10-26
 
 Esta carpeta contiene la documentación centrada en el **usuario y el producto**, siguiendo los principios de **Design Thinking** como marco metodológico de diseño.
 
@@ -8,7 +8,7 @@ Esta carpeta contiene la documentación centrada en el **usuario y el producto**
 
 > **¿Por qué Design Thinking?**
 > Los documentos técnicos (ADRs, roadmap, metodología) responden al *cómo* se construye Lumapse.
-> Esta carpeta responde al **por qué** y al **para quién**: valida que el producto resuelve un problema real, para personas reales, de una forma que las alternativas existentes no logran.
+> Esta carpeta responde al **por qué** y al **para quién**: reúne el relevamiento y las decisiones que fundamentan el producto. La encuesta identifica necesidades declaradas; no demuestra por sí sola adopción ni superioridad frente a las alternativas.
 
 ---
 
@@ -57,7 +57,7 @@ La subcarpeta [`encuesta/`](./encuesta/) contiene los materiales para la distrib
 └─────────────┘   └─────────────┘   └─────────────┘   └─────────────┘   └─────────────┘
 ```
 
-> **Nota:** Prototipar se materializó incrementalmente entre los Hitos 02 y 05. Hito 05 aportó la primera beta `v0.4.8`; Hito 06 publicó `v0.5.0` con cierres de integridad, seguridad, confiabilidad y usabilidad táctil. La validación directa con usuarios y la revisión final de RNF continúan pendientes para el cierre académico.
+> **Nota:** Prototipar se materializó incrementalmente entre los Hitos 02 y 05. Hito 05 aportó la primera beta `v0.4.8`; Hito 06 publicó `v0.5.0` con cierres de integridad, seguridad, confiabilidad y usabilidad táctil. La RC1 `v0.6.0` está publicada con validación parcial aceptada y [desarrollo congelado](../../BACKLOG.md#congelación-académica--2026-10-22). La evidencia de cada RNF conserva su artefacto y sus límites; no se transfiere automáticamente a la RC1. El feedback voluntario no bloquea el cierre documental y no acredita tiempos ni adopción. El [manual 0.6.0](../manual-de-usuario-0.6.0/README.md) ya está incorporado y publicado; restan su revisión final, matriz RNF, informe y defensa.
 
 ---
 

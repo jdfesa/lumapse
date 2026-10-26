@@ -8,7 +8,7 @@
 
 **Proyecto:** Lumapse
 
-**Estado:** Activo sólo para cierre documental y defensa — RC1 `v0.6.0/600` publicada como Pre-release, aceptada con validación parcial; desarrollo y nuevas comprobaciones de app congelados hasta después de la presentación académica oficial. Próxima sesión: manual de usuario; luego informe final y defensa. Matriz RNF y entregables documentales pendientes, sin nuevas mediciones
+**Estado:** Activo sólo para cierre documental y defensa — RC1 `v0.6.0/600` publicada como Pre-release, aceptada con validación parcial; desarrollo y nuevas comprobaciones de app congelados hasta después de la presentación académica oficial. Manual de usuario 0.6.0 incorporado y publicado, pendiente de revisión final; luego informe final y defensa. Matriz RNF y entregables documentales pendientes, sin nuevas mediciones
 
 **Última actualización:** Octubre 2026
 
@@ -19,7 +19,7 @@
 Cerrar Lumapse con documentación coherente, evidencia técnica existente, diagramas finales y una presentación académica preparada. El corte APK ya quedó fijado y publicado con cobertura parcial aceptada; no se reabre el desarrollo ni se repiten controles para manual/informe. La [decisión de congelación](../../BACKLOG.md#congelación-académica--2026-10-22) prevalece sobre la planificación técnica previa conservada a continuación.
 
 **Prioridad aprobada vigente:** conservar el APK publicado y el desarrollo congelado
-→ próxima sesión: manual de usuario → luego informe final y defensa. Sólo trabajo
+→ revisión final del [manual de usuario 0.6.0](../manual-de-usuario-0.6.0/README.md) incorporado y publicado → luego informe final y defensa. Sólo trabajo
 documental hasta después de la presentación, sin nuevas comprobaciones de la app.
 Para finales de octubre de 2026 deben
 estar preparados todos esos entregables; no se promete cerrarlos en dos sesiones.
@@ -117,17 +117,17 @@ ampliado expresamente por el autor, sin aceptar pérdida de datos por ser beta.
 - Preparar estructura narrativa, diapositivas, demo y tiempos.
 - Actualizar el cheatsheet con métricas finales y respuestas verificables.
 - Preparar una demo de contingencia y evidencia alternativa si falla el dispositivo.
-- Ensayar instalación, apertura, nota, organización, búsqueda, fechas y backup/importación.
-- Revisar el manual externo de `v0.5.0` informado por el autor y adaptarlo al APK final; no presumir que ya está revisado o actualizado.
+- Preparar el guion de apertura, notas, organización, búsqueda, fechas y ZIP con la evidencia existente; no convertir el ensayo documental en una instalación o ronda de pruebas del APK durante la congelación.
+- Completar la revisión final del [manual 0.6.0 incorporado y publicado](../manual-de-usuario-0.6.0/README.md); conserva siete capturas y fuentes editables, sin acreditar los recorridos diferidos de la RC1.
 - Reservar tiempo de estudio del autor y mantener coherencia entre artefacto, informe, manual y demo.
 
 ### 5. Corte y línea base final
 
 - `v0.4.8` permanece como evidencia inmutable de la primera beta; `v0.5.0` congela AUD-001 a AUD-007 y las correcciones táctiles en la segunda beta.
-- Preparar el corte correspondiente después de producto/evidencia y antes del informe final/defensa; objetivo `0.6.0+` condicionado, no obligación de publicar `1.0.0`.
+- Conservar la RC1 `v0.6.0/600` publicada y congelada con cobertura parcial aceptada; [fuente, firma, hash y límites](../gestion/candidato-apk-0.6.0.md#binario-corregido). No se prepara otra APK antes del informe/defensa ni se exige `1.0.0`.
 - No reemplazar el asset `v0.5.0`. Un debug privado autorizado se identifica por canal/origen/hash sin bump por prueba; nuevo candidato/entrega requiere versión/code nuevos y permiso específico. [Flujo Android](../flujo-desarrollo-android.md#identificación-de-compilaciones-en-acerca-de).
 - `scripts/release-helper.py` ya sincroniza package/changelog, `versionName` y `versionCode`, distingue artefactos firmados/unsigned y expone `check:version` en el gate.
-- En el próximo corte entregable autorizado, actualizar versión, código Android, hash, changelog, README y línea base; después reconciliar informe y material de defensa.
+- Reconciliar matriz, informe, manual y defensa con el artefacto existente, sin bump, recompilación ni sustitución de assets. Un corte técnico posterior requiere un nuevo acuerdo después de la presentación.
 - Registrar la línea base académica del artefacto definitivo y su condición de beta; un tag estable o `1.0.0` requiere evidencia y decisión explícita, no se fuerza por la fecha de defensa.
 
 ## Fuera de Alcance

@@ -1,12 +1,18 @@
 # Requisitos Funcionales — Lumapse
 
 **Fase Design Thinking:** Idear / Prototipar  
-**Última actualización:** 2026-09-05 (reconciliación con la segunda beta `v0.5.0`)
+**Última actualización:** 2026-10-26 (coherencia documental con la RC1 `v0.6.0`, sin nuevas pruebas ni cambios de estado)
 **Autor:** José David Sandoval
 
 > **Nota de evolución:** La línea base inicial se formuló para una PWA con IndexedDB. El estado vigente del producto es una aplicación Android empaquetada con Capacitor, con persistencia SQLite y distribución mediante APK, según [ADR-005](../adr/ADR-005-pivote-app-nativa.md) y [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md). Los requisitos obsoletos se conservan tachados para mantener trazabilidad histórica.
 
 ---
+
+> **Corte de presentación:** la RC1 `v0.6.0/600` está publicada y congelada con
+> validación parcial aceptada. Los estados siguientes registran implementación y
+> evidencia previa; no certifican todos los flujos del binario publicado. El
+> borrador vigente de `RF-005` se persiste en SQLite y se consume atómicamente al
+> guardar desde el editor, conforme a [ADR-012](../adr/ADR-012-borrador-sqlite-y-guardado-atomico.md).
 
 ## Convenciones
 
@@ -36,7 +42,7 @@
 | ID | Requisito | Prioridad | Persona | Hito | Estado |
 |---|---|---|---|---|---|
 | RF-007 | El sistema debe almacenar todas las notas de forma **local en el dispositivo**, sin enviar datos automáticamente a ningún servidor. La primera implementación utilizó IndexedDB; el producto vigente persiste en SQLite mediante Capacitor, según [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md). | MUST | Lucía, Martín | 02 / 04 | Implementado |
-| RF-008 | El sistema debe disponer de un **mecanismo offline** después de la instalación: los assets (HTML, CSS, JS, fuentes) se empaquetan dentro del APK Android y el núcleo persiste localmente. Los casos OFF-01–05 de `RNF-009` fueron verificados en el [debug identificado](../beta-core-validation/offline-2026-10-06.md) y aceptados en PR #31; la validación del futuro candidato final se acuerda por separado. | MUST | Lucía | 03 | Implementado |
+| RF-008 | El sistema debe disponer de un **mecanismo offline** después de la instalación: los assets (HTML, CSS, JS, fuentes) se empaquetan dentro del APK Android y el núcleo persiste localmente. Los casos OFF-01–05 de `RNF-009` fueron verificados en el [debug identificado](../beta-core-validation/offline-2026-10-06.md) y aceptados en PR #31; los recorridos restantes sobre la RC1 publicada `v0.6.0` están [diferidos hasta después de la presentación](../../BACKLOG.md#congelación-académica--2026-10-22), sin atribuirle ese resultado. | MUST | Lucía | 03 | Implementado |
 | RF-009 | ~~El sistema debe registrar **Service Workers** para cachear los assets.~~ Obsoleto: la arquitectura migró a una APK Android híbrida con Capacitor ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)). Los assets son locales por diseño; `vite-plugin-pwa` fue removido en `ee90559`. | MUST | Lucía | 03 | Obsoleto (ADR-005) |
 
 ---
