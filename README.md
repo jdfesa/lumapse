@@ -7,7 +7,7 @@
 > App móvil minimalista de captura de notas y gestión del conocimiento personal.  
 > Offline-first · Markdown · SQLite · Sin fricción.
 
-[![Estado del proyecto](https://img.shields.io/badge/estado-en%20desarrollo-a3e635?style=flat-square)](https://github.com/jdfesa/lumapse)
+[![Estado del proyecto](https://img.shields.io/badge/estado-RC1%20congelada-a3e635?style=flat-square)](./BACKLOG.md#congelación-académica--2026-10-22)
 [![Hito actual](https://img.shields.io/badge/hito-06%20entrega%20final-3b82f6?style=flat-square)](./BACKLOG.md)
 [![Licencia](https://img.shields.io/badge/licencia-GPLv3-737373?style=flat-square)](./LICENSE)
 [![Conventional Commits](https://img.shields.io/badge/commits-conventional-a3e635?style=flat-square)](https://www.conventionalcommits.org)
@@ -24,11 +24,13 @@
 
 ### Capturas principales
 
+Capturas de la versión 0.6.0, incluidas en el manual de usuario.
+
 <table>
   <tr>
-    <td align="center"><img src="./docs/assets/screenshots/v0.5.0/01-entrada.png" alt="Captura rápida de una nota en Lumapse" width="230"></td>
-    <td align="center"><img src="./docs/assets/screenshots/v0.5.0/02-materias-secciones.png" alt="Organización por materias y secciones en Lumapse" width="230"></td>
-    <td align="center"><img src="./docs/assets/screenshots/v0.5.0/03-calendario.png" alt="Calendario y próximas fechas académicas en Lumapse" width="230"></td>
+    <td align="center"><img src="./docs/manual-de-usuario-0.6.0/assets/capturas/01-principal-0.6.0.png" alt="Editor y listado de notas en Lumapse 0.6.0" width="230"></td>
+    <td align="center"><img src="./docs/manual-de-usuario-0.6.0/assets/capturas/02-materias-0.6.0.png" alt="Materias, secciones y búsqueda en Lumapse 0.6.0" width="230"></td>
+    <td align="center"><img src="./docs/manual-de-usuario-0.6.0/assets/capturas/03-calendario-0.6.0.png" alt="Calendario y próximas fechas académicas en Lumapse 0.6.0" width="230"></td>
   </tr>
   <tr>
     <td align="center"><strong>Captura rápida</strong></td>
@@ -43,11 +45,6 @@
 
 La guía explica cómo escribir, organizar, consultar fechas y guardar una copia de tus notas.
 Se abre directamente en el navegador, sin instalar nada.
-
-También podés leerla sin conexión: descargá o cloná el repositorio y abrí
-`docs/manual-de-usuario-0.6.0/manual-de-usuario-lumapse.html` en un navegador,
-conservando la carpeta `assets` a su lado. Las [instrucciones del manual](./docs/manual-de-usuario-0.6.0/README.md)
-explican cómo editarlo, regenerarlo y publicarlo.
 
 ---
 
@@ -81,7 +78,7 @@ Lumapse se enfoca en una fricción concreta: para parte del público relevado, l
 
 ---
 
-## Levantar el entorno de desarrollo
+## Descargar Lumapse y preparar el entorno
 
 ### Descargar beta Android
 
@@ -138,8 +135,11 @@ La línea canónica es Node **22.20.0** con npm **10.9.3**, fijada en `.nvmrc`, 
 
 ### Compilación Android (APK)
 
-Para compilar el `.apk` con el corte actual se requiere Android Studio, JDK 21 y Android SDK 36.
-La guía completa de instalación, dispositivos de prueba y flujo de trabajo está en:
+El entorno Android utiliza JDK 21 y Android SDK 36, con el Gradle Wrapper del
+repositorio. Android Studio permite gestionar el SDK; también existe una
+[guía para Arch Linux con herramientas de línea de comandos](./docs/flujo-desarrollo-android-en-arch.md).
+La compilación o instalación requiere autorización y no corresponde durante la
+congelación académica. El procedimiento para macOS y dispositivos físicos está en:
 
 > 📱 [`docs/flujo-desarrollo-android.md`](./docs/flujo-desarrollo-android.md)
 
@@ -147,13 +147,17 @@ La guía completa de instalación, dispositivos de prueba y flujo de trabajo est
 
 ## Estructura del proyecto
 
+Mapa resumido de los directorios y archivos versionados. El
+[portal documental](./docs/README.md) y el [catálogo de scripts](./scripts/README.md)
+detallan sus fuentes y procedimientos.
+
 ```
 lumapse/
 ├── src/                    # Código fuente de la aplicación
 │   ├── components/         # Componentes UI organizados por feature
-│   │   ├── academic-events/ # Calendario, heatmap y fechas académicas
 │   │   ├── about/           # Sección Acerca de
-│   │   ├── backup/         # Vista UI del backup manual
+│   │   ├── academic-events/ # Calendario, heatmap y fechas académicas
+│   │   ├── backup/          # Exportación e importación ZIP
 │   │   ├── common/         # ConfirmDialog, Toast y piezas transversales
 │   │   ├── feed/           # Listado, tarjetas, acciones y papelera
 │   │   ├── markdown/       # Preview y estilos Markdown compartidos
@@ -164,37 +168,53 @@ lumapse/
 │   ├── services/           # Reglas, flujos, adaptadores y SQLite
 │   ├── store/              # Estado de la aplicación (NoteStore)
 │   ├── styles/             # CSS modular
+│   ├── utils/              # Utilidades auxiliares de desarrollo
 │   └── main.js             # Punto de entrada
-├── android/                # Proyecto Android nativo (generado por Capacitor)
+├── android/                # Proyecto Android y Gradle Wrapper
 ├── public/                 # Assets estáticos
+│   ├── fonts/              # Fuentes locales
 │   └── icons/              # Iconos de la aplicación
+├── tests/                  # Tests de aplicación y tooling
+│   ├── unit/               # Servicios, store, componentes y configuración
+│   └── tooling/            # Regresiones de herramientas y guardias
 ├── scripts/                # Scripts utilitarios y de automatización local
 ├── analisis-relevamiento/  # Análisis de datos del relevamiento (Python)
 │   ├── datos/              # CSV con respuestas crudas
 │   ├── scripts/            # Pipeline modular de análisis
-│   └── graficos/           # Gráficos generados (12 archivos)
+│   └── graficos/           # Gráficos generados desde el relevamiento
 ├── docs/                   # Documentación del proyecto
-│   ├── adr/                # Architecture Decision Records (9 ADRs)
-│   ├── diagramas/          # Diagramas UML (Mermaid)
+│   ├── adr/                # Decisiones técnicas y su estado
+│   ├── anteproyecto/       # Definición académica original
+│   ├── assets/             # Recursos gráficos documentales
+│   ├── beta-core-validation/ # Protocolo, matrices y evidencia del núcleo
+│   ├── diagramas/          # Arquitectura, UML y modelos de base de datos
 │   ├── gestion/            # Estimación, planificación y control de avance
 │   ├── hitos/              # Informes de avance mensuales
 │   ├── informe-final/      # Capítulos fuente del informe académico final (PP3)
 │   ├── inspiracion/        # Benchmarking e ideas UX/UI externas
+│   ├── manual-de-usuario-0.6.0/ # Manual HTML, fuentes y capturas
 │   ├── producto/           # Design Thinking, requisitos, HU y encuesta
-│   └── flujo-desarrollo-android.md  # Guía operativa: build, deploy, scrcpy
+│   ├── flujo-desarrollo-android.md  # Guía Android desde macOS
+│   └── flujo-desarrollo-android-en-arch.md # Guía Android desde Arch Linux
 ├── .github/                # Automatización y templates de GitHub
-│   ├── workflows/          # CI: Quality Gate en cada push/PR
+│   ├── workflows/          # Quality Gate y publicación aislada del manual
 │   ├── ISSUE_TEMPLATE/     # Templates para issues (features y bugs)
 │   └── PULL_REQUEST_TEMPLATE.md
 ├── index.html              # Punto de entrada HTML de la aplicación
 ├── capacitor.config.json   # Configuración de Capacitor (appId, webDir)
 ├── vite.config.js          # Configuración de Vite (build tool)
 ├── eslint.config.js        # Configuración de ESLint (reglas de calidad)
+├── tsconfig.json           # Configuración del tipado gradual
+├── vitest.config.js        # Configuración de tests de aplicación
+├── .nvmrc                  # Versión canónica de Node.js
 ├── package.json            # Dependencias y scripts del proyecto
+├── package-lock.json       # Versiones resueltas de dependencias
 ├── README.md               # Documentación principal
+├── AGENTS.md               # Procedimiento inicial para agentes
 ├── CONTRIBUTING.md         # Reglas de contribución, ramas y estándares
 ├── CHANGELOG.md            # Registro histórico de cambios y versiones
 ├── BACKLOG.md              # Deuda técnica y tareas pendientes por hacer
+├── TODO.md                 # Tablero operativo del hito actual
 └── LICENSE                 # Licencia legal Copyleft (GNU GPLv3)
 ```
 
@@ -293,7 +313,8 @@ Cerrar el proyecto con documentación coherente, evidencia final y presentación
 - Revisión editorial y congelamiento de la documentación técnica y académica
 - Gráficos de base de datos regenerados y verificados contra el schema real; resta validar su maquetación en PDF y diapositivas
 - RC1 `v0.6.0/600` publicada y desarrollo congelado por decisión del autor, con cobertura parcial explícita; no se repetirán los controles restantes antes de la presentación
-- [Recorte de entrega y deuda postdefensa](./BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa): offline verificado en debug `348da88` y aceptado en PR #31; privacidad, uso/accesibilidad y matriz RNF pendientes; continuidad del borrador aceptada en PR #29 y CRUD/FPS diferidos, sin afirmar cumplimiento cuantitativo
+- [Recorte de entrega y deuda postdefensa](./BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa): evidencia de offline, privacidad y uso/accesibilidad registrada por artefacto en la [fuente RNF](./docs/producto/requisitos-no-funcionales.md), sin transferirla automáticamente a la RC1. Matriz final pendiente; CRUD/FPS diferidos, sin afirmar cumplimiento cuantitativo
+- Manual de usuario 0.6.0 incorporado y publicado; revisión final del manual, informe y defensa pendientes
 - Planificación y tareas pendientes: [`TODO.md`](./TODO.md)
 - Fijar la línea base académica sobre ese artefacto, sin forzar una versión estable o afirmar adopción real
 

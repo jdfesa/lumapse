@@ -16,6 +16,14 @@
 
 ## Prioridad inmediata — plan aceptado
 
+**Revisión documental acordada — 2026-10-26:** depurar el README principal,
+contrastar su estructura con los archivos versionados y reconciliar las guías e
+índices vigentes con la RC1 y el manual publicado. Se preservan evidencia histórica,
+estados RNF y checkpoint del informe; no se modifica ni se prueba la app. Validar
+enlaces, trazabilidad y correspondencia con las fuentes canónicas. Commits
+documentales en inglés y push al finalizar; preparar el PR sólo cuando el autor
+lo indique, después de revisar los cambios.
+
 **Decisión de congelación — 2026-10-22:** el autor acepta la RC1 tal como está y
 su cobertura parcial; se publica sin completar los controles restantes. Núcleo
 offline, organización/búsqueda, fechas, ZIP y tráfico/trackers quedan **diferidos,
