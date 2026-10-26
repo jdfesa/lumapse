@@ -267,7 +267,7 @@ del cambio. El archivo 08 corresponde a las referencias y se trata también como
 una unidad separada. Los pendientes previos del manual y la matriz RNF conservan
 su estado: iniciar el informe no los da por terminados.
 
-- [ ] **[Capítulo 1 — Introducción y Planteo del Problema](docs/informe-final/01-introduccion.md):** unidad activa; primera redacción revisada contra las fuentes y cifras contrastadas con el CSV. Controles documentales aprobados; pendientes la revisión del autor y la integración.
+- [ ] **[Capítulo 1 — Introducción y Planteo del Problema](docs/informe-final/01-introduccion.md):** unidad activa; versión revisada contra las fuentes y cifras contrastadas con el CSV. Controles documentales aprobados; pendientes la revisión del autor y la integración.
 - [ ] **[Capítulo 2 — Marco Metodológico y Modelo de Negocio](docs/informe-final/02-marco-metodologico.md):** prácticas realmente aplicadas, justificación, trazabilidad y límites de las métricas de gestión.
 - [ ] **[Capítulo 3 — Relevamiento y Análisis de Datos](docs/informe-final/03-relevamiento-datos.md):** instrumento, población/muestra, procesamiento, resultados con sus bases de cálculo, sesgos e impacto en decisiones.
 - [ ] **[Capítulo 4 — Arquitectura y Diseño](docs/informe-final/04-arquitectura-diseno.md):** decisiones, alternativas, modelos y correspondencia con la implementación.
