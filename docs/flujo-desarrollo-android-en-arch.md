@@ -9,6 +9,13 @@ Complementa el [flujo con dispositivos físicos desde macOS](./flujo-desarrollo-
 No reemplaza las instrucciones ni la evidencia de los Samsung conservadas en ese
 documento.
 
+> **Límite operativo posterior:** desde el 2026-10-22 la RC1 `v0.6.0` está
+> publicada y [el desarrollo y las nuevas pruebas de app están congelados](../BACKLOG.md#congelación-académica--2026-10-22).
+> Los estados observados el 2026-10-04 se preservan como evidencia histórica de
+> esta estación; no equivalen a una revisión actual del emulador o del APK. Los
+> comandos de instalación, build y pruebas requieren reanudación y autorización
+> específicas después de la presentación, no se ejecutan como parte de documentación.
+
 ## Contenido
 
 - [1. Alcance y estado comprobado](#1-alcance-y-estado-comprobado)

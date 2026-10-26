@@ -26,7 +26,16 @@ La fecha de ensamblado se calcula en cada ejecución. El estado, alcance funcion
 
 ## Estado actual
 
-El Hito 05 quedó cerrado con la primera beta `v0.4.8`. El Hito 06 publicó la segunda beta `v0.5.0` y continúa activo para el cierre académico. Los capítulos fuente describen el alcance funcional vigente, la distribución Android, el gate de 67 archivos y 1065 tests y los límites de validación restantes.
+El Hito 05 quedó cerrado con la primera beta `v0.4.8`. El Hito 06 publicó la segunda
+beta `v0.5.0` y la **RC1 `v0.6.0/600`**, aceptada con validación parcial. El
+[desarrollo y las nuevas comprobaciones de app están congelados](../../BACKLOG.md#congelación-académica--2026-10-22)
+hasta después de la presentación. El manual 0.6.0 ya está incorporado y publicado,
+pendiente de revisión final; después corresponde adaptar el informe y la defensa.
+
+**Frontera del checkpoint:** los capítulos y `report-metadata.json` conservan el
+corte `v0.5.0` del 2026-09-05, incluido el gate histórico de 67 archivos/1065 tests.
+No describen todavía toda la evolución hasta la RC1. Sus métricas no corresponden
+al `main` actual ni se atribuyen al APK `0.6.0`.
 
 `INFORME-FINAL-COMPLETO.md` se regeneró como checkpoint después de reconciliar los capítulos con `v0.5.0`. Los capítulos siguen siendo la fuente de verdad y el artefacto deberá ensamblarse otra vez si se incorpora nueva evidencia antes del cierre académico.
 
@@ -39,8 +48,8 @@ Los pendientes explícitos del Hito 06 son:
 - Revisión editorial de congelamiento después de incorporar las evidencias finales; la reconciliación transversal y las figuras DB del checkpoint ya están completadas.
 - Verificación de legibilidad de las imágenes de base de datos dentro del PDF y las diapositivas. El conceptual Chen y el lógico relacional ya fueron exportados, revisados e incorporados desde sus fuentes DOT y DBML sincronizadas.
 - Verificación de los metadatos bibliográficos incompletos de Gómez (2014) y Parada (2026) contra los originales de cátedra; la sección de referencias ya existe y no inventa los datos ausentes.
-- Ejecución del plan RNF de Hito 06: uso y navegación, accesibilidad, offline, tráfico/dependencias, coverage en el candidato y matriz final por artefacto. `RNF-010` ya fue [verificado y aceptado](../beta-core-validation/continuidad-2026-10-04.md); CRUD/FPS siguen pendientes y [diferidos a post-presentación](../../BACKLOG.md#rendimiento-post-presentación). La portabilidad del gate fue cerrada en F1/PR #14, con sus límites por entorno documentados.
-- Tareas técnicas imprescindibles → último APK de presentación generado/validado (versión por acordar; objetivo previo `0.6.0+`) → congelar desarrollo → manual basado en ese APK → informe final y defensa. El [recorte vigente](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa) exige preparar todos los entregables para finales de octubre de 2026, sin prometer estabilidad comercial o adopción. El asset firmado `v0.5.0` ya fue aceptado en al menos tres dispositivos: [registro general](../gestion/checklist-validacion-android.md#aceptación-general-de-la-apk-publicada-v050). No rehacer el checkpoint histórico ahora ni reabrir esa aceptación.
+- Consolidación documental de la matriz RNF a partir de la [fuente canónica](../producto/requisitos-no-funcionales.md) y los reportes existentes: método, fecha, artefacto, resultado y límites. La evidencia de uso, accesibilidad, offline y tráfico en debugs no verifica automáticamente la RC1. CRUD/FPS siguen pendientes y [diferidos a post-presentación](../../BACKLOG.md#rendimiento-post-presentación); las comprobaciones restantes del APK exacto también se difieren, sin nuevas mediciones para completar el informe.
+- Incorporación del [corte RC1 identificado](../gestion/candidato-apk-0.6.0.md#binario-corregido), sus controles y aceptación parcial en los capítulos cuando se acuerde su revisión. El [recorte vigente](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa) no exige otra APK ni una versión estable: corresponde cerrar manual, matriz, informe y defensa con la evidencia disponible y los pendientes explícitos. Esta revisión de guías no modifica ni regenera el checkpoint.
 
 ### Manual de usuario y consistencia de la entrega
 
@@ -54,13 +63,15 @@ a esa versión, no al APK posterior. No esperar respuestas para cerrar entregabl
 **Evidencia posterior al checkpoint:** [OFF-01–05 de RNF-009](../beta-core-validation/offline-2026-10-06.md)
 pasaron en el debug `348da88` el 2026-10-06, tras corregir el bloqueo del ZIP local
 sin red. El autor aceptó [PR #31](https://github.com/jdfesa/lumapse/pull/31); este resultado
-todavía no modifica capítulos ni informe ensamblado y no pertenece al asset publicado
-ni al futuro APK final.
+todavía no modifica capítulos ni informe ensamblado y no se transfiere al asset
+publicado `v0.5.0` ni a la RC1 `v0.6.0`.
 
-El autor informa que conserva fuera del repositorio un manual de `v0.5.0`. No fue
-inspeccionado en este recorte: falta compartirlo, estudiar sus instrucciones y adaptar
-contenido, capturas e identificación de versión al APK final validado. No se redacta
-desde cero ni se presume que ya refleje el comportamiento nuevo.
+El [manual de usuario 0.6.0](../manual-de-usuario-0.6.0/README.md) ya se incorporó
+al repositorio y se [publicó en GitHub Pages](https://jdfesa.github.io/lumapse/manual-de-usuario-lumapse.html).
+Incluye fuentes editables y siete capturas de ese corte. Reemplaza, como guía de
+uso actual, la referencia anterior a un manual externo `v0.5.0` aún por revisar.
+Su revisión final y congelamiento documental siguen pendientes; publicar la guía
+no equivale a probar los recorridos diferidos de la APK.
 
 La revisión debe explicar los flujos existentes y sus límites: guardado explícito,
 borradores, archivo/papelera y backup ZIP local, que no incluye borradores ni papelera.
@@ -77,6 +88,7 @@ ni el informe ensamblado de `v0.5.0`.
 - [x] Ejecutar los chequeos documentales del checkpoint.
 - [x] Ensamblar el checkpoint con `python3 scripts/assemble-report.py` y revisar el diff generado.
 - [x] Reconciliar metadatos, capítulos y referencias con el tag publicado `v0.5.0`.
+- [ ] Adaptar capítulos y metadatos al corte RC1 `v0.6.0`, con matriz RNF por artefacto y límites aceptados, antes de acordar un nuevo ensamblado.
 - [ ] Congelar contenido antes de iniciar la maquetación LaTeX/PDF.
 
 ## Formato final de entrega

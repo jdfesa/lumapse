@@ -1,6 +1,6 @@
 # Revisión Técnica Priorizada — 2026-09-01
 
-**Estado:** Vigente — AUD-001 a AUD-007 cerrados e incluidos en `v0.5.0`; AUD-008/AUD-009 aceptados e integrados en PR #14; alcance de AUD-014 aceptado para creación de notas/fechas en PR #15. PR #19 cerró por separado crear materia/sección y editar/eliminar fecha (`34b2900`, 2026-09-18); otras mutaciones vecinas permanecen como deuda media guiada por evidencia. AUD-010 a AUD-013 continúan abiertos. F3 preparada, medición Android pendiente.
+**Estado:** Vigente — AUD-001 a AUD-007 cerrados e incluidos en `v0.5.0`; AUD-008/AUD-009 aceptados e integrados en PR #14; alcance de AUD-014 aceptado para creación de notas/fechas en PR #15. PR #19 cerró por separado crear materia/sección y editar/eliminar fecha (`34b2900`, 2026-09-18); otras mutaciones vecinas permanecen como deuda media guiada por evidencia. AUD-010 a AUD-013 continúan abiertos. F3 preparada, métricas CRUD/FPS pendientes y diferidas. La [RC1 `v0.6.0` está publicada con validación parcial y el desarrollo congelado](../../BACKLOG.md#congelación-académica--2026-10-22); los hallazgos abiertos no autorizan nuevos frentes técnicos antes de la presentación. Las mediciones y advertencias de la revisión original conservan su fecha y fuente, no describen una auditoría nueva.
 **Rama original de auditoría:** `fix/note-save-integrity`
 **Commit base original revisado:** `cd60c0e` (`main`)
 **Versión original revisada:** `0.4.8` (Beta); cierres publicados en `v0.5.0`<br>

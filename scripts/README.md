@@ -1,6 +1,6 @@
 # Lumapse — Scripts de Automatización
 
-Esta carpeta contiene scripts de shell (`.sh`) y Python (`.py`) diseñados para automatizar y estandarizar flujos de trabajo repetitivos o propensos a errores durante el desarrollo local de Lumapse.
+Esta carpeta contiene scripts de shell (`.sh`), Python (`.py`) y Node.js (`.js`) diseñados para automatizar y estandarizar flujos de trabajo repetitivos o propensos a errores durante el desarrollo local de Lumapse.
 
 > **Criterio de uso:** Consultar el estado y los límites de cada herramienta antes de
 > ejecutarla. La existencia de un archivo o de un comando npm no autoriza su uso
@@ -174,13 +174,12 @@ Valida todos los enlaces internos dentro de la documentación Markdown del proye
 
 - **Problema que resuelve:** La documentación Markdown está ampliamente interconectada; renombrar o mover archivos puede romper enlaces relativos silenciosamente.
 - **Qué verifica:**
-  - Enlaces a otros archivos `.md`.
-  - Rutas a imágenes locales.
-- **Características:** No revisa URLs externas. Retorna código de salida de error si encuentra al menos 1 enlace roto.
+  - Destinos locales de enlaces Markdown, incluidos directorios y archivos de otros tipos.
+  - Rutas a imágenes Markdown y anclas de encabezados, con advertencias para anclas no verificables.
+- **Características:** No revisa URLs externas ni enlaces/imágenes embebidos como HTML. Descubre `docs/**/*.md` y README/CHANGELOG/BACKLOG/catálogo de scripts; `AGENTS.md`, `CONTRIBUTING.md`, `TODO.md` y otros Markdown fuera de ese conjunto requieren revisión suplementaria. Retorna error por archivos o imágenes ausentes; las anclas pendientes de revisión se informan aunque el exit sea cero.
 - **Uso:**
   ```bash
-  python3 scripts/check-doc-links.py
-  ./scripts/lumapse-audit-bin --doc-links
+  npm run check:docs
   ```
 
 ### 8. `bundle-budget.sh`
@@ -251,19 +250,18 @@ real; no son una validación del formato experimental.
 Compara el esquema SQLite implementado en código contra el DDL documentado.
 
 - **Problema que resuelve:** Lumapse mantiene el esquema de base de datos en dos lugares: el DDL real embebido en código y la documentación académica en `docs/diagramas/database/04-modelo-fisico-ddl.md`. Si se agrega una columna, tabla o tipo en un lado y se olvida actualizar el otro, el informe técnico queda desincronizado respecto del producto real.
-- **Estado actual:** Se conserva como respaldo documental. El check vigente es `./scripts/lumapse-audit-bin --schema`, que apunta al servicio SQLite refactorizado en `src/services/sqlite/connection.js`.
+- **Estado: vigente.** `npm run check:schema` ejecuta este control portable sobre `src/services/sqlite/connection.js`; forma parte del gate canónico de ADR-010. El auditor Rust es sólo un diagnóstico opcional externo, no su reemplazo.
 - **Qué hace:**
   - Extrae sentencias `CREATE TABLE IF NOT EXISTS` desde strings SQL del servicio SQLite.
   - Extrae sentencias `ALTER TABLE ... ADD COLUMN` usadas por migraciones idempotentes.
   - Lee únicamente los bloques de código SQL del documento físico de base de datos.
   - Construye dos mapas `{tabla -> columna -> tipo}` y compara tablas, columnas y tipos.
   - Ignora constraints como `PRIMARY KEY`, `DEFAULT`, `REFERENCES`, `ON DELETE` o `NOT NULL`, porque el objetivo es auditar sincronización estructural básica y no reglas completas de integridad.
-- **Cuándo usarlo:** Después de modificar el schema SQLite, después de actualizar `04-modelo-fisico-ddl.md`, antes de cerrar un hito que toque persistencia SQLite y antes de entregar documentación técnica de base de datos. Para el flujo actual, preferir `lumapse-audit --schema`.
+- **Cuándo usarlo:** Después de modificar el schema SQLite, después de actualizar `04-modelo-fisico-ddl.md`, antes de cerrar un hito que toque persistencia SQLite y antes de entregar documentación técnica de base de datos. Utilizar el punto de entrada `npm run check:schema`.
 - **Salida esperada:** Termina con código `0` si no hay diferencias y con código `1` si detecta tablas, columnas o tipos desincronizados.
 - **Uso:**
   ```bash
-  python3 scripts/check-schema-sync.py
-  ./scripts/lumapse-audit-bin --schema
+  npm run check:schema
   ```
 
 ### 14. `assemble-report.py`
@@ -399,7 +397,8 @@ Valida la integridad de la jerarquía de materias y secciones de acuerdo a la de
   python3 scripts/validate-subjects-hierarchy.py [ruta_base.db]
   # Para ejecutar pruebas con datos que violan las reglas intencionalmente:
   python3 scripts/validate-subjects-hierarchy.py --test-violations
-  ./scripts/lumapse-audit-bin --hierarchy
+  # Punto de entrada del gate para los datos de prueba en memoria:
+  npm run check:subjects
   ```
 
 ### 25. `generate-dbml-from-code.py`

@@ -6,6 +6,12 @@
 
 ## Contexto
 
+> **Lectura temporal:** la revisión de este ADR conserva la evidencia de la beta
+> `v0.5.0`; no fija las versiones actuales de herramientas. La RC1 publicada es
+> `v0.6.0`, sin cambio de esta decisión base. El runtime exacto pertenece a
+> [ADR-010](./ADR-010-gate-portable-y-entorno-canonico.md), `.nvmrc` y `package.json`;
+> las dependencias resueltas pertenecen a `package-lock.json`.
+
 Al iniciar Lumapse como una PWA, fue necesario decidir qué tecnologías usar para su capa web. Existían múltiples opciones (React, Vue, Angular, Svelte o Vanilla JS) y distintas herramientas de build. La elección debía equilibrar productividad, curva de aprendizaje, rendimiento y defendibilidad académica. El pivote posterior a Android no invalida esta decisión base porque Capacitor reutiliza la aplicación web dentro del contenedor nativo.
 
 ## Opciones consideradas

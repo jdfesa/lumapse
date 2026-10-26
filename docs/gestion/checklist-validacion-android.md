@@ -2,7 +2,7 @@
 
 **Hito:** 06 — Entrega Final<br>
 **Objetivo:** registrar evidencia reproducible de cada APK y distinguir la verificación del asset firmado de las pruebas sobre builds equivalentes.<br>
-**Estado:** `v0.5.0` publicada y aceptada; smoke de identificación de PR #22 aceptado. F3 sin métricas CRUD/FPS nuevas; OFF-01–05 de RNF-009 verificados en debug `348da88` y aceptados en PR #31. RNF-010 verificado en debug identificado y aceptado por el autor; cierre aprobado en PR #29.
+**Estado:** RC1 `v0.6.0/600` publicada, aceptada con cobertura parcial y desarrollo congelado. Se conservan las aceptaciones históricas de `v0.5.0`, PR #22, offline/RNF-009 y continuidad/RNF-010 en sus artefactos. CRUD/FPS y las comprobaciones restantes de la RC1 están diferidos, no aprobados; no ejecutar nuevas pruebas durante el cierre documental.
 
 ---
 
@@ -200,7 +200,7 @@ no se completan por inferencia las casillas históricas ni se atribuyen métrica
 
 - [x] Aceptación general del asset firmado/publicado `v0.5.0` recibida del autor.
 
-La identidad del asset permanece en [Corte vigente — v0.5.0](#corte-vigente--v050).
+La identidad de aquel asset permanece en [el registro histórico de v0.5.0](#corte-vigente--v050).
 El debug posterior de parches fue aceptado por separado y PR #21 integrado mediante
 `5ef1f911`; [evidencia canónica](./validacion-parches-dependencias-2026-10-02.md).
 Ninguna de estas aceptaciones demuestra los casos o mediciones RNF pendientes.
@@ -303,6 +303,11 @@ autoriza su merge.
 ---
 
 ## Corte vigente — v0.5.0
+
+> **Sección histórica:** se conserva el título y su ancla para no romper
+> referencias de esa beta. No identifica el corte operativo actual: la RC1
+> `v0.6.0` y sus límites están registrados al comienzo de esta checklist y en
+> [el registro del candidato](candidato-apk-0.6.0.md).
 
 ### Identificación y publicación
 

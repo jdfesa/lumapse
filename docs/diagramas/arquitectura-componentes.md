@@ -1,12 +1,19 @@
 # Arquitectura de Componentes — Lumapse
 
-**Estado:** tag `v0.5.0` auditado; arquitectura de la segunda beta publicada<br>
-**Corte documental:** 2026-09-05<br>
+**Estado:** arquitectura del corte `v0.6.0`, revisada estáticamente<br>
+**Corte documental:** 2026-10-26<br>
 **Decisiones asociadas:** [ADR-008 — Arquitectura modular y patrones](../adr/ADR-008-arquitectura-modular-y-patrones.md) y [ADR-009 — Propiedad transaccional SQLite](../adr/ADR-009-propiedad-transaccional-sqlite.md)
 
 Lumapse se implementa como un **monolito modular cliente, offline-first**, construido con módulos ES y TypeScript gradual, empaquetado como aplicación Android mediante Capacitor. La separación es lógica: todos los módulos se entregan como una sola aplicación, pero cada capa tiene responsabilidades y dependencias delimitadas.
 
-> **Frontera de versión:** La funcionalidad y los nombres de archivo representados coinciden con el tag `v0.5.0` (`5840755`). La coordinación de una única conexión SQLite y el arranque preparado antes del montaje forman parte de esta beta.
+> **Frontera de versión:** Vista contrastada con la fuente de la RC1 `v0.6.0`
+> (APK de `bcefe6a`, tag sobre `ac2a747`), sin ejecutar nuevas pruebas del APK.
+> La coordinación SQLite de ADR-009 sigue vigente; [ADR-010](../adr/ADR-010-gate-portable-y-entorno-canonico.md)
+> fija el gate, [ADR-011](../adr/ADR-011-limite-guardado-y-refresco.md) separa escritura
+> de refresco y [ADR-012](../adr/ADR-012-borrador-sqlite-y-guardado-atomico.md) agrega
+> hidratación del borrador y consumo atómico en SQLite. El despliegue seguro de
+> [ADR-013](../adr/ADR-013-despliegue-android-sin-desinstalacion-implicita.md) pertenece
+> al tooling, no a una capa nueva del cliente.
 
 ```mermaid
 flowchart TB
@@ -47,7 +54,7 @@ flowchart TB
 
 | Capa | Ubicación principal | Responsabilidad | Puede depender de |
 |---|---|---|---|
-| Composición | `src/main.js` | Preparar SQLite y las lecturas iniciales antes de construir la interfaz; conectar estado con vistas y ofrecer recuperación segura | Todas las capas necesarias para el arranque |
+| Composición | `src/main.js` | Preparar SQLite, hidratar el borrador y completar las lecturas iniciales antes de construir la interfaz; conectar estado con vistas y ofrecer recuperación segura | Todas las capas necesarias para el arranque |
 | Presentación | `src/components/`, `src/layout/`, `src/styles/` | Interacción, renderizado y navegación, agrupados por feature | Store, servicios y componentes compartidos |
 | Estado | `src/store/` | Mantener estado observable y coordinar operaciones de la UI | Servicios, contratos de dominio y módulos SQLite de acceso a datos |
 | Aplicación/dominio | `src/services/`, `src/domain/` | Validaciones, reglas, flujos y tipos compartidos | Acceso a datos y adaptadores de infraestructura |
@@ -100,6 +107,13 @@ sequenceDiagram
     S-->>C: notify(state)
     C-->>U: Renderiza el nuevo estado
 ```
+
+El diagrama resume el camino de escritura; no implica una frontera de error
+única para todas las mutaciones. En los flujos cubiertos por ADR-011 y su
+seguimiento, un fallo de refresco posterior no reclasifica una escritura
+confirmada: se ofrece recuperación de lecturas sin repetir la mutación. Al guardar
+desde el editor, ADR-012 confirma nota y limpieza del borrador en una transacción;
+no se limpia el borrador mediante una escritura independiente después del éxito.
 
 ### Integración nativa
 

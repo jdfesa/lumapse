@@ -3,7 +3,7 @@
 > **Proyecto:** Lumapse  
 > **Referencia:** Gómez, J. (2014), Sección 6. Guía de Estudio PP3 (Ing. Mauricio Parada, 2026).  
 > **Fecha de creación:** 2026-05-15  
-> **Última actualización:** Octubre 2026 — próximo corte académico; líneas base publicadas preservadas.
+> **Última actualización:** 2026-10-26 — RC1 publicada y congelada; línea base documental final pendiente.
 > **Autor:** José David Sandoval
 
 ---
@@ -224,6 +224,34 @@ shasum -a 256 releases/v0.5.0/lumapse-v0.5.0.apk
 
 ---
 
+### v0.6.0 — Release Candidate 1 de presentación
+
+| Campo | Detalle |
+|---|---|
+| **Tag Git de release** | `v0.6.0`, sobre `ac2a747` |
+| **Fuente del APK** | `bcefe6a2ad86ed3abef4f5789a6696143503600e`, limpia; no confundirla con el commit del tag |
+| **Fecha de publicación** | 2026-10-22 |
+| **Hito** | 06 — Entrega Final, activo sólo para documentación y defensa |
+| **Release** | [Lumapse v0.6.0 — RC1](https://github.com/jdfesa/lumapse/releases/tag/v0.6.0), Pre-release |
+| **Artefacto** | `lumapse-v0.6.0.apk`, 25.767.142 bytes; checksum adjunto |
+| **SHA-256 APK** | `15f8ede5b78387e3fcac1a53eb3bc78dbb1e30df9acf7f4f20c771c48739e042` |
+| **Versión/code y canal** | `0.6.0/600`, `android-candidate` |
+| **Firma** | Identidad de distribución original; [registro de firma](firma-apk-android.md#resultado-publicado-060--rc1) |
+| **Aceptación** | Cobertura parcial aceptada; desarrollo y nuevas pruebas de app congelados hasta después de la presentación |
+
+La [evidencia canónica del candidato](candidato-apk-0.6.0.md#binario-corregido)
+distingue la actualización pública `0.5.0` → candidato inicial de la actualización
+inicial → corregido. No se atribuye una repetición directa pública → corregido ni
+los recorridos restantes del núcleo o tráfico/trackers. Se conservan diferidos,
+no aprobados, según la [decisión de congelación](../../BACKLOG.md#congelación-académica--2026-10-22).
+
+El artefacto publicado está fijado; esto **no completa la línea base documental
+final**. Restan revisión final del manual publicado, matriz RNF, capítulos del
+informe, maquetación y demo coherentes con ese corte. No se crea un tag adicional
+ni se recompila la APK por esta actualización documental.
+
+---
+
 ## 4. Gestión de cambios respecto de la línea base
 
 Una vez establecida una LB, todo cambio en el alcance debe pasar por un proceso formal
@@ -245,6 +273,7 @@ Una vez establecida una LB, todo cambio en el alcance debe pasar por un proceso 
 | 2026-07-01 | Publicación de beta controlada `v0.4.8` | Alto — congela un artefacto APK firmado y validado para distribución controlada | LB-PROD-v0.4.8 | [Release v0.4.8](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8), [Checklist Android](checklist-validacion-android.md) |
 | 2026-07-15 | Cierre documental de Hito 05 y activación de Hito 06 | Medio — conserva `v0.4.8` como beta operativa y separa los 12 commits posteriores del futuro corte final | LB-PROD-v0.4.8 | [Hito 05](../hitos/hito-05-septiembre.md), [Hito 06](../hitos/hito-06-octubre.md) |
 | 2026-09-05 | Publicación de la segunda beta `v0.5.0` | Alto — congela los cierres AUD-001 a AUD-007, las mejoras táctiles y el tooling de release en un nuevo APK firmado | LB-PROD-v0.5.0 | [Release v0.5.0](https://github.com/jdfesa/lumapse/releases/tag/v0.5.0), [firma](firma-apk-android.md), [Hito 06](../hitos/hito-06-octubre.md) |
+| 2026-10-22 | Publicación de RC1 `v0.6.0` y congelación académica | Artefacto aceptado con cobertura parcial; comprobaciones restantes diferidas, sin anunciar estabilidad ni cerrar los entregables documentales | Corte de presentación `v0.6.0` | [Candidato y evidencia](candidato-apk-0.6.0.md), [decisión del autor](../../BACKLOG.md#congelación-académica--2026-10-22) |
 
 > **Nota:** El pivote a aplicación Android híbrida fue el cambio más significativo respecto de la LB de
 > requerimientos original. El relevamiento con 120 respuestas válidas respaldó las
@@ -257,14 +286,15 @@ Una vez establecida una LB, todo cambio en el alcance debe pasar por un proceso 
 
 | Tag | Hito | Momento esperado | Contenido |
 |---|---|---|---|
-| Identificador/tag del corte final autorizado, por acordar | 06 — Entrega Final | Después de validar el nuevo APK y antes de congelar la entrega | Fuente, versión/code, firma y hash del artefacto; matriz RNF, informe, manual y demo coherentes con ese corte |
+| Línea base documental final referida a `v0.6.0` | 06 — Entrega Final | Después de revisar y aceptar los entregables documentales | APK ya publicado e inmutable; matriz RNF, informe, manual y demo identifican ese corte y declaran la cobertura parcial y lo diferido |
 
 No se creó una línea base `0.4.9`: la evolución posterior a `v0.4.8` se publicó como `v0.5.0`. El nombre y número de un eventual corte estable se decidirán con evidencia completa, sin modificar ni reutilizar ninguna de las betas publicadas.
 
 El [recorte de entrega](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa) prevé
-preparar el APK final y los entregables para finales de octubre de 2026. Su condición
-de beta y las limitaciones aceptadas deben quedar explícitas: no se exige `1.0.0` ni
-se registra esta línea base como creada antes de producir y aceptar el artefacto.
+cerrar los entregables documentales para finales de octubre de 2026. La RC1 ya está
+publicada y congelada: no se exige otra APK ni `1.0.0`. Su condición de candidato
+y las limitaciones aceptadas deben quedar explícitas; no se da por creada la línea
+base documental final antes de revisar y aceptar esos entregables.
 
 ---
 

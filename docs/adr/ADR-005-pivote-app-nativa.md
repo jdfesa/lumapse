@@ -137,6 +137,15 @@ La revisión técnica prevista se completó. La versión `0.5.0` se construye y 
 
 Esta evidencia confirma la viabilidad técnica del pivote para la beta, pero no demuestra todavía que estudiantes del público objetivo puedan localizar, descargar e instalar el APK sin asistencia ni que prefieran este canal frente a una tienda o una PWA. Esa instalabilidad se mantiene como validación específica del Hito 06.
 
+**Seguimiento documental posterior:** la aceptación general del asset publicado
+`v0.5.0` en al menos tres dispositivos está registrada en la
+[checklist Android](../gestion/checklist-validacion-android.md#aceptación-general-de-la-apk-publicada-v050);
+el pendiente descrito arriba pertenece al checkpoint anterior. El corte operativo
+es ahora la [RC1 `v0.6.0`](../gestion/candidato-apk-0.6.0.md), aceptada con cobertura
+parcial y desarrollo congelado. Nada de esto acredita instalación autónoma con
+usuarios nuevos ni preferencia de canal; no se reescribe la evidencia inicial ni
+se autoriza una nueva prueba durante la congelación.
+
 ---
 
 *Decisión informada por el [Relevamiento de Datos](../producto/resultados-relevamiento.md) —120 respuestas válidas del IES 6023 "Dr. Alfredo Loutaif", mayo de 2026— y justificada mediante el análisis técnico de alternativas. Script de análisis reproducible en [`analisis-relevamiento/scripts/`](../../analisis-relevamiento/scripts/).*
