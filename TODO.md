@@ -237,7 +237,7 @@ en la matriz, manual, informe y defensa, sin inventar resultados ni reabrir prue
 ### Revisión del informe capítulo por capítulo
 
 - [x] **[Capítulo 1 — Introducción y Planteo del Problema](docs/informe-final/01-introduccion.md):** aprobado e integrado en [PR #46](https://github.com/jdfesa/lumapse/pull/46); rama eliminada.
-- [ ] **[Capítulo 2 — Marco Metodológico y Modelo de Negocio](docs/informe-final/02-marco-metodologico.md):** rama `docs/final-report-chapter-02` preparada; revisión pendiente.
+- [ ] **[Capítulo 2 — Marco Metodológico y Modelo de Negocio](docs/informe-final/02-marco-metodologico.md):** versión revisada en `docs/final-report-chapter-02-content`; pendientes la revisión del autor y la integración.
 - [ ] **[Capítulo 3 — Relevamiento y Análisis de Datos](docs/informe-final/03-relevamiento-datos.md):** pendiente.
 - [ ] **[Capítulo 4 — Arquitectura y Diseño](docs/informe-final/04-arquitectura-diseno.md):** pendiente.
 - [ ] **[Capítulo 5 — Desarrollo e Implementación](docs/informe-final/05-desarrollo-implementacion.md):** pendiente.
