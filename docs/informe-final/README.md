@@ -24,17 +24,39 @@ La fecha de ensamblado se calcula en cada ejecución. El estado, alcance funcion
 - Antes de ensamblar, ejecutar los chequeos documentales (`npm run check:docs` y `npm run check:traceability`).
 - Si aparece contenido útil solo en `INFORME-FINAL-COMPLETO.md`, primero moverlo al capítulo fuente correspondiente y recién después regenerar.
 
+### Revisión acordada para el tribunal
+
+Desde el 2026-10-26, el informe se revisa **capítulo por capítulo, con un capítulo
+por rama**, con un estándar de fundamentación comparable al de una tesina de fin
+de carrera. La redacción debe explicar qué se hizo, por qué, con qué metodología,
+qué evidencia lo respalda y qué límites conserva. Debe poder comprenderse en la
+versión impresa sin depender de abrir enlaces para seguir el argumento.
+
+El [plan operativo y la secuencia de revisión](../../TODO.md#revisión-del-informe-capítulo-por-capítulo)
+se mantienen en `TODO.md`. Una sola rama permanece activa hasta la revisión del
+autor, integración y limpieza; no se adelanta otro capítulo dentro de esa rama.
+Los ajustes mínimos de seguimiento editorial acompañan a la unidad. El ensamblado,
+los metadatos globales y la maquetación final se reservan para después de completar
+y revisar los capítulos, sin presentar una revisión parcial como informe terminado.
+
 ## Estado actual
 
 El Hito 05 quedó cerrado con la primera beta `v0.4.8`. El Hito 06 publicó la segunda
 beta `v0.5.0` y la **RC1 `v0.6.0/600`**, aceptada con validación parcial. El
 [desarrollo y las nuevas comprobaciones de app están congelados](../../BACKLOG.md#congelación-académica--2026-10-22)
 hasta después de la presentación. El manual 0.6.0 ya está incorporado y publicado,
-pendiente de revisión final; después corresponde adaptar el informe y la defensa.
+con revisión final pendiente. El acuerdo del 2026-10-26 inicia la revisión del
+informe por el capítulo 1, sin dar por cerrados el manual ni la defensa.
 
-**Frontera del checkpoint:** los capítulos y `report-metadata.json` conservan el
-corte `v0.5.0` del 2026-09-05, incluido el gate histórico de 67 archivos/1065 tests.
-No describen todavía toda la evolución hasta la RC1. Sus métricas no corresponden
+**Revisión parcial en curso:** el capítulo 1 se adapta al corte RC1 `v0.6.0`,
+con revisión del autor pendiente. Los archivos `02-*.md` a `08-*.md` todavía
+conservan el checkpoint anterior y se revisarán en ramas separadas. No se consideran
+actualizados por haber revisado la introducción.
+
+**Frontera del checkpoint generado:** `report-metadata.json` y
+`INFORME-FINAL-COMPLETO.md` conservan el corte `v0.5.0` del 2026-09-05, incluido el
+gate histórico de 67 archivos/1065 tests. No describen toda la evolución hasta la
+RC1 ni reflejan aún la revisión parcial de las fuentes. Sus métricas no corresponden
 al `main` actual ni se atribuyen al APK `0.6.0`.
 
 `INFORME-FINAL-COMPLETO.md` se regeneró como checkpoint después de reconciliar los capítulos con `v0.5.0`. Los capítulos siguen siendo la fuente de verdad y el artefacto deberá ensamblarse otra vez si se incorpora nueva evidencia antes del cierre académico.

@@ -45,9 +45,13 @@ El informe completo se ensambla a partir de sus capítulos fuente. La migración
 
 Para el cierre público, distinguir resultados comprobados, pendientes, limitaciones
 y postergaciones conforme al [recorte de entrega](../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa).
-Ni un plan aceptado ni una casilla del tablero sustituyen la evidencia. Los capítulos
-y el informe ensamblado conservan su checkpoint hasta la revisión final; no se
-reescriben resultados históricos para aparentar cumplimiento del APK nuevo.
+Ni un plan aceptado ni una casilla del tablero sustituyen la evidencia. La revisión
+de las fuentes se realiza capítulo por capítulo, con un capítulo por rama, según
+el [plan operativo](../TODO.md#revisión-del-informe-capítulo-por-capítulo). El
+[estado editorial del informe](./informe-final/README.md#estado-actual) distingue
+las fuentes revisadas de las pendientes y del ensamblado, que conserva su checkpoint
+hasta un nuevo punto de control acordado. No se reescriben resultados históricos
+para aparentar cumplimiento del APK nuevo.
 
 ## Estado documental actual
 
