@@ -239,7 +239,7 @@ en la matriz, manual, informe y defensa, sin inventar resultados ni reabrir prue
 
 - [x] **[Capítulo 1 — Introducción y Planteo del Problema](docs/informe-final/01-introduccion.md):** aprobado e integrado en [PR #46](https://github.com/jdfesa/lumapse/pull/46); rama eliminada.
 - [x] **[Capítulo 2 — Marco Metodológico y Modelo de Negocio](docs/informe-final/02-marco-metodologico.md):** aprobado e integrado en [PR #48](https://github.com/jdfesa/lumapse/pull/48); rama eliminada.
-- [ ] **[Capítulo 3 — Relevamiento y Análisis de Datos](docs/informe-final/03-relevamiento-datos.md):** versión revisada en `docs/final-report-chapter-03`; pendientes la revisión del autor y la integración.
+- [x] **[Capítulo 3 — Relevamiento y Análisis de Datos](docs/informe-final/03-relevamiento-datos.md):** revisado y aprobado; cambios en [PR #49](https://github.com/jdfesa/lumapse/pull/49).
 - [ ] **[Capítulo 4 — Arquitectura y Diseño](docs/informe-final/04-arquitectura-diseno.md):** pendiente.
 - [ ] **[Capítulo 5 — Desarrollo e Implementación](docs/informe-final/05-desarrollo-implementacion.md):** pendiente.
 - [ ] **[Capítulo 6 — Pruebas y Validación](docs/informe-final/06-pruebas-validacion.md):** pendiente.
