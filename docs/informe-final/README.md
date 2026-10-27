@@ -36,12 +36,13 @@ hasta después de la presentación. El manual 0.6.0 ya está incorporado y publi
 con revisión final pendiente. La revisión del informe avanza por unidades,
 sin dar por cerrados el manual ni la defensa.
 
-**Revisión parcial:** el capítulo 1 está adaptado al corte RC1 `v0.6.0`, aprobado
-e integrado en [PR #46](https://github.com/jdfesa/lumapse/pull/46). El capítulo 2
-tiene una versión revisada en `docs/final-report-chapter-02-content`, pendiente
-de revisión del autor e integración. Los archivos `03-*.md` a `08-*.md` todavía
-conservan el checkpoint anterior; no se consideran actualizados por la revisión
-de las otras unidades.
+**Revisión parcial:** los capítulos 1 y 2 están revisados, aprobados e integrados
+en [PR #46](https://github.com/jdfesa/lumapse/pull/46) y
+[PR #48](https://github.com/jdfesa/lumapse/pull/48), respectivamente. El capítulo 3
+tiene una versión revisada en `docs/final-report-chapter-03`, pendiente de revisión
+del autor e integración. Los archivos `04-*.md` a `08-*.md` todavía conservan el
+checkpoint anterior; no se consideran actualizados por la revisión de las otras
+unidades.
 
 **Frontera del checkpoint generado:** `report-metadata.json` y
 `INFORME-FINAL-COMPLETO.md` conservan el corte `v0.5.0` del 2026-09-05, incluido el
