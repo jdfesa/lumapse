@@ -37,10 +37,11 @@ con revisión final pendiente. La revisión del informe avanza por unidades,
 sin dar por cerrados el manual ni la defensa.
 
 **Revisión parcial:** el capítulo 1 está adaptado al corte RC1 `v0.6.0`, aprobado
-e integrado en [PR #46](https://github.com/jdfesa/lumapse/pull/46). La rama
-`docs/final-report-chapter-02` está preparada para el capítulo 2, cuya revisión
-permanece pendiente. Los archivos `02-*.md` a `08-*.md` todavía conservan el
-checkpoint anterior; no se consideran actualizados por haber revisado la introducción.
+e integrado en [PR #46](https://github.com/jdfesa/lumapse/pull/46). El capítulo 2
+tiene una versión revisada en `docs/final-report-chapter-02-content`, pendiente
+de revisión del autor e integración. Los archivos `03-*.md` a `08-*.md` todavía
+conservan el checkpoint anterior; no se consideran actualizados por la revisión
+de las otras unidades.
 
 **Frontera del checkpoint generado:** `report-metadata.json` y
 `INFORME-FINAL-COMPLETO.md` conservan el corte `v0.5.0` del 2026-09-05, incluido el
@@ -73,9 +74,9 @@ a esa versión, no al APK posterior. No esperar respuestas para cerrar entregabl
 
 **Evidencia posterior al checkpoint:** [OFF-01–05 de RNF-009](../beta-core-validation/offline-2026-10-06.md)
 pasaron en el debug `348da88` el 2026-10-06, tras corregir el bloqueo del ZIP local
-sin red. El autor aceptó [PR #31](https://github.com/jdfesa/lumapse/pull/31); este resultado
-todavía no modifica capítulos ni informe ensamblado y no se transfiere al asset
-publicado `v0.5.0` ni a la RC1 `v0.6.0`.
+sin red. El autor aceptó [PR #31](https://github.com/jdfesa/lumapse/pull/31); el
+resultado corresponde a ese debug y no se transfiere al asset publicado `v0.5.0`
+ni a la RC1 `v0.6.0`. El informe ensamblado conserva su checkpoint anterior.
 
 El [manual de usuario 0.6.0](../manual-de-usuario-0.6.0/README.md) ya se incorporó
 al repositorio y se [publicó en GitHub Pages](https://jdfesa.github.io/lumapse/manual-de-usuario-lumapse.html).
