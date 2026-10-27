@@ -1,187 +1,163 @@
 # Capítulo 2: Marco Metodológico y Modelo de Negocio
 
+En este capítulo explico cómo organicé el desarrollo y cómo relacioné las necesidades iniciales con las decisiones de producto y los requisitos. Distingo la gestión del trabajo, el análisis de usuarios y las hipótesis de valor: cumplen funciones complementarias, pero no constituyen una única metodología ni producen el mismo tipo de evidencia.
+
 ## 2.1. Enfoque de Desarrollo y Gestión del Flujo (Kanban Adaptado)
 
-El desarrollo de Lumapse se organizó mediante un **enfoque ágil, iterativo e incremental**, con gestión del trabajo basada en Kanban y adaptada a un proyecto individual. La expresión distingue dos niveles: el enfoque general describe cómo evoluciona el producto mediante incrementos y aprendizaje; Kanban aporta la estrategia para visualizar, limitar y mejorar el flujo. No se presenta Kanban como un proceso prescriptivo equivalente a Scrum o RUP.
+Desarrollé Lumapse de forma iterativa e incremental: construí funcionalidades acotadas, revisé su comportamiento y ajusté prioridades y decisiones a medida que avanzaba el proyecto. Para gestionar ese trabajo adopté un sistema basado en Kanban, adaptado a un desarrollo individual y formalizado en ADR-003. El enfoque incremental describe la evolución del producto; Kanban organiza el flujo de las unidades de trabajo.
 
-Cada hito agrupa un objetivo funcional o técnico —investigación, fundación, editor, MVP offline, organización/UX, calidad/distribución y cierre— y funciona como punto de revisión, entrega y línea base. Los hitos no son Sprints: el trabajo no se selecciona en Sprint Planning, no se compromete contra Sprint Goals ni se cierra mediante los eventos definidos por Scrum. El Hito 05 quedó cerrado con la primera beta `v0.4.8`; Hito 06 publicó la segunda beta `v0.5.0` y concentra el cierre académico sin reabrir por defecto el alcance funcional.
+Los hitos funcionaron como puntos académicos de revisión, entrega y establecimiento de líneas base, no como Sprints. El cronograma inicial y las fechas de cierre registran planificación y evolución del proyecto, sin convertir los hitos en iteraciones de duración fija.
+
+Complementé la gestión con artefactos de Design Thinking para organizar la comprensión del contexto, la definición del problema y las alternativas de solución. Las personas, la encuesta, el análisis competitivo y el Lean Canvas aportaron insumos para esas actividades. El prototipo evolucionó hacia las betas y la RC1; esa evolución técnica no demuestra que se haya completado una validación sistemática de uso con el público objetivo.
 
 ### 2.1.1. Justificación frente a Scrum y RUP
 
-La elección de Kanban no se fundamenta en una supuesta prohibición numérica de Scrum. La Scrum Guide 2020 indica que un Scrum Team tiene típicamente diez personas o menos y no fija un mínimo explícito. Una persona podría adoptar prácticas inspiradas en Scrum o asumir más de una responsabilidad; sin embargo, la guía define Scrum como un framework integral con Developers, Product Owner, Scrum Master, Sprints, eventos, artefactos y compromisos. Aplicar solo una parte no basta para afirmar que se utiliza Scrum (Schwaber & Sutherland, 2020). Lumapse no implementó ese conjunto ni organizó el trabajo mediante Sprints, por lo que clasificarlo como Scrum describiría incorrectamente el proceso real.
+La elección no se basó en una prohibición numérica de Scrum para proyectos individuales. Schwaber y Sutherland (2020) describen equipos de diez personas o menos como situación típica, sin fijar un mínimo explícito. Sin embargo, Scrum define responsabilidades, Sprints, eventos, artefactos y compromisos que deben reconocerse en su aplicación. No organicé Lumapse mediante ese conjunto: utilizar historias de usuario o estimaciones relativas no basta para afirmar que apliqué Scrum.
 
-Tampoco se aplicó Rational Unified Process. RUP es iterativo e incremental, pero organiza el ciclo de vida en Inicio, Elaboración, Construcción y Transición, con disciplinas, roles y artefactos adaptables (IBM, s. f.). Lumapse contiene requisitos, casos de uso, UML y documentación de arquitectura porque son evidencia académica y técnica útil; su existencia aislada no demuestra que el proyecto haya seguido las fases y disciplinas de RUP.
+Tampoco seguí Rational Unified Process —RUP—, que organiza el ciclo de desarrollo en Inicio, Elaboración, Construcción y Transición, con disciplinas y artefactos adaptables (IBM, s. f.). Produje requisitos, casos de uso y modelos de arquitectura por su utilidad técnica y académica, pero no estructuré la gestión según esas fases. La presencia de diagramas UML no identifica por sí sola el proceso utilizado.
 
-Kanban resultó proporcional al contexto porque no exige roles ni iteraciones fijas. La referencia vigente lo define como una estrategia para optimizar el flujo de valor mediante la definición y visualización del flujo, la gestión activa de los elementos y su mejora continua (Kanban Guides, 2025).
-
-| Criterio observable | Scrum | RUP | Lumapse |
-|---|---|---|---|
-| Cadencia principal | Sprints de un mes o menos | Fases e iteraciones | Flujo continuo con hitos académicos |
-| Estructura de responsabilidades | Product Owner, Scrum Master y Developers | Roles y disciplinas adaptadas | Responsable individual y stakeholders docentes/usuarios |
-| Control del trabajo | Sprint Goal y Sprint Backlog | Plan por fases/iteraciones | Tablero, prioridad y límite WIP |
-| Evidencia presente en Lumapse | Algunas técnicas compatibles, no el framework completo | Algunos artefactos, no el proceso | Prácticas centrales aplicadas y formalizadas |
+Kanban Guides (2025) presenta Kanban como una estrategia de optimización del flujo de valor que combina definición y visualización del flujo, gestión activa de los elementos y mejora del sistema. Esa orientación resultó compatible con reordenar prioridades y terminar unidades pequeñas sin simular responsabilidades o ceremonias de un equipo inexistente. Es una elección contextual, no una afirmación de superioridad general.
 
 ### 2.1.2. Sistema de trabajo aplicado
 
-La [Definition of Workflow](../gestion/definicion-flujo-kanban.md) vigente explicita el sistema:
+La definición de flujo formalizada en Hito 06 establece cuatro estados:
 
-`Backlog → En Curso → En Revisión → Hecho`
+> Backlog → En Curso → En Revisión → Hecho
 
-- Un elemento comienza al pasar a `En Curso` y termina cuando cumple su criterio de cierre y pasa a `Hecho`.
-- `En Curso` y `En Revisión` forman parte del trabajo en curso.
-- El WIP máximo vigente es de dos elementos activos en total.
-- El trabajo nuevo se selecciona mediante *pull* solo cuando existe capacidad.
-- La revisión y el cierre tienen prioridad sobre abrir tareas nuevas.
-- `TODO`, [BACKLOG.md](../../BACKLOG.md), [CHANGELOG.md](../../CHANGELOG.md), los informes de hito, los ADR y Git aportan evidencia versionada complementaria al tablero.
+Un elemento representa un objetivo concreto con salida verificable, dependencias y criterio de cierre. Comienza cuando pasa a En Curso y termina cuando satisface ese criterio; permanecer En Revisión significa que todavía consume capacidad. Una funcionalidad redactada o implementada no se considera terminada sólo por existir un commit.
 
-Las prácticas de soporte incluyen descomposición en tareas pequeñas, prioridad por valor/riesgo/dependencia, criterios de aceptación, commits atómicos, decisiones mediante ADR y verificaciones automatizadas o manuales proporcionales al cambio.
+El límite global de trabajo en curso —WIP— es de dos elementos entre En Curso y En Revisión, con una política más restrictiva de una sola rama de tarea activa. Seleccioné trabajo mediante un sistema de arrastre o *pull*, priorizando cerrar lo iniciado. Un bloqueo conserva su condición de trabajo en curso, sin liberar capacidad artificialmente.
+
+La prioridad atiende riesgos de pérdida de datos, bloqueos de entrega, evidencia necesaria, dependencias y valor funcional. La definición asigna a GitHub Projects la vista del flujo; los tableros, ADR, informes de hito y el historial Git conservan evidencia complementaria. Un commit o PR permite rastrear cambios, pero no sustituye aceptación ni acredita pruebas por sí solo.
 
 ### 2.1.3. Medición y límite de la evidencia
 
-La planificación se complementó con Story Points para historias de usuario y PERT para riesgos técnicos mayores, siguiendo el material de la cátedra (Gómez, 2014; Parada, 2026). Los SP entregados por hito expresan alcance/capacidad académica: no son una práctica exclusiva de Scrum ni sustituyen las métricas de flujo de Kanban.
+Estimé las historias mediante tamaño relativo en Story Points, utilizando juicio individual y una historia de referencia. Para los riesgos de integración de Capacitor y migración a SQLite documenté escenarios optimista, más probable y pesimista mediante estimación de tres puntos. Son instrumentos de planificación: no equivalen a horas efectivas, productividad observada ni duraciones reales demostradas.
 
-Durante las etapas anteriores se aplicaron visualización, priorización continua y límite WIP, pero no se conservaron fechas completas para calcular WIP histórico, *throughput*, edad y tiempo de ciclo de todos los elementos. No se reconstruyen esos valores de manera retroactiva. Desde Hito 06 se formalizaron las cuatro métricas y una expectativa de nivel de servicio provisional. Por ello, la formulación rigurosa es **“sistema basado en Kanban y adaptado al contexto académico individual”**, sin afirmar conformidad histórica completa con cada requisito de la Kanban Guide 2025.
+El seguimiento por hitos registra Story Points asociados al alcance entregado. No los interpreto como *throughput* de Kanban, que cuenta elementos terminados, ni como tiempo de ciclo. Tampoco presento los escenarios de estimación como intervalos empíricos de cumplimiento.
+
+La guía de Kanban identifica cuatro métricas mínimas: WIP, cantidad de elementos terminados por unidad de tiempo, edad de los elementos aún activos y tiempo de ciclo de los finalizados (Kanban Guides, 2025). No dispongo de fechas completas y confiables para calcularlas retrospectivamente sobre todo el proyecto. La formalización de su registro en Hito 06 no demuestra que se hayan medido durante las etapas anteriores.
+
+La definición de flujo incorpora una expectativa de nivel de servicio provisional: 85 % de los elementos en siete días calendario o menos, a recalibrar con al menos cinco elementos con fechas confiables. No es cumplimiento observado. Por estas limitaciones, describo el proceso como basado en Kanban y adaptado al contexto individual, sin afirmar conformidad histórica completa.
 
 ## 2.2. Análisis de Personas de Usuario
 
-Las personas de usuario se construyeron inicialmente a partir de observación directa, experiencia institucional y conversaciones informales dentro del contexto académico. Luego fueron contrastadas con los resultados del relevamiento cuantitativo, lo que permitió confirmar o matizar los supuestos iniciales.
+Formulé tres personas a partir de mi experiencia en el contexto académico, la observación y conversaciones informales. Son arquetipos de diseño, no participantes identificados en una investigación ni entrevistas sistemáticas. Sus nombres, biografías y citas sintéticas ayudan a representar necesidades; no deben interpretarse como testimonios recolectados.
 
-Las tres personas principales documentadas en [personas.md](../producto/personas.md) son:
-
-| Persona | Rol dentro del proyecto | Necesidad principal |
+| Arquetipo | Papel en el análisis | Necesidad que orienta el diseño |
 |---|---|---|
-| Lucía, estudiante organizada | Usuario primario no técnico | Capturar notas rápido, acceder offline y organizar por materia. |
-| Martín, estudiante práctico | Usuario técnico / early adopter | Usar Markdown, controlar sus datos y evitar vendor lock-in. |
-| Prof. Ramos, docente evaluador | Stakeholder académico | Ver evidencia de proceso, documentación y decisiones justificadas. |
+| Lucía, estudiante organizada | Usuaria primaria, sin exigir conocimientos técnicos | Capturar y recuperar apuntes, disponer de ellos sin red y organizarlos por materia |
+| Martín, estudiante práctico | Perfil con familiaridad técnica | Trabajar con Markdown y conservar control y portabilidad de sus contenidos |
+| Prof. Ramos, docente evaluador | Parte interesada académica, no segmento comercial demostrado | Comprender el proceso y examinar una entrega identificable con decisiones y evidencia |
 
-El relevamiento respaldó varios atributos centrales de estas personas dentro del contexto estudiado: preferencia declarada por el celular, disponibilidad de red no permanente, organización por materia y valoración de una propuesta simple. En consecuencia, las personas funcionan como puente entre la observación inicial y las decisiones de diseño implementadas, sin reemplazar una validación directa de los arquetipos con el prototipo.
+Utilicé los perfiles como preguntas de diseño: si puede escribirse sin aprender Markdown, cómo recuperar un apunte o qué evidencia necesita quien evalúa la entrega. El relevamiento permitió contrastar atributos generales, como preferencia móvil y organización por materia, pero no valida cada biografía ni la satisfacción de los arquetipos mediante uso del prototipo.
 
 ## 2.3. Análisis Competitivo
 
-El análisis competitivo comparó a Lumapse con herramientas de notas existentes como Google Keep, Notion, Obsidian, OneNote, Simplenote, Evernote, Standard Notes y Joplin. Los criterios de comparación surgieron de las necesidades detectadas en las personas: funcionamiento offline real, ausencia de cuenta obligatoria, tamaño liviano, soporte Markdown, gratuidad, uso multiplataforma y velocidad de arranque.
+El análisis competitivo documentado incluyó herramientas como Google Keep, Notion, Obsidian, OneNote, Simplenote y Joplin, entre otras. Comparó disponibilidad sin red, necesidad de cuenta, portabilidad, formato de notas, tamaño, costo, alcance entre dispositivos y rapidez de acceso. Esos criterios permitieron ordenar alternativas relevantes para el contexto de diseño.
 
-El análisis competitivo original propuso una lectura cualitativa: algunas herramientas simples dependen de cuentas o ecosistemas propietarios, mientras otras ofrecen más potencia con mayor complejidad, peso o costo. No demuestra que el mercado esté vacío ni sustituye una revisión actual de cada producto. Lumapse busca diferenciarse mediante baja complejidad, almacenamiento local, ausencia de cuenta, núcleo offline-first, Markdown y foco académico.
+La matriz conserva apreciaciones del relevamiento competitivo original, sin una revalidación actual de las versiones, planes o dispositivos comparados. Por ello, no reproduzco sus precios, tamaños y tiempos de arranque como mediciones vigentes, ni utilizo sus calificaciones para afirmar que las demás herramientas requieren conexión permanente. Existen alternativas locales y con Markdown; su presencia impide justificar Lumapse por una supuesta ausencia de soluciones.
 
-Este análisis no se utiliza para afirmar que Lumapse compite con plataformas maduras en amplitud funcional, sino para justificar una estrategia de diferenciación: resolver muy bien un problema acotado y real antes que replicar suites generales de productividad.
+El posicionamiento buscado es una combinación acotada: captura de apuntes, organización académica, almacenamiento local, ausencia de cuenta obligatoria y respaldo manual. No equivale a mayor potencia, mejor rendimiento o superioridad de usabilidad frente a productos maduros. La distribución vigente es Android; una interfaz adaptable y una base de código web no constituyen una entrega soportada para escritorio o para múltiples plataformas.
 
 ## 2.4. Lean Canvas
 
-El Lean Canvas de Lumapse documenta la lógica de producto en una sola vista: problema, solución, propuesta de valor, ventaja injusta, segmento de clientes, métricas, canales, costos e ingresos potenciales. Fue elaborado antes del relevamiento y luego recontextualizado a la luz de los datos obtenidos.
+Elaboré el Lean Canvas como ejercicio de diseño de producto previo al relevamiento. Su función fue relacionar problema, destinatarios, propuesta de valor, solución y condiciones de sostenibilidad, no acreditar un negocio validado. La formulación inicial contemplaba PWA, IndexedDB y un posible empaquetado mediante TWA; esos elementos quedaron reemplazados por las decisiones técnicas ADR-005 y ADR-006.
 
-La propuesta de valor inicial puede sintetizarse como: "Tus notas. En tu equipo. Sin cuenta. Sin internet. Sin excusas". Esta formulación se mantiene vigente, aunque la solución técnica evolucionó: de una PWA offline-first con IndexedDB hacia una app Android con Capacitor y SQLite.
+La tabla distingue la contribución de cada bloque de aquello que aún no constituye un resultado demostrado.
 
-El canvas cumple una función metodológica: obliga a vincular las decisiones técnicas con la viabilidad del producto. En Lumapse, decisiones como no usar backend, no exigir cuenta y priorizar almacenamiento local no son solo preferencias técnicas; responden a una propuesta de valor, a una estructura de costos baja y a un canal de distribución posible dentro del alcance académico.
+| Bloque | Aplicación y límite en Lumapse |
+|---|---|
+| Problema | Pérdida, desorganización y conectividad como cuestiones investigadas; la encuesta describe la muestra, no demuestra causalidad |
+| Segmentos | Público estudiantil institucional; extensión a otros contextos todavía hipotética |
+| Propuesta de valor | Notas locales sin cuenta; sin garantía absoluta de privacidad o conservación |
+| Solución | Captura, organización y consulta en Android con Capacitor y SQLite, dentro del alcance delimitado |
+| Canales | APK publicado en GitHub Releases; aceptación del canal por nuevos estudiantes no medida |
+| Métricas clave | Primera nota, satisfacción y retención propuestas, sin resultados de uso sostenido acreditados |
+| Costos | Menor dependencia de servidores; desarrollo, mantenimiento y distribución no se vuelven gratuitos por ello |
+| Ingresos | Modalidades y precios hipotéticos, sin ventas, disposición a pagar o rentabilidad demostradas |
+| Ventaja propuesta | Cercanía al contexto como acceso inicial al problema, no como barrera competitiva demostrada |
+
+La síntesis «Tus notas. En tu equipo. Sin cuenta. Sin internet.» expresa esa orientación con los límites del capítulo 1: el respaldo externo requiere una acción deliberada y la pérdida del dispositivo o la desinstalación siguen siendo riesgos. Portabilidad no equivale a sincronización ni a recuperación garantizada de todo el estado.
+
+El canvas hace visibles los supuestos; no presento una validación económica integral ni un estudio de retención. Sus metas iniciales no reemplazan requisitos medibles ni resultados de usuario.
 
 ## 2.5. Historias de Usuario como Hipótesis de Valor (Lean UX)
 
-El proyecto Lumapse adoptó el marco de Lean UX (Gothelf & Seiden, 2013) para el diseño centrado en el usuario. Bajo este enfoque, las historias de usuario no se conciben como especificaciones definitivas escritas al final del análisis, sino como hipótesis de valor que se formulan tempranamente y se someten a validación empírica. Este ciclo de hipótesis, validación e iteración conecta la fase de ideación con la implementación técnica.
+Las historias expresan una necesidad y un beneficio esperado desde la perspectiva del usuario. Contienen supuestos de valor, mientras sus criterios de aceptación delimitan comportamientos verificables. Una historia no es, por sí sola, un experimento ni una hipótesis contrastada.
 
-El historial del proyecto refleja este proceso: las primeras historias de usuario fueron redactadas antes del relevamiento de campo. Esto no constituye una anomalía metodológica, sino la aplicación deliberada del ciclo Lean UX: formular una hipótesis razonable, diseñar una forma de validarla y ajustar el producto cuando los datos contradicen el supuesto inicial.
+Esta separación es coherente con la orientación de Lean UX hacia supuestos, hipótesis, experimentación y aprendizaje a partir de usuarios, desarrollada por Gothelf y Seiden (2013). En Lumapse distingo el contraste exploratorio de necesidades, las decisiones de diseño y la verificación del software. No presento la existencia de esos artefactos como demostración de haber aplicado íntegramente un programa experimental de Lean UX.
 
 ### 2.5.1. Fase 1 — La Historia de Usuario como supuesto de diseño
 
-Una historia de usuario es una descripción breve de una funcionalidad del software escrita desde la perspectiva del usuario final, con el formato:
-
-> Como [rol], quiero [funcionalidad], para [beneficio].
-
-Su propósito no es detallar la implementación técnica, sino capturar qué problema quiere resolver el usuario y por qué le interesa. En la terminología de Lean UX, cada historia funciona como una hipótesis de valor: una apuesta informada sobre lo que el usuario necesita, basada en empatía y análisis inicial, pero todavía sin validación empírica.
-
-En las etapas iniciales, las historias se formularon a partir de:
-
-- Empatía con el contexto del autor como estudiante del IES 6023.
-- Personas de usuario construidas desde observación institucional.
-- Benchmarking competitivo de herramientas existentes.
-- Restricciones técnicas y académicas del proyecto.
-
-En esa fase, las historias eran supuestos educados. Por ejemplo, se consideró inicialmente que los estudiantes podrían organizar sus notas mediante etiquetas, patrón habitual en herramientas de productividad general.
+Las personas, el contexto y las restricciones sirvieron para formular necesidades con la estructura «Como [rol], quiero [acción], para [beneficio]». Organizar apuntes por materia expresa una necesidad; elegir una tabla relacional o limitar la profundidad son decisiones de solución. Esta separación permitió revisar supuestos, como priorizar etiquetas, sin tratar las primeras historias como compromisos inmodificables.
 
 ### 2.5.2. Fase 2 — La encuesta como instrumento de validación
 
-Para transformar los supuestos en decisiones fundamentadas, se diseñó y ejecutó una encuesta de relevamiento sobre 121 estudiantes, con 120 respuestas válidas. La encuesta no se diseñó de manera aislada: sus preguntas se formularon para validar o refutar hipótesis contenidas en las historias de usuario y decisiones iniciales de producto.
+El relevamiento reunió 121 respuestas y permitió analizar 120 después de aplicar el criterio de exclusión. Su selección fue no probabilística por conveniencia. Los resultados siguientes describen esa muestra y orientan decisiones; no prueban eficacia del prototipo ni representan una estimación inferencial de toda la población. El capítulo 3 desarrolla el instrumento y sus limitaciones.
 
-| Hipótesis | Pregunta de validación | Resultado | Decisión |
-|---|---|---|---|
-| Los estudiantes necesitan una app que funcione sin internet en el aula. | P6: frecuencia declarada de acceso estable; P8: prioridades. | 81.7% responde "A veces", "Raramente" o "Nunca"; 74.2% selecciona offline. | Hipótesis respaldada en la muestra: se mantiene y debe probarse offline-first. |
-| Los estudiantes prefieren usar el celular para una app de notas. | P9: dispositivo preferido para una app de notas. | 72.5% elige celular. | Hipótesis respaldada en la muestra: se prioriza el diseño mobile-first. |
-| Los estudiantes organizarían sus notas con etiquetas. | P11: modelo de organización preferido. | 69.2% prefiere carpetas por materia. | Hipótesis contradicha en la muestra: pivote a materias y secciones. |
-| Offline aparece entre las características más seleccionadas. | P8: frecuencia de selección de funcionalidades. | 74.2% selecciona offline. | Hipótesis respaldada de forma descriptiva: persistencia local robusta. |
+| Cuestión examinada | Evidencia declarada, base de 120 respuestas | Implicación y límite |
+|---|---|---|
+| Disponibilidad de conexión | En P6, 98 personas eligieron «A veces», «Raramente» o «Nunca» (81,7 %); en P8, 89 seleccionaron funcionamiento sin internet (74,2 %) | Priorizar operaciones locales y su verificación; no es una medición técnica de la red |
+| Dispositivo preferido | En P9, 87 eligieron celular (72,5 %) | Priorizar el diseño móvil; no decide entre PWA y APK |
+| Organización principal | En P11, 83 prefirieron carpetas por materia (69,2 %) frente a 24 que eligieron etiquetas (20,0 %) | Priorizar materias sin afirmar que las etiquetas carezcan de valor |
+| Protección de la escritura | En P8, 63 seleccionaron la formulación de guardado automático (52,5 %) | Investigar continuidad del trabajo; no demuestra preferencia por guardar notas definitivas sin confirmación |
 
-P8 declaraba un máximo de tres opciones, pero el CSV contiene 371 marcas y 37 respuestas con cuatro a seis. Por ello sus porcentajes se usan como frecuencias descriptivas, no como un ranking de elección forzada uniforme ni como evidencia inferencial.
+P8 indicaba un máximo de tres opciones, pero se registraron 371 marcas y 37 respuestas con cuatro a seis selecciones. Sus porcentajes son frecuencias descriptivas con personas como denominador, no un ranking de elección forzada uniforme. La tabla no transforma esas selecciones en requisitos aprobados automáticamente.
 
-La encuesta respaldó las restricciones **mobile-first** y **offline-first**, pero no comparó PWA frente a APK, no preguntó por instalación desde fuentes externas y tampoco evaluó motores de persistencia. La elección de Capacitor/APK y SQLite se realizó posteriormente mediante el análisis técnico documentado en [ADR-005](../adr/ADR-005-pivote-app-nativa.md) y [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md).
+La pregunta sobre utilidad combinaba aplicación web, gratuidad, ausencia de cuenta y toma de notas: 97 de 120 participantes la valoraron con cuatro o cinco puntos (80,8 %). No permite aislar el atractivo de un atributo ni demostrar intención de pago, adopción real o aceptación de un APK. La disposición declarada a probar un prototipo tampoco equivale a participación efectiva.
 
 ### 2.5.3. Fase 3 — El pivote fundamentado en datos
 
-Cuando la encuesta refutó una hipótesis inicial, se ejecutó un pivote de producto documentado y trazable.
+La preferencia por materias llevó a revisar el protagonismo inicial de las etiquetas y quedó reflejada en DP-002 y DP-004. La solución incorpora Entrada, Materias y Archivo, con materias y secciones opcionales. La encuesta no evaluó esa nomenclatura, el límite de dos niveles ni el recorrido: son decisiones de diseño, no resultados de P11.
 
-El supuesto original indicaba que los estudiantes organizarían notas con etiquetas. La evidencia empírica mostró otra cosa: el 69.2% de los 120 encuestados prefirió organizar por carpetas por materia. Como resultado, se descartó el sistema de etiquetas como eje principal y se diseñó una jerarquía de Materias y Secciones con profundidad máxima de dos niveles. Esta decisión quedó formalizada en [DP-002](../producto/decisiones-producto.md) y [DP-004](../producto/decisiones-producto.md), y se materializó en el modelo SQLite mediante la tabla `subjects` y la auto-referencia `parentSubjectId`.
+La prioridad móvil y offline orientó también la comparación de alternativas técnicas. Adopté Android con Capacitor y SQLite por el análisis documentado en ADR-005 y ADR-006, considerando persistencia, reutilización de la interfaz y alcance del desarrollo. El cuestionario no comparó motores de base de datos ni canales de instalación: no atribuyo a los estudiantes una elección de SQLite o del formato APK.
 
-Este pivote demuestra que las historias de usuario no son compromisos irrevocables. Su valor metodológico no consiste en acertar desde el inicio, sino en crear un marco que permita detectar y corregir supuestos antes de invertir más desarrollo en una dirección equivocada.
+Otra revisión relevante fue la de RF-005: la protección del trabajo en curso se concretó como borrador persistente, manteniendo una acción explícita para crear o actualizar la nota definitiva. Esta solución distingue una necesidad de continuidad de una interpretación literal de «guardado automático». La encuesta no demuestra que el mecanismo elegido resulte comprendido por todos los usuarios.
 
 ### 2.5.4. Fase 4 — Materialización en requisitos y código
 
-Una vez validadas o ajustadas las historias, se estableció una cadena de trazabilidad:
+La trazabilidad relaciona necesidad, decisión, historia, requisito, criterio de aceptación, implementación y evidencia. Una prueba o restricción técnica puede obligar a revisar esa relación, como permite examinar el caso de organización por materias.
 
-```text
-Historia de usuario
-        |
-        v
-Requisito funcional
-        |
-        v
-Criterios de aceptación
-        |
-        v
-Código
-        |
-        v
-Tests y validaciones
-```
+| Eslabón | Correspondencia documentada |
+|---|---|
+| Necesidad | Preferencia de P11 por carpetas por materia |
+| Decisiones | DP-002 define la navegación; DP-004 delimita materias y secciones |
+| Historia y requisito | HU-017 reúne creación, asociación y filtrado; RF-014 identifica el filtrado por materia y sección |
+| Criterios de aceptación | Creación de la jerarquía, asociación de notas, filtrado y persistencia |
+| Implementación | Servicio de materias, estado de notas, interfaz de organización y acceso SQLite |
+| Evidencia técnica | Pruebas existentes de validación de profundidad y operaciones de materias, junto con los controles documentados |
 
-Por ejemplo, la necesidad de organizar por materias se trazó desde el relevamiento hasta la implementación:
-
-- HU vinculada a crear materias, secciones y asignar notas.
-- RF-014: filtrado de notas por materia y sección.
-- DP-002 y DP-004: estructura Entrada / Materias / Archivo y jerarquía Materia -> Sección -> Nota.
-- Código en `SubjectService`, `drawerSubjects`, `NoteStore.data` y servicios SQLite.
-- Tests unitarios y auditorías de jerarquía de materias.
-
-La trazabilidad completa puede consultarse en [historias de usuario](../producto/historias-de-usuario.md), [requisitos funcionales](../producto/requisitos-funcionales.md), [decisiones de producto](../producto/decisiones-producto.md) y los scripts de auditoría documentados en [scripts/README.md](../../scripts/README.md).
+La prueba de profundidad comprueba una regla del software, no su preferencia entre estudiantes. La auditoría documental detecta referencias incoherentes, pero no verifica facilidad de uso ni cobertura completa de un binario. El diseño corresponde al capítulo 4; la implementación, al 5; las pruebas, al 6.
 
 ## 2.6. Requisitos del Sistema
 
-Los requisitos del sistema se documentan como artefactos vivos, separados en requisitos funcionales (RF) y no funcionales (RNF). Esta separación permite diferenciar qué debe hacer el sistema de cómo debe comportarse en términos de calidad, rendimiento, seguridad, usabilidad y mantenibilidad.
+Organicé los requisitos en funcionales —qué debe permitir el sistema— y no funcionales —qué atributos y condiciones de calidad deben verificarse—. Sus identificadores permiten seguir cambios de alcance sin borrar la formulación histórica. La prioridad expresa importancia para la entrega, no evidencia de cumplimiento.
 
 ### 2.6.1. Requisitos Funcionales
 
-Los requisitos funcionales cubren los módulos principales del producto: gestión de notas, persistencia local, Markdown, organización, portabilidad local, experiencia de usuario e información del sistema. En el estado actual del proyecto, el documento [requisitos-funcionales.md](../producto/requisitos-funcionales.md) registra 28 requisitos.
+El catálogo conserva 28 RF. En el corte documental vigente, 21 figuran implementados, uno verificado, cuatro postergados y dos obsoletos por el cambio de arquitectura. Mantener esas categorías evita contar una función excluida como pendiente accidental o presentar como implementado un requisito de la antigua PWA.
 
-El núcleo del MVP ya implementado incluye:
+Los RF abarcan notas y borradores, persistencia, Markdown, organización, fechas puntuales, interfaz e identificación y respaldo/importación ZIP. La sección 1.4.2 delimita esas funciones; no incluyen sincronización, agenda completa ni una copia exacta de todo el estado del dispositivo.
 
-- Creación, edición, listado, búsqueda y eliminación de notas.
-- Borradores persistentes del editor.
-- Persistencia local.
-- Renderizado Markdown y modos de lectura/escritura.
-- Organización por materias, secciones, archivo y papelera.
-- Tema claro/oscuro y marcadores visuales de estado académico.
-- Fechas académicas discretas.
-- Backup manual `.zip` e importación no destructiva de backups generados por Lumapse.
-- Sección "Acerca de" y ayudas opcionales de formato dentro del editor.
-
-Al cierre formal del Hito 04 (2026-06-01), los pendientes opcionales de UX se reclasificaron con justificación de producto: contador de palabras/caracteres, onboarding e indicador offline/online pasan a estado postergado para evitar ruido visual o falsas expectativas de sincronización. Durante Hito 05 se resolvió la portabilidad de workspace con backup manual `.zip` e importación no destructiva de backups generados por Lumapse, además de incorporar la sección "Acerca de". Compartir/exportar una nota individual sigue postergado hasta contar con share sheet nativo de Android validado y evidencia de que no duplica la acción existente de copiar.
+Los cuatro RF postergados son conteo de palabras y caracteres (RF-006), compartir o exportar una nota individual (RF-016), bienvenida inicial (RF-022) e indicador global de conexión (RF-024). Service Workers (RF-009) e instalación PWA (RF-021) quedaron obsoletos. En cambio, el ZIP del espacio de trabajo (RF-017 y RF-018) es distinto del flujo individual postergado. Los estados de implementación no certifican todos los recorridos de la RC1 publicada.
 
 ### 2.6.2. Requisitos No Funcionales
 
-Los requisitos no funcionales se agrupan según criterios de rendimiento, usabilidad, disponibilidad, seguridad, portabilidad, accesibilidad y mantenibilidad. En el estado actual, el documento [requisitos-no-funcionales.md](../producto/requisitos-no-funcionales.md) registra 26 RNF.
+El catálogo reúne 26 RNF sobre rendimiento, usabilidad, disponibilidad y confiabilidad, seguridad y privacidad, portabilidad, accesibilidad y mantenibilidad. Cada requisito debe relacionarse con una métrica, un método y evidencia identificable; una propiedad deseada no se demuestra mediante una descripción de arquitectura.
 
-Entre los RNF centrales del proyecto se destacan:
+La revisión distingue evidencia verificada en su alcance, evidencia parcial, mediciones pendientes y criterios obsoletos o no aplicables al APK. Por ejemplo, una comprobación de disponibilidad en un debug identificado no se atribuye automáticamente a otro binario; los controles de HTTPS del hosting tampoco equivalen a controles del runtime local Android.
 
-- Carga rápida y bundle liviano.
-- Funcionamiento offline.
-- Persistencia confiable ante cierres inesperados.
-- Ausencia de tracking y envío de datos del usuario a servidores externos.
-- Accesibilidad básica en elementos interactivos.
-- Estructura modular mantenible.
-- Verificación automatizada mediante tests, build, lint y auditorías documentales.
+Tres métricas conservan su estado pendiente y sus umbrales:
 
-Las betas aportan evidencia incremental en dispositivo real. `v0.4.8` cuenta con instalación de APK firmada, apertura offline, persistencia, navegación principal y flujos críticos sin crashes. Para `v0.5.0` se aprobaron un build equivalente con datos preservados, las correcciones táctiles, el gate y la firma del asset publicado; su instalación específica sigue pendiente. La validación final de defensa debe completar feedback de estudiantes, contraste visual y comportamiento con mayor volumen real de notas. Esos puntos se abordan en el Capítulo 6.
+| Requisito | Criterio | Límite actual |
+|---|---|---|
+| RNF-002 | Latencia de crear, editar o eliminar notas ≤ 200 ms | Sin muestras temporales aceptadas; medición diferida a después de la presentación |
+| RNF-004 | Fluidez de desplazamiento ≥ 55 FPS con 500 notas | La importación funcional de ese volumen no acredita la tasa de cuadros; medición diferida |
+| RNF-005 | Primera nota de un usuario nuevo ≤ 10 s | Sin medición específica con participantes nuevos; evaluación posterior al corte, no bloqueante |
+
+La aceptación de esas limitaciones no rebaja los criterios ni convierte una opinión favorable en medición. La navegación por teclado mantiene evidencia parcial y las verificaciones acotadas de accesibilidad no se presentan como certificación exhaustiva.
+
+El corte de presentación es la RC1 0.6.0/600, publicada con validación parcial y desarrollo congelado hasta después de la presentación. Las betas y los builds de prueba conservan identidad y cobertura propias; los recorridos restantes de la RC1 siguen diferidos, no aprobados. Publicar el candidato no equivale a cumplimiento global.
+
+En conjunto, este marco permite seguir el razonamiento desde los supuestos iniciales hasta requisitos y decisiones verificables. El capítulo 3 desarrolla la evidencia del relevamiento; los capítulos 4 a 6 explican cómo se tradujo en diseño, implementación y pruebas. La relación entre esas etapas sostiene la evaluación del proyecto, sin sustituir los resultados que cada una debe demostrar.
