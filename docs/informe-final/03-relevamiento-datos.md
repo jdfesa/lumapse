@@ -1,140 +1,223 @@
 # Capítulo 3: Relevamiento y Análisis de Datos
 
+En este capítulo presento el relevamiento de mayo de 2026 y explico cómo pasé de las respuestas a los hallazgos que orientaron Lumapse. El propósito fue contrastar hábitos, dificultades y preferencias del contexto estudiantil, no demostrar la eficacia de una aplicación terminada. Distingo los datos observados, su interpretación y las decisiones posteriores.
+
+Las tablas son de elaboración propia a partir de las 120 respuestas válidas. En cada caso indico la base de cálculo; los porcentajes se redondean a una cifra decimal. Las diferencias de redondeo y las preguntas de selección múltiple impiden suponer que toda tabla deba sumar exactamente 100 %.
+
 ## 3.1. Metodología de Recolección (Población y Muestra)
 
-El relevamiento de datos tuvo como objetivo validar necesidades, hábitos y problemas de estudiantes del IES 6023 en relación con la toma de notas. Se diseñó como una encuesta autoadministrada mediante Google Forms, distribuida por canales institucionales e informales: WhatsApp, difusión en aulas y código QR.
+### 3.1.1. Población de referencia y selección
 
-La población objetivo estuvo compuesta por estudiantes regulares del IES 6023 "Dr. Alfredo Loutaif" durante el ciclo lectivo 2026. El tamaño de población registrado fue de 1.239 estudiantes, distribuidos en turnos mañana, tarde y noche, y en carreras de formación docente y tecnicaturas.
+Definí como población objetivo a estudiantes regulares del IES 6023 «Dr. Alfredo Loutaif» durante el ciclo lectivo 2026, excluyendo a quienes asistían únicamente a rendir exámenes. El diseño registra 1.239 estudiantes, tres turnos y siete carreras con matrícula activa como población de referencia. No utilicé una lista nominal para seleccionar participantes al azar.
 
-La muestra final quedó compuesta por 120 respuestas válidas sobre 121 recolectadas. Se excluyó un registro correspondiente a una persona que indicó asistir únicamente a rendir, criterio de exclusión definido previamente en el diseño del relevamiento. La recolección se realizó entre el 11/05/2026 y el 13/05/2026, con cierre anticipado al superar el objetivo mínimo de respuestas.
+Distribuí una encuesta autoadministrada en Google Forms mediante grupos de WhatsApp, pósteres con código QR en aulas y colaboración para difundir el enlace. La selección fue no probabilística por conveniencia: dependió del acceso al formulario y de la decisión de responder. Procurar cobertura de distintos turnos no equivale a aplicar cuotas proporcionales ni probabilidades de inclusión conocidas.
 
-| Parámetro | Valor |
+| Característica | Registro del estudio |
 |---|---|
-| Población objetivo | Estudiantes regulares del IES 6023 |
-| Tamaño de población | 1.239 estudiantes |
-| Respuestas válidas | 120 |
-| Tipo de muestreo | No probabilístico por conveniencia |
-| Nivel de confianza de referencia | 95% |
-| Margen nominal de referencia | Aproximadamente 8.5% bajo muestreo aleatorio simple; no es un intervalo efectivo para la muestra por conveniencia |
-| Instrumento | Google Forms, 12 preguntas + 1 condicional |
-| Período de recolección | 11/05/2026 al 13/05/2026 |
+| Población de referencia consignada en el diseño | 1.239 estudiantes regulares |
+| Recolección | 11 al 13 de mayo de 2026 |
+| Respuestas recolectadas | 121 |
+| Exclusión aplicada | Un registro que indicó asistir sólo a rendir |
+| Base analítica | 120 respuestas válidas |
+| Selección | No probabilística por conveniencia |
+| Instrumento | Doce preguntas numeradas P1–P12 y una adicional condicional, P5b |
 
-El cálculo muestral se fundamentó con fórmula para poblaciones finitas, dado que la población era conocida y acotada. La justificación estadística completa se encuentra en [metodologia-muestral.md](../producto/metodologia-muestral.md), donde se documentan los escenarios de confianza, margen de error y contingencia.
+La meta operativa mínima fue reunir 90 respuestas. Para dimensionarla utilicé como referencia la fórmula de población finita:
 
-El nivel de confianza y el margen de error se utilizan como referencia para dimensionar la muestra, no como garantía de inferencia probabilística. Al tratarse de un muestreo por conveniencia, los resultados describen a las personas participantes y aportan evidencia útil para decisiones de producto, pero no permiten afirmar representatividad estadística perfecta de toda la población institucional.
+$$
+n^* = \frac{N Z^2 p(1-p)}{e^2(N-1)+Z^2p(1-p)}
+$$
+
+En la fórmula, N es la población de referencia; Z, el valor normal asociado al nivel nominal de confianza; p, la proporción supuesta, y e, el error tolerado en ese escenario. Con N = 1.239, Z = 1,96, p = 0,5 —máxima variabilidad— y e = 0,10, el objetivo nominal redondeado hacia arriba es 90. Para 120 respuestas, el cálculo hipotético arroja aproximadamente 8,5 % al nivel nominal de 95 %. Esos valores suponen selección aleatoria simple: describen el escenario de planificación, no un margen efectivo de este estudio. Superar la meta no corrige el sesgo de selección ni convierte la muestra por conveniencia en probabilística.
+
+La recolección se desarrolló entre el 11 y el 13 de mayo de 2026, durante aproximadamente dos días naturales y en horario de Argentina. Al alcanzar 121 respuestas, decidí cerrar la encuesta, ya que se había superado la meta operativa de 90.
+
+### 3.1.2. Instrumento y ramificaciones
+
+El formulario combinó perfil demográfico, método principal de toma de notas, dificultades, conectividad, utilidad percibida y preferencias de funcionalidades, dispositivo y organización. P12 fue una pregunta abierta opcional. Las preguntas cerradas usaron respuesta única, una valoración de cinco puntos o selección múltiple, según el caso.
+
+La ramificación evitó preguntar por dificultades de una actividad que la persona había declarado no realizar:
+
+- Quienes eligieron «No tomo notas» en P4 pasaron a P6, sin responder P5 ni P5b.
+- Quienes tomaban notas respondieron P5 sobre dificultad percibida.
+- Sólo quienes respondieron afirmativamente a P5 detallaron dificultades en P5b.
+- P6–P12 correspondían al conjunto de participantes, con P12 opcional.
+
+Comprobé que las bases resultantes respetan ese recorrido: cinco registros sin toma de notas, 115 a los que aplica P5 y 56 con dificultad declarada a los que aplica P5b. Los saltos son ausencia prevista por diseño, no respuestas que deban completarse artificialmente.
+
+P7 preguntó por una propuesta conjunta: «una app web gratuita, sin cuenta, para tomar notas de estudio». No aisló el efecto de cada atributo. P8 solicitó elegir hasta tres características; la exportación demuestra que ese máximo no quedó asegurado. Estas propiedades del instrumento delimitan las interpretaciones posteriores.
+
+### 3.1.3. Tratamiento y control de los datos
+
+Conservé el CSV original y contrasté las frecuencias con las reglas del análisis documentado en Python. El proceso normaliza finales de línea, identifica las columnas y aplica la exclusión poblacional. Además, reclasifica un registro de doble turno a Tarde y una respuesta de doble carrera a Lengua y Literatura. Son convenciones del tratamiento, no asignaciones aleatorias ni cambios en la composición de la matrícula.
+
+Las marcas temporales del CSV se interpretan en orden mes/día/año. La primera y la última respuesta no identifican por sí solas los momentos exactos de apertura y cierre del formulario.
+
+Para separar respuestas múltiples, el análisis distingue comas fuera de paréntesis. Esa regla preserva opciones como «formato (títulos, listas, tablas, fórmulas)», pero una coma dentro de texto libre puede generar fragmentos adicionales. Por ello diferencio respuestas, opciones predefinidas y fragmentos del procesamiento; no los considero unidades intercambiables.
+
+Los scripts conservados separan limpieza, frecuencias, cruces, clasificación de comentarios y gráficos. Esa estructura permite rastrear operaciones, pero no garantiza calidad semántica ni elimina sesgos del instrumento. Las comprobaciones de este informe no implican una nueva recolección ni validan automáticamente todas las interpretaciones del análisis inicial.
 
 ## 3.2. Análisis Demográfico
 
-La distribución demográfica permitió verificar que la muestra incluyera distintos turnos, carreras y rangos etarios relevantes para el proyecto.
+Los tres turnos estuvieron presentes, con mayor cantidad de respuestas en tarde y noche. La base es de 120 registros después de las reclasificaciones indicadas.
 
-En cuanto al turno de cursada, la muestra se concentró principalmente en los turnos tarde y noche:
-
-| Turno | n | Porcentaje |
+| Turno | Respuestas | Porcentaje |
 |---|---:|---:|
-| Tarde | 56 | 46.7% |
-| Noche | 47 | 39.2% |
-| Mañana | 17 | 14.2% |
+| Tarde | 56 | 46,7 % |
+| Noche | 47 | 39,2 % |
+| Mañana | 17 | 14,2 % |
 
-Respecto de las carreras, la muestra cubrió seis de las siete ofertas con matrícula activa; no hubo respuesta válida del Profesorado en Física. Las carreras con mayor presencia fueron Educación Primaria, Educación Especial, Sistemas y Lengua y Literatura, que en conjunto representan el 86.7% de la muestra. La selección por conveniencia y la ausencia de una tabla institucional por carrera impiden afirmar proporcionalidad con la matrícula.
+Se observaron seis de las siete carreras consignadas en la población de referencia. No hubo una respuesta válida del Profesorado en Física.
 
-| Carrera | n | Porcentaje |
+| Carrera | Respuestas | Porcentaje |
 |---|---:|---:|
-| Educación Primaria | 35 | 29.2% |
-| Educación Especial | 26 | 21.7% |
-| Sistemas | 22 | 18.3% |
-| Lengua y Literatura | 21 | 17.5% |
-| Danzas | 9 | 7.5% |
-| Turismo | 7 | 5.8% |
+| Educación Primaria | 35 | 29,2 % |
+| Educación Especial | 26 | 21,7 % |
+| Sistemas | 22 | 18,3 % |
+| Lengua y Literatura | 21 | 17,5 % |
+| Danzas | 9 | 7,5 % |
+| Turismo | 7 | 5,8 % |
 
-La distribución por edad mostró una mayoría de estudiantes jóvenes: el 75.8% se ubicó entre 18 y 27 años. El dato describe la composición de la muestra, pero la edad por sí sola no permite inferir afinidad tecnológica ni adopción previa de herramientas digitales para tomar notas.
+Las cuatro carreras con más respuestas reúnen 104 de 120 registros (86,7 %). No dispongo en este análisis de una distribución institucional por turno y carrera que permita evaluar proporcionalidad; la diversidad observada no demuestra representatividad de la matrícula.
+
+En P3, 56 respuestas correspondieron a 18–22 años, 35 a 23–27, 23 a 28–35, cinco a 36–45 y una a 46 o más. Los dos primeros grupos suman 91 de 120 (75,8 %). La edad describe la muestra, no alfabetización digital; el único registro del tramo mayor tampoco permite comparaciones de ese grupo.
 
 ## 3.3. Resultados sobre Hábitos de Estudio y Toma de Notas
 
-El primer hallazgo significativo fue que el cuaderno o papel continúa siendo el método dominante de toma de notas. El 88.3% de los encuestados declaró usarlo como medio principal, mientras que solo el 7.5% utiliza algún dispositivo digital (celular, notebook o tablet).
+### 3.3.1. Método principal y dificultades
 
-| Método principal | n | Porcentaje |
+P4 preguntó por el método principal utilizado en clase, no por todas las herramientas que cada participante pudiera emplear.
+
+| Método principal | Respuestas, base 120 | Porcentaje |
 |---|---:|---:|
-| Cuaderno/papel | 106 | 88.3% |
-| Celular | 7 | 5.8% |
-| No tomo notas | 5 | 4.2% |
-| Notebook/PC | 1 | 0.8% |
-| Tablet | 1 | 0.8% |
+| Cuaderno o papel | 106 | 88,3 % |
+| Celular | 7 | 5,8 % |
+| No toma notas | 5 | 4,2 % |
+| Notebook o PC | 1 | 0,8 % |
+| Tablet | 1 | 0,8 % |
 
-Este resultado identifica al papel como hábito de partida predominante. La encuesta preguntó por el método principal, no por el conjunto de herramientas utilizadas ni por competidores percibidos; por ello no permite concluir que Lumapse compita exclusivamente o principalmente contra el cuaderno. Sí sugiere que el prototipo debe demostrar una ventaja clara sin introducir fricción adicional.
+Los dispositivos digitales suman nueve respuestas (7,5 %). El predominio del papel caracteriza el hábito de partida, pero no indica por qué se lo prefiere ni permite afirmar que nunca se utilicen aplicaciones como recurso secundario. Tampoco identifica un competidor único de Lumapse.
 
-Entre quienes toman notas, el 48.7% reconoció dificultades con su método actual. Las dificultades principales fueron pérdida de notas y desorganización rápida, ambas con 58.9% entre quienes reportaron problemas.
+Entre las 115 respuestas a las que aplica P5, 56 declaran dificultad (48,7 %) y 59 no la declaran (51,3 %). P5b utiliza exclusivamente las 56 afirmativas como denominador:
 
-| Dificultad reportada | n | Porcentaje sobre quienes reportaron dificultad |
+| Dificultad predefinida | Respuestas que la incluyen, base 56 | Porcentaje |
 |---|---:|---:|
-| Pierdo notas con frecuencia | 33 | 58.9% |
-| Se desorganizan rápido | 33 | 58.9% |
-| Me cuesta organizar el formato | 22 | 39.3% |
-| No encuentro lo que busco | 13 | 23.2% |
-| No puedo acceder sin internet | 3 | 5.4% |
+| Pérdida de notas | 33 | 58,9 % |
+| Desorganización rápida | 33 | 58,9 % |
+| Dificultad para organizar el formato | 22 | 39,3 % |
+| No encontrar lo buscado | 13 | 23,2 % |
+| No poder acceder sin internet | 3 | 5,4 % |
 
-También se registraron seis formulaciones libres diferentes, con una mención cada una; no se fusionan en una categoría artificial. La consigna pedía hasta tres opciones, pero una respuesta contiene cuatro marcas, limitación que se conserva en el análisis.
+Son selecciones múltiples: una respuesta puede aparecer en varias filas y los porcentajes no deben sumarse como grupos disjuntos. Pérdida y desorganización tienen igual frecuencia, sin que ello demuestre causalidad, gravedad equivalente o que afecten a personas diferentes.
 
-Ante la pregunta por acceso estable a internet, el 81.7% respondió "A veces", "Raramente" o "Nunca". La pregunta no mide uptime ni calidad técnica, pero respalda priorizar y comprobar el funcionamiento offline en el contexto relevado.
+Cinco respuestas contienen formulaciones libres adicionales. El separador automático produce seis fragmentos de esos textos: la única salida de cuatro fragmentos reúne dos opciones cerradas y una formulación libre con coma. No constituye evidencia suficiente de cuatro opciones seleccionadas ni permite atribuir esos fragmentos a seis personas. Reporto las cinco categorías predefinidas por separado, sin crear una categoría homogénea a partir de fragmentos de redacción.
 
-En cuanto a la propuesta de valor, el 80.8% calificó como útil o muy útil la formulación aplicada: "una app web gratuita, sin cuenta, para tomar notas de estudio". La pregunta combina varios atributos y no permite atribuir el resultado a uno solo. En P10, el 100% respondió "Sí" o "Tal vez" ante una futura prueba; esa intención declarada facilita planificar reclutamiento, pero no garantiza participación, adopción ni uso sostenido.
+### 3.3.2. Conectividad y características seleccionadas
 
-La priorización de funcionalidades mostró cuatro demandas principales:
+P6 recoge frecuencia declarada de acceso estable a internet en el instituto:
 
-| Funcionalidad | Porcentaje |
-|---|---:|
-| Que funcione sin internet | 74.2% |
-| Que permita organizar por materia | 73.3% |
-| Que funcione en celular y PC | 53.3% |
-| Que guarde automáticamente | 52.5% |
+| Frecuencia | Respuestas, base 120 | Porcentaje |
+|---|---:|---:|
+| Siempre | 7 | 5,8 % |
+| Casi siempre | 15 | 12,5 % |
+| A veces | 42 | 35,0 % |
+| Raramente | 29 | 24,2 % |
+| Nunca | 27 | 22,5 % |
 
-La consigna de P8 pedía hasta tres opciones, pero el CSV contiene 371 marcas y 37 respuestas con cuatro a seis selecciones. Por lo tanto, estas cifras se leen como frecuencias descriptivas sobre 120 personas, no como un ranking de elección forzada aplicado de manera uniforme.
+Las tres últimas categorías suman 98 respuestas (81,7 %). Es una declaración sobre disponibilidad, no una medición de cobertura, velocidad o tiempo de actividad de la red. Orienta priorizar operaciones locales, sin demostrar todavía el funcionamiento offline de una implementación.
 
-El dispositivo preferido fue el celular, elegido por el 72.5% de los encuestados. Si se suma la opción "cualquiera por igual", el 95% incluye al celular como dispositivo aceptable. Este resultado fundamentó la prioridad mobile-first. La encuesta no comparó PWA y APK ni midió la disposición a instalar aplicaciones por un canal específico; el empaquetado Android y SQLite se definieron después mediante el análisis técnico de ADR-005 y ADR-006.
+P8 registra las siguientes frecuencias:
+
+| Característica | Respuestas que la seleccionan, base 120 | Porcentaje |
+|---|---:|---:|
+| Funcionar sin internet | 89 | 74,2 % |
+| Organizar por materia | 88 | 73,3 % |
+| Funcionar en celular y PC | 64 | 53,3 % |
+| Guardar automáticamente | 63 | 52,5 % |
+| Ser rápida | 54 | 45,0 % |
+| No pedir cuenta | 13 | 10,8 % |
+
+A diferencia del texto libre de P5b, P8 contiene seis opciones cerradas. Se observan 371 selecciones y 37 respuestas con cuatro a seis opciones, aunque la consigna pedía un máximo de tres. Por eso interpreto la tabla como frecuencia descriptiva sobre las 120 respuestas, no como un ranking de elección forzada uniforme. El total no es una muestra de 371 participantes.
+
+Que «no pedir cuenta» tenga menos selecciones no demuestra aceptación de un registro obligatorio. Del mismo modo, elegir rapidez no mide latencia y seleccionar guardado automático no define por sí solo cuándo debe confirmarse una nota definitiva.
+
+### 3.3.3. Utilidad percibida y disposición a una prueba
+
+La valoración de la propuesta conjunta de P7 se distribuyó así:
+
+| Valoración | Respuestas, base 120 | Porcentaje |
+|---|---:|---:|
+| 5 — Muy útil | 61 | 50,8 % |
+| 4 — Útil | 36 | 30,0 % |
+| 3 — Algo útil | 17 | 14,2 % |
+| 2 — Poco útil | 4 | 3,3 % |
+| 1 — Nada útil | 2 | 1,7 % |
+
+Las valoraciones cuatro y cinco suman 97 respuestas (80,8 %). La media descriptiva de las puntuaciones es 4,25 y la mediana, cinco; no son una medición de satisfacción después de usar Lumapse. La pregunta combinó web, gratuidad, ausencia de cuenta y toma de notas, de modo que no permite atribuir la valoración a un componente aislado.
+
+En P10 hubo 97 respuestas «Sí» y 23 «Tal vez» a una posible prueba, sin respuestas negativas. La suma de ambas categorías es 100 %, pero una disposición condicional no equivale a compromiso de participación. Estos datos no prueban uso efectivo, retención, intención de pago ni demanda comercial.
+
+### 3.3.4. Dispositivo y organización preferidos
+
+En P9, 87 respuestas eligieron celular (72,5 %), 27 «Cualquiera por igual» (22,5 %), cinco notebook o PC (4,2 %) y una tablet (0,8 %). Celular y «Cualquiera por igual» suman 114 de 120 (95,0 %): es una combinación de preferencias declaradas, no prueba de posesión, compatibilidad o disponibilidad permanente de esos dispositivos.
+
+P11 permite contrastar el supuesto inicial de organización por etiquetas:
+
+| Organización preferida | Respuestas, base 120 | Porcentaje |
+|---|---:|---:|
+| Carpetas por materia | 83 | 69,2 % |
+| Etiquetas | 24 | 20,0 % |
+| Indiferente si puede encontrar las notas | 9 | 7,5 % |
+| Lista simple | 4 | 3,3 % |
+
+El resultado respalda priorizar materias dentro de la muestra, sin demostrar que las etiquetas carezcan de valor. La pregunta no probó nombres de navegación, profundidad de carpetas ni recorridos de una interfaz. Esas decisiones requieren una justificación de diseño distinta de la frecuencia observada.
+
+### 3.3.5. Cruces descriptivos
+
+El análisis documentado contempla seis cruces entre turno y dificultades, carrera y dispositivo, dispositivo y organización, edad y método, edad y características, y método actual y dispositivo deseado. Sus tablas son descriptivas; no se presentan pruebas inferenciales de diferencias ni causalidad.
+
+Dos ejemplos muestran su utilidad y su límite. Entre las 106 respuestas cuyo método principal es papel, 79 eligen celular para una aplicación de notas (74,5 %). El contraste distingue hábito actual y preferencia hipotética, sin explicar por qué todavía no usan ese dispositivo como medio principal. Entre quienes prefieren celular, 59 de 87 eligen materias (67,8 %); esto orienta ensayar una organización común, no demuestra que funcione sin dificultad.
+
+Los grupos por carrera y edad son desiguales y algunos muy pequeños. Que una opción lidere en las seis carreras observadas no permite extender el resultado a Física ni afirmar equivalencia estadística entre carreras. Tampoco sumo los márgenes de cruces multirrespuesta como si fueran personas diferentes.
 
 ## 3.4. Análisis Cualitativo (Puntos de Dolor)
 
-La encuesta incluyó una pregunta abierta opcional, respondida por 41 estudiantes. Esta tasa de participación, equivalente al 34.2% de la muestra, aportó indicios cualitativos valiosos para comprender necesidades no capturadas completamente por las preguntas cerradas.
+P12 recibió 41 respuestas no vacías, equivalentes al 34,2 % de la base de 120. Respondieron voluntariamente a una pregunta opcional; esa proporción no mide compromiso sostenido ni convierte sus temas en representativos del conjunto.
 
-Los comentarios se agruparon por categorías temáticas. Entre las más relevantes aparecieron:
+La clasificación conservada busca palabras o fragmentos de palabras en el texto convertido a minúsculas. Cada comentario puede recibir varias etiquetas; si no coincide con ninguna, se asigna a «Otros». El recuento reproducible es:
 
-| Categoría | Menciones | Interpretación |
-|---|---:|---|
-| Comentarios positivos o de apoyo | 7 | Expresiones favorables; no equivalen a conducta de adopción. |
-| Planificaciones docentes | 7 | Necesidad específica de profesorados. |
-| Organización avanzada | 6 | Mapas mentales, esquemas, cuadros sinópticos. |
-| Multimedia | 5 | Interés en fotos de pizarrón y audios. |
-| Velocidad de captura | 4 | Necesidad de escribir rápido durante la clase. |
-| Fórmulas o contenido técnico | 4 | Requisitos especializados por carrera. |
-| Conectividad | 3 | Refuerzo cualitativo de la necesidad offline. |
-| Recuperación o historial | 3 | Interés en no perder información. |
-| Agenda o calendario | 3 | Las fechas académicas discretas ya fueron implementadas; una agenda/calendario completo queda como posible extensión. |
+| Etiqueta del clasificador | Comentarios asignados |
+|---|---:|
+| Otros | 10 |
+| Positivos o apoyo | 7 |
+| Planificaciones docentes | 7 |
+| Organización avanzada | 6 |
+| Multimedia: fotos o audio | 5 |
+| Velocidad de captura | 4 |
+| Fórmulas o contenido técnico | 4 |
+| Conectividad | 3 |
+| Recuperación o historial | 3 |
+| Agenda o calendario | 3 |
 
-Las necesidades emergentes varían por carrera. En los profesorados aparecen demandas vinculadas a planificaciones, imágenes y materiales didácticos; en Lengua y Literatura, estructuras textuales y grabación de audio; en Sistemas, diagramas, herramientas más técnicas y fechas de parciales. Estas diferencias no cambian el núcleo del MVP, pero sí ofrecen insumos para trabajo futuro.
+Los 41 comentarios generan 52 asignaciones y ocho reciben más de una etiqueta. No son 52 personas ni categorías excluyentes. «Otros» significa ausencia de coincidencia con las palabras previstas, no ausencia de una necesidad. Incluso la etiqueta de apoyo es una coincidencia léxica, no una medición validada de intención positiva.
 
-El análisis cualitativo aporta respaldo adicional a velocidad, organización y acceso offline como preocupaciones de las personas participantes. También sugiere que funcionalidades como multimedia, plantillas o una agenda/calendario completo deben tratarse como extensiones futuras. La beta ya implementa fechas académicas discretas (`RF-027`), sin recurrencias, horarios ni planificación integral.
+Esta clasificación permite localizar temas para lectura contextual, pero no sustituye una interpretación semántica exhaustiva ni acredita acuerdo entre evaluadores. La propia pregunta ofrecía ejemplos de necesidades por carrera, lo que también pudo orientar las respuestas. No infiero prevalencia de necesidades ni diferencias firmes entre carreras a partir de esos grupos pequeños.
+
+Los temas incluyen recursos de planificación docente, esquemas, contenido técnico, imágenes o audio y recuperación. Su aparición amplía las preguntas de producto, sin convertir cada comentario en un requisito obligatorio. Las fechas académicas puntuales implementadas son distintas de una agenda completa; multimedia y otras extensiones conservan su delimitación como trabajo futuro.
 
 ## 3.5. Conclusiones del Relevamiento e Impacto en el Producto
 
-El relevamiento tuvo impacto directo en las decisiones del proyecto. Dentro de la muestra, los resultados respaldaron algunas hipótesis iniciales, contradijeron otras y aportaron evidencia para pivotes significativos.
+El relevamiento aportó evidencia exploratoria donde antes existían principalmente supuestos. La muestra describe un predominio del papel, dificultades de una parte de quienes toman notas, disponibilidad de conexión no permanente y preferencia declarada por celular y materias. Esas observaciones permiten orientar el prototipo, no certificar resultados de uso.
 
-Las conclusiones principales fueron:
+| Evidencia | Decisión informada | Lo que la encuesta no demuestra |
+|---|---|---|
+| P6 y selección de offline en P8 | Prioridad de operaciones locales y su comprobación | Disponibilidad real de todos los flujos del software sin red |
+| Preferencia móvil en P9 | Diseño mobile-first, registrado en DP-003 | Preferencia por PWA o APK, aceptación de descarga directa o elección de SQLite |
+| Carpetas por materia en P11 | Organización por materias, desarrollada en DP-002 y DP-004 | Validación de nombres, límite de dos niveles o recorridos de navegación |
+| Pérdida declarada en P5b y protección de escritura en P8 | Conservación del trabajo; revisión posterior de RF-005 como borrador persistente | Preferencia por crear o actualizar notas definitivas sin confirmación |
 
-1. Una parte relevante de la muestra declara dificultades al tomar y organizar notas.
-2. El interés declarado es alto en la muestra: la propuesta fue considerada útil o muy útil por el 80.8%.
-3. El celular es el dispositivo preferido en la muestra para una futura app de notas.
-4. La disponibilidad de red no permanente y la selección de P8 respaldan priorizar offline-first.
-5. La organización por materia es el modelo preferido por la mayoría de la muestra.
-6. El cuaderno físico es el hábito principal declarado; la encuesta no identificó un competidor único ni midió el uso secundario de otras aplicaciones.
+La combinación de necesidades y restricciones técnicas dio lugar a decisiones de arquitectura registradas en ADR-005 y ADR-006, no a una elección tecnológica realizada por las personas encuestadas. La preferencia por uso en celular y PC permanece como señal de interés, no como entrega multiplataforma terminada.
 
-El impacto en el producto se materializó en cuatro decisiones centrales:
+Los principales límites son la selección por conveniencia y autoselección, cobertura incompleta y proporcionalidad no comprobada, formulación conjunta de P7, máximo no asegurado en P8 y clasificación léxica de una pregunta abierta opcional. La exportación tampoco acredita por sí sola unicidad de participantes. Conocer esos límites evita atribuir al tamaño de muestra una precisión o un control que el procedimiento no documenta.
 
-| Evidencia | Decisión tomada |
-|---|---|
-| 72.5% usaría la app desde el celular | Diseño mobile-first; el empaquetado Android se decidió después mediante análisis técnico. |
-| 81.7% responde "A veces", "Raramente" o "Nunca" sobre acceso estable | Prioridad al funcionamiento offline. |
-| 74.2% prioriza offline | Persistencia local robusta y sin dependencia de red. |
-| 69.2% prefiere carpetas por materia | Pivote desde etiquetas hacia materias y secciones. |
-
-En consecuencia, el relevamiento determina necesidades y prioridades de uso, pero no demuestra preferencia por un formato de distribución ni por una tecnología de persistencia. Esas decisiones corresponden a la evaluación arquitectónica documentada en [ADR-005](../adr/ADR-005-pivote-app-nativa.md) y [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md).
-
-De esta manera, el relevamiento no quedó como un anexo aislado, sino que funcionó como insumo metodológico para las decisiones de arquitectura, producto, UX y alcance. La trazabilidad entre datos y decisiones queda registrada en los documentos de producto, ADRs, requisitos y capítulos técnicos del presente informe.
+La encuesta evaluó una propuesta inicial, no una sesión de uso de la RC1. No midió tiempos de primera nota, latencia, fluidez, comprensión de la instalación ni adopción sostenida. El capítulo 4 desarrolla las elecciones de diseño; los capítulos 5 y 6 distinguen su implementación y la evidencia de verificación. Esta separación mantiene una historia trazable desde las necesidades declaradas hasta el producto, sin convertir intención en resultado.
