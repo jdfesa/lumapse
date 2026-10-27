@@ -10,7 +10,7 @@ El informe es un documento vivo y queda sujeto a actualizaciones mientras el pro
 python3 scripts/assemble-report.py
 ```
 
-Por regla general, no se edita manualmente el informe completo. Se regenera solo en puntos de control explícitos o al cierre, cuando las secciones ya estén revisadas y consistentes.
+Por regla general, no se edita manualmente el informe completo. El próximo ensamblado queda pendiente hasta completar la revisión y aprobación de todos los capítulos y las referencias.
 
 La fecha de ensamblado se calcula en cada ejecución. El estado, alcance funcional y fecha de corte documental se leen de `report-metadata.json`; nunca se recuperan desde una salida generada anterior.
 
@@ -18,26 +18,14 @@ La fecha de ensamblado se calcula en cada ejecución. El estado, alcance funcion
 
 - Editar siempre el capítulo correspondiente, no el informe completo.
 - Mantener numeración, títulos y enlaces internos coherentes entre capítulos.
-- Redactar con tono académico y evidencia verificable.
-- Usar normas APA como criterio de rigor: citas autor-fecha en el texto y referencias completas al consolidar la bibliografía final.
-- No duplicar contenido entre capítulos; si una idea aparece en más de una sección, una debe resumir y la otra desarrollar.
 - Antes de ensamblar, ejecutar los chequeos documentales (`npm run check:docs` y `npm run check:traceability`).
 - Si aparece contenido útil solo en `INFORME-FINAL-COMPLETO.md`, primero moverlo al capítulo fuente correspondiente y recién después regenerar.
 
-### Revisión acordada para el tribunal
+### Seguimiento por capítulos
 
-Desde el 2026-10-26, el informe se revisa **capítulo por capítulo, con un capítulo
-por rama**, con un estándar de fundamentación comparable al de una tesina de fin
-de carrera. La redacción debe explicar qué se hizo, por qué, con qué metodología,
-qué evidencia lo respalda y qué límites conserva. Debe poder comprenderse en la
-versión impresa sin depender de abrir enlaces para seguir el argumento.
-
-El [plan operativo y la secuencia de revisión](../../TODO.md#revisión-del-informe-capítulo-por-capítulo)
-se mantienen en `TODO.md`. Una sola rama permanece activa hasta la revisión del
-autor, integración y limpieza; no se adelanta otro capítulo dentro de esa rama.
-Los ajustes mínimos de seguimiento editorial acompañan a la unidad. El ensamblado,
-los metadatos globales y la maquetación final se reservan para después de completar
-y revisar los capítulos, sin presentar una revisión parcial como informe terminado.
+El [estado de cada unidad](../../TODO.md#revisión-del-informe-capítulo-por-capítulo)
+se registra en `TODO.md`. El ensamblado final y la actualización de los metadatos
+globales siguen pendientes; una revisión parcial no equivale al informe terminado.
 
 ## Estado actual
 
@@ -45,13 +33,14 @@ El Hito 05 quedó cerrado con la primera beta `v0.4.8`. El Hito 06 publicó la s
 beta `v0.5.0` y la **RC1 `v0.6.0/600`**, aceptada con validación parcial. El
 [desarrollo y las nuevas comprobaciones de app están congelados](../../BACKLOG.md#congelación-académica--2026-10-22)
 hasta después de la presentación. El manual 0.6.0 ya está incorporado y publicado,
-con revisión final pendiente. El acuerdo del 2026-10-26 inicia la revisión del
-informe por el capítulo 1, sin dar por cerrados el manual ni la defensa.
+con revisión final pendiente. La revisión del informe avanza por unidades,
+sin dar por cerrados el manual ni la defensa.
 
-**Revisión parcial en curso:** el capítulo 1 se adapta al corte RC1 `v0.6.0`,
-con revisión del autor pendiente. Los archivos `02-*.md` a `08-*.md` todavía
-conservan el checkpoint anterior y se revisarán en ramas separadas. No se consideran
-actualizados por haber revisado la introducción.
+**Revisión parcial:** el capítulo 1 está adaptado al corte RC1 `v0.6.0`, aprobado
+e integrado en [PR #46](https://github.com/jdfesa/lumapse/pull/46). La rama
+`docs/final-report-chapter-02` está preparada para el capítulo 2, cuya revisión
+permanece pendiente. Los archivos `02-*.md` a `08-*.md` todavía conservan el
+checkpoint anterior; no se consideran actualizados por haber revisado la introducción.
 
 **Frontera del checkpoint generado:** `report-metadata.json` y
 `INFORME-FINAL-COMPLETO.md` conservan el corte `v0.5.0` del 2026-09-05, incluido el
@@ -59,7 +48,7 @@ gate histórico de 67 archivos/1065 tests. No describen toda la evolución hasta
 RC1 ni reflejan aún la revisión parcial de las fuentes. Sus métricas no corresponden
 al `main` actual ni se atribuyen al APK `0.6.0`.
 
-`INFORME-FINAL-COMPLETO.md` se regeneró como checkpoint después de reconciliar los capítulos con `v0.5.0`. Los capítulos siguen siendo la fuente de verdad y el artefacto deberá ensamblarse otra vez si se incorpora nueva evidencia antes del cierre académico.
+`INFORME-FINAL-COMPLETO.md` se regeneró como checkpoint después de reconciliar los capítulos con `v0.5.0`. Los capítulos siguen siendo la fuente de verdad; el próximo ensamblado permanece pendiente hasta completar la revisión y aprobación de todas las unidades.
 
 El tablero único vigente es [`TODO.md`](../../TODO.md). El nombre anterior `TODO`
 se conserva en menciones históricas del checkpoint; no representa otro tablero ni
@@ -123,14 +112,6 @@ La generación final podrá automatizarse mediante un script específico cuando 
 
 ### Consideraciones para la conversión a LaTeX
 
-La conversión a LaTeX debe tratarse como una fase de presentación final, no como una reescritura del contenido. El objetivo es producir un PDF académico prolijo, manteniendo Markdown como fuente de verdad y evitando divergencias entre versiones.
-
-- Usar preferentemente `xelatex` o `lualatex` para manejar correctamente acentos, comillas, símbolos y posibles caracteres especiales presentes en nombres, tablas o evidencia.
-- Exportar previamente los diagramas Mermaid a formato apto para LaTeX (`.pdf`, `.svg` o `.png`) y referenciarlos como figuras con numeración, caption y mención en el texto.
-- Mantener los diagramas de base de datos con su flujo propio: DOT/Graphviz para el conceptual Chen y DBML/dbdiagram.io para el modelo lógico relacional, exportando imágenes finales antes de componer el PDF.
-- Revisar manualmente tablas largas de requisitos, historias de usuario, métricas y validación, porque una tabla legible en Markdown puede desbordar márgenes en LaTeX.
-- Convertir enlaces internos tipo Markdown en referencias académicas cuando corresponda: "ver Figura X", "ver Tabla Y" o "ver Sección Z".
-- Definir un criterio único para bloques de código y comandos (`verbatim`, `listings` o equivalente), evitando estilos mezclados dentro del informe.
-- Consolidar bibliografía y citas bajo un criterio APA consistente; si se automatiza, evaluar BibTeX/BibLaTeX en la etapa final.
-- Revisar captions, numeración de figuras/tablas, portada, índice, anexos y saltos de página como parte de la corrección editorial final.
-- No incorporar LaTeX al flujo diario ni al quality gate del proyecto hasta que el contenido esté congelado; si se automatiza, hacerlo con un script separado y documentado.
+La selección del motor, el tratamiento de figuras y tablas, y la comprobación
+visual de la salida quedan pendientes para esa etapa. No se ha generado ni
+verificado un PDF final.

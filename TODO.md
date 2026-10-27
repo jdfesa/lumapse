@@ -16,32 +16,8 @@
 
 ## Prioridad inmediata — plan aceptado
 
-**Informe final — plan acordado el 2026-10-26:** las próximas sesiones se dedican
-a completar el informe **capítulo por capítulo, con un capítulo por rama**. El
-informe se destina a la impresión y evaluación por el tribunal, con un estándar
-de redacción y fundamentación comparable al de una **tesina de fin de carrera**:
-explicar
-qué se hizo, por qué, con qué metodología y evidencia, y con qué límites. No basta
-con resumir funcionalidades ni enumerar tecnologías; cada afirmación debe poder
-contrastarse con las fuentes vigentes del repositorio.
-
-Mantener una sola rama activa, incluida su revisión. Cada capítulo se contrasta,
-redacta y verifica por separado; requiere revisión del autor, integración y
-limpieza de su rama antes de iniciar la siguiente. Los ajustes de seguimiento
-editorial necesarios acompañan al capítulo, pero no habilitan la revisión de
-otros capítulos en la misma rama. Conservar Markdown como fuente; no editar ni
-regenerar `INFORME-FINAL-COMPLETO.md`, ni actualizar los metadatos globales como si
-todo el informe estuviera revisado. El ensamblado y la maquetación para impresión
-se acuerdan después de completar y revisar el contenido.
-
-**Unidad activa:** capítulo 1, Introducción y Planteo del Problema, en
-`docs/final-report-chapter-01`. Alcance: contexto, problema, objetivos,
-justificación y alcance real de la RC1, con evidencia y limitaciones explícitas.
-Validación: contraste editorial con las fuentes, comprobación de cifras y
-denominadores utilizados, `npm run check:docs`, `npm run check:traceability` y
-revisión suplementaria de enlaces de este tablero. No incluye otros capítulos,
-nuevas pruebas de app ni PDF final. La [secuencia de revisión](#revisión-del-informe-capítulo-por-capítulo)
-registra los pendientes; redactar y verificar no equivale a aceptación del autor.
+**Informe final:** seguimiento del tratamiento final en la
+[lista por capítulo](#revisión-del-informe-capítulo-por-capítulo).
 
 **Revisión documental previa — completada:** README principal, estructura y
 guías vigentes reconciliados con la RC1 y el manual publicado en
@@ -236,9 +212,8 @@ de controles como condición de publicación. No abrir otra ronda técnica.
 
 ### Después del APK aceptado con límites — cierre académico y defensa
 
-El orden previo contemplaba revisión final del manual, informe y defensa. El
-acuerdo del 2026-10-26 fija como unidad actual el capítulo 1 y establece la
-[revisión del informe por capítulos](#revisión-del-informe-capítulo-por-capítulo).
+El avance del informe se registra en la
+[lista por capítulo](#revisión-del-informe-capítulo-por-capítulo).
 La revisión final del manual conserva su pendiente. Sólo documentación, utilizando
 el corte publicado y la evidencia existente; no se reabre desarrollo ni se generan
 pruebas para completar métricas pendientes.
@@ -261,25 +236,16 @@ en la matriz, manual, informe y defensa, sin inventar resultados ni reabrir prue
 
 ### Revisión del informe capítulo por capítulo
 
-El acuerdo del 2026-10-26 fija el orden siguiente. **Cada unidad requiere su propia
-rama**; una casilla sólo se cierra después de la revisión del autor y la integración
-del cambio. El archivo 08 corresponde a las referencias y se trata también como
-una unidad separada. Los pendientes previos del manual y la matriz RNF conservan
-su estado: iniciar el informe no los da por terminados.
-
-- [ ] **[Capítulo 1 — Introducción y Planteo del Problema](docs/informe-final/01-introduccion.md):** unidad activa; versión revisada contra las fuentes y cifras contrastadas con el CSV. Controles documentales aprobados; pendientes la revisión del autor y la integración.
-- [ ] **[Capítulo 2 — Marco Metodológico y Modelo de Negocio](docs/informe-final/02-marco-metodologico.md):** prácticas realmente aplicadas, justificación, trazabilidad y límites de las métricas de gestión.
-- [ ] **[Capítulo 3 — Relevamiento y Análisis de Datos](docs/informe-final/03-relevamiento-datos.md):** instrumento, población/muestra, procesamiento, resultados con sus bases de cálculo, sesgos e impacto en decisiones.
-- [ ] **[Capítulo 4 — Arquitectura y Diseño](docs/informe-final/04-arquitectura-diseno.md):** decisiones, alternativas, modelos y correspondencia con la implementación.
-- [ ] **[Capítulo 5 — Desarrollo e Implementación](docs/informe-final/05-desarrollo-implementacion.md):** evolución, soluciones implementadas y justificación técnica verificable.
-- [ ] **[Capítulo 6 — Pruebas y Validación](docs/informe-final/06-pruebas-validacion.md):** métodos, artefactos, resultados, matriz RNF y limitaciones, sin transferir pruebas entre versiones.
-- [ ] **[Capítulo 7 — Conclusiones](docs/informe-final/07-conclusiones.md):** balance respecto de los objetivos, aportes, limitaciones y trabajo futuro sustentados en los capítulos anteriores.
-- [ ] **[Referencias — archivo 08](docs/informe-final/08-referencias.md):** correspondencia entre citas y fuentes, metadatos comprobados y criterio APA consistente; no inventar datos de cátedra ausentes.
-
-Después de esas unidades: acordar la revisión transversal, actualizar los
-metadatos globales y ensamblar mediante el script existente. Sólo con el contenido
-consolidado se aborda la maquetación PDF y su revisión visual para impresión:
-portada, índice, numeración, citas, figuras, tablas, márgenes y saltos de página.
+- [x] **[Capítulo 1 — Introducción y Planteo del Problema](docs/informe-final/01-introduccion.md):** aprobado e integrado en [PR #46](https://github.com/jdfesa/lumapse/pull/46); rama eliminada.
+- [ ] **[Capítulo 2 — Marco Metodológico y Modelo de Negocio](docs/informe-final/02-marco-metodologico.md):** rama `docs/final-report-chapter-02` preparada; revisión pendiente.
+- [ ] **[Capítulo 3 — Relevamiento y Análisis de Datos](docs/informe-final/03-relevamiento-datos.md):** pendiente.
+- [ ] **[Capítulo 4 — Arquitectura y Diseño](docs/informe-final/04-arquitectura-diseno.md):** pendiente.
+- [ ] **[Capítulo 5 — Desarrollo e Implementación](docs/informe-final/05-desarrollo-implementacion.md):** pendiente.
+- [ ] **[Capítulo 6 — Pruebas y Validación](docs/informe-final/06-pruebas-validacion.md):** pendiente.
+- [ ] **[Capítulo 7 — Conclusiones](docs/informe-final/07-conclusiones.md):** pendiente.
+- [ ] **[Referencias — archivo 08](docs/informe-final/08-referencias.md):** pendiente.
+- [ ] **Revisión transversal, metadatos y ensamblado final:** pendientes hasta completar la revisión e integración de todos los capítulos y las referencias.
+- [ ] **Maquetación LaTeX/PDF y revisión de presentación:** pendientes del contenido consolidado.
 
 ## Criterios de salida de Hito 06
 
