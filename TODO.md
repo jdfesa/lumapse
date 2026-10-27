@@ -222,7 +222,7 @@ pruebas para completar métricas pendientes.
 - [ ] Emitir la matriz RNF final con requisito, método, comando, dispositivo, fecha, artefacto, resultado, evidencia y limitaciones aceptadas; mantener CRUD/FPS pendientes y diferidos según el backlog.
 - [ ] Incorporar el corte y la evidencia final en los capítulos fuente del informe; revisar coherencia, referencias y diagramas antes de congelar y ensamblar.
 - [ ] Contrastar los metadatos bibliográficos de Gómez (2014) y Parada (2026) contra los originales de cátedra y cerrar la sección de referencias.
-- [ ] **Cronología del relevamiento:** correspondencia horaria entre bitácora y CSV pendiente de aclaración; no se afirma una duración exacta.
+- [x] **Cronología del relevamiento:** aproximadamente dos días naturales, en horario de Argentina; cierre al alcanzar 121 respuestas, sin afirmar horas exactas de apertura o cierre.
 - [ ] Revisar PDF, tablas y legibilidad de figuras; dejar informe y manual preparados para la entrega.
 - [ ] Alinear GitHub Projects con la Definition of Workflow: WIP global 2, bloqueos y fechas reales `startedAt`/`finishedAt`, sin reconstruir tiempos inexistentes.
 - [ ] Registrar el factor de ajuste solo si hay datos fiables, o declarar la limitación de medición; redactar recomendaciones para futuras cohortes sin inventar métricas.

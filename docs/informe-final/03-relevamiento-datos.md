@@ -30,7 +30,7 @@ $$
 
 En la fórmula, N es la población de referencia; Z, el valor normal asociado al nivel nominal de confianza; p, la proporción supuesta, y e, el error tolerado en ese escenario. Con N = 1.239, Z = 1,96, p = 0,5 —máxima variabilidad— y e = 0,10, el objetivo nominal redondeado hacia arriba es 90. Para 120 respuestas, el cálculo hipotético arroja aproximadamente 8,5 % al nivel nominal de 95 %. Esos valores suponen selección aleatoria simple: describen el escenario de planificación, no un margen efectivo de este estudio. Superar la meta no corrige el sesgo de selección ni convierte la muestra por conveniencia en probabilística.
 
-La bitácora documenta cierre anticipado al superar el mínimo. Utilizo el intervalo de fechas comprobable, 11–13 de mayo; la correspondencia horaria entre esa bitácora y las marcas del CSV permanece pendiente de reconciliación. No atribuyo al archivo una duración exacta ni una tasa horaria de respuesta.
+La recolección se desarrolló entre el 11 y el 13 de mayo de 2026, durante aproximadamente dos días naturales y en horario de Argentina. Al alcanzar 121 respuestas, decidí cerrar la encuesta, ya que se había superado la meta operativa de 90.
 
 ### 3.1.2. Instrumento y ramificaciones
 
@@ -51,7 +51,7 @@ P7 preguntó por una propuesta conjunta: «una app web gratuita, sin cuenta, par
 
 Conservé el CSV original y contrasté las frecuencias con las reglas del análisis documentado en Python. El proceso normaliza finales de línea, identifica las columnas y aplica la exclusión poblacional. Además, reclasifica un registro de doble turno a Tarde y una respuesta de doble carrera a Lengua y Literatura. Son convenciones del tratamiento, no asignaciones aleatorias ni cambios en la composición de la matrícula.
 
-Las marcas temporales se interpretan en orden mes/día/año. El archivo no explicita por sí solo la zona horaria necesaria para reconciliarlas con la bitácora. Los conteos de este capítulo dependen del criterio poblacional y de las respuestas, no de seleccionar registros mediante una ventana horaria supuesta.
+Las marcas temporales del CSV se interpretan en orden mes/día/año. La primera y la última respuesta no identifican por sí solas los momentos exactos de apertura y cierre del formulario.
 
 Para separar respuestas múltiples, el análisis distingue comas fuera de paréntesis. Esa regla preserva opciones como «formato (títulos, listas, tablas, fórmulas)», pero una coma dentro de texto libre puede generar fragmentos adicionales. Por ello diferencio respuestas, opciones predefinidas y fragmentos del procesamiento; no los considero unidades intercambiables.
 
@@ -218,6 +218,6 @@ El relevamiento aportó evidencia exploratoria donde antes existían principalme
 
 La combinación de necesidades y restricciones técnicas dio lugar a decisiones de arquitectura registradas en ADR-005 y ADR-006, no a una elección tecnológica realizada por las personas encuestadas. La preferencia por uso en celular y PC permanece como señal de interés, no como entrega multiplataforma terminada.
 
-Los principales límites son la selección por conveniencia y autoselección, cobertura incompleta y proporcionalidad no comprobada, duración horaria sin reconciliar, formulación conjunta de P7, máximo no asegurado en P8 y clasificación léxica de una pregunta abierta opcional. La exportación tampoco acredita por sí sola unicidad de participantes. Conocer esos límites evita atribuir al tamaño de muestra una precisión o un control que el procedimiento no documenta.
+Los principales límites son la selección por conveniencia y autoselección, cobertura incompleta y proporcionalidad no comprobada, formulación conjunta de P7, máximo no asegurado en P8 y clasificación léxica de una pregunta abierta opcional. La exportación tampoco acredita por sí sola unicidad de participantes. Conocer esos límites evita atribuir al tamaño de muestra una precisión o un control que el procedimiento no documenta.
 
 La encuesta evaluó una propuesta inicial, no una sesión de uso de la RC1. No midió tiempos de primera nota, latencia, fluidez, comprensión de la instalación ni adopción sostenida. El capítulo 4 desarrolla las elecciones de diseño; los capítulos 5 y 6 distinguen su implementación y la evidencia de verificación. Esta separación mantiene una historia trazable desde las necesidades declaradas hasta el producto, sin convertir intención en resultado.
