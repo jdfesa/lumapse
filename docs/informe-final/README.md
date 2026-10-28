@@ -43,8 +43,8 @@ también está revisado, aprobado e integrado en
 [PR #49](https://github.com/jdfesa/lumapse/pull/49). El capítulo 4 está aprobado e
 integrado en [PR #50](https://github.com/jdfesa/lumapse/pull/50), con su rama
 eliminada. El [capítulo 5](./05-desarrollo-implementacion.md) está revisado contra
-la fuente RC1 en [PR #51](https://github.com/jdfesa/lumapse/pull/51) y pendiente
-de lectura y aprobación. Los archivos `06-*.md` a
+la fuente RC1 y aprobado; sus cambios se recogen en
+[PR #51](https://github.com/jdfesa/lumapse/pull/51). Los archivos `06-*.md` a
 `08-*.md` todavía conservan el checkpoint anterior; no se consideran actualizados
 por la revisión de las otras unidades. La correspondencia bibliográfica se
 completará en la unidad de referencias, incluida la cita de la GPLv3 en 5.7.
