@@ -1,212 +1,272 @@
 # Capítulo 4: Arquitectura y Diseño
 
-## 4.1. Decisiones Arquitectónicas Iniciales (ADRs)
+Las necesidades expuestas en el capítulo 3 establecen prioridades de producto, pero no determinan una tecnología por sí solas. En este capítulo explico cómo las traduje en decisiones de plataforma, organización del software, interacción y persistencia, considerando la reutilización del trabajo previo y el alcance académico.
 
-Las decisiones arquitectónicas significativas de Lumapse se documentan mediante Architecture Decision Records (ADRs). Este formato permite registrar el contexto, las alternativas evaluadas, la decisión tomada y sus consecuencias. En un proyecto académico, los ADRs cumplen además una función de defensa: muestran que la arquitectura no surge de preferencias arbitrarias, sino de restricciones, evidencia y análisis.
+La descripción corresponde al diseño presente en la fuente de **Lumapse 0.6.0/600 — Release Candidate 1**, identificada en la sección 1.4.4. Distingo ese diseño de sus antecedentes y de su validación: comprobar una estructura en el código no demuestra que todos los recorridos del APK hayan sido probados. La implementación se desarrolla en el capítulo 5 y la evidencia, con sus artefactos y límites, en el capítulo 6.
 
-Los ADRs vigentes cubren:
+## 4.1. Decisiones arquitectónicas y evolución del diseño
 
-| ADR | Tema | Estado |
+Registré las decisiones significativas mediante *Architecture Decision Records* (ADR), documentos que conservan contexto, alternativas, elección y consecuencias. Su valor es permitir reconstruir razones y costos, no certificar por sí solos que una solución sea correcta. Algunos formalizan retrospectivamente un diseño ya consolidado; no presupongo que la fecha de cada registro demuestre una decisión anterior a su implementación.
+
+| Registros | Decisión y relación con el diseño |
+|---|---|
+| ADR-001 y ADR-004 | Base web sin framework de interfaz, Vite y separación de responsabilidades en el repositorio |
+| ADR-002 | IndexedDB en la propuesta PWA original; decisión reemplazada por ADR-005 y ADR-006 |
+| ADR-003 | Gestión adaptada del flujo de trabajo, desarrollada en el capítulo 2 |
+| ADR-005 y ADR-006 | Canal Android híbrido, SQLite nativo y entorno SQLite web auxiliar |
+| ADR-007 y ADR-008 | Componentes por funcionalidad y monolito modular cliente con capas pragmáticas |
+| ADR-009 | Propiedad transaccional explícita y recuperación del arranque |
+| ADR-010 | Entorno canónico y una misma definición del control automatizado local y remoto |
+| ADR-011 | Separación entre escritura confirmada y refresco secundario de la interfaz |
+| ADR-012 | Borrador SQLite y consumo atómico al guardar la nota |
+| ADR-013 | Despliegue de desarrollo sin desinstalación implícita; pertenece a las herramientas, no a una nueva capa del producto |
+
+El cambio principal fue pasar de una PWA con IndexedDB a una aplicación Android con interfaz web y SQLite. Comparé mantener el canal de navegador, reutilizar la interfaz mediante Capacitor y afrontar una reescritura con otra tecnología móvil. Adopté la segunda alternativa porque conservaba la base existente, permitía acceder a capacidades del dispositivo y situaba la base de datos del producto fuera del almacenamiento administrado por el navegador.
+
+Capacitor proporciona un contenedor y una API de plugins para integrar código web con capacidades nativas (Ionic, s. f.). En Lumapse, la interfaz se ejecuta en una WebView: no se convirtió en una interfaz escrita completamente con componentes nativos de Android. El costo del pivote fue incorporar herramientas y pruebas específicas de Android y dejar de comprometer una entrega utilizable desde cualquier navegador.
+
+La encuesta respaldó priorizar celular y uso sin conexión; no comparó PWA con APK ni IndexedDB con SQLite. Tampoco demostró que descargar e instalar un APK fuera intuitivo. La elección concreta provino del análisis técnico de ADR-005 y ADR-006. A su vez, SQLite no elimina riesgos como desinstalación, pérdida del dispositivo o eliminación definitiva: la portabilidad mediante respaldo sigue siendo necesaria.
+
+## 4.2. Stack tecnológico y compromisos
+
+Seleccioné tecnologías que permitieran sostener una aplicación local con responsabilidades visibles. La ausencia de un framework de interfaz reduce esa dependencia de ejecución, pero traslada al código propio el manejo de componentes, eventos y suscripciones. No presento esa elección como una superioridad de rendimiento demostrada frente a React o Vue.
+
+| Área | Tecnología | Función y compromiso |
 |---|---|---|
-| [ADR-001](../adr/ADR-001-stack-tecnologico.md) | Elección del stack tecnológico: Vanilla JS + Vite. | Aceptado |
-| [ADR-002](../adr/ADR-002-persistencia-indexeddb.md) | Persistencia inicial con IndexedDB. | Superado por ADR-005 |
-| [ADR-003](../adr/ADR-003-metodologia-kanban.md) | Enfoque incremental y gestión del flujo con Kanban adaptado. | Aceptado, revisado |
-| [ADR-004](../adr/ADR-004-estructura-carpetas.md) | Estructura de carpetas del proyecto. | Aceptado |
-| [ADR-005](../adr/ADR-005-pivote-app-nativa.md) | Pivote de PWA a aplicación Android híbrida con Capacitor. | Aceptado |
-| [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md) | Arquitectura SQLite para web de desarrollo y entorno nativo. | Aceptado |
-| [ADR-007](../adr/ADR-007-organizacion-componentes-por-feature.md) | Organización de componentes UI por feature folders. | Aceptado |
-| [ADR-008](../adr/ADR-008-arquitectura-modular-y-patrones.md) | Arquitectura modular por capas pragmáticas y patrones aplicados. | Aceptado |
+| Desarrollo y construcción | Vite | Sirve recursos durante el desarrollo y construye los archivos web del paquete; no ejecuta un backend del producto |
+| Lenguaje | JavaScript con módulos ES y TypeScript gradual | Conserva módulos existentes e incorpora contratos estáticos donde reducen riesgos; no todo JavaScript queda comprobado por el sistema de tipos |
+| Presentación | DOM y CSS, con componentes propios | Permite controlar interacción y renderizado; exige gestionar explícitamente eventos y ciclo de vida |
+| Plataforma | Capacitor y Android | Empaqueta la interfaz web y conecta plugins; requiere comprobar por separado el comportamiento nativo |
+| Persistencia del producto | SQLite y el plugin comunitario de Capacitor | Mantiene datos relacionales locales y operaciones transaccionales fuera de la presentación |
+| Entorno web auxiliar | `sql.js` y `jeep-sqlite` | Ejecuta SQLite mediante WebAssembly para desarrollo; no reproduce todas las condiciones de Android |
+| Contenido y portabilidad | `marked`, DOMPurify y módulos ZIP propios | Procesan Markdown, sanitizan el HTML renderizado y generan o leen el respaldo ZIP; la escritura usa entradas sin compresión y la importación conserva límites propios |
+| Verificación | Vitest, runner de pruebas de Node, scripts y GitHub Actions | Comprueban unidades y reglas automatizables; no sustituyen una prueba del plugin o del APK |
 
-La evolución más importante fue el pivote desde una PWA con IndexedDB hacia una app Android empaquetada con Capacitor y persistencia SQLite. Este cambio no elimina el valor de las decisiones iniciales: las conserva como antecedentes y muestra cómo el proyecto respondió a evidencia empírica nueva.
+La adopción de TypeScript no fue una reescritura de la aplicación. La concentré en contratos de dominio, reglas y servicios con estructuras de datos relevantes, manteniendo módulos JavaScript existentes. Los tipos expresan entradas y resultados, pero no validan por sí solos un archivo importado ni los datos recibidos en ejecución. Por eso la importación conserva comprobaciones de formato, tamaño y relaciones antes de escribir.
 
-## 4.2. Stack Tecnológico
+Android define el canal presentado. El entorno web se conserva como apoyo para iterar y comprobar lógica compartida, no como PWA soportada ni como evidencia de una entrega para escritorio o iOS. Node y npm pertenecen al entorno de herramientas, no son servidores requeridos para usar la aplicación instalada.
 
-El stack se eligió buscando equilibrio entre simplicidad, rendimiento, defendibilidad académica y capacidad de evolucionar hacia un entorno móvil nativo.
+## 4.3. Modelo de dominio
 
-| Capa | Tecnología | Justificación |
+Organicé el núcleo académico alrededor de tres entidades persistentes. Separé esas entidades del estado temporal de navegación y de los contratos técnicos de borrador y respaldo.
+
+| Entidad | Responsabilidad | Relación principal |
 |---|---|---|
-| Build | Vite 6 | Servidor de desarrollo rápido, build optimizado y configuración mínima. |
-| Lenguaje | JavaScript ES2022+ y TypeScript gradual | Mantiene módulos nativos y permite tipar primero contratos y lógica pura sin reescribir la UI en bloque. |
-| UI | Componentes propios con DOM + CSS nativo | Máximo control sobre rendimiento y estructura. |
-| Persistencia | SQLite mediante `@capacitor-community/sqlite` | Persistencia local robusta en Android. |
-| Simulación web | `sql.js` + `jeep-sqlite` | Mantiene el flujo de desarrollo web sin cambiar la capa de servicios. |
-| Markdown | `marked` + `DOMPurify` | Renderizado Markdown con sanitización contra XSS. |
-| Empaquetado | Capacitor + Android | Reutiliza la web app y genera una experiencia instalable como APK. |
-| Testing | Vitest + smoke tests básicos de Gradle/JUnit | Pruebas unitarias de lógica JavaScript/TypeScript y verificación mínima del paquete nativo. |
-| Calidad | GitHub Actions + scripts locales | Automatización de lint, tests, build, trazabilidad y auditorías. |
+| Nota (`Note`) | Conserva título, contenido Markdown, marcas de fijado y archivo, estado académico y fechas de creación/modificación | Puede no tener materia o pertenecer a una materia o sección |
+| Materia/Sección (`Subject`) | Organiza las notas con nombre, color y estado | Una materia raíz puede contener secciones; cada sección tiene una materia padre |
+| Fecha académica (`AcademicEvent`) | Representa un parcial, final, trabajo práctico o exposición en una fecha local | Puede vincularse a una materia o sección, sin que esa asociación sea obligatoria |
 
-La decisión de no usar un framework frontend como React o Vue fue deliberada. Para el alcance del proyecto, Vanilla JS reduce dependencias de runtime, permite un bundle liviano y deja visible la arquitectura del código ante la evaluación académica.
+Materia y Sección son roles de una misma entidad, no dos tablas independientes. Un `Subject` sin padre representa una materia; uno con padre representa una sección. Según DP-004, la jerarquía admite dos niveles de organización: una sección no contiene subsecciones. La nota no constituye un tercer nivel de carpetas, sino contenido asociado a cualquiera de los dos niveles.
 
-## 4.3. Modelo de Dominio
+Una nota y una fecha académica tienen, cada una, cero o una referencia a `Subject`; un mismo `Subject` puede agrupar muchas de ambas. En notas, `subjectId = NULL` representa Entrada. Así se evita crear una materia ficticia para las capturas aún no clasificadas. La profundidad y la validación de nombres por nivel se resuelven en el servicio de materias, no por la sola existencia de una clave foránea.
 
-El modelo de dominio actual se centra en cuatro conceptos principales: Nota, Materia/Sección, Evento Académico y Estado de Aplicación. La entidad `Note` representa el contenido escrito por el estudiante; `Subject` modela materias y secciones mediante una auto-referencia; `AcademicEvent` representa fechas discretas vinculadas opcionalmente con una materia; y el estado de aplicación mantiene los datos cargados, la selección actual, los filtros y la vista activa. Además, el subsistema de portabilidad define contratos para el manifiesto, los datos y el plan de importación de un respaldo, mientras que los borradores del editor se conservan de forma local y separada de la nota definitiva.
+El estado de aplicación mantiene en memoria datos cargados, selección, búsqueda, filtros y vista activa. No es una cuarta entidad académica ni la autoridad durable de los datos. El borrador protege una única edición pendiente; los contratos de respaldo describen los datos exportables y su manifiesto. Diferenciarlos evita confundir una selección de interfaz, una nota confirmada y texto todavía pendiente de guardar.
 
-La decisión de modelar materias y secciones con una sola entidad responde a la estructura de información definida en [DP-004](../producto/decisiones-producto.md): una Materia es un `Subject` raíz y una Sección es un `Subject` con `parentSubjectId`. Esta solución evita duplicar tablas y permite expresar la jerarquía con una relación relacional simple.
+## 4.4. Casos de uso y frontera del sistema
 
-El modelo completo se documenta en [modelo-dominio.md](../diagramas/modelo-dominio.md). Desde el punto de vista del informe, su aporte principal es mostrar cómo las decisiones de producto se traducen en entidades persistentes, contratos de dominio, servicios de aplicación y estado de UI.
+El actor principal es el estudiante que administra sus notas en el dispositivo. Consultar Acerca de también sirve a la evaluación académica, pero no crea un rol autenticado ni permisos distintos. La figura 4-1 sintetiza las áreas de interacción; no representa módulos internos ni una conexión con un servidor.
 
-## 4.4. Diagramas de Casos de Uso
+```mermaid
+flowchart LR
+    E((Estudiante))
+    subgraph L["Lumapse · cliente Android"]
+        N["Crear, editar y consultar notas"]
+        O["Organizar, archivar y gestionar papelera"]
+        M["Escribir y visualizar Markdown"]
+        F["Gestionar fechas académicas"]
+        B["Exportar e importar respaldo ZIP"]
+        S["Cambiar tema y consultar Acerca de"]
+    end
+    E --- N
+    E --- O
+    E --- M
+    E --- F
+    E --- B
+    E --- S
+    B -. "selección o salida manual" .-> A["Archivos y compartición de Android"]
+```
 
-Los casos de uso describen el sistema desde la perspectiva del estudiante. El actor principal puede crear, editar, buscar, eliminar, fijar, archivar y previsualizar notas. Además, interactúa con funciones de organización, fechas académicas, tema visual, papelera y portabilidad del espacio de trabajo. El respaldo manual `.zip` y su importación no destructiva ya forman parte de la UI de la beta; compartir una nota individual permanece como trabajo futuro porque debe aportar un flujo nativo distinto de la acción Copiar.
+*Figura 4-1. Síntesis de los casos de uso y la frontera de interacción. Fuente: elaboración propia.*
 
-El diagrama documentado en [casos-de-uso.md](../diagramas/casos-de-uso.md) agrupa las funcionalidades en seis áreas:
+La gestión de notas comprende creación, edición, consulta, búsqueda y eliminación lógica, además de fijado y archivo. La escritura puede ser texto plano o Markdown; los comandos de formato son ayudas opcionales, no una condición para crear una nota. El contenido se renderiza en las tarjetas del listado: la existencia de un componente aislado de previsualización no implica una vista dividida activa en el editor.
 
-- Gestión de notas.
-- Organización.
-- Fechas académicas.
-- Markdown.
-- Datos y portabilidad.
-- Sistema y personalización.
+La protección del borrador forma parte de crear o editar, pero no confirma automáticamente la nota. Organizar después de capturar y restaurar desde Papelera son decisiones posteriores del usuario. Las fechas académicas son recordatorios visuales puntuales: no incorporan horarios, recurrencias o notificaciones.
 
-La relación `include` se usa para expresar que crear o editar una nota incluye siempre la protección del borrador persistente del editor. La relación `extend` se utiliza para acciones opcionales, como gestionar la papelera después de una eliminación. En portabilidad local, el respaldo `.zip` y la importación del formato propio ya están integrados; la exportación de notas individuales y la importación genérica de archivos Markdown quedan como deuda posterior separada.
+En portabilidad, exportar genera un ZIP del formato propio e importar permite revisar una propuesta antes de confirmarla. Seleccionar un destino de compartición no es sincronización automática ni asegura que un proveedor externo haya conservado una copia. Compartir o importar una nota Markdown individual queda fuera del alcance presentado, sin confundirse con el respaldo del conjunto.
 
-## 4.5. Diagramas de Secuencia
+## 4.5. Secuencia de edición, guardado y recuperación
 
-Los diagramas de secuencia permiten representar el flujo temporal entre UI, estado y persistencia. El flujo más importante del producto es crear una nota protegida por borrador persistente mientras el estudiante escribe.
+El flujo de escritura permite explicar una distinción central: **conservar trabajo en curso no equivale a guardar una nota definitiva**. Adopté confirmación explícita con `Guardar` o `Actualizar` y un borrador local independiente, conforme a RF-005. ADR-012 precisa cómo se relacionan ambas persistencias en el corte de presentación.
 
-El diagrama documentado en [secuencia-crear-nota.md](../diagramas/secuencia-crear-nota.md) modela el comportamiento vigente: el usuario abre el editor, la UI conserva el borrador localmente mientras escribe, el store persiste la nota definitiva solo cuando el usuario confirma con `Guardar` o `Actualizar`, y el borrador se limpia después del éxito.
+Antes de montar la interfaz, el arranque prepara SQLite e hidrata el borrador. Sólo si falta su fila se considera migrar el borrador anterior desde `localStorage`; una vez confirmado en SQLite, ese almacenamiento anterior deja de ser una alternativa de lectura. Una fila con JSON `null` significa borrador vacío y se distingue de una fila ausente, para no reimportar texto ya consumido o descartado.
 
-Como criterio de documentación viva, los diagramas deben actualizarse cuando el flujo técnico cambie de manera sustancial. En el estado actual, el diagrama ya refleja la separación entre borrador local y persistencia definitiva en SQLite.
+Mientras se escribe, la interfaz captura instantáneas de título, contenido y organización sin esperar un intervalo de inactividad. El servicio las envía a la cola SQLite. El retorno satisfactorio de la operación acredita su confirmación, no solamente el envío al puente nativo. La figura 4-2 muestra la trayectoria de éxito del guardado desde el editor.
 
-## 4.6. Diseño de Interfaz (UI/UX y Mobile-First)
+```mermaid
+sequenceDiagram
+    actor E as Estudiante
+    participant UI as Editor
+    participant ST as Store
+    participant BO as Servicio de borrador
+    participant DB as SQLite
+    E->>UI: Escribe o cambia la materia
+    UI->>BO: Captura instantánea del borrador
+    BO->>DB: Encola persistencia en metadata
+    DB-->>BO: Confirma la escritura
+    E->>UI: Guardar o Actualizar
+    UI->>UI: Solicita flush y bloquea controles
+    UI->>ST: Crear o actualizar con consumo de borrador
+    ST->>BO: Ejecutar escritura de nota
+    BO->>DB: Transacción: nota y marcador JSON null
+    DB-->>BO: Confirma ambas escrituras
+    BO-->>ST: Devuelve entidad persistida
+    opt Creación de nota
+        ST->>ST: Refresca materias y conteos
+        Note over ST: Si falla la lectura, avisa sin repetir la creación
+    end
+    ST-->>UI: Devuelve entidad confirmada
+    UI->>UI: Limpia campos y habilita controles
+```
 
-La interfaz se diseñó con enfoque mobile-first, prioridad respaldada por el relevamiento: el 72.5% de la muestra usaría la app desde el celular y el 95% incluye celular como dispositivo aceptable. Esto implica priorizar navegación compacta, acciones de bajo número de toques, tipografía legible y componentes que funcionen en pantallas pequeñas.
+*Figura 4-2. Guardado explícito con consumo atómico del borrador. Fuente: elaboración propia a partir de los contratos de ADR-011 y ADR-012.*
 
-La estructura principal se compone de:
+Confirmar la nota y vaciar el borrador en una única transacción evita una ventana en la que una nota ya guardada conserve un borrador que luego reaparezca. Si falla una escritura y se confirma el rollback, ninguna de las dos modificaciones queda aplicada. La interfaz conserva los campos y permite reintentar, sin mostrar éxito. Descartar también espera la confirmación de su limpieza antes de vaciar el editor.
 
-- Un shell de aplicación con drawer lateral.
-- Un feed de notas filtrable por vista, búsqueda y materia.
-- Un editor Markdown con modos de edición y lectura.
-- Acciones contextuales para fijar, archivar, mover, eliminar y restaurar.
-- Papelera con eliminación lógica y restauración.
-- Fechas académicas discretas con calendario y próximos eventos.
-- Respaldo/importación manual y una vista Acerca de.
-- Tema claro/oscuro persistente.
+Una creación ya confirmada no debe comunicarse como fallida porque después no se pudieron actualizar conteos. ADR-011 separa esas fronteras: se conserva la entidad y se ofrece recuperar las lecturas, sin otro `INSERT`. Ese contrato se aplica a los caminos cubiertos por la decisión y sus extensiones registradas; no lo generalizo a todas las mutaciones del sistema.
 
-La UX se apoya en decisiones de producto específicas: Entrada como destino por defecto, Materias como organización principal, Archivo para contenido inactivo y Papelera para evitar pérdidas accidentales. Estas decisiones reducen la carga cognitiva del estudiante y privilegian capturar rápido antes que configurar estructuras complejas.
+La protección tiene límites. Si el proceso termina antes del commit, no se garantiza la última tecla. Si falla la confirmación o persistencia de una operación y su resultado es incierto, el coordinador rechaza y exige recuperar la conexión, sin prometer que nada se escribió ni repetir automáticamente la escritura. El borrador tampoco ofrece recuperación ante desinstalación o pérdida del dispositivo. Estos límites no se sustituyen por una afirmación genérica de «sin pérdida de datos».
 
-## 4.7. Diseño de Base de Datos
+## 4.6. Diseño de interfaz y prioridad móvil
+
+La preferencia móvil del relevamiento fundamentó priorizar pantallas pequeñas, según DP-003. No demuestra por sí misma que la interfaz resultante sea fácil de usar. Diseñé la navegación para que capturar, consultar y organizar fueran acciones distinguibles, con el contenido por delante de la configuración.
+
+La estructura combina un panel lateral de navegación, un listado de tarjetas y un editor de título y cuerpo. Materias y secciones delimitan la organización; Archivo reúne contenido apartado de la consulta habitual; Papelera separa eliminar lógicamente de borrar definitivamente. Calendario y próximas fechas aportan contexto académico sin convertir el producto en una agenda completa.
+
+Entrada permite capturar sin clasificación previa, pero no obliga a que toda nota nueva tenga siempre `subjectId = NULL`: el selector del editor y el contexto de una materia permiten asociarla al guardar. La preferencia por carpetas por materia, analizada en el capítulo 3, respalda esa organización dentro de la muestra; la profundidad máxima de dos niveles es una decisión de diseño, no una cantidad elegida por los encuestados.
+
+Los comandos de formato, el modo de enfoque y los temas claro y oscuro complementan la escritura. Mantener Markdown como contenido permite que las ayudas de edición no se conviertan en un formato propietario obligatorio. Para mostrarlo, separé el procesamiento del texto de la inserción de HTML en la interfaz y apliqué sanitización en el servicio correspondiente.
+
+También distinguí tres estados de feedback: error de persistencia, guardado confirmado con lectura secundaria pendiente y recuperación del arranque. Un error al abrir los datos no debe mostrar silenciosamente una aplicación vacía; un aviso de refresco no debe invitar a guardar otra vez. Estas decisiones vinculan el estado visible con el resultado de las operaciones, sin convertir la intención de diseño en cumplimiento demostrado de tiempos, usabilidad o accesibilidad. Esas comprobaciones pertenecen al capítulo 6.
+
+## 4.7. Diseño de base de datos
 
 ### 4.7.1. Motor de persistencia
 
-Lumapse utiliza **SQLite** como motor de base de datos, accedido a través del plugin `@capacitor-community/sqlite` en el entorno nativo Android y simulado con `sql.js` (WebAssembly) + `jeep-sqlite` durante el desarrollo web local. Las claves foráneas y sus acciones se interpretan de acuerdo con la documentación oficial de SQLite (SQLite Project, s. f.). La decisión del proyecto se documenta en [ADR-005](../adr/ADR-005-pivote-app-nativa.md) y [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md).
+SQLite es la fuente persistente primaria del núcleo académico. En Android se accede mediante el plugin comunitario de Capacitor. En el entorno web auxiliar, `sql.js` y `jeep-sqlite` ejecutan SQLite y requieren persistir los cambios en el almacén web mediante `saveToStore`. Compartir el modelo relacional no vuelve equivalentes ambos entornos ni acredita durabilidad nativa mediante una prueba de navegador.
 
-### 4.7.2. Metodología de diseño
+La capa de acceso concentra conexión, sentencias SQL, traducción de filas y migraciones. Los componentes no ejecutan SQL. La migración histórica de notas IndexedDB se mantiene como compatibilidad de instalaciones de desarrollo anteriores al pivote; no constituye otro motor vigente del producto.
 
-El diseño de la base de datos sigue una metodología académica de tres niveles de abstracción, complementada por una verificación de normalización:
+Las migraciones comprueban las columnas existentes antes de agregar una nueva. Un error inesperado detiene la preparación en lugar de tratarse como una columna duplicada o permitir un arranque con estructura incompleta. Esta política permite reintentar la inicialización sin recrear la base para resolver el fallo.
 
-1. **Modelo Conceptual** — Diagrama Entidad-Relación con notación Chen (Graphviz DOT, renderizado en [edotor.net](https://edotor.net)).
-2. **Normalización** — Verificación de Primera, Segunda y Tercera Forma Normal sobre cada entidad.
-3. **Modelo Lógico** — Esquema de tablas relacionales con PKs, FKs, tipos y restricciones (dbdiagram.io, sintaxis DBML).
-4. **Modelo Físico** — Sentencias DDL SQL implementadas en `src/services/sqlite/connection.js`.
+### 4.7.2. Niveles de diseño y representaciones
 
-Los diagramas y la documentación de cada nivel se encuentran en [`docs/diagramas/database/`](../diagramas/database/).
+Desarrollé el diseño en tres niveles: conceptual, para entidades y relaciones; lógico, para tablas y claves; y físico, para el esquema SQLite y sus migraciones. La revisión de normalización complementa esos niveles. Conservé fuentes editables en DOT para el conceptual y DBML para el lógico, mientras el DDL ejecutable determina la estructura efectiva.
 
-Los archivos fuente del modelo conceptual (`.dot`), lógico (`.dbml`) y físico (DDL) permanecen versionados en el repositorio. Las imágenes conceptual y lógica fueron regeneradas externamente, reemplazadas y revisadas el 2026-07-15 contra esas fuentes y el esquema ejecutable. El control pendiente se limita a su legibilidad dentro de la maquetación definitiva del informe y la presentación.
+Las figuras 4-3 y 4-4 proceden de las exportaciones del 15 de julio de 2026. La estructura efectiva del corte RC1 mantiene las cuatro tablas, 26 columnas y tres claves foráneas representadas; mover el borrador a `metadata` cambió el uso de esa tabla, no agregó una entidad o columna. Conservar las figuras no implica que hayan sido reexportadas para la RC1. Su legibilidad al tamaño definitivo sigue correspondiendo a la maquetación final.
 
 #### 4.7.2.1. Modelo conceptual
 
 ![Modelo conceptual de Lumapse en notación Chen](../diagramas/database/01-modelo-conceptual-der-chen.png)
 
-*Figura 4-1. Modelo conceptual de Lumapse. Fuente: elaboración propia a partir del modelo DOT vigente, exportado con Graphviz/edotor.net el 2026-07-15.*
+*Figura 4-3. Modelo conceptual de Lumapse en notación Chen. Fuente: elaboración propia; exportación desde DOT mediante Graphviz del 15 de julio de 2026.*
 
-El nivel conceptual representa las tres entidades académicas: Materia/Sección, Nota y Evento Académico. `metadata` se excluye deliberadamente porque es una estructura técnica para migraciones y flags internos, no un concepto del dominio estudiantil.
+El modelo conceptual reúne Materia/Sección, Nota y Fecha académica. La autorreferencia permite distinguir materia raíz y sección, y las asociaciones opcionales permiten notas en Entrada y fechas sin materia. La tabla técnica `metadata` se excluye de este nivel porque sus claves no representan entidades académicas.
 
 #### 4.7.2.2. Modelo lógico relacional
 
 ![Modelo lógico relacional de Lumapse](../diagramas/database/03-modelo-logico-relacional.png)
 
-*Figura 4-2. Modelo lógico relacional de Lumapse. Fuente: elaboración propia a partir del DBML vigente, exportado con dbdiagram.io el 2026-07-15.*
+*Figura 4-4. Modelo lógico relacional de Lumapse. Fuente: elaboración propia; exportación desde DBML mediante dbdiagram.io del 15 de julio de 2026.*
 
-El nivel lógico incorpora las cuatro tablas implementadas, sus 26 columnas y las tres claves foráneas: la autorreferencia de `subjects`, la relación opcional de `notes` con `subjects` y la relación opcional de `academic_events` con `subjects`. La correspondencia física se detalla en el DDL documentado y en `src/services/sqlite/connection.js`.
+El modelo lógico incorpora las tres tablas de dominio y `metadata`. Los identificadores de las entidades son UUID almacenados como texto; la clave de `metadata`, en cambio, es el nombre textual de una propiedad. Los indicadores booleanos se representan con enteros y las fechas con texto; la fecha académica usa `YYYY-MM-DD`, diferenciada de las marcas de creación y actualización.
 
-### 4.7.3. Entidades del dominio
+### 4.7.3. Integridad y reglas de negocio
 
-El modelo contempla tres entidades persistentes de dominio y una tabla técnica:
+Las tres relaciones declaradas comparten a `subjects` como tabla referenciada. Sus acciones de eliminación física se interpretan según la semántica de SQLite, con el control de claves foráneas habilitado en la conexión (SQLite Project, s. f.).
 
-- **MATERIA** (`subjects`): Modela tanto las Materias (carpetas raíz) como las Secciones (subcarpetas) mediante auto-referencia. Si `parentSubjectId` es `NULL`, es una Materia; si tiene un valor, es una Sección hija de esa Materia. Profundidad máxima: 2 niveles ([DP-004](../producto/decisiones-producto.md)).
-- **NOTA** (`notes`): Representa el contenido Markdown creado por el estudiante. Una nota puede vivir en la **Entrada** (`subjectId = NULL`), en una **Materia** o en una **Sección**.
-- **EVENTO ACADÉMICO** (`academic_events`): Representa una fecha académica discreta y puede asociarse opcionalmente con una Materia o Sección. Si la organización vinculada deja de existir, el evento puede conservarse sin esa referencia.
-- **METADATA** (`metadata`): Tabla técnica de clave-valor para control de migraciones y flags internos del sistema.
+| Referencia | Acción declarada | Efecto del borrado físico del registro referenciado |
+|---|---|---|
+| `subjects.parentSubjectId` → `subjects.id` | `ON DELETE CASCADE` | Elimina las secciones hijas de la materia |
+| `notes.subjectId` → `subjects.id` | `ON DELETE SET NULL` | Conserva la nota sin esa asociación |
+| `academic_events.subjectId` → `subjects.id` | `ON DELETE SET NULL` | Conserva la fecha académica sin esa asociación |
 
-### 4.7.4. Estructura de información opinionada (DP-004)
+Enviar una materia a Papelera no ejecuta esas acciones de SQL: asigna `deletedAt` a la materia, sus secciones y las notas afectadas mediante la capa de servicio y una transacción. Las notas eliminadas lógicamente se excluyen de las lecturas del listado activo. La purga definitiva sí elimina registros; si una nota ya estaba marcada para purga, no se afirma que sobreviva por la sola existencia de `SET NULL`.
 
-La estructura de navegación de Lumapse es **opinionada**: no le da al usuario un lienzo en blanco como Notion u Obsidian, sino una jerarquía predefinida que refleja el flujo de trabajo natural de un estudiante universitario:
+Las fechas académicas no tienen `deletedAt` ni participan de la papelera: su eliminación es física. El conjunto de tipos admitidos está restringido mediante `CHECK`, y existen índices sobre fecha y materia para las consultas de eventos. Estas decisiones describen estructura y finalidad, no un rendimiento medido.
 
-- **Entrada:** Destino por defecto de toda nota nueva. Captura rápida sin fricción.
-- **Materias:** Carpetas creadas por el usuario, con opción de secciones dentro de cada una.
-- **Archivo:** Materias aprobadas y notas archivadas.
+Otras reglas quedan fuera de las claves foráneas: limitar la jerarquía a dos niveles, validar nombres no vacíos y comprobar nombres repetidos dentro del mismo nivel. Las resuelve el servicio de materias; no las atribuyo a restricciones `UNIQUE` inexistentes en el DDL. Los UUID se conservan estables por diseño, de modo que no se definió una cascada de actualización de esos identificadores.
 
-Esta decisión fue respaldada dentro de la muestra: el 69.2% de las 120 respuestas válidas prefiere organizar por carpetas por materia (P11 del relevamiento).
+### 4.7.4. Organización, archivo y borrador técnico
 
-### 4.7.5. Normalización y decisión de persistencia del título
+La estructura Entrada/Materias/Archivo de DP-002 y DP-004 relaciona navegación y datos sin crear tablas para cada vista. Entrada es la ausencia de asociación; Materias utiliza la jerarquía de `subjects`; Archivo combina el estado de una nota con el de su organización. Al archivar una materia se actualizan la materia y sus secciones, no se reescribe automáticamente la marca de archivo de todas sus notas: el filtrado considera la organización archivada.
 
-El modelo se verificó contra las tres primeras formas normales (ver [02-normalizacion.md](../diagramas/database/02-normalizacion.md)):
+En el corte RC1, `metadata` conserva además el único borrador del editor como JSON bajo la clave `lumapse-editor-draft-v1`. Ese documento contiene modo de creación o edición, referencia a la nota cuando corresponde, título, contenido, materia y marcas temporales. Su formato y validación pertenecen al servicio de borradores, no a columnas académicas adicionales.
 
-- **1FN:** ✅ Todos los atributos son atómicos, sin grupos repetidos.
-- **2FN:** ✅ Todas las PKs son simples (UUID), eliminando la posibilidad de dependencias parciales.
-- **3FN:** ✅ Las tablas separan entidades y evitan dependencias parciales o transitivas dentro del diseño vigente.
+Esta separación impide equiparar borrador con una nota más del listado. El respaldo ZIP exporta notas confirmadas, materias/secciones y fechas académicas, incluidos los elementos archivados, pero excluye borradores y papelera. Por lo tanto, disponer de un ZIP no equivale a una copia íntegra de todo el estado local.
 
-**Aclaración sobre el campo `title`:**
+### 4.7.5. Normalización y persistencia del título
 
-En una etapa anterior se describió el título como un valor siempre derivado del contenido Markdown. La implementación vigente de la beta es más precisa: el editor admite un título explícito y la política de guardado solo toma un encabezado `# ` del contenido como alternativa cuando el campo está vacío. Si tampoco existe ese encabezado, utiliza el valor `Sin título`. Por lo tanto, en el modelo actual `title` es un atributo propio de `Note` y no una dependencia transitiva obligatoria de `content`.
+Revisé las relaciones de dominio con las dependencias funcionales que expresa el modelo:
 
-Persistir el título sigue aportando ventajas operativas:
+- **Primera forma normal:** cada nota tiene un título, un cuerpo y, como máximo, una asociación organizativa; no se utilizan columnas repetidas para almacenar una lista de materias. El cuerpo Markdown se trata como un valor textual del dominio.
+- **Segunda forma normal:** las claves de las entidades son simples, por lo que no hay dependencia parcial respecto de una clave compuesta. La clave textual de `metadata` también es simple, aunque no sea un UUID.
+- **Tercera forma normal:** el identificador determina los atributos de cada entidad. La materia asociada no determina el contenido de la nota ni la fecha del evento; el nombre y el color de la materia permanecen en su propia relación, no repetidos en cada nota.
 
-1. **Contrato de presentación:** El listado y el backup disponen de un título resuelto sin reinterpretar el Markdown cada vez. La prueba de carga de `scripts/run-load-tests.py` compara sintéticamente lectura de columna con extracción mediante expresión regular; sus resultados varían por entorno y no equivalen a una medición de CPU Android ni a un RNF validado.
-2. **Evolución posible de consultas:** Almacenar el título permitiría proyectar `id`, `title` y fechas sin cargar el cuerpo completo. La implementación actual todavía carga filas completas para sostener búsqueda por contenido, por lo que esa optimización no se afirma como aplicada.
-3. **Política centralizada:** `NoteTitleService` concentra la normalización, la alternativa basada en encabezado y la presentación del título, evitando que cada componente reconstruya reglas diferentes.
+Esta justificación se limita a las dependencias modeladas. El JSON técnico del borrador se administra como un documento dentro de `metadata`: no afirmo que cada campo interno esté descompuesto o normalizado como una relación adicional. Las formas normales tampoco sustituyen las validaciones de jerarquía, las transacciones o las reglas de eliminación.
 
-Las imágenes vigentes respetan esta decisión: `title` se representa como atributo propio y opcional, no como un valor derivado obligatorio, porque la UI permite editarlo explícitamente.
+El título merece una precisión. El editor admite un valor explícito; si está vacío, utiliza la primera línea no vacía del cuerpo sólo cuando es un encabezado `# `. Si tampoco existe esa alternativa, guarda `Sin título`. En consecuencia, `content → title` no es una dependencia funcional general: dos notas con el mismo cuerpo pueden tener títulos explícitos distintos.
 
-## 4.8. Patrones de Arquitectura y Diseño de Software
+Persistir el título expresa ese contrato y permite presentarlo o incluirlo en el respaldo sin reconstruirlo en cada consumidor. No lo justifico mediante una supuesta mejora cuantificada: la carga actual de notas recupera filas completas y la búsqueda utiliza título y contenido en memoria. Proyectar sólo campos de listado sería una optimización distinta, no una capacidad ya aplicada por almacenar `title`.
 
-Lumapse se clasifica como un **monolito modular cliente, offline-first, con capas pragmáticas y UI organizada por feature**. Combina una unidad de despliegue Android con módulos separados por responsabilidades y patrones aplicados en puntos concretos. La descripción se formula en función del código vigente y no presupone una implementación canónica de todos los patrones. La decisión se formaliza en [ADR-008](../adr/ADR-008-arquitectura-modular-y-patrones.md) y su vista de componentes se documenta en [arquitectura-componentes.md](../diagramas/arquitectura-componentes.md).
+## 4.8. Patrones de arquitectura y diseño de software
 
-La frontera de versión se declara de forma explícita: el comportamiento, el dominio y los nombres de archivo usados como evidencia corresponden al tag publicado `v0.5.0` (`5840755`). Esta beta incluye la evolución gradual a TypeScript, los límites de error de mutaciones, la coordinación SQLite y el arranque recuperable documentados durante Hito 06.
+Clasifiqué Lumapse como un **monolito modular cliente, offline-first, con capas pragmáticas y componentes de interfaz agrupados por funcionalidad**. «Monolito» describe una unidad de despliegue; «modular» describe la separación interna. Los servicios no son aplicaciones desplegadas de manera independiente. ADR-008 formaliza esa clasificación, complementada en la RC1 por los contratos de persistencia, borrador y refresco posteriores.
 
-### 4.8.1. Organización modular y flujo de dependencias
+### 4.8.1. Responsabilidades y dirección de dependencias
 
-| Área | Responsabilidad principal | Dependencias predominantes | Límite observado |
-|---|---|---|---|
-| Presentación (`src/components/`, `src/layout/`) | Renderizar DOM, capturar eventos y mostrar feedback. Los componentes se agrupan por feature. | Store y servicios de aplicación. | No emite sentencias SQL; algunos flujos especializados, como backup, consumen servicios directamente. |
-| Estado y coordinación (`src/store/`) | Mantener el estado compartido, aplicar filtros y coordinar operaciones centrales de notas y materias. | Servicios de dominio y acceso a datos. | No es una capa de persistencia y no debería decidir cómo se presenta un error al usuario. |
-| Servicios y dominio (`src/services/`, `src/domain/`) | Aplicar reglas, validar contratos y orquestar casos de uso. | Funciones puras, fuentes de datos y adaptadores. | No todos los servicios son puros: los adaptadores nativos encapsulan efectos externos de manera explícita. |
-| Datos e integración (`src/services/sqlite/` y adaptadores Capacitor) | Ejecutar operaciones SQLite y traducir capacidades del dispositivo. | SQLite, Filesystem, Share y Network de Capacitor. | Su API se consume a través de servicios o del store; la UI no contiene SQL. |
+| Área | Responsabilidad | Dependencias predominantes |
+|---|---|---|
+| Composición | Preparar persistencia y datos antes del montaje; conectar vistas, estado y feedback | Servicios, store y componentes necesarios para el arranque |
+| Presentación | Renderizar DOM y capturar interacción, con piezas agrupadas por funcionalidad | Store, servicios de aplicación y componentes compartidos |
+| Estado y coordinación | Mantener datos cargados, selecciones y filtros; coordinar operaciones | Servicios y módulos SQLite de acceso a datos |
+| Aplicación y dominio | Validar reglas, expresar contratos y orquestar casos de uso | Funciones de dominio, fuentes de datos y adaptadores |
+| Datos e integración | Ejecutar SQL y traducir capacidades de plataforma | SQLite y plugins de Capacitor, sin dependencia de la presentación |
 
-El flujo predominante es **UI → store/servicios → acceso SQLite o adaptadores Capacitor**. Se trata de una separación pragmática, no de capas estrictamente aisladas: la coordinación central pasa por `NoteStore` para el dominio principal, mientras que features autocontenidas pueden invocar un servicio de aplicación sin atravesar el store.
+No existe una cadena obligatoria interfaz → store → servicio → datos. Para notas, el store puede invocar directamente el módulo SQLite; para materias o fechas utiliza servicios con reglas propias. A su vez, una funcionalidad autocontenida como respaldo puede consumir un servicio de aplicación sin pasar por el estado global. Describir estas rutas es más preciso que atribuir una arquitectura de capas estrictamente aisladas.
 
-La cualidad **offline-first** atraviesa estas áreas: SQLite es la fuente persistente primaria y la red no es necesaria para crear, editar, buscar u organizar notas. No se la clasifica como patrón GoF, sino como una decisión arquitectónica y de producto.
+ADR-009 agrega una cola por conexión y una capacidad transaccional explícita: las operaciones que componen una misma transacción deben recibir su ámbito, mientras las independientes esperan su turno. Así se evita interpretar coincidencia temporal entre operaciones asíncronas como pertenencia a una transacción ajena. El costo es que una lectura externa puede esperar a una operación larga; no se afirma paralelismo ni optimización de consultas por ese mecanismo.
 
-Desde `v0.5.0`, la persistencia usa una cola por conexión y capacidades transaccionales explícitas: las operaciones independientes no ingresan en transacciones ajenas y las cascadas propagan su scope de forma deliberada. `main.js` prepara base y lecturas iniciales antes de montar consumidores y ofrece una recuperación segura si el arranque falla. [ADR-009](../adr/ADR-009-propiedad-transaccional-sqlite.md) fija este contrato sin cambiar el schema final.
+El arranque prepara la base, hidrata el borrador y carga los datos antes de montar consumidores. Ante un error ofrece recuperación sin recrear la base del usuario. Si el montaje quedó incompleto, la recuperación requiere cerrar de forma segura la conexión antes de recargar la WebView, en lugar de duplicar componentes o listeners sobre un estado parcial.
 
-### 4.8.2. Patrones identificados en el código
+### 4.8.2. Patrones observables y grado de aplicación
 
-| Patrón o enfoque | Clasificación | Evidencia representativa | Función y alcance real |
-|---|---|---|---|
-| Composition Root | Aplicado | `src/main.js` | Inicializa persistencia, construye vistas y conecta dependencias principales; centraliza el arranque, no todas las decisiones posteriores. |
-| Observer / publicador-suscriptor | Aplicado | `NoteStore.state.js` y `NoteStore.errors.js` | Notifica estado y errores mediante suscripción/desuscripción manual dentro del proceso; no es un bus distribuido. |
-| Service Layer | Aplicado | `SubjectService.crud.ts`, `BackupService.ts`, `MarkdownService.ts` | Centraliza validaciones, reglas y orquestación fuera de componentes y SQL; combina servicios puros con coordinadores de efectos. |
-| Adapter | Aplicado | `BackupNativeNetworkService.ts`, `BackupShareService.ts` | Traduce APIs de Capacitor a contratos propios, con alternativas web donde corresponde; no toda dependencia externa tiene adaptador formal. |
-| Inyección de dependencias explícita | Aplicada en servicios seleccionados | `BackupFlowService.ts` | Sustituye funciones de red, creación, almacenamiento y compartición en pruebas, sin contenedor global. |
-| Fachada modular / *barrel* | Analogía parcial | `NoteStore.js`, `SubjectService.js`, `ExportService.ts` | Ofrece entradas estables sobre módulos especializados; un *barrel* no oculta por sí solo toda la complejidad de una fachada GoF. |
-| Data Access similar a Repository | Analogía parcial | módulos de `src/services/sqlite/` | Encapsula consultas y mapeo de filas, sin interfaz Repository genérica ni intercambio transparente entre motores. |
-| Command Registry | Inspirado en Command | `editorCommandRegistry.ts`, handlers y transformaciones del editor | Comparte catálogo, metadatos y snippets; no implementa objetos uniformes con `execute/undo`. |
-| Strategy/Policy funcional | Enfoque funcional | `noteFilters.ts`, `BackupNetworkService.ts`, plan de importación | Selecciona reglas mediante funciones y discriminantes, no con jerarquías de objetos Strategy. |
-| Component | Enfoque de UI | clases y módulos de `src/components/` | Encapsula renderizado y eventos por feature sin ciclo de vida uniforme de framework. |
+El inventario de ADR-008 distingue implementaciones directas, analogías parciales y enfoques de organización. Mantengo esa diferencia para no asignar una etiqueta teórica por la sola existencia de una carpeta o un nombre de archivo.
 
-Los refactors no crearon estos patrones: hicieron más explícitos contratos, dependencias y límites que ya eran observables, facilitando su identificación y verificación. ADR-008 mantiene el inventario canónico y separa las implementaciones directas de las analogías parciales.
+| Patrón o enfoque | Grado de aplicación | Evidencia y límite |
+|---|---|---|
+| *Composition Root* | Aplicado | El punto de entrada prepara y conecta dependencias principales; no centraliza todas las decisiones posteriores |
+| Observer / publicador-suscriptor | Aplicado | El store notifica cambios y errores mediante suscripciones explícitas; es comunicación dentro del proceso |
+| Capa de servicios (*Service Layer*) | Aplicada | Los servicios de materias, fechas y respaldo separan reglas y orquestación de DOM y SQL |
+| Adaptador | Aplicado | Los servicios de red y compartición traducen plugins de Capacitor a operaciones del producto |
+| Inyección explícita de dependencias | Aplicada en servicios seleccionados | El flujo de respaldo admite funciones reemplazables para red, creación y compartición; no existe un contenedor global |
+| Fachada modular / *barrel* | Analogía parcial | Entradas como `NoteStore` y `SubjectService` reúnen módulos especializados; reexportar no constituye por sí solo una fachada completa |
+| Acceso a datos similar a Repository | Analogía parcial | Los módulos SQLite encapsulan consultas y mapeo, sin repositorios intercambiables entre motores |
+| Registro de comandos | Inspirado en Command | El editor comparte catálogo y acciones; no implementa objetos uniformes de ejecución y deshacer |
+| Política funcional | Enfoque funcional | Filtros y reglas de respaldo seleccionan comportamiento mediante funciones, sin una jerarquía de objetos Strategy |
+| Componente | Enfoque de interfaz | Las piezas encapsulan DOM y eventos, sin un ciclo de vida uniforme impuesto por un framework |
+
+Estos límites facilitan probar reglas con dependencias controladas, pero no constituyen evidencia de que todas las integraciones nativas estén verificadas. Tampoco una conversión de JavaScript a TypeScript crea un patrón: la clasificación proviene de responsabilidades y dependencias observables.
 
 ### 4.8.3. Relación con MVC y límites de la clasificación
 
-Lumapse **no implementa un MVC de libro**. No existen clases formales `Model`, `View` y `Controller`, ni controladores que concentren todo el flujo de entrada. La UI cumple el rol de presentación; `NoteStore` mantiene estado y coordina parte de los casos de uso; los servicios contienen reglas; y los módulos SQLite realizan acceso a datos. Esta distribución puede recordar responsabilidades de MVC, pero describirla como MVC completo ocultaría sus dependencias reales.
+Lumapse no implementa MVC estricto. La presentación, el estado, los servicios y el acceso a datos distribuyen responsabilidades que pueden recordar a modelo, vista y controlador, pero no existen controladores formales que concentren todo el flujo de entrada. Por la misma razón, no la presento como Clean Architecture completa: no hay un sistema uniforme de puertos y casos de uso ni una dirección de dependencias impuesta en todas las rutas.
 
-Tampoco corresponde presentar cada módulo ES como un Singleton. Los módulos garantizan una instancia de evaluación por grafo de imports, pero muchos servicios exportan funciones puras y no mantienen identidad ni estado global. La arquitectura se defiende mejor por la separación observable de responsabilidades, las fronteras de efectos y las pruebas de cada módulo que por asignar etiquetas de patrones donde el código no las implementa de forma completa.
+Tampoco identifico cada módulo ES con el patrón Singleton. Compartir un módulo importado no demuestra una decisión explícita de instancia única; varios servicios son funciones sin estado propio. La ventaja defendible del diseño está en separar reglas, efectos y presentación. Sus costos son mantener manualmente suscripciones, convenciones de dependencia y contratos entre JavaScript y TypeScript, con riesgo de crecimiento del store o de las fachadas.
 
-### 4.8.4. Frontera cliente y ausencia de backend remoto
+### 4.8.4. Frontera cliente y alcance offline
 
-Lumapse **no posee un backend remoto o de servidor**. No existe un servicio desplegado por separado, una API HTTP propia, una base de datos remota, autenticación centralizada ni un proceso en la nube que ejecute reglas del producto. El núcleo funcional puede crear, editar, buscar y organizar notas sin red.
+Lumapse no tiene un backend remoto propio: no despliega una API de producto, autenticación centralizada ni una base de datos en un servidor. Las reglas y SQLite se ejecutan dentro de la unidad cliente Android. Vite es una herramienta de desarrollo, no el backend que necesita la aplicación instalada.
 
-Esta afirmación no significa que la aplicación carezca de lógica “detrás” de la interfaz. Los módulos de estado, servicios, dominio y acceso a datos cumplen responsabilidades que en una arquitectura cliente–servidor podrían ubicarse parcialmente en un backend, pero en Lumapse se ejecutan dentro de la misma unidad cliente Android. SQLite es una base de datos embebida en el dispositivo; no es un servidor independiente.
+La capacidad de crear, editar, consultar y organizar sin depender de un servicio remoto es una decisión arquitectónica y de producto, no un patrón de diseño de objetos. La generación del ZIP también es local; si el usuario elige compartirlo con otra aplicación, ese destino puede requerir conectividad y queda fuera de la persistencia interna de Lumapse.
 
-Capacitor actúa como contenedor Android y puente hacia capacidades nativas. Vite sirve los recursos y ofrece recarga durante el desarrollo, pero su servidor de desarrollo no procesa los casos de uso ni persiste los datos del producto y, por lo tanto, no constituye el backend de Lumapse. La formulación técnica precisa es: **monolito modular cliente, offline-first, con lógica y persistencia locales, sin backend server-side**.
+Este límite evita prometer sincronización, backup automático o recuperación remota que no existen. A la vez, almacenar localmente no demuestra por sí solo ausencia de tráfico, cifrado o conservación ante cualquier fallo. La RC1 mantiene la validación parcial declarada en la sección 1.4.4. El diseño explica las responsabilidades y sus límites; el capítulo 6 debe sostener por separado qué propiedades fueron comprobadas, sobre qué artefacto y cuáles permanecen sin demostrar.
