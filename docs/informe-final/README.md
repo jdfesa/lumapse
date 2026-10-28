@@ -40,11 +40,13 @@ sin dar por cerrados el manual ni la defensa.
 en [PR #46](https://github.com/jdfesa/lumapse/pull/46) y
 [PR #48](https://github.com/jdfesa/lumapse/pull/48), respectivamente. El capítulo 3
 también está revisado, aprobado e integrado en
-[PR #49](https://github.com/jdfesa/lumapse/pull/49). El capítulo 4 también está
-revisado y aprobado; sus cambios se recogen en
-[PR #50](https://github.com/jdfesa/lumapse/pull/50). Los archivos `05-*.md` a
+[PR #49](https://github.com/jdfesa/lumapse/pull/49). El capítulo 4 está aprobado e
+integrado en [PR #50](https://github.com/jdfesa/lumapse/pull/50), con su rama
+eliminada. El [capítulo 5](./05-desarrollo-implementacion.md) está revisado contra
+la fuente RC1 y pendiente de lectura y aprobación. Los archivos `06-*.md` a
 `08-*.md` todavía conservan el checkpoint anterior; no se consideran actualizados
-por la revisión de las otras unidades.
+por la revisión de las otras unidades. La correspondencia bibliográfica se
+completará en la unidad de referencias, incluida la cita de la GPLv3 en 5.7.
 
 **Frontera del checkpoint generado:** `report-metadata.json` y
 `INFORME-FINAL-COMPLETO.md` conservan el corte `v0.5.0` del 2026-09-05, incluido el

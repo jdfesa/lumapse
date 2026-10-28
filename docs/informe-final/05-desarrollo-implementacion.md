@@ -1,229 +1,197 @@
 # Capítulo 5: Desarrollo e Implementación
 
-## 5.1. Estructura del Repositorio y Entorno
+En el capítulo 4 expliqué las decisiones de arquitectura y sus compromisos. En este capítulo desarrollo cómo las materialicé en el código: composición de la interfaz, coordinación del estado, acceso a datos, continuidad de la edición, portabilidad y herramientas de verificación. El propósito no es enumerar archivos, sino mostrar cómo colaboran las piezas para resolver los recorridos del producto.
 
-El repositorio está organizado para que código, documentación, scripts, análisis de datos y configuración nativa convivan en una misma base versionada. Esta decisión permite que el proyecto sea auditable desde Git: cada cambio de código puede relacionarse con documentación, requisitos, decisiones y evidencia.
+La implementación descrita corresponde a la fuente de **Lumapse 0.6.0/600 — Release Candidate 1**, identificada en la sección 1.4.4. Su inspección permite explicar mecanismos presentes en el programa, pero no demuestra que todos los recorridos del APK estén validados. Mantengo esa diferencia respecto del capítulo 6, donde corresponde atribuir cada resultado a su método, artefacto y alcance.
 
-Las carpetas principales son:
+## 5.1. Estructura del repositorio y entorno
 
-| Carpeta | Propósito |
+Organicé código, documentación, configuración nativa y automatización en una misma base versionada. Esto permite relacionar una modificación con sus requisitos y decisiones, sin confundir el código fuente con los archivos generados para distribuirlo.
+
+| Ubicación | Responsabilidad en la implementación |
 |---|---|
-| `src/` | Código fuente de la aplicación web empaquetada. |
-| `src/components/` | Componentes de interfaz organizados por feature: editor, feed, fechas académicas, backup, Markdown y piezas comunes. |
-| `src/services/` | Servicios de dominio y aplicación: Markdown, temas, materias, eventos académicos, persistencia SQLite, respaldo e importación local. Parte de la lógica pura adopta TypeScript de forma gradual. |
-| `src/store/` | Estado de aplicación, filtros y coordinación entre datos y UI. |
-| `android/` | Proyecto Android generado y mantenido por Capacitor. |
-| `docs/` | Documentación técnica, producto, gestión, hitos e informe final. |
-| `scripts/` | Automatización local: quality gate, auditorías, deploy Android y ensamblado del informe. |
-| `tests/` | Suite de tests unitarios con Vitest. |
-| `.github/` | Workflows de GitHub Actions, plantillas de issues y pull requests. |
+| `src/components/`, `src/layout/` y `src/styles/` | Componentes, composición visual, navegación y estilos |
+| `src/store/` | Estado observable, selección, filtros y coordinación de operaciones |
+| `src/domain/` | Contratos y reglas de datos compartidos por servicios y consumidores |
+| `src/services/` | Servicios de aplicación, reglas de dominio, SQLite e integraciones nativas |
+| `android/` | Proyecto nativo de Capacitor, configuración y construcción Android |
+| `public/` | Recursos locales que se incorporan a la salida web |
+| `tests/` | Pruebas de aplicación y de herramientas; no sólo pruebas de interfaz |
+| `scripts/` y `.github/workflows/` | Controles locales y ejecución remota de tareas automatizadas |
+| `docs/` | Requisitos, decisiones, gestión, evidencia e informe académico |
 
-El entorno de desarrollo usa Node.js, npm y Vite para levantar la aplicación en navegador. Para la compilación Android se requiere Android Studio, JDK y SDK Android. La guía operativa se documenta en [flujo-desarrollo-android.md](../flujo-desarrollo-android.md).
+El entorno canónico fija **Node.js 22.20.0 y npm 10.9.3**. La declaración se mantiene coherente entre `.nvmrc`, los campos de entorno de `package.json` y el workflow remoto. El control `check:runtime` rechaza una versión distinta antes de ejecutar la suite; no se interpreta un fallo de un entorno no soportado como un defecto del producto. Esta decisión de reproducibilidad se formaliza en ADR-010.
 
-## 5.2. Capa de Presentación (Componentes UI)
+Vite sirve la aplicación durante el desarrollo y construye los archivos web en `dist/`. Para el entorno SQLite de navegador, `copy-wasm` copia el recurso WebAssembly de `sql.js` a los assets locales: se ejecuta antes de desarrollo y construcción, y después de instalar dependencias. El servidor de desarrollo no es un backend requerido por el APK instalado.
 
-La interfaz está implementada con componentes propios en JavaScript, algunos auxiliares tipados en TypeScript y CSS, sin framework de UI. Esta decisión exige más trabajo manual que una solución basada en React o Vue, pero mantiene el bundle liviano y hace explícito el flujo de eventos, renderizado y estado.
+La construcción Android utiliza un JDK, el SDK Android, el wrapper de Gradle y herramientas como ADB y `apksigner`. Android Studio puede facilitar la configuración y la inspección del proyecto, pero el script de despliegue realiza la construcción por línea de comandos. Disponer del entorno web no acredita disponer de esas herramientas ni de un teléfono accesible.
 
-Los componentes principales son:
+Mantuve JavaScript y adopté TypeScript gradualmente en contratos, reglas y servicios. La configuración utiliza comprobación estricta para TypeScript, sin emitir archivos, pero conserva `checkJs: false`: no convierte todo el JavaScript existente en código comprobado estáticamente. Tampoco los tipos validan por sí solos un JSON importado; esa responsabilidad requiere controles en ejecución.
 
-| Componente | Responsabilidad |
+## 5.2. Capa de presentación y edición
+
+La presentación utiliza DOM, JavaScript, auxiliares TypeScript y CSS, sin un framework de interfaz. Los componentes crean su estructura, conectan eventos y reaccionan a las suscripciones pertinentes. La organización por funcionalidad de ADR-007 mantiene juntas las piezas de cada recorrido; no establece un ciclo de vida uniforme ni elimina la necesidad de liberar listeners y suscripciones.
+
+| Área | Piezas principales y colaboración |
 |---|---|
-| `note-editor/NoteEditor` y auxiliares | Edición de título y contenido Markdown, borradores persistentes, comandos opcionales y modos de trabajo. |
-| `feed/NoteList` y `feed/NoteCardRenderer` | Listado y representación visual de notas. |
-| `feed/TrashView` | Papelera, restauración y eliminación definitiva. |
-| `academic-events/Heatmap` y `academic-events/UpcomingAcademicEvents` | Calendario, fechas académicas discretas y recordatorios próximos. |
-| `backup/BackupView` y controladores auxiliares | Exportación manual e importación no destructiva de respaldos `.zip`. |
-| `about/AboutView` | Información mínima de versión, autoría, licencia y alcance local/offline. |
-| `common/ConfirmDialog` | Confirmaciones personalizadas para reemplazar diálogos nativos. |
-| `common/Toast` | Mensajes breves de estado y feedback. |
-| `drawerSubjects` | Navegación por materias y secciones. |
-| `drawerController` | Coordinación del drawer lateral. |
+| Edición | `NoteEditor`, captura/restauración de borrador, selector de materia y herramientas Markdown |
+| Listado | `NoteList`, auxiliares de tarjetas, filtros visibles y `VirtualFeed` |
+| Papelera | Vista de elementos eliminados y control de vigencia de sus lecturas |
+| Fechas académicas | `Heatmap`, próximas fechas y diálogos de gestión |
+| Respaldo | `BackupView` y controladores que separan preparación, confirmación y feedback |
+| Navegación e información | Drawer de materias, cambio de vistas y Acerca de |
+| Interacción compartida | Confirmaciones, mensajes y utilidades de presentación defensiva |
 
-La capa de presentación no emite sentencias SQL. Interactúa principalmente con el store para el dominio central y, en features autocontenidas como backup, con servicios de aplicación explícitos. Esta separación mantiene fuera de los componentes los detalles de SQLite y de los plugins nativos, aunque no constituye un sistema de capas rígidas. La organización por carpetas de feature se documenta en [ADR-007](../adr/ADR-007-organizacion-componentes-por-feature.md) y evita que `src/components/` se convierta en una carpeta plana difícil de mantener.
+El punto de entrada prepara SQLite, hidrata el borrador y carga los datos antes de montar los componentes. Así, el editor no intenta restaurar una edición sobre una base todavía sin inicializar. El límite de arranque muestra un estado accesible y permite reintentar la preparación; ante un montaje parcial, exige cerrar de forma segura la conexión antes de recargar, en lugar de volver a instalar los mismos listeners sobre el documento incompleto.
 
-## 5.3. Gestión de Estado Reactivo
+En el editor separé título, cuerpo y asociación organizativa. Los eventos de entrada actualizan la disponibilidad de `Guardar` o `Actualizar` y capturan el trabajo pendiente. El modo de enfoque cambia la disposición visual; no convierte la edición en un guardado automático. Durante guardado o descarte se bloquean los controles y una comprobación explícita impide repetir la operación mientras está en curso.
 
-La gestión de estado se implementa con un store propio basado en el patrón Observer. El estado central mantiene notas, materias, vista activa, búsqueda, nota seleccionada, materia seleccionada y banderas de UI. Cuando una operación modifica datos o filtros, el store notifica a los componentes suscriptores para que actualicen la pantalla.
+Las ayudas de RF-028 modifican el texto Markdown, no un documento de edición visual independiente. El registro tipado de comandos comparte definiciones entre `/` y el menú `+`; `Aa` aplica transformaciones sobre la selección. La continuidad de listas y bloques al pulsar Enter también opera sobre el texto y vuelve a emitir el evento de entrada. Esto mantiene el contenido editable sin exigir utilizar los menús. La representación Markdown se realiza en las tarjetas del listado; el editor no incorpora un panel dividido activo de previsualización.
 
-El store se dividió en módulos para reducir acoplamiento:
+Para el listado, `NoteList` renderiza directamente hasta 50 notas y utiliza `VirtualFeed` cuando el resultado supera ese umbral. Este último calcula una ventana visible con margen, conserva espaciadores y ajusta las alturas a partir de las tarjetas medidas. Agrupa las actualizaciones de desplazamiento mediante `requestAnimationFrame` y retira sus listeners al destruirse.
 
-| Archivo | Responsabilidad |
+La virtualización reduce el conjunto de tarjetas presentes en el DOM, **no la cantidad de notas cargadas desde SQLite**. La lectura vigente recupera las notas activas completas y el filtrado trabaja en memoria: no hay paginación de consultas por ese mecanismo. Su existencia tampoco demuestra un valor de FPS, una latencia ni rendimiento óptimo con 500 notas; esas mediciones conservan sus límites y postergaciones.
+
+## 5.3. Estado observable, filtros y operaciones asíncronas
+
+El store mantiene notas, organización, selecciones, búsqueda, fecha, vistas y cachés académicos. `NoteStore.state.js` utiliza un conjunto de suscriptores: al suscribirse, cada consumidor recibe el estado actual y una función para cancelar la suscripción. Las notificaciones posteriores entregan esa misma referencia de estado; no se trata de un sistema general de instantáneas inmutables.
+
+Dividí la coordinación para hacer visibles responsabilidades distintas:
+
+| Módulo | Responsabilidad |
 |---|---|
-| `NoteStore.state.js` | Estado base y suscripciones. |
-| `NoteStore.errors.js` | Canal de errores de dominio desacoplado del mecanismo visual de feedback. |
-| `NoteStore.data.js` | Carga, creación, actualización y eliminación de datos. |
-| `NoteStore.ui.js` | Acciones de UI y coordinación de vistas. |
-| `noteFilters.ts` | Reglas de filtrado y visibilidad de notas. |
+| `NoteStore.state.js` | Estado base y suscripciones |
+| `NoteStore.data.js` | Datos y mutaciones de notas y organización |
+| `NoteStore.ui.js` | Navegación, selección y filtros de interfaz |
+| `NoteStore.academicEvents.js` | Cargas, mutaciones y cachés de fechas académicas |
+| `NoteStore.errors.js` | Publicación de errores de persistencia y propagación del rechazo |
+| `NoteStore.refresh.js` | Avisos y recuperación de lecturas posteriores a una escritura confirmada |
+| `noteFilters.ts` | Selección y ordenamiento de notas sin manipular el DOM |
 
-Esta división permite testear reglas de negocio sin renderizar toda la interfaz. También facilita mantener invariantes importantes, como ocultar notas eliminadas del feed, mostrar notas fijadas al tope y respetar el filtro por materia o sección. El canal separado de errores permite que el store comunique el problema y que la capa de presentación decida si corresponde mostrar un toast, un diálogo u otra respuesta.
+La búsqueda normaliza mayúsculas y tildes y compara título y contenido en memoria. En Entrada, materia y vista general, una búsqueda activa recorre globalmente las notas activas no archivadas; no queda limitada a la materia desde la que se abrió. Archivo mantiene su propio ámbito. El filtro de fecha utiliza la última modificación de la nota, `updatedAt`, y no la fecha de un evento académico. El orden prioriza notas fijadas y luego la modificación más reciente. Las notas eliminadas lógicamente ya están excluidas de la carga del listado activo.
 
-## 5.4. Capa de Persistencia (Evolución de IndexedDB a SQLite)
+Las lecturas asíncronas requieren además comprobar su vigencia. Una respuesta de Papelera no debe reemplazar el contenido de otra vista si el usuario ya salió de ella. Para ese recorrido, un propietario de solicitud combina identidad del consumidor, estado activo y versión de lectura. En las fechas académicas, las versiones de solicitud y una revisión de mutaciones evitan aplicar resultados obsoletos o deshacer cambios confirmados mientras una lectura estaba pendiente. Estos mecanismos corresponden a consumidores concretos, no a una cancelación universal de toda operación asíncrona.
 
-La persistencia tuvo dos etapas. En la fase inicial del MVP se implementó almacenamiento local con IndexedDB, suficiente para validar el editor y el funcionamiento offline en navegador. Luego, tras el relevamiento de datos y el pivote a aplicación Android híbrida, se decidió migrar a SQLite. La protección actual del trabajo en curso se resuelve con borradores persistentes locales del editor, separados del guardado definitivo de notas.
+El manejo de errores distingue persistencia y presentación. Cuando una acción envuelta por `runStoreAction` recibe un `DatabaseError`, publica el evento y relanza la excepción. La composición conecta ese canal con el feedback visual; el store no importa el componente de mensajes. Así, un formulario puede conservar sus campos ante el rechazo sin generar por sí mismo un segundo mensaje para el mismo error de persistencia.
 
-La motivación del cambio fue doble:
+Una lectura secundaria fallida tampoco equivale a una escritura fallida. Tras crear una nota, el store conserva la entidad recibida y utiliza `refreshAfterWrite` para actualizar materias y conteos. Si esa lectura falla, ofrece recuperarla sin volver a insertar la nota. La misma frontera se aplica a la creación de fechas y a las extensiones registradas para crear materias y actualizar o eliminar fechas académicas, conforme a ADR-011. Otras mutaciones mantienen contratos distintos; no generalizo este comportamiento a todo el store.
 
-- El relevamiento respaldó una experiencia mobile-first y offline-first; no comparó PWA, APK ni canales de instalación.
-- El análisis técnico seleccionó Capacitor y SQLite para reutilizar la base web, disponer de persistencia local fuera de la política de almacenamiento del navegador e integrar capacidades nativas en Android. La aceptación de instalar un APK por parte del público objetivo se valida por separado.
+## 5.4. Persistencia, continuidad y respaldo
 
-La arquitectura actual utiliza `@capacitor-community/sqlite` en Android. Para desarrollo web local se incorporó `sql.js` y `jeep-sqlite`, permitiendo simular SQLite en navegador sin modificar los componentes ni el store. La configuración se automatiza con el script `copy-wasm`, ejecutado antes de `npm run dev`, `npm run build` y después de instalar dependencias.
+### 5.4.1. Acceso SQLite y composición de operaciones
 
-La capa SQLite se encuentra en `src/services/sqlite/` y separa conexión, manejo de errores y operaciones de notas, materias y eventos académicos. Estos módulos cumplen una función de acceso a datos orientada a SQLite: ejecutan consultas y traducen filas, sin pretender una interfaz Repository genérica. Por encima, servicios como `SubjectService` aplican validaciones y coordinan transacciones; en los límites nativos, servicios específicos adaptan Filesystem, Share y Network de Capacitor. Esta separación permite auditar el schema, generar DBML desde código y validar la jerarquía de materias con scripts automatizados.
+La evolución desde IndexedDB y la elección del motor se fundamentan en el capítulo 4. En la implementación vigente, `src/services/sqlite/` concentra conexión, esquema, migraciones y operaciones de notas, materias y fechas. La presentación no ejecuta SQL: utiliza el store o servicios de aplicación. Para notas, el store accede directamente a los módulos SQLite; para organización y fechas intervienen servicios con validaciones propias. No existe una cadena rígida de capas que todas las acciones deban recorrer.
 
-## 5.5. Procesamiento de Markdown y Seguridad (XSS)
+Las operaciones parametrizan los valores de las consultas y transforman filas a contratos de aplicación, por ejemplo convirtiendo marcas enteras a booleanos. El esquema y las migraciones permanecen en `connection.js`. Antes de agregar una columna se consulta `PRAGMA table_info`; su existencia permite omitir el cambio, pero un error inesperado aborta la inicialización. No se ignoran indiscriminadamente los errores de migración.
 
-Markdown es el formato base de las notas. Esta decisión aporta portabilidad, simplicidad y compatibilidad con herramientas externas. Sin embargo, renderizar Markdown como HTML introduce un riesgo de seguridad: el contenido escrito por el usuario podría convertirse en HTML ejecutable si no se sanitiza correctamente.
+ADR-009 se materializa en una cola por conexión y un ámbito transaccional explícito, `scope`. Las operaciones que componen una transacción reciben ese ámbito; las independientes esperan su turno. El módulo no entrega la conexión nativa a cualquier consumidor. La resolución externa espera la confirmación y, en el entorno web, la persistencia correspondiente. Ante resultados inciertos de confirmación o fallos de recuperación, la conexión se bloquea hasta recuperar un estado comprobable: no se afirma que cualquier error implique que nada se escribió.
 
-Para resolverlo, Lumapse usa:
+La migración legada desde IndexedDB conserva notas y marcador de migración dentro de una transacción y no reemplaza notas SQLite existentes al reintentar. Es compatibilidad con la etapa anterior, no una segunda autoridad de almacenamiento del producto. El entorno web auxiliar conserva SQLite mediante `jeep-sqlite` y `sql.js`, sin equipararlo al plugin nativo.
 
-- `marked` para convertir Markdown a HTML.
-- `DOMPurify` para sanitizar el HTML resultante antes de insertarlo en el DOM.
+### 5.4.2. Borrador y confirmación explícita
 
-La responsabilidad está encapsulada en `MarkdownService`, con tests unitarios que verifican comportamiento esperado y prevención de inyección básica. De esta forma, la UI consume HTML ya procesado y no replica lógica de sanitización en múltiples componentes.
+La continuidad de RF-005 utiliza un único borrador en `metadata`, bajo la clave `lumapse-editor-draft-v1`. `EditorDraftService` valida y normaliza su formato, mantiene la caché hidratada al iniciar y delega la persistencia en el módulo SQLite. Capturar una edición no crea ni actualiza automáticamente la nota definitiva.
 
-## 5.6. Empaquetado Android Híbrido (Capacitor)
+La captura toma una instantánea en cada cambio, sin esperar un intervalo de inactividad. Incluye título, contenido, asociación y, en modo edición, referencia a la nota original. Si esa nota ya no existe al restaurar, el texto pendiente puede recuperarse como borrador de una nota nueva, sin recrear silenciosamente el registro desaparecido.
 
-Capacitor permite empaquetar la aplicación web como una aplicación Android híbrida, reutilizando el código existente en `src/` y generando un proyecto Android en `android/`. La UI continúa ejecutándose en una WebView y accede a capacidades de plataforma mediante el puente y los plugins de Capacitor (Ionic, s. f.). Esta estrategia evita reescribir la interfaz en Kotlin o React Native y conserva la inversión realizada en la arquitectura web.
+Guardar desde el editor solicita `flush` de la captura y utiliza la opción `clearDraft`; la cola SQLite ordena las escrituras. El store coordina entonces la escritura de la nota y el marcador JSON `null` en una misma transacción. Ese marcador distingue borrador vacío de fila ausente y evita reimportar un borrador legado ya consumido. Los campos se limpian después de recibir la entidad confirmada; descartar también espera la confirmación de la limpieza. La secuencia y los límites de fallo se desarrollan en la sección 4.5.
 
-El flujo general es:
+SQLite es la autoridad del borrador después de su inicialización. La lectura legada de `localStorage` sólo se considera si falta la fila, no como alternativa cuando falla SQLite. El mecanismo no garantiza la última tecla si el proceso termina antes del commit, ni recuperación ante desinstalación o pérdida del dispositivo. Tampoco el ZIP respalda este trabajo pendiente.
 
-```text
-npm run build
-        |
-        v
-npx cap sync
-        |
-        v
-Gradle compila el proyecto Android
-        |
-        v
-APK instalable en dispositivo
-```
+### 5.4.3. Exportación e importación del conjunto de datos
 
-El script [deploy-android.sh](../../scripts/deploy-android.sh) automatiza este proceso. En su modo normal conserva los datos locales de la app para no borrar SQLite durante pruebas; y con `--clean` permite una instalación limpia cuando se necesita simular el primer uso o descartar estado local.
+Implementé la portabilidad de RF-017 y RF-018 mediante un formato ZIP propio. La exportación reúne notas confirmadas, materias/secciones y fechas académicas, conserva elementos archivados y excluye la papelera y el borrador. El paquete contiene un manifiesto, JSON con los datos restaurables y notas Markdown organizadas en carpetas para lectura fuera de Lumapse. Los Markdown no sustituyen el contrato JSON ni constituyen un flujo de importación de notas individuales.
 
-La decisión de usar Capacitor se fundamenta en [ADR-005](../adr/ADR-005-pivote-app-nativa.md): el relevamiento respaldó las prioridades mobile-first y offline-first, mientras el ADR comparó las alternativas técnicas. La encuesta no midió tolerancia al *sideload* ni familiaridad con la instalación de APK.
+La generación utiliza los módulos propios `BackupZipService` y `BackupZipArchive`, con entradas `STORE`, sin compresión. JSZip permanece declarado como dependencia, pero sus importaciones observadas pertenecen a las pruebas, no al generador de producción. La lectura está acotada al formato admitido: inspecciona estructura y límites antes de procesar los JSON, verifica tamaño y CRC32 al leerlos y exige texto UTF-8 válido. Los respaldos históricos `DEFLATE` dependen del soporte de descompresión del WebView. CRC32 permite detectar corrupción del contenido leído, no comprobar identidad del emisor ni autenticidad criptográfica.
 
-## 5.7. Licenciamiento de Software y Filosofía Open Source
+La importación separa preparación y confirmación. Primero valida manifiesto, entidades y relaciones, y calcula un plan frente a los datos locales. La interfaz presenta elementos a incorporar, omisiones, renombrados y advertencias; sólo después de la confirmación se aplica el plan mediante inserciones dentro de una transacción. La política no destructiva no equivale a reemplazar íntegramente el workspace ni a una sincronización de cambios entre dispositivos.
 
-Lumapse se publica bajo licencia GNU GPLv3. Esta elección responde a una decisión ética y académica: el proyecto nace en un entorno educativo público y se desarrolla como evidencia de aprendizaje profesionalizante. Por lo tanto, el código no solo cumple una función de producto, sino también de material de estudio, referencia y posible punto de partida para futuras cohortes.
+La salida nativa también tiene una frontera concreta. `BackupShareService` escribe el archivo en caché mediante Filesystem, obtiene una URI y abre el selector con Share. El ZIP y el selector pueden prepararse sin red; un destino externo puede necesitar conectividad. Abrir o completar ese selector no permite demostrar que un proveedor conservó una copia durable. Por ello, respaldo manual, archivo temporal y sincronización automática no se presentan como capacidades equivalentes.
 
-La GPLv3 permite usar, estudiar y modificar el programa. Cuando una persona distribuye copias o una obra derivada cubierta por la licencia, debe ofrecer el código fuente correspondiente bajo GPLv3 y conservar los avisos aplicables; las modificaciones de uso estrictamente privado no activan por sí solas esa obligación de distribución. En el contexto del proyecto, esta elección favorece que las versiones redistribuidas continúen siendo auditables y que las mejoras compartidas regresen a la comunidad bajo las mismas libertades.
+## 5.5. Procesamiento de Markdown y seguridad de presentación
 
-La licencia también refuerza la transparencia del proyecto: cualquier evaluador puede revisar cómo se implementó la aplicación, cómo se tomaron decisiones y cómo evolucionó la solución.
+Markdown conserva el contenido como texto, pero su transformación a HTML introduce una frontera de confianza. El riesgo de *cross-site scripting* (XSS) consiste en que el contenido presentado permita ejecutar código no previsto. Que una nota provenga del mismo dispositivo no vuelve seguro todo su contenido: también puede contener material copiado o importado. Parsear ese texto y sanear el resultado son responsabilidades diferentes.
 
-## 5.8. Integración Continua (CI) — Automatización de Calidad de Código
+`MarkdownService` concentra el recorrido de renderizado:
 
-### 5.8.1. ¿Qué es la Integración Continua?
+1. Procesa los bloques destacados o *callouts* y convierte el Markdown mediante `marked`, con sintaxis GFM (*GitHub Flavored Markdown*) y saltos de línea habilitados.
+2. Sanea el HTML con DOMPurify mediante listas explícitas de etiquetas y atributos permitidos y prohibidos. El HTML admitido por el parser no se considera confiable y también pasa por ese control.
+3. Aplica reglas de atributos para enlaces y recursos. En particular, elimina fuentes de imagen HTTP/HTTPS y agrega atributos de apertura a enlaces externos.
+4. Reconstruye las casillas de tareas con APIs del DOM, identifica su línea y obtiene su nombre accesible del contenido ya saneado; finalmente serializa el fragmento para presentarlo.
 
-La **Integración Continua** (CI, del inglés *Continuous Integration*) es una práctica de ingeniería de software mediante la cual cada modificación del código fuente se verifica automáticamente mediante una serie de comprobaciones definidas por el equipo de desarrollo. El objetivo es detectar problemas lo antes posible en el ciclo de vida del software, reduciendo el costo de corrección y aumentando la confianza en el código que se entrega.
+El índice de línea permite que una interacción sobre una casilla modifique la tarea correspondiente en el Markdown. Esa correspondencia también contempla el desplazamiento de líneas cuando el título y el cuerpo se presentan por separado. La lógica de las tarjetas consume el HTML procesado; no implementa otro parser en cada vista.
 
-En entornos profesionales, un pipeline de CI suele incluir análisis estático de código, ejecución de tests unitarios, compilación del proyecto y, eventualmente, despliegue automático. Para Lumapse, el workflow evolucionó desde un chequeo inicial de lint hacia una verificación remota que combina lint, tests, build, presupuesto de bundle y auditorías documentales/técnicas. El comando local `npm run verify` amplía ese conjunto con typecheck, revisión de toolchain y smoke test de base de datos, entre otras guardias.
+La sanitización de Markdown no protege automáticamente los demás campos que se interpolan en plantillas. Para títulos, nombres e identificadores utilicé utilidades distintas de escape de texto y atributos. Los colores se validan antes de incorporarlos a estilos. Esta separación responde al contexto de salida: un valor apto como texto no es necesariamente apto como atributo o propiedad visual.
 
-### 5.8.2. Herramientas utilizadas
+La política CSP del documento de entrada complementa estos controles limitando orígenes de recursos y permitiendo los recursos locales necesarios. Conserva permisos para evaluación de scripts y estilos inline, por lo que no se describe como una prohibición absoluta de ejecución. Los enlaces externos pueden abrirse por acción del usuario; restringir la carga automática de recursos no equivale a impedir toda comunicación externa.
 
-| Herramienta | Rol | Versión |
-|---|---|---|
-| **ESLint** | Linter: analiza el código JavaScript en busca de errores y malas prácticas | v10.x (flat config) |
-| **Vitest** | Ejecución de tests unitarios automatizados | v4.x |
-| **GitHub Actions** | Plataforma de CI integrada en GitHub que ejecuta el workflow automáticamente | N/A (servicio cloud) |
-| **Scripts de auditoría** | Trazabilidad, links, schema SQLite, DBML, jerarquía de materias, a11y y diálogos nativos | Scripts locales del repositorio |
+La suite contiene casos de Markdown válido, contenido peligroso, atributos, casillas y regresiones específicas del sanitizador. Esos casos comprueban contratos automatizados en su entorno, no ausencia universal de XSS ni falta de tráfico en el APK. La evidencia de seguridad y sus límites corresponden al capítulo 6, sin convertir esta descripción del mecanismo en una certificación.
 
-#### ¿Qué es un Linter?
+## 5.6. Empaquetado Android e identificación del artefacto
 
-Un linter es una herramienta que lee el código fuente de forma estática —sin ejecutarlo— y reporta:
+Capacitor integra los archivos web con un proyecto Android y conecta capacidades nativas mediante plugins (Ionic, s. f.). En Lumapse, `webDir` apunta a `dist/`: Vite produce esos archivos y la sincronización los incorpora al proyecto nativo. Gradle construye el APK. La interfaz sigue ejecutándose en una WebView; ni la construcción optimizada de Vite ni la sincronización crean por sí solas una entrega firmada y publicada.
 
-- **Errores:** uso de variables no definidas, imports duplicados, construcciones inválidas.
-- **Advertencias:** uso de `var` en lugar de `const`/`let`, comparaciones con `==` en vez de `===`, variables declaradas pero nunca utilizadas.
+El despliegue de desarrollo distingue construcción e instalación. Conforme a ADR-013, el script realiza la siguiente secuencia:
 
-En Lumapse, `npm run lint` se ejecuta sin la opción `--fix`: no modifica el código ni afecta la ejecución de la aplicación, sino que genera un reporte para revisar la calidad del código.
+1. Identifica el dispositivo y construye la salida web con canal de debug declarado.
+2. Sincroniza el proyecto Android y compila mediante el wrapper de Gradle.
+3. Verifica el APK con `apksigner` y, si hay una instalación previa en modo normal, comprueba la igualdad de sus certificados de firma.
+4. Instala con ADB sin desinstalar previamente y comprueba el éxito explícito antes de abrir la actividad.
 
-### 5.8.3. Implementación en Lumapse
+Si faltan medios para verificar la firma, ésta difiere o Android rechaza la actualización, el modo normal se detiene. No delega la instalación en un mecanismo que reintente mediante desinstalación. La opción `--clean` es una operación destructiva separada, no una reparación automática: elimina datos locales y requiere autorización y recuperación acordadas. Un ZIP no recupera el borrador ni la papelera que esa operación elimina.
 
-Se crearon y consolidaron tres grupos de configuración:
+Acerca de muestra versión y procedencia de construcción. Los metadatos distinguen servidor de desarrollo, prueba optimizada y canales Android declarados, e incluyen el commit y el estado conocido de las fuentes. No demuestran firma, publicación ni identidad binaria: el hash del APK y su certificado deben registrarse por separado. Tampoco el paso de CI que construye los assets web produce automáticamente el candidato de presentación.
 
-**`eslint.config.js` (raíz del proyecto):** Define el alcance del análisis (únicamente `src/`), las variables globales del entorno del navegador permitidas (`window`, `document`, `alert`, `crypto`, etc.) y el conjunto de reglas activas:
+El corte entregable sigue siendo la RC1 identificada en la sección 1.4.4, con aceptación parcial y desarrollo congelado. Describir el script y los metadatos no significa volver a ejecutarlo, recompilar ese artefacto o completar sus pruebas diferidas. La reproducción de una build y la aceptación de un binario son actividades distintas.
 
-```javascript
-// Reglas clave configuradas:
-"no-unused-vars": "warn"    // Variables declaradas pero no usadas → advertencia
-"no-undef":       "error"   // Variables no definidas              → error
-"prefer-const":   "warn"    // Preferir const sobre let            → advertencia
-"no-var":         "warn"    // Evitar var (obsoleto en ES6+)       → advertencia
-"eqeqeq":         "warn"    // Usar === en lugar de ==             → advertencia
-```
+## 5.7. Licenciamiento y continuidad académica
 
-**`.github/workflows/lint.yml`:** Define el workflow `CI — Quality Gate`, ejecutado automáticamente ante cada `push` o `pull request` a la rama `main`:
+Publiqué el código del proyecto con el texto de la GNU GPL versión 3 y la declaración `GPL-3.0-or-later` en los metadatos del paquete. Esta elección permite que el trabajo pueda estudiarse, modificarse y reutilizarse bajo sus condiciones, en lugar de quedar limitado a una demostración cerrada.
+
+La GPLv3 permite el uso y la modificación privada sin exigir publicar cada cambio. Al redistribuir código o una obra cubierta, establece condiciones de conservación de avisos y de acceso al código fuente correspondiente; no basta entregar un ejecutable sin atender esas obligaciones (Free Software Foundation, 2007). La declaración del proyecto no reemplaza los avisos y condiciones de sus dependencias.
+
+En el contexto académico, busco facilitar que futuras cohortes comprendan tanto la solución como sus decisiones y límites. Un repositorio público y una licencia libre habilitan esa posibilidad, pero no prueban que exista una comunidad de contribuidores, adopción institucional o mantenimiento futuro asegurado.
+
+## 5.8. Integración continua y control automatizado
+
+Utilicé integración continua para ejecutar comprobaciones reproducibles sobre cambios versionados y ofrecer un resultado remoto revisable. La definición vigente supera la separación anterior entre una lista local y otra remota: **`npm run verify` y el workflow de CI ejecutan el mismo gate canónico**, establecido en ADR-010 y mantenido en `scripts/quality.sh`.
+
+### 5.8.1. Entorno y entrada común
+
+El workflow `CI — Quality Gate` se activa ante pushes a `main` y eventos de pull request cuya base es `main`; no ante todo push a cualquier rama por el mero hecho de existir. Prepara Node desde `.nvmrc`, configura Python 3.12, comprueba el entorno antes de instalar e instala las dependencias mediante `npm ci`, usando el archivo de bloqueo. Después invoca literalmente `npm run verify`.
+
+El siguiente fragmento reproduce los tres pasos finales de esa configuración, no un workflow completo:
 
 ```yaml
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  quality:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: "22" }
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.12" }
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run test
-      - run: npm run build
-      - run: npm run check:size
-      - run: npm run check:native-dialogs
-      - run: npm run check:traceability
-      - run: npm run check:docs
-      - run: npm run check:schema
-      - run: npm run check:dbml
-      - run: npm run check:subjects
-      - run: npm run check:a11y
+- name: Verificar entorno canónico
+  run: npm run check:runtime
+- name: Instalar dependencias
+  run: npm ci
+- name: Ejecutar gate canónico completo
+  run: npm run verify
 ```
 
-**`package.json`:** Expone comandos reutilizables tanto localmente como desde CI. El comando principal de verificación local es:
+El punto de entrada local delega en ese mismo script. Compartir la definición evita mantener dos listas divergentes; no significa que un equipo local y el runner remoto tengan idénticos sistema operativo, recursos o integraciones nativas. Tampoco la ejecución local depende de que exista un hook de Git instalado o un binario auxiliar en una máquina particular.
 
-```bash
-npm run verify
-```
+### 5.8.2. Controles y criterio de fallo
 
-El workflow remoto no ejecuta literalmente `npm run verify`: invoca de manera explícita el subconjunto portable que figura en el YAML. En el corte actual, `typecheck`, `check:toolchain` y `check:db-smoke` pertenecen al gate local, por lo que CI y verificación local son complementarios, pero todavía no equivalentes.
+El gate comprueba primero el runtime y luego coordina lint, pruebas de herramientas, suite de aplicación, validación de su reporte, construcción web, tipos y guardias técnicas/documentales. Las herramientas aportan evidencias de naturaleza diferente:
 
-### 5.8.4. Flujo de trabajo resultante
+| Control | Qué comprueba y cuál es su límite |
+|---|---|
+| ESLint | Analiza JS y TS de `src/` con reglas apropiadas a cada lenguaje, sin corregir archivos mediante `--fix`; advertencias no equivalen a errores bloqueantes |
+| Pruebas de herramientas y Vitest | Ejecutan escenarios automatizados; la suite de aplicación utiliza el entorno DOM simulado y sus adaptadores de prueba, no el plugin Android instalado |
+| Construcción y tipos | Detectan problemas de empaquetado web y contratos estáticos; no producen una APK firmada ni validan todos los valores recibidos en ejecución |
+| Versión, base y esquema | Contrastan versiones y aspectos del esquema, ejecutan un smoke SQLite y revisan su representación DBML; cada control conserva un alcance parcial |
+| Bundle, diálogos, jerarquía y accesibilidad | Aplican presupuestos y reglas automatizables; una auditoría estática no certifica experiencia de uso o accesibilidad completa |
+| Trazabilidad, enlaces, toolchain y offline | Buscan inconsistencias y referencias inválidas o remotas; no comprueban por sí solos la veracidad de un resultado, todos los enlaces posibles ni el tráfico efectivo |
 
-```
-git push origin main
-        │
-        ▼
-GitHub recibe el commit
-        │
-        ▼
-GitHub Actions activa el workflow "CI — Quality Gate"
-        │
-        ├─ Checkout del código
-        ├─ Instalación de dependencias (npm ci)
-        ├─ Lint + tests + build
-        ├─ Bundle budget
-        └─ Auditorías documentales y técnicas
-               │
-               ├─ Sin problemas → ✅ Badge verde en GitHub
-               └─ Con problemas → ❌ Badge rojo + reporte con archivo, línea y descripción
-```
+La aceptación de Vitest no se basa sólo en leer un resumen de consola. Se exige salida normal con código cero y un reporte JSON nuevo, completo y coherente con los archivos esperados. El validador rechaza omisiones, duplicados, casos pendientes o totales inconsistentes; la ejecución impide `.only`. Un crash no se acepta porque antes haya impreso resultados exitosos. El gate utiliza un worker para acotar memoria, sin reducir la suite a un subconjunto.
 
-> **Nota importante:** el workflow es una verificación remota de calidad. Localmente, `npm run verify` se ejecuta de manera explícita antes de cortes y publicaciones; el repositorio ofrece scripts para instalar hooks, pero su presencia debe verificarse en cada entorno y no puede darse por supuesta.
+Los controles posteriores agregan sus resultados y un fallo mantiene el resultado global como fallido. Los diagnósticos de tamaño y complejidad conservan advertencias orientativas, sin convertir en advertencia un error de ejecución de la herramienta. La medición de cobertura y las auditorías de dependencias son comprobaciones separadas: no se atribuyen automáticamente a cada ejecución de `verify`.
 
-### 5.8.5. Resultado actual
+### 5.8.3. Relación entre automatización y aceptación
 
-En el corte `v0.5.0`, `VITEST_MAX_WORKERS=1 npm run verify` completó lint, typecheck, 1065 tests unitarios distribuidos en 67 archivos, build de producción, verificación de versiones, smoke test de base de datos, presupuesto de bundle, trazabilidad, links internos, schema SQLite, jerarquía de materias, accesibilidad estática y ausencia de diálogos nativos fuera del seeder. El workflow remoto de PR #10 aprobó su subconjunto portable y verificó además el DBML mediante un paso explícito. Esta evidencia automatizada es amplia, pero no reemplaza las pruebas manuales en Android ni implica que ambos recorridos cubran exactamente los mismos pasos.
+El valor de este mecanismo está en hacer explícitos los criterios comprobables, reducir diferencias accidentales entre ejecuciones y asociar resultados a una revisión concreta. Es un mecanismo de control, no una medida general de madurez ni una prueba de ausencia de errores. Un resultado correcto tampoco garantiza el comportamiento de todas las combinaciones de datos o del puente nativo.
 
-### 5.8.6. Justificación de la práctica
-
-Incorporar CI desde las etapas tempranas del proyecto responde a uno de los principios fundamentales de la ingeniería de software moderna: **"fail fast"** (detectar y corregir problemas cuanto antes). El costo de corregir un error suele aumentar a medida que avanza el ciclo de desarrollo; un linter que detecta una variable mal declarada antes de integrar un cambio reduce el costo frente a encontrarla después de distribuir la aplicación.
-
-Adicionalmente, la presencia de un workflow de CI en el repositorio es una señal de madurez técnica reconocible por cualquier evaluador externo: indica que el proyecto no depende exclusivamente del criterio subjetivo del desarrollador, sino que cuenta con comprobaciones objetivas y automatizadas sobre la calidad del código.
-
-> **Referencia:** `.github/workflows/lint.yml` · `package.json` · `eslint.config.js` · `scripts/quality.sh`
+La revisión documental, la ejecución de CI, la comprobación Android y la aceptación del artefacto son niveles distintos. El análisis de resultados del capítulo 6 complementa esta descripción distinguiendo controles del candidato, pruebas históricas de otros debugs y recorridos diferidos de la RC1. Así, la implementación explica qué mecanismos existen y cómo colaboran, sin convertir posibilidades de prueba o controles automatizados en resultados que no fueron obtenidos.
