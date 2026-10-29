@@ -242,7 +242,7 @@ en la matriz, manual, informe y defensa, sin inventar resultados ni reabrir prue
 - [x] **[Capítulo 3 — Relevamiento y Análisis de Datos](docs/informe-final/03-relevamiento-datos.md):** aprobado e integrado en [PR #49](https://github.com/jdfesa/lumapse/pull/49).
 - [x] **[Capítulo 4 — Arquitectura y Diseño](docs/informe-final/04-arquitectura-diseno.md):** aprobado e integrado en [PR #50](https://github.com/jdfesa/lumapse/pull/50); rama eliminada.
 - [x] **[Capítulo 5 — Desarrollo e Implementación](docs/informe-final/05-desarrollo-implementacion.md):** revisado contra la fuente RC1 y aprobado; cambios en [PR #51](https://github.com/jdfesa/lumapse/pull/51).
-- [ ] **[Capítulo 6 — Pruebas y Validación](docs/informe-final/06-pruebas-validacion.md):** pendiente.
+- [ ] **[Capítulo 6 — Pruebas y Validación](docs/informe-final/06-pruebas-validacion.md):** revisado con evidencia atribuida por artefacto y límites de la RC1; pendiente de lectura y aprobación.
 - [ ] **[Capítulo 7 — Conclusiones](docs/informe-final/07-conclusiones.md):** pendiente.
 - [ ] **[Referencias — archivo 08](docs/informe-final/08-referencias.md):** pendiente; completar la correspondencia bibliográfica, incluida la GPLv3 citada en la sección 5.7.
 - [ ] **Revisión transversal, metadatos y ensamblado final:** pendientes hasta completar la revisión e integración de todos los capítulos y las referencias.
