@@ -47,11 +47,13 @@ la fuente RC1 y aprobado; sus cambios se recogen en
 [PR #51](https://github.com/jdfesa/lumapse/pull/51). El
 [capítulo 6](./06-pruebas-validacion.md) está revisado con evidencia atribuida por
 artefacto y límites de la RC1 y aprobado; sus cambios se recogen en
-[PR #52](https://github.com/jdfesa/lumapse/pull/52). Los archivos
-`07-*.md` y `08-*.md` todavía conservan el checkpoint anterior; no se consideran
-actualizados por la revisión de las otras unidades. La correspondencia
-bibliográfica se completará en la unidad de referencias, incluida la cita de
-la GPLv3 en 5.7.
+[PR #52](https://github.com/jdfesa/lumapse/pull/52). El
+[capítulo 7](./07-conclusiones.md) está revisado contra los objetivos y la evidencia
+del corte RC1, con lecciones y trabajo futuro delimitados y aprobado; sus cambios
+se recogen en [PR #53](https://github.com/jdfesa/lumapse/pull/53).
+El archivo `08-referencias.md` todavía conserva el checkpoint
+anterior; su revisión sigue pendiente, incluida la correspondencia bibliográfica
+de la GPLv3 citada en 5.7.
 
 **Frontera del checkpoint generado:** `report-metadata.json` y
 `INFORME-FINAL-COMPLETO.md` conservan el corte `v0.5.0` del 2026-09-05, incluido el
