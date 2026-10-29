@@ -46,7 +46,8 @@ eliminada. El [capítulo 5](./05-desarrollo-implementacion.md) está revisado co
 la fuente RC1 y aprobado; sus cambios se recogen en
 [PR #51](https://github.com/jdfesa/lumapse/pull/51). El
 [capítulo 6](./06-pruebas-validacion.md) está revisado con evidencia atribuida por
-artefacto y límites de la RC1; pendiente de lectura y aprobación. Los archivos
+artefacto y límites de la RC1; [PR #52](https://github.com/jdfesa/lumapse/pull/52)
+pendiente de lectura y aprobación. Los archivos
 `07-*.md` y `08-*.md` todavía conservan el checkpoint anterior; no se consideran
 actualizados por la revisión de las otras unidades. La correspondencia
 bibliográfica se completará en la unidad de referencias, incluida la cita de
