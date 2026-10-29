@@ -49,8 +49,8 @@ la fuente RC1 y aprobado; sus cambios se recogen en
 artefacto y límites de la RC1 y aprobado; sus cambios se recogen en
 [PR #52](https://github.com/jdfesa/lumapse/pull/52). El
 [capítulo 7](./07-conclusiones.md) está revisado contra los objetivos y la evidencia
-del corte RC1, con lecciones y trabajo futuro delimitados; pendiente de lectura
-y aprobación en [PR #53](https://github.com/jdfesa/lumapse/pull/53).
+del corte RC1, con lecciones y trabajo futuro delimitados y aprobado; sus cambios
+se recogen en [PR #53](https://github.com/jdfesa/lumapse/pull/53).
 El archivo `08-referencias.md` todavía conserva el checkpoint
 anterior; su revisión sigue pendiente, incluida la correspondencia bibliográfica
 de la GPLv3 citada en 5.7.
