@@ -51,7 +51,8 @@ artefacto y límites de la RC1 y aprobado; sus cambios se recogen en
 [capítulo 7](./07-conclusiones.md) está revisado contra los objetivos y la evidencia
 del corte RC1, con lecciones y trabajo futuro delimitados y aprobado; sus cambios
 se recogen en [PR #53](https://github.com/jdfesa/lumapse/pull/53).
-La revisión de `08-referencias.md` está preparada y pendiente de lectura y
+La revisión de `08-referencias.md` está preparada en
+[PR #54](https://github.com/jdfesa/lumapse/pull/54) y pendiente de lectura y
 aprobación. Los originales de Gómez y Parada permitieron comprobar sus metadatos
 y distinguir la obra publicada del material de cátedra. La correspondencia de
 citas incluye la GPLv3 de 5.7 y la atribución de la guía Kanban a Coleman y Vacanti,

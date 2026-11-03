@@ -245,7 +245,7 @@ en la matriz, manual, informe y defensa, sin inventar resultados ni reabrir prue
 - [x] **[Capítulo 5 — Desarrollo e Implementación](docs/informe-final/05-desarrollo-implementacion.md):** revisado contra la fuente RC1 y aprobado; cambios en [PR #51](https://github.com/jdfesa/lumapse/pull/51).
 - [x] **[Capítulo 6 — Pruebas y Validación](docs/informe-final/06-pruebas-validacion.md):** revisado con evidencia atribuida por artefacto y límites de la RC1 y aprobado; cambios en [PR #52](https://github.com/jdfesa/lumapse/pull/52).
 - [x] **[Capítulo 7 — Conclusiones](docs/informe-final/07-conclusiones.md):** revisado contra los objetivos y la evidencia del corte RC1, con lecciones y trabajo futuro delimitados y aprobado; cambios en [PR #53](https://github.com/jdfesa/lumapse/pull/53).
-- [ ] **[Referencias — archivo 08](docs/informe-final/08-referencias.md):** revisión preparada; metadatos de Gómez y Parada contrastados con los originales, material de cátedra distinguido de libros, autoría de la guía Kanban corregida y GPLv3 incorporada. Pendiente de lectura y aprobación.
+- [ ] **[Referencias — archivo 08](docs/informe-final/08-referencias.md):** revisión preparada en [PR #54](https://github.com/jdfesa/lumapse/pull/54); metadatos de Gómez y Parada contrastados con los originales, material de cátedra distinguido de libros, autoría de la guía Kanban corregida y GPLv3 incorporada. Pendiente de lectura y aprobación.
 - [ ] **Revisión transversal, metadatos y ensamblado final:** pendientes hasta completar la revisión e integración de todos los capítulos y las referencias.
 - [ ] **Maquetación LaTeX/PDF y revisión de presentación:** pendientes del contenido consolidado.
 
