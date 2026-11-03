@@ -222,7 +222,7 @@ pruebas para completar métricas pendientes.
 - [ ] Emitir la matriz RNF final con requisito, método, comando, dispositivo, fecha, artefacto, resultado, evidencia y limitaciones aceptadas; mantener CRUD/FPS pendientes y diferidos según el backlog.
 - [ ] Incorporar el corte y la evidencia final en los capítulos fuente del informe; revisar coherencia, referencias y diagramas antes de congelar y ensamblar.
 - [x] Contrastar los metadatos bibliográficos de Gómez (2014) y Parada (2026) contra los originales de cátedra: obra de Gómez, edición de abril de 2014, y guía didáctica de Parada para PP3, ciclo 2026, identificadas por separado.
-- [ ] Revisar y aprobar la sección de referencias preparada con esos originales y con la correspondencia de citas comprobada.
+- [x] Revisar y aprobar la sección de referencias preparada con esos originales y con la correspondencia de citas comprobada.
 - [x] **Cronología del relevamiento:** aproximadamente dos días naturales, en horario de Argentina; cierre al alcanzar 121 respuestas, sin afirmar horas exactas de apertura o cierre.
 - [ ] Revisar PDF, tablas y legibilidad de figuras; dejar informe y manual preparados para la entrega.
 - [ ] Alinear GitHub Projects con la Definition of Workflow: WIP global 2, bloqueos y fechas reales `startedAt`/`finishedAt`, sin reconstruir tiempos inexistentes.
@@ -245,7 +245,7 @@ en la matriz, manual, informe y defensa, sin inventar resultados ni reabrir prue
 - [x] **[Capítulo 5 — Desarrollo e Implementación](docs/informe-final/05-desarrollo-implementacion.md):** revisado contra la fuente RC1 y aprobado; cambios en [PR #51](https://github.com/jdfesa/lumapse/pull/51).
 - [x] **[Capítulo 6 — Pruebas y Validación](docs/informe-final/06-pruebas-validacion.md):** revisado con evidencia atribuida por artefacto y límites de la RC1 y aprobado; cambios en [PR #52](https://github.com/jdfesa/lumapse/pull/52).
 - [x] **[Capítulo 7 — Conclusiones](docs/informe-final/07-conclusiones.md):** revisado contra los objetivos y la evidencia del corte RC1, con lecciones y trabajo futuro delimitados y aprobado; cambios en [PR #53](https://github.com/jdfesa/lumapse/pull/53).
-- [ ] **[Referencias — archivo 08](docs/informe-final/08-referencias.md):** revisión preparada en [PR #54](https://github.com/jdfesa/lumapse/pull/54); metadatos de Gómez y Parada contrastados con los originales, material de cátedra distinguido de libros, autoría de la guía Kanban corregida y GPLv3 incorporada. Pendiente de lectura y aprobación.
+- [x] **[Referencias — archivo 08](docs/informe-final/08-referencias.md):** revisadas y aprobadas en [PR #54](https://github.com/jdfesa/lumapse/pull/54); metadatos de Gómez y Parada contrastados con los originales, material de cátedra distinguido de libros, autoría de la guía Kanban corregida y GPLv3 incorporada.
 - [ ] **Revisión transversal, metadatos y ensamblado final:** pendientes hasta completar la revisión e integración de todos los capítulos y las referencias.
 - [ ] **Maquetación LaTeX/PDF y revisión de presentación:** pendientes del contenido consolidado.
 

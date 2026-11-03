@@ -36,7 +36,7 @@ hasta después de la presentación. El manual 0.6.0 ya está incorporado y publi
 con revisión final pendiente. La revisión del informe avanza por unidades,
 sin dar por cerrados el manual ni la defensa.
 
-**Revisión parcial:** los capítulos 1 y 2 están revisados, aprobados e integrados
+**Revisión de las fuentes:** los capítulos 1 y 2 están revisados, aprobados e integrados
 en [PR #46](https://github.com/jdfesa/lumapse/pull/46) y
 [PR #48](https://github.com/jdfesa/lumapse/pull/48), respectivamente. El capítulo 3
 también está revisado, aprobado e integrado en
@@ -51,9 +51,9 @@ artefacto y límites de la RC1 y aprobado; sus cambios se recogen en
 [capítulo 7](./07-conclusiones.md) está revisado contra los objetivos y la evidencia
 del corte RC1, con lecciones y trabajo futuro delimitados y aprobado; sus cambios
 se recogen en [PR #53](https://github.com/jdfesa/lumapse/pull/53).
-La revisión de `08-referencias.md` está preparada en
-[PR #54](https://github.com/jdfesa/lumapse/pull/54) y pendiente de lectura y
-aprobación. Los originales de Gómez y Parada permitieron comprobar sus metadatos
+La unidad `08-referencias.md` está revisada y aprobada en
+[PR #54](https://github.com/jdfesa/lumapse/pull/54).
+Los originales de Gómez y Parada permitieron comprobar sus metadatos
 y distinguir la obra publicada del material de cátedra. La correspondencia de
 citas incluye la GPLv3 de 5.7 y la atribución de la guía Kanban a Coleman y Vacanti,
 con corrección mínima de sus dos citas en el capítulo 2.
@@ -61,7 +61,7 @@ con corrección mínima de sus dos citas en el capítulo 2.
 **Frontera del checkpoint generado:** `report-metadata.json` y
 `INFORME-FINAL-COMPLETO.md` conservan el corte `v0.5.0` del 2026-09-05, incluido el
 gate histórico de 67 archivos/1065 tests. No describen toda la evolución hasta la
-RC1 ni reflejan aún la revisión parcial de las fuentes. Sus métricas no corresponden
+RC1 ni reflejan aún la revisión de las fuentes. Sus métricas no corresponden
 al `main` actual ni se atribuyen al APK `0.6.0`.
 
 `INFORME-FINAL-COMPLETO.md` se regeneró como checkpoint después de reconciliar los capítulos con `v0.5.0`. Los capítulos siguen siendo la fuente de verdad; el próximo ensamblado permanece pendiente hasta completar la revisión y aprobación de todas las unidades.
@@ -74,7 +74,6 @@ Los pendientes explícitos del Hito 06 son:
 
 - Revisión editorial de congelamiento después de incorporar las evidencias finales; la reconciliación transversal y las figuras DB del checkpoint ya están completadas.
 - Verificación de legibilidad de las imágenes de base de datos dentro del PDF y las diapositivas. El conceptual Chen y el lógico relacional ya fueron exportados, revisados e incorporados desde sus fuentes DOT y DBML sincronizadas.
-- Lectura y aprobación de la sección de referencias revisada; los metadatos de Gómez (2014) y Parada (2026) ya se contrastaron con los originales, distinguiendo el libro de la guía didáctica de PP3.
 - Consolidación documental de la matriz RNF a partir de la [fuente canónica](../producto/requisitos-no-funcionales.md) y los reportes existentes: método, fecha, artefacto, resultado y límites. La evidencia de uso, accesibilidad, offline y tráfico en debugs no verifica automáticamente la RC1. CRUD/FPS siguen pendientes y [diferidos a post-presentación](../../BACKLOG.md#rendimiento-post-presentación); las comprobaciones restantes del APK exacto también se difieren, sin nuevas mediciones para completar el informe.
 - Incorporación del [corte RC1 identificado](../gestion/candidato-apk-0.6.0.md#binario-corregido), sus controles y aceptación parcial en los capítulos cuando se acuerde su revisión. El [recorte vigente](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa) no exige otra APK ni una versión estable: corresponde cerrar manual, matriz, informe y defensa con la evidencia disponible y los pendientes explícitos. Esta revisión de guías no modifica ni regenera el checkpoint.
 
@@ -112,7 +111,7 @@ ni el informe ensamblado de `v0.5.0`.
 - [x] Sincronizar las fuentes DOT, DBML y DDL con el schema ejecutable.
 - [x] Incorporar o referenciar las imágenes finales de base de datos y verificar su correspondencia con el código (2026-07-15).
 - [x] Confirmar metadatos de Gómez y del material de cátedra de Parada contra los originales; preparar la correspondencia entre citas y referencias.
-- [ ] Aprobar la unidad de referencias antes del congelamiento y nuevo ensamblado.
+- [x] Aprobar la unidad de referencias antes del congelamiento y nuevo ensamblado.
 - [x] Ejecutar los chequeos documentales del checkpoint.
 - [x] Ensamblar el checkpoint con `python3 scripts/assemble-report.py` y revisar el diff generado.
 - [x] Reconciliar metadatos, capítulos y referencias con el tag publicado `v0.5.0`.
