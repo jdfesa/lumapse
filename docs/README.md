@@ -96,7 +96,10 @@ Los PDFs, presentaciones y plantillas institucionales se conservan en Dropbox pa
 | `04-design-thinking/` | Ejercicios y material de Design Thinking |
 | `05-analisis-y-relevamiento/` | Material de análisis y relevamiento de sistemas |
 | `06-estimacion-y-medicion/` | Bibliografía de estimación y medición |
-| `07-guia-relevamiento-y-analisis/` | Guía de relevamiento y análisis |
+| `07-guia-relevamiento-y-analisis/` | Guía de estudio de PP3: relevamiento, análisis y estimación de proyectos |
 | `08-planilla-de-seguimiento/` | Seguimiento de actividades y encuentros con la tutora |
+| `09-reporte-actual/` | Reportes de estado y material audiovisual de avance |
+| `10-guia-metodologica-TIF/` | Guía metodológica del Trabajo Integrador Final (TIF) |
+| `xx-convenios/` | Convenios marco e individual de la práctica |
 
 Los documentos externos son referencia académica. El código, las decisiones técnicas y el historial verificable viven en este repositorio.

@@ -16,7 +16,7 @@ La elección no se basó en una prohibición numérica de Scrum para proyectos i
 
 Tampoco seguí Rational Unified Process —RUP—, que organiza el ciclo de desarrollo en Inicio, Elaboración, Construcción y Transición, con disciplinas y artefactos adaptables (IBM, s. f.). Produje requisitos, casos de uso y modelos de arquitectura por su utilidad técnica y académica, pero no estructuré la gestión según esas fases. La presencia de diagramas UML no identifica por sí sola el proceso utilizado.
 
-Kanban Guides (2025) presenta Kanban como una estrategia de optimización del flujo de valor que combina definición y visualización del flujo, gestión activa de los elementos y mejora del sistema. Esa orientación resultó compatible con reordenar prioridades y terminar unidades pequeñas sin simular responsabilidades o ceremonias de un equipo inexistente. Es una elección contextual, no una afirmación de superioridad general.
+Coleman y Vacanti (2025) presentan Kanban como una estrategia de optimización del flujo de valor que combina definición y visualización del flujo, gestión activa de los elementos y mejora del sistema. Esa orientación resultó compatible con reordenar prioridades y terminar unidades pequeñas sin simular responsabilidades o ceremonias de un equipo inexistente. Es una elección contextual, no una afirmación de superioridad general.
 
 ### 2.1.2. Sistema de trabajo aplicado
 
@@ -36,7 +36,7 @@ Estimé las historias mediante tamaño relativo en Story Points, utilizando juic
 
 El seguimiento por hitos registra Story Points asociados al alcance entregado. No los interpreto como *throughput* de Kanban, que cuenta elementos terminados, ni como tiempo de ciclo. Tampoco presento los escenarios de estimación como intervalos empíricos de cumplimiento.
 
-La guía de Kanban identifica cuatro métricas mínimas: WIP, cantidad de elementos terminados por unidad de tiempo, edad de los elementos aún activos y tiempo de ciclo de los finalizados (Kanban Guides, 2025). No dispongo de fechas completas y confiables para calcularlas retrospectivamente sobre todo el proyecto. La formalización de su registro en Hito 06 no demuestra que se hayan medido durante las etapas anteriores.
+La guía de Kanban identifica cuatro métricas mínimas: WIP, cantidad de elementos terminados por unidad de tiempo, edad de los elementos aún activos y tiempo de ciclo de los finalizados (Coleman y Vacanti, 2025). No dispongo de fechas completas y confiables para calcularlas retrospectivamente sobre todo el proyecto. La formalización de su registro en Hito 06 no demuestra que se hayan medido durante las etapas anteriores.
 
 La definición de flujo incorpora una expectativa de nivel de servicio provisional: 85 % de los elementos en siete días calendario o menos, a recalibrar con al menos cinco elementos con fechas confiables. No es cumplimiento observado. Por estas limitaciones, describo el proceso como basado en Kanban y adaptado al contexto individual, sin afirmar conformidad histórica completa.
 
