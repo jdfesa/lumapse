@@ -51,9 +51,11 @@ artefacto y límites de la RC1 y aprobado; sus cambios se recogen en
 [capítulo 7](./07-conclusiones.md) está revisado contra los objetivos y la evidencia
 del corte RC1, con lecciones y trabajo futuro delimitados y aprobado; sus cambios
 se recogen en [PR #53](https://github.com/jdfesa/lumapse/pull/53).
-El archivo `08-referencias.md` todavía conserva el checkpoint
-anterior; su revisión sigue pendiente, incluida la correspondencia bibliográfica
-de la GPLv3 citada en 5.7.
+La revisión de `08-referencias.md` está preparada y pendiente de lectura y
+aprobación. Los originales de Gómez y Parada permitieron comprobar sus metadatos
+y distinguir la obra publicada del material de cátedra. La correspondencia de
+citas incluye la GPLv3 de 5.7 y la atribución de la guía Kanban a Coleman y Vacanti,
+con corrección mínima de sus dos citas en el capítulo 2.
 
 **Frontera del checkpoint generado:** `report-metadata.json` y
 `INFORME-FINAL-COMPLETO.md` conservan el corte `v0.5.0` del 2026-09-05, incluido el
@@ -71,7 +73,7 @@ Los pendientes explícitos del Hito 06 son:
 
 - Revisión editorial de congelamiento después de incorporar las evidencias finales; la reconciliación transversal y las figuras DB del checkpoint ya están completadas.
 - Verificación de legibilidad de las imágenes de base de datos dentro del PDF y las diapositivas. El conceptual Chen y el lógico relacional ya fueron exportados, revisados e incorporados desde sus fuentes DOT y DBML sincronizadas.
-- Verificación de los metadatos bibliográficos incompletos de Gómez (2014) y Parada (2026) contra los originales de cátedra; la sección de referencias ya existe y no inventa los datos ausentes.
+- Lectura y aprobación de la sección de referencias revisada; los metadatos de Gómez (2014) y Parada (2026) ya se contrastaron con los originales, distinguiendo el libro de la guía didáctica de PP3.
 - Consolidación documental de la matriz RNF a partir de la [fuente canónica](../producto/requisitos-no-funcionales.md) y los reportes existentes: método, fecha, artefacto, resultado y límites. La evidencia de uso, accesibilidad, offline y tráfico en debugs no verifica automáticamente la RC1. CRUD/FPS siguen pendientes y [diferidos a post-presentación](../../BACKLOG.md#rendimiento-post-presentación); las comprobaciones restantes del APK exacto también se difieren, sin nuevas mediciones para completar el informe.
 - Incorporación del [corte RC1 identificado](../gestion/candidato-apk-0.6.0.md#binario-corregido), sus controles y aceptación parcial en los capítulos cuando se acuerde su revisión. El [recorte vigente](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa) no exige otra APK ni una versión estable: corresponde cerrar manual, matriz, informe y defensa con la evidencia disponible y los pendientes explícitos. Esta revisión de guías no modifica ni regenera el checkpoint.
 
@@ -108,7 +110,8 @@ ni el informe ensamblado de `v0.5.0`.
 - [x] Confirmar que alcance, versión, cantidad de tests y estado del hito coinciden con `TODO`, `BACKLOG.md` y `CHANGELOG.md` en el checkpoint `v0.5.0` del 2026-09-05.
 - [x] Sincronizar las fuentes DOT, DBML y DDL con el schema ejecutable.
 - [x] Incorporar o referenciar las imágenes finales de base de datos y verificar su correspondencia con el código (2026-07-15).
-- [ ] Confirmar metadatos de los materiales de cátedra y cerrar la bibliografía con correspondencia uno a uno entre citas y referencias.
+- [x] Confirmar metadatos de Gómez y del material de cátedra de Parada contra los originales; preparar la correspondencia entre citas y referencias.
+- [ ] Aprobar la unidad de referencias antes del congelamiento y nuevo ensamblado.
 - [x] Ejecutar los chequeos documentales del checkpoint.
 - [x] Ensamblar el checkpoint con `python3 scripts/assemble-report.py` y revisar el diff generado.
 - [x] Reconciliar metadatos, capítulos y referencias con el tag publicado `v0.5.0`.
