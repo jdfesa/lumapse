@@ -1,7 +1,9 @@
 # Prueba exploratoria de Lumapse
 
 > **Estado:** borrador de diseño para revisión. Las alternativas de este documento
-> no están seleccionadas ni aplicadas al formulario.
+> no están seleccionadas ni aplicadas al formulario. A queda descartada en su
+> formulación original por permitir respuestas incompatibles; B y C se revisan
+> con finales separados.
 >
 > **Línea de base:** formulario observado el 9 de noviembre de 2026, con cinco
 > preguntas, tres secciones y sin publicar. Referencia de producto: `v0.6.0 — RC1`.
@@ -112,47 +114,66 @@ de una respuesta que exige iniciar sesión y no se comparte el resumen de result
 Hay barra de progreso y no se mezcla el orden de las preguntas. Esto no acredita por
 sí solo acceso anónimo en todos los dispositivos: no se comprobó una sesión desconectada.
 
-## Alternativas para decidir
+### Acceso sin inicio de sesión y respuestas repetidas
+
+La [ayuda oficial de Google Forms](https://support.google.com/docs/answer/2839588?hl=es),
+consultada el 9 de noviembre de 2026, confirma que **«Limitar a 1 respuesta» exige
+iniciar sesión en una cuenta de Google**. La recopilación de correos es un ajuste
+separado: se puede mantener desactivada aunque se active el límite. Eso evita
+recopilar el correo mediante ese ajuste, pero no convierte la participación en
+acceso sin autenticación ni garantiza que el texto libre no identifique a alguien.
+
+| Configuración nativa | Barrera de acceso | Alcance del control |
+|---|---|---|
+| Sin límite de una respuesta y sin recopilar correos | No exige sesión por esos ajustes; falta comprobar el acceso desconectado | No bloquea respuestas repetidas de una misma persona |
+| Límite de una respuesta, sin recopilar correos | Exige cuenta y sesión de Google | Una respuesta por cuenta; no equivale a una persona única |
+
+Por tanto, **no se puede prometer simultáneamente acceso sin cuenta y bloqueo de
+una segunda respuesta de la misma persona con el control nativo verificado**.
+La distinción entre cuenta y persona es un límite del diseño: alguien puede tener
+varias cuentas. Sin una identidad o credencial única tampoco se puede reconocer
+de forma fiable a quien vuelve desde otro navegador o dispositivo.
+
+**Tratamiento acordado:** conservar la configuración actual, sin activar el límite
+ni recopilar correos. No sustituirla por identificación adicional, complementos,
+cookies o controles por IP dentro de esta tarea. Aceptar este límite no significa
+que se haya demostrado la ausencia de duplicados.
+
+En la auditoría también estaba activado «Mostrar enlace para enviar otra respuesta».
+Ocultarlo podría reducir la invitación a repetir por error, pero no impediría
+reabrir el enlace. Queda como mitigación opcional, **no aplicada**, al igual que un
+recordatorio breve de responder una sola vez. No son garantías de unicidad ni
+justifican borrar respuestas parecidas como si fueran duplicados comprobados.
+
+## Revisión de alternativas
 
 Todas conservan **cinco preguntas en total**. Cambiar de alternativa implica una
 decisión sobre qué información recoger y cuántas pantallas recorrer, no solamente
-cambiar el número de una sección.
+cambiar el número de una sección. B y C bifurcan el cierre: quienes no usaron la
+app responden motivos; quienes sí la usaron terminan tras las preguntas de experiencia.
 
-### A · Tres secciones, cierre común simplificado
+### A · Cierre común simplificado: descartado en su formulación original
 
-Mantiene el árbol observado y sustituye P5 por una pregunta de opción única. El
-encabezado del cierre sería «Para terminar», con una indicación breve para elegir
-una opción y un enlace discreto al manual, sin exigir consultarlo.
+La propuesta inicial mantenía el árbol observado y sustituía P5 por la pregunta
+de opción única «¿Qué fue lo principal que te frenó para instalar o probar Lumapse?».
+Entre sus opciones estaban «Nada, pude probarla» y «La instalé, pero me costó empezar
+a usarla».
 
-Texto propuesto de P5:
+Esto no es solamente una pérdida de detalle: permite combinaciones incompatibles
+con P1. Por ejemplo, O1 («No llegué a instalarla») podría terminar en «Nada, pude
+probarla» o en una respuesta que afirma haberla instalado. Una indicación escrita
+no impide seleccionar esas opciones.
 
-> **¿Qué fue lo principal que te frenó para instalar o probar Lumapse?**
->
-> Elegí una opción.
-
-1. Nada, pude probarla.
-2. No tuve tiempo.
-3. Me generó dudas instalar una APK fuera de Google Play.
-4. Tuve problemas para descargarla o instalarla.
-5. La instalé, pero me costó empezar a usarla.
-6. Otro motivo.
-
-La propuesta mantiene P5 obligatoria, pero permite responder mediante una selección.
-La opción «Otro motivo» se propone como opción cerrada: no exige escribir otra
-explicación. Esto reduce el detalle disponible; no se conocerá necesariamente cuál
-fue ese otro motivo. No se preselecciona ninguna respuesta.
-
-**Ventaja:** conserva una pregunta sobre barreras para todas las personas, sin
-duplicar preguntas ni exigir a todos redactar el cierre.
-
-**Límite:** recoge un motivo principal, no todas las dificultades. Una persona que
-la usó también verá opciones referidas a instalación. No permite deducir un error
-técnico concreto ni su causa.
+**Resultado de la revisión:** A no cumple el criterio de coherencia entre recorrido
+y respuestas disponibles. Se conserva sólo como antecedente del diseño, no como
+alternativa lista para aprobación. No se aplicó al formulario.
 
 ### B · Tres secciones, finales diferentes según uso
 
 Interpreta la separación de O1/O2 y O3/O4 como dos recorridos que terminan por
-separado. No necesita una cuarta sección.
+separado. No necesita una cuarta sección: Google Forms permite dirigir según P1
+y seleccionar «Enviar formulario» al final de cada sección, según su
+[ayuda sobre ramificación](https://support.google.com/docs/answer/141062?hl=es-419).
 
 ```mermaid
 flowchart TD
@@ -169,18 +190,38 @@ flowchart TD
 En esta alternativa P5 se adapta exclusivamente a quienes no llegaron a usarla:
 
 > **¿Qué fue lo principal que te frenó para empezar a usar Lumapse?**
+>
+> Elegí el motivo principal, aunque haya habido más de uno.
 
-Opciones propuestas: falta de tiempo; dudas sobre instalar una APK fuera de Google
-Play; problemas de descarga o instalación; la instalé pero no supe cómo empezar;
-otro motivo. No incluye «Nada, pude probarla», porque ese recorrido corresponde a
-quien declaró no haberla usado.
+1. Falta de tiempo.
+2. Dudas sobre la seguridad o la procedencia de la APK.
+3. Dificultades con la descarga o la instalación.
+4. Falta de orientación para empezar.
+5. Falta de interés en continuar con la prueba.
+6. Otro motivo.
+
+P5 sería obligatoria y de opción única, sin respuesta preseleccionada. «Otro motivo»
+sería una opción cerrada, sin exigir texto adicional. No se ofrecen «Nada, pude
+probarla» ni «Ninguna»: no haber empezado puede deberse a falta de tiempo o interés,
+no necesariamente a una dificultad técnica.
+
+Las opciones expresan **motivos**, no afirman etapas ya realizadas. Como O1 y O2
+comparten P5, tampoco debe incluirse «La instalé, pero…», incompatible con O1, ni
+«No pude instalarla», incompatible con O2. P1 ya registra hasta dónde llegó cada
+persona. Una dificultad de instalación pudo superarse antes de desistir; elegir
+esa categoría junto con O2 no prueba por sí solo una contradicción.
+
+El cierre tendría un encabezado breve, «Para terminar», y el manual como consulta
+opcional, sin instrucciones largas ni obligación de abandonar el formulario.
 
 **Ventaja:** cada persona encuentra un cierre acorde con lo que declaró y recorre
 dos secciones. Quien ya la usó no vuelve a contestar motivos de no instalación.
 
-**Límite:** quienes la usaron no contestan P5. Sus dificultades quedan reflejadas
-en facilidad de uso y, si quieren, en la mejora propuesta; se pierde la pregunta
-cerrada común de barreras. Las respuestas de P5 no describirían al conjunto de participantes.
+**Límite:** quienes la usaron no contestan P5. Sus dificultades sólo podrían aparecer
+en la valoración de facilidad y, si quieren, en la mejora propuesta; no hay una
+pregunta cerrada de barreras para ese grupo. P5 recoge un motivo principal, no todos
+los motivos ni un diagnóstico técnico; «Otro motivo» no revela su contenido. Sus
+respuestas deben leerse junto con O1/O2, no como descripción de todos los participantes.
 
 ### C · Cuatro secciones, finales diferentes según uso
 
@@ -215,7 +256,7 @@ pantalla más. Una cuarta sección no mejora por sí sola la claridad ni la part
 | Diseño | Total de preguntas | Sin uso: preguntas / secciones | Con uso: preguntas / secciones | ¿P5 se muestra a todos? |
 |---|---|---|---|---|
 | Observado | 5 | 2 / 2 | 5 / 3 | Sí; texto libre |
-| A · Cierre común simplificado | 5 | 2 / 2 | 5 / 3 | Sí; opción única |
+| A · Descartado en su formulación original | 5 | 2 / 2 | 5 / 3 | Sí; admite contradicciones |
 | B · Finales diferentes, tres secciones | 5 | 2 / 2 | 4 / 2 | No |
 | C · Finales diferentes, cuatro secciones | 5 | 2 / 2 | 4 / 3 | No |
 
@@ -226,10 +267,42 @@ Duplicar P5 en dos versiones, una para usuarios y otra para no usuarios, produci
 seis preguntas distintas en el formulario. Aunque cada persona viera como máximo
 cinco, no cumpliría el límite actual de cinco preguntas en total.
 
-**Criterio para la revisión:** A simplifica el cierre conservando la información
-común; B prioriza recorridos breves y diferenciados; C sólo resulta preferible si
-hay una razón concreta para separar la mejora en otra pantalla. Ninguna alternativa
-queda aprobada por esta comparación.
+Tampoco basta con agregar una sección para mostrar opciones diferentes de P5 a O1
+y O2: la ramificación nativa dirige a secciones, no filtra las opciones de una misma
+pregunta según una respuesta previa. Dos preguntas de motivos específicas, una por
+etapa, más P1–P4 también sumarían seis. Para mantener cinco habría que reformular
+o retirar otra pregunta; ese cambio requiere una decisión aparte y no se aplica
+implícitamente en B o C.
+
+**Criterio para la revisión:** bifurcar el cierre evita las incompatibilidades
+identificadas. B lo hace con menos pantallas; C hace explícita una cuarta sección,
+pero no añade información ni mayor validación. B es la recomendación por brevedad;
+C sigue disponible si se prefiere separar la mejora. Ninguna queda aprobada por
+esta comparación.
+
+Separar recorridos no cambia el hecho de recoger **un** motivo principal. Si se
+quisieran varios motivos, habría que revisar el tipo de respuesta y sus reglas;
+agregar una sección no resuelve esa diferencia. Tampoco un árbol coherente prueba
+la veracidad de lo declarado por cada participante.
+
+### Reglas de coherencia y lectura de resultados
+
+| Respuesta a P1 | Preguntas pertinentes en B y C | Opciones o recorrido que no deben ofrecerse |
+|---|---|---|
+| O1 · No instalada | P1 y P5 | Opiniones de uso; «pude probarla»; «la instalé» |
+| O2 · Instalada sin uso | P1 y P5 | Opiniones de uso; «pude probarla»; «no pude instalarla» |
+| O3 · Uso parcial | P1–P4 | P5 sobre motivos de no haber empezado |
+| O4 · Recorrido realizado | P1–P4 | P5 sobre motivos de no haber empezado |
+
+Estas reglas impiden ofrecer las combinaciones incompatibles señaladas; no eliminan
+toda ambigüedad del autorreporte. Por ejemplo, «no me resultó útil» es una respuesta
+válida de P3 para alguien que sí la usó, no un dato a descartar.
+
+Para leer resultados, P1 delimita el grupo pertinente: P2–P4 sólo para O3/O4 y P5
+sólo para O1/O2. Una pregunta no mostrada no se interpreta como «sin dificultades»
+ni como falta de colaboración. Antes de distribuir el formulario debe comprobarse
+también el retroceso y cambio de P1. No se ha verificado si Forms conserva en el
+envío respuestas previas de un ramal abandonado; no se presupone su borrado automático.
 
 ## Mensaje de confianza propuesto
 
@@ -254,16 +327,22 @@ en Google Play. Ante una alerta, no se propone sortearla para completar la prueb
 
 ## Decisiones pendientes y comprobación posterior
 
-- [ ] Elegir A, B o C y aprobar sus destinos, en particular si P5 será común o
-  exclusiva de quienes no usaron Lumapse.
+- [ ] Elegir B o C y aprobar sus destinos y la ausencia de una pregunta cerrada de
+  barreras para quienes sí usaron Lumapse. A no es admisible sin rediseño.
 - [ ] Aprobar la redacción y opciones de P5, su obligatoriedad y la pérdida de detalle
   de una opción «Otro motivo» sin texto adicional.
 - [ ] Aprobar el mensaje de confianza junto a la descarga y la presentación breve
   del manual al cerrar cada recorrido.
 - [ ] Después de aplicar la alternativa elegida, comprobar las cuatro respuestas de
-  P1 en vista previa: destino correcto, preguntas pertinentes y final en envío.
+  P1 en vista previa: destino correcto, reglas de coherencia anteriores y final en envío.
+- [ ] Comprobar el retroceso y cambio de P1 entre sin uso/con uso. La vista previa
+  sin envío no demuestra cómo se guardan las respuestas de un ramal abandonado;
+  cualquier prueba con envíos requiere autorización y separación de los datos reales.
 - [ ] Confirmar cinco preguntas totales, mejora opcional, enlaces correctos y ausencia
   de solicitud de opiniones de uso a quienes no la usaron.
+- [ ] Comprobar acceso sin sesión de Google en los dispositivos disponibles, sin
+  afirmar unicidad de personas. Mantener los ajustes actuales; cualquier mitigación
+  adicional de repetición accidental necesita aprobación específica.
 - [ ] Revisar el instrumento aplicado y su correspondencia con este documento antes
   de autorizar publicación y distribución.
 
@@ -276,6 +355,11 @@ alcance, sin publicar datos identificables, respuestas personales ni capturas de
 
 - [Registro del candidato 0.6.0](../gestion/candidato-apk-0.6.0.md): identidad del corte,
   aceptación parcial y límites; no equivale a una nueva validación del binario.
+- [Google Forms: publicación y configuración de respuestas](https://support.google.com/docs/answer/2839588?hl=es):
+  límite de una respuesta con inicio de sesión; recopilación de correos separada.
+- [Google Forms: mostrar preguntas según respuestas](https://support.google.com/docs/answer/141062?hl=es-419):
+  destinos por sección y terminación del formulario; no implica opciones dinámicas
+  dentro de una misma pregunta.
 - [GOV.UK: preguntas abiertas](https://design-system.service.gov.uk/components/textarea/#when-not-to-use-this-component):
   advierte sobre su dificultad y considera alternativas más simples. Sustenta la
   hipótesis de reducir escritura, no demuestra que esta propuesta aumente respuestas.
