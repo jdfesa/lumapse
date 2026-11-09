@@ -7,7 +7,7 @@ Este directorio reúne la documentación viva de Lumapse. El corte vigente es la
 | Necesidad | Fuente canónica |
 |---|---|
 | Aprender a usar Lumapse | [Manual de usuario 0.6.0](https://jdfesa.github.io/lumapse/manual-de-usuario-lumapse.html) |
-| Revisar el diseño de la prueba exploratoria voluntaria | [Cinco preguntas y árbol aplicado](./prueba-exploratoria/README.md) — aprobado y aplicado, sin publicar |
+| Revisar el diseño de la prueba exploratoria voluntaria | [Cinco preguntas y árbol aplicado](./prueba-exploratoria/README.md) — documentación aprobada en [PR #55](https://github.com/jdfesa/lumapse/pull/55); formulario aplicado, sin publicar |
 | Editar y regenerar el manual | [Fuentes y regeneración](./manual-de-usuario-0.6.0/README.md#para-editar-y-regenerar) |
 | Entender el producto y su alcance actual | [`producto/`](./producto/) |
 | Entender la arquitectura y sus decisiones | [`adr/`](./adr/) y [`diagramas/arquitectura-componentes.md`](./diagramas/arquitectura-componentes.md) |
