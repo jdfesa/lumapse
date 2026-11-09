@@ -1,9 +1,8 @@
 # Prueba exploratoria de Lumapse
 
-> **Estado:** propuesta única pendiente de aprobación; todavía no aplicada.
-> El formulario observado el 9 de noviembre de 2026 tiene cinco preguntas,
-> tres secciones y sigue sin publicar. Lo que sigue describe **sólo el diseño
-> propuesto: cinco preguntas y cuatro secciones**.
+> **Estado:** diseño aprobado y aplicado el 9 de noviembre de 2026.
+> El formulario tiene **cinco preguntas y cuatro secciones**; sigue sin publicar.
+> Este documento describe únicamente el diseño aplicado.
 
 ## Objetivo e invitación
 
@@ -25,13 +24,13 @@ Recursos opcionales: [sitio](https://lumapse.tech/),
 [manual interactivo](https://lumapse.tech/manual/) y
 [tutorial de instalación](https://youtu.be/u8IV2VRYkn8).
 El video fue grabado con v0.5.0; la descarga para esta prueba es v0.6.0 RC1.
-Mantener el manual disponible en todas las secciones, con una indicación breve
+El manual está disponible en las cuatro secciones, con una indicación breve
 de volver al formulario si se consulta.
 
-## Las cinco preguntas propuestas
+## Las cinco preguntas
 
-Todas serían obligatorias. P1, P2, P4 y P5 serían de opción única, sin preselección;
-P3, de respuesta corta. «Otra dificultad» y «Otro motivo» serían opciones cerradas,
+Todas son obligatorias. P1, P2, P4 y P5 son de opción única, sin preselección;
+P3, de respuesta corta. «Otra dificultad» y «Otro motivo» son opciones cerradas,
 sin escritura adicional.
 
 ### Sección 1 · Participación
@@ -79,7 +78,7 @@ P5 no ofrece «Ninguna» ni afirmaciones como «La instalé» o «No pude instal
 P1 ya distingue esas etapas. P4 sí permite «Ninguna», porque sólo llega quien la usó.
 Ambos cierres recogen un motivo principal, no un diagnóstico exhaustivo.
 
-## Único árbol propuesto
+## Árbol aplicado
 
 ```mermaid
 flowchart TD
@@ -98,18 +97,21 @@ flowchart TD
 Quien no la usó ve **dos preguntas**; quien la usó, **cuatro**.
 S3 y S4 terminan en «Enviar formulario», sin pasar de un cierre al otro.
 
-**Cambio a aprobar:** reemplazar la pregunta abierta independiente de mejora por
+**Cambio aprobado y aplicado:** se reemplazó la pregunta abierta independiente de mejora por
 P4, cerrada y específica sobre barreras de uso. Así se conserva el total de cinco
 y se consultan barreras en ambos recorridos, sin preguntas incompatibles.
 
 ## Configuración y revisión pendiente
 
-Mantener los ajustes actuales sin recopilar correos ni activar el límite de una
+Se mantuvieron los ajustes sin recopilar correos ni activar el límite de una
 respuesta: [Google exige iniciar sesión para ese límite](https://support.google.com/docs/answer/2839588?hl=es).
-Sin él no se garantiza una sola respuesta por persona. No se cambian estos ajustes.
+Sin él no se garantiza una sola respuesta por persona.
 
-- [ ] Aprobar estas cinco preguntas, sus opciones y el reemplazo de la mejora abierta.
-- [ ] Aplicar el diseño y comprobar las cuatro opciones de P1, ambos envíos finales,
-  retroceso/cambio de recorrido, enlaces y acceso sin sesión. Sin enviar respuestas
-  de prueba a los datos reales sin autorización.
+- [x] Aprobadas las cinco preguntas, sus opciones y el reemplazo de la mejora abierta.
+- [x] Diseño aplicado y guardado; cuatro opciones de P1 comprobadas en vista previa,
+  con destinos correctos, manual disponible y ambos cierres en «Enviar».
+  También se comprobó el retroceso y cambio de recorrido. No se enviaron respuestas.
+- [ ] Comprobar acceso de participantes sin sesión cuando se autorice habilitar el
+  formulario. La vista previa no verifica ese acceso ni la persistencia de respuestas
+  de un ramal abandonado tras un envío.
 - [ ] Revisar el formulario resultante antes de autorizar su publicación.
