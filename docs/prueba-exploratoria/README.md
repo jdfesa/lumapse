@@ -1,6 +1,7 @@
 # Prueba exploratoria de Lumapse
 
-> **Estado:** diseño aprobado y aplicado el 9 de noviembre de 2026.
+> **Estado del formulario:** diseño aplicado y contenido final aprobado
+> el 9 de noviembre de 2026.
 > El formulario tiene **cinco preguntas y cuatro secciones**; sigue sin publicar.
 > Este documento describe únicamente el diseño aplicado.
 
@@ -111,9 +112,10 @@ Sin él no se garantiza una sola respuesta por persona.
 
 - [x] Aprobadas las cinco preguntas, sus opciones y el reemplazo de la mejora abierta.
 - [x] Diseño aplicado y guardado; cuatro opciones de P1 comprobadas en vista previa,
-  con destinos correctos, manual disponible y ambos cierres en «Enviar».
+  con destinos correctos, recursos de apoyo y ambos cierres en «Enviar».
   También se comprobó el retroceso y cambio de recorrido. No se enviaron respuestas.
+- [x] Revisión final del contenido y los recursos aprobada; se conserva este diseño.
 - [ ] Comprobar acceso de participantes sin sesión cuando se autorice habilitar el
   formulario. La vista previa no verifica ese acceso ni la persistencia de respuestas
   de un ramal abandonado tras un envío.
-- [ ] Revisar el formulario resultante antes de autorizar su publicación.
+- [ ] Autorizar por separado la publicación del formulario.
