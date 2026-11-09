@@ -206,6 +206,7 @@ de controles como condición de publicación. No abrir otra ronda técnica.
 
 ### Feedback posterior al corte — no bloqueante
 
+- [ ] Revisar y aprobar el [diseño y árbol de la prueba exploratoria](docs/prueba-exploratoria/README.md), distinguiendo instrumento observado, alternativas de tres/cuatro secciones y mensaje de confianza antes de aplicar una nueva configuración del formulario.
 - [ ] Distribuir el APK de presentación a compañeros y otros usuarios e invitar a una encuesta voluntaria; registrar versión, fecha y resultados disponibles, sin condicionar manual, informe o defensa a recibir respuestas.
 - [ ] Recoger observaciones sobre primera nota (`RNF-005`), funcionalidad y fricciones. El umbral ≤10 s sigue pendiente si no se realiza una medición específica; opiniones no acreditan tiempos ni adopción.
 - [ ] Incorporar, cuando se reciban, las observaciones de los dos docentes que el autor informa están probando `v0.5.0`; atribuirlas a esa versión, no al APK posterior. Documentar hallazgos y trabajo futuro sin reabrir automáticamente el desarrollo.
