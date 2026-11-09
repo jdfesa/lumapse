@@ -24,8 +24,10 @@ Recursos opcionales: [sitio](https://lumapse.tech/),
 [manual interactivo](https://lumapse.tech/manual/) y
 [tutorial de instalación](https://youtu.be/u8IV2VRYkn8).
 El video fue grabado con v0.5.0; la descarga para esta prueba es v0.6.0 RC1.
-El manual está disponible en las cuatro secciones, con una indicación breve
-de volver al formulario si se consulta.
+El sitio se destaca en la sección 1 y también se ofrece en las secciones 3 y 4.
+El manual está en las secciones 1, 2 y 3; en la sección 4 se ofrece el tutorial
+de instalación en su lugar. Todos son opcionales, con una indicación breve
+de volver al formulario después de consultarlos.
 
 ## Las cinco preguntas
 
