@@ -2,8 +2,10 @@
 
 > **Estado del formulario:** diseño aplicado y contenido final aprobado
 > el 9 de noviembre de 2026.
-> El formulario tiene **cinco preguntas y cuatro secciones**; sigue sin publicar.
+> Publicado el **10 de noviembre de 2026**, con **cinco preguntas y cuatro secciones**.
 > Este documento describe únicamente el diseño aplicado.
+
+[Enlace para responder y compartir](https://forms.gle/e4fWoxdcV33D42VS9).
 
 ## Objetivo e invitación
 
@@ -115,7 +117,9 @@ Sin él no se garantiza una sola respuesta por persona.
   con destinos correctos, recursos de apoyo y ambos cierres en «Enviar».
   También se comprobó el retroceso y cambio de recorrido. No se enviaron respuestas.
 - [x] Revisión final del contenido y los recursos aprobada; se conserva este diseño.
-- [ ] Comprobar acceso de participantes sin sesión cuando se autorice habilitar el
-  formulario. La vista previa no verifica ese acceso ni la persistencia de respuestas
+- [x] Publicación autorizada y realizada: acepta respuestas de cualquier persona
+  con el enlace. Se abrió el enlace de participación sin enviar respuestas;
+  la comprobación se realizó con una sesión de Google iniciada.
+- [ ] Comprobar acceso de participantes sin sesión. La vista previa no verifica
+  ese acceso ni la persistencia de respuestas
   de un ramal abandonado tras un envío.
-- [ ] Autorizar por separado la publicación del formulario.
