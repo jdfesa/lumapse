@@ -209,7 +209,9 @@ de controles como condición de publicación. No abrir otra ronda técnica.
 - [x] Aprobar y aplicar el [diseño de la prueba exploratoria](docs/prueba-exploratoria/README.md): cinco preguntas, cuatro secciones y barreras en ambos recorridos; mejora abierta reemplazada. Cuatro recorridos comprobados en vista previa, mensaje breve y recursos adaptados a cada sección; sin envíos ni publicación.
 - [x] Revisar y aprobar el contenido y los recursos finales del formulario aplicado; se conserva el diseño documentado, sin publicar.
 - [x] Aprobar la documentación de la prueba exploratoria en [PR #55](https://github.com/jdfesa/lumapse/pull/55); la aprobación no autoriza publicar el formulario.
-- [ ] Autorizar por separado la publicación del formulario; el acceso de participantes sin sesión sigue sin comprobarse.
+- [x] Autorizar y publicar el formulario el 2026-11-10: recepción de respuestas activada y [enlace para participar](https://forms.gle/e4fWoxdcV33D42VS9) abierto sin enviar respuestas; se mantienen preguntas, recorridos y hoja vinculada.
+- [x] Acceso para responder sin iniciar sesión en Google comprobado por el responsable del proyecto.
+- [ ] Registrar la fecha de cierre de la encuesta en la [documentación de la prueba](docs/prueba-exploratoria/README.md) cuando finalice la recepción de respuestas; conservar el enlace como referencia.
 - [ ] Distribuir el APK de presentación a compañeros y otros usuarios e invitar a una encuesta voluntaria; registrar versión, fecha y resultados disponibles, sin condicionar manual, informe o defensa a recibir respuestas.
 - [ ] Recoger observaciones sobre primera nota (`RNF-005`), funcionalidad y fricciones. El umbral ≤10 s sigue pendiente si no se realiza una medición específica; opiniones no acreditan tiempos ni adopción.
 - [ ] Incorporar, cuando se reciban, las observaciones de los dos docentes que el autor informa están probando `v0.5.0`; atribuirlas a esa versión, no al APK posterior. Documentar hallazgos y trabajo futuro sin reabrir automáticamente el desarrollo.

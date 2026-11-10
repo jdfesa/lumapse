@@ -1,9 +1,10 @@
 # Prueba exploratoria de Lumapse
 
-> **Estado del formulario:** diseño aplicado y contenido final aprobado
-> el 9 de noviembre de 2026.
-> El formulario tiene **cinco preguntas y cuatro secciones**; sigue sin publicar.
-> Este documento describe únicamente el diseño aplicado.
+> **Estado:** encuesta abierta desde el **10 de noviembre de 2026**.
+> **Cierre:** sin fecha definida; se registrará aquí cuando se cierre la encuesta.
+> Diseño aplicado y aprobado el 9 de noviembre de 2026, con **cinco preguntas y cuatro secciones**.
+
+[Formulario de la prueba exploratoria](https://forms.gle/e4fWoxdcV33D42VS9).
 
 ## Objetivo e invitación
 
@@ -104,7 +105,7 @@ S3 y S4 terminan en «Enviar formulario», sin pasar de un cierre al otro.
 P4, cerrada y específica sobre barreras de uso. Así se conserva el total de cinco
 y se consultan barreras en ambos recorridos, sin preguntas incompatibles.
 
-## Configuración y revisión pendiente
+## Configuración y comprobaciones
 
 Se mantuvieron los ajustes sin recopilar correos ni activar el límite de una
 respuesta: [Google exige iniciar sesión para ese límite](https://support.google.com/docs/answer/2839588?hl=es).
@@ -115,7 +116,7 @@ Sin él no se garantiza una sola respuesta por persona.
   con destinos correctos, recursos de apoyo y ambos cierres en «Enviar».
   También se comprobó el retroceso y cambio de recorrido. No se enviaron respuestas.
 - [x] Revisión final del contenido y los recursos aprobada; se conserva este diseño.
-- [ ] Comprobar acceso de participantes sin sesión cuando se autorice habilitar el
-  formulario. La vista previa no verifica ese acceso ni la persistencia de respuestas
-  de un ramal abandonado tras un envío.
-- [ ] Autorizar por separado la publicación del formulario.
+- [x] Publicación autorizada y realizada: acepta respuestas de cualquier persona
+  con el enlace.
+- [x] Acceso para responder sin iniciar sesión en Google comprobado por el
+  responsable del proyecto.
