@@ -87,6 +87,8 @@ La protección del despliegue y las comparaciones de datos descritas en la secci
 
 El mantenimiento de dependencias requiere considerar los cambios del grafo y los avisos de seguridad de cada corte. Una auditoría sin vulnerabilidades conocidas en una fecha no demuestra que el grafo conserve ese resultado indefinidamente, ni sustituye la comprobación de los flujos afectados por un parche.
 
+Sostener el proyecto requiere prever tiempo de mantenimiento y revisar los recursos compartidos y bonificados descritos en la sección 2.4.1. Al finalizar los beneficios sería necesario evaluar su renovación o alternativas, sin presumir gratuidad permanente. La disponibilidad de esas herramientas y del dominio afecta al trabajo de mantenimiento y difusión, no al funcionamiento local del APK ya instalado.
+
 ### 7.3.3. Opciones de evolución del producto
 
 Las capacidades postergadas pueden revisarse si aparecen necesidades y evidencia que las justifiquen. Entre ellas están compartir e importar notas individuales, adjuntos, búsqueda especializada y mecanismos más avanzados de restauración. No son equivalentes al ZIP manual ya disponible: extender la portabilidad exige definir qué datos y conflictos se resuelven, no sólo agregar otro botón.

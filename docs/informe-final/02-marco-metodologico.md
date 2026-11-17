@@ -40,6 +40,10 @@ La guía de Kanban identifica cuatro métricas mínimas: WIP, cantidad de elemen
 
 La definición de flujo incorpora una expectativa de nivel de servicio provisional: 85 % de los elementos en siete días calendario o menos, a recalibrar con al menos cinco elementos con fechas confiables. No es cumplimiento observado. Por estas limitaciones, describo el proceso como basado en Kanban y adaptado al contexto individual, sin afirmar conformidad histórica completa.
 
+### 2.1.4. Asistencia de inteligencia artificial
+
+Me apoyé en herramientas de inteligencia artificial durante el desarrollo incremental: inicialmente utilicé Antigravity y posteriormente modelos de OpenAI. Esa asistencia acompañó el trabajo sobre funcionalidades, correcciones y scripts de automatización; no constituye una metodología independiente ni una garantía de corrección. La definición del problema, el alcance y las decisiones aceptadas permanecen bajo mi responsabilidad. No considero validada una propuesta por provenir de un modelo: su fundamento debe examinarse mediante los requisitos, las decisiones y las verificaciones documentadas en los capítulos 4 a 6.
+
 ## 2.2. Análisis de Personas de Usuario
 
 Formulé tres personas a partir de mi experiencia en el contexto académico, la observación y conversaciones informales. Son arquetipos de diseño, no participantes identificados en una investigación ni entrevistas sistemáticas. Sus nombres, biografías y citas sintéticas ayudan a representar necesidades; no deben interpretarse como testimonios recolectados.
@@ -81,6 +85,18 @@ La tabla distingue la contribución de cada bloque de aquello que aún no consti
 La síntesis «Tus notas. En tu equipo. Sin cuenta. Sin internet.» expresa esa orientación con los límites del capítulo 1: el respaldo externo requiere una acción deliberada y la pérdida del dispositivo o la desinstalación siguen siendo riesgos. Portabilidad no equivale a sincronización ni a recuperación garantizada de todo el estado.
 
 El canvas hace visibles los supuestos; no presento una validación económica integral ni un estudio de retención. Sus metas iniciales no reemplazan requisitos medibles ni resultados de usuario.
+
+### 2.4.1. Recursos y costos del desarrollo
+
+Distingo los desembolsos personales, los accesos bonificados y el trabajo no valorizado. Utilicé una suscripción personal de ChatGPT de USD 20 mensuales, cuyo inicio sitúo aproximadamente en abril de 2026. La destiné en gran medida a Lumapse y su mantenimiento, pero también a otros proyectos; por ello, la cuota no representa un costo mensual exclusivo de Lumapse.
+
+| Recurso | Desembolso personal | Condición de uso |
+|---|---|---|
+| ChatGPT | USD 20 mensuales | Suscripción compartida con otros proyectos, sin un porcentaje de imputación registrado |
+| Antigravity | USD 0 | Acceso bonificado mediante una promoción estudiantil personal |
+| Dominio `.tech` | USD 0 | Beneficio personal de GitHub Student Developer Pack, no una compra del proyecto |
+
+Estos recursos apoyan el desarrollo y la difusión; su contratación no es un requisito para utilizar el núcleo local del APK. El trabajo se realizó sin horario fijo y no dispongo de un registro completo de horas para valorizarlo, como explico en la sección 7.2.2. El cuadro no constituye un presupuesto integral: no calculo un total exclusivo a partir de cuotas compartidas ni sumo precios comerciales de recursos que recibí bonificados. Un desembolso nulo tampoco demuestra que su continuidad esté financiada, cuestión retomada en la sección 7.3.2.
 
 ## 2.5. Historias de Usuario como Hipótesis de Valor (Lean UX)
 
