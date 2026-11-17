@@ -254,7 +254,8 @@ en la matriz, manual, informe y defensa, sin inventar resultados ni reabrir prue
 - [x] **[Capítulo 7 — Conclusiones](docs/informe-final/07-conclusiones.md):** revisado contra los objetivos y la evidencia del corte RC1, con lecciones y trabajo futuro delimitados y aprobado; cambios en [PR #53](https://github.com/jdfesa/lumapse/pull/53).
 - [x] **[Referencias — archivo 08](docs/informe-final/08-referencias.md):** revisadas y aprobadas en [PR #54](https://github.com/jdfesa/lumapse/pull/54); metadatos de Gómez y Parada contrastados con los originales, material de cátedra distinguido de libros, autoría de la guía Kanban corregida y GPLv3 incorporada.
 - [x] **Complementos de proceso y recursos:** incisos 2.1.4 y 2.4.1 y continuidad en 7.3.2 revisados y aprobados; cambios en [PR #57](https://github.com/jdfesa/lumapse/pull/57), sin modificar la evidencia de pruebas ni el checkpoint ensamblado.
-- [ ] **Revisión transversal, metadatos y ensamblado final:** pendientes hasta completar la revisión e integración de todos los capítulos y las referencias.
+- [x] **Checkpoint parcial de lectura:** ensamblado el 2026-11-17 desde los capítulos y las referencias vigentes, con portada RC1 y estado parcial; no equivale al informe final terminado.
+- [ ] **Revisión transversal, metadatos y ensamblado final:** pendientes de cierre editorial; el checkpoint parcial no completa esta revisión ni el pendiente de diagramas.
 - [ ] **Maquetación LaTeX/PDF y revisión de presentación:** pendientes del contenido consolidado.
 
 ## Criterios de salida de Hito 06

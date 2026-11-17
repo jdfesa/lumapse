@@ -10,7 +10,7 @@ El informe es un documento vivo y queda sujeto a actualizaciones mientras el pro
 python3 scripts/assemble-report.py
 ```
 
-Por regla general, no se edita manualmente el informe completo. El próximo ensamblado queda pendiente hasta completar la revisión y aprobación de todos los capítulos y las referencias.
+No se edita manualmente el informe completo. El checkpoint parcial del 2026-11-17 reúne las fuentes vigentes para su lectura y revisión; no equivale al cierre editorial ni a la entrega final.
 
 La fecha de ensamblado se calcula en cada ejecución. El estado, alcance funcional y fecha de corte documental se leen de `report-metadata.json`; nunca se recuperan desde una salida generada anterior.
 
@@ -24,8 +24,8 @@ La fecha de ensamblado se calcula en cada ejecución. El estado, alcance funcion
 ### Seguimiento por capítulos
 
 El [estado de cada unidad](../../TODO.md#revisión-del-informe-capítulo-por-capítulo)
-se registra en `TODO.md`. El ensamblado final y la actualización de los metadatos
-globales siguen pendientes; una revisión parcial no equivale al informe terminado.
+se registra en `TODO.md`. Los metadatos identifican el checkpoint parcial; su
+comprobación definitiva y el ensamblado final siguen pendientes del cierre editorial.
 
 ## Estado actual
 
@@ -62,26 +62,29 @@ con corrección mínima de sus dos citas en el capítulo 2.
 asistencia de IA y los recursos y desembolsos personales, con continuidad en
 7.3.2. Están revisados y aprobados; sus cambios se recogen en
 [PR #57](https://github.com/jdfesa/lumapse/pull/57). No amplían la evidencia de
-pruebas ni actualizan los metadatos o el ensamblado.
+pruebas; el checkpoint parcial los incorpora sin modificar los capítulos fuente.
 
-**Frontera del checkpoint generado:** `report-metadata.json` y
-`INFORME-FINAL-COMPLETO.md` conservan el corte `v0.5.0` del 2026-09-05, incluido el
-gate histórico de 67 archivos/1065 tests. No describen toda la evolución hasta la
-RC1 ni reflejan aún la revisión de las fuentes. Sus métricas no corresponden
-al `main` actual ni se atribuyen al APK `0.6.0`.
+**Checkpoint parcial generado — 2026-11-17:**
+[`INFORME-FINAL-COMPLETO.md`](./INFORME-FINAL-COMPLETO.md) reúne los siete capítulos
+y las referencias vigentes, con índice automático y metadatos de la RC1
+`v0.6.0/600`. La portada distingue el tag publicado `v0.6.0` sobre `ac2a747` de la
+fuente del APK, `bcefe6a`. El estado indica expresamente que el contenido sigue
+sujeto a revisión y cierre editorial. Las métricas y verificaciones del capítulo 6
+conservan sus artefactos y límites; este ensamblado no aporta pruebas nuevas.
 
-`INFORME-FINAL-COMPLETO.md` se regeneró como checkpoint después de reconciliar los capítulos con `v0.5.0`. Los capítulos siguen siendo la fuente de verdad; el próximo ensamblado permanece pendiente hasta completar la revisión y aprobación de todas las unidades.
+El checkpoint anterior de `v0.5.0`, del 2026-09-05, queda como antecedente en el
+historial de Git. Los capítulos siguen siendo la fuente de verdad. Este ensamblado
+parcial no congela el contenido ni completa los pendientes de diagramas, matriz RNF,
+revisión transversal o presentación final.
 
-El tablero único vigente es [`TODO.md`](../../TODO.md). El nombre anterior `TODO`
-se conserva en menciones históricas del checkpoint; no representa otro tablero ni
-una ruta de navegación vigente.
+El tablero único vigente es [`TODO.md`](../../TODO.md).
 
 Los pendientes explícitos del Hito 06 son:
 
-- Revisión editorial de congelamiento después de incorporar las evidencias finales; la reconciliación transversal y las figuras DB del checkpoint ya están completadas.
-- Verificación de legibilidad de las imágenes de base de datos dentro del PDF y las diapositivas. El conceptual Chen y el lógico relacional ya fueron exportados, revisados e incorporados desde sus fuentes DOT y DBML sincronizadas.
+- Revisión transversal y congelamiento editorial del contenido antes del ensamblado final; el checkpoint parcial no cierra esta tarea.
+- Inclusión y revisión de vigencia de los diagramas de base de datos y del modelado UML respecto de la RC1 congelada, además de su legibilidad en PDF y diapositivas. La existencia de figuras históricas no completa el [pendiente de diagramas](../../TODO.md#después-del-apk-aceptado-con-límites--cierre-académico-y-defensa).
 - Consolidación documental de la matriz RNF a partir de la [fuente canónica](../producto/requisitos-no-funcionales.md) y los reportes existentes: método, fecha, artefacto, resultado y límites. La evidencia de uso, accesibilidad, offline y tráfico en debugs no verifica automáticamente la RC1. CRUD/FPS siguen pendientes y [diferidos a post-presentación](../../BACKLOG.md#rendimiento-post-presentación); las comprobaciones restantes del APK exacto también se difieren, sin nuevas mediciones para completar el informe.
-- Incorporación del [corte RC1 identificado](../gestion/candidato-apk-0.6.0.md#binario-corregido), sus controles y aceptación parcial en los capítulos cuando se acuerde su revisión. El [recorte vigente](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa) no exige otra APK ni una versión estable: corresponde cerrar manual, matriz, informe y defensa con la evidencia disponible y los pendientes explícitos. Esta revisión de guías no modifica ni regenera el checkpoint.
+- Conciliación final del [corte RC1 identificado](../gestion/candidato-apk-0.6.0.md#binario-corregido), sus controles y aceptación parcial entre informe, manual, matriz y demo. El [recorte vigente](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa) no exige otra APK ni una versión estable: corresponde cerrar esos entregables con la evidencia disponible y los pendientes explícitos.
 
 ### Manual de usuario y consistencia de la entrega
 
@@ -92,11 +95,11 @@ inferir la métrica de RNF-005 ni abrir correcciones automáticamente. Las futur
 observaciones de los dos docentes que el autor informa prueban `v0.5.0` pertenecen
 a esa versión, no al APK posterior. No esperar respuestas para cerrar entregables.
 
-**Evidencia posterior al checkpoint:** [OFF-01–05 de RNF-009](../beta-core-validation/offline-2026-10-06.md)
+**Evidencia incorporada al checkpoint parcial:** [OFF-01–05 de RNF-009](../beta-core-validation/offline-2026-10-06.md)
 pasaron en el debug `348da88` el 2026-10-06, tras corregir el bloqueo del ZIP local
 sin red. El autor aceptó [PR #31](https://github.com/jdfesa/lumapse/pull/31); el
 resultado corresponde a ese debug y no se transfiere al asset publicado `v0.5.0`
-ni a la RC1 `v0.6.0`. El informe ensamblado conserva su checkpoint anterior.
+ni a la RC1 `v0.6.0`. El checkpoint parcial conserva esa atribución por artefacto.
 
 El [manual de usuario 0.6.0](../manual-de-usuario-0.6.0/README.md) ya se incorporó
 al repositorio y se [publicó en GitHub Pages](https://jdfesa.github.io/lumapse/manual-de-usuario-lumapse.html).
@@ -107,11 +110,11 @@ no equivale a probar los recorridos diferidos de la APK.
 
 La revisión debe explicar los flujos existentes y sus límites: guardado explícito,
 borradores, archivo/papelera y backup ZIP local, que no incluye borradores ni papelera.
-Informe, manual, matriz RNF y demo deben describir el mismo artefacto. La adaptación
-y el congelamiento final siguen pendientes; este acuerdo no regenera los capítulos
-ni el informe ensamblado de `v0.5.0`.
+Informe, manual, matriz RNF y demo deben describir el mismo artefacto. La conciliación
+y el congelamiento final siguen pendientes; el ensamblado parcial no completa las
+revisiones restantes ni modifica los capítulos fuente.
 
-### Checklist antes del próximo ensamblado
+### Checklist de ensamblado y cierre
 
 - [x] Confirmar que alcance, versión, cantidad de tests y estado del hito coinciden con `TODO`, `BACKLOG.md` y `CHANGELOG.md` en el checkpoint `v0.5.0` del 2026-09-05.
 - [x] Sincronizar las fuentes DOT, DBML y DDL con el schema ejecutable.
@@ -121,7 +124,8 @@ ni el informe ensamblado de `v0.5.0`.
 - [x] Ejecutar los chequeos documentales del checkpoint.
 - [x] Ensamblar el checkpoint con `python3 scripts/assemble-report.py` y revisar el diff generado.
 - [x] Reconciliar metadatos, capítulos y referencias con el tag publicado `v0.5.0`.
-- [ ] Adaptar capítulos y metadatos al corte RC1 `v0.6.0`, con matriz RNF por artefacto y límites aceptados, antes de acordar un nuevo ensamblado.
+- [x] Regenerar el checkpoint parcial RC1 del 2026-11-17 desde las fuentes vigentes, con fecha, alcance y estado parcial en la portada.
+- [ ] Completar la revisión transversal y la conciliación final con la matriz RNF por artefacto, los diagramas y los límites aceptados antes de congelar y ensamblar la entrega.
 - [ ] Congelar contenido antes de iniciar la maquetación LaTeX/PDF.
 
 ## Formato final de entrega

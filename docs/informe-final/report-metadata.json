@@ -1,9 +1,9 @@
 {
-  "status": "Checkpoint documental — Hito 06 activo; segunda beta publicada",
-  "document_cutoff_date": "2026-09-05",
-  "functional_scope": "v0.5.0",
-  "functional_tag": "v0.5.0",
-  "functional_commit": "5840755",
-  "technical_ref": "v0.5.0",
-  "technical_commit": "5840755"
+  "status": "Checkpoint parcial para revisión — Hito 06 activo; pendiente de cierre editorial",
+  "document_cutoff_date": "2026-11-17",
+  "functional_scope": "v0.6.0/600 — Release Candidate 1, validación parcial",
+  "functional_tag": "v0.6.0",
+  "functional_commit": "ac2a747",
+  "technical_ref": "bcefe6a",
+  "technical_commit": "bcefe6a"
 }

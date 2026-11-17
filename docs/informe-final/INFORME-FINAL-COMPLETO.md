@@ -7,11 +7,11 @@
 | Institución | IES 6023 "Dr. Alfredo Loutaif" |
 | Materia | Prácticas Profesionalizantes III |
 | Año | 2026 |
-| Estado | Checkpoint documental — Hito 06 activo; segunda beta publicada |
-| Alcance funcional | v0.5.0 (`v0.5.0` / `5840755`) |
-| Fuente técnica auditada | `v0.5.0` @ `5840755` |
-| Corte documental | 2026-09-05 |
-| Ensamblado automáticamente | 2026-09-05 |
+| Estado | Checkpoint parcial para revisión — Hito 06 activo; pendiente de cierre editorial |
+| Alcance funcional | v0.6.0/600 — Release Candidate 1, validación parcial (`v0.6.0` / `ac2a747`) |
+| Fuente técnica auditada | `bcefe6a` @ `bcefe6a` |
+| Corte documental | 2026-11-17 |
+| Ensamblado automáticamente | 2026-11-17 |
 
 ---
 
@@ -24,14 +24,20 @@
     - [1.3.1. Objetivo General](#131-objetivo-general)
     - [1.3.2. Objetivos Específicos](#132-objetivos-específicos)
   - [1.4. Justificación y Alcance](#14-justificación-y-alcance)
+    - [1.4.1. Justificación académica y de producto](#141-justificación-académica-y-de-producto)
+    - [1.4.2. Alcance funcional implementado](#142-alcance-funcional-implementado)
+    - [1.4.3. Delimitaciones técnicas y funcionales](#143-delimitaciones-técnicas-y-funcionales)
+    - [1.4.4. Corte de presentación y límites de la evidencia](#144-corte-de-presentación-y-límites-de-la-evidencia)
 - [Capítulo 2: Marco Metodológico y Modelo de Negocio](#capítulo-2-marco-metodológico-y-modelo-de-negocio)
   - [2.1. Enfoque de Desarrollo y Gestión del Flujo (Kanban Adaptado)](#21-enfoque-de-desarrollo-y-gestión-del-flujo-kanban-adaptado)
     - [2.1.1. Justificación frente a Scrum y RUP](#211-justificación-frente-a-scrum-y-rup)
     - [2.1.2. Sistema de trabajo aplicado](#212-sistema-de-trabajo-aplicado)
     - [2.1.3. Medición y límite de la evidencia](#213-medición-y-límite-de-la-evidencia)
+    - [2.1.4. Asistencia de inteligencia artificial](#214-asistencia-de-inteligencia-artificial)
   - [2.2. Análisis de Personas de Usuario](#22-análisis-de-personas-de-usuario)
   - [2.3. Análisis Competitivo](#23-análisis-competitivo)
   - [2.4. Lean Canvas](#24-lean-canvas)
+    - [2.4.1. Recursos y costos del desarrollo](#241-recursos-y-costos-del-desarrollo)
   - [2.5. Historias de Usuario como Hipótesis de Valor (Lean UX)](#25-historias-de-usuario-como-hipótesis-de-valor-lean-ux)
     - [2.5.1. Fase 1 — La Historia de Usuario como supuesto de diseño](#251-fase-1--la-historia-de-usuario-como-supuesto-de-diseño)
     - [2.5.2. Fase 2 — La encuesta como instrumento de validación](#252-fase-2--la-encuesta-como-instrumento-de-validación)
@@ -42,65 +48,85 @@
     - [2.6.2. Requisitos No Funcionales](#262-requisitos-no-funcionales)
 - [Capítulo 3: Relevamiento y Análisis de Datos](#capítulo-3-relevamiento-y-análisis-de-datos)
   - [3.1. Metodología de Recolección (Población y Muestra)](#31-metodología-de-recolección-población-y-muestra)
+    - [3.1.1. Población de referencia y selección](#311-población-de-referencia-y-selección)
+    - [3.1.2. Instrumento y ramificaciones](#312-instrumento-y-ramificaciones)
+    - [3.1.3. Tratamiento y control de los datos](#313-tratamiento-y-control-de-los-datos)
   - [3.2. Análisis Demográfico](#32-análisis-demográfico)
   - [3.3. Resultados sobre Hábitos de Estudio y Toma de Notas](#33-resultados-sobre-hábitos-de-estudio-y-toma-de-notas)
+    - [3.3.1. Método principal y dificultades](#331-método-principal-y-dificultades)
+    - [3.3.2. Conectividad y características seleccionadas](#332-conectividad-y-características-seleccionadas)
+    - [3.3.3. Utilidad percibida y disposición a una prueba](#333-utilidad-percibida-y-disposición-a-una-prueba)
+    - [3.3.4. Dispositivo y organización preferidos](#334-dispositivo-y-organización-preferidos)
+    - [3.3.5. Cruces descriptivos](#335-cruces-descriptivos)
   - [3.4. Análisis Cualitativo (Puntos de Dolor)](#34-análisis-cualitativo-puntos-de-dolor)
   - [3.5. Conclusiones del Relevamiento e Impacto en el Producto](#35-conclusiones-del-relevamiento-e-impacto-en-el-producto)
 - [Capítulo 4: Arquitectura y Diseño](#capítulo-4-arquitectura-y-diseño)
-  - [4.1. Decisiones Arquitectónicas Iniciales (ADRs)](#41-decisiones-arquitectónicas-iniciales-adrs)
-  - [4.2. Stack Tecnológico](#42-stack-tecnológico)
-  - [4.3. Modelo de Dominio](#43-modelo-de-dominio)
-  - [4.4. Diagramas de Casos de Uso](#44-diagramas-de-casos-de-uso)
-  - [4.5. Diagramas de Secuencia](#45-diagramas-de-secuencia)
-  - [4.6. Diseño de Interfaz (UI/UX y Mobile-First)](#46-diseño-de-interfaz-uiux-y-mobile-first)
-  - [4.7. Diseño de Base de Datos](#47-diseño-de-base-de-datos)
+  - [4.1. Decisiones arquitectónicas y evolución del diseño](#41-decisiones-arquitectónicas-y-evolución-del-diseño)
+  - [4.2. Stack tecnológico y compromisos](#42-stack-tecnológico-y-compromisos)
+  - [4.3. Modelo de dominio](#43-modelo-de-dominio)
+  - [4.4. Casos de uso y frontera del sistema](#44-casos-de-uso-y-frontera-del-sistema)
+  - [4.5. Secuencia de edición, guardado y recuperación](#45-secuencia-de-edición-guardado-y-recuperación)
+  - [4.6. Diseño de interfaz y prioridad móvil](#46-diseño-de-interfaz-y-prioridad-móvil)
+  - [4.7. Diseño de base de datos](#47-diseño-de-base-de-datos)
     - [4.7.1. Motor de persistencia](#471-motor-de-persistencia)
-    - [4.7.2. Metodología de diseño](#472-metodología-de-diseño)
-    - [4.7.3. Entidades del dominio](#473-entidades-del-dominio)
-    - [4.7.4. Estructura de información opinionada (DP-004)](#474-estructura-de-información-opinionada-dp-004)
-    - [4.7.5. Normalización y decisión de persistencia del título](#475-normalización-y-decisión-de-persistencia-del-título)
-  - [4.8. Patrones de Arquitectura y Diseño de Software](#48-patrones-de-arquitectura-y-diseño-de-software)
-    - [4.8.1. Organización modular y flujo de dependencias](#481-organización-modular-y-flujo-de-dependencias)
-    - [4.8.2. Patrones identificados en el código](#482-patrones-identificados-en-el-código)
+    - [4.7.2. Niveles de diseño y representaciones](#472-niveles-de-diseño-y-representaciones)
+    - [4.7.3. Integridad y reglas de negocio](#473-integridad-y-reglas-de-negocio)
+    - [4.7.4. Organización, archivo y borrador técnico](#474-organización-archivo-y-borrador-técnico)
+    - [4.7.5. Normalización y persistencia del título](#475-normalización-y-persistencia-del-título)
+  - [4.8. Patrones de arquitectura y diseño de software](#48-patrones-de-arquitectura-y-diseño-de-software)
+    - [4.8.1. Responsabilidades y dirección de dependencias](#481-responsabilidades-y-dirección-de-dependencias)
+    - [4.8.2. Patrones observables y grado de aplicación](#482-patrones-observables-y-grado-de-aplicación)
     - [4.8.3. Relación con MVC y límites de la clasificación](#483-relación-con-mvc-y-límites-de-la-clasificación)
-    - [4.8.4. Frontera cliente y ausencia de backend remoto](#484-frontera-cliente-y-ausencia-de-backend-remoto)
+    - [4.8.4. Frontera cliente y alcance offline](#484-frontera-cliente-y-alcance-offline)
 - [Capítulo 5: Desarrollo e Implementación](#capítulo-5-desarrollo-e-implementación)
-  - [5.1. Estructura del Repositorio y Entorno](#51-estructura-del-repositorio-y-entorno)
-  - [5.2. Capa de Presentación (Componentes UI)](#52-capa-de-presentación-componentes-ui)
-  - [5.3. Gestión de Estado Reactivo](#53-gestión-de-estado-reactivo)
-  - [5.4. Capa de Persistencia (Evolución de IndexedDB a SQLite)](#54-capa-de-persistencia-evolución-de-indexeddb-a-sqlite)
-  - [5.5. Procesamiento de Markdown y Seguridad (XSS)](#55-procesamiento-de-markdown-y-seguridad-xss)
-  - [5.6. Empaquetado Android Híbrido (Capacitor)](#56-empaquetado-android-híbrido-capacitor)
-  - [5.7. Licenciamiento de Software y Filosofía Open Source](#57-licenciamiento-de-software-y-filosofía-open-source)
-  - [5.8. Integración Continua (CI) — Automatización de Calidad de Código](#58-integración-continua-ci--automatización-de-calidad-de-código)
-    - [5.8.1. ¿Qué es la Integración Continua?](#581-qué-es-la-integración-continua)
-    - [5.8.2. Herramientas utilizadas](#582-herramientas-utilizadas)
-    - [5.8.3. Implementación en Lumapse](#583-implementación-en-lumapse)
-    - [5.8.4. Flujo de trabajo resultante](#584-flujo-de-trabajo-resultante)
-    - [5.8.5. Resultado actual](#585-resultado-actual)
-    - [5.8.6. Justificación de la práctica](#586-justificación-de-la-práctica)
+  - [5.1. Estructura del repositorio y entorno](#51-estructura-del-repositorio-y-entorno)
+  - [5.2. Capa de presentación y edición](#52-capa-de-presentación-y-edición)
+  - [5.3. Estado observable, filtros y operaciones asíncronas](#53-estado-observable-filtros-y-operaciones-asíncronas)
+  - [5.4. Persistencia, continuidad y respaldo](#54-persistencia-continuidad-y-respaldo)
+    - [5.4.1. Acceso SQLite y composición de operaciones](#541-acceso-sqlite-y-composición-de-operaciones)
+    - [5.4.2. Borrador y confirmación explícita](#542-borrador-y-confirmación-explícita)
+    - [5.4.3. Exportación e importación del conjunto de datos](#543-exportación-e-importación-del-conjunto-de-datos)
+  - [5.5. Procesamiento de Markdown y seguridad de presentación](#55-procesamiento-de-markdown-y-seguridad-de-presentación)
+  - [5.6. Empaquetado Android e identificación del artefacto](#56-empaquetado-android-e-identificación-del-artefacto)
+  - [5.7. Licenciamiento y continuidad académica](#57-licenciamiento-y-continuidad-académica)
+  - [5.8. Integración continua y control automatizado](#58-integración-continua-y-control-automatizado)
+    - [5.8.1. Entorno y entrada común](#581-entorno-y-entrada-común)
+    - [5.8.2. Controles y criterio de fallo](#582-controles-y-criterio-de-fallo)
+    - [5.8.3. Relación entre automatización y aceptación](#583-relación-entre-automatización-y-aceptación)
 - [Capítulo 6: Pruebas y Validación](#capítulo-6-pruebas-y-validación)
-  - [6.1. Estrategia de Testing](#61-estrategia-de-testing)
-  - [6.2. Pruebas Unitarias](#62-pruebas-unitarias)
-  - [6.3. Pruebas de Integración y Funcionamiento Offline](#63-pruebas-de-integración-y-funcionamiento-offline)
-  - [6.4. Validación de Rendimiento y UX](#64-validación-de-rendimiento-y-ux)
-  - [6.5. Alcance de la Evidencia y Validación Pendiente](#65-alcance-de-la-evidencia-y-validación-pendiente)
+  - [6.1. Estrategia y criterios de interpretación](#61-estrategia-y-criterios-de-interpretación)
+  - [6.2. Pruebas automatizadas e integración técnica](#62-pruebas-automatizadas-e-integración-técnica)
+    - [6.2.1. Regresiones orientadas a riesgos](#621-regresiones-orientadas-a-riesgos)
+    - [6.2.2. Resultados de los cortes y cobertura](#622-resultados-de-los-cortes-y-cobertura)
+    - [6.2.3. Alcance de los controles de integración](#623-alcance-de-los-controles-de-integración)
+  - [6.3. Evidencia Android, continuidad y actualización](#63-evidencia-android-continuidad-y-actualización)
+    - [6.3.1. Antecedentes y funcionamiento offline](#631-antecedentes-y-funcionamiento-offline)
+    - [6.3.2. Continuidad del borrador](#632-continuidad-del-borrador)
+    - [6.3.3. Identidad y alcance de las pruebas de la RC1](#633-identidad-y-alcance-de-las-pruebas-de-la-rc1)
+  - [6.4. Rendimiento, usabilidad y accesibilidad](#64-rendimiento-usabilidad-y-accesibilidad)
+    - [6.4.1. Métricas medidas y métricas pendientes](#641-métricas-medidas-y-métricas-pendientes)
+    - [6.4.2. Revisiones de interacción y presentación](#642-revisiones-de-interacción-y-presentación)
+    - [6.4.3. Lighthouse y tratamiento de sus hallazgos](#643-lighthouse-y-tratamiento-de-sus-hallazgos)
+  - [6.5. Seguridad, privacidad y alcance de las auditorías](#65-seguridad-privacidad-y-alcance-de-las-auditorías)
+  - [6.6. Síntesis del estado y límites de la entrega](#66-síntesis-del-estado-y-límites-de-la-entrega)
 - [Capítulo 7: Conclusiones](#capítulo-7-conclusiones)
-  - [7.1. Cumplimiento de Objetivos](#71-cumplimiento-de-objetivos)
-  - [7.2. Lecciones Aprendidas](#72-lecciones-aprendidas)
-    - [7.2.1. Gestión de riesgos técnicos: la estimación PERT como herramienta de decisión](#721-gestión-de-riesgos-técnicos-la-estimación-pert-como-herramienta-de-decisión)
-    - [7.2.2. Adaptación del entorno de pruebas: hardware limitado como oportunidad](#722-adaptación-del-entorno-de-pruebas-hardware-limitado-como-oportunidad)
-    - [7.2.3. Estimación retroactiva vs. prospectiva: el sesgo de confirmación](#723-estimación-retroactiva-vs-prospectiva-el-sesgo-de-confirmación)
-    - [7.2.4. Documentación viva vs. documentación muerta](#724-documentación-viva-vs-documentación-muerta)
-  - [7.3. Trabajo Futuro y Posibles Mejoras](#73-trabajo-futuro-y-posibles-mejoras)
-    - [7.3.1. Cierre documental y de calidad](#731-cierre-documental-y-de-calidad)
-    - [7.3.2. Mejoras posteriores a la beta](#732-mejoras-posteriores-a-la-beta)
-    - [7.3.3. Evolución de largo plazo](#733-evolución-de-largo-plazo)
+  - [7.1. Cumplimiento de los objetivos y alcance del resultado](#71-cumplimiento-de-los-objetivos-y-alcance-del-resultado)
+  - [7.2. Lecciones aprendidas](#72-lecciones-aprendidas)
+    - [7.2.1. Relacionar necesidades con decisiones sin confundir sus evidencias](#721-relacionar-necesidades-con-decisiones-sin-confundir-sus-evidencias)
+    - [7.2.2. Usar estimaciones como hipótesis y registros como evidencia](#722-usar-estimaciones-como-hipótesis-y-registros-como-evidencia)
+    - [7.2.3. Adaptar el entorno sin volver prescindibles los datos de prueba](#723-adaptar-el-entorno-sin-volver-prescindibles-los-datos-de-prueba)
+    - [7.2.4. Separar implementación, verificación y aceptación](#724-separar-implementación-verificación-y-aceptación)
+    - [7.2.5. Mantener trazabilidad sin confundir documentación con validación](#725-mantener-trazabilidad-sin-confundir-documentación-con-validación)
+  - [7.3. Trabajo futuro y posibles mejoras](#73-trabajo-futuro-y-posibles-mejoras)
+    - [7.3.1. Validación del núcleo y de los atributos de calidad](#731-validación-del-núcleo-y-de-los-atributos-de-calidad)
+    - [7.3.2. Mantenimiento y protección de los datos](#732-mantenimiento-y-protección-de-los-datos)
+    - [7.3.3. Opciones de evolución del producto](#733-opciones-de-evolución-del-producto)
   - [7.4. Cierre](#74-cierre)
 - [Referencias](#referencias)
-  - [8.1. Bibliografía metodológica](#81-bibliografía-metodológica)
+  - [8.1. Referencias metodológicas](#81-referencias-metodológicas)
   - [8.2. Normas y documentación técnica oficial](#82-normas-y-documentación-técnica-oficial)
-  - [8.3. Fuentes primarias del proyecto](#83-fuentes-primarias-del-proyecto)
+  - [8.3. Bibliografía de apoyo y material de cátedra](#83-bibliografía-de-apoyo-y-material-de-cátedra)
+  - [8.4. Fuentes primarias del proyecto](#84-fuentes-primarias-del-proyecto)
 
 ---
 
@@ -108,1104 +134,1299 @@
 
 ## 1.1. Contexto del Proyecto
 
-Lumapse es una aplicación móvil de captura, organización y recuperación de notas de estudio, desarrollada como proyecto integrador para la materia Prácticas Profesionalizantes III de la Tecnicatura en Análisis de Sistemas y Desarrollo de Software del IES 6023 "Dr. Alfredo Loutaif".
+Desarrollé Lumapse, una aplicación de captura, organización y recuperación de notas de estudio, como proyecto integrador de Prácticas Profesionalizantes III de la Tecnicatura en Análisis de Sistemas y Desarrollo de Software del IES 6023 «Dr. Alfredo Loutaif». En este informe presento el análisis del problema, el relevamiento de necesidades, la definición de requisitos, el diseño de la solución, su implementación y las verificaciones documentadas. Mi propósito académico fue integrar esas actividades en un producto de software cuyo proceso de construcción y decisiones pudieran examinarse con evidencia.
 
-El proyecto surge a partir de una necesidad observada en el contexto académico local: contar con una herramienta simple, rápida y confiable para tomar apuntes durante la cursada. Las alternativas existentes resuelven partes de esa necesidad, pero combinan de maneras diferentes cuentas, sincronización, complejidad funcional y almacenamiento local; Lumapse explora una combinación deliberadamente acotada para el contexto relevado.
+Tomé como contexto inicial la comunidad estudiantil del instituto. Mi experiencia como estudiante y las conversaciones exploratorias con compañeros me llevaron a formular una primera hipótesis: capturar información durante la cursada no es suficiente si luego resulta difícil conservarla, organizarla o recuperarla cuando se necesita. Utilicé esos antecedentes para orientar el relevamiento, no como entrevistas sistemáticas ni como una medición de la frecuencia del problema. Por ello, distingo la observación inicial de los resultados de la encuesta posterior.
 
-La primera definición del producto fue una aplicación web progresiva (PWA) con persistencia local. El relevamiento realizado sobre estudiantes del IES 6023 respaldó dos prioridades: uso mobile-first y funcionamiento offline. La encuesta no comparó tecnologías de distribución; el paso a una aplicación Android empaquetada con Capacitor y persistencia SQLite se decidió después mediante el análisis técnico documentado en [ADR-005](../adr/ADR-005-pivote-app-nativa.md) y [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md).
+Delimité la propuesta al ciclo de capturar, organizar y volver a consultar apuntes. No busqué sustituir todas las herramientas de estudio ni demostrar, por la sola existencia de la aplicación, una mejora del aprendizaje. Prioricé el uso desde el celular, el almacenamiento local y la disponibilidad del núcleo funcional sin conexión. La rapidez de interacción y la facilidad de uso son objetivos sujetos a verificación, no propiedades que puedan presumirse a partir del diseño.
 
-Desde el punto de vista técnico, Lumapse combina tecnologías web modernas (Vite, JavaScript modular y una adopción gradual de TypeScript, CSS nativo), empaquetado Android mediante Capacitor, persistencia local con SQLite, renderizado Markdown seguro y automatización de calidad con GitHub Actions y scripts locales. Desde el punto de vista metodológico, el proyecto se apoya en Design Thinking, Lean UX, gestión incremental por hitos, documentación viva en Markdown y trazabilidad entre necesidades, requisitos, decisiones y código.
+En el anteproyecto propuse una aplicación web progresiva —PWA, por sus siglas en inglés— con persistencia en IndexedDB, una tecnología de almacenamiento del navegador. Posteriormente adopté una aplicación Android híbrida: la interfaz, construida con tecnologías web, se ejecuta en una WebView dentro de un contenedor Capacitor y utiliza SQLite como base de datos local. El relevamiento respaldó las prioridades móvil y offline, pero no comparó PWA con APK ni evaluó motores de persistencia. Fundamenté la elección de la plataforma y del almacenamiento mediante el análisis técnico de alternativas registrado en las decisiones arquitectónicas ADR-005 y ADR-006, cuyo tratamiento corresponde al capítulo 4.
+
+Para organizar el trabajo combiné prácticas de diseño centrado en las necesidades del usuario, hipótesis de producto y desarrollo iterativo e incremental. Utilicé Design Thinking para organizar los artefactos de comprensión y definición del problema; Lean UX para tratar los supuestos de valor; y un sistema basado en Kanban, adaptado al trabajo individual, para gestionar el flujo por unidades y revisar resultados por hitos. Estas prácticas cumplen funciones distintas y no las considero metodologías intercambiables. En el capítulo 2 desarrollo su aplicación y sus límites.
 
 ## 1.2. Planteo del Problema
 
-El problema central no es la inexistencia de aplicaciones de notas, sino explorar una solución acotada para el contexto relevado: estudiantes de nivel superior, prioridad declarada por el celular, disponibilidad de red no permanente y necesidad de capturar y organizar información sin agregar complejidad innecesaria. El peso tolerable de instalación y la velocidad real de captura siguen siendo hipótesis a validar con el prototipo.
+El problema abordado es la dificultad declarada por una parte del público relevado para conservar y organizar sus notas de estudio, en un contexto donde el acceso estable a internet no está disponible de manera permanente para todas las personas participantes. La oportunidad no se fundamenta en la inexistencia de aplicaciones de notas: existen alternativas con diferentes combinaciones de almacenamiento local, sincronización, organización y complejidad. Lumapse explora una combinación deliberadamente limitada para el contexto institucional estudiado, sin afirmar superioridad general frente a esas herramientas.
 
-El relevamiento de datos respaldó este diagnóstico dentro de la muestra. Sobre 120 respuestas válidas, el 88.3% declaró tomar notas principalmente en cuaderno o papel; el 48.7% de quienes toman notas reconoció dificultades en su forma actual de trabajo; y las dificultades más repetidas fueron pérdida de notas y desorganización, ambas con 58.9% entre quienes reportaron problemas. Además, el 81.7% eligió "A veces", "Raramente" o "Nunca" al responder por acceso estable a internet y el 72.5% usaría una app de notas desde el celular ([resultados del relevamiento](../producto/resultados-relevamiento.md)).
+Para contrastar los supuestos iniciales realicé un relevamiento mediante una encuesta autoadministrada entre el 11 y el 13 de mayo de 2026. Analicé 120 de las 121 respuestas recolectadas, tras excluir un registro que no cumplía el criterio poblacional definido. La selección fue no probabilística por conveniencia. Por tanto, los porcentajes siguientes describen a las personas participantes; no estiman con un margen de error efectivo la situación de todo el instituto ni de los estudiantes de nivel superior en general. En el capítulo 3 expongo el instrumento, el procesamiento y las limitaciones del relevamiento sobre hábitos y necesidades de toma de notas.
 
-Las herramientas existentes cubren partes del problema, pero no el conjunto completo de restricciones. Google Keep y OneNote requieren cuentas y dependen de ecosistemas externos; Notion resulta potente pero pesado y orientado a flujos más complejos; Obsidian y Joplin son más cercanas a una filosofía local-first, pero pueden resultar técnicas o pesadas para el usuario promedio. Lumapse se posiciona en un espacio deliberadamente acotado: una app de notas académicas, offline-first, sin cuenta, ligera, local y centrada en el flujo real de estudiar.
+El cuaderno o papel fue el método principal de toma de notas para 106 de las 120 personas participantes (88,3 %). Entre las 115 que declararon tomar notas, 56 manifestaron dificultades con su método actual (48,7 %). Dentro de ese subgrupo de 56, la pérdida de notas y la desorganización fueron seleccionadas por 33 personas cada una (58,9 % en ambos casos). Son respuestas a una pregunta de selección múltiple: los dos porcentajes no describen grupos necesariamente distintos ni prueban una relación causal entre pérdida y desorganización.
+
+La conectividad y el dispositivo preferido delimitan otras condiciones de diseño. Ante la pregunta por acceso estable a internet en el instituto, 98 de 120 personas respondieron «A veces», «Raramente» o «Nunca» (81,7 %). Esto expresa una frecuencia declarada de disponibilidad, no una medición técnica de la red. Por otra parte, 87 eligieron el celular como dispositivo de uso preferido para una aplicación de notas (72,5 %) y 83 prefirieron organizar sus apuntes en carpetas por materia (69,2 %). Estos resultados respaldan priorizar una interfaz móvil, operaciones locales y organización académica por materias; no demuestran que una implementación concreta ya satisfaga esas necesidades.
+
+En términos de análisis de sistemas, el desafío consiste en conectar tres momentos: registrar información durante la cursada, conservar el trabajo y localizarlo posteriormente mediante una organización comprensible. El diseño debe reducir la dependencia de conectividad para ese ciclo y proporcionar una salida de los datos que no obligue a permanecer en la aplicación. En consecuencia, planteé la siguiente pregunta como guía del proyecto:
+
+> ¿Cómo diseñar e implementar una aplicación móvil de notas que permita capturar, organizar y recuperar información de estudio sin depender de una conexión permanente, atendiendo las necesidades declaradas por los estudiantes relevados y las restricciones de un proyecto académico individual?
+
+El relevamiento aporta un fundamento para desarrollar y examinar esa propuesta, no una prueba de adopción ni de eficacia del producto terminado. Tampoco permite atribuir a toda la población una preferencia por Markdown, por SQLite o por la instalación directa de un APK. Esas decisiones pertenecen al diseño técnico; su viabilidad y las condiciones de uso deben distinguirse del interés declarado en una encuesta.
 
 ## 1.3. Objetivos
 
+Formulé los objetivos siguientes a partir del propósito de captura y gestión local de notas del anteproyecto, ajustándolos al alcance resultante de las decisiones documentadas. Con esta formulación explicito la evolución desde la propuesta PWA inicial hacia Android con SQLite, sin reemplazar retroactivamente el anteproyecto presentado. Los objetivos indican qué procuré obtener; su grado de cumplimiento debe juzgarse mediante los resultados y limitaciones de los capítulos de implementación, validación y conclusiones.
+
 ### 1.3.1. Objetivo General
 
-Desarrollar y documentar una aplicación móvil offline-first para que estudiantes de nivel superior puedan capturar, organizar y recuperar notas de estudio de forma rápida y confiable, utilizando evidencia empírica del público objetivo y prácticas profesionales de análisis, diseño, implementación, validación y documentación de software.
+Diseñar, implementar y documentar una aplicación Android de captura, organización y recuperación de notas de estudio, con funcionamiento prioritariamente local y sin conexión, fundamentada en el relevamiento del contexto estudiantil del IES 6023 y en un proceso trazable de análisis, diseño, desarrollo y verificación de software.
 
 ### 1.3.2. Objetivos Específicos
 
-- Relevar necesidades, hábitos y problemas de estudiantes reales del IES 6023 mediante una encuesta estructurada.
-- Analizar los datos obtenidos para validar o ajustar las hipótesis iniciales del producto.
-- Definir personas de usuario, requisitos funcionales, requisitos no funcionales, historias de usuario y decisiones de producto trazables.
-- Diseñar una arquitectura local-first que priorice funcionamiento offline, privacidad y persistencia robusta.
-- Implementar un editor de notas con soporte Markdown, borradores persistentes, búsqueda y organización por materias y secciones, junto con un mecanismo manual de respaldo e importación local del espacio de trabajo.
-- Migrar la persistencia desde IndexedDB hacia SQLite de acuerdo con las decisiones arquitectónicas aprobadas, preservando las prioridades mobile-first y offline-first respaldadas por el relevamiento.
-- Empaquetar la aplicación como APK Android mediante Capacitor.
-- Incorporar pruebas unitarias, validaciones documentales y un quality gate automatizado para sostener la calidad del código y la documentación.
-- Mantener documentación viva y versionada que permita reconstruir el proceso de decisión, desarrollo y validación.
+1. Relevar y analizar hábitos, dificultades y preferencias de los estudiantes participantes, explicitando el instrumento, las bases de cálculo y los límites de la evidencia obtenida.
+2. Traducir las necesidades y restricciones identificadas en requisitos funcionales, atributos de calidad, historias de usuario y decisiones de producto con criterios de aceptación rastreables.
+3. Diseñar y justificar una arquitectura modular con persistencia local, diferenciando las necesidades respaldadas por el relevamiento de las decisiones técnicas de plataforma y almacenamiento.
+4. Implementar la creación, edición, lectura, búsqueda y organización de notas en texto plano y Markdown, con materias y secciones como estructura académica principal.
+5. Incorporar mecanismos de continuidad y recuperación: borradores persistentes, guardado explícito, archivo, papelera y respaldo e importación manual del espacio de trabajo, con límites definidos para cada mecanismo.
+6. Empaquetar y distribuir un artefacto Android identificable, y documentar las verificaciones automatizadas y en dispositivo con sus métodos, resultados, versiones y cobertura, sin presentar como cumplidos los criterios no medidos.
+7. Mantener evidencia versionada de la evolución del proyecto —requisitos, decisiones, hitos, código, pruebas e informe— que permita reconstruir y evaluar el trabajo realizado.
 
 ## 1.4. Justificación y Alcance
 
-La justificación académica del proyecto reside en que Lumapse permite integrar de manera concreta los contenidos centrales de la carrera: análisis de usuarios, diseño de requisitos, modelado de dominio, arquitectura de software, desarrollo frontend, persistencia local, pruebas, automatización, control de versiones y documentación técnica. El proyecto no se limita a construir una interfaz funcional, sino que documenta las decisiones y evidencia la evolución del producto a través de hitos, ADRs, backlog, changelog y commits.
+### 1.4.1. Justificación académica y de producto
 
-La justificación social y de producto se relaciona con el contexto de uso. La evidencia disponible sugiere valor en una alternativa que abra rápido, funcione sin conexión, no exija una cuenta y respete la organización académica por materias. Por eso, el alcance funcional prioriza captura y recuperación de notas, guardado local y simplicidad, sin asumir que deba reemplazar a todas las herramientas generalistas.
+La justificación académica reside en abordar un problema de software de manera integral, en lugar de limitar la entrega a una interfaz funcional. Relacioné necesidades de usuarios con requisitos, modelos, decisiones arquitectónicas, persistencia, implementación, pruebas y documentación. En los registros de decisiones arquitectónicas —ADR— documenté las razones y consecuencias de las elecciones técnicas; los requisitos, informes de hito y el historial de versiones permiten contrastar lo planificado con lo implementado y verificado.
 
-El alcance verificado en la segunda beta `v0.5.0` incluye una app Android empaquetada con Capacitor, persistencia SQLite coordinada, editor Markdown con comandos opcionales y borradores persistentes, previsualización segura, búsqueda, materias y secciones, archivo, papelera, fechas académicas discretas, tema claro/oscuro, sección Acerca de y automatización de calidad. También incorpora un flujo manual de respaldo `.zip` mediante el selector o la hoja de compartir del sistema y una importación no destructiva de respaldos generados por Lumapse, con validación previa y escritura transaccional. Respecto de `v0.4.8`, el corte agrega cierres de integridad, seguridad, ownership asíncrono, recuperación de arranque y usabilidad táctil sin ampliar el alcance funcional principal.
+Desde la perspectiva de producto, el valor propuesto es disponer de apuntes organizados para su consulta en el contexto relevado, sin exigir una cuenta ni una conexión para las operaciones locales principales. La ausencia de backend propio y el almacenamiento en el dispositivo acotan las dependencias del núcleo de la aplicación. No constituyen, sin embargo, una garantía absoluta de privacidad o conservación: la pérdida del teléfono, la desinstalación y la gestión de copias externas siguen siendo riesgos que deben comunicarse. Una exportación iniciada por el usuario puede entregar el archivo a otra aplicación o servicio elegido por él.
 
-Compartir una nota individual continúa fuera del alcance actual: solo se retomará si utiliza la hoja de compartir nativa de Android y aporta una utilidad distinta de la acción Copiar. También quedan fuera del MVP la sincronización automática en la nube, la colaboración en tiempo real, el backend multiusuario, la inteligencia artificial generativa y la publicación formal en tiendas de aplicaciones. Estas posibilidades se mantienen como trabajo futuro y solo deberían incorporarse si nueva evidencia de uso justifica ampliar el alcance.
+La organización por materias responde a una preferencia declarada de la muestra; la persistencia local y el respaldo atienden la necesidad de conservar información. Markdown se utiliza como texto plano con marcas de formato y permite incluir notas legibles fuera de Lumapse dentro del respaldo. Estas decisiones buscan mantener un alcance comprensible y portabilidad de los contenidos. Su pertinencia no demuestra por sí sola satisfacción sostenida, demanda comercial o una mejora del desempeño académico.
+
+### 1.4.2. Alcance funcional implementado
+
+Definí el alcance mediante requisitos funcionales y criterios de aceptación, cuyo análisis presento en la sección 2.6.1 y cuya implementación desarrollo en el capítulo 5. Las funcionalidades implementadas comprenden:
+
+- **Captura y lectura de notas:** creación y edición de título y contenido, texto plano o Markdown, previsualización sanitizada y herramientas opcionales de formato e inserción. Markdown no es un requisito para comenzar a escribir.
+- **Continuidad del trabajo:** conservación local de un borrador del editor, diferenciada de la nota confirmada. Crear o actualizar una nota requiere una acción explícita; recuperar un borrador no equivale a haber guardado una nueva nota definitiva.
+- **Organización y recuperación:** materias y secciones, búsqueda por título y contenido, fijación, archivo, marcadores visuales de estado académico y papelera con restauración y eliminación permanente. La papelera no reemplaza a una copia de seguridad externa.
+- **Fechas académicas puntuales:** registro de parciales, finales, trabajos prácticos y exposiciones, con asociación opcional a materia o sección. Son recordatorios visuales pasivos, no una agenda con horarios, recurrencias o notificaciones.
+- **Respaldo y portabilidad manual:** exportación del espacio de trabajo en ZIP con manifiesto, datos estructurados y notas Markdown legibles; importación de ZIP generado por Lumapse, con validación previa, vista de los elementos a importar, tratamiento no destructivo de duplicados y escritura transaccional. El ZIP no incluye borradores ni elementos en papelera y no es una imagen completa de todo el estado de la aplicación.
+- **Interfaz e identificación:** temas claro y oscuro y una sección «Acerca de» con información del producto y de la compilación, además de los controles de navegación asociados a los flujos anteriores.
+
+Esta enumeración describe funcionalidades presentes, no certifica que cada recorrido haya sido probado sobre todo dispositivo o sobre cada binario distribuido. La separación entre implementación y verificación es necesaria para interpretar el alcance de la entrega.
+
+### 1.4.3. Delimitaciones técnicas y funcionales
+
+El producto presentado es una aplicación Android distribuida como paquete instalable APK. Adopté un monolito modular cliente con separación pragmática de responsabilidades, no un sistema cliente-servidor ni una aplicación completamente escrita con interfaces nativas de Android. El entorno web con SQLite/WebAssembly se conserva para desarrollo y pruebas auxiliares; no constituye un canal PWA soportado ni una entrega para escritorio o iOS. Formalicé esta clasificación y sus límites en ADR-008; en la sección 4.8 analizo los patrones y las fronteras de la arquitectura.
+
+Quedan fuera del corte la sincronización automática entre dispositivos, el backend multiusuario, la colaboración en tiempo real, el respaldo automático en la nube, la integración directa con la API de Google Drive, los adjuntos multimedia y una agenda académica completa. También se encuentran postergadas la acción de compartir una nota individual y la importación individual de archivos Markdown. La existencia de notas legibles dentro del ZIP no implica que esos flujos individuales estén disponibles.
+
+La distribución mediante tiendas de aplicaciones, el uso autónomo del canal de instalación por nuevos estudiantes y la extensión a otras instituciones requieren decisiones o validaciones propias. No los considero demostrados por la viabilidad técnica del APK ni por la intención declarada de probar el prototipo. Mantengo los trabajos excluidos y sus condiciones de eventual revisión como trabajo futuro, tratado en la sección 7.3, sin incorporarlos automáticamente a esta entrega.
+
+### 1.4.4. Corte de presentación y límites de la evidencia
+
+Fijé como corte de presentación **Lumapse 0.6.0, código Android 600, Release Candidate 1 (RC1)**, publicado como versión preliminar el 22 de octubre de 2026. Adopté este candidato con validación parcial y con las limitaciones de cobertura expresamente reconocidas. El APK procede del commit de código fuente `bcefe6a`; la etiqueta de versión `v0.6.0` apunta a `ac2a747`, que incluye la integración posterior. No son identificadores intercambiables. La firma, la huella criptográfica y las comprobaciones del binario forman parte de su registro de identificación y de la evidencia que corresponde desarrollar en el capítulo 6. Conservo las betas `v0.4.8` y `v0.5.0` como antecedentes, sin atribuir automáticamente sus resultados a la RC1.
+
+Al evaluar la evidencia, distingo controles sobre el código fuente, pruebas automatizadas y recorridos en un dispositivo y artefacto identificados. La existencia de una funcionalidad, una compilación correcta o una aceptación general de la entrega no equivalen a una verificación exhaustiva. Las métricas de latencia de operaciones, fluidez con 500 notas y tiempo de primera nota de un usuario nuevo conservan sus estados pendientes: corresponden a los requisitos no funcionales RNF-002, RNF-004 y RNF-005, respectivamente. En el capítulo 6 se trata el alcance de su verificación. No considero demostrado un rendimiento óptimo ni facilidad de uso sin las mediciones correspondientes.
+
+Para acotar el cierre académico, decidí congelar el desarrollo y las nuevas comprobaciones de la aplicación hasta después de la presentación. Diferí los recorridos restantes del núcleo offline, organización y búsqueda, fechas, ZIP y tráfico sobre el APK exacto, sin considerarlos aprobados. En este informe utilizo la evidencia existente con sus límites; no presento la entrega como una versión estable ni supongo ausencia de defectos. Esta delimitación permite evaluar el trabajo efectivamente realizado, las decisiones que fundamenté y los aspectos que todavía requieren evidencia.
 
 ---
 
 # Capítulo 2: Marco Metodológico y Modelo de Negocio
 
+En este capítulo explico cómo organicé el desarrollo y cómo relacioné las necesidades iniciales con las decisiones de producto y los requisitos. Distingo la gestión del trabajo, el análisis de usuarios y las hipótesis de valor: cumplen funciones complementarias, pero no constituyen una única metodología ni producen el mismo tipo de evidencia.
+
 ## 2.1. Enfoque de Desarrollo y Gestión del Flujo (Kanban Adaptado)
 
-El desarrollo de Lumapse se organizó mediante un **enfoque ágil, iterativo e incremental**, con gestión del trabajo basada en Kanban y adaptada a un proyecto individual. La expresión distingue dos niveles: el enfoque general describe cómo evoluciona el producto mediante incrementos y aprendizaje; Kanban aporta la estrategia para visualizar, limitar y mejorar el flujo. No se presenta Kanban como un proceso prescriptivo equivalente a Scrum o RUP.
+Desarrollé Lumapse de forma iterativa e incremental: construí funcionalidades acotadas, revisé su comportamiento y ajusté prioridades y decisiones a medida que avanzaba el proyecto. Para gestionar ese trabajo adopté un sistema basado en Kanban, adaptado a un desarrollo individual y formalizado en ADR-003. El enfoque incremental describe la evolución del producto; Kanban organiza el flujo de las unidades de trabajo.
 
-Cada hito agrupa un objetivo funcional o técnico —investigación, fundación, editor, MVP offline, organización/UX, calidad/distribución y cierre— y funciona como punto de revisión, entrega y línea base. Los hitos no son Sprints: el trabajo no se selecciona en Sprint Planning, no se compromete contra Sprint Goals ni se cierra mediante los eventos definidos por Scrum. El Hito 05 quedó cerrado con la primera beta `v0.4.8`; Hito 06 publicó la segunda beta `v0.5.0` y concentra el cierre académico sin reabrir por defecto el alcance funcional.
+Los hitos funcionaron como puntos académicos de revisión, entrega y establecimiento de líneas base, no como Sprints. El cronograma inicial y las fechas de cierre registran planificación y evolución del proyecto, sin convertir los hitos en iteraciones de duración fija.
+
+Complementé la gestión con artefactos de Design Thinking para organizar la comprensión del contexto, la definición del problema y las alternativas de solución. Las personas, la encuesta, el análisis competitivo y el Lean Canvas aportaron insumos para esas actividades. El prototipo evolucionó hacia las betas y la RC1; esa evolución técnica no demuestra que se haya completado una validación sistemática de uso con el público objetivo.
 
 ### 2.1.1. Justificación frente a Scrum y RUP
 
-La elección de Kanban no se fundamenta en una supuesta prohibición numérica de Scrum. La Scrum Guide 2020 indica que un Scrum Team tiene típicamente diez personas o menos y no fija un mínimo explícito. Una persona podría adoptar prácticas inspiradas en Scrum o asumir más de una responsabilidad; sin embargo, la guía define Scrum como un framework integral con Developers, Product Owner, Scrum Master, Sprints, eventos, artefactos y compromisos. Aplicar solo una parte no basta para afirmar que se utiliza Scrum (Schwaber & Sutherland, 2020). Lumapse no implementó ese conjunto ni organizó el trabajo mediante Sprints, por lo que clasificarlo como Scrum describiría incorrectamente el proceso real.
+La elección no se basó en una prohibición numérica de Scrum para proyectos individuales. Schwaber y Sutherland (2020) describen equipos de diez personas o menos como situación típica, sin fijar un mínimo explícito. Sin embargo, Scrum define responsabilidades, Sprints, eventos, artefactos y compromisos que deben reconocerse en su aplicación. No organicé Lumapse mediante ese conjunto: utilizar historias de usuario o estimaciones relativas no basta para afirmar que apliqué Scrum.
 
-Tampoco se aplicó Rational Unified Process. RUP es iterativo e incremental, pero organiza el ciclo de vida en Inicio, Elaboración, Construcción y Transición, con disciplinas, roles y artefactos adaptables (IBM, s. f.). Lumapse contiene requisitos, casos de uso, UML y documentación de arquitectura porque son evidencia académica y técnica útil; su existencia aislada no demuestra que el proyecto haya seguido las fases y disciplinas de RUP.
+Tampoco seguí Rational Unified Process —RUP—, que organiza el ciclo de desarrollo en Inicio, Elaboración, Construcción y Transición, con disciplinas y artefactos adaptables (IBM, s. f.). Produje requisitos, casos de uso y modelos de arquitectura por su utilidad técnica y académica, pero no estructuré la gestión según esas fases. La presencia de diagramas UML no identifica por sí sola el proceso utilizado.
 
-Kanban resultó proporcional al contexto porque no exige roles ni iteraciones fijas. La referencia vigente lo define como una estrategia para optimizar el flujo de valor mediante la definición y visualización del flujo, la gestión activa de los elementos y su mejora continua (Kanban Guides, 2025).
-
-| Criterio observable | Scrum | RUP | Lumapse |
-|---|---|---|---|
-| Cadencia principal | Sprints de un mes o menos | Fases e iteraciones | Flujo continuo con hitos académicos |
-| Estructura de responsabilidades | Product Owner, Scrum Master y Developers | Roles y disciplinas adaptadas | Responsable individual y stakeholders docentes/usuarios |
-| Control del trabajo | Sprint Goal y Sprint Backlog | Plan por fases/iteraciones | Tablero, prioridad y límite WIP |
-| Evidencia presente en Lumapse | Algunas técnicas compatibles, no el framework completo | Algunos artefactos, no el proceso | Prácticas centrales aplicadas y formalizadas |
+Coleman y Vacanti (2025) presentan Kanban como una estrategia de optimización del flujo de valor que combina definición y visualización del flujo, gestión activa de los elementos y mejora del sistema. Esa orientación resultó compatible con reordenar prioridades y terminar unidades pequeñas sin simular responsabilidades o ceremonias de un equipo inexistente. Es una elección contextual, no una afirmación de superioridad general.
 
 ### 2.1.2. Sistema de trabajo aplicado
 
-La [Definition of Workflow](../gestion/definicion-flujo-kanban.md) vigente explicita el sistema:
+La definición de flujo formalizada en Hito 06 establece cuatro estados:
 
-`Backlog → En Curso → En Revisión → Hecho`
+> Backlog → En Curso → En Revisión → Hecho
 
-- Un elemento comienza al pasar a `En Curso` y termina cuando cumple su criterio de cierre y pasa a `Hecho`.
-- `En Curso` y `En Revisión` forman parte del trabajo en curso.
-- El WIP máximo vigente es de dos elementos activos en total.
-- El trabajo nuevo se selecciona mediante *pull* solo cuando existe capacidad.
-- La revisión y el cierre tienen prioridad sobre abrir tareas nuevas.
-- `TODO`, [BACKLOG.md](../../BACKLOG.md), [CHANGELOG.md](../../CHANGELOG.md), los informes de hito, los ADR y Git aportan evidencia versionada complementaria al tablero.
+Un elemento representa un objetivo concreto con salida verificable, dependencias y criterio de cierre. Comienza cuando pasa a En Curso y termina cuando satisface ese criterio; permanecer En Revisión significa que todavía consume capacidad. Una funcionalidad redactada o implementada no se considera terminada sólo por existir un commit.
 
-Las prácticas de soporte incluyen descomposición en tareas pequeñas, prioridad por valor/riesgo/dependencia, criterios de aceptación, commits atómicos, decisiones mediante ADR y verificaciones automatizadas o manuales proporcionales al cambio.
+El límite global de trabajo en curso —WIP— es de dos elementos entre En Curso y En Revisión, con una política más restrictiva de una sola rama de tarea activa. Seleccioné trabajo mediante un sistema de arrastre o *pull*, priorizando cerrar lo iniciado. Un bloqueo conserva su condición de trabajo en curso, sin liberar capacidad artificialmente.
+
+La prioridad atiende riesgos de pérdida de datos, bloqueos de entrega, evidencia necesaria, dependencias y valor funcional. La definición asigna a GitHub Projects la vista del flujo; los tableros, ADR, informes de hito y el historial Git conservan evidencia complementaria. Un commit o PR permite rastrear cambios, pero no sustituye aceptación ni acredita pruebas por sí solo.
 
 ### 2.1.3. Medición y límite de la evidencia
 
-La planificación se complementó con Story Points para historias de usuario y PERT para riesgos técnicos mayores, siguiendo el material de la cátedra (Gómez, 2014; Parada, 2026). Los SP entregados por hito expresan alcance/capacidad académica: no son una práctica exclusiva de Scrum ni sustituyen las métricas de flujo de Kanban.
+Estimé las historias mediante tamaño relativo en Story Points, utilizando juicio individual y una historia de referencia. Para los riesgos de integración de Capacitor y migración a SQLite documenté escenarios optimista, más probable y pesimista mediante estimación de tres puntos. Son instrumentos de planificación: no equivalen a horas efectivas, productividad observada ni duraciones reales demostradas.
 
-Durante las etapas anteriores se aplicaron visualización, priorización continua y límite WIP, pero no se conservaron fechas completas para calcular WIP histórico, *throughput*, edad y tiempo de ciclo de todos los elementos. No se reconstruyen esos valores de manera retroactiva. Desde Hito 06 se formalizaron las cuatro métricas y una expectativa de nivel de servicio provisional. Por ello, la formulación rigurosa es **“sistema basado en Kanban y adaptado al contexto académico individual”**, sin afirmar conformidad histórica completa con cada requisito de la Kanban Guide 2025.
+El seguimiento por hitos registra Story Points asociados al alcance entregado. No los interpreto como *throughput* de Kanban, que cuenta elementos terminados, ni como tiempo de ciclo. Tampoco presento los escenarios de estimación como intervalos empíricos de cumplimiento.
+
+La guía de Kanban identifica cuatro métricas mínimas: WIP, cantidad de elementos terminados por unidad de tiempo, edad de los elementos aún activos y tiempo de ciclo de los finalizados (Coleman y Vacanti, 2025). No dispongo de fechas completas y confiables para calcularlas retrospectivamente sobre todo el proyecto. La formalización de su registro en Hito 06 no demuestra que se hayan medido durante las etapas anteriores.
+
+La definición de flujo incorpora una expectativa de nivel de servicio provisional: 85 % de los elementos en siete días calendario o menos, a recalibrar con al menos cinco elementos con fechas confiables. No es cumplimiento observado. Por estas limitaciones, describo el proceso como basado en Kanban y adaptado al contexto individual, sin afirmar conformidad histórica completa.
+
+### 2.1.4. Asistencia de inteligencia artificial
+
+Me apoyé en herramientas de inteligencia artificial durante el desarrollo incremental: inicialmente utilicé Antigravity y posteriormente modelos de OpenAI. Esa asistencia acompañó el trabajo sobre funcionalidades, correcciones y scripts de automatización; no constituye una metodología independiente ni una garantía de corrección. La definición del problema, el alcance y las decisiones aceptadas permanecen bajo mi responsabilidad. No considero validada una propuesta por provenir de un modelo: su fundamento debe examinarse mediante los requisitos, las decisiones y las verificaciones documentadas en los capítulos 4 a 6.
 
 ## 2.2. Análisis de Personas de Usuario
 
-Las personas de usuario se construyeron inicialmente a partir de observación directa, experiencia institucional y conversaciones informales dentro del contexto académico. Luego fueron contrastadas con los resultados del relevamiento cuantitativo, lo que permitió confirmar o matizar los supuestos iniciales.
+Formulé tres personas a partir de mi experiencia en el contexto académico, la observación y conversaciones informales. Son arquetipos de diseño, no participantes identificados en una investigación ni entrevistas sistemáticas. Sus nombres, biografías y citas sintéticas ayudan a representar necesidades; no deben interpretarse como testimonios recolectados.
 
-Las tres personas principales documentadas en [personas.md](../producto/personas.md) son:
-
-| Persona | Rol dentro del proyecto | Necesidad principal |
+| Arquetipo | Papel en el análisis | Necesidad que orienta el diseño |
 |---|---|---|
-| Lucía, estudiante organizada | Usuario primario no técnico | Capturar notas rápido, acceder offline y organizar por materia. |
-| Martín, estudiante práctico | Usuario técnico / early adopter | Usar Markdown, controlar sus datos y evitar vendor lock-in. |
-| Prof. Ramos, docente evaluador | Stakeholder académico | Ver evidencia de proceso, documentación y decisiones justificadas. |
+| Lucía, estudiante organizada | Usuaria primaria, sin exigir conocimientos técnicos | Capturar y recuperar apuntes, disponer de ellos sin red y organizarlos por materia |
+| Martín, estudiante práctico | Perfil con familiaridad técnica | Trabajar con Markdown y conservar control y portabilidad de sus contenidos |
+| Prof. Ramos, docente evaluador | Parte interesada académica, no segmento comercial demostrado | Comprender el proceso y examinar una entrega identificable con decisiones y evidencia |
 
-El relevamiento respaldó varios atributos centrales de estas personas dentro del contexto estudiado: preferencia declarada por el celular, disponibilidad de red no permanente, organización por materia y valoración de una propuesta simple. En consecuencia, las personas funcionan como puente entre la observación inicial y las decisiones de diseño implementadas, sin reemplazar una validación directa de los arquetipos con el prototipo.
+Utilicé los perfiles como preguntas de diseño: si puede escribirse sin aprender Markdown, cómo recuperar un apunte o qué evidencia necesita quien evalúa la entrega. El relevamiento permitió contrastar atributos generales, como preferencia móvil y organización por materia, pero no valida cada biografía ni la satisfacción de los arquetipos mediante uso del prototipo.
 
 ## 2.3. Análisis Competitivo
 
-El análisis competitivo comparó a Lumapse con herramientas de notas existentes como Google Keep, Notion, Obsidian, OneNote, Simplenote, Evernote, Standard Notes y Joplin. Los criterios de comparación surgieron de las necesidades detectadas en las personas: funcionamiento offline real, ausencia de cuenta obligatoria, tamaño liviano, soporte Markdown, gratuidad, uso multiplataforma y velocidad de arranque.
+El análisis competitivo documentado incluyó herramientas como Google Keep, Notion, Obsidian, OneNote, Simplenote y Joplin, entre otras. Comparó disponibilidad sin red, necesidad de cuenta, portabilidad, formato de notas, tamaño, costo, alcance entre dispositivos y rapidez de acceso. Esos criterios permitieron ordenar alternativas relevantes para el contexto de diseño.
 
-El análisis competitivo original propuso una lectura cualitativa: algunas herramientas simples dependen de cuentas o ecosistemas propietarios, mientras otras ofrecen más potencia con mayor complejidad, peso o costo. No demuestra que el mercado esté vacío ni sustituye una revisión actual de cada producto. Lumapse busca diferenciarse mediante baja complejidad, almacenamiento local, ausencia de cuenta, núcleo offline-first, Markdown y foco académico.
+La matriz conserva apreciaciones del relevamiento competitivo original, sin una revalidación actual de las versiones, planes o dispositivos comparados. Por ello, no reproduzco sus precios, tamaños y tiempos de arranque como mediciones vigentes, ni utilizo sus calificaciones para afirmar que las demás herramientas requieren conexión permanente. Existen alternativas locales y con Markdown; su presencia impide justificar Lumapse por una supuesta ausencia de soluciones.
 
-Este análisis no se utiliza para afirmar que Lumapse compite con plataformas maduras en amplitud funcional, sino para justificar una estrategia de diferenciación: resolver muy bien un problema acotado y real antes que replicar suites generales de productividad.
+El posicionamiento buscado es una combinación acotada: captura de apuntes, organización académica, almacenamiento local, ausencia de cuenta obligatoria y respaldo manual. No equivale a mayor potencia, mejor rendimiento o superioridad de usabilidad frente a productos maduros. La distribución vigente es Android; una interfaz adaptable y una base de código web no constituyen una entrega soportada para escritorio o para múltiples plataformas.
 
 ## 2.4. Lean Canvas
 
-El Lean Canvas de Lumapse documenta la lógica de producto en una sola vista: problema, solución, propuesta de valor, ventaja injusta, segmento de clientes, métricas, canales, costos e ingresos potenciales. Fue elaborado antes del relevamiento y luego recontextualizado a la luz de los datos obtenidos.
+Elaboré el Lean Canvas como ejercicio de diseño de producto previo al relevamiento. Su función fue relacionar problema, destinatarios, propuesta de valor, solución y condiciones de sostenibilidad, no acreditar un negocio validado. La formulación inicial contemplaba PWA, IndexedDB y un posible empaquetado mediante TWA; esos elementos quedaron reemplazados por las decisiones técnicas ADR-005 y ADR-006.
 
-La propuesta de valor inicial puede sintetizarse como: "Tus notas. En tu equipo. Sin cuenta. Sin internet. Sin excusas". Esta formulación se mantiene vigente, aunque la solución técnica evolucionó: de una PWA offline-first con IndexedDB hacia una app Android con Capacitor y SQLite.
+La tabla distingue la contribución de cada bloque de aquello que aún no constituye un resultado demostrado.
 
-El canvas cumple una función metodológica: obliga a vincular las decisiones técnicas con la viabilidad del producto. En Lumapse, decisiones como no usar backend, no exigir cuenta y priorizar almacenamiento local no son solo preferencias técnicas; responden a una propuesta de valor, a una estructura de costos baja y a un canal de distribución posible dentro del alcance académico.
+| Bloque | Aplicación y límite en Lumapse |
+|---|---|
+| Problema | Pérdida, desorganización y conectividad como cuestiones investigadas; la encuesta describe la muestra, no demuestra causalidad |
+| Segmentos | Público estudiantil institucional; extensión a otros contextos todavía hipotética |
+| Propuesta de valor | Notas locales sin cuenta; sin garantía absoluta de privacidad o conservación |
+| Solución | Captura, organización y consulta en Android con Capacitor y SQLite, dentro del alcance delimitado |
+| Canales | APK publicado en GitHub Releases; aceptación del canal por nuevos estudiantes no medida |
+| Métricas clave | Primera nota, satisfacción y retención propuestas, sin resultados de uso sostenido acreditados |
+| Costos | Menor dependencia de servidores; desarrollo, mantenimiento y distribución no se vuelven gratuitos por ello |
+| Ingresos | Modalidades y precios hipotéticos, sin ventas, disposición a pagar o rentabilidad demostradas |
+| Ventaja propuesta | Cercanía al contexto como acceso inicial al problema, no como barrera competitiva demostrada |
+
+La síntesis «Tus notas. En tu equipo. Sin cuenta. Sin internet.» expresa esa orientación con los límites del capítulo 1: el respaldo externo requiere una acción deliberada y la pérdida del dispositivo o la desinstalación siguen siendo riesgos. Portabilidad no equivale a sincronización ni a recuperación garantizada de todo el estado.
+
+El canvas hace visibles los supuestos; no presento una validación económica integral ni un estudio de retención. Sus metas iniciales no reemplazan requisitos medibles ni resultados de usuario.
+
+### 2.4.1. Recursos y costos del desarrollo
+
+Distingo los desembolsos personales, los accesos bonificados y el trabajo no valorizado. Utilicé una suscripción personal de ChatGPT de USD 20 mensuales, cuyo inicio sitúo aproximadamente en abril de 2026. La destiné en gran medida a Lumapse y su mantenimiento, pero también a otros proyectos; por ello, la cuota no representa un costo mensual exclusivo de Lumapse.
+
+| Recurso | Desembolso personal | Condición de uso |
+|---|---|---|
+| ChatGPT | USD 20 mensuales | Suscripción compartida con otros proyectos, sin un porcentaje de imputación registrado |
+| Antigravity | USD 0 | Acceso bonificado mediante una promoción estudiantil personal |
+| Dominio `.tech` | USD 0 | Beneficio personal de GitHub Student Developer Pack, no una compra del proyecto |
+
+Estos recursos apoyan el desarrollo y la difusión; su contratación no es un requisito para utilizar el núcleo local del APK. El trabajo se realizó sin horario fijo y no dispongo de un registro completo de horas para valorizarlo, como explico en la sección 7.2.2. El cuadro no constituye un presupuesto integral: no calculo un total exclusivo a partir de cuotas compartidas ni sumo precios comerciales de recursos que recibí bonificados. Un desembolso nulo tampoco demuestra que su continuidad esté financiada, cuestión retomada en la sección 7.3.2.
 
 ## 2.5. Historias de Usuario como Hipótesis de Valor (Lean UX)
 
-El proyecto Lumapse adoptó el marco de Lean UX (Gothelf & Seiden, 2013) para el diseño centrado en el usuario. Bajo este enfoque, las historias de usuario no se conciben como especificaciones definitivas escritas al final del análisis, sino como hipótesis de valor que se formulan tempranamente y se someten a validación empírica. Este ciclo de hipótesis, validación e iteración conecta la fase de ideación con la implementación técnica.
+Las historias expresan una necesidad y un beneficio esperado desde la perspectiva del usuario. Contienen supuestos de valor, mientras sus criterios de aceptación delimitan comportamientos verificables. Una historia no es, por sí sola, un experimento ni una hipótesis contrastada.
 
-El historial del proyecto refleja este proceso: las primeras historias de usuario fueron redactadas antes del relevamiento de campo. Esto no constituye una anomalía metodológica, sino la aplicación deliberada del ciclo Lean UX: formular una hipótesis razonable, diseñar una forma de validarla y ajustar el producto cuando los datos contradicen el supuesto inicial.
+Esta separación es coherente con la orientación de Lean UX hacia supuestos, hipótesis, experimentación y aprendizaje a partir de usuarios, desarrollada por Gothelf y Seiden (2013). En Lumapse distingo el contraste exploratorio de necesidades, las decisiones de diseño y la verificación del software. No presento la existencia de esos artefactos como demostración de haber aplicado íntegramente un programa experimental de Lean UX.
 
 ### 2.5.1. Fase 1 — La Historia de Usuario como supuesto de diseño
 
-Una historia de usuario es una descripción breve de una funcionalidad del software escrita desde la perspectiva del usuario final, con el formato:
-
-> Como [rol], quiero [funcionalidad], para [beneficio].
-
-Su propósito no es detallar la implementación técnica, sino capturar qué problema quiere resolver el usuario y por qué le interesa. En la terminología de Lean UX, cada historia funciona como una hipótesis de valor: una apuesta informada sobre lo que el usuario necesita, basada en empatía y análisis inicial, pero todavía sin validación empírica.
-
-En las etapas iniciales, las historias se formularon a partir de:
-
-- Empatía con el contexto del autor como estudiante del IES 6023.
-- Personas de usuario construidas desde observación institucional.
-- Benchmarking competitivo de herramientas existentes.
-- Restricciones técnicas y académicas del proyecto.
-
-En esa fase, las historias eran supuestos educados. Por ejemplo, se consideró inicialmente que los estudiantes podrían organizar sus notas mediante etiquetas, patrón habitual en herramientas de productividad general.
+Las personas, el contexto y las restricciones sirvieron para formular necesidades con la estructura «Como [rol], quiero [acción], para [beneficio]». Organizar apuntes por materia expresa una necesidad; elegir una tabla relacional o limitar la profundidad son decisiones de solución. Esta separación permitió revisar supuestos, como priorizar etiquetas, sin tratar las primeras historias como compromisos inmodificables.
 
 ### 2.5.2. Fase 2 — La encuesta como instrumento de validación
 
-Para transformar los supuestos en decisiones fundamentadas, se diseñó y ejecutó una encuesta de relevamiento sobre 121 estudiantes, con 120 respuestas válidas. La encuesta no se diseñó de manera aislada: sus preguntas se formularon para validar o refutar hipótesis contenidas en las historias de usuario y decisiones iniciales de producto.
+El relevamiento reunió 121 respuestas y permitió analizar 120 después de aplicar el criterio de exclusión. Su selección fue no probabilística por conveniencia. Los resultados siguientes describen esa muestra y orientan decisiones; no prueban eficacia del prototipo ni representan una estimación inferencial de toda la población. El capítulo 3 desarrolla el instrumento y sus limitaciones.
 
-| Hipótesis | Pregunta de validación | Resultado | Decisión |
-|---|---|---|---|
-| Los estudiantes necesitan una app que funcione sin internet en el aula. | P6: frecuencia declarada de acceso estable; P8: prioridades. | 81.7% responde "A veces", "Raramente" o "Nunca"; 74.2% selecciona offline. | Hipótesis respaldada en la muestra: se mantiene y debe probarse offline-first. |
-| Los estudiantes prefieren usar el celular para una app de notas. | P9: dispositivo preferido para una app de notas. | 72.5% elige celular. | Hipótesis respaldada en la muestra: se prioriza el diseño mobile-first. |
-| Los estudiantes organizarían sus notas con etiquetas. | P11: modelo de organización preferido. | 69.2% prefiere carpetas por materia. | Hipótesis contradicha en la muestra: pivote a materias y secciones. |
-| Offline aparece entre las características más seleccionadas. | P8: frecuencia de selección de funcionalidades. | 74.2% selecciona offline. | Hipótesis respaldada de forma descriptiva: persistencia local robusta. |
+| Cuestión examinada | Evidencia declarada, base de 120 respuestas | Implicación y límite |
+|---|---|---|
+| Disponibilidad de conexión | En P6, 98 personas eligieron «A veces», «Raramente» o «Nunca» (81,7 %); en P8, 89 seleccionaron funcionamiento sin internet (74,2 %) | Priorizar operaciones locales y su verificación; no es una medición técnica de la red |
+| Dispositivo preferido | En P9, 87 eligieron celular (72,5 %) | Priorizar el diseño móvil; no decide entre PWA y APK |
+| Organización principal | En P11, 83 prefirieron carpetas por materia (69,2 %) frente a 24 que eligieron etiquetas (20,0 %) | Priorizar materias sin afirmar que las etiquetas carezcan de valor |
+| Protección de la escritura | En P8, 63 seleccionaron la formulación de guardado automático (52,5 %) | Investigar continuidad del trabajo; no demuestra preferencia por guardar notas definitivas sin confirmación |
 
-P8 declaraba un máximo de tres opciones, pero el CSV contiene 371 marcas y 37 respuestas con cuatro a seis. Por ello sus porcentajes se usan como frecuencias descriptivas, no como un ranking de elección forzada uniforme ni como evidencia inferencial.
+P8 indicaba un máximo de tres opciones, pero se registraron 371 marcas y 37 respuestas con cuatro a seis selecciones. Sus porcentajes son frecuencias descriptivas con personas como denominador, no un ranking de elección forzada uniforme. La tabla no transforma esas selecciones en requisitos aprobados automáticamente.
 
-La encuesta respaldó las restricciones **mobile-first** y **offline-first**, pero no comparó PWA frente a APK, no preguntó por instalación desde fuentes externas y tampoco evaluó motores de persistencia. La elección de Capacitor/APK y SQLite se realizó posteriormente mediante el análisis técnico documentado en [ADR-005](../adr/ADR-005-pivote-app-nativa.md) y [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md).
+La pregunta sobre utilidad combinaba aplicación web, gratuidad, ausencia de cuenta y toma de notas: 97 de 120 participantes la valoraron con cuatro o cinco puntos (80,8 %). No permite aislar el atractivo de un atributo ni demostrar intención de pago, adopción real o aceptación de un APK. La disposición declarada a probar un prototipo tampoco equivale a participación efectiva.
 
 ### 2.5.3. Fase 3 — El pivote fundamentado en datos
 
-Cuando la encuesta refutó una hipótesis inicial, se ejecutó un pivote de producto documentado y trazable.
+La preferencia por materias llevó a revisar el protagonismo inicial de las etiquetas y quedó reflejada en DP-002 y DP-004. La solución incorpora Entrada, Materias y Archivo, con materias y secciones opcionales. La encuesta no evaluó esa nomenclatura, el límite de dos niveles ni el recorrido: son decisiones de diseño, no resultados de P11.
 
-El supuesto original indicaba que los estudiantes organizarían notas con etiquetas. La evidencia empírica mostró otra cosa: el 69.2% de los 120 encuestados prefirió organizar por carpetas por materia. Como resultado, se descartó el sistema de etiquetas como eje principal y se diseñó una jerarquía de Materias y Secciones con profundidad máxima de dos niveles. Esta decisión quedó formalizada en [DP-002](../producto/decisiones-producto.md) y [DP-004](../producto/decisiones-producto.md), y se materializó en el modelo SQLite mediante la tabla `subjects` y la auto-referencia `parentSubjectId`.
+La prioridad móvil y offline orientó también la comparación de alternativas técnicas. Adopté Android con Capacitor y SQLite por el análisis documentado en ADR-005 y ADR-006, considerando persistencia, reutilización de la interfaz y alcance del desarrollo. El cuestionario no comparó motores de base de datos ni canales de instalación: no atribuyo a los estudiantes una elección de SQLite o del formato APK.
 
-Este pivote demuestra que las historias de usuario no son compromisos irrevocables. Su valor metodológico no consiste en acertar desde el inicio, sino en crear un marco que permita detectar y corregir supuestos antes de invertir más desarrollo en una dirección equivocada.
+Otra revisión relevante fue la de RF-005: la protección del trabajo en curso se concretó como borrador persistente, manteniendo una acción explícita para crear o actualizar la nota definitiva. Esta solución distingue una necesidad de continuidad de una interpretación literal de «guardado automático». La encuesta no demuestra que el mecanismo elegido resulte comprendido por todos los usuarios.
 
 ### 2.5.4. Fase 4 — Materialización en requisitos y código
 
-Una vez validadas o ajustadas las historias, se estableció una cadena de trazabilidad:
+La trazabilidad relaciona necesidad, decisión, historia, requisito, criterio de aceptación, implementación y evidencia. Una prueba o restricción técnica puede obligar a revisar esa relación, como permite examinar el caso de organización por materias.
 
-```text
-Historia de usuario
-        |
-        v
-Requisito funcional
-        |
-        v
-Criterios de aceptación
-        |
-        v
-Código
-        |
-        v
-Tests y validaciones
-```
+| Eslabón | Correspondencia documentada |
+|---|---|
+| Necesidad | Preferencia de P11 por carpetas por materia |
+| Decisiones | DP-002 define la navegación; DP-004 delimita materias y secciones |
+| Historia y requisito | HU-017 reúne creación, asociación y filtrado; RF-014 identifica el filtrado por materia y sección |
+| Criterios de aceptación | Creación de la jerarquía, asociación de notas, filtrado y persistencia |
+| Implementación | Servicio de materias, estado de notas, interfaz de organización y acceso SQLite |
+| Evidencia técnica | Pruebas existentes de validación de profundidad y operaciones de materias, junto con los controles documentados |
 
-Por ejemplo, la necesidad de organizar por materias se trazó desde el relevamiento hasta la implementación:
-
-- HU vinculada a crear materias, secciones y asignar notas.
-- RF-014: filtrado de notas por materia y sección.
-- DP-002 y DP-004: estructura Entrada / Materias / Archivo y jerarquía Materia -> Sección -> Nota.
-- Código en `SubjectService`, `drawerSubjects`, `NoteStore.data` y servicios SQLite.
-- Tests unitarios y auditorías de jerarquía de materias.
-
-La trazabilidad completa puede consultarse en [historias de usuario](../producto/historias-de-usuario.md), [requisitos funcionales](../producto/requisitos-funcionales.md), [decisiones de producto](../producto/decisiones-producto.md) y los scripts de auditoría documentados en [scripts/README.md](../../scripts/README.md).
+La prueba de profundidad comprueba una regla del software, no su preferencia entre estudiantes. La auditoría documental detecta referencias incoherentes, pero no verifica facilidad de uso ni cobertura completa de un binario. El diseño corresponde al capítulo 4; la implementación, al 5; las pruebas, al 6.
 
 ## 2.6. Requisitos del Sistema
 
-Los requisitos del sistema se documentan como artefactos vivos, separados en requisitos funcionales (RF) y no funcionales (RNF). Esta separación permite diferenciar qué debe hacer el sistema de cómo debe comportarse en términos de calidad, rendimiento, seguridad, usabilidad y mantenibilidad.
+Organicé los requisitos en funcionales —qué debe permitir el sistema— y no funcionales —qué atributos y condiciones de calidad deben verificarse—. Sus identificadores permiten seguir cambios de alcance sin borrar la formulación histórica. La prioridad expresa importancia para la entrega, no evidencia de cumplimiento.
 
 ### 2.6.1. Requisitos Funcionales
 
-Los requisitos funcionales cubren los módulos principales del producto: gestión de notas, persistencia local, Markdown, organización, portabilidad local, experiencia de usuario e información del sistema. En el estado actual del proyecto, el documento [requisitos-funcionales.md](../producto/requisitos-funcionales.md) registra 28 requisitos.
+El catálogo conserva 28 RF. En el corte documental vigente, 21 figuran implementados, uno verificado, cuatro postergados y dos obsoletos por el cambio de arquitectura. Mantener esas categorías evita contar una función excluida como pendiente accidental o presentar como implementado un requisito de la antigua PWA.
 
-El núcleo del MVP ya implementado incluye:
+Los RF abarcan notas y borradores, persistencia, Markdown, organización, fechas puntuales, interfaz e identificación y respaldo/importación ZIP. La sección 1.4.2 delimita esas funciones; no incluyen sincronización, agenda completa ni una copia exacta de todo el estado del dispositivo.
 
-- Creación, edición, listado, búsqueda y eliminación de notas.
-- Borradores persistentes del editor.
-- Persistencia local.
-- Renderizado Markdown y modos de lectura/escritura.
-- Organización por materias, secciones, archivo y papelera.
-- Tema claro/oscuro y marcadores visuales de estado académico.
-- Fechas académicas discretas.
-- Backup manual `.zip` e importación no destructiva de backups generados por Lumapse.
-- Sección "Acerca de" y ayudas opcionales de formato dentro del editor.
-
-Al cierre formal del Hito 04 (2026-06-01), los pendientes opcionales de UX se reclasificaron con justificación de producto: contador de palabras/caracteres, onboarding e indicador offline/online pasan a estado postergado para evitar ruido visual o falsas expectativas de sincronización. Durante Hito 05 se resolvió la portabilidad de workspace con backup manual `.zip` e importación no destructiva de backups generados por Lumapse, además de incorporar la sección "Acerca de". Compartir/exportar una nota individual sigue postergado hasta contar con share sheet nativo de Android validado y evidencia de que no duplica la acción existente de copiar.
+Los cuatro RF postergados son conteo de palabras y caracteres (RF-006), compartir o exportar una nota individual (RF-016), bienvenida inicial (RF-022) e indicador global de conexión (RF-024). Service Workers (RF-009) e instalación PWA (RF-021) quedaron obsoletos. En cambio, el ZIP del espacio de trabajo (RF-017 y RF-018) es distinto del flujo individual postergado. Los estados de implementación no certifican todos los recorridos de la RC1 publicada.
 
 ### 2.6.2. Requisitos No Funcionales
 
-Los requisitos no funcionales se agrupan según criterios de rendimiento, usabilidad, disponibilidad, seguridad, portabilidad, accesibilidad y mantenibilidad. En el estado actual, el documento [requisitos-no-funcionales.md](../producto/requisitos-no-funcionales.md) registra 26 RNF.
+El catálogo reúne 26 RNF sobre rendimiento, usabilidad, disponibilidad y confiabilidad, seguridad y privacidad, portabilidad, accesibilidad y mantenibilidad. Cada requisito debe relacionarse con una métrica, un método y evidencia identificable; una propiedad deseada no se demuestra mediante una descripción de arquitectura.
 
-Entre los RNF centrales del proyecto se destacan:
+La revisión distingue evidencia verificada en su alcance, evidencia parcial, mediciones pendientes y criterios obsoletos o no aplicables al APK. Por ejemplo, una comprobación de disponibilidad en un debug identificado no se atribuye automáticamente a otro binario; los controles de HTTPS del hosting tampoco equivalen a controles del runtime local Android.
 
-- Carga rápida y bundle liviano.
-- Funcionamiento offline.
-- Persistencia confiable ante cierres inesperados.
-- Ausencia de tracking y envío de datos del usuario a servidores externos.
-- Accesibilidad básica en elementos interactivos.
-- Estructura modular mantenible.
-- Verificación automatizada mediante tests, build, lint y auditorías documentales.
+Tres métricas conservan su estado pendiente y sus umbrales:
 
-Las betas aportan evidencia incremental en dispositivo real. `v0.4.8` cuenta con instalación de APK firmada, apertura offline, persistencia, navegación principal y flujos críticos sin crashes. Para `v0.5.0` se aprobaron un build equivalente con datos preservados, las correcciones táctiles, el gate y la firma del asset publicado; su instalación específica sigue pendiente. La validación final de defensa debe completar feedback de estudiantes, contraste visual y comportamiento con mayor volumen real de notas. Esos puntos se abordan en el Capítulo 6.
+| Requisito | Criterio | Límite actual |
+|---|---|---|
+| RNF-002 | Latencia de crear, editar o eliminar notas ≤ 200 ms | Sin muestras temporales aceptadas; medición diferida a después de la presentación |
+| RNF-004 | Fluidez de desplazamiento ≥ 55 FPS con 500 notas | La importación funcional de ese volumen no acredita la tasa de cuadros; medición diferida |
+| RNF-005 | Primera nota de un usuario nuevo ≤ 10 s | Sin medición específica con participantes nuevos; evaluación posterior al corte, no bloqueante |
+
+La aceptación de esas limitaciones no rebaja los criterios ni convierte una opinión favorable en medición. La navegación por teclado mantiene evidencia parcial y las verificaciones acotadas de accesibilidad no se presentan como certificación exhaustiva.
+
+El corte de presentación es la RC1 0.6.0/600, publicada con validación parcial y desarrollo congelado hasta después de la presentación. Las betas y los builds de prueba conservan identidad y cobertura propias; los recorridos restantes de la RC1 siguen diferidos, no aprobados. Publicar el candidato no equivale a cumplimiento global.
+
+En conjunto, este marco permite seguir el razonamiento desde los supuestos iniciales hasta requisitos y decisiones verificables. El capítulo 3 desarrolla la evidencia del relevamiento; los capítulos 4 a 6 explican cómo se tradujo en diseño, implementación y pruebas. La relación entre esas etapas sostiene la evaluación del proyecto, sin sustituir los resultados que cada una debe demostrar.
 
 ---
 
 # Capítulo 3: Relevamiento y Análisis de Datos
 
+En este capítulo presento el relevamiento de mayo de 2026 y explico cómo pasé de las respuestas a los hallazgos que orientaron Lumapse. El propósito fue contrastar hábitos, dificultades y preferencias del contexto estudiantil, no demostrar la eficacia de una aplicación terminada. Distingo los datos observados, su interpretación y las decisiones posteriores.
+
+Las tablas son de elaboración propia a partir de las 120 respuestas válidas. En cada caso indico la base de cálculo; los porcentajes se redondean a una cifra decimal. Las diferencias de redondeo y las preguntas de selección múltiple impiden suponer que toda tabla deba sumar exactamente 100 %.
+
 ## 3.1. Metodología de Recolección (Población y Muestra)
 
-El relevamiento de datos tuvo como objetivo validar necesidades, hábitos y problemas de estudiantes del IES 6023 en relación con la toma de notas. Se diseñó como una encuesta autoadministrada mediante Google Forms, distribuida por canales institucionales e informales: WhatsApp, difusión en aulas y código QR.
+### 3.1.1. Población de referencia y selección
 
-La población objetivo estuvo compuesta por estudiantes regulares del IES 6023 "Dr. Alfredo Loutaif" durante el ciclo lectivo 2026. El tamaño de población registrado fue de 1.239 estudiantes, distribuidos en turnos mañana, tarde y noche, y en carreras de formación docente y tecnicaturas.
+Definí como población objetivo a estudiantes regulares del IES 6023 «Dr. Alfredo Loutaif» durante el ciclo lectivo 2026, excluyendo a quienes asistían únicamente a rendir exámenes. El diseño registra 1.239 estudiantes, tres turnos y siete carreras con matrícula activa como población de referencia. No utilicé una lista nominal para seleccionar participantes al azar.
 
-La muestra final quedó compuesta por 120 respuestas válidas sobre 121 recolectadas. Se excluyó un registro correspondiente a una persona que indicó asistir únicamente a rendir, criterio de exclusión definido previamente en el diseño del relevamiento. La recolección se realizó entre el 11/05/2026 y el 13/05/2026, con cierre anticipado al superar el objetivo mínimo de respuestas.
+Distribuí una encuesta autoadministrada en Google Forms mediante grupos de WhatsApp, pósteres con código QR en aulas y colaboración para difundir el enlace. La selección fue no probabilística por conveniencia: dependió del acceso al formulario y de la decisión de responder. Procurar cobertura de distintos turnos no equivale a aplicar cuotas proporcionales ni probabilidades de inclusión conocidas.
 
-| Parámetro | Valor |
+| Característica | Registro del estudio |
 |---|---|
-| Población objetivo | Estudiantes regulares del IES 6023 |
-| Tamaño de población | 1.239 estudiantes |
-| Respuestas válidas | 120 |
-| Tipo de muestreo | No probabilístico por conveniencia |
-| Nivel de confianza de referencia | 95% |
-| Margen nominal de referencia | Aproximadamente 8.5% bajo muestreo aleatorio simple; no es un intervalo efectivo para la muestra por conveniencia |
-| Instrumento | Google Forms, 12 preguntas + 1 condicional |
-| Período de recolección | 11/05/2026 al 13/05/2026 |
+| Población de referencia consignada en el diseño | 1.239 estudiantes regulares |
+| Recolección | 11 al 13 de mayo de 2026 |
+| Respuestas recolectadas | 121 |
+| Exclusión aplicada | Un registro que indicó asistir sólo a rendir |
+| Base analítica | 120 respuestas válidas |
+| Selección | No probabilística por conveniencia |
+| Instrumento | Doce preguntas numeradas P1–P12 y una adicional condicional, P5b |
 
-El cálculo muestral se fundamentó con fórmula para poblaciones finitas, dado que la población era conocida y acotada. La justificación estadística completa se encuentra en [metodologia-muestral.md](../producto/metodologia-muestral.md), donde se documentan los escenarios de confianza, margen de error y contingencia.
+La meta operativa mínima fue reunir 90 respuestas. Para dimensionarla utilicé como referencia la fórmula de población finita:
 
-El nivel de confianza y el margen de error se utilizan como referencia para dimensionar la muestra, no como garantía de inferencia probabilística. Al tratarse de un muestreo por conveniencia, los resultados describen a las personas participantes y aportan evidencia útil para decisiones de producto, pero no permiten afirmar representatividad estadística perfecta de toda la población institucional.
+$$
+n^* = \frac{N Z^2 p(1-p)}{e^2(N-1)+Z^2p(1-p)}
+$$
+
+En la fórmula, N es la población de referencia; Z, el valor normal asociado al nivel nominal de confianza; p, la proporción supuesta, y e, el error tolerado en ese escenario. Con N = 1.239, Z = 1,96, p = 0,5 —máxima variabilidad— y e = 0,10, el objetivo nominal redondeado hacia arriba es 90. Para 120 respuestas, el cálculo hipotético arroja aproximadamente 8,5 % al nivel nominal de 95 %. Esos valores suponen selección aleatoria simple: describen el escenario de planificación, no un margen efectivo de este estudio. Superar la meta no corrige el sesgo de selección ni convierte la muestra por conveniencia en probabilística.
+
+La recolección se desarrolló entre el 11 y el 13 de mayo de 2026, durante aproximadamente dos días naturales y en horario de Argentina (UTC−03:00). Al alcanzar 121 respuestas, decidí cerrar la encuesta, ya que se había superado la meta operativa de 90.
+
+### 3.1.2. Instrumento y ramificaciones
+
+El formulario combinó perfil demográfico, método principal de toma de notas, dificultades, conectividad, utilidad percibida y preferencias de funcionalidades, dispositivo y organización. P12 fue una pregunta abierta opcional. Las preguntas cerradas usaron respuesta única, una valoración de cinco puntos o selección múltiple, según el caso.
+
+La ramificación evitó preguntar por dificultades de una actividad que la persona había declarado no realizar:
+
+- Quienes eligieron «No tomo notas» en P4 pasaron a P6, sin responder P5 ni P5b.
+- Quienes tomaban notas respondieron P5 sobre dificultad percibida.
+- Sólo quienes respondieron afirmativamente a P5 detallaron dificultades en P5b.
+- P6–P12 correspondían al conjunto de participantes, con P12 opcional.
+
+Comprobé que las bases resultantes respetan ese recorrido: cinco registros sin toma de notas, 115 a los que aplica P5 y 56 con dificultad declarada a los que aplica P5b. Los saltos son ausencia prevista por diseño, no respuestas que deban completarse artificialmente.
+
+P7 preguntó por una propuesta conjunta: «una app web gratuita, sin cuenta, para tomar notas de estudio». No aisló el efecto de cada atributo. P8 solicitó elegir hasta tres características; la exportación demuestra que ese máximo no quedó asegurado. Estas propiedades del instrumento delimitan las interpretaciones posteriores.
+
+### 3.1.3. Tratamiento y control de los datos
+
+Conservé el CSV original y contrasté las frecuencias con las reglas del análisis documentado en Python. El proceso normaliza finales de línea, identifica las columnas y aplica la exclusión poblacional. Además, reclasifica un registro de doble turno a Tarde y una respuesta de doble carrera a Lengua y Literatura. Son convenciones del tratamiento, no asignaciones aleatorias ni cambios en la composición de la matrícula.
+
+Las marcas temporales del CSV se interpretan en orden mes/día/año. La primera y la última respuesta no identifican por sí solas los momentos exactos de apertura y cierre del formulario.
+
+Para separar respuestas múltiples, el análisis distingue comas fuera de paréntesis. Esa regla preserva opciones como «formato (títulos, listas, tablas, fórmulas)», pero una coma dentro de texto libre puede generar fragmentos adicionales. Por ello diferencio respuestas, opciones predefinidas y fragmentos del procesamiento; no los considero unidades intercambiables.
+
+Los scripts conservados separan limpieza, frecuencias, cruces, clasificación de comentarios y gráficos. Esa estructura permite rastrear operaciones, pero no garantiza calidad semántica ni elimina sesgos del instrumento. Las comprobaciones de este informe no implican una nueva recolección ni validan automáticamente todas las interpretaciones del análisis inicial.
 
 ## 3.2. Análisis Demográfico
 
-La distribución demográfica permitió verificar que la muestra incluyera distintos turnos, carreras y rangos etarios relevantes para el proyecto.
+Los tres turnos estuvieron presentes, con mayor cantidad de respuestas en tarde y noche. La base es de 120 registros después de las reclasificaciones indicadas.
 
-En cuanto al turno de cursada, la muestra se concentró principalmente en los turnos tarde y noche:
-
-| Turno | n | Porcentaje |
+| Turno | Respuestas | Porcentaje |
 |---|---:|---:|
-| Tarde | 56 | 46.7% |
-| Noche | 47 | 39.2% |
-| Mañana | 17 | 14.2% |
+| Tarde | 56 | 46,7 % |
+| Noche | 47 | 39,2 % |
+| Mañana | 17 | 14,2 % |
 
-Respecto de las carreras, la muestra cubrió seis de las siete ofertas con matrícula activa; no hubo respuesta válida del Profesorado en Física. Las carreras con mayor presencia fueron Educación Primaria, Educación Especial, Sistemas y Lengua y Literatura, que en conjunto representan el 86.7% de la muestra. La selección por conveniencia y la ausencia de una tabla institucional por carrera impiden afirmar proporcionalidad con la matrícula.
+Se observaron seis de las siete carreras consignadas en la población de referencia. No hubo una respuesta válida del Profesorado en Física.
 
-| Carrera | n | Porcentaje |
+| Carrera | Respuestas | Porcentaje |
 |---|---:|---:|
-| Educación Primaria | 35 | 29.2% |
-| Educación Especial | 26 | 21.7% |
-| Sistemas | 22 | 18.3% |
-| Lengua y Literatura | 21 | 17.5% |
-| Danzas | 9 | 7.5% |
-| Turismo | 7 | 5.8% |
+| Educación Primaria | 35 | 29,2 % |
+| Educación Especial | 26 | 21,7 % |
+| Sistemas | 22 | 18,3 % |
+| Lengua y Literatura | 21 | 17,5 % |
+| Danzas | 9 | 7,5 % |
+| Turismo | 7 | 5,8 % |
 
-La distribución por edad mostró una mayoría de estudiantes jóvenes: el 75.8% se ubicó entre 18 y 27 años. El dato describe la composición de la muestra, pero la edad por sí sola no permite inferir afinidad tecnológica ni adopción previa de herramientas digitales para tomar notas.
+Las cuatro carreras con más respuestas reúnen 104 de 120 registros (86,7 %). No dispongo en este análisis de una distribución institucional por turno y carrera que permita evaluar proporcionalidad; la diversidad observada no demuestra representatividad de la matrícula.
+
+En P3, 56 respuestas correspondieron a 18–22 años, 35 a 23–27, 23 a 28–35, cinco a 36–45 y una a 46 o más. Los dos primeros grupos suman 91 de 120 (75,8 %). La edad describe la muestra, no alfabetización digital; el único registro del tramo mayor tampoco permite comparaciones de ese grupo.
 
 ## 3.3. Resultados sobre Hábitos de Estudio y Toma de Notas
 
-El primer hallazgo significativo fue que el cuaderno o papel continúa siendo el método dominante de toma de notas. El 88.3% de los encuestados declaró usarlo como medio principal, mientras que solo el 7.5% utiliza algún dispositivo digital (celular, notebook o tablet).
+### 3.3.1. Método principal y dificultades
 
-| Método principal | n | Porcentaje |
+P4 preguntó por el método principal utilizado en clase, no por todas las herramientas que cada participante pudiera emplear.
+
+| Método principal | Respuestas, base 120 | Porcentaje |
 |---|---:|---:|
-| Cuaderno/papel | 106 | 88.3% |
-| Celular | 7 | 5.8% |
-| No tomo notas | 5 | 4.2% |
-| Notebook/PC | 1 | 0.8% |
-| Tablet | 1 | 0.8% |
+| Cuaderno o papel | 106 | 88,3 % |
+| Celular | 7 | 5,8 % |
+| No toma notas | 5 | 4,2 % |
+| Notebook o PC | 1 | 0,8 % |
+| Tablet | 1 | 0,8 % |
 
-Este resultado identifica al papel como hábito de partida predominante. La encuesta preguntó por el método principal, no por el conjunto de herramientas utilizadas ni por competidores percibidos; por ello no permite concluir que Lumapse compita exclusivamente o principalmente contra el cuaderno. Sí sugiere que el prototipo debe demostrar una ventaja clara sin introducir fricción adicional.
+Los dispositivos digitales suman nueve respuestas (7,5 %). El predominio del papel caracteriza el hábito de partida, pero no indica por qué se lo prefiere ni permite afirmar que nunca se utilicen aplicaciones como recurso secundario. Tampoco identifica un competidor único de Lumapse.
 
-Entre quienes toman notas, el 48.7% reconoció dificultades con su método actual. Las dificultades principales fueron pérdida de notas y desorganización rápida, ambas con 58.9% entre quienes reportaron problemas.
+Entre las 115 respuestas a las que aplica P5, 56 declaran dificultad (48,7 %) y 59 no la declaran (51,3 %). P5b utiliza exclusivamente las 56 afirmativas como denominador:
 
-| Dificultad reportada | n | Porcentaje sobre quienes reportaron dificultad |
+| Dificultad predefinida | Respuestas que la incluyen, base 56 | Porcentaje |
 |---|---:|---:|
-| Pierdo notas con frecuencia | 33 | 58.9% |
-| Se desorganizan rápido | 33 | 58.9% |
-| Me cuesta organizar el formato | 22 | 39.3% |
-| No encuentro lo que busco | 13 | 23.2% |
-| No puedo acceder sin internet | 3 | 5.4% |
+| Pérdida de notas | 33 | 58,9 % |
+| Desorganización rápida | 33 | 58,9 % |
+| Dificultad para organizar el formato | 22 | 39,3 % |
+| No encontrar lo buscado | 13 | 23,2 % |
+| No poder acceder sin internet | 3 | 5,4 % |
 
-También se registraron seis formulaciones libres diferentes, con una mención cada una; no se fusionan en una categoría artificial. La consigna pedía hasta tres opciones, pero una respuesta contiene cuatro marcas, limitación que se conserva en el análisis.
+Son selecciones múltiples: una respuesta puede aparecer en varias filas y los porcentajes no deben sumarse como grupos disjuntos. Pérdida y desorganización tienen igual frecuencia, sin que ello demuestre causalidad, gravedad equivalente o que afecten a personas diferentes.
 
-Ante la pregunta por acceso estable a internet, el 81.7% respondió "A veces", "Raramente" o "Nunca". La pregunta no mide uptime ni calidad técnica, pero respalda priorizar y comprobar el funcionamiento offline en el contexto relevado.
+Cinco respuestas contienen formulaciones libres adicionales. El separador automático produce seis fragmentos de esos textos: la única salida de cuatro fragmentos reúne dos opciones cerradas y una formulación libre con coma. No constituye evidencia suficiente de cuatro opciones seleccionadas ni permite atribuir esos fragmentos a seis personas. Reporto las cinco categorías predefinidas por separado, sin crear una categoría homogénea a partir de fragmentos de redacción.
 
-En cuanto a la propuesta de valor, el 80.8% calificó como útil o muy útil la formulación aplicada: "una app web gratuita, sin cuenta, para tomar notas de estudio". La pregunta combina varios atributos y no permite atribuir el resultado a uno solo. En P10, el 100% respondió "Sí" o "Tal vez" ante una futura prueba; esa intención declarada facilita planificar reclutamiento, pero no garantiza participación, adopción ni uso sostenido.
+### 3.3.2. Conectividad y características seleccionadas
 
-La priorización de funcionalidades mostró cuatro demandas principales:
+P6 recoge frecuencia declarada de acceso estable a internet en el instituto:
 
-| Funcionalidad | Porcentaje |
-|---|---:|
-| Que funcione sin internet | 74.2% |
-| Que permita organizar por materia | 73.3% |
-| Que funcione en celular y PC | 53.3% |
-| Que guarde automáticamente | 52.5% |
+| Frecuencia | Respuestas, base 120 | Porcentaje |
+|---|---:|---:|
+| Siempre | 7 | 5,8 % |
+| Casi siempre | 15 | 12,5 % |
+| A veces | 42 | 35,0 % |
+| Raramente | 29 | 24,2 % |
+| Nunca | 27 | 22,5 % |
 
-La consigna de P8 pedía hasta tres opciones, pero el CSV contiene 371 marcas y 37 respuestas con cuatro a seis selecciones. Por lo tanto, estas cifras se leen como frecuencias descriptivas sobre 120 personas, no como un ranking de elección forzada aplicado de manera uniforme.
+Las tres últimas categorías suman 98 respuestas (81,7 %). Es una declaración sobre disponibilidad, no una medición de cobertura, velocidad o tiempo de actividad de la red. Orienta priorizar operaciones locales, sin demostrar todavía el funcionamiento offline de una implementación.
 
-El dispositivo preferido fue el celular, elegido por el 72.5% de los encuestados. Si se suma la opción "cualquiera por igual", el 95% incluye al celular como dispositivo aceptable. Este resultado fundamentó la prioridad mobile-first. La encuesta no comparó PWA y APK ni midió la disposición a instalar aplicaciones por un canal específico; el empaquetado Android y SQLite se definieron después mediante el análisis técnico de ADR-005 y ADR-006.
+P8 registra las siguientes frecuencias:
+
+| Característica | Respuestas que la seleccionan, base 120 | Porcentaje |
+|---|---:|---:|
+| Funcionar sin internet | 89 | 74,2 % |
+| Organizar por materia | 88 | 73,3 % |
+| Funcionar en celular y PC | 64 | 53,3 % |
+| Guardar automáticamente | 63 | 52,5 % |
+| Ser rápida | 54 | 45,0 % |
+| No pedir cuenta | 13 | 10,8 % |
+
+A diferencia del texto libre de P5b, P8 contiene seis opciones cerradas. Se observan 371 selecciones y 37 respuestas con cuatro a seis opciones, aunque la consigna pedía un máximo de tres. Por eso interpreto la tabla como frecuencia descriptiva sobre las 120 respuestas, no como un ranking de elección forzada uniforme. El total no es una muestra de 371 participantes.
+
+Que «no pedir cuenta» tenga menos selecciones no demuestra aceptación de un registro obligatorio. Del mismo modo, elegir rapidez no mide latencia y seleccionar guardado automático no define por sí solo cuándo debe confirmarse una nota definitiva.
+
+### 3.3.3. Utilidad percibida y disposición a una prueba
+
+La valoración de la propuesta conjunta de P7 se distribuyó así:
+
+| Valoración | Respuestas, base 120 | Porcentaje |
+|---|---:|---:|
+| 5 — Muy útil | 61 | 50,8 % |
+| 4 — Útil | 36 | 30,0 % |
+| 3 — Algo útil | 17 | 14,2 % |
+| 2 — Poco útil | 4 | 3,3 % |
+| 1 — Nada útil | 2 | 1,7 % |
+
+Las valoraciones cuatro y cinco suman 97 respuestas (80,8 %). La media descriptiva de las puntuaciones es 4,25 y la mediana, cinco; no son una medición de satisfacción después de usar Lumapse. La pregunta combinó web, gratuidad, ausencia de cuenta y toma de notas, de modo que no permite atribuir la valoración a un componente aislado.
+
+En P10 hubo 97 respuestas «Sí» y 23 «Tal vez» a una posible prueba, sin respuestas negativas. La suma de ambas categorías es 100 %, pero una disposición condicional no equivale a compromiso de participación. Estos datos no prueban uso efectivo, retención, intención de pago ni demanda comercial.
+
+### 3.3.4. Dispositivo y organización preferidos
+
+En P9, 87 respuestas eligieron celular (72,5 %), 27 «Cualquiera por igual» (22,5 %), cinco notebook o PC (4,2 %) y una tablet (0,8 %). Celular y «Cualquiera por igual» suman 114 de 120 (95,0 %): es una combinación de preferencias declaradas, no prueba de posesión, compatibilidad o disponibilidad permanente de esos dispositivos.
+
+P11 permite contrastar el supuesto inicial de organización por etiquetas:
+
+| Organización preferida | Respuestas, base 120 | Porcentaje |
+|---|---:|---:|
+| Carpetas por materia | 83 | 69,2 % |
+| Etiquetas | 24 | 20,0 % |
+| Indiferente si puede encontrar las notas | 9 | 7,5 % |
+| Lista simple | 4 | 3,3 % |
+
+El resultado respalda priorizar materias dentro de la muestra, sin demostrar que las etiquetas carezcan de valor. La pregunta no probó nombres de navegación, profundidad de carpetas ni recorridos de una interfaz. Esas decisiones requieren una justificación de diseño distinta de la frecuencia observada.
+
+### 3.3.5. Cruces descriptivos
+
+El análisis documentado contempla seis cruces entre turno y dificultades, carrera y dispositivo, dispositivo y organización, edad y método, edad y características, y método actual y dispositivo deseado. Sus tablas son descriptivas; no se presentan pruebas inferenciales de diferencias ni causalidad.
+
+Dos ejemplos muestran su utilidad y su límite. Entre las 106 respuestas cuyo método principal es papel, 79 eligen celular para una aplicación de notas (74,5 %). El contraste distingue hábito actual y preferencia hipotética, sin explicar por qué todavía no usan ese dispositivo como medio principal. Entre quienes prefieren celular, 59 de 87 eligen materias (67,8 %); esto orienta ensayar una organización común, no demuestra que funcione sin dificultad.
+
+Los grupos por carrera y edad son desiguales y algunos muy pequeños. Que una opción lidere en las seis carreras observadas no permite extender el resultado a Física ni afirmar equivalencia estadística entre carreras. Tampoco sumo los márgenes de cruces multirrespuesta como si fueran personas diferentes.
 
 ## 3.4. Análisis Cualitativo (Puntos de Dolor)
 
-La encuesta incluyó una pregunta abierta opcional, respondida por 41 estudiantes. Esta tasa de participación, equivalente al 34.2% de la muestra, aportó indicios cualitativos valiosos para comprender necesidades no capturadas completamente por las preguntas cerradas.
+P12 recibió 41 respuestas no vacías, equivalentes al 34,2 % de la base de 120. Respondieron voluntariamente a una pregunta opcional; esa proporción no mide compromiso sostenido ni convierte sus temas en representativos del conjunto.
 
-Los comentarios se agruparon por categorías temáticas. Entre las más relevantes aparecieron:
+La clasificación conservada busca palabras o fragmentos de palabras en el texto convertido a minúsculas. Cada comentario puede recibir varias etiquetas; si no coincide con ninguna, se asigna a «Otros». El recuento reproducible es:
 
-| Categoría | Menciones | Interpretación |
-|---|---:|---|
-| Comentarios positivos o de apoyo | 7 | Expresiones favorables; no equivalen a conducta de adopción. |
-| Planificaciones docentes | 7 | Necesidad específica de profesorados. |
-| Organización avanzada | 6 | Mapas mentales, esquemas, cuadros sinópticos. |
-| Multimedia | 5 | Interés en fotos de pizarrón y audios. |
-| Velocidad de captura | 4 | Necesidad de escribir rápido durante la clase. |
-| Fórmulas o contenido técnico | 4 | Requisitos especializados por carrera. |
-| Conectividad | 3 | Refuerzo cualitativo de la necesidad offline. |
-| Recuperación o historial | 3 | Interés en no perder información. |
-| Agenda o calendario | 3 | Las fechas académicas discretas ya fueron implementadas; una agenda/calendario completo queda como posible extensión. |
+| Etiqueta del clasificador | Comentarios asignados |
+|---|---:|
+| Otros | 10 |
+| Positivos o apoyo | 7 |
+| Planificaciones docentes | 7 |
+| Organización avanzada | 6 |
+| Multimedia: fotos o audio | 5 |
+| Velocidad de captura | 4 |
+| Fórmulas o contenido técnico | 4 |
+| Conectividad | 3 |
+| Recuperación o historial | 3 |
+| Agenda o calendario | 3 |
 
-Las necesidades emergentes varían por carrera. En los profesorados aparecen demandas vinculadas a planificaciones, imágenes y materiales didácticos; en Lengua y Literatura, estructuras textuales y grabación de audio; en Sistemas, diagramas, herramientas más técnicas y fechas de parciales. Estas diferencias no cambian el núcleo del MVP, pero sí ofrecen insumos para trabajo futuro.
+Los 41 comentarios generan 52 asignaciones y ocho reciben más de una etiqueta. No son 52 personas ni categorías excluyentes. «Otros» significa ausencia de coincidencia con las palabras previstas, no ausencia de una necesidad. Incluso la etiqueta de apoyo es una coincidencia léxica, no una medición validada de intención positiva.
 
-El análisis cualitativo aporta respaldo adicional a velocidad, organización y acceso offline como preocupaciones de las personas participantes. También sugiere que funcionalidades como multimedia, plantillas o una agenda/calendario completo deben tratarse como extensiones futuras. La beta ya implementa fechas académicas discretas (`RF-027`), sin recurrencias, horarios ni planificación integral.
+Esta clasificación permite localizar temas para lectura contextual, pero no sustituye una interpretación semántica exhaustiva ni acredita acuerdo entre evaluadores. La propia pregunta ofrecía ejemplos de necesidades por carrera, lo que también pudo orientar las respuestas. No infiero prevalencia de necesidades ni diferencias firmes entre carreras a partir de esos grupos pequeños.
+
+Los temas incluyen recursos de planificación docente, esquemas, contenido técnico, imágenes o audio y recuperación. Su aparición amplía las preguntas de producto, sin convertir cada comentario en un requisito obligatorio. Las fechas académicas puntuales implementadas son distintas de una agenda completa; multimedia y otras extensiones conservan su delimitación como trabajo futuro.
 
 ## 3.5. Conclusiones del Relevamiento e Impacto en el Producto
 
-El relevamiento tuvo impacto directo en las decisiones del proyecto. Dentro de la muestra, los resultados respaldaron algunas hipótesis iniciales, contradijeron otras y aportaron evidencia para pivotes significativos.
+El relevamiento aportó evidencia exploratoria donde antes existían principalmente supuestos. La muestra describe un predominio del papel, dificultades de una parte de quienes toman notas, disponibilidad de conexión no permanente y preferencia declarada por celular y materias. Esas observaciones permiten orientar el prototipo, no certificar resultados de uso.
 
-Las conclusiones principales fueron:
+| Evidencia | Decisión informada | Lo que la encuesta no demuestra |
+|---|---|---|
+| P6 y selección de offline en P8 | Prioridad de operaciones locales y su comprobación | Disponibilidad real de todos los flujos del software sin red |
+| Preferencia móvil en P9 | Diseño mobile-first, registrado en DP-003 | Preferencia por PWA o APK, aceptación de descarga directa o elección de SQLite |
+| Carpetas por materia en P11 | Organización por materias, desarrollada en DP-002 y DP-004 | Validación de nombres, límite de dos niveles o recorridos de navegación |
+| Pérdida declarada en P5b y protección de escritura en P8 | Conservación del trabajo; revisión posterior de RF-005 como borrador persistente | Preferencia por crear o actualizar notas definitivas sin confirmación |
 
-1. Una parte relevante de la muestra declara dificultades al tomar y organizar notas.
-2. El interés declarado es alto en la muestra: la propuesta fue considerada útil o muy útil por el 80.8%.
-3. El celular es el dispositivo preferido en la muestra para una futura app de notas.
-4. La disponibilidad de red no permanente y la selección de P8 respaldan priorizar offline-first.
-5. La organización por materia es el modelo preferido por la mayoría de la muestra.
-6. El cuaderno físico es el hábito principal declarado; la encuesta no identificó un competidor único ni midió el uso secundario de otras aplicaciones.
+La combinación de necesidades y restricciones técnicas dio lugar a decisiones de arquitectura registradas en ADR-005 y ADR-006, no a una elección tecnológica realizada por las personas encuestadas. La preferencia por uso en celular y PC permanece como señal de interés, no como entrega multiplataforma terminada.
 
-El impacto en el producto se materializó en cuatro decisiones centrales:
+Los principales límites son la selección por conveniencia y autoselección, cobertura incompleta y proporcionalidad no comprobada, formulación conjunta de P7, máximo no asegurado en P8 y clasificación léxica de una pregunta abierta opcional. La exportación tampoco acredita por sí sola unicidad de participantes. Conocer esos límites evita atribuir al tamaño de muestra una precisión o un control que el procedimiento no documenta.
 
-| Evidencia | Decisión tomada |
-|---|---|
-| 72.5% usaría la app desde el celular | Diseño mobile-first; el empaquetado Android se decidió después mediante análisis técnico. |
-| 81.7% responde "A veces", "Raramente" o "Nunca" sobre acceso estable | Prioridad al funcionamiento offline. |
-| 74.2% prioriza offline | Persistencia local robusta y sin dependencia de red. |
-| 69.2% prefiere carpetas por materia | Pivote desde etiquetas hacia materias y secciones. |
-
-En consecuencia, el relevamiento determina necesidades y prioridades de uso, pero no demuestra preferencia por un formato de distribución ni por una tecnología de persistencia. Esas decisiones corresponden a la evaluación arquitectónica documentada en [ADR-005](../adr/ADR-005-pivote-app-nativa.md) y [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md).
-
-De esta manera, el relevamiento no quedó como un anexo aislado, sino que funcionó como insumo metodológico para las decisiones de arquitectura, producto, UX y alcance. La trazabilidad entre datos y decisiones queda registrada en los documentos de producto, ADRs, requisitos y capítulos técnicos del presente informe.
+La encuesta evaluó una propuesta inicial, no una sesión de uso de la RC1. No midió tiempos de primera nota, latencia, fluidez, comprensión de la instalación ni adopción sostenida. El capítulo 4 desarrolla las elecciones de diseño; los capítulos 5 y 6 distinguen su implementación y la evidencia de verificación. Esta separación mantiene una historia trazable desde las necesidades declaradas hasta el producto, sin convertir intención en resultado.
 
 ---
 
 # Capítulo 4: Arquitectura y Diseño
 
-## 4.1. Decisiones Arquitectónicas Iniciales (ADRs)
+Las necesidades expuestas en el capítulo 3 establecen prioridades de producto, pero no determinan una tecnología por sí solas. En este capítulo explico cómo las traduje en decisiones de plataforma, organización del software, interacción y persistencia, considerando la reutilización del trabajo previo y el alcance académico.
 
-Las decisiones arquitectónicas significativas de Lumapse se documentan mediante Architecture Decision Records (ADRs). Este formato permite registrar el contexto, las alternativas evaluadas, la decisión tomada y sus consecuencias. En un proyecto académico, los ADRs cumplen además una función de defensa: muestran que la arquitectura no surge de preferencias arbitrarias, sino de restricciones, evidencia y análisis.
+La descripción corresponde al diseño presente en la fuente de **Lumapse 0.6.0/600 — Release Candidate 1**, identificada en la sección 1.4.4. Distingo ese diseño de sus antecedentes y de su validación: comprobar una estructura en el código no demuestra que todos los recorridos del APK hayan sido probados. La implementación se desarrolla en el capítulo 5 y la evidencia, con sus artefactos y límites, en el capítulo 6.
 
-Los ADRs vigentes cubren:
+## 4.1. Decisiones arquitectónicas y evolución del diseño
 
-| ADR | Tema | Estado |
+Registré las decisiones significativas mediante *Architecture Decision Records* (ADR), documentos que conservan contexto, alternativas, elección y consecuencias. Su valor es permitir reconstruir razones y costos, no certificar por sí solos que una solución sea correcta. Algunos formalizan retrospectivamente un diseño ya consolidado; no presupongo que la fecha de cada registro demuestre una decisión anterior a su implementación.
+
+| Registros | Decisión y relación con el diseño |
+|---|---|
+| ADR-001 y ADR-004 | Base web sin framework de interfaz, Vite y separación de responsabilidades en el repositorio |
+| ADR-002 | IndexedDB en la propuesta PWA original; decisión reemplazada por ADR-005 y ADR-006 |
+| ADR-003 | Gestión adaptada del flujo de trabajo, desarrollada en el capítulo 2 |
+| ADR-005 y ADR-006 | Canal Android híbrido, SQLite nativo y entorno SQLite web auxiliar |
+| ADR-007 y ADR-008 | Componentes por funcionalidad y monolito modular cliente con capas pragmáticas |
+| ADR-009 | Propiedad transaccional explícita y recuperación del arranque |
+| ADR-010 | Entorno canónico y una misma definición del control automatizado local y remoto |
+| ADR-011 | Separación entre escritura confirmada y refresco secundario de la interfaz |
+| ADR-012 | Borrador SQLite y consumo atómico al guardar la nota |
+| ADR-013 | Despliegue de desarrollo sin desinstalación implícita; pertenece a las herramientas, no a una nueva capa del producto |
+
+El cambio principal fue pasar de una PWA con IndexedDB a una aplicación Android con interfaz web y SQLite. Comparé mantener el canal de navegador, reutilizar la interfaz mediante Capacitor y afrontar una reescritura con otra tecnología móvil. Adopté la segunda alternativa porque conservaba la base existente, permitía acceder a capacidades del dispositivo y situaba la base de datos del producto fuera del almacenamiento administrado por el navegador.
+
+Capacitor proporciona un contenedor y una API de plugins para integrar código web con capacidades nativas (Ionic, s. f.). En Lumapse, la interfaz se ejecuta en una WebView: no se convirtió en una interfaz escrita completamente con componentes nativos de Android. El costo del pivote fue incorporar herramientas y pruebas específicas de Android y dejar de comprometer una entrega utilizable desde cualquier navegador.
+
+La encuesta respaldó priorizar celular y uso sin conexión; no comparó PWA con APK ni IndexedDB con SQLite. Tampoco demostró que descargar e instalar un APK fuera intuitivo. La elección concreta provino del análisis técnico de ADR-005 y ADR-006. A su vez, SQLite no elimina riesgos como desinstalación, pérdida del dispositivo o eliminación definitiva: la portabilidad mediante respaldo sigue siendo necesaria.
+
+## 4.2. Stack tecnológico y compromisos
+
+Seleccioné tecnologías que permitieran sostener una aplicación local con responsabilidades visibles. La ausencia de un framework de interfaz reduce esa dependencia de ejecución, pero traslada al código propio el manejo de componentes, eventos y suscripciones. No presento esa elección como una superioridad de rendimiento demostrada frente a React o Vue.
+
+| Área | Tecnología | Función y compromiso |
 |---|---|---|
-| [ADR-001](../adr/ADR-001-stack-tecnologico.md) | Elección del stack tecnológico: Vanilla JS + Vite. | Aceptado |
-| [ADR-002](../adr/ADR-002-persistencia-indexeddb.md) | Persistencia inicial con IndexedDB. | Superado por ADR-005 |
-| [ADR-003](../adr/ADR-003-metodologia-kanban.md) | Enfoque incremental y gestión del flujo con Kanban adaptado. | Aceptado, revisado |
-| [ADR-004](../adr/ADR-004-estructura-carpetas.md) | Estructura de carpetas del proyecto. | Aceptado |
-| [ADR-005](../adr/ADR-005-pivote-app-nativa.md) | Pivote de PWA a aplicación Android híbrida con Capacitor. | Aceptado |
-| [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md) | Arquitectura SQLite para web de desarrollo y entorno nativo. | Aceptado |
-| [ADR-007](../adr/ADR-007-organizacion-componentes-por-feature.md) | Organización de componentes UI por feature folders. | Aceptado |
-| [ADR-008](../adr/ADR-008-arquitectura-modular-y-patrones.md) | Arquitectura modular por capas pragmáticas y patrones aplicados. | Aceptado |
+| Desarrollo y construcción | Vite | Sirve recursos durante el desarrollo y construye los archivos web del paquete; no ejecuta un backend del producto |
+| Lenguaje | JavaScript con módulos ES y TypeScript gradual | Conserva módulos existentes e incorpora contratos estáticos donde reducen riesgos; no todo JavaScript queda comprobado por el sistema de tipos |
+| Presentación | DOM y CSS, con componentes propios | Permite controlar interacción y renderizado; exige gestionar explícitamente eventos y ciclo de vida |
+| Plataforma | Capacitor y Android | Empaqueta la interfaz web y conecta plugins; requiere comprobar por separado el comportamiento nativo |
+| Persistencia del producto | SQLite y el plugin comunitario de Capacitor | Mantiene datos relacionales locales y operaciones transaccionales fuera de la presentación |
+| Entorno web auxiliar | `sql.js` y `jeep-sqlite` | Ejecuta SQLite mediante WebAssembly para desarrollo; no reproduce todas las condiciones de Android |
+| Contenido y portabilidad | `marked`, DOMPurify y módulos ZIP propios | Procesan Markdown, sanitizan el HTML renderizado y generan o leen el respaldo ZIP; la escritura usa entradas sin compresión y la importación conserva límites propios |
+| Verificación | Vitest, runner de pruebas de Node, scripts y GitHub Actions | Comprueban unidades y reglas automatizables; no sustituyen una prueba del plugin o del APK |
 
-La evolución más importante fue el pivote desde una PWA con IndexedDB hacia una app Android empaquetada con Capacitor y persistencia SQLite. Este cambio no elimina el valor de las decisiones iniciales: las conserva como antecedentes y muestra cómo el proyecto respondió a evidencia empírica nueva.
+La adopción de TypeScript no fue una reescritura de la aplicación. La concentré en contratos de dominio, reglas y servicios con estructuras de datos relevantes, manteniendo módulos JavaScript existentes. Los tipos expresan entradas y resultados, pero no validan por sí solos un archivo importado ni los datos recibidos en ejecución. Por eso la importación conserva comprobaciones de formato, tamaño y relaciones antes de escribir.
 
-## 4.2. Stack Tecnológico
+Android define el canal presentado. El entorno web se conserva como apoyo para iterar y comprobar lógica compartida, no como PWA soportada ni como evidencia de una entrega para escritorio o iOS. Node y npm pertenecen al entorno de herramientas, no son servidores requeridos para usar la aplicación instalada.
 
-El stack se eligió buscando equilibrio entre simplicidad, rendimiento, defendibilidad académica y capacidad de evolucionar hacia un entorno móvil nativo.
+## 4.3. Modelo de dominio
 
-| Capa | Tecnología | Justificación |
+Organicé el núcleo académico alrededor de tres entidades persistentes. Separé esas entidades del estado temporal de navegación y de los contratos técnicos de borrador y respaldo.
+
+| Entidad | Responsabilidad | Relación principal |
 |---|---|---|
-| Build | Vite 6 | Servidor de desarrollo rápido, build optimizado y configuración mínima. |
-| Lenguaje | JavaScript ES2022+ y TypeScript gradual | Mantiene módulos nativos y permite tipar primero contratos y lógica pura sin reescribir la UI en bloque. |
-| UI | Componentes propios con DOM + CSS nativo | Máximo control sobre rendimiento y estructura. |
-| Persistencia | SQLite mediante `@capacitor-community/sqlite` | Persistencia local robusta en Android. |
-| Simulación web | `sql.js` + `jeep-sqlite` | Mantiene el flujo de desarrollo web sin cambiar la capa de servicios. |
-| Markdown | `marked` + `DOMPurify` | Renderizado Markdown con sanitización contra XSS. |
-| Empaquetado | Capacitor + Android | Reutiliza la web app y genera una experiencia instalable como APK. |
-| Testing | Vitest + smoke tests básicos de Gradle/JUnit | Pruebas unitarias de lógica JavaScript/TypeScript y verificación mínima del paquete nativo. |
-| Calidad | GitHub Actions + scripts locales | Automatización de lint, tests, build, trazabilidad y auditorías. |
+| Nota (`Note`) | Conserva título, contenido Markdown, marcas de fijado y archivo, estado académico y fechas de creación/modificación | Puede no tener materia o pertenecer a una materia o sección |
+| Materia/Sección (`Subject`) | Organiza las notas con nombre, color y estado | Una materia raíz puede contener secciones; cada sección tiene una materia padre |
+| Fecha académica (`AcademicEvent`) | Representa un parcial, final, trabajo práctico o exposición en una fecha local | Puede vincularse a una materia o sección, sin que esa asociación sea obligatoria |
 
-La decisión de no usar un framework frontend como React o Vue fue deliberada. Para el alcance del proyecto, Vanilla JS reduce dependencias de runtime, permite un bundle liviano y deja visible la arquitectura del código ante la evaluación académica.
+Materia y Sección son roles de una misma entidad, no dos tablas independientes. Un `Subject` sin padre representa una materia; uno con padre representa una sección. Según DP-004, la jerarquía admite dos niveles de organización: una sección no contiene subsecciones. La nota no constituye un tercer nivel de carpetas, sino contenido asociado a cualquiera de los dos niveles.
 
-## 4.3. Modelo de Dominio
+Una nota y una fecha académica tienen, cada una, cero o una referencia a `Subject`; un mismo `Subject` puede agrupar muchas de ambas. En notas, `subjectId = NULL` representa Entrada. Así se evita crear una materia ficticia para las capturas aún no clasificadas. La profundidad y la validación de nombres por nivel se resuelven en el servicio de materias, no por la sola existencia de una clave foránea.
 
-El modelo de dominio actual se centra en cuatro conceptos principales: Nota, Materia/Sección, Evento Académico y Estado de Aplicación. La entidad `Note` representa el contenido escrito por el estudiante; `Subject` modela materias y secciones mediante una auto-referencia; `AcademicEvent` representa fechas discretas vinculadas opcionalmente con una materia; y el estado de aplicación mantiene los datos cargados, la selección actual, los filtros y la vista activa. Además, el subsistema de portabilidad define contratos para el manifiesto, los datos y el plan de importación de un respaldo, mientras que los borradores del editor se conservan de forma local y separada de la nota definitiva.
+El estado de aplicación mantiene en memoria datos cargados, selección, búsqueda, filtros y vista activa. No es una cuarta entidad académica ni la autoridad durable de los datos. El borrador protege una única edición pendiente; los contratos de respaldo describen los datos exportables y su manifiesto. Diferenciarlos evita confundir una selección de interfaz, una nota confirmada y texto todavía pendiente de guardar.
 
-La decisión de modelar materias y secciones con una sola entidad responde a la estructura de información definida en [DP-004](../producto/decisiones-producto.md): una Materia es un `Subject` raíz y una Sección es un `Subject` con `parentSubjectId`. Esta solución evita duplicar tablas y permite expresar la jerarquía con una relación relacional simple.
+## 4.4. Casos de uso y frontera del sistema
 
-El modelo completo se documenta en [modelo-dominio.md](../diagramas/modelo-dominio.md). Desde el punto de vista del informe, su aporte principal es mostrar cómo las decisiones de producto se traducen en entidades persistentes, contratos de dominio, servicios de aplicación y estado de UI.
+El actor principal es el estudiante que administra sus notas en el dispositivo. Consultar Acerca de también sirve a la evaluación académica, pero no crea un rol autenticado ni permisos distintos. La figura 4-1 sintetiza las áreas de interacción; no representa módulos internos ni una conexión con un servidor.
 
-## 4.4. Diagramas de Casos de Uso
+```mermaid
+flowchart LR
+    E((Estudiante))
+    subgraph L["Lumapse · cliente Android"]
+        N["Crear, editar y consultar notas"]
+        O["Organizar, archivar y gestionar papelera"]
+        M["Escribir y visualizar Markdown"]
+        F["Gestionar fechas académicas"]
+        B["Exportar e importar respaldo ZIP"]
+        S["Cambiar tema y consultar Acerca de"]
+    end
+    E --- N
+    E --- O
+    E --- M
+    E --- F
+    E --- B
+    E --- S
+    B -. "selección o salida manual" .-> A["Archivos y compartición de Android"]
+```
 
-Los casos de uso describen el sistema desde la perspectiva del estudiante. El actor principal puede crear, editar, buscar, eliminar, fijar, archivar y previsualizar notas. Además, interactúa con funciones de organización, fechas académicas, tema visual, papelera y portabilidad del espacio de trabajo. El respaldo manual `.zip` y su importación no destructiva ya forman parte de la UI de la beta; compartir una nota individual permanece como trabajo futuro porque debe aportar un flujo nativo distinto de la acción Copiar.
+*Figura 4-1. Síntesis de los casos de uso y la frontera de interacción. Fuente: elaboración propia.*
 
-El diagrama documentado en [casos-de-uso.md](../diagramas/casos-de-uso.md) agrupa las funcionalidades en seis áreas:
+La gestión de notas comprende creación, edición, consulta, búsqueda y eliminación lógica, además de fijado y archivo. La escritura puede ser texto plano o Markdown; los comandos de formato son ayudas opcionales, no una condición para crear una nota. El contenido se renderiza en las tarjetas del listado: la existencia de un componente aislado de previsualización no implica una vista dividida activa en el editor.
 
-- Gestión de notas.
-- Organización.
-- Fechas académicas.
-- Markdown.
-- Datos y portabilidad.
-- Sistema y personalización.
+La protección del borrador forma parte de crear o editar, pero no confirma automáticamente la nota. Organizar después de capturar y restaurar desde Papelera son decisiones posteriores del usuario. Las fechas académicas son recordatorios visuales puntuales: no incorporan horarios, recurrencias o notificaciones.
 
-La relación `include` se usa para expresar que crear o editar una nota incluye siempre la protección del borrador persistente del editor. La relación `extend` se utiliza para acciones opcionales, como gestionar la papelera después de una eliminación. En portabilidad local, el respaldo `.zip` y la importación del formato propio ya están integrados; la exportación de notas individuales y la importación genérica de archivos Markdown quedan como deuda posterior separada.
+En portabilidad, exportar genera un ZIP del formato propio e importar permite revisar una propuesta antes de confirmarla. Seleccionar un destino de compartición no es sincronización automática ni asegura que un proveedor externo haya conservado una copia. Compartir o importar una nota Markdown individual queda fuera del alcance presentado, sin confundirse con el respaldo del conjunto.
 
-## 4.5. Diagramas de Secuencia
+## 4.5. Secuencia de edición, guardado y recuperación
 
-Los diagramas de secuencia permiten representar el flujo temporal entre UI, estado y persistencia. El flujo más importante del producto es crear una nota protegida por borrador persistente mientras el estudiante escribe.
+El flujo de escritura permite explicar una distinción central: **conservar trabajo en curso no equivale a guardar una nota definitiva**. Adopté confirmación explícita con `Guardar` o `Actualizar` y un borrador local independiente, conforme a RF-005. ADR-012 precisa cómo se relacionan ambas persistencias en el corte de presentación.
 
-El diagrama documentado en [secuencia-crear-nota.md](../diagramas/secuencia-crear-nota.md) modela el comportamiento vigente: el usuario abre el editor, la UI conserva el borrador localmente mientras escribe, el store persiste la nota definitiva solo cuando el usuario confirma con `Guardar` o `Actualizar`, y el borrador se limpia después del éxito.
+Antes de montar la interfaz, el arranque prepara SQLite e hidrata el borrador. Sólo si falta su fila se considera migrar el borrador anterior desde `localStorage`; una vez confirmado en SQLite, ese almacenamiento anterior deja de ser una alternativa de lectura. Una fila con JSON `null` significa borrador vacío y se distingue de una fila ausente, para no reimportar texto ya consumido o descartado.
 
-Como criterio de documentación viva, los diagramas deben actualizarse cuando el flujo técnico cambie de manera sustancial. En el estado actual, el diagrama ya refleja la separación entre borrador local y persistencia definitiva en SQLite.
+Mientras se escribe, la interfaz captura instantáneas de título, contenido y organización sin esperar un intervalo de inactividad. El servicio las envía a la cola SQLite. El retorno satisfactorio de la operación acredita su confirmación, no solamente el envío al puente nativo. La figura 4-2 muestra la trayectoria de éxito del guardado desde el editor.
 
-## 4.6. Diseño de Interfaz (UI/UX y Mobile-First)
+```mermaid
+sequenceDiagram
+    actor E as Estudiante
+    participant UI as Editor
+    participant ST as Store
+    participant BO as Servicio de borrador
+    participant DB as SQLite
+    E->>UI: Escribe o cambia la materia
+    UI->>BO: Captura instantánea del borrador
+    BO->>DB: Encola persistencia en metadata
+    DB-->>BO: Confirma la escritura
+    E->>UI: Guardar o Actualizar
+    UI->>UI: Solicita flush y bloquea controles
+    UI->>ST: Crear o actualizar con consumo de borrador
+    ST->>BO: Ejecutar escritura de nota
+    BO->>DB: Transacción: nota y marcador JSON null
+    DB-->>BO: Confirma ambas escrituras
+    BO-->>ST: Devuelve entidad persistida
+    opt Creación de nota
+        ST->>ST: Refresca materias y conteos
+        Note over ST: Si falla la lectura, avisa sin repetir la creación
+    end
+    ST-->>UI: Devuelve entidad confirmada
+    UI->>UI: Limpia campos y habilita controles
+```
 
-La interfaz se diseñó con enfoque mobile-first, prioridad respaldada por el relevamiento: el 72.5% de la muestra usaría la app desde el celular y el 95% incluye celular como dispositivo aceptable. Esto implica priorizar navegación compacta, acciones de bajo número de toques, tipografía legible y componentes que funcionen en pantallas pequeñas.
+*Figura 4-2. Guardado explícito con consumo atómico del borrador. Fuente: elaboración propia a partir de los contratos de ADR-011 y ADR-012.*
 
-La estructura principal se compone de:
+Confirmar la nota y vaciar el borrador en una única transacción evita una ventana en la que una nota ya guardada conserve un borrador que luego reaparezca. Si falla una escritura y se confirma el rollback, ninguna de las dos modificaciones queda aplicada. La interfaz conserva los campos y permite reintentar, sin mostrar éxito. Descartar también espera la confirmación de su limpieza antes de vaciar el editor.
 
-- Un shell de aplicación con drawer lateral.
-- Un feed de notas filtrable por vista, búsqueda y materia.
-- Un editor Markdown con modos de edición y lectura.
-- Acciones contextuales para fijar, archivar, mover, eliminar y restaurar.
-- Papelera con eliminación lógica y restauración.
-- Fechas académicas discretas con calendario y próximos eventos.
-- Respaldo/importación manual y una vista Acerca de.
-- Tema claro/oscuro persistente.
+Una creación ya confirmada no debe comunicarse como fallida porque después no se pudieron actualizar conteos. ADR-011 separa esas fronteras: se conserva la entidad y se ofrece recuperar las lecturas, sin otro `INSERT`. Ese contrato se aplica a los caminos cubiertos por la decisión y sus extensiones registradas; no lo generalizo a todas las mutaciones del sistema.
 
-La UX se apoya en decisiones de producto específicas: Entrada como destino por defecto, Materias como organización principal, Archivo para contenido inactivo y Papelera para evitar pérdidas accidentales. Estas decisiones reducen la carga cognitiva del estudiante y privilegian capturar rápido antes que configurar estructuras complejas.
+La protección tiene límites. Si el proceso termina antes del commit, no se garantiza la última tecla. Si falla la confirmación o persistencia de una operación y su resultado es incierto, el coordinador rechaza y exige recuperar la conexión, sin prometer que nada se escribió ni repetir automáticamente la escritura. El borrador tampoco ofrece recuperación ante desinstalación o pérdida del dispositivo. Estos límites no se sustituyen por una afirmación genérica de «sin pérdida de datos».
 
-## 4.7. Diseño de Base de Datos
+## 4.6. Diseño de interfaz y prioridad móvil
+
+La preferencia móvil del relevamiento fundamentó priorizar pantallas pequeñas, según DP-003. No demuestra por sí misma que la interfaz resultante sea fácil de usar. Diseñé la navegación para que capturar, consultar y organizar fueran acciones distinguibles, con el contenido por delante de la configuración.
+
+La estructura combina un panel lateral de navegación, un listado de tarjetas y un editor de título y cuerpo. Materias y secciones delimitan la organización; Archivo reúne contenido apartado de la consulta habitual; Papelera separa eliminar lógicamente de borrar definitivamente. Calendario y próximas fechas aportan contexto académico sin convertir el producto en una agenda completa.
+
+Entrada permite capturar sin clasificación previa, pero no obliga a que toda nota nueva tenga siempre `subjectId = NULL`: el selector del editor y el contexto de una materia permiten asociarla al guardar. La preferencia por carpetas por materia, analizada en el capítulo 3, respalda esa organización dentro de la muestra; la profundidad máxima de dos niveles es una decisión de diseño, no una cantidad elegida por los encuestados.
+
+Los comandos de formato, el modo de enfoque y los temas claro y oscuro complementan la escritura. Mantener Markdown como contenido permite que las ayudas de edición no se conviertan en un formato propietario obligatorio. Para mostrarlo, separé el procesamiento del texto de la inserción de HTML en la interfaz y apliqué sanitización en el servicio correspondiente.
+
+También distinguí tres estados de feedback: error de persistencia, guardado confirmado con lectura secundaria pendiente y recuperación del arranque. Un error al abrir los datos no debe mostrar silenciosamente una aplicación vacía; un aviso de refresco no debe invitar a guardar otra vez. Estas decisiones vinculan el estado visible con el resultado de las operaciones, sin convertir la intención de diseño en cumplimiento demostrado de tiempos, usabilidad o accesibilidad. Esas comprobaciones pertenecen al capítulo 6.
+
+## 4.7. Diseño de base de datos
 
 ### 4.7.1. Motor de persistencia
 
-Lumapse utiliza **SQLite** como motor de base de datos, accedido a través del plugin `@capacitor-community/sqlite` en el entorno nativo Android y simulado con `sql.js` (WebAssembly) + `jeep-sqlite` durante el desarrollo web local. Las claves foráneas y sus acciones se interpretan de acuerdo con la documentación oficial de SQLite (SQLite Project, s. f.). La decisión del proyecto se documenta en [ADR-005](../adr/ADR-005-pivote-app-nativa.md) y [ADR-006](../adr/ADR-006-arquitectura-de-persistencia-y-tooling-sqlite-para-desarrollo-web-y-native.md).
+SQLite es la fuente persistente primaria del núcleo académico. En Android se accede mediante el plugin comunitario de Capacitor. En el entorno web auxiliar, `sql.js` y `jeep-sqlite` ejecutan SQLite y requieren persistir los cambios en el almacén web mediante `saveToStore`. Compartir el modelo relacional no vuelve equivalentes ambos entornos ni acredita durabilidad nativa mediante una prueba de navegador.
 
-### 4.7.2. Metodología de diseño
+La capa de acceso concentra conexión, sentencias SQL, traducción de filas y migraciones. Los componentes no ejecutan SQL. La migración histórica de notas IndexedDB se mantiene como compatibilidad de instalaciones de desarrollo anteriores al pivote; no constituye otro motor vigente del producto.
 
-El diseño de la base de datos sigue una metodología académica de tres niveles de abstracción, complementada por una verificación de normalización:
+Las migraciones comprueban las columnas existentes antes de agregar una nueva. Un error inesperado detiene la preparación en lugar de tratarse como una columna duplicada o permitir un arranque con estructura incompleta. Esta política permite reintentar la inicialización sin recrear la base para resolver el fallo.
 
-1. **Modelo Conceptual** — Diagrama Entidad-Relación con notación Chen (Graphviz DOT, renderizado en [edotor.net](https://edotor.net)).
-2. **Normalización** — Verificación de Primera, Segunda y Tercera Forma Normal sobre cada entidad.
-3. **Modelo Lógico** — Esquema de tablas relacionales con PKs, FKs, tipos y restricciones (dbdiagram.io, sintaxis DBML).
-4. **Modelo Físico** — Sentencias DDL SQL implementadas en `src/services/sqlite/connection.js`.
+### 4.7.2. Niveles de diseño y representaciones
 
-Los diagramas y la documentación de cada nivel se encuentran en [`docs/diagramas/database/`](../diagramas/database/).
+Desarrollé el diseño en tres niveles: conceptual, para entidades y relaciones; lógico, para tablas y claves; y físico, para el esquema SQLite y sus migraciones. La revisión de normalización complementa esos niveles. Conservé fuentes editables en DOT para el conceptual y DBML para el lógico, mientras el DDL ejecutable determina la estructura efectiva.
 
-Los archivos fuente del modelo conceptual (`.dot`), lógico (`.dbml`) y físico (DDL) permanecen versionados en el repositorio. Las imágenes conceptual y lógica fueron regeneradas externamente, reemplazadas y revisadas el 2026-07-15 contra esas fuentes y el esquema ejecutable. El control pendiente se limita a su legibilidad dentro de la maquetación definitiva del informe y la presentación.
+Las figuras 4-3 y 4-4 proceden de las exportaciones del 15 de julio de 2026. La estructura efectiva del corte RC1 mantiene las cuatro tablas, 26 columnas y tres claves foráneas representadas; mover el borrador a `metadata` cambió el uso de esa tabla, no agregó una entidad o columna. Conservar las figuras no implica que hayan sido reexportadas para la RC1. Su legibilidad al tamaño definitivo sigue correspondiendo a la maquetación final.
 
 #### 4.7.2.1. Modelo conceptual
 
 ![Modelo conceptual de Lumapse en notación Chen](../diagramas/database/01-modelo-conceptual-der-chen.png)
 
-*Figura 4-1. Modelo conceptual de Lumapse. Fuente: elaboración propia a partir del modelo DOT vigente, exportado con Graphviz/edotor.net el 2026-07-15.*
+*Figura 4-3. Modelo conceptual de Lumapse en notación Chen. Fuente: elaboración propia; exportación desde DOT mediante Graphviz del 15 de julio de 2026.*
 
-El nivel conceptual representa las tres entidades académicas: Materia/Sección, Nota y Evento Académico. `metadata` se excluye deliberadamente porque es una estructura técnica para migraciones y flags internos, no un concepto del dominio estudiantil.
+El modelo conceptual reúne Materia/Sección, Nota y Fecha académica. La autorreferencia permite distinguir materia raíz y sección, y las asociaciones opcionales permiten notas en Entrada y fechas sin materia. La tabla técnica `metadata` se excluye de este nivel porque sus claves no representan entidades académicas.
 
 #### 4.7.2.2. Modelo lógico relacional
 
 ![Modelo lógico relacional de Lumapse](../diagramas/database/03-modelo-logico-relacional.png)
 
-*Figura 4-2. Modelo lógico relacional de Lumapse. Fuente: elaboración propia a partir del DBML vigente, exportado con dbdiagram.io el 2026-07-15.*
+*Figura 4-4. Modelo lógico relacional de Lumapse. Fuente: elaboración propia; exportación desde DBML mediante dbdiagram.io del 15 de julio de 2026.*
 
-El nivel lógico incorpora las cuatro tablas implementadas, sus 26 columnas y las tres claves foráneas: la autorreferencia de `subjects`, la relación opcional de `notes` con `subjects` y la relación opcional de `academic_events` con `subjects`. La correspondencia física se detalla en el DDL documentado y en `src/services/sqlite/connection.js`.
+El modelo lógico incorpora las tres tablas de dominio y `metadata`. Los identificadores de las entidades son UUID almacenados como texto; la clave de `metadata`, en cambio, es el nombre textual de una propiedad. Los indicadores booleanos se representan con enteros y las fechas con texto; la fecha académica usa `YYYY-MM-DD`, diferenciada de las marcas de creación y actualización.
 
-### 4.7.3. Entidades del dominio
+### 4.7.3. Integridad y reglas de negocio
 
-El modelo contempla tres entidades persistentes de dominio y una tabla técnica:
+Las tres relaciones declaradas comparten a `subjects` como tabla referenciada. Sus acciones de eliminación física se interpretan según la semántica de SQLite, con el control de claves foráneas habilitado en la conexión (SQLite Project, s. f.).
 
-- **MATERIA** (`subjects`): Modela tanto las Materias (carpetas raíz) como las Secciones (subcarpetas) mediante auto-referencia. Si `parentSubjectId` es `NULL`, es una Materia; si tiene un valor, es una Sección hija de esa Materia. Profundidad máxima: 2 niveles ([DP-004](../producto/decisiones-producto.md)).
-- **NOTA** (`notes`): Representa el contenido Markdown creado por el estudiante. Una nota puede vivir en la **Entrada** (`subjectId = NULL`), en una **Materia** o en una **Sección**.
-- **EVENTO ACADÉMICO** (`academic_events`): Representa una fecha académica discreta y puede asociarse opcionalmente con una Materia o Sección. Si la organización vinculada deja de existir, el evento puede conservarse sin esa referencia.
-- **METADATA** (`metadata`): Tabla técnica de clave-valor para control de migraciones y flags internos del sistema.
+| Referencia | Acción declarada | Efecto del borrado físico del registro referenciado |
+|---|---|---|
+| `subjects.parentSubjectId` → `subjects.id` | `ON DELETE CASCADE` | Elimina las secciones hijas de la materia |
+| `notes.subjectId` → `subjects.id` | `ON DELETE SET NULL` | Conserva la nota sin esa asociación |
+| `academic_events.subjectId` → `subjects.id` | `ON DELETE SET NULL` | Conserva la fecha académica sin esa asociación |
 
-### 4.7.4. Estructura de información opinionada (DP-004)
+Enviar una materia a Papelera no ejecuta esas acciones de SQL: asigna `deletedAt` a la materia, sus secciones y las notas afectadas mediante la capa de servicio y una transacción. Las notas eliminadas lógicamente se excluyen de las lecturas del listado activo. La purga definitiva sí elimina registros; si una nota ya estaba marcada para purga, no se afirma que sobreviva por la sola existencia de `SET NULL`.
 
-La estructura de navegación de Lumapse es **opinionada**: no le da al usuario un lienzo en blanco como Notion u Obsidian, sino una jerarquía predefinida que refleja el flujo de trabajo natural de un estudiante universitario:
+Las fechas académicas no tienen `deletedAt` ni participan de la papelera: su eliminación es física. El conjunto de tipos admitidos está restringido mediante `CHECK`, y existen índices sobre fecha y materia para las consultas de eventos. Estas decisiones describen estructura y finalidad, no un rendimiento medido.
 
-- **Entrada:** Destino por defecto de toda nota nueva. Captura rápida sin fricción.
-- **Materias:** Carpetas creadas por el usuario, con opción de secciones dentro de cada una.
-- **Archivo:** Materias aprobadas y notas archivadas.
+Otras reglas quedan fuera de las claves foráneas: limitar la jerarquía a dos niveles, validar nombres no vacíos y comprobar nombres repetidos dentro del mismo nivel. Las resuelve el servicio de materias; no las atribuyo a restricciones `UNIQUE` inexistentes en el DDL. Los UUID se conservan estables por diseño, de modo que no se definió una cascada de actualización de esos identificadores.
 
-Esta decisión fue respaldada dentro de la muestra: el 69.2% de las 120 respuestas válidas prefiere organizar por carpetas por materia (P11 del relevamiento).
+### 4.7.4. Organización, archivo y borrador técnico
 
-### 4.7.5. Normalización y decisión de persistencia del título
+La estructura Entrada/Materias/Archivo de DP-002 y DP-004 relaciona navegación y datos sin crear tablas para cada vista. Entrada es la ausencia de asociación; Materias utiliza la jerarquía de `subjects`; Archivo combina el estado de una nota con el de su organización. Al archivar una materia se actualizan la materia y sus secciones, no se reescribe automáticamente la marca de archivo de todas sus notas: el filtrado considera la organización archivada.
 
-El modelo se verificó contra las tres primeras formas normales (ver [02-normalizacion.md](../diagramas/database/02-normalizacion.md)):
+En el corte RC1, `metadata` conserva además el único borrador del editor como JSON bajo la clave `lumapse-editor-draft-v1`. Ese documento contiene modo de creación o edición, referencia a la nota cuando corresponde, título, contenido, materia y marcas temporales. Su formato y validación pertenecen al servicio de borradores, no a columnas académicas adicionales.
 
-- **1FN:** ✅ Todos los atributos son atómicos, sin grupos repetidos.
-- **2FN:** ✅ Todas las PKs son simples (UUID), eliminando la posibilidad de dependencias parciales.
-- **3FN:** ✅ Las tablas separan entidades y evitan dependencias parciales o transitivas dentro del diseño vigente.
+Esta separación impide equiparar borrador con una nota más del listado. El respaldo ZIP exporta notas confirmadas, materias/secciones y fechas académicas, incluidos los elementos archivados, pero excluye borradores y papelera. Por lo tanto, disponer de un ZIP no equivale a una copia íntegra de todo el estado local.
 
-**Aclaración sobre el campo `title`:**
+### 4.7.5. Normalización y persistencia del título
 
-En una etapa anterior se describió el título como un valor siempre derivado del contenido Markdown. La implementación vigente de la beta es más precisa: el editor admite un título explícito y la política de guardado solo toma un encabezado `# ` del contenido como alternativa cuando el campo está vacío. Si tampoco existe ese encabezado, utiliza el valor `Sin título`. Por lo tanto, en el modelo actual `title` es un atributo propio de `Note` y no una dependencia transitiva obligatoria de `content`.
+Revisé las relaciones de dominio con las dependencias funcionales que expresa el modelo:
 
-Persistir el título sigue aportando ventajas operativas:
+- **Primera forma normal:** cada nota tiene un título, un cuerpo y, como máximo, una asociación organizativa; no se utilizan columnas repetidas para almacenar una lista de materias. El cuerpo Markdown se trata como un valor textual del dominio.
+- **Segunda forma normal:** las claves de las entidades son simples, por lo que no hay dependencia parcial respecto de una clave compuesta. La clave textual de `metadata` también es simple, aunque no sea un UUID.
+- **Tercera forma normal:** el identificador determina los atributos de cada entidad. La materia asociada no determina el contenido de la nota ni la fecha del evento; el nombre y el color de la materia permanecen en su propia relación, no repetidos en cada nota.
 
-1. **Contrato de presentación:** El listado y el backup disponen de un título resuelto sin reinterpretar el Markdown cada vez. La prueba de carga de `scripts/run-load-tests.py` compara sintéticamente lectura de columna con extracción mediante expresión regular; sus resultados varían por entorno y no equivalen a una medición de CPU Android ni a un RNF validado.
-2. **Evolución posible de consultas:** Almacenar el título permitiría proyectar `id`, `title` y fechas sin cargar el cuerpo completo. La implementación actual todavía carga filas completas para sostener búsqueda por contenido, por lo que esa optimización no se afirma como aplicada.
-3. **Política centralizada:** `NoteTitleService` concentra la normalización, la alternativa basada en encabezado y la presentación del título, evitando que cada componente reconstruya reglas diferentes.
+Esta justificación se limita a las dependencias modeladas. El JSON técnico del borrador se administra como un documento dentro de `metadata`: no afirmo que cada campo interno esté descompuesto o normalizado como una relación adicional. Las formas normales tampoco sustituyen las validaciones de jerarquía, las transacciones o las reglas de eliminación.
 
-Las imágenes vigentes respetan esta decisión: `title` se representa como atributo propio y opcional, no como un valor derivado obligatorio, porque la UI permite editarlo explícitamente.
+El título merece una precisión. El editor admite un valor explícito; si está vacío, utiliza la primera línea no vacía del cuerpo sólo cuando es un encabezado `# `. Si tampoco existe esa alternativa, guarda `Sin título`. En consecuencia, `content → title` no es una dependencia funcional general: dos notas con el mismo cuerpo pueden tener títulos explícitos distintos.
 
-## 4.8. Patrones de Arquitectura y Diseño de Software
+Persistir el título expresa ese contrato y permite presentarlo o incluirlo en el respaldo sin reconstruirlo en cada consumidor. No lo justifico mediante una supuesta mejora cuantificada: la carga actual de notas recupera filas completas y la búsqueda utiliza título y contenido en memoria. Proyectar sólo campos de listado sería una optimización distinta, no una capacidad ya aplicada por almacenar `title`.
 
-Lumapse se clasifica como un **monolito modular cliente, offline-first, con capas pragmáticas y UI organizada por feature**. Combina una unidad de despliegue Android con módulos separados por responsabilidades y patrones aplicados en puntos concretos. La descripción se formula en función del código vigente y no presupone una implementación canónica de todos los patrones. La decisión se formaliza en [ADR-008](../adr/ADR-008-arquitectura-modular-y-patrones.md) y su vista de componentes se documenta en [arquitectura-componentes.md](../diagramas/arquitectura-componentes.md).
+## 4.8. Patrones de arquitectura y diseño de software
 
-La frontera de versión se declara de forma explícita: el comportamiento, el dominio y los nombres de archivo usados como evidencia corresponden al tag publicado `v0.5.0` (`5840755`). Esta beta incluye la evolución gradual a TypeScript, los límites de error de mutaciones, la coordinación SQLite y el arranque recuperable documentados durante Hito 06.
+Clasifiqué Lumapse como un **monolito modular cliente, offline-first, con capas pragmáticas y componentes de interfaz agrupados por funcionalidad**. «Monolito» describe una unidad de despliegue; «modular» describe la separación interna. Los servicios no son aplicaciones desplegadas de manera independiente. ADR-008 formaliza esa clasificación, complementada en la RC1 por los contratos de persistencia, borrador y refresco posteriores.
 
-### 4.8.1. Organización modular y flujo de dependencias
+### 4.8.1. Responsabilidades y dirección de dependencias
 
-| Área | Responsabilidad principal | Dependencias predominantes | Límite observado |
-|---|---|---|---|
-| Presentación (`src/components/`, `src/layout/`) | Renderizar DOM, capturar eventos y mostrar feedback. Los componentes se agrupan por feature. | Store y servicios de aplicación. | No emite sentencias SQL; algunos flujos especializados, como backup, consumen servicios directamente. |
-| Estado y coordinación (`src/store/`) | Mantener el estado compartido, aplicar filtros y coordinar operaciones centrales de notas y materias. | Servicios de dominio y acceso a datos. | No es una capa de persistencia y no debería decidir cómo se presenta un error al usuario. |
-| Servicios y dominio (`src/services/`, `src/domain/`) | Aplicar reglas, validar contratos y orquestar casos de uso. | Funciones puras, fuentes de datos y adaptadores. | No todos los servicios son puros: los adaptadores nativos encapsulan efectos externos de manera explícita. |
-| Datos e integración (`src/services/sqlite/` y adaptadores Capacitor) | Ejecutar operaciones SQLite y traducir capacidades del dispositivo. | SQLite, Filesystem, Share y Network de Capacitor. | Su API se consume a través de servicios o del store; la UI no contiene SQL. |
+| Área | Responsabilidad | Dependencias predominantes |
+|---|---|---|
+| Composición | Preparar persistencia y datos antes del montaje; conectar vistas, estado y feedback | Servicios, store y componentes necesarios para el arranque |
+| Presentación | Renderizar DOM y capturar interacción, con piezas agrupadas por funcionalidad | Store, servicios de aplicación y componentes compartidos |
+| Estado y coordinación | Mantener datos cargados, selecciones y filtros; coordinar operaciones | Servicios y módulos SQLite de acceso a datos |
+| Aplicación y dominio | Validar reglas, expresar contratos y orquestar casos de uso | Funciones de dominio, fuentes de datos y adaptadores |
+| Datos e integración | Ejecutar SQL y traducir capacidades de plataforma | SQLite y plugins de Capacitor, sin dependencia de la presentación |
 
-El flujo predominante es **UI → store/servicios → acceso SQLite o adaptadores Capacitor**. Se trata de una separación pragmática, no de capas estrictamente aisladas: la coordinación central pasa por `NoteStore` para el dominio principal, mientras que features autocontenidas pueden invocar un servicio de aplicación sin atravesar el store.
+No existe una cadena obligatoria interfaz → store → servicio → datos. Para notas, el store puede invocar directamente el módulo SQLite; para materias o fechas utiliza servicios con reglas propias. A su vez, una funcionalidad autocontenida como respaldo puede consumir un servicio de aplicación sin pasar por el estado global. Describir estas rutas es más preciso que atribuir una arquitectura de capas estrictamente aisladas.
 
-La cualidad **offline-first** atraviesa estas áreas: SQLite es la fuente persistente primaria y la red no es necesaria para crear, editar, buscar u organizar notas. No se la clasifica como patrón GoF, sino como una decisión arquitectónica y de producto.
+ADR-009 agrega una cola por conexión y una capacidad transaccional explícita: las operaciones que componen una misma transacción deben recibir su ámbito, mientras las independientes esperan su turno. Así se evita interpretar coincidencia temporal entre operaciones asíncronas como pertenencia a una transacción ajena. El costo es que una lectura externa puede esperar a una operación larga; no se afirma paralelismo ni optimización de consultas por ese mecanismo.
 
-Desde `v0.5.0`, la persistencia usa una cola por conexión y capacidades transaccionales explícitas: las operaciones independientes no ingresan en transacciones ajenas y las cascadas propagan su scope de forma deliberada. `main.js` prepara base y lecturas iniciales antes de montar consumidores y ofrece una recuperación segura si el arranque falla. [ADR-009](../adr/ADR-009-propiedad-transaccional-sqlite.md) fija este contrato sin cambiar el schema final.
+El arranque prepara la base, hidrata el borrador y carga los datos antes de montar consumidores. Ante un error ofrece recuperación sin recrear la base del usuario. Si el montaje quedó incompleto, la recuperación requiere cerrar de forma segura la conexión antes de recargar la WebView, en lugar de duplicar componentes o listeners sobre un estado parcial.
 
-### 4.8.2. Patrones identificados en el código
+### 4.8.2. Patrones observables y grado de aplicación
 
-| Patrón o enfoque | Clasificación | Evidencia representativa | Función y alcance real |
-|---|---|---|---|
-| Composition Root | Aplicado | `src/main.js` | Inicializa persistencia, construye vistas y conecta dependencias principales; centraliza el arranque, no todas las decisiones posteriores. |
-| Observer / publicador-suscriptor | Aplicado | `NoteStore.state.js` y `NoteStore.errors.js` | Notifica estado y errores mediante suscripción/desuscripción manual dentro del proceso; no es un bus distribuido. |
-| Service Layer | Aplicado | `SubjectService.crud.ts`, `BackupService.ts`, `MarkdownService.ts` | Centraliza validaciones, reglas y orquestación fuera de componentes y SQL; combina servicios puros con coordinadores de efectos. |
-| Adapter | Aplicado | `BackupNativeNetworkService.ts`, `BackupShareService.ts` | Traduce APIs de Capacitor a contratos propios, con alternativas web donde corresponde; no toda dependencia externa tiene adaptador formal. |
-| Inyección de dependencias explícita | Aplicada en servicios seleccionados | `BackupFlowService.ts` | Sustituye funciones de red, creación, almacenamiento y compartición en pruebas, sin contenedor global. |
-| Fachada modular / *barrel* | Analogía parcial | `NoteStore.js`, `SubjectService.js`, `ExportService.ts` | Ofrece entradas estables sobre módulos especializados; un *barrel* no oculta por sí solo toda la complejidad de una fachada GoF. |
-| Data Access similar a Repository | Analogía parcial | módulos de `src/services/sqlite/` | Encapsula consultas y mapeo de filas, sin interfaz Repository genérica ni intercambio transparente entre motores. |
-| Command Registry | Inspirado en Command | `editorCommandRegistry.ts`, handlers y transformaciones del editor | Comparte catálogo, metadatos y snippets; no implementa objetos uniformes con `execute/undo`. |
-| Strategy/Policy funcional | Enfoque funcional | `noteFilters.ts`, `BackupNetworkService.ts`, plan de importación | Selecciona reglas mediante funciones y discriminantes, no con jerarquías de objetos Strategy. |
-| Component | Enfoque de UI | clases y módulos de `src/components/` | Encapsula renderizado y eventos por feature sin ciclo de vida uniforme de framework. |
+El inventario de ADR-008 distingue implementaciones directas, analogías parciales y enfoques de organización. Mantengo esa diferencia para no asignar una etiqueta teórica por la sola existencia de una carpeta o un nombre de archivo.
 
-Los refactors no crearon estos patrones: hicieron más explícitos contratos, dependencias y límites que ya eran observables, facilitando su identificación y verificación. ADR-008 mantiene el inventario canónico y separa las implementaciones directas de las analogías parciales.
+| Patrón o enfoque | Grado de aplicación | Evidencia y límite |
+|---|---|---|
+| *Composition Root* | Aplicado | El punto de entrada prepara y conecta dependencias principales; no centraliza todas las decisiones posteriores |
+| Observer / publicador-suscriptor | Aplicado | El store notifica cambios y errores mediante suscripciones explícitas; es comunicación dentro del proceso |
+| Capa de servicios (*Service Layer*) | Aplicada | Los servicios de materias, fechas y respaldo separan reglas y orquestación de DOM y SQL |
+| Adaptador | Aplicado | Los servicios de red y compartición traducen plugins de Capacitor a operaciones del producto |
+| Inyección explícita de dependencias | Aplicada en servicios seleccionados | El flujo de respaldo admite funciones reemplazables para red, creación y compartición; no existe un contenedor global |
+| Fachada modular / *barrel* | Analogía parcial | Entradas como `NoteStore` y `SubjectService` reúnen módulos especializados; reexportar no constituye por sí solo una fachada completa |
+| Acceso a datos similar a Repository | Analogía parcial | Los módulos SQLite encapsulan consultas y mapeo, sin repositorios intercambiables entre motores |
+| Registro de comandos | Inspirado en Command | El editor comparte catálogo y acciones; no implementa objetos uniformes de ejecución y deshacer |
+| Política funcional | Enfoque funcional | Filtros y reglas de respaldo seleccionan comportamiento mediante funciones, sin una jerarquía de objetos Strategy |
+| Componente | Enfoque de interfaz | Las piezas encapsulan DOM y eventos, sin un ciclo de vida uniforme impuesto por un framework |
+
+Estos límites facilitan probar reglas con dependencias controladas, pero no constituyen evidencia de que todas las integraciones nativas estén verificadas. Tampoco una conversión de JavaScript a TypeScript crea un patrón: la clasificación proviene de responsabilidades y dependencias observables.
 
 ### 4.8.3. Relación con MVC y límites de la clasificación
 
-Lumapse **no implementa un MVC de libro**. No existen clases formales `Model`, `View` y `Controller`, ni controladores que concentren todo el flujo de entrada. La UI cumple el rol de presentación; `NoteStore` mantiene estado y coordina parte de los casos de uso; los servicios contienen reglas; y los módulos SQLite realizan acceso a datos. Esta distribución puede recordar responsabilidades de MVC, pero describirla como MVC completo ocultaría sus dependencias reales.
+Lumapse no implementa MVC estricto. La presentación, el estado, los servicios y el acceso a datos distribuyen responsabilidades que pueden recordar a modelo, vista y controlador, pero no existen controladores formales que concentren todo el flujo de entrada. Por la misma razón, no la presento como Clean Architecture completa: no hay un sistema uniforme de puertos y casos de uso ni una dirección de dependencias impuesta en todas las rutas.
 
-Tampoco corresponde presentar cada módulo ES como un Singleton. Los módulos garantizan una instancia de evaluación por grafo de imports, pero muchos servicios exportan funciones puras y no mantienen identidad ni estado global. La arquitectura se defiende mejor por la separación observable de responsabilidades, las fronteras de efectos y las pruebas de cada módulo que por asignar etiquetas de patrones donde el código no las implementa de forma completa.
+Tampoco identifico cada módulo ES con el patrón Singleton. Compartir un módulo importado no demuestra una decisión explícita de instancia única; varios servicios son funciones sin estado propio. La ventaja defendible del diseño está en separar reglas, efectos y presentación. Sus costos son mantener manualmente suscripciones, convenciones de dependencia y contratos entre JavaScript y TypeScript, con riesgo de crecimiento del store o de las fachadas.
 
-### 4.8.4. Frontera cliente y ausencia de backend remoto
+### 4.8.4. Frontera cliente y alcance offline
 
-Lumapse **no posee un backend remoto o de servidor**. No existe un servicio desplegado por separado, una API HTTP propia, una base de datos remota, autenticación centralizada ni un proceso en la nube que ejecute reglas del producto. El núcleo funcional puede crear, editar, buscar y organizar notas sin red.
+Lumapse no tiene un backend remoto propio: no despliega una API de producto, autenticación centralizada ni una base de datos en un servidor. Las reglas y SQLite se ejecutan dentro de la unidad cliente Android. Vite es una herramienta de desarrollo, no el backend que necesita la aplicación instalada.
 
-Esta afirmación no significa que la aplicación carezca de lógica “detrás” de la interfaz. Los módulos de estado, servicios, dominio y acceso a datos cumplen responsabilidades que en una arquitectura cliente–servidor podrían ubicarse parcialmente en un backend, pero en Lumapse se ejecutan dentro de la misma unidad cliente Android. SQLite es una base de datos embebida en el dispositivo; no es un servidor independiente.
+La capacidad de crear, editar, consultar y organizar sin depender de un servicio remoto es una decisión arquitectónica y de producto, no un patrón de diseño de objetos. La generación del ZIP también es local; si el usuario elige compartirlo con otra aplicación, ese destino puede requerir conectividad y queda fuera de la persistencia interna de Lumapse.
 
-Capacitor actúa como contenedor Android y puente hacia capacidades nativas. Vite sirve los recursos y ofrece recarga durante el desarrollo, pero su servidor de desarrollo no procesa los casos de uso ni persiste los datos del producto y, por lo tanto, no constituye el backend de Lumapse. La formulación técnica precisa es: **monolito modular cliente, offline-first, con lógica y persistencia locales, sin backend server-side**.
+Este límite evita prometer sincronización, backup automático o recuperación remota que no existen. A la vez, almacenar localmente no demuestra por sí solo ausencia de tráfico, cifrado o conservación ante cualquier fallo. La RC1 mantiene la validación parcial declarada en la sección 1.4.4. El diseño explica las responsabilidades y sus límites; el capítulo 6 debe sostener por separado qué propiedades fueron comprobadas, sobre qué artefacto y cuáles permanecen sin demostrar.
 
 ---
 
 # Capítulo 5: Desarrollo e Implementación
 
-## 5.1. Estructura del Repositorio y Entorno
+En el capítulo 4 expliqué las decisiones de arquitectura y sus compromisos. En este capítulo desarrollo cómo las materialicé en el código: composición de la interfaz, coordinación del estado, acceso a datos, continuidad de la edición, portabilidad y herramientas de verificación. El propósito no es enumerar archivos, sino mostrar cómo colaboran las piezas para resolver los recorridos del producto.
 
-El repositorio está organizado para que código, documentación, scripts, análisis de datos y configuración nativa convivan en una misma base versionada. Esta decisión permite que el proyecto sea auditable desde Git: cada cambio de código puede relacionarse con documentación, requisitos, decisiones y evidencia.
+La implementación descrita corresponde a la fuente de **Lumapse 0.6.0/600 — Release Candidate 1**, identificada en la sección 1.4.4. Su inspección permite explicar mecanismos presentes en el programa, pero no demuestra que todos los recorridos del APK estén validados. Mantengo esa diferencia respecto del capítulo 6, donde corresponde atribuir cada resultado a su método, artefacto y alcance.
 
-Las carpetas principales son:
+## 5.1. Estructura del repositorio y entorno
 
-| Carpeta | Propósito |
+Organicé código, documentación, configuración nativa y automatización en una misma base versionada. Esto permite relacionar una modificación con sus requisitos y decisiones, sin confundir el código fuente con los archivos generados para distribuirlo.
+
+| Ubicación | Responsabilidad en la implementación |
 |---|---|
-| `src/` | Código fuente de la aplicación web empaquetada. |
-| `src/components/` | Componentes de interfaz organizados por feature: editor, feed, fechas académicas, backup, Markdown y piezas comunes. |
-| `src/services/` | Servicios de dominio y aplicación: Markdown, temas, materias, eventos académicos, persistencia SQLite, respaldo e importación local. Parte de la lógica pura adopta TypeScript de forma gradual. |
-| `src/store/` | Estado de aplicación, filtros y coordinación entre datos y UI. |
-| `android/` | Proyecto Android generado y mantenido por Capacitor. |
-| `docs/` | Documentación técnica, producto, gestión, hitos e informe final. |
-| `scripts/` | Automatización local: quality gate, auditorías, deploy Android y ensamblado del informe. |
-| `tests/` | Suite de tests unitarios con Vitest. |
-| `.github/` | Workflows de GitHub Actions, plantillas de issues y pull requests. |
+| `src/components/`, `src/layout/` y `src/styles/` | Componentes, composición visual, navegación y estilos |
+| `src/store/` | Estado observable, selección, filtros y coordinación de operaciones |
+| `src/domain/` | Contratos y reglas de datos compartidos por servicios y consumidores |
+| `src/services/` | Servicios de aplicación, reglas de dominio, SQLite e integraciones nativas |
+| `android/` | Proyecto nativo de Capacitor, configuración y construcción Android |
+| `public/` | Recursos locales que se incorporan a la salida web |
+| `tests/` | Pruebas de aplicación y de herramientas; no sólo pruebas de interfaz |
+| `scripts/` y `.github/workflows/` | Controles locales y ejecución remota de tareas automatizadas |
+| `docs/` | Requisitos, decisiones, gestión, evidencia e informe académico |
 
-El entorno de desarrollo usa Node.js, npm y Vite para levantar la aplicación en navegador. Para la compilación Android se requiere Android Studio, JDK y SDK Android. La guía operativa se documenta en [flujo-desarrollo-android.md](../flujo-desarrollo-android.md).
+El entorno canónico fija **Node.js 22.20.0 y npm 10.9.3**. La declaración se mantiene coherente entre `.nvmrc`, los campos de entorno de `package.json` y el workflow remoto. El control `check:runtime` rechaza una versión distinta antes de ejecutar la suite; no se interpreta un fallo de un entorno no soportado como un defecto del producto. Esta decisión de reproducibilidad se formaliza en ADR-010.
 
-## 5.2. Capa de Presentación (Componentes UI)
+Vite sirve la aplicación durante el desarrollo y construye los archivos web en `dist/`. Para el entorno SQLite de navegador, `copy-wasm` copia el recurso WebAssembly de `sql.js` a los assets locales: se ejecuta antes de desarrollo y construcción, y después de instalar dependencias. El servidor de desarrollo no es un backend requerido por el APK instalado.
 
-La interfaz está implementada con componentes propios en JavaScript, algunos auxiliares tipados en TypeScript y CSS, sin framework de UI. Esta decisión exige más trabajo manual que una solución basada en React o Vue, pero mantiene el bundle liviano y hace explícito el flujo de eventos, renderizado y estado.
+La construcción Android utiliza un JDK, el SDK Android, el wrapper de Gradle y herramientas como ADB y `apksigner`. Android Studio puede facilitar la configuración y la inspección del proyecto, pero el script de despliegue realiza la construcción por línea de comandos. Disponer del entorno web no acredita disponer de esas herramientas ni de un teléfono accesible.
 
-Los componentes principales son:
+Mantuve JavaScript y adopté TypeScript gradualmente en contratos, reglas y servicios. La configuración utiliza comprobación estricta para TypeScript, sin emitir archivos, pero conserva `checkJs: false`: no convierte todo el JavaScript existente en código comprobado estáticamente. Tampoco los tipos validan por sí solos un JSON importado; esa responsabilidad requiere controles en ejecución.
 
-| Componente | Responsabilidad |
+## 5.2. Capa de presentación y edición
+
+La presentación utiliza DOM, JavaScript, auxiliares TypeScript y CSS, sin un framework de interfaz. Los componentes crean su estructura, conectan eventos y reaccionan a las suscripciones pertinentes. La organización por funcionalidad de ADR-007 mantiene juntas las piezas de cada recorrido; no establece un ciclo de vida uniforme ni elimina la necesidad de liberar listeners y suscripciones.
+
+| Área | Piezas principales y colaboración |
 |---|---|
-| `note-editor/NoteEditor` y auxiliares | Edición de título y contenido Markdown, borradores persistentes, comandos opcionales y modos de trabajo. |
-| `feed/NoteList` y `feed/NoteCardRenderer` | Listado y representación visual de notas. |
-| `feed/TrashView` | Papelera, restauración y eliminación definitiva. |
-| `academic-events/Heatmap` y `academic-events/UpcomingAcademicEvents` | Calendario, fechas académicas discretas y recordatorios próximos. |
-| `backup/BackupView` y controladores auxiliares | Exportación manual e importación no destructiva de respaldos `.zip`. |
-| `about/AboutView` | Información mínima de versión, autoría, licencia y alcance local/offline. |
-| `common/ConfirmDialog` | Confirmaciones personalizadas para reemplazar diálogos nativos. |
-| `common/Toast` | Mensajes breves de estado y feedback. |
-| `drawerSubjects` | Navegación por materias y secciones. |
-| `drawerController` | Coordinación del drawer lateral. |
+| Edición | `NoteEditor`, captura/restauración de borrador, selector de materia y herramientas Markdown |
+| Listado | `NoteList`, auxiliares de tarjetas, filtros visibles y `VirtualFeed` |
+| Papelera | Vista de elementos eliminados y control de vigencia de sus lecturas |
+| Fechas académicas | `Heatmap`, próximas fechas y diálogos de gestión |
+| Respaldo | `BackupView` y controladores que separan preparación, confirmación y feedback |
+| Navegación e información | Drawer de materias, cambio de vistas y Acerca de |
+| Interacción compartida | Confirmaciones, mensajes y utilidades de presentación defensiva |
 
-La capa de presentación no emite sentencias SQL. Interactúa principalmente con el store para el dominio central y, en features autocontenidas como backup, con servicios de aplicación explícitos. Esta separación mantiene fuera de los componentes los detalles de SQLite y de los plugins nativos, aunque no constituye un sistema de capas rígidas. La organización por carpetas de feature se documenta en [ADR-007](../adr/ADR-007-organizacion-componentes-por-feature.md) y evita que `src/components/` se convierta en una carpeta plana difícil de mantener.
+El punto de entrada prepara SQLite, hidrata el borrador y carga los datos antes de montar los componentes. Así, el editor no intenta restaurar una edición sobre una base todavía sin inicializar. El límite de arranque muestra un estado accesible y permite reintentar la preparación; ante un montaje parcial, exige cerrar de forma segura la conexión antes de recargar, en lugar de volver a instalar los mismos listeners sobre el documento incompleto.
 
-## 5.3. Gestión de Estado Reactivo
+En el editor separé título, cuerpo y asociación organizativa. Los eventos de entrada actualizan la disponibilidad de `Guardar` o `Actualizar` y capturan el trabajo pendiente. El modo de enfoque cambia la disposición visual; no convierte la edición en un guardado automático. Durante guardado o descarte se bloquean los controles y una comprobación explícita impide repetir la operación mientras está en curso.
 
-La gestión de estado se implementa con un store propio basado en el patrón Observer. El estado central mantiene notas, materias, vista activa, búsqueda, nota seleccionada, materia seleccionada y banderas de UI. Cuando una operación modifica datos o filtros, el store notifica a los componentes suscriptores para que actualicen la pantalla.
+Las ayudas de RF-028 modifican el texto Markdown, no un documento de edición visual independiente. El registro tipado de comandos comparte definiciones entre `/` y el menú `+`; `Aa` aplica transformaciones sobre la selección. La continuidad de listas y bloques al pulsar Enter también opera sobre el texto y vuelve a emitir el evento de entrada. Esto mantiene el contenido editable sin exigir utilizar los menús. La representación Markdown se realiza en las tarjetas del listado; el editor no incorpora un panel dividido activo de previsualización.
 
-El store se dividió en módulos para reducir acoplamiento:
+Para el listado, `NoteList` renderiza directamente hasta 50 notas y utiliza `VirtualFeed` cuando el resultado supera ese umbral. Este último calcula una ventana visible con margen, conserva espaciadores y ajusta las alturas a partir de las tarjetas medidas. Agrupa las actualizaciones de desplazamiento mediante `requestAnimationFrame` y retira sus listeners al destruirse.
 
-| Archivo | Responsabilidad |
+La virtualización reduce el conjunto de tarjetas presentes en el DOM, **no la cantidad de notas cargadas desde SQLite**. La lectura vigente recupera las notas activas completas y el filtrado trabaja en memoria: no hay paginación de consultas por ese mecanismo. Su existencia tampoco demuestra un valor de FPS, una latencia ni rendimiento óptimo con 500 notas; esas mediciones conservan sus límites y postergaciones.
+
+## 5.3. Estado observable, filtros y operaciones asíncronas
+
+El store mantiene notas, organización, selecciones, búsqueda, fecha, vistas y cachés académicos. `NoteStore.state.js` utiliza un conjunto de suscriptores: al suscribirse, cada consumidor recibe el estado actual y una función para cancelar la suscripción. Las notificaciones posteriores entregan esa misma referencia de estado; no se trata de un sistema general de instantáneas inmutables.
+
+Dividí la coordinación para hacer visibles responsabilidades distintas:
+
+| Módulo | Responsabilidad |
 |---|---|
-| `NoteStore.state.js` | Estado base y suscripciones. |
-| `NoteStore.errors.js` | Canal de errores de dominio desacoplado del mecanismo visual de feedback. |
-| `NoteStore.data.js` | Carga, creación, actualización y eliminación de datos. |
-| `NoteStore.ui.js` | Acciones de UI y coordinación de vistas. |
-| `noteFilters.ts` | Reglas de filtrado y visibilidad de notas. |
+| `NoteStore.state.js` | Estado base y suscripciones |
+| `NoteStore.data.js` | Datos y mutaciones de notas y organización |
+| `NoteStore.ui.js` | Navegación, selección y filtros de interfaz |
+| `NoteStore.academicEvents.js` | Cargas, mutaciones y cachés de fechas académicas |
+| `NoteStore.errors.js` | Publicación de errores de persistencia y propagación del rechazo |
+| `NoteStore.refresh.js` | Avisos y recuperación de lecturas posteriores a una escritura confirmada |
+| `noteFilters.ts` | Selección y ordenamiento de notas sin manipular el DOM |
 
-Esta división permite testear reglas de negocio sin renderizar toda la interfaz. También facilita mantener invariantes importantes, como ocultar notas eliminadas del feed, mostrar notas fijadas al tope y respetar el filtro por materia o sección. El canal separado de errores permite que el store comunique el problema y que la capa de presentación decida si corresponde mostrar un toast, un diálogo u otra respuesta.
+La búsqueda normaliza mayúsculas y tildes y compara título y contenido en memoria. En Entrada, materia y vista general, una búsqueda activa recorre globalmente las notas activas no archivadas; no queda limitada a la materia desde la que se abrió. Archivo mantiene su propio ámbito. El filtro de fecha utiliza la última modificación de la nota, `updatedAt`, y no la fecha de un evento académico. El orden prioriza notas fijadas y luego la modificación más reciente. Las notas eliminadas lógicamente ya están excluidas de la carga del listado activo.
 
-## 5.4. Capa de Persistencia (Evolución de IndexedDB a SQLite)
+Las lecturas asíncronas requieren además comprobar su vigencia. Una respuesta de Papelera no debe reemplazar el contenido de otra vista si el usuario ya salió de ella. Para ese recorrido, un propietario de solicitud combina identidad del consumidor, estado activo y versión de lectura. En las fechas académicas, las versiones de solicitud y una revisión de mutaciones evitan aplicar resultados obsoletos o deshacer cambios confirmados mientras una lectura estaba pendiente. Estos mecanismos corresponden a consumidores concretos, no a una cancelación universal de toda operación asíncrona.
 
-La persistencia tuvo dos etapas. En la fase inicial del MVP se implementó almacenamiento local con IndexedDB, suficiente para validar el editor y el funcionamiento offline en navegador. Luego, tras el relevamiento de datos y el pivote a aplicación Android híbrida, se decidió migrar a SQLite. La protección actual del trabajo en curso se resuelve con borradores persistentes locales del editor, separados del guardado definitivo de notas.
+El manejo de errores distingue persistencia y presentación. Cuando una acción envuelta por `runStoreAction` recibe un `DatabaseError`, publica el evento y relanza la excepción. La composición conecta ese canal con el feedback visual; el store no importa el componente de mensajes. Así, un formulario puede conservar sus campos ante el rechazo sin generar por sí mismo un segundo mensaje para el mismo error de persistencia.
 
-La motivación del cambio fue doble:
+Una lectura secundaria fallida tampoco equivale a una escritura fallida. Tras crear una nota, el store conserva la entidad recibida y utiliza `refreshAfterWrite` para actualizar materias y conteos. Si esa lectura falla, ofrece recuperarla sin volver a insertar la nota. La misma frontera se aplica a la creación de fechas y a las extensiones registradas para crear materias y actualizar o eliminar fechas académicas, conforme a ADR-011. Otras mutaciones mantienen contratos distintos; no generalizo este comportamiento a todo el store.
 
-- El relevamiento respaldó una experiencia mobile-first y offline-first; no comparó PWA, APK ni canales de instalación.
-- El análisis técnico seleccionó Capacitor y SQLite para reutilizar la base web, disponer de persistencia local fuera de la política de almacenamiento del navegador e integrar capacidades nativas en Android. La aceptación de instalar un APK por parte del público objetivo se valida por separado.
+## 5.4. Persistencia, continuidad y respaldo
 
-La arquitectura actual utiliza `@capacitor-community/sqlite` en Android. Para desarrollo web local se incorporó `sql.js` y `jeep-sqlite`, permitiendo simular SQLite en navegador sin modificar los componentes ni el store. La configuración se automatiza con el script `copy-wasm`, ejecutado antes de `npm run dev`, `npm run build` y después de instalar dependencias.
+### 5.4.1. Acceso SQLite y composición de operaciones
 
-La capa SQLite se encuentra en `src/services/sqlite/` y separa conexión, manejo de errores y operaciones de notas, materias y eventos académicos. Estos módulos cumplen una función de acceso a datos orientada a SQLite: ejecutan consultas y traducen filas, sin pretender una interfaz Repository genérica. Por encima, servicios como `SubjectService` aplican validaciones y coordinan transacciones; en los límites nativos, servicios específicos adaptan Filesystem, Share y Network de Capacitor. Esta separación permite auditar el schema, generar DBML desde código y validar la jerarquía de materias con scripts automatizados.
+La evolución desde IndexedDB y la elección del motor se fundamentan en el capítulo 4. En la implementación vigente, `src/services/sqlite/` concentra conexión, esquema, migraciones y operaciones de notas, materias y fechas. La presentación no ejecuta SQL: utiliza el store o servicios de aplicación. Para notas, el store accede directamente a los módulos SQLite; para organización y fechas intervienen servicios con validaciones propias. No existe una cadena rígida de capas que todas las acciones deban recorrer.
 
-## 5.5. Procesamiento de Markdown y Seguridad (XSS)
+Las operaciones parametrizan los valores de las consultas y transforman filas a contratos de aplicación, por ejemplo convirtiendo marcas enteras a booleanos. El esquema y las migraciones permanecen en `connection.js`. Antes de agregar una columna se consulta `PRAGMA table_info`; su existencia permite omitir el cambio, pero un error inesperado aborta la inicialización. No se ignoran indiscriminadamente los errores de migración.
 
-Markdown es el formato base de las notas. Esta decisión aporta portabilidad, simplicidad y compatibilidad con herramientas externas. Sin embargo, renderizar Markdown como HTML introduce un riesgo de seguridad: el contenido escrito por el usuario podría convertirse en HTML ejecutable si no se sanitiza correctamente.
+ADR-009 se materializa en una cola por conexión y un ámbito transaccional explícito, `scope`. Las operaciones que componen una transacción reciben ese ámbito; las independientes esperan su turno. El módulo no entrega la conexión nativa a cualquier consumidor. La resolución externa espera la confirmación y, en el entorno web, la persistencia correspondiente. Ante resultados inciertos de confirmación o fallos de recuperación, la conexión se bloquea hasta recuperar un estado comprobable: no se afirma que cualquier error implique que nada se escribió.
 
-Para resolverlo, Lumapse usa:
+La migración legada desde IndexedDB conserva notas y marcador de migración dentro de una transacción y no reemplaza notas SQLite existentes al reintentar. Es compatibilidad con la etapa anterior, no una segunda autoridad de almacenamiento del producto. El entorno web auxiliar conserva SQLite mediante `jeep-sqlite` y `sql.js`, sin equipararlo al plugin nativo.
 
-- `marked` para convertir Markdown a HTML.
-- `DOMPurify` para sanitizar el HTML resultante antes de insertarlo en el DOM.
+### 5.4.2. Borrador y confirmación explícita
 
-La responsabilidad está encapsulada en `MarkdownService`, con tests unitarios que verifican comportamiento esperado y prevención de inyección básica. De esta forma, la UI consume HTML ya procesado y no replica lógica de sanitización en múltiples componentes.
+La continuidad de RF-005 utiliza un único borrador en `metadata`, bajo la clave `lumapse-editor-draft-v1`. `EditorDraftService` valida y normaliza su formato, mantiene la caché hidratada al iniciar y delega la persistencia en el módulo SQLite. Capturar una edición no crea ni actualiza automáticamente la nota definitiva.
 
-## 5.6. Empaquetado Android Híbrido (Capacitor)
+La captura toma una instantánea en cada cambio, sin esperar un intervalo de inactividad. Incluye título, contenido, asociación y, en modo edición, referencia a la nota original. Si esa nota ya no existe al restaurar, el texto pendiente puede recuperarse como borrador de una nota nueva, sin recrear silenciosamente el registro desaparecido.
 
-Capacitor permite empaquetar la aplicación web como una aplicación Android híbrida, reutilizando el código existente en `src/` y generando un proyecto Android en `android/`. La UI continúa ejecutándose en una WebView y accede a capacidades de plataforma mediante el puente y los plugins de Capacitor (Ionic, s. f.). Esta estrategia evita reescribir la interfaz en Kotlin o React Native y conserva la inversión realizada en la arquitectura web.
+Guardar desde el editor solicita `flush` de la captura y utiliza la opción `clearDraft`; la cola SQLite ordena las escrituras. El store coordina entonces la escritura de la nota y el marcador JSON `null` en una misma transacción. Ese marcador distingue borrador vacío de fila ausente y evita reimportar un borrador legado ya consumido. Los campos se limpian después de recibir la entidad confirmada; descartar también espera la confirmación de la limpieza. La secuencia y los límites de fallo se desarrollan en la sección 4.5.
 
-El flujo general es:
+SQLite es la autoridad del borrador después de su inicialización. La lectura legada de `localStorage` sólo se considera si falta la fila, no como alternativa cuando falla SQLite. El mecanismo no garantiza la última tecla si el proceso termina antes del commit, ni recuperación ante desinstalación o pérdida del dispositivo. Tampoco el ZIP respalda este trabajo pendiente.
 
-```text
-npm run build
-        |
-        v
-npx cap sync
-        |
-        v
-Gradle compila el proyecto Android
-        |
-        v
-APK instalable en dispositivo
-```
+### 5.4.3. Exportación e importación del conjunto de datos
 
-El script [deploy-android.sh](../../scripts/deploy-android.sh) automatiza este proceso. En su modo normal conserva los datos locales de la app para no borrar SQLite durante pruebas; y con `--clean` permite una instalación limpia cuando se necesita simular el primer uso o descartar estado local.
+Implementé la portabilidad de RF-017 y RF-018 mediante un formato ZIP propio. La exportación reúne notas confirmadas, materias/secciones y fechas académicas, conserva elementos archivados y excluye la papelera y el borrador. El paquete contiene un manifiesto, JSON con los datos restaurables y notas Markdown organizadas en carpetas para lectura fuera de Lumapse. Los Markdown no sustituyen el contrato JSON ni constituyen un flujo de importación de notas individuales.
 
-La decisión de usar Capacitor se fundamenta en [ADR-005](../adr/ADR-005-pivote-app-nativa.md): el relevamiento respaldó las prioridades mobile-first y offline-first, mientras el ADR comparó las alternativas técnicas. La encuesta no midió tolerancia al *sideload* ni familiaridad con la instalación de APK.
+La generación utiliza los módulos propios `BackupZipService` y `BackupZipArchive`, con entradas `STORE`, sin compresión. JSZip permanece declarado como dependencia, pero sus importaciones observadas pertenecen a las pruebas, no al generador de producción. La lectura está acotada al formato admitido: inspecciona estructura y límites antes de procesar los JSON, verifica tamaño y CRC32 al leerlos y exige texto UTF-8 válido. Los respaldos históricos `DEFLATE` dependen del soporte de descompresión del WebView. CRC32 permite detectar corrupción del contenido leído, no comprobar identidad del emisor ni autenticidad criptográfica.
 
-## 5.7. Licenciamiento de Software y Filosofía Open Source
+La importación separa preparación y confirmación. Primero valida manifiesto, entidades y relaciones, y calcula un plan frente a los datos locales. La interfaz presenta elementos a incorporar, omisiones, renombrados y advertencias; sólo después de la confirmación se aplica el plan mediante inserciones dentro de una transacción. La política no destructiva no equivale a reemplazar íntegramente el workspace ni a una sincronización de cambios entre dispositivos.
 
-Lumapse se publica bajo licencia GNU GPLv3. Esta elección responde a una decisión ética y académica: el proyecto nace en un entorno educativo público y se desarrolla como evidencia de aprendizaje profesionalizante. Por lo tanto, el código no solo cumple una función de producto, sino también de material de estudio, referencia y posible punto de partida para futuras cohortes.
+La salida nativa también tiene una frontera concreta. `BackupShareService` escribe el archivo en caché mediante Filesystem, obtiene una URI y abre el selector con Share. El ZIP y el selector pueden prepararse sin red; un destino externo puede necesitar conectividad. Abrir o completar ese selector no permite demostrar que un proveedor conservó una copia durable. Por ello, respaldo manual, archivo temporal y sincronización automática no se presentan como capacidades equivalentes.
 
-La GPLv3 permite usar, estudiar y modificar el programa. Cuando una persona distribuye copias o una obra derivada cubierta por la licencia, debe ofrecer el código fuente correspondiente bajo GPLv3 y conservar los avisos aplicables; las modificaciones de uso estrictamente privado no activan por sí solas esa obligación de distribución. En el contexto del proyecto, esta elección favorece que las versiones redistribuidas continúen siendo auditables y que las mejoras compartidas regresen a la comunidad bajo las mismas libertades.
+## 5.5. Procesamiento de Markdown y seguridad de presentación
 
-La licencia también refuerza la transparencia del proyecto: cualquier evaluador puede revisar cómo se implementó la aplicación, cómo se tomaron decisiones y cómo evolucionó la solución.
+Markdown conserva el contenido como texto, pero su transformación a HTML introduce una frontera de confianza. El riesgo de *cross-site scripting* (XSS) consiste en que el contenido presentado permita ejecutar código no previsto. Que una nota provenga del mismo dispositivo no vuelve seguro todo su contenido: también puede contener material copiado o importado. Parsear ese texto y sanear el resultado son responsabilidades diferentes.
 
-## 5.8. Integración Continua (CI) — Automatización de Calidad de Código
+`MarkdownService` concentra el recorrido de renderizado:
 
-### 5.8.1. ¿Qué es la Integración Continua?
+1. Procesa los bloques destacados o *callouts* y convierte el Markdown mediante `marked`, con sintaxis GFM (*GitHub Flavored Markdown*) y saltos de línea habilitados.
+2. Sanea el HTML con DOMPurify mediante listas explícitas de etiquetas y atributos permitidos y prohibidos. El HTML admitido por el parser no se considera confiable y también pasa por ese control.
+3. Aplica reglas de atributos para enlaces y recursos. En particular, elimina fuentes de imagen HTTP/HTTPS y agrega atributos de apertura a enlaces externos.
+4. Reconstruye las casillas de tareas con APIs del DOM, identifica su línea y obtiene su nombre accesible del contenido ya saneado; finalmente serializa el fragmento para presentarlo.
 
-La **Integración Continua** (CI, del inglés *Continuous Integration*) es una práctica de ingeniería de software mediante la cual cada modificación del código fuente se verifica automáticamente mediante una serie de comprobaciones definidas por el equipo de desarrollo. El objetivo es detectar problemas lo antes posible en el ciclo de vida del software, reduciendo el costo de corrección y aumentando la confianza en el código que se entrega.
+El índice de línea permite que una interacción sobre una casilla modifique la tarea correspondiente en el Markdown. Esa correspondencia también contempla el desplazamiento de líneas cuando el título y el cuerpo se presentan por separado. La lógica de las tarjetas consume el HTML procesado; no implementa otro parser en cada vista.
 
-En entornos profesionales, un pipeline de CI suele incluir análisis estático de código, ejecución de tests unitarios, compilación del proyecto y, eventualmente, despliegue automático. Para Lumapse, el workflow evolucionó desde un chequeo inicial de lint hacia una verificación remota que combina lint, tests, build, presupuesto de bundle y auditorías documentales/técnicas. El comando local `npm run verify` amplía ese conjunto con typecheck, revisión de toolchain y smoke test de base de datos, entre otras guardias.
+La sanitización de Markdown no protege automáticamente los demás campos que se interpolan en plantillas. Para títulos, nombres e identificadores utilicé utilidades distintas de escape de texto y atributos. Los colores se validan antes de incorporarlos a estilos. Esta separación responde al contexto de salida: un valor apto como texto no es necesariamente apto como atributo o propiedad visual.
 
-### 5.8.2. Herramientas utilizadas
+La política CSP del documento de entrada complementa estos controles limitando orígenes de recursos y permitiendo los recursos locales necesarios. Conserva permisos para evaluación de scripts y estilos inline, por lo que no se describe como una prohibición absoluta de ejecución. Los enlaces externos pueden abrirse por acción del usuario; restringir la carga automática de recursos no equivale a impedir toda comunicación externa.
 
-| Herramienta | Rol | Versión |
-|---|---|---|
-| **ESLint** | Linter: analiza el código JavaScript en busca de errores y malas prácticas | v10.x (flat config) |
-| **Vitest** | Ejecución de tests unitarios automatizados | v4.x |
-| **GitHub Actions** | Plataforma de CI integrada en GitHub que ejecuta el workflow automáticamente | N/A (servicio cloud) |
-| **Scripts de auditoría** | Trazabilidad, links, schema SQLite, DBML, jerarquía de materias, a11y y diálogos nativos | Scripts locales del repositorio |
+La suite contiene casos de Markdown válido, contenido peligroso, atributos, casillas y regresiones específicas del sanitizador. Esos casos comprueban contratos automatizados en su entorno, no ausencia universal de XSS ni falta de tráfico en el APK. La evidencia de seguridad y sus límites corresponden al capítulo 6, sin convertir esta descripción del mecanismo en una certificación.
 
-#### ¿Qué es un Linter?
+## 5.6. Empaquetado Android e identificación del artefacto
 
-Un linter es una herramienta que lee el código fuente de forma estática —sin ejecutarlo— y reporta:
+Capacitor integra los archivos web con un proyecto Android y conecta capacidades nativas mediante plugins (Ionic, s. f.). En Lumapse, `webDir` apunta a `dist/`: Vite produce esos archivos y la sincronización los incorpora al proyecto nativo. Gradle construye el APK. La interfaz sigue ejecutándose en una WebView; ni la construcción optimizada de Vite ni la sincronización crean por sí solas una entrega firmada y publicada.
 
-- **Errores:** uso de variables no definidas, imports duplicados, construcciones inválidas.
-- **Advertencias:** uso de `var` en lugar de `const`/`let`, comparaciones con `==` en vez de `===`, variables declaradas pero nunca utilizadas.
+El despliegue de desarrollo distingue construcción e instalación. Conforme a ADR-013, el script realiza la siguiente secuencia:
 
-En Lumapse, `npm run lint` se ejecuta sin la opción `--fix`: no modifica el código ni afecta la ejecución de la aplicación, sino que genera un reporte para revisar la calidad del código.
+1. Identifica el dispositivo y construye la salida web con canal de debug declarado.
+2. Sincroniza el proyecto Android y compila mediante el wrapper de Gradle.
+3. Verifica el APK con `apksigner` y, si hay una instalación previa en modo normal, comprueba la igualdad de sus certificados de firma.
+4. Instala con ADB sin desinstalar previamente y comprueba el éxito explícito antes de abrir la actividad.
 
-### 5.8.3. Implementación en Lumapse
+Si faltan medios para verificar la firma, ésta difiere o Android rechaza la actualización, el modo normal se detiene. No delega la instalación en un mecanismo que reintente mediante desinstalación. La opción `--clean` es una operación destructiva separada, no una reparación automática: elimina datos locales y requiere autorización y recuperación acordadas. Un ZIP no recupera el borrador ni la papelera que esa operación elimina.
 
-Se crearon y consolidaron tres grupos de configuración:
+Acerca de muestra versión y procedencia de construcción. Los metadatos distinguen servidor de desarrollo, prueba optimizada y canales Android declarados, e incluyen el commit y el estado conocido de las fuentes. No demuestran firma, publicación ni identidad binaria: el hash del APK y su certificado deben registrarse por separado. Tampoco el paso de CI que construye los assets web produce automáticamente el candidato de presentación.
 
-**`eslint.config.js` (raíz del proyecto):** Define el alcance del análisis (únicamente `src/`), las variables globales del entorno del navegador permitidas (`window`, `document`, `alert`, `crypto`, etc.) y el conjunto de reglas activas:
+El corte entregable sigue siendo la RC1 identificada en la sección 1.4.4, con aceptación parcial y desarrollo congelado. Describir el script y los metadatos no significa volver a ejecutarlo, recompilar ese artefacto o completar sus pruebas diferidas. La reproducción de una build y la aceptación de un binario son actividades distintas.
 
-```javascript
-// Reglas clave configuradas:
-"no-unused-vars": "warn"    // Variables declaradas pero no usadas → advertencia
-"no-undef":       "error"   // Variables no definidas              → error
-"prefer-const":   "warn"    // Preferir const sobre let            → advertencia
-"no-var":         "warn"    // Evitar var (obsoleto en ES6+)       → advertencia
-"eqeqeq":         "warn"    // Usar === en lugar de ==             → advertencia
-```
+## 5.7. Licenciamiento y continuidad académica
 
-**`.github/workflows/lint.yml`:** Define el workflow `CI — Quality Gate`, ejecutado automáticamente ante cada `push` o `pull request` a la rama `main`:
+Publiqué el código del proyecto con el texto de la GNU GPL versión 3 y la declaración `GPL-3.0-or-later` en los metadatos del paquete. Esta elección permite que el trabajo pueda estudiarse, modificarse y reutilizarse bajo sus condiciones, en lugar de quedar limitado a una demostración cerrada.
+
+La GPLv3 permite el uso y la modificación privada sin exigir publicar cada cambio. Al redistribuir código o una obra cubierta, establece condiciones de conservación de avisos y de acceso al código fuente correspondiente; no basta entregar un ejecutable sin atender esas obligaciones (Free Software Foundation, 2007). La declaración del proyecto no reemplaza los avisos y condiciones de sus dependencias.
+
+En el contexto académico, busco facilitar que futuras cohortes comprendan tanto la solución como sus decisiones y límites. Un repositorio público y una licencia libre habilitan esa posibilidad, pero no prueban que exista una comunidad de contribuidores, adopción institucional o mantenimiento futuro asegurado.
+
+## 5.8. Integración continua y control automatizado
+
+Utilicé integración continua para ejecutar comprobaciones reproducibles sobre cambios versionados y ofrecer un resultado remoto revisable. La definición vigente supera la separación anterior entre una lista local y otra remota: **`npm run verify` y el workflow de CI ejecutan el mismo gate canónico**, establecido en ADR-010 y mantenido en `scripts/quality.sh`.
+
+### 5.8.1. Entorno y entrada común
+
+El workflow `CI — Quality Gate` se activa ante pushes a `main` y eventos de pull request cuya base es `main`; no ante todo push a cualquier rama por el mero hecho de existir. Prepara Node desde `.nvmrc`, configura Python 3.12, comprueba el entorno antes de instalar e instala las dependencias mediante `npm ci`, usando el archivo de bloqueo. Después invoca literalmente `npm run verify`.
+
+El siguiente fragmento reproduce los tres pasos finales de esa configuración, no un workflow completo:
 
 ```yaml
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  quality:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: "22" }
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.12" }
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run test
-      - run: npm run build
-      - run: npm run check:size
-      - run: npm run check:native-dialogs
-      - run: npm run check:traceability
-      - run: npm run check:docs
-      - run: npm run check:schema
-      - run: npm run check:dbml
-      - run: npm run check:subjects
-      - run: npm run check:a11y
+- name: Verificar entorno canónico
+  run: npm run check:runtime
+- name: Instalar dependencias
+  run: npm ci
+- name: Ejecutar gate canónico completo
+  run: npm run verify
 ```
 
-**`package.json`:** Expone comandos reutilizables tanto localmente como desde CI. El comando principal de verificación local es:
+El punto de entrada local delega en ese mismo script. Compartir la definición evita mantener dos listas divergentes; no significa que un equipo local y el runner remoto tengan idénticos sistema operativo, recursos o integraciones nativas. Tampoco la ejecución local depende de que exista un hook de Git instalado o un binario auxiliar en una máquina particular.
 
-```bash
-npm run verify
-```
+### 5.8.2. Controles y criterio de fallo
 
-El workflow remoto no ejecuta literalmente `npm run verify`: invoca de manera explícita el subconjunto portable que figura en el YAML. En el corte actual, `typecheck`, `check:toolchain` y `check:db-smoke` pertenecen al gate local, por lo que CI y verificación local son complementarios, pero todavía no equivalentes.
+El gate comprueba primero el runtime y luego coordina lint, pruebas de herramientas, suite de aplicación, validación de su reporte, construcción web, tipos y guardias técnicas/documentales. Las herramientas aportan evidencias de naturaleza diferente:
 
-### 5.8.4. Flujo de trabajo resultante
+| Control | Qué comprueba y cuál es su límite |
+|---|---|
+| ESLint | Analiza JS y TS de `src/` con reglas apropiadas a cada lenguaje, sin corregir archivos mediante `--fix`; advertencias no equivalen a errores bloqueantes |
+| Pruebas de herramientas y Vitest | Ejecutan escenarios automatizados; la suite de aplicación utiliza el entorno DOM simulado y sus adaptadores de prueba, no el plugin Android instalado |
+| Construcción y tipos | Detectan problemas de empaquetado web y contratos estáticos; no producen una APK firmada ni validan todos los valores recibidos en ejecución |
+| Versión, base y esquema | Contrastan versiones y aspectos del esquema, ejecutan un smoke SQLite y revisan su representación DBML; cada control conserva un alcance parcial |
+| Bundle, diálogos, jerarquía y accesibilidad | Aplican presupuestos y reglas automatizables; una auditoría estática no certifica experiencia de uso o accesibilidad completa |
+| Trazabilidad, enlaces, toolchain y offline | Buscan inconsistencias y referencias inválidas o remotas; no comprueban por sí solos la veracidad de un resultado, todos los enlaces posibles ni el tráfico efectivo |
 
-```
-git push origin main
-        │
-        ▼
-GitHub recibe el commit
-        │
-        ▼
-GitHub Actions activa el workflow "CI — Quality Gate"
-        │
-        ├─ Checkout del código
-        ├─ Instalación de dependencias (npm ci)
-        ├─ Lint + tests + build
-        ├─ Bundle budget
-        └─ Auditorías documentales y técnicas
-               │
-               ├─ Sin problemas → ✅ Badge verde en GitHub
-               └─ Con problemas → ❌ Badge rojo + reporte con archivo, línea y descripción
-```
+La aceptación de Vitest no se basa sólo en leer un resumen de consola. Se exige salida normal con código cero y un reporte JSON nuevo, completo y coherente con los archivos esperados. El validador rechaza omisiones, duplicados, casos pendientes o totales inconsistentes; la ejecución impide `.only`. Un crash no se acepta porque antes haya impreso resultados exitosos. El gate utiliza un worker para acotar memoria, sin reducir la suite a un subconjunto.
 
-> **Nota importante:** el workflow es una verificación remota de calidad. Localmente, `npm run verify` se ejecuta de manera explícita antes de cortes y publicaciones; el repositorio ofrece scripts para instalar hooks, pero su presencia debe verificarse en cada entorno y no puede darse por supuesta.
+Los controles posteriores agregan sus resultados y un fallo mantiene el resultado global como fallido. Los diagnósticos de tamaño y complejidad conservan advertencias orientativas, sin convertir en advertencia un error de ejecución de la herramienta. La medición de cobertura y las auditorías de dependencias son comprobaciones separadas: no se atribuyen automáticamente a cada ejecución de `verify`.
 
-### 5.8.5. Resultado actual
+### 5.8.3. Relación entre automatización y aceptación
 
-En el corte `v0.5.0`, `VITEST_MAX_WORKERS=1 npm run verify` completó lint, typecheck, 1065 tests unitarios distribuidos en 67 archivos, build de producción, verificación de versiones, smoke test de base de datos, presupuesto de bundle, trazabilidad, links internos, schema SQLite, jerarquía de materias, accesibilidad estática y ausencia de diálogos nativos fuera del seeder. El workflow remoto de PR #10 aprobó su subconjunto portable y verificó además el DBML mediante un paso explícito. Esta evidencia automatizada es amplia, pero no reemplaza las pruebas manuales en Android ni implica que ambos recorridos cubran exactamente los mismos pasos.
+El valor de este mecanismo está en hacer explícitos los criterios comprobables, reducir diferencias accidentales entre ejecuciones y asociar resultados a una revisión concreta. Es un mecanismo de control, no una medida general de madurez ni una prueba de ausencia de errores. Un resultado correcto tampoco garantiza el comportamiento de todas las combinaciones de datos o del puente nativo.
 
-### 5.8.6. Justificación de la práctica
-
-Incorporar CI desde las etapas tempranas del proyecto responde a uno de los principios fundamentales de la ingeniería de software moderna: **"fail fast"** (detectar y corregir problemas cuanto antes). El costo de corregir un error suele aumentar a medida que avanza el ciclo de desarrollo; un linter que detecta una variable mal declarada antes de integrar un cambio reduce el costo frente a encontrarla después de distribuir la aplicación.
-
-Adicionalmente, la presencia de un workflow de CI en el repositorio es una señal de madurez técnica reconocible por cualquier evaluador externo: indica que el proyecto no depende exclusivamente del criterio subjetivo del desarrollador, sino que cuenta con comprobaciones objetivas y automatizadas sobre la calidad del código.
-
-> **Referencia:** `.github/workflows/lint.yml` · `package.json` · `eslint.config.js` · `scripts/quality.sh`
+La revisión documental, la ejecución de CI, la comprobación Android y la aceptación del artefacto son niveles distintos. El análisis de resultados del capítulo 6 complementa esta descripción distinguiendo controles del candidato, pruebas históricas de otros debugs y recorridos diferidos de la RC1. Así, la implementación explica qué mecanismos existen y cómo colaboran, sin convertir posibilidades de prueba o controles automatizados en resultados que no fueron obtenidos.
 
 ---
 
 # Capítulo 6: Pruebas y Validación
 
-## 6.1. Estrategia de Testing
+La implementación del capítulo 5 describe los mecanismos presentes en Lumapse; este capítulo analiza qué evidencia permite evaluar su funcionamiento y qué queda sin demostrar. El corte de presentación es **0.6.0/600 — Release Candidate 1 (RC1)**, publicado el 22 de octubre de 2026 y aceptado con validación parcial. Distingo ese binario de las betas anteriores, de los debugs privados y de las ejecuciones sobre código fuente: compartir un número de versión no vuelve equivalentes sus resultados.
 
-La estrategia de pruebas de Lumapse combina validaciones automatizadas, pruebas unitarias, smoke tests nativos, auditorías documentales y pruebas manuales en dispositivo. Dado que el proyecto tiene alcance académico y una sola persona desarrolladora, la estrategia prioriza alto impacto y reproducibilidad por encima de una cobertura exhaustiva difícil de sostener.
+## 6.1. Estrategia y criterios de interpretación
 
-El enfoque se organiza en capas:
+Prioricé los riesgos que podían afectar el trabajo académico almacenado: pérdida o duplicación de notas, continuidad del borrador, integridad de importaciones y disponibilidad de los flujos sin conexión. Combiné pruebas automatizadas, controles estáticos y comprobaciones Android, sin tratar ninguna capa como sustituto universal de las demás.
 
-| Capa | Objetivo | Herramientas |
+**Tabla 6-1. Niveles de comprobación y límites de interpretación**
+
+| Nivel | Qué permite comprobar | Límite principal |
 |---|---|---|
-| Lint | Detectar errores sintácticos, variables no definidas y malas prácticas. | ESLint |
-| Unit tests | Verificar servicios, store, filtros y componentes críticos en JavaScript y TypeScript gradual. | Vitest |
-| Build | Confirmar que el proyecto compila para producción. | Vite |
-| Auditorías técnicas | Validar bundle, a11y estática, schema, DBML y jerarquía. | Scripts locales |
-| Auditorías documentales | Validar links internos y trazabilidad RF/HU/ADR. | Scripts Python |
-| Android smoke tests | Confirmar paquete nativo y contexto básico. | Gradle/JUnit |
-| Pruebas manuales | Verificar flujos reales en dispositivo. | Android físico, scrcpy |
+| Pruebas de lógica y componentes | Reglas de servicios, estado, filtros, presentación y manejo de errores en un entorno controlado | El DOM simulado no reproduce el WebView ni la interacción física |
+| Integración con SQLite en memoria | Colaboración entre servicios, coordinador, store e interfaz ante escrituras y fallos inducidos | Los límites del plugin nativo se reemplazan por adaptadores de prueba |
+| Gate de código y documentación | Construcción, tipos, reglas estáticas, consistencia de versiones, esquema y trazabilidad | Un resultado correcto no mide por sí solo latencia, tráfico o accesibilidad real |
+| Comprobaciones en Android | Flujos con SQLite, WebView y selectores nativos en una APK identificada | Cada resultado corresponde a un dispositivo, configuración y conjunto de casos |
+| Evaluación con usuarios nuevos | Tiempo a primera nota y dificultades de uso sin instrucciones previas | No se dispone de esa medición; una revisión técnica no la reemplaza |
 
-El comando principal de verificación local es `npm run verify`, que encadena el quality gate y auditorías adicionales. En CI, GitHub Actions ejecuta el workflow `CI — Quality Gate` ante cada push o pull request sobre `main`.
+Para interpretar cada resultado mantengo unidos requisito, método, fecha, fuente o APK, entorno y alcance. Una prueba ejecutada con resultado satisfactorio es distinta de un control previsto, de una aceptación general y de una métrica no medida. También conservo los fallos que motivaron correcciones: sustituirlos por el último resultado impediría explicar por qué cambiaron decisiones de persistencia o despliegue.
 
-Para la segunda beta `v0.5.0`, el gate final se ejecutó con `VITEST_MAX_WORKERS=1 npm run verify`: 67 archivos y 1065 tests pasaron antes de publicar el APK firmado. El CI de PR #10 y GitGuardian también finalizaron correctamente. La evidencia operativa queda registrada en `CHANGELOG.md`, `TODO`, `docs/hitos/hito-06-octubre.md`, `docs/gestion/lineas-base.md` y `docs/gestion/checklist-validacion-android.md`.
+La base documental reúne el registro del candidato del 22 de octubre, el checklist Android y los informes de continuidad, offline, tráfico y accesibilidad que identifico en las secciones siguientes. Los reportes y CSV derivados permiten revisar resultados y conteos; no sustituyen los originales completos. Las bases, capturas e informes crudos con contenido de prueba se conservan fuera de la publicación. Sus hashes identifican esas copias, pero no ofrecen por sí solos acceso público ni una reproducción independiente de toda la ejecución.
 
-## 6.2. Pruebas Unitarias
+## 6.2. Pruebas automatizadas e integración técnica
 
-Las pruebas unitarias se implementan con Vitest. Cubren principalmente lógica de negocio y reglas de estado, porque son las zonas donde un error puede afectar datos del usuario o romper flujos centrales.
+### 6.2.1. Regresiones orientadas a riesgos
 
-Los módulos actualmente cubiertos incluyen:
+La suite de aplicación utiliza Vitest con DOM simulado mediante jsdom e incluye código JavaScript y TypeScript. Sus escenarios abarcan Markdown y sanitización, jerarquía de materias, filtrado y visibilidad de notas, fechas, papelera, borradores, importación ZIP y componentes de interacción. No todos son pruebas unitarias aisladas: algunos comprueban colaboraciones entre varias capas.
 
-- `MarkdownService`: renderizado y sanitización de Markdown.
-- `ThemeService`: persistencia y alternancia de tema visual.
-- Servicios SQLite: conexión, errores, notas y materias.
-- `SubjectService`: validaciones de jerarquía, nombres, CRUD y papelera.
-- `NoteStore`: carga, mutación de datos y acciones de UI.
-- `noteFilters`: reglas de visibilidad y filtrado.
-- Componentes críticos: confirmación, routing de acciones de feed y papelera.
+En las pruebas de persistencia integradas, SQLite se ejecuta realmente en memoria mediante sql.js, mientras que el adaptador permite controlar los límites asíncronos del plugin. Esto posibilita inducir un fallo en una segunda escritura, demorar una operación o rechazar un refresco, y comprobar después las filas y el estado resultantes. Entre los contratos protegidos están el rollback de operaciones compuestas, la migración del borrador, su limpieza atómica al confirmar una nota y la recuperación de lecturas sin repetir una creación ya persistida. Las pruebas de propiedad de solicitudes verifican además que respuestas obsoletas no sustituyan el estado vigente en los caminos cubiertos.
 
-La suite unitaria permite sostener cambios internos sin depender exclusivamente de pruebas manuales. Esto fue especialmente importante durante la migración a SQLite, la implementación de papelera y la consolidación de materias/secciones, porque esas áreas afectan persistencia, visibilidad y recuperación de datos.
+Este enfoque aporta algo más preciso que una secuencia de mocks exitosos: permite relacionar un fallo concreto con sus efectos sobre datos y presentación. Sin embargo, no reproduce durabilidad física, terminación de procesos, renderizado Android ni todos los fallos posibles del puente nativo. Los mecanismos y sus fronteras se desarrollaron en las secciones 4.5, 5.3 y 5.4.
 
-El corte `v0.4.8` registró 773 tests unitarios. El crecimiento posterior cubrió integridad y concurrencia del guardado, seguridad de importación, contratos de errores, coordinación SQLite, arranque recuperable, ownership de solicitudes asíncronas y navegación táctil. En `v0.5.0`, la suite registra 1065 tests distribuidos en 67 archivos y pasa dentro del flujo `npm run verify` con un worker.
+### 6.2.2. Resultados de los cortes y cobertura
 
-El repositorio dispone de `npm run test:coverage` con alcance `src/**/*.{js,ts}` y reportes de texto, HTML y resumen JSON. La última línea base formal registrada, del 2026-08-21, midió 93,21% de statements en el scope configurado y 92,43% (1538/1664) en los 31 archivos de `src/services/**`; por lo tanto, `RNF-024` superó el mínimo de 70% en ese checkpoint. La configuración todavía no fija umbrales bloqueantes y la cobertura no se volvió a declarar como métrica del tag `v0.5.0`: debe repetirse antes de una afirmación final.
+El gate vigente comparte definición local y remota conforme a ADR-010 y a la sección 5.8. Usa Node **22.20.0**, npm **10.9.3** y un worker de Vitest; exige salida cero y un reporte completo y coherente, sin aceptar crashes por un resumen favorable. Node 26 no es un entorno soportado por ese corte y se rechaza al inicio. El auditor Rust es optativo y no sustituye controles. La cobertura y las auditorías de dependencias se ejecutan por separado, no como resultados implícitos de cada `npm run verify`.
 
-## 6.3. Pruebas de Integración y Funcionamiento Offline
+**Tabla 6-2. Ejecuciones automatizadas registradas por corte**
 
-El funcionamiento offline se valida desde varias perspectivas:
+| Referencia | Fecha del registro | Resultado registrado |
+|---|---|---|
+| Segunda beta `v0.5.0` | 5 de septiembre de 2026 | Gate aprobado: 67 archivos y 1065 pruebas de aplicación; CI del corte aprobado |
+| Candidato inicial `3068455`, `0.6.0/600` | 22 de octubre de 2026 | Gate aprobado: 79 archivos, 1211 pruebas de aplicación y 105 de herramientas |
+| Candidato corregido `bcefe6a`, `0.6.0/600` | 22 de octubre de 2026 | Gate final aprobado: 79 archivos, 1214 pruebas de aplicación y 105 de herramientas |
 
-- Los assets principales se empaquetan dentro del APK, por lo que la app instalada no depende de red para abrir.
-- Las notas y materias se persisten localmente en SQLite.
-- El proyecto incluye auditorías para detectar dependencias externas no deseadas o diálogos nativos no permitidos.
-- La persistencia se verifica con pruebas unitarias sobre servicios SQLite y con pruebas manuales en dispositivo.
+Los conteos describen esas ejecuciones; no se suman entre sí ni expresan un porcentaje de requisitos cumplidos. El gate final del candidato conservó tres advertencias previas de lint y cero errores. Sus controles de construcción, tipos, versión y documentación pasaron, sin que eso equivalga a recorrer toda la aplicación instalada.
 
-En Android se reemplazaron los smoke tests de plantilla por pruebas bajo el paquete real `com.lumapse.app`. Estas pruebas no validan todavía toda la UI, pero sí evitan conservar referencias de plantilla y confirman que el paquete nativo básico corresponde al proyecto.
+Para **RNF-024**, la medición del candidato inicial ejecutó `npm run test:coverage -- --maxWorkers=1 --allowOnly=false`. Registró **96,06 % de statements en servicios: 2095 de 2181, distribuidos en 42 archivos**, incluidos JavaScript, TypeScript y subdirectorios. Superó el mínimo del 70 %. La base anterior del 21 de agosto había registrado 92,43 % sobre otro conjunto de servicios; no interpreto la diferencia como una mejora causada por incrementar la versión.
 
-Además, los scripts `check:schema`, `check:dbml` y `check:subjects` cumplen una función de integración documental y técnica: comparan tablas, columnas, tipos y relaciones configuradas, y validan las reglas de jerarquía de materias. No sustituyen una revisión exhaustiva de índices, restricciones `CHECK`, acciones referenciales ni comportamiento real en Android. El smoke test ejecuta el DDL completo, pero sus aserciones explícitas de columnas y relaciones todavía se concentran en `subjects`, `notes` y `metadata`; `academic_events` debe incorporarse a esa cobertura antes de presentar el smoke como exhaustivo.
+El porcentaje de 96,06 % pertenece a la fuente `3068455`, no a una nueva ejecución del ajuste posterior. Aunque ese ajuste no modificó el código de servicios, cambió el candidato y no se repitió la cobertura. Tampoco es cobertura de toda la interfaz: la configuración excluye componentes, layout y otros ámbitos, no fija umbrales bloqueantes y medir statements ejecutados no demuestra la calidad de todas las aserciones ni la ausencia de errores.
 
-Las pruebas manuales en dispositivo siguen siendo necesarias para validar escenarios que no se capturan completamente en Node o en CI: instalación del APK, primer uso, modo avión, persistencia tras cerrar la app, restauración desde papelera, archivado, navegación táctil y rendimiento percibido.
+### 6.2.3. Alcance de los controles de integración
 
-La beta `v0.4.8` fue validada inicialmente el 2026-07-01 en un Samsung Galaxy S20 FE (`SM-G780G`) con Android 13. Esa ejecución cubrió instalación limpia, apertura offline, creación/edición/persistencia de notas, materias y secciones, búsqueda, pin/archivo, estados académicos, fechas discretas, papelera, tema, rotación/responsivo y rendimiento percibido (VM-01 a VM-14). El resultado fue apto para beta controlada, con observaciones UX menores.
+Los controles de esquema, DBML y jerarquía contrastan aspectos de la implementación con sus representaciones documentales. Son complementarios: comparar tablas, columnas y tipos no verifica por completo índices, restricciones `CHECK` o acciones referenciales. El smoke Python ejecuta el DDL extraído en una base temporal y comprueba relaciones seleccionadas, pero sus aserciones explícitas se concentran en `subjects`, `notes` y `metadata`, no en toda la tabla de fechas académicas. No lo presento como una prueba exhaustiva de migraciones o integridad nativa.
 
-Para `v0.5.0`, un build equivalente `0.5.0/500` se instaló en un Samsung `SM_G965F` preservando SQLite y se aprobaron el funcionamiento general y las correcciones táctiles de `Mover a` y materias/secciones. El asset de GitHub fue firmado con el certificado de producción, verificado mediante APK Signature Scheme v2 y publicado con SHA-256 `d48338e04021a6096fcaeaced5fde411911d403c9ea95407891d2b034515a884`. Como el dispositivo contenía una compilación debug, la validación incremental usó la misma clave debug para permitir la actualización: no equivale a instalar el asset firmado y esa comprobación permanece pendiente.
+Las pruebas JUnit conservadas en Android comprueban el nombre del paquete `com.lumapse.app` y el contexto de la aplicación. No forman parte del gate npm ni constituyen una suite de interfaz de extremo a extremo. Construir correctamente el proyecto Android y comprobar su identidad tampoco acredita automáticamente los recorridos del usuario.
 
-Exportar e importar ZIP cuenta con una ejecución Android separada del 2026-06-18 sobre un Samsung `SM_G965F`, Android 10 y un build previo de la rama `feature/importar-backup-zip` (`a1be7c9`, `versionName=1.0`). Las validaciones de AUD-003 agregaron backups `STORE`/`DEFLATE`, rechazo de datos inválidos y una fixture de 500 notas sobre builds posteriores. Esa evidencia confirma el flujo y sus defensas en cortes previos, pero no se atribuye automáticamente al APK firmado `v0.5.0`; Hito 06 exige repetir los casos críticos sobre ese asset.
+## 6.3. Evidencia Android, continuidad y actualización
 
-## 6.4. Validación de Rendimiento y UX
+### 6.3.1. Antecedentes y funcionamiento offline
 
-La validación de rendimiento y UX se apoya en métricas objetivas y revisión manual. En el estado actual del proyecto se verifican automáticamente el build de producción y el presupuesto de bundle, ya que el tamaño final impacta directamente en una app orientada a celulares con recursos limitados.
+La primera beta `v0.4.8` tiene una ejecución manual del 1 de julio de 2026 en Samsung Galaxy S20 FE, Android 13: instalación, apertura offline, notas, organización, búsqueda, fechas, papelera, tema y revisión inicial de presentación. Su valoración de rendimiento fue perceptiva y con pocas notas, no una medición temporal. Para `v0.5.0` distingo la validación incremental con firma debug en Samsung SM-G965F de la aceptación posterior del asset firmado publicado: el 2 de octubre quedó registrada su prueba y aceptación general en **al menos tres dispositivos**. No se conocen los modelos ni resultados granulares de ese conjunto, por lo que no completo casos o métricas por inferencia ni mantengo aquella aceptación como pendiente.
 
-Las validaciones actuales incluyen:
+La evidencia offline posterior es más específica. El registro del **6 de octubre**, sobre Samsung **SM-G965F, Android 10**, identifica el debug privado `0.5.0/500` de fuente **`348da88`**, con modo avión, Wi-Fi y datos apagados y sin red activa. Las acciones usaron controles del WebView con SQLite y puente reales, y los selectores Android se operaron mediante ADB; no fue una sesión con participantes nuevos.
 
-- `npm run build`: confirma que la aplicación compila sin errores bloqueantes.
-- `npm run check:size`: controla que el bundle no exceda presupuestos definidos.
-- `npm run check:a11y`: ejecuta auditoría estática de accesibilidad.
-- `npm run check:native-dialogs`: bloquea `alert`, `confirm` y `prompt` nativos fuera del seeder.
-- Revisión manual de flujos mobile-first en dispositivo Android.
-- Publicación de `v0.5.0` como segunda beta con APK firmado, tag anotado y SHA-256 documentado.
+**Tabla 6-3. Casos offline ejecutados en el debug `348da88`**
 
-Quedan pendientes para el cierre documental final y Hito 06 pruebas más cercanas al usuario final: medición de tiempo hasta crear la primera nota, revisión fina de contraste y navegación táctil, comportamiento con mayor volumen real de notas y feedback de estudiantes sobre el prototipo instalado.
+| Caso | Comprobación | Resultado |
+|---|---|---|
+| OFF-01 | Abrir, crear, editar y volver a la nota | PASS; contenido e identidad comprobados |
+| OFF-02 | Buscar, mover, fijar y archivar | PASS; destino y datos conservados |
+| OFF-03 | Papelera, restauración y borrado de una auxiliar | PASS; sin vaciar la papelera previa |
+| OFF-04 | Crear, modificar, consultar y eliminar una fecha auxiliar | PASS; las fechas anteriores se conservaron |
+| OFF-05 | Generar ZIP local, importar y repetir la importación | PASS; auxiliar recuperada y segunda importación sin duplicados |
 
-El build de `v0.5.0` finaliza con código 0, por lo que satisface el criterio explícito de `RNF-025` (construcción sin errores). Las advertencias previas por módulos importados de forma estática y dinámica se resolvieron retirando imports redundantes; el presupuesto de bundle continúa siendo un control bloqueante separado.
+La ejecución inicial de OFF-05 había fallado porque la exportación local se deshabilitaba sin internet. La corrección separó generación local y disponibilidad de destinos externos; sólo después se repitió el flujo completo. La comparación final conservó las notas originales, materias y fechas, con integridad SQLite correcta. Esto sustenta **RNF-009 en ese alcance**, no garantiza todo destino externo ni transfiere el resultado al asset de `v0.5.0` o a la RC1.
 
-## 6.5. Alcance de la Evidencia y Validación Pendiente
+### 6.3.2. Continuidad del borrador
 
-La evidencia reunida permite calificar `v0.5.0` como segunda beta firmada, publicada y respaldada por gate, CI y validación Android incremental. No permite afirmar que el asset firmado fue instalado en el dispositivo usado ni generalizar el resultado a todo el parque Android o a una validación integral de accesibilidad, seguridad, rendimiento y experiencia de usuario.
+La validación de **RNF-010** mostró por qué una comprobación visible de almacenamiento no basta. En los debugs previos se perdió una modificación reciente al terminar el proceso antes de 500 ms y reapareció el borrador después de ciertas limpiezas. Quitar el debounce hizo inmediata la captura, pero una repetición nativa todavía perdió el último cambio aunque la interfaz y `localStorage` lo mostraran antes de terminar el proceso.
 
-Los límites principales son:
+Tras adoptar SQLite y la confirmación atómica de nota y limpieza, el registro del **5 de octubre** identifica el debug limpio **`dbc8940`**, Samsung SM-G965F/Android 10. Pasaron **12 casos** de creación y edición: cambiar de app, bloquear, terminar y reabrir, descartar, y guardar o actualizar. La migración desde el almacenamiento anterior recuperó el borrador sin convertirlo automáticamente en nota. En una repetición con entrada nativa, el timestamp inmediatamente anterior al SIGKILL se registró a **285 ms** de la entrada y el texto se recuperó al reabrir.
 
-- La auditoría `check:a11y` es estática; no sustituye Lighthouse, lector de pantalla, navegación táctil real ni revisión manual completa de contraste. La evaluación final debe tomar WCAG 2.2 como referencia, sin declarar conformidad hasta comprobar los criterios aplicables con métodos automáticos y humanos (World Wide Web Consortium [W3C], 2024).
-- Los smoke tests Gradle verifican el paquete y el contexto nativo básico, no los flujos completos de UI ni una prueba end-to-end del APK.
-- La prueba Python con 5.000 notas es sintética, compara dos estrategias aisladas y no mide CPU ni renderizado Android. La revisión en dispositivo se realizó con un volumen acotado; falta una medición reproducible con un conjunto realista y criterios temporales definidos.
-- El reporte de cobertura incluye JavaScript y TypeScript, pero la última línea base formal es anterior a `v0.5.0` y no existe un umbral bloqueante acordado.
-- El workflow remoto y `npm run verify` no ejecutan exactamente los mismos pasos; conviene alinear al menos typecheck y smoke test de base de datos cuando sean portables en CI.
-- La suite completa presenta una incompatibilidad de Web Storage bajo Node 26; el corte canónico se validó con Node 22 y un worker. Resolver AUD-009 exige portabilidad real, no relajar tests.
-- `quality.sh` puede usar un binario Rust compilado para la plataforma y, si no está disponible, recurrir a scripts de compatibilidad. Un resultado exitoso en macOS no prueba por sí solo ambos caminos; la portabilidad requiere compilar o distribuir el auditor por plataforma y verificar el fallback en un checkout limpio.
-- La revisión periódica de dependencias y vulnerabilidades debe conservar evidencia propia; sanitizar Markdown reduce el riesgo XSS, pero no reemplaza el mantenimiento de las bibliotecas involucradas.
+Ese intervalo delimita la prueba de interrupción, no una medición de latencia CRUD. La terminación deliberada del proceso tampoco equivale a un apagado físico ni a todos los mecanismos de cierre de Android. El resultado aceptado cubre los casos y el artefacto registrados; **no garantiza conservar la última tecla si el proceso muere antes del commit**. La distinción entre borrador y nota confirmada permanece como se explicó en la sección 5.4.2.
 
-Estos puntos no reabren el alcance funcional de la beta: delimitan con precisión qué está validado y qué debe cerrarse como evidencia técnica o prueba de usuario dentro de Hito 06.
+### 6.3.3. Identidad y alcance de las pruebas de la RC1
 
-La validación final no debe limitarse a que el código compile. Para que Lumapse cumpla su objetivo, debe demostrar que una persona puede instalarla, abrirla sin conexión, crear una nota rápidamente, encontrarla después, organizarla por materia y confiar en que no se pierde.
+El binario publicado es `lumapse-v0.6.0.apk`, versión **0.6.0**, código **600**, canal **`android-candidate`**, generado desde fuente limpia **`bcefe6a`**. La etiqueta `v0.6.0` apunta a **`ac2a747`**, que incluye la integración posterior; no es el commit incorporado en la APK. Su identificación registrada incluye:
+
+**SHA-256 de la APK publicada:**
+
+```text
+15f8ede5b78387e3fcac1a53eb3bc78dbb1e30df9acf7f4f20c771c48739e042
+```
+
+**SHA-256 del certificado de distribución:**
+
+```text
+91d719826e632e10f331913c3835c51e38cf780eb139940eb3b0bf1ed6a157cd
+```
+
+Se registraron verificación de firma v2, manifest no depurable, alineación y correspondencia de assets web y metadata con la construcción. Son controles de identidad y empaquetado, no pruebas funcionales de todas las pantallas.
+
+**Tabla 6-4. Actualizaciones firmadas comprobadas el 22 de octubre de 2026**
+
+| Recorrido en Samsung SM-G965F/Android 10 | Resultado y alcance |
+|---|---|
+| APK pública `0.5.0` → candidato inicial `3068455` | Actualización y apertura PASS; cinco notas, dos materias/secciones y una fecha conservadas; borrador completo migrado de localStorage a SQLite y recuperado visiblemente; tema claro conservado |
+| Candidato inicial → candidato corregido `bcefe6a` | Actualización y apertura PASS; todas las filas de las cuatro tablas, incluido el borrador, idénticas; etiqueta «Android · candidato» comprobada en Acerca de |
+
+Desde la referencia pública no hubo desinstalación, limpieza, importación ni restauración. Se comprobaron los hashes de las APK instaladas y se compararon filas completas, no sólo cantidades, en copias verificadas de lectura: integridad correcta y claves foráneas sin violaciones. **Son dos recorridos diferentes**; no constituyen una repetición directa de `0.5.0` al candidato corregido ni una garantía para cualquier tamaño de base o dispositivo.
+
+La seguridad de ese procedimiento también tiene un antecedente adverso. Durante el precorte, un despliegue debug con firma distinta provocó una desinstalación implícita del intermediario `native-run` y pérdida del estado de prueba. El incidente se conservó como fallo operativo: se recuperaron tablas, borrador y preferencias, comprobados por hash o valor frente a la referencia previa, y se protegió el instalador conforme a ADR-013. La actualización debug compatible posterior conservó los datos. No atribuyo el borrado a SQLite ni presento la recuperación como si el incidente no hubiera ocurrido; tampoco confundo esa prueba debug con las actualizaciones firmadas de la tabla 6-4.
+
+## 6.4. Rendimiento, usabilidad y accesibilidad
+
+### 6.4.1. Métricas medidas y métricas pendientes
+
+El tamaño del bundle y la construcción correcta aportan evidencia de **RNF-003** y **RNF-025** en los cortes registrados, pero no miden respuesta interactiva. **RNF-002 conserva el límite de 200 ms por operación** y **RNF-004 exige al menos 55 FPS durante el desplazamiento con 500 notas**. Ambos permanecen pendientes y diferidos hasta después de la presentación, sin reducir umbrales.
+
+Los perfiles sintéticos de 50 y 500 notas permitieron preparar datos y comprobar importación y funcionamiento. Los pilotos de trazas no establecieron una atribución suficiente entre entrada, contenido correcto y primera presentación física Android; los datos de SurfaceFlinger y gfxinfo tampoco aportaron frames atribuibles a la superficie de Lumapse. Esta limitación del método no demuestra un defecto de rendimiento ni un cumplimiento. El experimento Python con 5000 notas compara estrategias aisladas sobre SQLite en memoria y con durabilidad desactivada: no mide el tiempo del flujo completo, CPU o renderizado del APK.
+
+**RNF-005**, primera nota de un usuario nuevo en **10 segundos o menos**, continúa sin medición con participantes. El acceso técnico al editor, una valoración durante el desarrollo o una encuesta voluntaria no verifican ese tiempo. La evaluación posterior al corte no bloquea la entrega ni acredita adopción real. La encuesta de hábitos del capítulo 3 fundamenta decisiones de producto, no es una prueba de uso de la aplicación instalada.
+
+### 6.4.2. Revisiones de interacción y presentación
+
+Las comprobaciones Android de octubre cubrieron dimensiones distintas. La tabla siguiente identifica el origen de los debugs privados, todos sobre Samsung SM-G965F/Android 10; **no son resultados de la RC1 firmada**.
+
+**Tabla 6-5. Evidencia acotada de usabilidad y accesibilidad**
+
+| RNF y fecha de 2026 | Fuente del debug | Método y resultado registrado |
+|---|---|---|
+| RNF-006, 7 de octubre | `348da88` | Profundidad de entrada: editor visible sin taps adicionales; buscar y organizar accesibles en dos taps |
+| RNF-008, 8 de octubre | `9056ab2` | Límites renderizados de controles principales y opciones de materia: al menos 44×44 CSS px |
+| RNF-007, 9 de octubre | `f2beef7` | Tamaños computados y revisión visual de lectura/edición: mínimo 16 CSS px en el alcance medido |
+| RNF-021, 12 de octubre | `803947e` | Contraste compuesto: 208 muestras de fixtures y 174 de recorridos, ambos temas por encima de 4,5:1 |
+| RNF-022, 13 de octubre | `b7c3d31` | Árbol de accesibilidad y revisión de propósito: 2188 observaciones en 24 escenas, sin nombres vacíos o de símbolo solo |
+| RNF-020, 19 de octubre | `538c906` | Navegación con entrada ADB/CDP: 16 casos PASS; evidencia parcial, sin teclado físico ni mutaciones completas |
+
+El alcance importa tanto como el valor. RNF-006 mide llegar a una función, no completar todas sus operaciones. Los 44×44 CSS px corresponden a controles principales, no a cada botón de la app. Los 16 CSS px son del texto de lectura y edición, no de toda etiqueta o metadato; el componente preview se midió aisladamente, sin atribuirle una vista activa inexistente.
+
+En contraste se compusieron fondos, alfa y opacidades antes de comparar; algunos estados hover se reprodujeron mediante reglas CSS en fixtures, no con un puntero físico. Las 2188 muestras accesibles son observaciones repetidas, no controles únicos ni interacciones. Los eventos de teclado inyectados permiten estudiar foco, cancelación y retorno, pero no certifican hardware USB/Bluetooth. Tomé **WCAG 2.2** como referencia para interpretar contraste, alternativas y operabilidad, sin declarar conformidad global a partir de estas comprobaciones parciales (World Wide Web Consortium [W3C], 2024).
+
+### 6.4.3. Lighthouse y tratamiento de sus hallazgos
+
+Para **RNF-019**, la medición del **20 de octubre** utilizó Lighthouse **13.5.0** sobre el WebView real del debug **`92deffd`**, no una réplica de escritorio. Los snapshots conservaron la pantalla y el almacenamiento, sin recarga ni emulación de viewport o agente de usuario. Se obtuvieron **40 informes válidos: 20 escenas por tema, 34 puntuaciones de 100/100 y seis de 96/100**. Cada escena superó el umbral de 90; no se promediaron resultados para ocultar un caso inferior.
+
+El resultado no significa cero hallazgos. Los informes registraron **seis auditorías ponderadas fallidas**, de contraste o tamaño disponible de objetivos, además de revisión incompleta y entradas manuales no ejecutadas por el instrumento. Los 3040 registros derivados son entradas de auditoría, no 3040 pruebas humanas; 400 corresponden a comprobaciones manuales. Incluso una puntuación de 100 había coexistido en la referencia anterior con una etiqueta fallida de peso cero. El score y el inventario de problemas deben leerse por separado.
+
+Los informes definitivos se conservaron aunque el runner terminó con error en la limpieza posterior a recolectarlos; la restauración del estado se completó y comprobó por separado. No considero exitosa toda la ejecución por haber obtenido scores favorables.
+
+La revisión del **22 de octubre** reprodujo un defecto adicional: el hover de «Agregar fecha» podía quedar visible con bajo contraste tras cerrar el diálogo con Escape. Se corrigió y midió en el debug **`e0700f6`**: 8,82:1 en oscuro y 6,29:1 en claro en ese estado. Sus seis snapshots nuevos de 100/100 no reemplazan las cuarenta escenas anteriores ni verifican la RC1. Otros límites de superposición, semántica ARIA y cobertura quedaron clasificados y aceptados para el corte: por ejemplo, los botones de opciones de tarjeta seguían midiendo 28×28 CSS px. No se convirtieron en cumplimiento general de RNF-008, teclado completo, control por voz, TalkBack o WCAG exhaustiva.
+
+## 6.5. Seguridad, privacidad y alcance de las auditorías
+
+La evidencia de **RNF-012 y RNF-013** corresponde al **7 de octubre**, debug **`348da88`**, Samsung SM-G965F/Android 10. Se combinaron revisión estática de integraciones y captura runtime durante arranque, navegación, calendario, Acerca de y apertura de una exportación explícita. El selector se canceló sin elegir destino: no se comprobó la conservación del archivo por una aplicación externa.
+
+Durante una ventana de **240 segundos**, los contadores de recepción y transmisión del UID de Lumapse no variaron: **cero bytes nuevos atribuibles a la app** en esos flujos. La captura global sí contenía tráfico ajeno; no se atribuyó a Lumapse por aparecer en el mismo dispositivo. La revisión estática no encontró una integración declarada de tracking, analytics o cookies de terceros. Son resultados de esa corrida, no una garantía universal ni una captura del APK final. Un escaneo de referencias externas tampoco detecta necesariamente toda comunicación dinámica.
+
+Las auditorías completa y productiva de dependencias del **22 de octubre** finalizaron con cero vulnerabilidades conocidas después de los parches autorizados, incluido DOMPurify **3.4.17** en el candidato corregido. Esa cifra representa la consulta y el grafo examinados en esa fecha, no ausencia permanente de vulnerabilidades. Los avisos del tooling de desarrollo y una vulnerabilidad explotable en el APK son riesgos que deben distinguirse, aunque ambos requieran tratamiento en su ámbito.
+
+Las regresiones de sanitización, escape contextual y validación de ZIP aportan defensas comprobables frente a entradas seleccionadas, como se explicó en las secciones 5.4.3 y 5.5. No constituyen una prueba de penetración completa ni una certificación de ausencia de XSS. Tampoco la firma de distribución certifica privacidad: identifica al firmante y permite comprobar compatibilidad, mientras que el tráfico requiere su propia observación.
+
+## 6.6. Síntesis del estado y límites de la entrega
+
+La clasificación de los **26 requisitos no funcionales** mantiene los estados y artefactos de sus registros, sin elevar una aceptación general a prueba exhaustiva de la RC1.
+
+**Tabla 6-6. Síntesis documental de estados RNF**
+
+| Estado registrado | Cantidad | Identificadores |
+|---|---:|---|
+| Verificado en el alcance documentado | 16 | RNF-003; RNF-006 a RNF-010; RNF-012 y RNF-013; RNF-018 y RNF-019; RNF-021 a RNF-026 |
+| Evidencia parcial | 1 | RNF-020 |
+| Pendiente | 3 | RNF-002, RNF-004 y RNF-005 |
+| Obsoleto por el pivote | 3 | RNF-001, RNF-011 y RNF-017 |
+| No aplica al APK | 3 | RNF-014, RNF-015 y RNF-016 |
+
+Entre los verificados, RNF-018 conserva la inspección del Markdown legible dentro del backup, sin habilitar compartir notas individuales. RNF-023 se apoya en la separación modular descrita en el capítulo 4. RNF-026 tiene un inventario de decisiones contrastado en el precorte, complementado por ADR-013; algunos ADR formalizan retrospectivamente una solución y no prueban que el registro precediera a implementarla. Los requisitos obsoletos corresponden a criterios de carga web, Service Worker e instalación PWA reemplazados; los no aplicables se refieren a hosting HTTPS, headers y paridad multinavegador, no al canal APK vigente.
+
+La tabla no expresa «16 de 26 pruebas de la RC1 aprobadas»: combina requisitos, métodos y checkpoints diferentes. No calculo con ella un índice global de calidad. El tamaño del bundle, la cobertura de servicios, una revisión documental y un recorrido nativo miden propiedades distintas y no compensan entre sí la falta de evidencia.
+
+La **RC1 fue aceptada y publicada con validación parcial**. Están documentados sus controles de fuente e identidad, apertura y actualizaciones con el conjunto pequeño descrito. Los recorridos restantes de núcleo offline, organización/búsqueda, fechas y ZIP, así como tráfico y trackers sobre el binario exacto, quedaron **diferidos, no aprobados**. La actualización directa de `0.5.0` al corregido tampoco se repitió. La decisión del 22 de octubre congeló desarrollo y nuevas comprobaciones de app hasta después de la presentación, sin convertir esas ausencias en defectos confirmados ni en resultados positivos.
+
+El alcance defendible de la entrega es, por tanto, un prototipo Android identificable, con controles automatizados y evidencia nativa relevante, pero no una versión estable certificada ni una validación exhaustiva de seguridad, accesibilidad, rendimiento o uso real. Esta delimitación permite fundamentar las conclusiones y el trabajo futuro del capítulo 7 con resultados obtenidos, en lugar de promesas de comprobación.
 
 ---
 
 # Capítulo 7: Conclusiones
 
-## 7.1. Cumplimiento de Objetivos
+En este capítulo evalúo los resultados de Lumapse respecto de los objetivos formulados en la sección 1.3, recupero aprendizajes del proceso y delimito posibles líneas de continuidad del producto. El corte de presentación es **0.6.0/600 — Release Candidate 1 (RC1)**, publicado el 22 de octubre de 2026 y aceptado con validación parcial. Las conclusiones se apoyan en la implementación y en las verificaciones expuestas en el capítulo 6, con sus métodos y límites de evidencia.
 
-El objetivo general se considera **cumplido para el alcance de una beta controlada**: Lumapse materializa una aplicación móvil offline-first que permite capturar, organizar y recuperar notas de estudio sin cuenta ni conexión obligatoria, y el proceso queda respaldado por relevamiento, requisitos, decisiones arquitectónicas, código versionado, pruebas y documentación. Esta conclusión no equivale todavía al cierre académico definitivo ni a declarar una versión estable para todo público.
+## 7.1. Cumplimiento de los objetivos y alcance del resultado
 
-| Objetivo específico | Evidencia alcanzada | Evaluación |
+El resultado central es una aplicación Android de notas con almacenamiento local, organización académica y mecanismos de continuidad y portabilidad manual, acompañada por evidencia versionada de su construcción. Con ello materialicé el núcleo técnico del objetivo general y documenté las decisiones y verificaciones. No equivale a demostrar que la aplicación mejora el aprendizaje, que fue adoptada de forma sostenida por estudiantes o que satisface universalmente todos los atributos de calidad.
+
+La tabla 7-1 conserva la correspondencia con los siete objetivos específicos de la sección 1.3.2. Distingo lo realizado del alcance de su comprobación, en lugar de asignar un cumplimiento global a partir de la existencia del programa.
+
+**Tabla 7-1. Síntesis de resultados respecto de los objetivos específicos**
+
+| Objetivo | Resultado alcanzado | Alcance y límite |
 |---|---|---|
-| Relevar necesidades del público objetivo y revisar las hipótesis iniciales. | Encuesta con 120 respuestas válidas, análisis cuantitativo y pivote documentado de PWA a aplicación Android local-first. | Cumplido. |
-| Formalizar alcance, usuarios, requisitos y decisiones trazables. | Personas, problem statement, RF/RNF, historias de usuario, decisiones de producto, ADRs, backlog y changelog versionados. | Cumplido, con revisión documental final en curso. |
-| Diseñar una solución offline y orientada al uso móvil. | Arquitectura Capacitor + SQLite, UI mobile-first, persistencia local y funcionamiento sin red para los flujos principales. | Cumplido para el dispositivo y los escenarios validados. |
-| Implementar el núcleo de captura y organización académica. | Editor Markdown, borradores persistentes, búsqueda, materias/secciones, archivo, papelera, fechas académicas, tema, Acerca de y portabilidad manual mediante backup/importación `.zip`. | Cumplido para `v0.5.0`. |
-| Preparar una distribución Android verificable. | APK firmada, tag anotado, hash SHA-256, pre-release publicada y validación incremental sobre un build equivalente `0.5.0/500`. | Cumplido como segunda beta; instalación específica del asset firmado pendiente. |
-| Incorporar calidad automatizada y validación reproducible. | `npm run verify`, 1065 tests en 67 archivos, typecheck, build, auditorías técnicas/documentales y checklist Android. | Cumplido parcialmente: quedan límites de accesibilidad, rendimiento, seguridad y equivalencia CI/local explicitados en el Capítulo 6; `RNF-024` dispone de línea base JS/TS anterior al tag. |
-| Producir documentación académica defendible. | Documentación viva por capítulos, diagramas fuente y trazabilidad dentro del repositorio. | Cumplido como corpus versionado, con gráficos DB incorporados; el Hito 06 completa revisión editorial, consolidación de evidencias y maquetación. |
+| 1. Relevar y analizar hábitos, dificultades y preferencias | Encuesta con 121 respuestas recolectadas y 120 analizadas; instrumento, procesamiento y bases de cálculo explicitados en el capítulo 3 | Describe una muestra por conveniencia; no representa una prueba de uso ni una estimación inferencial de toda la población |
+| 2. Traducir necesidades y restricciones en requisitos trazables | Requisitos, historias de usuario, criterios de aceptación y decisiones de producto relacionados en el capítulo 2 | Un requisito implementado o una preferencia declarada no acreditan satisfacción ni validación completa de un binario |
+| 3. Diseñar y justificar una arquitectura modular local | Arquitectura Android/Capacitor con SQLite y separación pragmática de responsabilidades, fundamentada en el capítulo 4 y los ADR | Es una solución contextual, no una demostración de superioridad frente a todas las alternativas ni una arquitectura de capas estricta |
+| 4. Implementar creación, edición, lectura, búsqueda y organización | Núcleo de notas en texto plano y Markdown, materias y secciones, búsqueda y controles asociados, descrito en el capítulo 5 | La presencia de las funciones no demuestra por sí sola rapidez, facilidad de uso ni todos los recorridos de la RC1 |
+| 5. Incorporar continuidad y recuperación | Borrador persistente, guardado explícito, archivo, papelera y respaldo/importación ZIP, con mecanismos y evidencia delimitados en las secciones 5.4 y 6.3 | No garantizan recuperación ante toda interrupción o pérdida del dispositivo; el ZIP excluye borradores y papelera |
+| 6. Distribuir un artefacto identificable y documentar sus verificaciones | RC1 firmada y publicada; fuente, identidad binaria, controles y actualizaciones distinguidos en la sección 6.3.3 | Aceptación con cobertura parcial; las pruebas de otros debugs y las métricas pendientes no se transfieren al APK publicado |
+| 7. Mantener evidencia versionada de la evolución | Requisitos, decisiones, hitos, código, pruebas e informe permiten reconstruir cambios y resultados | La trazabilidad permite examinar el proceso; un plan o registro histórico no acredita por sí solo el comportamiento de un artefacto posterior |
 
-En términos del Hito 05, la primera beta `v0.4.8` quedó cerrada. En Hito 06 se incorporaron los gráficos finales de base de datos y se publicó `v0.5.0` con AUD-001 a AUD-007, mejoras táctiles y tooling de release sincronizado. El hito continúa activo para la revisión editorial y de maquetación, la matriz RNF, la instalación manual del asset firmado y la preparación de la defensa, sin reabrir por defecto el alcance funcional.
+La pregunta del problema planteado en la sección 1.2 encuentra así una respuesta de diseño e implementación: relacioné necesidades declaradas con un núcleo local de captura, organización y consulta, y construí mecanismos para conservar trabajo y extraer datos sin depender de una sincronización propia. La encuesta fundamentó prioridades, mientras que la plataforma y la persistencia se eligieron mediante análisis técnico. No atribuyo a las personas participantes una elección de SQLite, del formato APK o de cada comportamiento de la interfaz.
 
-## 7.2. Lecciones Aprendidas
+El capítulo 6 establece hasta dónde llega la comprobación. Los casos offline y de continuidad tienen dispositivos y debugs identificados; la RC1 posee controles de fuente e identidad, apertura y actualizaciones acotadas. Permanecen pendientes las métricas de RNF-002, RNF-004 y RNF-005; se conservan la evidencia parcial de teclado y los recorridos diferidos sobre el binario exacto. Por ello, el resultado es un **prototipo Android con alcance y evidencia delimitados**, no una versión estable certificada ni una validación integral de experiencia de uso, accesibilidad, seguridad o rendimiento.
 
-A lo largo del desarrollo de Lumapse, se produjeron situaciones no planificadas que
-obligaron a tomar decisiones técnicas y metodológicas que, en retrospectiva, resultaron
-ser las experiencias de aprendizaje más valiosas del proyecto. A continuación se
-documentan las más significativas.
+## 7.2. Lecciones aprendidas
 
-### 7.2.1. Gestión de riesgos técnicos: la estimación PERT como herramienta de decisión
+### 7.2.1. Relacionar necesidades con decisiones sin confundir sus evidencias
 
-La migración de la aplicación web (PWA) a una aplicación Android híbrida con Capacitor fue una decisión
-de alto riesgo técnico. No se trataba de agregar una funcionalidad nueva, sino de cambiar
-la base sobre la cual el sistema entero se ejecutaba. Para gestionar este riesgo se
-aplicó la técnica de estimación PERT (Program Evaluation and Review Technique), según el material metodológico utilizado por la cátedra (Gómez, 2014; Parada, 2026), asignando
-tres escenarios —optimista, más probable y pesimista— exclusivamente a los módulos
-críticos: la integración de Capacitor y la migración de IndexedDB a SQLite.
+El relevamiento me permitió revisar la dirección del producto: prioricé el uso móvil, las operaciones sin conexión y la organización por materias. El aprendizaje no consiste en afirmar que los datos determinan automáticamente una tecnología. La encuesta no comparó motores de base de datos ni canales de distribución; esa elección exigió considerar persistencia, reutilización de la interfaz y restricciones del proyecto, como expliqué en las secciones 2.5.3 y 4.1.
 
-**Lección:** La estimación formal no es solo un requisito académico; es una herramienta
-que obliga a pensar en los escenarios de fracaso antes de escribir la primera línea de
-código. Gracias a la estimación PERT, se identificó que la integración de Capacitor
-podía extenderse hasta 14 días en el peor caso, lo que permitió planificar el hito
-con holgura suficiente. Sin esta estimación, el desvío habría sido una sorpresa.
+La continuidad del editor muestra la misma distinción. La necesidad era proteger el trabajo en curso, pero no obligaba a guardar silenciosamente cada modificación como nota definitiva. La solución de borrador persistente y confirmación explícita conserva esa necesidad mediante un contrato diferente. Aprendí a separar problema, alternativa de solución y criterio de verificación: una preferencia puede orientar el diseño sin demostrar que la implementación elegida ya resulta comprensible o eficaz para todos sus usuarios.
 
-> **Referencia:** [`docs/gestion/estimacion-pert.md`](../gestion/estimacion-pert.md)
+### 7.2.2. Usar estimaciones como hipótesis y registros como evidencia
 
-### 7.2.2. Adaptación del entorno de pruebas: hardware limitado como oportunidad
+Para la integración de Capacitor y la migración de IndexedDB a SQLite documenté escenarios optimista, más probable y pesimista, tratados en la sección 2.1.3. Para Capacitor, los valores eran 3, 7 y 14 días; para SQLite, 2, 5 y 10. Esos valores hacían explícitos supuestos y riesgos. Los 14 días del cronograma consolidado, en cambio, sumaban 8 y 6 días tras redondear las estimaciones de cada módulo, no una duración real observada ni el escenario pesimista del conjunto. No puedo atribuir a la estimación un desvío evitado o una holgura efectiva que no medí.
 
-El dispositivo principal de desarrollo (Samsung Galaxy S7 Edge) tenía el módulo de
-pantalla dañado: no mostraba imagen alguna. En lugar de descartarlo, se configuró un
-flujo de trabajo alternativo utilizando **scrcpy**, una herramienta open source que
-proyecta la pantalla del dispositivo Android en la computadora de desarrollo a través
-de USB.
+El seguimiento de Story Points también exige interpretar qué se está contando. Sus tablas normalizan el alcance entregado e incorporan reclasificaciones de historias; una igualdad entre puntos planificados y entregados no demuestra ausencia de desvíos temporales ni precisión de la predicción original. Las tablas permiten describir el alcance formalizado, pero no reconstruir por sí solas la secuencia entre estimación y ejecución. Los puntos no se convierten en horas, productividad ni métricas de flujo Kanban.
 
-El comando utilizado (`scrcpy --turn-screen-off -K`) permitía:
+La principal lección de gestión es conservar desde el inicio los supuestos, cambios de alcance y registros temporales que permitan contrastarlos. No dispongo de horas completas y confiables para calcular un factor de ajuste real entre esfuerzo total y desarrollo puro; tampoco reconstruyo tiempos de ciclo a partir de commits. Las proporciones usadas en la planificación no sustituyen esa medición. Esta carencia limita la evaluación cuantitativa de la planificación y del costo real del proceso.
 
-- Ver la pantalla del celular en una ventana de macOS.
-- Enviar toques y texto desde el teclado de la computadora.
-- Apagar la pantalla física del dispositivo para ahorrar batería.
+### 7.2.3. Adaptar el entorno sin volver prescindibles los datos de prueba
 
-**Lección:** Los recursos limitados no son un impedimento si se buscan soluciones
-creativas. Un dispositivo con la pantalla rota se convirtió en una estación de
-debugging dedicada, aislada de los datos personales del teléfono principal, que podía ser formateada y
-reinstalada sin afectar ese entorno personal. Esta restricción forzó a documentar exhaustivamente el
-flujo de trabajo de compilación y despliegue
-([`docs/flujo-desarrollo-android.md`](../flujo-desarrollo-android.md)),
-lo cual terminó beneficiando la reproducibilidad del proyecto.
+El uso de un dispositivo dedicado con pantalla dañada y control remoto mediante scrcpy y ADB permitió sostener el trabajo Android con los recursos disponibles. Ese flujo quedó documentado y facilitó separar las pruebas del entorno de uso personal. No presento, sin embargo, una interacción desde la computadora como prueba de ergonomía con el dedo o como una sesión autónoma con estudiantes.
 
-### 7.2.3. Estimación retroactiva vs. prospectiva: el sesgo de confirmación
+La separación del entorno tampoco convierte sus datos en desechables. El incidente de despliegue del precorte, desarrollado en la sección 6.3.3, mostró que un intermediario podía desinstalar ante una firma incompatible aunque el flujo anunciara conservación de datos. La recuperación comprobada y la protección posterior del instalador, formalizada en ADR-013, fueron parte del tratamiento del incidente.
 
-Durante los Hitos 02 y 03, la estimación de Story Points se realizó de forma
-**retroactiva**: primero se desarrollaron las funcionalidades y luego se les asignó
-un valor en puntos. Este enfoque, si bien es pragmático para proyectos en marcha,
-introduce un sesgo de confirmación: se tiende a asignar valores que confirman la
-velocidad deseada, en lugar de reflejar la complejidad real.
+Aprendí que reproducibilidad no significa sólo poder compilar: también implica identificar el artefacto, conocer los efectos del procedimiento y disponer de una referencia recuperable. Un dispositivo de pruebas no elimina la necesidad de proteger borradores y papelera; el ZIP de producto no contiene ese estado completo. La adaptación técnica resulta útil cuando conserva esas fronteras, no cuando consigue que una operación termine a cualquier costo.
 
-A partir del Hito 04, se adoptó la práctica de estimar **antes** del inicio del
-desarrollo, lo que permite contrastar la estimación con la realidad y generar datos
-de velocidad realmente útiles para la planificación futura.
+### 7.2.4. Separar implementación, verificación y aceptación
 
-**Lección:** La estimación que no puede equivocarse no sirve. El valor de estimar
-no está en acertar, sino en poder medir cuánto nos desviamos y por qué. La honestidad
-en la documentación de los desvíos es más valiosa que un reporte "perfecto" que no
-refleje la realidad.
+El diagnóstico del borrador mostró que ver el texto en la interfaz y en `localStorage` no bastaba para acreditar su recuperación tras terminar el proceso. La corrección requirió cambiar la persistencia y el límite de confirmación, y volver a comprobar los casos afectados. Como se expuso en la sección 6.3.2, incluso el resultado favorable con SQLite conserva el límite anterior al commit; no lo transformo en una garantía absoluta de conservación.
 
-> **Referencia:** [`docs/gestion/seguimiento-velocidad.md`](../gestion/seguimiento-velocidad.md)
+Las comprobaciones de accesibilidad enseñaron algo equivalente: una puntuación favorable puede coexistir con hallazgos o comprobaciones manuales pendientes. Aumentar el número de tests, obtener una compilación correcta o superar el umbral de un instrumento no autoriza a extender el resultado más allá de su alcance. Por eso mantuve separados los controles automatizados, los recorridos Android y la aceptación de cada entrega.
 
-### 7.2.4. Documentación viva vs. documentación muerta
+La lección es definir qué observación acredita cada afirmación y qué resultado la haría fallar. Identificar fuente, binario, entorno y método evita confundir la evolución de `main` con una APK publicada, o una actualización de datos acotados con todas las migraciones posibles. La aceptación parcial de la RC1 es una decisión de alcance que conserva límites, no una prueba adicional que los elimina.
 
-Una de las decisiones más importantes del proyecto fue mantener toda la documentación
-en formato Markdown dentro del repositorio Git, en lugar de escribirla en documentos
-Word o PDF separados. Esto tuvo consecuencias profundas:
+### 7.2.5. Mantener trazabilidad sin confundir documentación con validación
 
-- **Versionamiento:** Cada cambio en la documentación tiene un commit asociado con
-  fecha, autor y motivo. Es posible ver cómo evolucionó cualquier decisión en el tiempo.
-- **Trazabilidad:** Los documentos se referencian entre sí mediante enlaces relativos
-  (`[ver ADR-005](../adr/ADR-005-pivote-app-nativa.md)`), lo que permite navegar la
-  documentación como un sistema interconectado.
-- **Mantenimiento:** Al vivir junto al código, la documentación puede actualizarse en el
-  mismo flujo de trabajo. Esto reduce el riesgo de desincronización entre "lo que dice el
-  documento" y "lo que hace el código", aunque no elimina la necesidad de revisiones
-  periódicas, como demuestra la corrección de métricas y estados realizada en este corte.
+Mantener las fuentes en Markdown junto al código permitió seguir decisiones y correcciones mediante el historial de Git. Los ADR explican cambios como el pivote de plataforma, el borrador SQLite y el despliegue conservador; los requisitos y reportes permiten relacionarlos con necesidades y resultados. Ese corpus facilita examinar el trabajo, en lugar de depender únicamente de la aplicación funcionando durante una demostración.
 
-**Lección:** La documentación más completa del mundo es inútil si nadie la mantiene.
-Al integrar la documentación en el flujo de Git (commit → push → review), se reduce
-la fricción y se conserva la historia de los cambios. El costo de documentar también
-disminuye cuando el trabajo se realiza incrementalmente, aunque antes de cada corte sigue
-siendo necesaria una revisión transversal de métricas, alcance y evidencias.
+La proximidad entre código y documentación no impide que un registro quede desactualizado. Un requisito puede estar implementado en el código vigente mientras que su evidencia de dispositivo corresponde a una versión anterior, como ocurre con las verificaciones diferenciadas en el capítulo 6. Conservar fecha, método y artefacto permite reconocer esa diferencia sin invalidar el resultado histórico ni extenderlo a otra entrega.
 
-## 7.3. Trabajo Futuro y Posibles Mejoras
+La recomendación que extraigo para otros proyectos individuales es registrar los motivos, las alternativas y las consecuencias de cada decisión, junto con los cambios y sus verificaciones. La trazabilidad aporta valor cuando permite reconstruir por qué se decidió algo y con qué evidencia; acumular documentos no sustituye la observación del comportamiento del software.
 
-El trabajo futuro se organiza por prioridad para evitar que una lista abierta de ideas impida cerrar incrementos terminados. El Hito 05 ya está cerrado: algunos puntos corresponden al Hito 06 documental y otros al backlog post-beta; ninguno debe convertirse automáticamente en una nueva funcionalidad.
+## 7.3. Trabajo futuro y posibles mejoras
 
-### 7.3.1. Cierre documental y de calidad
+Las líneas de continuidad de Lumapse surgen de los límites de validación, la deuda técnica registrada y las capacidades excluidas del corte presentado. El desarrollo quedó congelado el 22 de octubre de 2026 con aceptación parcial de la RC1. Las validaciones y mejoras siguientes corresponden a una etapa posterior a la presentación; no forman parte de los resultados obtenidos ni modifican la cobertura del candidato publicado.
 
-Las tareas inmediatas corresponden al cierre del trabajo ya realizado:
+### 7.3.1. Validación del núcleo y de los atributos de calidad
 
-- Tras la reconciliación transversal y la incorporación de las figuras DB completadas el 2026-07-15, consolidar la evidencia final, verificar los metadatos pendientes de los materiales de cátedra, ejecutar la revisión de congelamiento y regenerar el informe ensamblado.
-- Confirmar en la maquetación PDF y en las diapositivas que las imágenes conceptual y lógica ya verificadas sean legibles, especialmente el formato panorámico del modelo conceptual; el DDL y la representación del campo `title` ya coinciden con la implementación vigente.
-- Alinear los requisitos no funcionales con evidencia reproducible: el reporte JS/TS de `RNF-024` y los imports dinámicos redundantes quedaron resueltos; resta repetir la línea base de coverage después del tag `v0.5.0`, verificar la portabilidad del auditor local y acercar el workflow remoto al alcance de `npm run verify`.
-- Mantener evidencia de revisión de dependencias y seguridad, y completar pruebas de accesibilidad, rendimiento con volumen realista y uso con estudiantes. Estas pruebas deben distinguir resultados automáticos, sintéticos y manuales.
-- Preparar materiales de defensa y, cuando el contenido quede congelado, convertir Markdown a LaTeX/PDF como capa de presentación, sin crear una segunda fuente de verdad.
-- Calcular el factor de ajuste real entre estimación y esfuerzo registrado, y convertir sus desvíos en recomendaciones concretas para futuros proyectos individuales; esta medición permanece pendiente hasta consolidar la evidencia temporal del cierre.
+Los límites de evidencia del capítulo 6 orientan las siguientes líneas de evaluación del producto en un binario identificado:
 
-### 7.3.2. Mejoras posteriores a la beta
+- Completar los recorridos diferidos del núcleo offline, organización/búsqueda, fechas, ZIP y tráfico/trackers sobre la RC1 exacta, sin heredar resultados de debugs anteriores.
+- Establecer un método proporcionado y verificable para RNF-002 y RNF-004, manteniendo sus umbrales de **≤ 200 ms por operación CRUD** y **≥ 55 FPS durante el desplazamiento con al menos 500 notas**. La ausencia actual de métricas no se interpreta como un defecto de rendimiento demostrado ni como cumplimiento.
+- Evaluar el uso con participantes nuevos, incluido RNF-005, cuyo límite de primera nota es **10 segundos o menos** desde la primera apertura, sin instrucciones previas. Las opiniones voluntarias no reemplazan esa medición ni un estudio de uso sostenido.
+- Ampliar la revisión de accesibilidad a dispositivos, estados y tecnologías de asistencia no cubiertos. La evidencia parcial de teclado, sin teclado físico ni recorridos completos de mutación, delimita uno de esos frentes.
 
-La fricción de **Mover a** fue corregida y validada antes de `v0.5.0`. La observación abierta de mayor prioridad es medir el comportamiento con feeds más extensos. También pueden evaluarse, con evidencia de uso:
+Estas evaluaciones permitirían contrastar respuesta interactiva, facilidad de uso y barreras de interacción que la implementación por sí sola no demuestra. Sus resultados tendrían que conservar la versión, el dispositivo, el método y el alcance observados. Las opiniones sobre una beta anterior no prueban el comportamiento de la RC1 ni acreditan adopción real.
 
-- Compartir una nota individual mediante la hoja nativa; el backup vigente ya exporta contenido legible organizado por materia o sección.
-- Importar archivos Markdown individuales sin confundir ese flujo con la restauración completa de un respaldo.
-- Incorporar búsqueda FTS5, estadísticas académicas mínimas, contador de palabras o una ayuda breve, siempre que aporten valor sin volver pesada la experiencia de captura.
-- Extender el backup hacia Drive API directa o restauración/merge avanzado; la beta ya ofrece salida a destinos externos mediante share sheet/gestor de archivos y un recordatorio local acotado.
-- Continuar la migración gradual a TypeScript archivo por archivo, priorizando contratos y módulos puros; el store y los componentes DOM grandes deben abordarse solo con un plan incremental y pruebas focalizadas.
+### 7.3.2. Mantenimiento y protección de los datos
 
-### 7.3.3. Evolución de largo plazo
+La deuda técnica registrada incluye componentes grandes, refrescos posteriores a ciertas mutaciones de notas, materias y papelera aún no caracterizados, y cobertura parcial de herramientas de comprobación. Su tratamiento debería responder a cambios funcionales relacionados o a riesgos verificables, mediante intervenciones acotadas y pruebas focalizadas. No se desprende de esa deuda la necesidad de migrar toda la interfaz a un framework ni de convertir masivamente los módulos a TypeScript.
 
-La sincronización multidispositivo, un backend, la colaboración o la publicación en tiendas requieren otra etapa de investigación. Antes de implementarlas se debería validar demanda real, política de privacidad, resolución de conflictos, costos de infraestructura y experiencia offline. El principio rector es preservar la propuesta que originó Lumapse: una herramienta local, rápida y comprensible para estudiantes, no una plataforma generalista de productividad.
+La protección del despliegue y las comparaciones de datos descritas en la sección 6.3.3 constituyen una referencia para futuras actualizaciones. Los cambios de persistencia, importación o instalación deberían conservar esa atención a notas, borradores, papelera y preferencias, sin suponer que el ZIP permite recuperar todo el estado. La actualización comprobada con un conjunto pequeño tampoco acredita cualquier migración, volumen de datos o dispositivo.
+
+El mantenimiento de dependencias requiere considerar los cambios del grafo y los avisos de seguridad de cada corte. Una auditoría sin vulnerabilidades conocidas en una fecha no demuestra que el grafo conserve ese resultado indefinidamente, ni sustituye la comprobación de los flujos afectados por un parche.
+
+Sostener el proyecto requiere prever tiempo de mantenimiento y revisar los recursos compartidos y bonificados descritos en la sección 2.4.1. Al finalizar los beneficios sería necesario evaluar su renovación o alternativas, sin presumir gratuidad permanente. La disponibilidad de esas herramientas y del dominio afecta al trabajo de mantenimiento y difusión, no al funcionamiento local del APK ya instalado.
+
+### 7.3.3. Opciones de evolución del producto
+
+Las capacidades postergadas pueden revisarse si aparecen necesidades y evidencia que las justifiquen. Entre ellas están compartir e importar notas individuales, adjuntos, búsqueda especializada y mecanismos más avanzados de restauración. No son equivalentes al ZIP manual ya disponible: extender la portabilidad exige definir qué datos y conflictos se resuelven, no sólo agregar otro botón.
+
+La integración directa con servicios externos, la sincronización multidispositivo, la colaboración, otros canales de distribución o el soporte de otras plataformas implican decisiones nuevas sobre privacidad, identidad, conflictos, costos y mantenimiento. Estas alternativas no forman parte del corte presentado y su demanda no quedó demostrada mediante la encuesta inicial. Antes de incorporarlas sería necesario contrastar su valor y sus consecuencias para el uso offline.
+
+El criterio de evolución no es equiparar Lumapse con una plataforma generalista, sino preservar una captura y organización comprensibles para el contexto de estudio. Añadir funciones o migrar tecnologías sólo tendría sentido si resuelve un problema identificado y puede sostenerse sin debilitar la conservación y portabilidad del trabajo.
 
 ## 7.4. Cierre
 
-Lumapse demuestra que un proyecto académico puede producir a la vez un incremento de software utilizable y evidencia profesional del proceso que lo originó. Su aporte no reside solamente en el APK: incluye el relevamiento que modificó la dirección del producto, las decisiones registradas, la arquitectura local-first, la disciplina de pruebas y la capacidad de reconocer límites sin ocultarlos.
+Lumapse concreta una respuesta técnica acotada al problema de capturar, organizar y recuperar apuntes sin depender de una conexión permanente. Su aporte comprende el prototipo Android, el análisis que orientó su alcance y la evidencia que permite examinar decisiones y resultados. No demuestra por sí solo una mejora del aprendizaje, superioridad frente a otras herramientas ni adopción real.
 
-La beta `v0.5.0` constituye el punto de cierre técnico vigente: está empaquetada, firmada, publicada y respaldada por gate, CI y validación Android incremental. La instalación específica del asset firmado y varias mediciones RNF siguen pendientes, por lo que no se la presenta como versión estable ni como validación universal. El producto todavía admite mejoras y la entrega académica conserva tareas editoriales, pero esas tareas pueden separarse del núcleo funcional. Concluir de forma responsable no significa vaciar el backlog, sino congelar un alcance coherente, demostrar qué funciona, documentar qué falta y evitar que nuevas ideas diluyan una entrega verificable.
+La RC1 0.6.0/600 constituye el corte de presentación, con identidad registrada y validación parcial aceptada. Las betas previas conservan su lugar en la evolución, sin sustituir la evidencia del candidato. Cerrar responsablemente este desarrollo no significa vaciar el backlog o anunciar una versión estable: significa identificar lo construido, sostener sus afirmaciones con resultados y reconocer lo que falta comprobar.
 
-En ese sentido, el resultado principal del proyecto es doble. Para el estudiante usuario, Lumapse ofrece una herramienta simple y disponible sin conexión para conservar y organizar conocimiento. Para la formación profesional, deja una experiencia completa de análisis, adaptación, diseño, implementación, validación y cierre incremental que puede ser auditada y continuada sobre evidencia versionada.
+En mi formación, el aprendizaje principal fue relacionar análisis, decisiones técnicas, implementación y verificación sin confundir sus alcances. El trabajo deja fuentes y registros que permiten estudiar el proceso y orientar su continuidad, con resultados y limitaciones identificados. Ese vínculo entre el problema abordado, las decisiones fundamentadas y el software construido constituye el principal aporte formativo del proyecto.
 
 ---
 
 # Referencias
 
-Este capítulo consolida las fuentes citadas o utilizadas como fundamento metodológico y técnico. Se aplica un criterio compatible con APA 7; los enlaces se mantienen para facilitar la verificación durante el checkpoint documental.
+Las referencias siguientes identifican las fuentes metodológicas y técnicas citadas en el informe, los materiales de apoyo utilizados en la planificación y las fuentes primarias de Lumapse. Distingo las obras publicadas de los recursos didácticos de la cátedra y de la evidencia producida durante el proyecto.
 
-## 8.1. Bibliografía metodológica
+## 8.1. Referencias metodológicas
 
-- Anderson, D. J. (2010). *Kanban: Successful evolutionary change for your technology business*. Blue Hole Press.
-- Gómez, J. (2014). *Guía práctica de estimación y medición de proyectos software* [Material de consulta provisto por la cátedra].
-- Gothelf, J., & Seiden, J. (2013). *Lean UX: Applying Lean Principles to Improve User Experience*. O’Reilly Media. https://www.oreilly.com/library/view/lean-ux/9781449366834/
-- Kanban Guides. (2025). *The Kanban Guide*. https://kanbanguides.org/the-kanban-guide/
-- Parada, M. (2026). *Guía de estudio de Prácticas Profesionalizantes III* [Material de cátedra]. IES 6023 “Dr. Alfredo Loutaif”.
-- Schwaber, K., & Sutherland, J. (2020). *The Scrum Guide*. https://scrumguides.org/docs/scrumguide/v2020/2020-Scrum-Guide-US.pdf
-
-> **Control bibliográfico pendiente:** Antes del congelamiento final deben contrastarse autoría, título, edición y entidad editora de Gómez (2014) y del material de Parada (2026) contra los originales conservados por la cátedra. El repositorio no contiene metadatos suficientes para completar esos campos sin inventarlos.
+- Coleman, J., & Vacanti, D. (2025, 1 de mayo). *The Kanban Guide* (edición 2025.5). Kanban Guides.
+- Gothelf, J., & Seiden, J. (2013). *Lean UX: Applying lean principles to improve user experience*. O’Reilly Media.
+- Schwaber, K., & Sutherland, J. (2020, noviembre). *The Scrum Guide: The definitive guide to Scrum: The rules of the game*.
 
 ## 8.2. Normas y documentación técnica oficial
 
-- IBM. (s. f.). *Project planning: Phases and iterations in Rational Unified Process*. Recuperado el 11 de agosto de 2026, de https://www.ibm.com/docs/en/rational-clearquest/10.0.9?topic=settings-project-planning
-- Ionic. (s. f.). *Capacitor documentation*. Recuperado el 15 de julio de 2026, de https://capacitorjs.com/docs
-- SQLite Project. (s. f.). *SQLite foreign key support*. Recuperado el 15 de julio de 2026, de https://www.sqlite.org/foreignkeys.html
-- World Wide Web Consortium. (2024, 12 de diciembre). *Web Content Accessibility Guidelines (WCAG) 2.2* (W3C Recommendation). https://www.w3.org/TR/WCAG22/
+- Free Software Foundation. (2007, 29 de junio). *GNU General Public License* (versión 3) [Licencia de software].
+- IBM. (s. f.). *Project planning* [Documentación de IBM Rational ClearQuest 10.0.9]. Recuperado el 3 de noviembre de 2026.
+- Ionic. (s. f.). *Capacitor: Cross-platform native runtime for web apps* [Documentación de Capacitor 8]. Recuperado el 3 de noviembre de 2026.
+- SQLite Project. (s. f.). *SQLite foreign key support* [Documentación técnica]. Recuperado el 3 de noviembre de 2026.
+- World Wide Web Consortium. (2024, 12 de diciembre). *Web Content Accessibility Guidelines (WCAG) 2.2* [Recomendación del W3C].
 
-## 8.3. Fuentes primarias del proyecto
+## 8.3. Bibliografía de apoyo y material de cátedra
 
-- Sandoval, J. D. F. (2026). *Relevamiento sobre hábitos y necesidades de toma de notas en estudiantes del IES 6023* [Conjunto de datos; 121 respuestas recolectadas, 120 válidas]. Lumapse. [`analisis-relevamiento/datos/respuestas_relevamiento_2026_05.csv`](../../analisis-relevamiento/datos/respuestas_relevamiento_2026_05.csv)
-- Sandoval, J. D. F. (2026). *Lumapse v0.4.8* [Software y APK Android, primera beta controlada]. GitHub. https://github.com/jdfesa/lumapse/releases/tag/v0.4.8
-- Sandoval, J. D. F. (2026). *Lumapse v0.5.0* [Software y APK Android, segunda beta]. GitHub. https://github.com/jdfesa/lumapse/releases/tag/v0.5.0
-- Sandoval, J. D. F. (2026). *Registros de decisiones arquitectónicas de Lumapse* [ADR-001 a ADR-008]. [`docs/adr/`](../adr/)
+Para la estimación y el seguimiento del proyecto utilicé la obra de Gómez (2014) y la guía de Parada (2026). Esta última es un material didáctico de Prácticas Profesionalizantes III, elaborado por el docente para relacionar la bibliografía con las actividades del proyecto; no constituye un libro ni una edición de la obra de Gómez.
 
-Los documentos internos, commits, scripts y checklists se citan mediante enlaces relativos porque funcionan como evidencia primaria versionada del proyecto, no como bibliografía externa.
+- Gómez, J. (2014, abril). *Guía práctica de estimación y medición de proyectos software: ¿Por qué? ¿Para qué? y ¿Cómo?* [Libro electrónico de autor].
+- Parada, M. (2026). *Guía de estudio: Etapa de relevamiento y análisis — Estimación de proyectos* [Material de cátedra de Prácticas Profesionalizantes III]. Instituto de Enseñanza Superior N.º 6023 «Dr. Alfredo Loutaif».
+
+## 8.4. Fuentes primarias del proyecto
+
+- Sandoval, J. D. F. (2026a). *Lumapse* [Repositorio de software y documentación]. GitHub.
+- Sandoval, J. D. F. (2026b). *Relevamiento sobre hábitos y necesidades de toma de notas en estudiantes del IES 6023* [Conjunto de datos; 121 respuestas recolectadas, 120 válidas]. Lumapse.
+
+El corpus de Lumapse reúne requisitos, historias de usuario, decisiones de producto, registros de decisiones arquitectónicas —ADR-001 a ADR-013—, modelos, código, pruebas y reportes de validación. Esas fuentes sustentan las referencias a identificadores y resultados de los capítulos anteriores; no se confunden con bibliografía externa.
+
+Las versiones publicadas permiten distinguir la primera beta `v0.4.8`, la segunda beta `v0.5.0` y el corte de presentación `v0.6.0/600 — Release Candidate 1`, publicado el 22 de octubre de 2026. Cada resultado conserva el artefacto y el alcance que identifica su reporte. La inclusión de la RC1 como fuente no traslada a ese APK la evidencia de otras compilaciones ni modifica su aceptación con validación parcial.
