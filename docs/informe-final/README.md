@@ -58,9 +58,10 @@ y distinguir la obra publicada del material de cátedra. La correspondencia de
 citas incluye la GPLv3 de 5.7 y la atribución de la guía Kanban a Coleman y Vacanti,
 con corrección mínima de sus dos citas en el capítulo 2.
 
-**Complementos en revisión:** las secciones 2.1.4 y 2.4.1 explicitan la asistencia
-de IA y los recursos y desembolsos personales, con continuidad en 7.3.2. Estos
-agregados están pendientes de revisión y aprobación; no amplían la evidencia de
+**Complementos de proceso y recursos:** las secciones 2.1.4 y 2.4.1 explicitan la
+asistencia de IA y los recursos y desembolsos personales, con continuidad en
+7.3.2. Están revisados y aprobados; sus cambios se recogen en
+[PR #57](https://github.com/jdfesa/lumapse/pull/57). No amplían la evidencia de
 pruebas ni actualizan los metadatos o el ensamblado.
 
 **Frontera del checkpoint generado:** `report-metadata.json` y
