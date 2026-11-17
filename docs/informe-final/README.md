@@ -58,6 +58,11 @@ y distinguir la obra publicada del material de cátedra. La correspondencia de
 citas incluye la GPLv3 de 5.7 y la atribución de la guía Kanban a Coleman y Vacanti,
 con corrección mínima de sus dos citas en el capítulo 2.
 
+**Complementos en revisión:** las secciones 2.1.4 y 2.4.1 explicitan la asistencia
+de IA y los recursos y desembolsos personales, con continuidad en 7.3.2. Estos
+agregados están pendientes de revisión y aprobación; no amplían la evidencia de
+pruebas ni actualizan los metadatos o el ensamblado.
+
 **Frontera del checkpoint generado:** `report-metadata.json` y
 `INFORME-FINAL-COMPLETO.md` conservan el corte `v0.5.0` del 2026-09-05, incluido el
 gate histórico de 67 archivos/1065 tests. No describen toda la evolución hasta la
