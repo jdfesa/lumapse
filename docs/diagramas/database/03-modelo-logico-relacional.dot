@@ -1,0 +1,137 @@
+// Figura documental contrastada con connection.js RC1 (bcefe6a).
+// Regeneración: dot -Kneato -n2 -Tsvg <este archivo> -o 03-modelo-logico-relacional.svg
+// Posiciones en puntos. Los extremos representan cardinalidades SQL, no reglas por rol.
+// FK -> PK: crowodot en la FK (0..N), teeodot en la PK (0..1).
+// pos conserva los puntos de conexión de los puertos; -n2 mantiene nodos y recorridos.
+// NN reproduce NOT NULL explícito; PK no lo implica en estas tablas SQLite.
+digraph Logical {
+ graph [bgcolor="white", margin=0, pad=0.08, splines=polyline, outputorder=edgesfirst, notranslate=true];
+ node [shape=plain, fontname="DejaVu Sans", fontsize=12];
+ edge [dir=both, arrowtail=crowodot, arrowhead=teeodot, arrowsize=0.8,
+       color="#222222", penwidth=1.1, fontname="DejaVu Sans", fontsize=12];
+ subjects [pos="175,650", label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="2">
+
+<TR><TD COLSPAN="3" BGCOLOR="#e8e8e8"><B>subjects</B></TD></TR>
+
+<TR><TD ALIGN="LEFT" WIDTH="110"><B>Columna</B></TD><TD WIDTH="56"><B>Tipo</B></TD><TD WIDTH="38"><B>SQL</B></TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="id" WIDTH="110">id</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="id_r" WIDTH="38">PK</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="name" WIDTH="110">name</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="name_r" WIDTH="38">NN</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="parentSubjectId" WIDTH="110">parentSubjectId</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="parentSubjectId_r" WIDTH="38">FK</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="archived" WIDTH="110">archived</TD><TD ALIGN="LEFT" WIDTH="56">INTEGER</TD><TD ALIGN="LEFT" PORT="archived_r" WIDTH="38">D=0</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="color" WIDTH="110">color</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="color_r" WIDTH="38">—</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="createdAt" WIDTH="110">createdAt</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="createdAt_r" WIDTH="38">NN</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="deletedAt" WIDTH="110">deletedAt</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="deletedAt_r" WIDTH="38">—</TD></TR></TABLE>>];
+ notes [pos="455,650", label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="2">
+
+<TR><TD COLSPAN="3" BGCOLOR="#e8e8e8"><B>notes</B></TD></TR>
+
+<TR><TD ALIGN="LEFT" WIDTH="95"><B>Columna</B></TD><TD WIDTH="56"><B>Tipo</B></TD><TD WIDTH="48"><B>SQL</B></TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="id" WIDTH="95">id</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="id_r" WIDTH="48">PK</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="title" WIDTH="95">title</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="title_r" WIDTH="48">—</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="content" WIDTH="95">content</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="content_r" WIDTH="48">—</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="pinned" WIDTH="95">pinned</TD><TD ALIGN="LEFT" WIDTH="56">INTEGER</TD><TD ALIGN="LEFT" PORT="pinned_r" WIDTH="48">D=0</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="archived" WIDTH="95">archived</TD><TD ALIGN="LEFT" WIDTH="56">INTEGER</TD><TD ALIGN="LEFT" PORT="archived_r" WIDTH="48">D=0</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="subjectId" WIDTH="95">subjectId</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="subjectId_r" WIDTH="48">FK</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="createdAt" WIDTH="95">createdAt</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="createdAt_r" WIDTH="48">NN</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="updatedAt" WIDTH="95">updatedAt</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="updatedAt_r" WIDTH="48">NN</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="statusEmoji" WIDTH="95">statusEmoji</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="statusEmoji_r" WIDTH="48">—</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="deletedAt" WIDTH="95">deletedAt</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="deletedAt_r" WIDTH="48">—</TD></TR></TABLE>>];
+ academic_events [pos="455,445", label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="2">
+
+<TR><TD COLSPAN="3" BGCOLOR="#e8e8e8"><B>academic_events</B></TD></TR>
+
+<TR><TD ALIGN="LEFT" WIDTH="100"><B>Columna</B></TD><TD WIDTH="56"><B>Tipo</B></TD><TD WIDTH="43"><B>SQL</B></TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="id" WIDTH="100">id</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="id_r" WIDTH="43">PK</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="type" WIDTH="100">type</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="type_r" WIDTH="43">NN</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="title" WIDTH="100">title</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="title_r" WIDTH="43">—</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="date" WIDTH="100">date</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="date_r" WIDTH="43">NN</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="subjectId" WIDTH="100">subjectId</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="subjectId_r" WIDTH="43">FK</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="createdAt" WIDTH="100">createdAt</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="createdAt_r" WIDTH="43">NN</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="updatedAt" WIDTH="100">updatedAt</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="updatedAt_r" WIDTH="43">NN</TD></TR></TABLE>>];
+ metadata [pos="175,445", label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="2">
+
+<TR><TD COLSPAN="3" BGCOLOR="#e8e8e8"><B>metadata</B></TD></TR>
+
+<TR><TD ALIGN="LEFT" WIDTH="110"><B>Columna</B></TD><TD WIDTH="56"><B>Tipo</B></TD><TD WIDTH="38"><B>SQL</B></TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="key" WIDTH="110">key</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="key_r" WIDTH="38">PK</TD></TR>
+
+<TR><TD ALIGN="LEFT" PORT="value" WIDTH="110">value</TD><TD ALIGN="LEFT" WIDTH="56">TEXT</TD><TD ALIGN="LEFT" PORT="value_r" WIDTH="38">—</TD></TR></TABLE>>];
+ constraints [pos="300,185", label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1">
+
+<TR><TD ALIGN="LEFT"><B>REFERENCIAS Y CARDINALIDADES · FK → PK</B></TD></TR>
+
+<TR><TD ALIGN="LEFT">subjects.parentSubjectId → subjects.id · ON DELETE CASCADE¹</TD></TR>
+
+
+<TR><TD ALIGN="LEFT">notes.subjectId → subjects.id · ON DELETE SET NULL</TD></TR>
+
+
+<TR><TD ALIGN="LEFT">academic_events.subjectId → subjects.id · ON DELETE SET NULL</TD></TR>
+
+
+<TR><TD ALIGN="LEFT">Las tres FK admiten NULL. ON UPDATE no declarado: NO ACTION.</TD></TR>
+
+<TR><TD ALIGN="LEFT"><B>RESTRICCIONES E ÍNDICES FÍSICOS</B></TD></TR>
+
+<TR><TD ALIGN="LEFT">academic_events.type: CHECK (type IN ('parcial', 'final', 'tp', 'exposicion'))</TD></TR>
+
+<TR><TD ALIGN="LEFT">Índices explícitos no únicos en academic_events:</TD></TR>
+
+<TR><TD ALIGN="LEFT">idx_academic_events_date (date) · idx_academic_events_subject (subjectId)</TD></TR>
+
+<TR><TD ALIGN="LEFT"><B>LECTURA Y LÍMITES</B></TD></TR>
+
+<TR><TD ALIGN="LEFT">Pata de gallo: círculo + barra = 0..1; círculo + tres ramas = 0..N.</TD></TR>
+<TR><TD ALIGN="LEFT">El símbolo junto a una tabla cuenta sus filas por cada fila del otro extremo.</TD></TR>
+<TR><TD ALIGN="LEFT">«Por A: (mín,máx) B»: cantidad de B vinculados a cada A; N = muchos.</TD></TR>
+
+<TR><TD ALIGN="LEFT">PK: PRIMARY KEY · FK: FOREIGN KEY · NN: NOT NULL explícito · D=0: DEFAULT 0.</TD></TR>
+
+<TR><TD ALIGN="LEFT">Sin NN se admite NULL, incluso en estas PK; sin DEFAULT, la omisión es NULL.</TD></TR>
+
+<TR><TD ALIGN="LEFT">¹ Por sección: (1,1) materia padre; por materia: (0,N) secciones [dominio].</TD></TR>
+
+<TR><TD ALIGN="LEFT">Raíz: parentSubjectId=NULL. Dos niveles y nombres por nivel: servicio.</TD></TR>
+
+<TR><TD ALIGN="LEFT">La FK no impone roles ni profundidad, y no evita ciclos.</TD></TR>
+
+<TR><TD ALIGN="LEFT">Sin CHECK de UUID, formato de fecha o indicadores 0/1. metadata: sin FK.</TD></TR>
+
+<TR><TD ALIGN="LEFT">ON DELETE corresponde al borrado físico, no a deletedAt (papelera).</TD></TR></TABLE>>];
+ header [pos="300,785", label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="0">
+<TR><TD ALIGN="LEFT"><FONT POINT-SIZE="15"><B>MODELO LÓGICO RELACIONAL · RC1</B></FONT></TD></TR>
+<TR><TD ALIGN="LEFT">4 tablas · 26 columnas · Pata de gallo · Esquema SQLite</TD></TR></TABLE>>];
+ // Puertos de fila y recorridos ortogonales explícitos; no alterar sin verificar su geometría.
+ // Los dos accesos a id terminan en esquinas distintas para no superponer símbolos.
+ notes:subjectId:w -> subjects:id_r:ne [
+   pos="s,355.25,622.62 e,277.25,695.62 339.25,622.62 335,622.62 325,622.62 325,622.62 325,622.62 325,695.62 325,695.62 325,695.62 300,695.62 289.25,695.62"];
+ academic_events:subjectId:w -> subjects:id_r:se [
+   pos="s,355.5,408.5 e,277.25,677.38 339.5,408.5 330,408.5 310,408.5 310,408.5 310,408.5 310,677.38 310,677.38 310,677.38 300,677.38 289.25,677.38"];
+ subjects:parentSubjectId:w -> subjects:id:w [headlabel="padre", taillabel="hijo", labeldistance=3, labelangle=35,
+   pos="s,72.75,650 e,72.75,686.5 56.75,650 45,650 28,650 28,650 28,650 28,686.5 28,686.5 28,686.5 45,686.5 60.75,686.5"];
+}
