@@ -66,7 +66,7 @@ El SVG es monocromo, conserva texto vectorial y no necesita imágenes rasterizad
 
 ![Modelo lógico relacional y restricciones físicas de la RC1](./03-modelo-logico-relacional.svg)
 
-**Figura DB-2.** Cuatro tablas, 26 columnas, cuatro claves primarias y tres referencias opcionales. La matriz de referencias indica columna de origen, clave de destino y acción de borrado físico, sin un lazo ambiguo sobre `subjects`. La figura diferencia restricciones SQL y reglas del servicio: la profundidad de la jerarquía y la unicidad de nombres por nivel no son garantías de la FK.
+**Figura DB-2.** Cuatro tablas, 26 columnas, cuatro claves primarias y tres referencias opcionales. La matriz de referencias indica columna de origen, clave de destino, cardinalidades mínimas/máximas en ambos sentidos y acción de borrado físico, sin un lazo ambiguo sobre `subjects`. Cada FK admite `(0,1)` destinos por fila de origen y cada destino admite `(0,N)` referencias de origen. En la jerarquía se identifica aparte el dominio: una sección tiene `(1,1)` materia padre y una materia admite `(0,N)` secciones; la fila raíz no tiene padre. «Por A: (mín,máx) B» cuenta los B vinculados a cada A, sin depender de una convención de extremos gráficos. La figura diferencia restricciones SQL y reglas del servicio: la profundidad de la jerarquía y la unicidad de nombres por nivel no son garantías de la FK.
 
 La fuente DOT transcribe los tipos declarados, ocho `NOT NULL` explícitos, tres valores `DEFAULT 0`, el `CHECK` de tipos de evento y los dos índices explícitos no únicos. Las PK generan además índices implícitos de unicidad en estas tablas ordinarias. No se representa `TEXT PRIMARY KEY` como `NOT NULL`: SQLite admite nulos en estas PK al no ser tablas `STRICT` ni `WITHOUT ROWID` y no declarar `NOT NULL`. No se infiere una validación SQL de UUID, fechas o indicadores booleanos. Las acciones FK requieren su control habilitado en la conexión; esta revisión es documental, no una comprobación del motor nativo.
 
@@ -85,7 +85,7 @@ dot -Tsvg docs/diagramas/database/03-modelo-logico-relacional.dot \
 
 Los dos verificadores no certifican todas las restricciones: complementar con el contraste de cada fila, PK, FK, `NOT NULL`, `DEFAULT`, `CHECK`, índice y acción referencial contra el esquema y sus migraciones. No modificar el esquema congelado para adaptarlo a la figura. Si cambia la documentación, editar primero DOT y regenerar SVG; no editar el SVG manualmente.
 
-El SVG es monocromo y conserva texto vectorial nativo. El control visual a 160 mm de ancho ocupa aproximadamente 220 mm de alto, con letra mínima de 10,9 puntos; es una referencia de legibilidad A4, no la maquetación definitiva. La revisión de márgenes, pie y paginación del PDF queda para el cierre del informe. El PNG anterior se retira para no conservar dos ilustraciones vigentes del mismo modelo; sigue recuperable en Git.
+El SVG es monocromo y conserva texto vectorial nativo. El control visual a 160 mm de ancho ocupa aproximadamente 244 mm de alto, con letra mínima de 11 puntos; se revisó en un control A4 con márgenes superior e inferior de 15 mm, interior de 30 mm y exterior de 20 mm. Es una referencia de legibilidad, no la maquetación definitiva. La revisión de márgenes, pie y paginación del PDF queda para el cierre del informe. El PNG anterior se retira para no conservar dos ilustraciones vigentes del mismo modelo; sigue recuperable en Git.
 
 ## Flujo metodológico
 
