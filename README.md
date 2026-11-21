@@ -340,7 +340,7 @@ Paralelamente al desarrollo se realizó un relevamiento con potenciales usuarios
 ## Documentación técnica
 
 - [Portal documental](./docs/README.md) — Jerarquía, fuentes canónicas y criterio editorial
-- [Informe final ensamblado](./docs/informe-final/INFORME-FINAL-COMPLETO.md) — Checkpoint académico generado desde los capítulos fuente
+- [Informe final — capítulos fuente](./docs/informe-final/) — Unidades vigentes en revisión; ensamblado al cierre editorial
 - [Hito 06 — Entrega Final](./docs/hitos/hito-06-octubre.md) — Alcance y criterios de cierre vigentes
 - [Plan de desarrollo inmediato de la beta](./docs/gestion/plan-desarrollo-inmediato-beta-2026-09-12.md) — Plan aceptado, seguimiento y ajuste vigente del cierre; no acredita pruebas pendientes
 - [Cheat sheet de defensa](./docs/gestion/cheatsheet-defensa.md) — Métricas y respuestas verificables para la presentación

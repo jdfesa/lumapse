@@ -13,8 +13,6 @@ Esta carpeta documenta el diseño de datos en tres niveles de abstracción. Las 
 |---|---|---|---|
 | [`01-modelo-conceptual.dot`](./01-modelo-conceptual.dot) | Conceptual | Fuente Graphviz, notación Chen | Contraste con dominio, SQLite y jerarquía de la RC1; detalle por roles |
 | [`01-modelo-conceptual.svg`](./01-modelo-conceptual.svg) | Conceptual | Imagen vectorial derivada de DOT | Figura 4-3 del capítulo fuente; atributos seleccionados |
-| [`01-modelo-conceptual-der-chen.dot`](./01-modelo-conceptual-der-chen.dot) | Conceptual | Fuente Graphviz histórica | Antecedente revalidado con `v0.5.0`; conservado sin cambios |
-| [`01-modelo-conceptual-der-chen.png`](./01-modelo-conceptual-der-chen.png) | Conceptual | Imagen histórica | Exportación del 2026-07-15 conservada como antecedente |
 | [`02-normalizacion.md`](./02-normalizacion.md) | Lógico | Justificación de 1FN, 2FN y 3FN | Referencia textual |
 | [`03-modelo-logico-relacional.dbml`](./03-modelo-logico-relacional.dbml) | Lógico | Fuente DBML | Sincronizada con el esquema ejecutable |
 | [`03-modelo-logico-relacional.png`](./03-modelo-logico-relacional.png) | Lógico | Imagen derivada | Exportación del 2026-07-15 conservada |
@@ -63,31 +61,7 @@ Esta exportación utiliza Graphviz 16.1.2 y el motor Neato. La fuente fija posic
 
 El SVG es monocromo, conserva texto vectorial y no necesita imágenes rasterizadas o etiquetas HTML incrustadas. La revisión de esta figura no sustituye la revisión del PDF A4: tipografía disponible, ancho útil, pie, márgenes de encuadernación y paginación. El ensamblado y LaTeX/PDF siguen fuera de esta unidad.
 
-## Diferencias resueltas en las fuentes
-
-La revisión del 2026-07-15 sincronizó las fuentes editables con el schema de `v0.4.8`. La revalidación del 2026-09-05 confirmó que `v0.5.0` conserva el mismo esquema efectivo: AUD-005 cambió propiedad de conexión, migraciones y recuperación, pero no tablas, columnas ni relaciones. Por eso las fuentes y los PNG siguen representando el modelo vigente:
-
-- el DER conceptual ya incluye `EVENTO ACADÉMICO` y su asociación opcional con `MATERIA / SECCIÓN`;
-- `MATERIA` y `SECCIÓN` se representan como una única entidad `Subject` autorreferenciada;
-- `NOTA` incorpora los atributos vigentes relevantes, incluidos `statusEmoji` y `deletedAt`, y `Subject` incorpora su borrado lógico mediante `deletedAt`;
-- las asociaciones opcionales de `NOTA` y `EVENTO ACADÉMICO` con `Subject` expresan los casos Entrada/sin materia, con cardinalidades `0..1` del lado de cada registro y `0..N` del lado de `Subject`;
-- las claves foráneas y acciones `ON DELETE` permanecen detalladas en el DBML, sin duplicarlas como atributos en el modelo conceptual;
-- `metadata` queda documentada como tabla técnica: incluida en los niveles lógico y físico, excluida del conceptual;
-- la nota de `notes.title` aclara que el título explícito es opcional, el H1 inicial es solo fallback y `Sin título` es el valor final cuando ambos faltan.
-
-## Exportaciones históricas verificadas
-
-Las fuentes DOT y DBML sincronizadas se exportaron con las herramientas externas previstas y sus PNG se reemplazaron el 2026-07-15. La revisión visual confirmó que las imágenes representan el mismo alcance que sus fuentes y que el modelo implementado.
-
-### Modelo conceptual
-
-![Modelo conceptual de Lumapse en notación Chen](./01-modelo-conceptual-der-chen.png)
-
-**Antecedente Chen.** Modelo conceptual de Lumapse, exportado desde [`01-modelo-conceptual-der-chen.dot`](./01-modelo-conceptual-der-chen.dot) mediante Graphviz/edotor.net. Representa `Subject` —Materia o Sección—, `Note` y `AcademicEvent`, con sus relaciones y cardinalidades. La tabla técnica `metadata` no aparece porque no es una entidad del dominio académico.
-
-La exportación es panorámica (`1622 × 296 px`). Su contenido fue verificado, pero la legibilidad al tamaño definitivo deberá confirmarse al componer el PDF y las diapositivas; si el texto queda pequeño, corresponde reexportar o disponer la figura en orientación horizontal, sin alterar el modelo.
-
-### Modelo lógico relacional
+## Modelo lógico relacional
 
 ![Modelo lógico relacional de Lumapse](./03-modelo-logico-relacional.png)
 
@@ -99,7 +73,6 @@ Los PNG son artefactos derivados: no se corrigen manualmente. Cualquier cambio f
 
 ```text
 Modelo conceptual del informe (DOT → Graphviz → SVG)
-Antecedente conceptual Chen (DOT → Graphviz/edotor.net)
         ↓
 Normalización (1FN → 2FN → 3FN)
         ↓
@@ -112,13 +85,6 @@ La coherencia entre DBML, DDL documentado y esquema ejecutable se valida con las
 
 ## Procedimiento de actualización externa
 
-### DER conceptual histórico
-
-1. Abrir la fuente vigente [`01-modelo-conceptual-der-chen.dot`](./01-modelo-conceptual-der-chen.dot) en [edotor.net](https://edotor.net) o Graphviz.
-2. Renderizar sin modificar el contenido conceptual validado.
-3. Exportar en una resolución legible y reemplazar `01-modelo-conceptual-der-chen.png`.
-4. Verificar visualmente entidades, atributos, relaciones y cardinalidades.
-
 ### Modelo lógico
 
 1. Ejecutar `python3 scripts/generate-dbml-from-code.py --check` sobre [`03-modelo-logico-relacional.dbml`](./03-modelo-logico-relacional.dbml).
@@ -130,6 +96,6 @@ La coherencia entre DBML, DDL documentado y esquema ejecutable se valida con las
 
 - Las fuentes editables coinciden con `connection.js` y con la documentación física.
 - Los verificadores de esquema del repositorio finalizan correctamente.
-- Cada imagen utilizada en el informe procede de su fuente editable vigente; las exportaciones históricas conservan su procedencia.
+- Cada imagen utilizada en el informe procede de su fuente editable vigente.
 - Las imágenes representan visualmente el alcance de las fuentes; la legibilidad al tamaño final de informe y diapositivas se valida durante la maquetación.
 - El capítulo fuente identifica la RC1 `0.6.0/600`; las versiones anteriores se conservan sólo como antecedentes o atribución de evidencia histórica. El checkpoint ensamblado no se modifica manualmente.
