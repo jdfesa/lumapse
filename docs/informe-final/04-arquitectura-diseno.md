@@ -160,23 +160,23 @@ Las migraciones comprueban las columnas existentes antes de agregar una nueva. U
 
 ### 4.7.2. Niveles de diseño y representaciones
 
-Desarrollé el diseño en tres niveles: conceptual, para entidades y relaciones; lógico, para tablas y claves; y físico, para el esquema SQLite y sus migraciones. La revisión de normalización complementa esos niveles. El modelo conceptual se representa mediante Mermaid en notación de pata de cuervo y el lógico conserva su fuente DBML, mientras el DDL ejecutable determina la estructura efectiva.
+Desarrollé el diseño en tres niveles: conceptual, para entidades y relaciones; lógico, para tablas y claves; y físico, para el esquema SQLite y sus migraciones. La revisión de normalización complementa esos niveles. El modelo conceptual utiliza notación Chen con cardinalidades mínimas y máximas y conserva su fuente DOT; el lógico mantiene su fuente DBML, mientras el DDL ejecutable determina la estructura efectiva.
 
 La figura 4-3 representa las entidades y asociaciones del dominio en la RC1; la figura 4-4 conserva la exportación lógica del 15 de julio de 2026. La estructura efectiva del corte mantiene las cuatro tablas, 26 columnas y tres claves foráneas del modelo lógico. Mover el borrador a `metadata` cambió el uso de esa tabla, no agregó una entidad o columna.
 
 #### 4.7.2.1. Modelo conceptual
 
-![Modelo conceptual de Lumapse en notación de pata de cuervo](../diagramas/database/01-modelo-conceptual.svg)
+![Modelo conceptual de Lumapse en notación Chen, con la jerarquía de materias y secciones desplegada por roles](../diagramas/database/01-modelo-conceptual.svg)
 
-*Figura 4-3. Modelo conceptual de Lumapse en notación de pata de cuervo, correspondiente al dominio de la RC1. Fuente: elaboración propia mediante Mermaid.*
+*Figura 4-3. Modelo conceptual de Lumapse en notación Chen, con atributos seleccionados y detalle de la jerarquía por roles, correspondiente al dominio de la RC1. Fuente: elaboración propia mediante Graphviz.*
 
-El modelo conceptual reúne Materia/Sección, Nota y Fecha académica. Los atributos expresan conceptos del dominio, no tipos SQL; las asociaciones representan los vínculos sin repetir las claves foráneas como atributos. Cada entidad tiene un identificador propio, por lo que las relaciones se dibujan como no identificadoras mediante líneas discontinuas.
+En el panel a, los rectángulos representan tipos de entidad; los rombos, relaciones; y los óvalos, una selección de atributos académicos. Los identificadores propios se subrayan. No se incluyen tipos SQL ni claves foráneas como atributos: el esquema completo corresponde al modelo lógico de la figura 4-4.
 
-La notación combina un círculo para el mínimo cero, una barra para el máximo uno y una pata de cuervo para el máximo muchos. Cada Materia/Sección puede agrupar cero o muchas notas y fechas académicas; cada nota o fecha se vincula con cero o una Materia/Sección. La ausencia de esa asociación representa Entrada para las notas y una fecha sin materia para los eventos.
+La cardinalidad `(mín, máx)` situada junto a cada entidad indica en cuántos vínculos de esa relación puede participar. Un `Subject`, sea materia o sección, puede agrupar cero o muchas notas y fechas académicas: `(0,N)`. Cada nota o fecha se vincula con cero o un `Subject`: `(0,1)`. La ausencia de esa asociación representa Entrada para las notas y una fecha sin materia para los eventos.
 
-La autorreferencia se interpreta según el rol: una materia raíz no tiene padre y puede contener cero o muchas secciones; cada sección tiene exactamente una materia padre y no puede contener subsecciones. El extremo cero o uno del vínculo reflexivo contempla ambos roles dentro de una misma entidad. La restricción de dos niveles corresponde a la validación del servicio, no queda expresada por la cardinalidad del diagrama por sí sola.
+El panel b despliega la relación jerárquica mediante dos apariciones de `Subject` con roles distintos, no mediante nuevos tipos de entidad. En el rol de **materia raíz**, un registro carece de padre y puede contener cero o muchas secciones: `(0,N)`. En el rol de **sección hija**, otro registro pertenece a exactamente una materia: `(1,1)`. La relación une registros distintos; una materia no se contiene a sí misma y una sección no contiene subsecciones. Por ejemplo, Matemática podría ser la materia y Teoría una de sus secciones.
 
-El título de una nota representa el valor confirmado: la entrada explícita es opcional, pero al guardar se resuelve mediante el título escrito, el encabezado inicial admitido o `Sin título`, como se explica en 4.7.5. El estado académico corresponde al marcador opcional `statusEmoji`, y eliminación representa la marca temporal de borrado lógico `deletedAt`; una fecha académica no tiene esa marca. La tabla técnica `metadata` se excluye de este nivel porque sus claves y el borrador del editor no constituyen entidades académicas.
+Ambos roles se implementan en la misma tabla `subjects`: `parentSubjectId` está vacío en la materia y referencia el identificador de la materia padre en la sección. Por eso la relación es autorreferenciada en el nivel lógico, sin implicar autocontención de una instancia. Al crear una sección, el servicio comprueba que el padre exista y sea una materia raíz; la clave foránea, por sí sola, no impone esa profundidad ni distingue los roles. La tabla técnica `metadata` se excluye del nivel conceptual porque sus propiedades y el borrador del editor no constituyen entidades académicas.
 
 #### 4.7.2.2. Modelo lógico relacional
 

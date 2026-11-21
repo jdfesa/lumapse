@@ -1,0 +1,70 @@
+// Lumapse — Modelo conceptual RC1 (fuente bcefe6a).
+// Notación Chen con cardinalidades de participación (mín, máx).
+// Panel a: tres tipos de entidad y sus asociaciones de contenido.
+// Panel b: la autorreferencia de Subject se despliega en dos roles.
+// Las dos cajas del panel b NO declaran entidades ni tablas adicionales.
+// Se omiten atributos técnicos y parte de los académicos: selección conceptual.
+// Posiciones en pulgadas, fijadas para una figura vertical, no panorámica.
+graph LumapseConceptual {
+  graph [
+    layout=neato, maxiter=0, overlap=true, splines=line,
+    outputorder=edgesfirst, bgcolor="white", pad=0.15,
+    fontname="Arial", fontsize=15
+  ];
+  node [
+    fontname="Arial", fontsize=15, color="black", fontcolor="black",
+    shape=box, style=solid, penwidth=1.3, pin=true, margin="0.12,0.08"
+  ];
+  edge [color="black", fontname="Arial", fontsize=14, penwidth=1.1];
+
+  // a) Entidades, relaciones y una selección de atributos académicos.
+  titulo_a [shape=plaintext, label="a) Entidades y asociaciones", pos="3.9,11.1!"];
+  SUBJECT [label="MATERIA O SECCIÓN\n(Subject)", pos="3.9,9.7!", width=2.3, height=0.65];
+  NOTE [label="NOTA", pos="1.9,7.1!", width=1.7, height=0.55];
+  EVENT [label="FECHA ACADÉMICA", pos="5.9,7.1!", width=2.3, height=0.55];
+  agrupa [shape=diamond, label="agrupa", pos="1.9,8.4!", width=1.1, height=0.7];
+  asocia [shape=diamond, label="asocia", pos="5.9,8.4!", width=1.1, height=0.7];
+
+  SUBJECT -- agrupa [taillabel="(0,N)", labeldistance=3.0, labelangle=50];
+  agrupa -- NOTE [headlabel="(0,1)", labeldistance=2.8, labelangle=50];
+  SUBJECT -- asocia [taillabel="(0,N)", labeldistance=3.0, labelangle=-50];
+  asocia -- EVENT [headlabel="(0,1)", labeldistance=2.8, labelangle=-50];
+
+  // Atributos seleccionados. Los identificadores propios se subrayan.
+  node [shape=ellipse, height=0.42, fontsize=14, margin="0.10,0.06"];
+  subject_id [label=<<U>identificador</U>>, pos="1.6,10.5!"];
+  subject_nombre [label="nombre", pos="3.9,10.55!"];
+  subject_color [label="color (opcional)", pos="6.2,10.5!"];
+  SUBJECT -- subject_id;
+  SUBJECT -- subject_nombre;
+  SUBJECT -- subject_color;
+
+  note_id [label=<<U>identificador</U>>, pos="0.8,6.05!"];
+  note_titulo [label="título", pos="2.35,5.8!"];
+  note_contenido [label="contenido", pos="3.4,6.35!"];
+  NOTE -- note_id;
+  NOTE -- note_titulo;
+  NOTE -- note_contenido;
+
+  event_id [label=<<U>identificador</U>>, pos="4.8,5.6!"];
+  event_tipo [label="tipo", pos="6.35,5.8!"];
+  event_fecha [label="fecha", pos="7.55,6.1!"];
+  EVENT -- event_id;
+  EVENT -- event_tipo;
+  EVENT -- event_fecha;
+
+  // b) Misma relación reflexiva, mostrada sin un lazo sobre una sola caja.
+  titulo_b [shape=plaintext, fontsize=15,
+    label="b) Jerarquía de Subject: dos registros, dos roles", pos="3.9,4.7!"];
+  node [shape=box, fontsize=15, height=0.65, margin="0.12,0.08"];
+  MATERIA [label="MATERIA\nSubject: rol raíz", pos="1.5,3.55!", width=2.15];
+  SECCION [label="SECCIÓN\nSubject: rol hija", pos="6.3,3.55!", width=2.15];
+  contiene [shape=diamond, label="contiene", pos="3.9,3.55!", width=1.3, height=0.75];
+  MATERIA -- contiene [taillabel="(0,N)", labeldistance=2.0, labelangle=25];
+  contiene -- SECCION [headlabel="(1,1)", labeldistance=2.0, labelangle=-25];
+
+  roles [shape=plaintext, fontsize=14, pos="3.9,2.3!",
+    label="Se repite Subject para distinguir sus roles, no para agregar entidades.\nUna materia no tiene padre; cada sección tiene una materia padre.\nLa relación une registros distintos. No se admiten subsecciones."];
+  leyenda [shape=plaintext, fontsize=14, pos="3.9,0.9!",
+    label="Rectángulo: entidad · Rombo: relación · Óvalo: atributo.\n(mín, máx) junto a la entidad: cantidad de vínculos en los que participa.\nN = muchos · Identificador subrayado · Atributos seleccionados."];
+}

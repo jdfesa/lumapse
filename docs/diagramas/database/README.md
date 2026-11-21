@@ -1,56 +1,67 @@
 # Diagramas de Base de Datos — Lumapse
 
-Esta carpeta documenta el diseño de datos en tres niveles de abstracción. Las **fuentes editables** se versionan en el repositorio y las **imágenes son artefactos derivados**. Mermaid se utiliza para la representación conceptual del informe; las fuentes DOT/Chen y DBML conservan sus respectivos flujos de exportación.
+Esta carpeta documenta el diseño de datos en tres niveles de abstracción. Las **fuentes editables** se versionan y las **imágenes son artefactos derivados**. El conceptual utiliza notación Chen; el lógico conserva DBML y el físico corresponde al DDL y las migraciones de SQLite.
 
 - **Autor:** José David Sandoval
 - **Motor:** SQLite mediante `@capacitor-community/sqlite`
-- **Versión de referencia del conceptual Mermaid:** `0.6.0/600 — RC1`, fuente `bcefe6a`
-- **Revisión del conceptual Mermaid:** 2026-11-21; no constituye una nueva prueba del APK
+- **Versión de referencia del conceptual revisado:** `0.6.0/600 — RC1`, fuente `bcefe6a`
+- **Revisión del conceptual:** 2026-11-21; no constituye una nueva prueba del APK
 
 ## Contenido y autoridad
 
 | Archivo | Nivel | Rol | Estado al corte |
 |---|---|---|---|
-| [`01-modelo-conceptual.mmd`](./01-modelo-conceptual.mmd) | Conceptual | Fuente Mermaid, pata de cuervo | Contrastada con dominio, SQLite y reglas de jerarquía de la RC1 |
-| [`01-modelo-conceptual.svg`](./01-modelo-conceptual.svg) | Conceptual | Imagen vectorial derivada de Mermaid | Representación utilizada en la figura 4-3 del capítulo fuente |
-| [`01-modelo-conceptual-der-chen.dot`](./01-modelo-conceptual-der-chen.dot) | Conceptual | Fuente Graphviz | Antecedente Chen revalidado con `v0.5.0`; no modificado por el cambio de representación |
-| [`01-modelo-conceptual-der-chen.png`](./01-modelo-conceptual-der-chen.png) | Conceptual | Imagen derivada | Exportación Chen del 2026-07-15 conservada como antecedente |
-| [`02-normalizacion.md`](./02-normalizacion.md) | Lógico | Justificación de 1FN, 2FN y 3FN | Referencia textual vigente |
-| [`03-modelo-logico-relacional.dbml`](./03-modelo-logico-relacional.dbml) | Lógico | Fuente DBML | Sincronizada con el esquema ejecutable; fuente de la exportación vigente |
-| [`03-modelo-logico-relacional.png`](./03-modelo-logico-relacional.png) | Lógico | Imagen derivada | Reemplazada y revisada el 2026-07-15 |
-| [`04-modelo-fisico-ddl.md`](./04-modelo-fisico-ddl.md) | Físico | Documentación del DDL y migraciones | Referencia técnica vigente |
-| [`src/services/sqlite/connection.js`](../../../src/services/sqlite/connection.js) | Físico ejecutable | Fuente de verdad del esquema en runtime | Autoridad final si existe una divergencia |
+| [`01-modelo-conceptual.dot`](./01-modelo-conceptual.dot) | Conceptual | Fuente Graphviz, notación Chen | Contraste con dominio, SQLite y jerarquía de la RC1; detalle por roles |
+| [`01-modelo-conceptual.svg`](./01-modelo-conceptual.svg) | Conceptual | Imagen vectorial derivada de DOT | Figura 4-3 del capítulo fuente; atributos seleccionados |
+| [`01-modelo-conceptual-der-chen.dot`](./01-modelo-conceptual-der-chen.dot) | Conceptual | Fuente Graphviz histórica | Antecedente revalidado con `v0.5.0`; conservado sin cambios |
+| [`01-modelo-conceptual-der-chen.png`](./01-modelo-conceptual-der-chen.png) | Conceptual | Imagen histórica | Exportación del 2026-07-15 conservada como antecedente |
+| [`02-normalizacion.md`](./02-normalizacion.md) | Lógico | Justificación de 1FN, 2FN y 3FN | Referencia textual |
+| [`03-modelo-logico-relacional.dbml`](./03-modelo-logico-relacional.dbml) | Lógico | Fuente DBML | Sincronizada con el esquema ejecutable |
+| [`03-modelo-logico-relacional.png`](./03-modelo-logico-relacional.png) | Lógico | Imagen derivada | Exportación del 2026-07-15 conservada |
+| [`04-modelo-fisico-ddl.md`](./04-modelo-fisico-ddl.md) | Físico | Documentación del DDL y migraciones | Referencia técnica |
+| [`src/services/sqlite/connection.js`](../../../src/services/sqlite/connection.js) | Físico ejecutable | Fuente de verdad del esquema | Autoridad final ante una divergencia |
 
-La tabla `metadata` aparece en el DBML y en el modelo físico porque forma parte del esquema ejecutable. Se excluye deliberadamente del DER conceptual: es una tabla técnica clave-valor utilizada para propiedades internas y, en la RC1, el borrador del editor; no es una entidad del dominio académico.
+La tabla `metadata` pertenece al esquema ejecutable, pero no al dominio académico. En la RC1 conserva propiedades internas y el borrador del editor; se incluye en los niveles lógico y físico, no en el conceptual.
 
-## Representación conceptual del informe — RC1
+## Modelo conceptual de la RC1
 
-![Modelo conceptual de Lumapse en notación de pata de cuervo](./01-modelo-conceptual.svg)
+![Modelo conceptual de Lumapse en notación Chen con jerarquía desplegada por roles](./01-modelo-conceptual.svg)
 
-**Figura DB-1.** Modelo conceptual en notación de pata de cuervo generado desde Mermaid. Reemplaza la representación Chen en el capítulo fuente del informe, sin modificar la aplicación ni el esquema. No es un diagrama UML ni el modelo lógico de tablas.
+**Figura DB-1.** Modelo conceptual en notación Chen con cardinalidades de participación `(mín, máx)`. El panel a representa tres tipos de entidad y sus asociaciones de contenido. El panel b despliega la relación de `Subject` para distinguir materia raíz y sección hija, sin un lazo que sugiera autocontención de una instancia. Es un detalle del mismo tipo de entidad, no dos entidades o tablas nuevas.
 
-El contraste se realiza con `src/domain/subjects.ts`, `notes.ts` y `academicEvents.ts`, el esquema y las migraciones de `src/services/sqlite/connection.js`, la validación de profundidad de `SubjectService.validation.ts` y el contrato de título de `NoteTitleService.ts`. Esas fuentes coinciden con las de `bcefe6a`; la comparación no ejecuta ni valida nuevamente el APK.
+- Rectángulos: tipos de entidad o sus apariciones por rol, identificadas explícitamente.
+- Rombos: relaciones; óvalos: atributos; identificadores propios subrayados.
+- La cardinalidad junto a una entidad indica en cuántos vínculos de esa relación participa. No se interpreta con la convención de extremos de pata de cuervo.
+- Una materia o sección puede agrupar cero o muchas notas y fechas: `(0,N)`. Cada nota o fecha admite cero o una materia o sección: `(0,1)`.
+- En la jerarquía, una materia raíz no tiene padre y puede tener cero o muchas secciones: `(0,N)`. Cada sección tiene exactamente una materia padre: `(1,1)`. Los roles son excluyentes, la relación une registros distintos y no hay subsecciones.
+- En el nivel lógico ambos roles se almacenan en `subjects`: raíz con `parentSubjectId = NULL`; sección con referencia a una raíz. Al crear una sección, el servicio comprueba que el padre exista y sea una materia raíz; la FK por sí sola no limita la profundidad ni distingue los roles.
 
-- Tres entidades, tres asociaciones no identificadoras y 21 atributos de dominio; las tres referencias se representan como asociaciones, no como atributos duplicados.
-- Cada nota o fecha admite cero o una Materia/Sección; cada Materia/Sección puede agrupar cero o muchas notas y fechas.
-- La autorreferencia admite cero o un padre por registro: una raíz carece de padre y una sección tiene exactamente uno. La regla de dos niveles se verifica en el servicio, no se deduce del diagrama aislado.
-- `estado` corresponde a `statusEmoji`; `eliminación` corresponde a `deletedAt`, sólo en Nota y Materia/Sección. No se añade papelera a las fechas académicas.
-- El título explícito de nota es opcional al escribir; el valor confirmado se resuelve según el contrato de guardado. El título de fecha académica sí puede permanecer ausente.
-- Los tipos de la figura describen conceptos del dominio; no declaran tipos SQL ni restricciones `NOT NULL`. `Tipo` corresponde a parcial, final, trabajo práctico o exposición; `Indicador` expresa un estado booleano.
+### Atributos seleccionados y contraste
 
-### Regenerar la representación Mermaid
+La figura muestra nueve atributos académicos seleccionados, no el inventario completo de columnas:
 
-Con Mermaid CLI disponible como herramienta documental externa a la app:
+| Tipo de entidad | Atributos de la figura | Correspondencia en el dominio |
+|---|---|---|
+| `Subject` | identificador, nombre, color opcional | `id`, `name`, `color` |
+| `Note` | identificador, título, contenido | `id`, `title`, `content` |
+| `AcademicEvent` | identificador, tipo, fecha | `id`, `type`, `date` |
+
+Los demás atributos y las referencias se detallan en el modelo lógico. El título de nota no implica una entrada manual obligatoria: se resuelve mediante el contrato de guardado explicado en 4.7.5. La selección no elimina propiedades de la app ni incorpora nuevas tablas.
+
+Se contrastaron `src/domain/subjects.ts`, `notes.ts` y `academicEvents.ts`, el esquema y las migraciones de `src/services/sqlite/connection.js`, la profundidad en `SubjectService.validation.ts` y el título en `NoteTitleService.ts`. Esas fuentes no presentan diferencias respecto de `bcefe6a`; esta comparación documental no valida nuevamente el APK.
+
+### Regenerar la figura actual
+
+Con Graphviz instalado como herramienta documental externa a la app, desde la raíz del repositorio:
 
 ```bash
-mmdc -i docs/diagramas/database/01-modelo-conceptual.mmd \
-  -o docs/diagramas/database/01-modelo-conceptual.svg \
-  -I lumapse-conceptual -b white --no-font-embed
+dot -Kneato -Tsvg docs/diagramas/database/01-modelo-conceptual.dot \
+  -o docs/diagramas/database/01-modelo-conceptual.svg
 ```
 
-Ejecutar desde la raíz del repositorio. La exportación de esta revisión utiliza Mermaid CLI 12.2.0 y Mermaid 12.3.0, apariencia clásica y disposición Dagre fijadas en la fuente. No se agrega Mermaid a `package.json` ni al gate de la app. La sintaxis de asociaciones y cardinalidades corresponde a la [documentación oficial de diagramas ER de Mermaid](https://mermaid.js.org/syntax/entityRelationshipDiagram.html).
+Esta exportación utiliza Graphviz 16.1.2 y el motor Neato. La fuente fija posiciones para mantener una disposición vertical. No se agrega una dependencia ni un generador al proyecto de la app. La [documentación de Graphviz](https://graphviz.org/docs/) describe el lenguaje y la exportación; las [notas docentes de Virginia Tech sobre el modelo ER](https://courses.cs.vt.edu/cs4604/Spring21/pdfs/3-ermodel2.pdf) desarrollan el uso de roles en relaciones recursivas.
 
-El SVG monocromo conserva texto SVG nativo, sin etiquetas HTML incrustadas, y no depende del color para explicar las relaciones. La fuente solicita Arial con alternativa sans-serif; la conversión final debe comprobar la tipografía disponible. La revisión de la figura no sustituye la comprobación posterior en el PDF A4: ancho útil, tipografía efectiva, pie, márgenes de encuadernación y saltos de página. La conversión a LaTeX/PDF y el ensamblado completo no forman parte de esta unidad.
+El SVG es monocromo, conserva texto vectorial y no necesita imágenes rasterizadas o etiquetas HTML incrustadas. La revisión de esta figura no sustituye la revisión del PDF A4: tipografía disponible, ancho útil, pie, márgenes de encuadernación y paginación. El ensamblado y LaTeX/PDF siguen fuera de esta unidad.
 
 ## Diferencias resueltas en las fuentes
 
@@ -87,7 +98,7 @@ Los PNG son artefactos derivados: no se corrigen manualmente. Cualquier cambio f
 ## Flujo metodológico
 
 ```text
-Modelo conceptual del informe (Mermaid → SVG)
+Modelo conceptual del informe (DOT → Graphviz → SVG)
 Antecedente conceptual Chen (DOT → Graphviz/edotor.net)
         ↓
 Normalización (1FN → 2FN → 3FN)
@@ -101,7 +112,7 @@ La coherencia entre DBML, DDL documentado y esquema ejecutable se valida con las
 
 ## Procedimiento de actualización externa
 
-### DER conceptual
+### DER conceptual histórico
 
 1. Abrir la fuente vigente [`01-modelo-conceptual-der-chen.dot`](./01-modelo-conceptual-der-chen.dot) en [edotor.net](https://edotor.net) o Graphviz.
 2. Renderizar sin modificar el contenido conceptual validado.
