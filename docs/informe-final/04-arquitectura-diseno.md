@@ -177,11 +177,11 @@ Así, `(0,1)` significa «cero o uno»; `(0,N)`, «cero o muchos»; y `(1,1)`, �
 
 ![Modelo lógico relacional de Lumapse](../diagramas/database/03-modelo-logico-relacional.svg)
 
-*Figura 4-4. Modelo lógico relacional de Lumapse. Tablas, claves y restricciones físicas declaradas en la RC1. Fuente: elaboración propia mediante Graphviz, contrastada con el esquema SQLite y sus migraciones.*
+*Figura 4-4. Modelo lógico relacional de Lumapse en notación de pata de cuervo. Tablas, claves y restricciones físicas declaradas en la RC1. Fuente: elaboración propia mediante Graphviz, contrastada con el esquema SQLite y sus migraciones.*
 
 El modelo lógico incorpora las tres tablas de dominio y `metadata`. Los identificadores de las entidades son UUID almacenados como texto; la clave de `metadata`, en cambio, es el nombre textual de una propiedad. Los indicadores booleanos se representan con enteros y las fechas con texto; la fecha académica usa `YYYY-MM-DD`, diferenciada de las marcas de creación y actualización.
 
-Las referencias se leen desde la columna de origen hacia la clave referenciada; las cardinalidades indican explícitamente cuántos registros pueden vincularse en cada sentido. `subjects.parentSubjectId` apunta a otra fila de `subjects`: representa el vínculo de una sección con su materia padre, no la contención de una fila en sí misma. Cada sección tiene exactamente una materia padre y cada materia puede tener cero o muchas secciones. Esta regla por rol y el límite de dos niveles corresponden al servicio; la FK que admite `NULL`, necesaria también para las filas raíz sin padre, no los impone por sí sola.
+Las líneas conectan cada FK con su PK referenciada. En la pata de cuervo, el símbolo junto a una tabla indica cuántas filas de esa tabla pueden vincularse con una fila del otro extremo; las referencias inferiores precisan las columnas y las acciones declaradas. `subjects.parentSubjectId` apunta a otra fila de `subjects`: representa el vínculo de una sección con su materia padre, no la contención de una fila en sí misma. Cada sección tiene exactamente una materia padre y cada materia puede tener cero o muchas secciones. Esta regla por rol y el límite de dos niveles corresponden al servicio; la FK que admite `NULL`, necesaria también para las filas raíz sin padre, no los impone por sí sola.
 
 ### 4.7.3. Integridad y reglas de negocio
 
