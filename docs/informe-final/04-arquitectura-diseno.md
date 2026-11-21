@@ -160,17 +160,23 @@ Las migraciones comprueban las columnas existentes antes de agregar una nueva. U
 
 ### 4.7.2. Niveles de diseño y representaciones
 
-Desarrollé el diseño en tres niveles: conceptual, para entidades y relaciones; lógico, para tablas y claves; y físico, para el esquema SQLite y sus migraciones. La revisión de normalización complementa esos niveles. Conservé fuentes editables en DOT para el conceptual y DBML para el lógico, mientras el DDL ejecutable determina la estructura efectiva.
+Desarrollé el diseño en tres niveles: conceptual, para entidades y relaciones; lógico, para tablas y claves; y físico, para el esquema SQLite y sus migraciones. La revisión de normalización complementa esos niveles. El modelo conceptual se representa mediante Mermaid en notación de pata de cuervo y el lógico conserva su fuente DBML, mientras el DDL ejecutable determina la estructura efectiva.
 
-Las figuras 4-3 y 4-4 proceden de las exportaciones del 15 de julio de 2026. La estructura efectiva del corte RC1 mantiene las cuatro tablas, 26 columnas y tres claves foráneas representadas; mover el borrador a `metadata` cambió el uso de esa tabla, no agregó una entidad o columna. Conservar las figuras no implica que hayan sido reexportadas para la RC1. Su legibilidad al tamaño definitivo sigue correspondiendo a la maquetación final.
+La figura 4-3 representa las entidades y asociaciones del dominio en la RC1; la figura 4-4 conserva la exportación lógica del 15 de julio de 2026. La estructura efectiva del corte mantiene las cuatro tablas, 26 columnas y tres claves foráneas del modelo lógico. Mover el borrador a `metadata` cambió el uso de esa tabla, no agregó una entidad o columna.
 
 #### 4.7.2.1. Modelo conceptual
 
-![Modelo conceptual de Lumapse en notación Chen](../diagramas/database/01-modelo-conceptual-der-chen.png)
+![Modelo conceptual de Lumapse en notación de pata de cuervo](../diagramas/database/01-modelo-conceptual.svg)
 
-*Figura 4-3. Modelo conceptual de Lumapse en notación Chen. Fuente: elaboración propia; exportación desde DOT mediante Graphviz del 15 de julio de 2026.*
+*Figura 4-3. Modelo conceptual de Lumapse en notación de pata de cuervo, correspondiente al dominio de la RC1. Fuente: elaboración propia mediante Mermaid.*
 
-El modelo conceptual reúne Materia/Sección, Nota y Fecha académica. La autorreferencia permite distinguir materia raíz y sección, y las asociaciones opcionales permiten notas en Entrada y fechas sin materia. La tabla técnica `metadata` se excluye de este nivel porque sus claves no representan entidades académicas.
+El modelo conceptual reúne Materia/Sección, Nota y Fecha académica. Los atributos expresan conceptos del dominio, no tipos SQL; las asociaciones representan los vínculos sin repetir las claves foráneas como atributos. Cada entidad tiene un identificador propio, por lo que las relaciones se dibujan como no identificadoras mediante líneas discontinuas.
+
+La notación combina un círculo para el mínimo cero, una barra para el máximo uno y una pata de cuervo para el máximo muchos. Cada Materia/Sección puede agrupar cero o muchas notas y fechas académicas; cada nota o fecha se vincula con cero o una Materia/Sección. La ausencia de esa asociación representa Entrada para las notas y una fecha sin materia para los eventos.
+
+La autorreferencia se interpreta según el rol: una materia raíz no tiene padre y puede contener cero o muchas secciones; cada sección tiene exactamente una materia padre y no puede contener subsecciones. El extremo cero o uno del vínculo reflexivo contempla ambos roles dentro de una misma entidad. La restricción de dos niveles corresponde a la validación del servicio, no queda expresada por la cardinalidad del diagrama por sí sola.
+
+El título de una nota representa el valor confirmado: la entrada explícita es opcional, pero al guardar se resuelve mediante el título escrito, el encabezado inicial admitido o `Sin título`, como se explica en 4.7.5. El estado académico corresponde al marcador opcional `statusEmoji`, y eliminación representa la marca temporal de borrado lógico `deletedAt`; una fecha académica no tiene esa marca. La tabla técnica `metadata` se excluye de este nivel porque sus claves y el borrador del editor no constituyen entidades académicas.
 
 #### 4.7.2.2. Modelo lógico relacional
 
