@@ -181,7 +181,18 @@ Así, `(0,1)` significa «cero o uno»; `(0,N)`, «cero o muchos»; y `(1,1)`, �
 
 El modelo lógico incorpora las tres tablas de dominio y `metadata`. Los identificadores de las entidades son UUID almacenados como texto; la clave de `metadata`, en cambio, es el nombre textual de una propiedad. Los indicadores booleanos se representan con enteros y las fechas con texto; la fecha académica usa `YYYY-MM-DD`, diferenciada de las marcas de creación y actualización.
 
-Las líneas conectan cada FK con su PK referenciada. En la pata de cuervo, el símbolo junto a una tabla indica cuántas filas de esa tabla pueden vincularse con una fila del otro extremo; las referencias inferiores precisan las columnas y las acciones declaradas. `subjects.parentSubjectId` apunta a otra fila de `subjects`: representa el vínculo de una sección con su materia padre, no la contención de una fila en sí misma. Cada sección tiene exactamente una materia padre y cada materia puede tener cero o muchas secciones. Esta regla por rol y el límite de dos niveles corresponden al servicio; la FK que admite `NULL`, necesaria también para las filas raíz sin padre, no los impone por sí sola.
+En la figura, PK señala la clave primaria y FK la columna que referencia una clave de destino. En la pata de cuervo, el símbolo junto a una tabla cuenta sus filas vinculadas a una fila del otro extremo:
+
+- **`subjects`:** relación autorreferencial: `parentSubjectId` referencia `id` de la misma tabla para vincular secciones con materias, no para expresar autocontención de una fila.
+  La FK admite `(0,1)` padre por registro —la raíz no tiene padre— y `(0,N)` registros hijos por padre.
+- **`notes`:** cada nota puede asociarse con `(0,1)` materia o sección mediante `subjectId`.
+  Cada materia o sección puede recibir `(0,N)` notas; `NULL` representa una nota en Entrada.
+- **`academic_events`:** cada fecha académica puede asociarse con `(0,1)` materia o sección mediante `subjectId`.
+  Cada materia o sección puede tener `(0,N)` fechas, independientemente de sus notas.
+- **`metadata`:** `key` es la PK textual y `value` conserva la propiedad técnica, incluido el borrador del editor.
+  No tiene FK ni relaciones; su aislamiento gráfico es intencional, no una cardinalidad omitida.
+
+En el dominio, cada sección tiene `(1,1)` materia padre distinta de ella: esa regla y los dos niveles dependen del servicio, no de la FK por sí sola. Los bloques inferiores separan referencias y acciones, restricciones e índices físicos y límites de lectura; la sección 4.7.3 explica sus efectos sin confundirlos con reglas de negocio.
 
 ### 4.7.3. Integridad y reglas de negocio
 
