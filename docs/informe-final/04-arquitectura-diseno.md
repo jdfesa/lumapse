@@ -177,11 +177,11 @@ Así, `(0,1)` significa «cero o uno»; `(0,N)`, «cero o muchos»; y `(1,1)`, �
 
 ![Modelo lógico relacional de Lumapse](../diagramas/database/03-modelo-logico-relacional.svg)
 
-*Figura 4-4. Modelo lógico relacional de Lumapse en notación de pata de cuervo. Tablas, claves y restricciones físicas declaradas en la RC1. Fuente: elaboración propia mediante Graphviz, contrastada con el esquema SQLite y sus migraciones.*
+*Figura 4-4. Modelo lógico relacional de Lumapse en notación de pata de gallo. Tablas, claves y restricciones físicas declaradas en la RC1. Fuente: elaboración propia mediante Graphviz, contrastada con el esquema SQLite y sus migraciones.*
 
 El modelo lógico incorpora las tres tablas de dominio y `metadata`. Los identificadores de las entidades son UUID almacenados como texto; la clave de `metadata`, en cambio, es el nombre textual de una propiedad. Los indicadores booleanos se representan con enteros y las fechas con texto; la fecha académica usa `YYYY-MM-DD`, diferenciada de las marcas de creación y actualización.
 
-En la figura, PK señala la clave primaria y FK la columna que referencia una clave de destino. En la pata de cuervo, el símbolo junto a una tabla cuenta sus filas vinculadas a una fila del otro extremo:
+En la figura, PK señala la clave primaria y FK la columna que referencia una clave de destino. En la pata de gallo, el símbolo junto a una tabla cuenta sus filas vinculadas a una fila del otro extremo:
 
 - **`subjects`:** relación autorreferencial: `parentSubjectId` referencia `id` de la misma tabla para vincular secciones con materias, no para expresar autocontención de una fila.
   La FK admite `(0,1)` padre por registro —la raíz no tiene padre— y `(0,N)` registros hijos por padre.

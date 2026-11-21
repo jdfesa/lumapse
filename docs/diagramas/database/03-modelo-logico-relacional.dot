@@ -106,7 +106,7 @@ digraph Logical {
 
 <TR><TD ALIGN="LEFT"><B>LECTURA Y LÍMITES</B></TD></TR>
 
-<TR><TD ALIGN="LEFT">Pata de cuervo: círculo + barra = 0..1; círculo + tres ramas = 0..N.</TD></TR>
+<TR><TD ALIGN="LEFT">Pata de gallo: círculo + barra = 0..1; círculo + tres ramas = 0..N.</TD></TR>
 <TR><TD ALIGN="LEFT">El símbolo junto a una tabla cuenta sus filas por cada fila del otro extremo.</TD></TR>
 <TR><TD ALIGN="LEFT">«Por A: (mín,máx) B»: cantidad de B vinculados a cada A; N = muchos.</TD></TR>
 
@@ -125,7 +125,7 @@ digraph Logical {
 <TR><TD ALIGN="LEFT">ON DELETE corresponde al borrado físico, no a deletedAt (papelera).</TD></TR></TABLE>>];
  header [pos="300,785", label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="0">
 <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="15"><B>MODELO LÓGICO RELACIONAL · RC1</B></FONT></TD></TR>
-<TR><TD ALIGN="LEFT">4 tablas · 26 columnas · Pata de cuervo · Esquema SQLite</TD></TR></TABLE>>];
+<TR><TD ALIGN="LEFT">4 tablas · 26 columnas · Pata de gallo · Esquema SQLite</TD></TR></TABLE>>];
  // Puertos de fila y recorridos ortogonales explícitos; no alterar sin verificar su geometría.
  // Los dos accesos a id terminan en esquinas distintas para no superponer símbolos.
  notes:subjectId:w -> subjects:id_r:ne [
