@@ -1,11 +1,11 @@
 # Diagramas de Base de Datos — Lumapse
 
-Esta carpeta documenta el diseño de datos en tres niveles de abstracción. Las **fuentes editables** se versionan y las **imágenes son artefactos derivados**. El conceptual utiliza notación Chen; el lógico conserva DBML y el físico corresponde al DDL y las migraciones de SQLite.
+Esta carpeta documenta el diseño de datos en tres niveles de abstracción. Las **fuentes editables** se versionan y las **imágenes son artefactos derivados**. El conceptual utiliza notación Chen; el lógico conserva DBML y una figura DOT/SVG y el físico corresponde al DDL y las migraciones de SQLite.
 
 - **Autor:** José David Sandoval
 - **Motor:** SQLite mediante `@capacitor-community/sqlite`
-- **Versión de referencia del conceptual revisado:** `0.6.0/600 — RC1`, fuente `bcefe6a`
-- **Revisión del conceptual:** 2026-11-21; no constituye una nueva prueba del APK
+- **Versión de referencia de los modelos revisados:** `0.6.0/600 — RC1`, fuente `bcefe6a`
+- **Revisión de las figuras:** 2026-11-21; no constituye una nueva prueba del APK
 
 ## Contenido y autoridad
 
@@ -15,7 +15,8 @@ Esta carpeta documenta el diseño de datos en tres niveles de abstracción. Las 
 | [`01-modelo-conceptual.svg`](./01-modelo-conceptual.svg) | Conceptual | Imagen vectorial derivada de DOT | Figura 4-3 del capítulo fuente; atributos seleccionados |
 | [`02-normalizacion.md`](./02-normalizacion.md) | Lógico | Justificación de 1FN, 2FN y 3FN | Referencia textual |
 | [`03-modelo-logico-relacional.dbml`](./03-modelo-logico-relacional.dbml) | Lógico | Fuente DBML | Sincronizada con el esquema ejecutable |
-| [`03-modelo-logico-relacional.png`](./03-modelo-logico-relacional.png) | Lógico | Imagen derivada | Exportación del 2026-07-15 conservada |
+| [`03-modelo-logico-relacional.dot`](./03-modelo-logico-relacional.dot) | Lógico y anotaciones físicas | Fuente de la figura Graphviz | Transcripción contrastada con DDL y migraciones RC1 |
+| [`03-modelo-logico-relacional.svg`](./03-modelo-logico-relacional.svg) | Lógico y anotaciones físicas | Imagen vectorial derivada | Figura 4-4 del capítulo fuente |
 | [`04-modelo-fisico-ddl.md`](./04-modelo-fisico-ddl.md) | Físico | Documentación del DDL y migraciones | Referencia técnica |
 | [`src/services/sqlite/connection.js`](../../../src/services/sqlite/connection.js) | Físico ejecutable | Fuente de verdad del esquema | Autoridad final ante una divergencia |
 
@@ -63,34 +64,42 @@ El SVG es monocromo, conserva texto vectorial y no necesita imágenes rasterizad
 
 ## Modelo lógico relacional
 
-![Modelo lógico relacional de Lumapse](./03-modelo-logico-relacional.png)
+![Modelo lógico relacional y restricciones físicas de la RC1](./03-modelo-logico-relacional.svg)
 
-**Figura DB-2.** Modelo lógico relacional de Lumapse, exportado desde [`03-modelo-logico-relacional.dbml`](./03-modelo-logico-relacional.dbml) mediante dbdiagram.io. Incluye las cuatro tablas del esquema (`subjects`, `notes`, `academic_events` y `metadata`), sus 26 columnas y las tres relaciones declaradas.
+**Figura DB-2.** Cuatro tablas, 26 columnas, cuatro claves primarias y tres referencias opcionales. La matriz de referencias indica columna de origen, clave de destino y acción de borrado físico, sin un lazo ambiguo sobre `subjects`. La figura diferencia restricciones SQL y reglas del servicio: la profundidad de la jerarquía y la unicidad de nombres por nivel no son garantías de la FK.
 
-Los PNG son artefactos derivados: no se corrigen manualmente. Cualquier cambio futuro debe aplicarse primero a las fuentes y al esquema ejecutable, ejecutar los verificadores y luego producir una nueva exportación.
+La fuente DOT transcribe los tipos declarados, ocho `NOT NULL` explícitos, tres valores `DEFAULT 0`, el `CHECK` de tipos de evento y los dos índices explícitos no únicos. Las PK generan además índices implícitos de unicidad en estas tablas ordinarias. No se representa `TEXT PRIMARY KEY` como `NOT NULL`: SQLite admite nulos en estas PK al no ser tablas `STRICT` ni `WITHOUT ROWID` y no declarar `NOT NULL`. No se infiere una validación SQL de UUID, fechas o indicadores booleanos. Las acciones FK requieren su control habilitado en la conexión; esta revisión es documental, no una comprobación del motor nativo.
+
+El [DBML](./03-modelo-logico-relacional.dbml) se mantiene como proyección estructural reproducible: su generador no proyecta `CHECK` ni índices y conserva `ON DELETE` como comentario. Sus notas semánticas no son un catálogo completo de usos: `metadata` también guarda el borrador RC1. La autoridad para restricciones es el DDL de `connection.js`, no las notas DBML ni una inferencia visual. El tratamiento de PK y las acciones por omisión se contrastaron con la documentación oficial de [CREATE TABLE](https://sqlite.org/lang_createtable.html) y [claves foráneas de SQLite](https://sqlite.org/foreignkeys.html).
+
+### Regeneración y contraste
+
+Desde la raíz, con Graphviz 16.1.2 como herramienta externa:
+
+```bash
+npm run check:dbml
+npm run check:schema
+dot -Tsvg docs/diagramas/database/03-modelo-logico-relacional.dot \
+  -o docs/diagramas/database/03-modelo-logico-relacional.svg
+```
+
+Los dos verificadores no certifican todas las restricciones: complementar con el contraste de cada fila, PK, FK, `NOT NULL`, `DEFAULT`, `CHECK`, índice y acción referencial contra el esquema y sus migraciones. No modificar el esquema congelado para adaptarlo a la figura. Si cambia la documentación, editar primero DOT y regenerar SVG; no editar el SVG manualmente.
+
+El SVG es monocromo y conserva texto vectorial nativo. El control visual a 160 mm de ancho ocupa aproximadamente 220 mm de alto, con letra mínima de 10,9 puntos; es una referencia de legibilidad A4, no la maquetación definitiva. La revisión de márgenes, pie y paginación del PDF queda para el cierre del informe. El PNG anterior se retira para no conservar dos ilustraciones vigentes del mismo modelo; sigue recuperable en Git.
 
 ## Flujo metodológico
 
 ```text
-Modelo conceptual del informe (DOT → Graphviz → SVG)
+Modelo conceptual (DOT → Graphviz → SVG)
         ↓
 Normalización (1FN → 2FN → 3FN)
         ↓
-Modelo lógico (DBML → dbdiagram.io)
+Modelo lógico (DBML parcial + figura DOT → Graphviz → SVG)
         ↓
 Modelo físico (DDL y migraciones en connection.js)
 ```
 
-La coherencia entre DBML, DDL documentado y esquema ejecutable se valida con las herramientas del repositorio antes de exportar las imágenes. Para `v0.5.0`, `npm run check:dbml`, `npm run check:schema` y el smoke test del DDL finalizaron correctamente dentro de los gates documentados.
-
-## Procedimiento de actualización externa
-
-### Modelo lógico
-
-1. Ejecutar `python3 scripts/generate-dbml-from-code.py --check` sobre [`03-modelo-logico-relacional.dbml`](./03-modelo-logico-relacional.dbml).
-2. Importar el DBML validado en [dbdiagram.io](https://dbdiagram.io).
-3. Exportar y reemplazar `03-modelo-logico-relacional.png`.
-4. Verificar que ninguna tabla, FK o restricción relevante haya quedado fuera del encuadre.
+Las anotaciones físicas de la figura lógica explicitan la implementación sin confundirla con las reglas del dominio. La comparación documental con la fuente RC1 no constituye una nueva prueba funcional del APK.
 
 ## Criterios de cierre
 

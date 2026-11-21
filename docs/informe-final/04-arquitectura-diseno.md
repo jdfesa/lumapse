@@ -160,9 +160,9 @@ Las migraciones comprueban las columnas existentes antes de agregar una nueva. U
 
 ### 4.7.2. Niveles de diseño y representaciones
 
-Desarrollé el diseño en tres niveles: conceptual, para entidades y relaciones; lógico, para tablas y claves; y físico, para el esquema SQLite y sus migraciones. La revisión de normalización complementa esos niveles. El modelo conceptual utiliza notación Chen con cardinalidades mínimas y máximas y conserva su fuente DOT; el lógico mantiene su fuente DBML, mientras el DDL ejecutable determina la estructura efectiva.
+Desarrollé el diseño en tres niveles: conceptual, para entidades y relaciones; lógico, para tablas y claves; y físico, para el esquema SQLite y sus migraciones. La revisión de normalización complementa esos niveles. El modelo conceptual utiliza notación Chen con cardinalidades mínimas y máximas y conserva su fuente DOT; el lógico conserva una proyección DBML y una figura vectorial en DOT contrastada con el DDL ejecutable, que determina la estructura efectiva.
 
-La figura 4-3 representa las entidades y asociaciones del dominio en la RC1; la figura 4-4 conserva la exportación lógica del 15 de julio de 2026. La estructura efectiva del corte mantiene las cuatro tablas, 26 columnas y tres claves foráneas del modelo lógico. Mover el borrador a `metadata` cambió el uso de esa tabla, no agregó una entidad o columna.
+La figura 4-3 representa las entidades y asociaciones del dominio en la RC1; la figura 4-4 detalla las tablas y claves de ese mismo corte, con sus restricciones físicas declaradas. La estructura efectiva del corte mantiene las cuatro tablas, 26 columnas y tres claves foráneas del modelo lógico. Mover el borrador a `metadata` cambió el uso de esa tabla, no agregó una entidad o columna.
 
 #### 4.7.2.1. Modelo conceptual
 
@@ -175,11 +175,13 @@ Así, `(0,1)` significa «cero o uno»; `(0,N)`, «cero o muchos»; y `(1,1)`, �
 
 #### 4.7.2.2. Modelo lógico relacional
 
-![Modelo lógico relacional de Lumapse](../diagramas/database/03-modelo-logico-relacional.png)
+![Modelo lógico relacional de Lumapse](../diagramas/database/03-modelo-logico-relacional.svg)
 
-*Figura 4-4. Modelo lógico relacional de Lumapse. Fuente: elaboración propia; exportación desde DBML mediante dbdiagram.io del 15 de julio de 2026.*
+*Figura 4-4. Modelo lógico relacional de Lumapse. Tablas, claves y restricciones físicas declaradas en la RC1. Fuente: elaboración propia mediante Graphviz, contrastada con el esquema SQLite y sus migraciones.*
 
 El modelo lógico incorpora las tres tablas de dominio y `metadata`. Los identificadores de las entidades son UUID almacenados como texto; la clave de `metadata`, en cambio, es el nombre textual de una propiedad. Los indicadores booleanos se representan con enteros y las fechas con texto; la fecha académica usa `YYYY-MM-DD`, diferenciada de las marcas de creación y actualización.
+
+Las referencias se leen desde la columna de origen hacia la clave referenciada. `subjects.parentSubjectId` apunta a otra fila de `subjects`: representa el vínculo de una sección con su materia padre, no la contención de una fila en sí misma. La restricción a dos niveles corresponde al servicio; la FK no la impone.
 
 ### 4.7.3. Integridad y reglas de negocio
 

@@ -1,0 +1,66 @@
+// Figura documental: transcripción contrastada con connection.js RC1 (bcefe6a).
+// Regeneración: dot -Tsvg <este archivo> -o 03-modelo-logico-relacional.svg
+// NN reproduce exclusivamente NOT NULL explícito; PK no lo implica en estas tablas SQLite.
+digraph Logical {
+ graph [bgcolor="white", margin=0, pad=0.08];
+ node [shape=plain, fontname="DejaVu Sans", fontsize=12];
+ schema [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0">
+<TR><TD COLSPAN="3" ALIGN="LEFT"><FONT POINT-SIZE="15"><B>MODELO LÓGICO RELACIONAL · RC1</B></FONT></TD></TR>
+<TR><TD COLSPAN="3" ALIGN="LEFT">4 tablas · 26 columnas · Esquema SQLite y migraciones</TD></TR>
+<TR><TD HEIGHT="12" COLSPAN="3"></TD></TR>
+<TR><TD VALIGN="TOP"><TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1">
+<TR><TD COLSPAN="3" BGCOLOR="#e8e8e8"><B>subjects</B></TD></TR>
+<TR><TD ALIGN="LEFT"><B>Columna</B></TD><TD><B>Tipo</B></TD><TD><B>SQL</B></TD></TR>
+<TR><TD ALIGN="LEFT">id</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">PK</TD></TR>
+<TR><TD ALIGN="LEFT">name</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">NN</TD></TR>
+<TR><TD ALIGN="LEFT">parentSubjectId</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">FK</TD></TR>
+<TR><TD ALIGN="LEFT">archived</TD><TD ALIGN="LEFT">INTEGER</TD><TD ALIGN="LEFT">D=0</TD></TR>
+<TR><TD ALIGN="LEFT">color</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">—</TD></TR>
+<TR><TD ALIGN="LEFT">createdAt</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">NN</TD></TR>
+<TR><TD ALIGN="LEFT">deletedAt</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">—</TD></TR></TABLE></TD><TD WIDTH="16"></TD><TD VALIGN="TOP"><TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1">
+<TR><TD COLSPAN="3" BGCOLOR="#e8e8e8"><B>notes</B></TD></TR>
+<TR><TD ALIGN="LEFT"><B>Columna</B></TD><TD><B>Tipo</B></TD><TD><B>SQL</B></TD></TR>
+<TR><TD ALIGN="LEFT">id</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">PK</TD></TR>
+<TR><TD ALIGN="LEFT">title</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">—</TD></TR>
+<TR><TD ALIGN="LEFT">content</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">—</TD></TR>
+<TR><TD ALIGN="LEFT">pinned</TD><TD ALIGN="LEFT">INTEGER</TD><TD ALIGN="LEFT">D=0</TD></TR>
+<TR><TD ALIGN="LEFT">archived</TD><TD ALIGN="LEFT">INTEGER</TD><TD ALIGN="LEFT">D=0</TD></TR>
+<TR><TD ALIGN="LEFT">subjectId</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">FK</TD></TR>
+<TR><TD ALIGN="LEFT">createdAt</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">NN</TD></TR>
+<TR><TD ALIGN="LEFT">updatedAt</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">NN</TD></TR>
+<TR><TD ALIGN="LEFT">statusEmoji</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">—</TD></TR>
+<TR><TD ALIGN="LEFT">deletedAt</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">—</TD></TR></TABLE></TD></TR>
+<TR><TD HEIGHT="12" COLSPAN="3"></TD></TR>
+<TR><TD VALIGN="TOP"><TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1">
+<TR><TD COLSPAN="3" BGCOLOR="#e8e8e8"><B>academic_events</B></TD></TR>
+<TR><TD ALIGN="LEFT"><B>Columna</B></TD><TD><B>Tipo</B></TD><TD><B>SQL</B></TD></TR>
+<TR><TD ALIGN="LEFT">id</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">PK</TD></TR>
+<TR><TD ALIGN="LEFT">type</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">NN</TD></TR>
+<TR><TD ALIGN="LEFT">title</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">—</TD></TR>
+<TR><TD ALIGN="LEFT">date</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">NN</TD></TR>
+<TR><TD ALIGN="LEFT">subjectId</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">FK</TD></TR>
+<TR><TD ALIGN="LEFT">createdAt</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">NN</TD></TR>
+<TR><TD ALIGN="LEFT">updatedAt</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">NN</TD></TR></TABLE></TD><TD></TD><TD VALIGN="TOP"><TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1">
+<TR><TD COLSPAN="3" BGCOLOR="#e8e8e8"><B>metadata</B></TD></TR>
+<TR><TD ALIGN="LEFT"><B>Columna</B></TD><TD><B>Tipo</B></TD><TD><B>SQL</B></TD></TR>
+<TR><TD ALIGN="LEFT">key</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">PK</TD></TR>
+<TR><TD ALIGN="LEFT">value</TD><TD ALIGN="LEFT">TEXT</TD><TD ALIGN="LEFT">—</TD></TR></TABLE></TD></TR>
+<TR><TD HEIGHT="12" COLSPAN="3"></TD></TR>
+<TR><TD COLSPAN="3"><TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="1">
+<TR><TD ALIGN="LEFT"><B>REFERENCIAS · FK → PK (todas admiten NULL)</B></TD></TR>
+<TR><TD ALIGN="LEFT">subjects.parentSubjectId → subjects.id · ON DELETE CASCADE¹</TD></TR>
+<TR><TD ALIGN="LEFT">notes.subjectId → subjects.id · ON DELETE SET NULL</TD></TR>
+<TR><TD ALIGN="LEFT">academic_events.subjectId → subjects.id · ON DELETE SET NULL</TD></TR>
+<TR><TD ALIGN="LEFT">Destino: 0..N referencias. ON UPDATE no declarado: NO ACTION.</TD></TR>
+<TR><TD ALIGN="LEFT"><B>RESTRICCIONES E ÍNDICES FÍSICOS</B></TD></TR>
+<TR><TD ALIGN="LEFT">academic_events.type: CHECK (type IN ('parcial', 'final', 'tp', 'exposicion'))</TD></TR>
+<TR><TD ALIGN="LEFT">Índices explícitos no únicos en academic_events:</TD></TR>
+<TR><TD ALIGN="LEFT">idx_academic_events_date (date) · idx_academic_events_subject (subjectId)</TD></TR>
+<TR><TD ALIGN="LEFT"><B>LECTURA Y LÍMITES</B></TD></TR>
+<TR><TD ALIGN="LEFT">PK: PRIMARY KEY · FK: FOREIGN KEY · NN: NOT NULL explícito · D=0: DEFAULT 0.</TD></TR>
+<TR><TD ALIGN="LEFT">Sin NN se admite NULL, incluso en estas PK; sin DEFAULT, la omisión es NULL.</TD></TR>
+<TR><TD ALIGN="LEFT">¹ Sección → otra fila materia raíz; raíz: parentSubjectId=NULL.</TD></TR>
+<TR><TD ALIGN="LEFT">Dos niveles y nombres por nivel: servicio; la FK no evita ciclos ni fija profundidad.</TD></TR>
+<TR><TD ALIGN="LEFT">Sin CHECK de UUID, formato de fecha o indicadores 0/1. metadata: sin FK.</TD></TR>
+<TR><TD ALIGN="LEFT">ON DELETE corresponde al borrado físico, no a deletedAt (papelera).</TD></TR></TABLE></TD></TR></TABLE>>];
+}
