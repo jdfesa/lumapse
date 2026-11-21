@@ -170,13 +170,8 @@ La figura 4-3 representa las entidades y asociaciones del dominio en la RC1; la 
 
 *Figura 4-3. Modelo conceptual de Lumapse en notación Chen, con atributos seleccionados y detalle de la jerarquía por roles, correspondiente al dominio de la RC1. Fuente: elaboración propia mediante Graphviz.*
 
-En el panel a, los rectángulos representan tipos de entidad; los rombos, relaciones; y los óvalos, una selección de atributos académicos. Los identificadores propios se subrayan. No se incluyen tipos SQL ni claves foráneas como atributos: el esquema completo corresponde al modelo lógico de la figura 4-4.
-
-La cardinalidad `(mín, máx)` situada junto a cada entidad indica en cuántos vínculos de esa relación puede participar. Un `Subject`, sea materia o sección, puede agrupar cero o muchas notas y fechas académicas: `(0,N)`. Cada nota o fecha se vincula con cero o un `Subject`: `(0,1)`. La ausencia de esa asociación representa Entrada para las notas y una fecha sin materia para los eventos.
-
-El panel b despliega la relación jerárquica mediante dos apariciones de `Subject` con roles distintos, no mediante nuevos tipos de entidad. En el rol de **materia raíz**, un registro carece de padre y puede contener cero o muchas secciones: `(0,N)`. En el rol de **sección hija**, otro registro pertenece a exactamente una materia: `(1,1)`. La relación une registros distintos; una materia no se contiene a sí misma y una sección no contiene subsecciones. Por ejemplo, Matemática podría ser la materia y Teoría una de sus secciones.
-
-Ambos roles se implementan en la misma tabla `subjects`: `parentSubjectId` está vacío en la materia y referencia el identificador de la materia padre en la sección. Por eso la relación es autorreferenciada en el nivel lógico, sin implicar autocontención de una instancia. Al crear una sección, el servicio comprueba que el padre exista y sea una materia raíz; la clave foránea, por sí sola, no impone esa profundidad ni distingue los roles. La tabla técnica `metadata` se excluye del nivel conceptual porque sus propiedades y el borrador del editor no constituyen entidades académicas.
+La cardinalidad se lee junto a la entidad a la que se aplica, como un par `(mínimo, máximo)` de vínculos en esa relación.
+Así, `(0,1)` significa «cero o uno»; `(0,N)`, «cero o muchos»; y `(1,1)`, «exactamente uno».
 
 #### 4.7.2.2. Modelo lógico relacional
 
