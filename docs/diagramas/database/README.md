@@ -1,51 +1,67 @@
 # Diagramas de Base de Datos — Lumapse
 
-Esta carpeta documenta el diseño de datos en tres niveles de abstracción. Las **fuentes editables** se versionan en el repositorio y las **imágenes son artefactos derivados** que deben exportarse con herramientas externas.
+Esta carpeta documenta el diseño de datos en tres niveles de abstracción. Las **fuentes editables** se versionan y las **imágenes son artefactos derivados**. El conceptual utiliza notación Chen; el lógico conserva DBML y el físico corresponde al DDL y las migraciones de SQLite.
 
 - **Autor:** José David Sandoval
 - **Motor:** SQLite mediante `@capacitor-community/sqlite`
-- **Versión de referencia:** `0.5.0`
-- **Auditoría documental:** 2026-09-05
+- **Versión de referencia del conceptual revisado:** `0.6.0/600 — RC1`, fuente `bcefe6a`
+- **Revisión del conceptual:** 2026-11-21; no constituye una nueva prueba del APK
 
 ## Contenido y autoridad
 
 | Archivo | Nivel | Rol | Estado al corte |
 |---|---|---|---|
-| [`01-modelo-conceptual-der-chen.dot`](./01-modelo-conceptual-der-chen.dot) | Conceptual | Fuente Graphviz | Revalidada con `v0.5.0`; fuente de la exportación vigente |
-| [`01-modelo-conceptual-der-chen.png`](./01-modelo-conceptual-der-chen.png) | Conceptual | Imagen derivada | Reemplazada y revisada el 2026-07-15 |
-| [`02-normalizacion.md`](./02-normalizacion.md) | Lógico | Justificación de 1FN, 2FN y 3FN | Referencia textual vigente |
-| [`03-modelo-logico-relacional.dbml`](./03-modelo-logico-relacional.dbml) | Lógico | Fuente DBML | Sincronizada con el esquema ejecutable; fuente de la exportación vigente |
-| [`03-modelo-logico-relacional.png`](./03-modelo-logico-relacional.png) | Lógico | Imagen derivada | Reemplazada y revisada el 2026-07-15 |
-| [`04-modelo-fisico-ddl.md`](./04-modelo-fisico-ddl.md) | Físico | Documentación del DDL y migraciones | Referencia técnica vigente |
-| [`src/services/sqlite/connection.js`](../../../src/services/sqlite/connection.js) | Físico ejecutable | Fuente de verdad del esquema en runtime | Autoridad final si existe una divergencia |
+| [`01-modelo-conceptual.dot`](./01-modelo-conceptual.dot) | Conceptual | Fuente Graphviz, notación Chen | Contraste con dominio, SQLite y jerarquía de la RC1; detalle por roles |
+| [`01-modelo-conceptual.svg`](./01-modelo-conceptual.svg) | Conceptual | Imagen vectorial derivada de DOT | Figura 4-3 del capítulo fuente; atributos seleccionados |
+| [`02-normalizacion.md`](./02-normalizacion.md) | Lógico | Justificación de 1FN, 2FN y 3FN | Referencia textual |
+| [`03-modelo-logico-relacional.dbml`](./03-modelo-logico-relacional.dbml) | Lógico | Fuente DBML | Sincronizada con el esquema ejecutable |
+| [`03-modelo-logico-relacional.png`](./03-modelo-logico-relacional.png) | Lógico | Imagen derivada | Exportación del 2026-07-15 conservada |
+| [`04-modelo-fisico-ddl.md`](./04-modelo-fisico-ddl.md) | Físico | Documentación del DDL y migraciones | Referencia técnica |
+| [`src/services/sqlite/connection.js`](../../../src/services/sqlite/connection.js) | Físico ejecutable | Fuente de verdad del esquema | Autoridad final ante una divergencia |
 
-La tabla `metadata` aparece en el DBML y en el modelo físico porque forma parte del esquema ejecutable. Se excluye deliberadamente del DER conceptual: es una tabla técnica clave-valor utilizada para migraciones y flags internos, no una entidad del dominio académico.
+La tabla `metadata` pertenece al esquema ejecutable, pero no al dominio académico. En la RC1 conserva propiedades internas y el borrador del editor; se incluye en los niveles lógico y físico, no en el conceptual.
 
-## Diferencias resueltas en las fuentes
+## Modelo conceptual de la RC1
 
-La revisión del 2026-07-15 sincronizó las fuentes editables con el schema de `v0.4.8`. La revalidación del 2026-09-05 confirmó que `v0.5.0` conserva el mismo esquema efectivo: AUD-005 cambió propiedad de conexión, migraciones y recuperación, pero no tablas, columnas ni relaciones. Por eso las fuentes y los PNG siguen representando el modelo vigente:
+![Modelo conceptual de Lumapse en notación Chen con jerarquía desplegada por roles](./01-modelo-conceptual.svg)
 
-- el DER conceptual ya incluye `EVENTO ACADÉMICO` y su asociación opcional con `MATERIA / SECCIÓN`;
-- `MATERIA` y `SECCIÓN` se representan como una única entidad `Subject` autorreferenciada;
-- `NOTA` incorpora los atributos vigentes relevantes, incluidos `statusEmoji` y `deletedAt`, y `Subject` incorpora su borrado lógico mediante `deletedAt`;
-- las asociaciones opcionales de `NOTA` y `EVENTO ACADÉMICO` con `Subject` expresan los casos Entrada/sin materia, con cardinalidades `0..1` del lado de cada registro y `0..N` del lado de `Subject`;
-- las claves foráneas y acciones `ON DELETE` permanecen detalladas en el DBML, sin duplicarlas como atributos en el modelo conceptual;
-- `metadata` queda documentada como tabla técnica: incluida en los niveles lógico y físico, excluida del conceptual;
-- la nota de `notes.title` aclara que el título explícito es opcional, el H1 inicial es solo fallback y `Sin título` es el valor final cuando ambos faltan.
+**Figura DB-1.** Modelo conceptual en notación Chen con cardinalidades de participación `(mín, máx)`. El panel a representa tres tipos de entidad y sus asociaciones de contenido. El panel b despliega la relación de `Subject` para distinguir materia raíz y sección hija, sin un lazo que sugiera autocontención de una instancia. Es un detalle del mismo tipo de entidad, no dos entidades o tablas nuevas.
 
-## Exportaciones verificadas
+- Rectángulos: tipos de entidad o sus apariciones por rol, identificadas explícitamente.
+- Rombos: relaciones; óvalos: atributos; identificadores propios subrayados.
+- La cardinalidad junto a una entidad indica en cuántos vínculos de esa relación participa. No se interpreta con la convención de extremos de pata de cuervo.
+- Una materia o sección puede agrupar cero o muchas notas y fechas: `(0,N)`. Cada nota o fecha admite cero o una materia o sección: `(0,1)`.
+- En la jerarquía, una materia raíz no tiene padre y puede tener cero o muchas secciones: `(0,N)`. Cada sección tiene exactamente una materia padre: `(1,1)`. Los roles son excluyentes, la relación une registros distintos y no hay subsecciones.
+- En el nivel lógico ambos roles se almacenan en `subjects`: raíz con `parentSubjectId = NULL`; sección con referencia a una raíz. Al crear una sección, el servicio comprueba que el padre exista y sea una materia raíz; la FK por sí sola no limita la profundidad ni distingue los roles.
 
-Las fuentes DOT y DBML sincronizadas se exportaron con las herramientas externas previstas y sus PNG se reemplazaron el 2026-07-15. La revisión visual confirmó que las imágenes representan el mismo alcance que sus fuentes y que el modelo implementado.
+### Atributos seleccionados y contraste
 
-### Modelo conceptual
+La figura muestra nueve atributos académicos seleccionados, no el inventario completo de columnas:
 
-![Modelo conceptual de Lumapse en notación Chen](./01-modelo-conceptual-der-chen.png)
+| Tipo de entidad | Atributos de la figura | Correspondencia en el dominio |
+|---|---|---|
+| `Subject` | identificador, nombre, color opcional | `id`, `name`, `color` |
+| `Note` | identificador, título, contenido | `id`, `title`, `content` |
+| `AcademicEvent` | identificador, tipo, fecha | `id`, `type`, `date` |
 
-**Figura DB-1.** Modelo conceptual de Lumapse, exportado desde [`01-modelo-conceptual-der-chen.dot`](./01-modelo-conceptual-der-chen.dot) mediante Graphviz/edotor.net. Representa `Subject` —Materia o Sección—, `Note` y `AcademicEvent`, con sus relaciones y cardinalidades. La tabla técnica `metadata` no aparece porque no es una entidad del dominio académico.
+Los demás atributos y las referencias se detallan en el modelo lógico. El título de nota no implica una entrada manual obligatoria: se resuelve mediante el contrato de guardado explicado en 4.7.5. La selección no elimina propiedades de la app ni incorpora nuevas tablas.
 
-La exportación es panorámica (`1622 × 296 px`). Su contenido fue verificado, pero la legibilidad al tamaño definitivo deberá confirmarse al componer el PDF y las diapositivas; si el texto queda pequeño, corresponde reexportar o disponer la figura en orientación horizontal, sin alterar el modelo.
+Se contrastaron `src/domain/subjects.ts`, `notes.ts` y `academicEvents.ts`, el esquema y las migraciones de `src/services/sqlite/connection.js`, la profundidad en `SubjectService.validation.ts` y el título en `NoteTitleService.ts`. Esas fuentes no presentan diferencias respecto de `bcefe6a`; esta comparación documental no valida nuevamente el APK.
 
-### Modelo lógico relacional
+### Regenerar la figura actual
+
+Con Graphviz instalado como herramienta documental externa a la app, desde la raíz del repositorio:
+
+```bash
+dot -Kneato -Tsvg docs/diagramas/database/01-modelo-conceptual.dot \
+  -o docs/diagramas/database/01-modelo-conceptual.svg
+```
+
+Esta exportación utiliza Graphviz 16.1.2 y el motor Neato. La fuente fija posiciones para mantener una disposición vertical. No se agrega una dependencia ni un generador al proyecto de la app. La [documentación de Graphviz](https://graphviz.org/docs/) describe el lenguaje y la exportación; las [notas docentes de Virginia Tech sobre el modelo ER](https://courses.cs.vt.edu/cs4604/Spring21/pdfs/3-ermodel2.pdf) desarrollan el uso de roles en relaciones recursivas.
+
+El SVG es monocromo, conserva texto vectorial y no necesita imágenes rasterizadas o etiquetas HTML incrustadas. La revisión de esta figura no sustituye la revisión del PDF A4: tipografía disponible, ancho útil, pie, márgenes de encuadernación y paginación. El ensamblado y LaTeX/PDF siguen fuera de esta unidad.
+
+## Modelo lógico relacional
 
 ![Modelo lógico relacional de Lumapse](./03-modelo-logico-relacional.png)
 
@@ -56,7 +72,7 @@ Los PNG son artefactos derivados: no se corrigen manualmente. Cualquier cambio f
 ## Flujo metodológico
 
 ```text
-Modelo conceptual (DOT → Graphviz/edotor.net)
+Modelo conceptual del informe (DOT → Graphviz → SVG)
         ↓
 Normalización (1FN → 2FN → 3FN)
         ↓
@@ -69,13 +85,6 @@ La coherencia entre DBML, DDL documentado y esquema ejecutable se valida con las
 
 ## Procedimiento de actualización externa
 
-### DER conceptual
-
-1. Abrir la fuente vigente [`01-modelo-conceptual-der-chen.dot`](./01-modelo-conceptual-der-chen.dot) en [edotor.net](https://edotor.net) o Graphviz.
-2. Renderizar sin modificar el contenido conceptual validado.
-3. Exportar en una resolución legible y reemplazar `01-modelo-conceptual-der-chen.png`.
-4. Verificar visualmente entidades, atributos, relaciones y cardinalidades.
-
 ### Modelo lógico
 
 1. Ejecutar `python3 scripts/generate-dbml-from-code.py --check` sobre [`03-modelo-logico-relacional.dbml`](./03-modelo-logico-relacional.dbml).
@@ -87,6 +96,6 @@ La coherencia entre DBML, DDL documentado y esquema ejecutable se valida con las
 
 - Las fuentes editables coinciden con `connection.js` y con la documentación física.
 - Los verificadores de esquema del repositorio finalizan correctamente.
-- Ambos PNG tienen fecha de exportación posterior al último cambio de sus fuentes.
+- Cada imagen utilizada en el informe procede de su fuente editable vigente.
 - Las imágenes representan visualmente el alcance de las fuentes; la legibilidad al tamaño final de informe y diapositivas se valida durante la maquetación.
-- El informe cita la versión `0.5.0` y conserva `0.4.8` únicamente cuando describe la primera beta o evidencia histórica.
+- El capítulo fuente identifica la RC1 `0.6.0/600`; las versiones anteriores se conservan sólo como antecedentes o atribución de evidencia histórica. El checkpoint ensamblado no se modifica manualmente.

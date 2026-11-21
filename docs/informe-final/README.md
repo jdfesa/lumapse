@@ -4,13 +4,13 @@ Este directorio se trabaja **por secciones**. Los archivos `01-*.md` a `08-*.md`
 
 El informe es un documento vivo y queda sujeto a actualizaciones mientras el proyecto avance. Se lo va a consultar de forma recurrente para agregar secciones, corregir inconsistencias, ajustar redacción y completar evidencias antes del cierre académico.
 
-`INFORME-FINAL-COMPLETO.md` es un artefacto ensamblado automáticamente con:
+`INFORME-FINAL-COMPLETO.md` es una salida generada, no una fuente de edición. Se regenerará al cerrar la revisión de los capítulos mediante:
 
 ```bash
 python3 scripts/assemble-report.py
 ```
 
-No se edita manualmente el informe completo. El checkpoint parcial del 2026-11-17 reúne las fuentes vigentes para su lectura y revisión; no equivale al cierre editorial ni a la entrega final.
+No se edita manualmente el informe completo. El checkpoint parcial del 2026-11-17 se retiró del árbol vigente al quedar desactualizado; permanece recuperable en el historial de Git. La lectura y edición actuales se realizan sobre los capítulos fuente, sin mantener una copia ensamblada hasta el cierre editorial.
 
 La fecha de ensamblado se calcula en cada ejecución. El estado, alcance funcional y fecha de corte documental se leen de `report-metadata.json`; nunca se recuperan desde una salida generada anterior.
 
@@ -24,7 +24,7 @@ La fecha de ensamblado se calcula en cada ejecución. El estado, alcance funcion
 ### Seguimiento por capítulos
 
 El [estado de cada unidad](../../TODO.md#revisión-del-informe-capítulo-por-capítulo)
-se registra en `TODO.md`. Los metadatos identifican el checkpoint parcial; su
+se registra en `TODO.md`. Los metadatos conservan el corte del último checkpoint; su
 comprobación definitiva y el ensamblado final siguen pendientes del cierre editorial.
 
 ## Estado actual
@@ -62,20 +62,19 @@ con corrección mínima de sus dos citas en el capítulo 2.
 asistencia de IA y los recursos y desembolsos personales, con continuidad en
 7.3.2. Están revisados y aprobados; sus cambios se recogen en
 [PR #57](https://github.com/jdfesa/lumapse/pull/57). No amplían la evidencia de
-pruebas; el checkpoint parcial los incorpora sin modificar los capítulos fuente.
+pruebas; el checkpoint parcial del 2026-11-17 los incorporó sin modificar los capítulos fuente.
 
-**Checkpoint parcial generado — 2026-11-17:**
-[`INFORME-FINAL-COMPLETO.md`](./INFORME-FINAL-COMPLETO.md) reúne los siete capítulos
-y las referencias vigentes, con índice automático y metadatos de la RC1
-`v0.6.0/600`. La portada distingue el tag publicado `v0.6.0` sobre `ac2a747` de la
-fuente del APK, `bcefe6a`. El estado indica expresamente que el contenido sigue
-sujeto a revisión y cierre editorial. Las métricas y verificaciones del capítulo 6
-conservan sus artefactos y límites; este ensamblado no aporta pruebas nuevas.
+**Checkpoint parcial del 2026-11-17 — antecedente histórico:** reunió los siete
+capítulos y las referencias de ese corte, con índice automático y metadatos de la
+RC1 `v0.6.0/600`. Su portada distinguía el tag `v0.6.0` sobre `ac2a747` de la fuente
+del APK, `bcefe6a`, e indicaba su estado parcial. Se retiró del árbol vigente junto
+con la figura conceptual reemplazada para evitar versiones contradictorias durante
+la revisión por capítulos; no se regeneró otro ensamblado.
 
-El checkpoint anterior de `v0.5.0`, del 2026-09-05, queda como antecedente en el
-historial de Git. Los capítulos siguen siendo la fuente de verdad. Este ensamblado
-parcial no congela el contenido ni completa los pendientes de diagramas, matriz RNF,
-revisión transversal o presentación final.
+Ese checkpoint y el anterior de `v0.5.0`, del 2026-09-05, permanecen en el historial
+de Git. Los capítulos son la fuente de verdad y conservan las atribuciones y límites
+de la evidencia. Su revisión no completa por sí sola los pendientes de diagramas,
+matriz RNF, revisión transversal o presentación final.
 
 El tablero único vigente es [`TODO.md`](../../TODO.md).
 
@@ -99,7 +98,7 @@ a esa versión, no al APK posterior. No esperar respuestas para cerrar entregabl
 pasaron en el debug `348da88` el 2026-10-06, tras corregir el bloqueo del ZIP local
 sin red. El autor aceptó [PR #31](https://github.com/jdfesa/lumapse/pull/31); el
 resultado corresponde a ese debug y no se transfiere al asset publicado `v0.5.0`
-ni a la RC1 `v0.6.0`. El checkpoint parcial conserva esa atribución por artefacto.
+ni a la RC1 `v0.6.0`. El capítulo 6 conserva esa atribución por artefacto.
 
 El [manual de usuario 0.6.0](../manual-de-usuario-0.6.0/README.md) ya se incorporó
 al repositorio y se [publicó en GitHub Pages](https://jdfesa.github.io/lumapse/manual-de-usuario-lumapse.html).
