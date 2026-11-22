@@ -305,16 +305,17 @@ Garantizó la calidad del código y preparó la primera distribución controlada
 - Generación, firma y publicación de `lumapse-v0.4.8.apk`
 - Cierre sin bugs bloqueantes; `Mover a` y rendimiento con más notas quedan como observaciones menores para la validación final
 
-### 🔄 Hito 06 — Entrega Final (planificado para Octubre 2026, activo) → [Informe inicial](./docs/hitos/hito-06-octubre.md)
+### 🔄 Hito 06 — Entrega Final (planificado para Octubre 2026, activo en cierre documental) → [Informe de ejecución](./docs/hitos/hito-06-octubre.md)
 
-Cerrar el proyecto con documentación coherente, evidencia final y presentación académica, sin ampliar el producto.
+El informe del hito consolida el trabajo realizado hasta el 22 de noviembre de 2026: fechas, decisiones, métodos, resultados y límites, con enlaces a la evidencia. Es distinto del informe académico que se prepara para el tribunal.
 
 - Segunda beta `v0.5.0` publicada con AUD-001 a AUD-007, mejoras táctiles y versionado Android `0.5.0/500`
-- Revisión editorial y congelamiento de la documentación técnica y académica
-- Gráficos de base de datos regenerados y verificados contra el schema real; resta validar su maquetación en PDF y diapositivas
 - `v0.6.0/600` RC1 publicada y desarrollo congelado por decisión del autor, con cobertura parcial explícita; no se repetirán los controles restantes antes de la presentación
+- Capítulos, referencias e identificación institucional del informe académico revisados y aprobados; el ensamblado y la presentación definitiva continúan por separado
+- Modelos conceptual, lógico y físico de base de datos actualizados documentalmente contra la fuente de la versión 0.6.0 RC1; resta revisar su composición en la entrega completa
+- [Prueba exploratoria](./docs/prueba-exploratoria/resultados.md) cerrada y analizada: 22 respuestas, 13 con uso declarado y nueve sin uso; resultados y límites incorporados al capítulo 6, sin acreditar adopción ni validación técnica del APK
 - [Recorte de entrega y deuda postdefensa](./BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa): evidencia de offline, privacidad y uso/accesibilidad registrada por artefacto en la [fuente RNF](./docs/producto/requisitos-no-funcionales.md), sin transferirla automáticamente a la versión 0.6.0 RC1. Matriz final pendiente; CRUD/FPS diferidos, sin afirmar cumplimiento cuantitativo
-- Manual de usuario 0.6.0 incorporado y publicado; revisión final del manual, informe y defensa pendientes
+- Manual de usuario 0.6.0 incorporado y publicado; revisión final del manual, cierre editorial del informe académico y preparación de defensa pendientes de registro
 - Planificación y tareas pendientes: [`TODO.md`](./TODO.md)
 - Fijar la línea base académica sobre ese artefacto, sin forzar una versión estable o afirmar adopción real
 

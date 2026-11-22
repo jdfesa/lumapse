@@ -19,6 +19,11 @@
 **Informe final:** seguimiento del tratamiento final en la
 [lista por capítulo](#revisión-del-informe-capítulo-por-capítulo).
 
+**Informe del Hito 06:** [balance de ejecución](docs/hitos/hito-06-octubre.md)
+consolidado hasta el 2026-11-22, pendiente de revisión del autor. Documenta hechos,
+cronología, decisiones, métodos y resultados, incluida la prueba exploratoria;
+no sustituye el informe académico ni declara cumplidos sus entregables pendientes.
+
 **Revisión documental previa — completada:** README principal, estructura y
 guías vigentes reconciliados con la versión 0.6.0 RC1 y el manual publicado en
 [PR #45](https://github.com/jdfesa/lumapse/pull/45). No se trasladó esa revisión a
