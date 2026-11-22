@@ -211,9 +211,10 @@ de controles como condición de publicación. No abrir otra ronda técnica.
 - [x] Aprobar la documentación de la prueba exploratoria en [PR #55](https://github.com/jdfesa/lumapse/pull/55); la aprobación no autoriza publicar el formulario.
 - [x] Autorizar y publicar el formulario el 2026-11-10: recepción de respuestas activada y [enlace para participar](https://forms.gle/e4fWoxdcV33D42VS9) abierto sin enviar respuestas; se mantienen preguntas, recorridos y hoja vinculada.
 - [x] Acceso para responder sin iniciar sesión en Google comprobado por el responsable del proyecto.
-- [ ] Registrar la fecha de cierre de la encuesta en la [documentación de la prueba](docs/prueba-exploratoria/README.md) cuando finalice la recepción de respuestas; conservar el enlace como referencia.
-- [ ] Distribuir el APK de presentación a compañeros y otros usuarios e invitar a una encuesta voluntaria; registrar versión, fecha y resultados disponibles, sin condicionar manual, informe o defensa a recibir respuestas.
-- [ ] Recoger observaciones sobre primera nota (`RNF-005`), funcionalidad y fricciones. El umbral ≤10 s sigue pendiente si no se realiza una medición específica; opiniones no acreditan tiempos ni adopción.
+- [x] Cerrar la recepción de la encuesta el 2026-11-22 y conservar su enlace y el CSV original de las 22 respuestas en la [documentación de la prueba](docs/prueba-exploratoria/README.md).
+- [x] Documentar la invitación a probar `v0.6.0` RC1 y los [resultados disponibles](docs/prueba-exploratoria/resultados.md) de la encuesta voluntaria: 22 respuestas, sin registro individual de descarga/versión instalada ni denominador de invitaciones. Sin condicionar manual, informe o defensa a recibir respuestas.
+- [x] Analizar utilidad percibida y fricciones declaradas, separando 13 respuestas con uso y nueve sin uso; conservar tres «Otro motivo» sin atribuir dispositivos. Los resultados no verifican `RNF-005` ni acreditan adopción.
+- [ ] Medición específica de primera nota (`RNF-005`), diferida: el umbral ≤10 s sigue pendiente. La encuesta no midió ese tiempo ni modifica el estado del requisito.
 - [ ] Incorporar, cuando se reciban, las observaciones de los dos docentes que el autor informa están probando `v0.5.0`; atribuirlas a esa versión, no al APK posterior. Documentar hallazgos y trabajo futuro sin reabrir automáticamente el desarrollo.
 
 ### Después del APK aceptado con límites — cierre académico y defensa

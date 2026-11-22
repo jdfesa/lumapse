@@ -1,10 +1,14 @@
 # Prueba exploratoria de Lumapse
 
-> **Estado:** encuesta abierta desde el **10 de noviembre de 2026**.
-> **Cierre:** sin fecha definida; se registrará aquí cuando se cierre la encuesta.
+> **Estado:** encuesta cerrada el **22 de noviembre de 2026**, con **22 respuestas**.
+> **Apertura:** 10 de noviembre de 2026. Se conserva el enlace como referencia.
 > Diseño aplicado y aprobado el 9 de noviembre de 2026, con **cinco preguntas y cuatro secciones**.
 
 [Formulario de la prueba exploratoria](https://forms.gle/e4fWoxdcV33D42VS9).
+
+Los [resultados y sus límites](./resultados.md) separan las 13 respuestas con
+uso de las nueve sin uso. El [CSV original](./datos/respuestas_experiencia_2026_11.csv)
+y el [recuento reproducible](./resumen.json) están disponibles en esta misma carpeta.
 
 ## Objetivo e invitación
 
@@ -120,3 +124,62 @@ Sin él no se garantiza una sola respuesta por persona.
   con el enlace.
 - [x] Acceso para responder sin iniciar sesión en Google comprobado por el
   responsable del proyecto.
+- [x] Recepción de nuevas respuestas desactivada y cambio guardado el 2026-11-22;
+  Google Forms mostró el aviso de formulario cerrado y conservó las 22 respuestas.
+
+## Cierre y datos originales
+
+El [CSV crudo](./datos/respuestas_experiencia_2026_11.csv) se exportó el
+**22 de noviembre de 2026**, después de cerrar la recepción, mediante
+«Download responses (.csv)» de Google Forms. La descarga entregó un ZIP con
+`Experiencia con Lumapse.csv`; se extrajo ese archivo y sólo se cambió su nombre
+para identificarlo en el repositorio. No se modificaron sus bytes, marcas
+temporales, textos, espacios finales ni campos vacíos.
+
+- **Contenido:** seis columnas —marca temporal y cinco preguntas— y 22 filas de
+  respuestas, además de la cabecera.
+- **Tamaño:** 3377 bytes, codificación UTF-8.
+- **SHA-256 del CSV:**
+  `60906d994bb513183c7a5de44d94286bd32856a0b208f7e5ffb5534e1ad38ac9`.
+- **Procedencia anónima:** el formulario no recopiló nombres ni correos y el CSV
+  no contiene esas columnas. Conserva las marcas temporales y los textos libres;
+  la ausencia de identificadores directos no garantiza anonimato absoluto ni
+  permite comprobar que cada fila corresponda a una persona distinta.
+
+Los datos originales se mantienen públicos y separados de sus interpretaciones.
+Los blancos deben leerse según el árbol aplicado: no completar una pregunta no
+mostrada no equivale a una valoración negativa ni a una respuesta perdida.
+
+## Reproducción del recuento
+
+El [script de análisis](./scripts/analizar.py) utiliza únicamente la biblioteca
+estándar de Python 3.8 o posterior. No necesita pandas, instalaciones ni cambios
+en las dependencias de Lumapse. Su [salida JSON](./resumen.json) conserva bases,
+frecuencias, porcentajes por recorrido, cruces de P1 con P2/P5, fechas de envío
+y los trece textos de P3 con identificadores de fila. `R01` designa la primera
+respuesta después de la cabecera; no identifica a una persona.
+
+Desde la raíz del repositorio:
+
+```bash
+# Recontar sin escribir archivos: imprime JSON en la terminal.
+python3 -B docs/prueba-exploratoria/scripts/analizar.py
+
+# Regenerar sólo la salida derivada, sin modificar el CSV original.
+python3 -B docs/prueba-exploratoria/scripts/analizar.py --salida docs/prueba-exploratoria/resumen.json
+
+# Ejecutar las regresiones con el CSV público y entradas sintéticas.
+python3 -B -m unittest discover -s docs/prueba-exploratoria/scripts -p 'test_*.py'
+```
+
+El script valida cabeceras, opciones, marcas temporales y coherencia de los
+saltos antes de calcular. Ante una entrada incompatible se detiene: no elimina
+filas ni completa respuestas. Recorta espacios exteriores sólo para comprobar
+campos y contar opciones; conserva los textos originales de P3. Diagnostica
+duplicados exactos sin descartarlos ni inferir identidad. Incluye las opciones
+con cero respuestas y usa `null` para un porcentaje cuya base sea cero.
+
+Los porcentajes se calculan como `100 × frecuencia / base` y se redondean a un
+decimal. Sus sumas pueden diferir de 100 % por redondeo. Los cruces son
+descriptivos; no se aplican pruebas inferenciales ni se clasifican automáticamente
+los comentarios por sentimiento o dispositivo.
