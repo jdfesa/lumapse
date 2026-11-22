@@ -305,7 +305,7 @@ Garantizó la calidad del código y preparó la primera distribución controlada
 - Generación, firma y publicación de `lumapse-v0.4.8.apk`
 - Cierre sin bugs bloqueantes; `Mover a` y rendimiento con más notas quedan como observaciones menores para la validación final
 
-### 🔄 Hito 06 — Entrega Final (planificado para Octubre 2026, activo en cierre documental) → [Informe de ejecución](./docs/hitos/hito-06-octubre.md)
+### 🔄 Hito 06 — Entrega Final (planificado para Octubre 2026, activo en cierre documental) → [Informe de cierre](./docs/hitos/hito-06-octubre.md)
 
 El informe del hito consolida el trabajo realizado hasta el 22 de noviembre de 2026: fechas, decisiones, métodos, resultados y límites, con enlaces a la evidencia. Es distinto del informe académico que se prepara para el tribunal.
 

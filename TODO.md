@@ -20,7 +20,8 @@
 [lista por capítulo](#revisión-del-informe-capítulo-por-capítulo).
 
 **Informe del Hito 06:** [balance de ejecución](docs/hitos/hito-06-octubre.md)
-consolidado hasta el 2026-11-22, pendiente de revisión del autor. Documenta hechos,
+consolidado hasta el 2026-11-22, revisado y aprobado en
+[PR #64](https://github.com/jdfesa/lumapse/pull/64). Documenta hechos,
 cronología, decisiones, métodos y resultados, incluida la prueba exploratoria;
 no sustituye el informe académico ni declara cumplidos sus entregables pendientes.
 
