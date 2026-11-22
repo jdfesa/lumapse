@@ -63,9 +63,9 @@ con corrección mínima de sus dos citas en el capítulo 2.
 el método, los resultados y los límites de las 22 respuestas a la encuesta cerrada
 el 22 de noviembre de 2026, contrastados con el [análisis y sus datos originales](../prueba-exploratoria/resultados.md).
 Se distinguen 13 respuestas con uso declarado y nueve sin uso, sin verificar
-personas únicas, versión instalada, adopción o RNF-005. La ampliación queda
-pendiente de revisión y aprobación; no modifica la app, los estados RNF ni las
-pruebas técnicas anteriores.
+personas únicas, versión instalada, adopción o RNF-005. La ampliación está
+revisada y aprobada; sus cambios se recogen en [PR #62](https://github.com/jdfesa/lumapse/pull/62).
+No modifica la app, los estados RNF ni las pruebas técnicas anteriores.
 
 **Complementos de proceso y recursos:** las secciones 2.1.4 y 2.4.1 explicitan la
 asistencia de IA y los recursos y desembolsos personales, con continuidad en
