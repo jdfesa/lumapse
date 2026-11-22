@@ -5,7 +5,9 @@ Las referencias siguientes identifican las fuentes metodológicas y técnicas ci
 ## 8.1. Referencias metodológicas
 
 - Coleman, J., & Vacanti, D. (2025, 1 de mayo). *The Kanban Guide* (edición 2025.5). Kanban Guides.
+- Doorley, S., Holcomb, S., Klebahn, P., Segovia, K., & Utley, J. (2018). *Design thinking bootleg* [Recurso didáctico]. Stanford d.school.
 - Gothelf, J., & Seiden, J. (2013). *Lean UX: Applying lean principles to improve user experience*. O’Reilly Media.
+- Maurya, A. (2024, 22 de febrero). *What is a Lean Canvas?* [Entrada de blog].
 - Schwaber, K., & Sutherland, J. (2020, noviembre). *The Scrum Guide: The definitive guide to Scrum: The rules of the game*.
 
 ## 8.2. Normas y documentación técnica oficial
@@ -18,7 +20,7 @@ Las referencias siguientes identifican las fuentes metodológicas y técnicas ci
 
 ## 8.3. Bibliografía de apoyo y material de cátedra
 
-Para la estimación y el seguimiento del proyecto utilicé la obra de Gómez (2014) y la guía de Parada (2026). Esta última es un material didáctico de Prácticas Profesionalizantes III, elaborado por el docente para relacionar la bibliografía con las actividades del proyecto; no constituye un libro ni una edición de la obra de Gómez.
+Para la estimación y el seguimiento del proyecto utilicé la obra de Gómez (2014) y la guía de Parada (2026). Esta última es un material didáctico de Prácticas Profesionalizantes III, elaborado por el Ing. Mauricio Parada, profesor responsable de la cátedra, para relacionar la bibliografía con las actividades del proyecto; no constituye un libro ni una edición de la obra de Gómez.
 
 - Gómez, J. (2014, abril). *Guía práctica de estimación y medición de proyectos software: ¿Por qué? ¿Para qué? y ¿Cómo?* [Libro electrónico de autor].
 - Parada, M. (2026). *Guía de estudio: Etapa de relevamiento y análisis — Estimación de proyectos* [Material de cátedra de Prácticas Profesionalizantes III]. Instituto de Enseñanza Superior N.º 6023 «Dr. Alfredo Loutaif».

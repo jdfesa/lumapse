@@ -8,7 +8,7 @@ Desarrollé Lumapse de forma iterativa e incremental: construí funcionalidades 
 
 Los hitos funcionaron como puntos académicos de revisión, entrega y establecimiento de líneas base, no como Sprints. El cronograma inicial y las fechas de cierre registran planificación y evolución del proyecto, sin convertir los hitos en iteraciones de duración fija.
 
-Complementé la gestión con artefactos de Design Thinking para organizar la comprensión del contexto, la definición del problema y las alternativas de solución. Las personas, la encuesta, el análisis competitivo y el Lean Canvas aportaron insumos para esas actividades. El prototipo evolucionó hacia las betas y la versión 0.6.0 RC1; esa evolución técnica no demuestra que se haya completado una validación sistemática de uso con el público objetivo.
+Complementé la gestión con artefactos de Design Thinking para organizar la comprensión del contexto, la definición del problema y las alternativas de solución. Como marco para interpretar esas actividades, Doorley et al. (2018) distinguen empatizar, definir, idear, prototipar y probar, sin imponer un recorrido lineal. En Lumapse, las personas y la encuesta ayudaron a formular y contrastar necesidades; el planteo del problema, el análisis competitivo y el Lean Canvas permitieron delimitar la propuesta. El prototipo evolucionó hacia las betas y la versión 0.6.0 RC1; esa evolución técnica no demuestra que se haya completado una validación sistemática de uso con el público objetivo.
 
 ### 2.1.1. Justificación frente a Scrum y RUP
 
@@ -32,9 +32,13 @@ La prioridad atiende riesgos de pérdida de datos, bloqueos de entrega, evidenci
 
 ### 2.1.3. Medición y límite de la evidencia
 
-Estimé las historias mediante tamaño relativo en Story Points, utilizando juicio individual y una historia de referencia. Para los riesgos de integración de Capacitor y migración a SQLite documenté escenarios optimista, más probable y pesimista mediante estimación de tres puntos. Son instrumentos de planificación: no equivalen a horas efectivas, productividad observada ni duraciones reales demostradas.
+Para la estimación y el seguimiento utilicé como apoyo la obra de Gómez (2014) y la guía didáctica de Parada (2026), elaborada por el Ing. Mauricio Parada, profesor responsable de la cátedra Prácticas Profesionalizantes III. Distingo la obra publicada de ese material de enseñanza, que relaciona la bibliografía con las actividades del proyecto.
 
-El seguimiento por hitos registra Story Points asociados al alcance entregado. No los interpreto como *throughput* de Kanban, que cuenta elementos terminados, ni como tiempo de ciclo. Tampoco presento los escenarios de estimación como intervalos empíricos de cumplimiento.
+Estimé las historias mediante tamaño relativo en Story Points —SP—, utilizando juicio individual y una escala de Fibonacci. Tomé HU-001, crear una nota rápida, como referencia de 2 SP. En comparación, asigné 8 SP a HU-017, organización por materias y secciones, porque reúne jerarquía, validaciones, asociación de notas y filtrado. Los puntos expresan complejidad relativa, no horas de trabajo ni una proporción comprobada entre las duraciones de desarrollo.
+
+Para los riesgos de integración de Capacitor y migración a SQLite documenté escenarios optimista —O—, más probable —M— y pesimista —P—. Para combinarlos utilicé la ponderación PERT, que da mayor peso al escenario más probable: `E = (O + 4 × M + P) / 6`. En Capacitor, los escenarios de 3, 7 y 14 días producen una estimación de 7,5 días; en SQLite, los de 2, 5 y 10 producen aproximadamente 5,33 días. El cronograma registra 8 y 6 días tras redondear cada módulo hacia arriba: los 14 días resultantes son planificación, no duración real observada. La sección 7.2.2 retoma las limitaciones de este registro al evaluar lo aprendido.
+
+El seguimiento por hitos registra Story Points asociados al alcance entregado e incorpora reclasificaciones de historias. Por esas modificaciones, no lo presento como una comparación inalterada entre el plan inicial y lo entregado. Tampoco equiparo los puntos con el *throughput* de Kanban, que cuenta elementos terminados, ni con el tiempo de ciclo. Los escenarios de estimación no son intervalos empíricos de cumplimiento.
 
 La guía de Kanban identifica cuatro métricas mínimas: WIP, cantidad de elementos terminados por unidad de tiempo, edad de los elementos aún activos y tiempo de ciclo de los finalizados (Coleman y Vacanti, 2025). No dispongo de fechas completas y confiables para calcularlas retrospectivamente sobre todo el proyecto. La formalización de su registro en Hito 06 no demuestra que se hayan medido durante las etapas anteriores.
 
@@ -48,11 +52,15 @@ Me apoyé en herramientas de inteligencia artificial durante el desarrollo incre
 
 Formulé tres personas a partir de mi experiencia en el contexto académico, la observación y conversaciones informales. Son arquetipos de diseño, no participantes identificados en una investigación ni entrevistas sistemáticas. Sus nombres, biografías y citas sintéticas ayudan a representar necesidades; no deben interpretarse como testimonios recolectados.
 
+**Tabla 2-1. Arquetipos y necesidades consideradas en el diseño**
+
 | Arquetipo | Papel en el análisis | Necesidad que orienta el diseño |
 |---|---|---|
 | Lucía, estudiante organizada | Usuaria primaria, sin exigir conocimientos técnicos | Capturar y recuperar apuntes, disponer de ellos sin red y organizarlos por materia |
 | Martín, estudiante práctico | Perfil con familiaridad técnica | Trabajar con Markdown y conservar control y portabilidad de sus contenidos |
 | Prof. Ramos, docente evaluador | Parte interesada académica, no segmento comercial demostrado | Comprender el proceso y examinar una entrega identificable con decisiones y evidencia |
+
+*Nota.* Elaboración propia a partir de las personas de diseño del proyecto; no representa testimonios ni perfiles validados mediante entrevistas.
 
 Utilicé los perfiles como preguntas de diseño: si puede escribirse sin aprender Markdown, cómo recuperar un apunte o qué evidencia necesita quien evalúa la entrega. El relevamiento permitió contrastar atributos generales, como preferencia móvil y organización por materia, pero no valida cada biografía ni la satisfacción de los arquetipos mediante uso del prototipo.
 
@@ -64,11 +72,17 @@ La matriz conserva apreciaciones del relevamiento competitivo original, sin una 
 
 El posicionamiento buscado es una combinación acotada: captura de apuntes, organización académica, almacenamiento local, ausencia de cuenta obligatoria y respaldo manual. No equivale a mayor potencia, mejor rendimiento o superioridad de usabilidad frente a productos maduros. La distribución vigente es Android; una interfaz adaptable y una base de código web no constituyen una entrega soportada para escritorio o para múltiples plataformas.
 
+El contraste me permitió delimitar qué conservar y qué no intentar reproducir: prioricé la captura local y la salida de los datos, una organización por materias y secciones y un alcance sin colaboración ni sincronización automática. Desarrollar una solución propia respondió también al objetivo formativo de recorrer el proceso completo de ingeniería, no a haber demostrado que ninguna herramienta existente pudiera utilizarse para estudiar.
+
 ## 2.4. Lean Canvas
+
+El Lean Canvas, creado por Ash Maurya como adaptación del Business Model Canvas, permite representar en una página los supuestos principales de una propuesta de producto (Maurya, 2024). Su utilidad reside en hacerlos explícitos para examinarlos, no en convertirlos en hechos por completar el esquema.
 
 Elaboré el Lean Canvas como ejercicio de diseño de producto previo al relevamiento. Su función fue relacionar problema, destinatarios, propuesta de valor, solución y condiciones de sostenibilidad, no acreditar un negocio validado. La formulación inicial contemplaba PWA, IndexedDB y un posible empaquetado mediante TWA; esos elementos quedaron reemplazados por las decisiones técnicas ADR-005 y ADR-006.
 
-La tabla distingue la contribución de cada bloque de aquello que aún no constituye un resultado demostrado.
+La tabla 2-2 sintetiza esos supuestos y su relación con el alcance actual; no reproduce el canvas inicial como si todas sus decisiones siguieran vigentes.
+
+**Tabla 2-2. Síntesis de los bloques del Lean Canvas y su evolución en Lumapse**
 
 | Bloque | Aplicación y límite en Lumapse |
 |---|---|
@@ -82,6 +96,8 @@ La tabla distingue la contribución de cada bloque de aquello que aún no consti
 | Ingresos | Modalidades y precios hipotéticos, sin ventas, disposición a pagar o rentabilidad demostradas |
 | Ventaja propuesta | Cercanía al contexto como acceso inicial al problema, no como barrera competitiva demostrada |
 
+*Nota.* Elaboración propia a partir del canvas inicial y las decisiones posteriores de producto y arquitectura; canales, ingresos y metas no constituyen resultados comerciales.
+
 La síntesis «Tus notas. En tu equipo. Sin cuenta. Sin internet.» expresa esa orientación con los límites del capítulo 1: el respaldo externo requiere una acción deliberada y la pérdida del dispositivo o la desinstalación siguen siendo riesgos. Portabilidad no equivale a sincronización ni a recuperación garantizada de todo el estado.
 
 El canvas hace visibles los supuestos; no presento una validación económica integral ni un estudio de retención. Sus metas iniciales no reemplazan requisitos medibles ni resultados de usuario.
@@ -90,11 +106,15 @@ El canvas hace visibles los supuestos; no presento una validación económica in
 
 Distingo los desembolsos personales, los accesos bonificados y el trabajo no valorizado. Utilicé una suscripción personal de ChatGPT de USD 20 mensuales, cuyo inicio sitúo aproximadamente en abril de 2026. La destiné en gran medida a Lumapse y su mantenimiento, pero también a otros proyectos; por ello, la cuota no representa un costo mensual exclusivo de Lumapse.
 
+**Tabla 2-3. Recursos utilizados y condiciones del desembolso personal**
+
 | Recurso | Desembolso personal | Condición de uso |
 |---|---|---|
 | ChatGPT | USD 20 mensuales | Suscripción compartida con otros proyectos, sin un porcentaje de imputación registrado |
 | Antigravity | USD 0 | Acceso bonificado mediante una promoción estudiantil personal |
 | Dominio `.tech` | USD 0 | Beneficio personal de GitHub Student Developer Pack, no una compra del proyecto |
+
+*Nota.* Registro propio de recursos y desembolsos declarados; no es una valoración del costo total ni una imputación exclusiva a Lumapse.
 
 Estos recursos apoyan el desarrollo y la difusión; su contratación no es un requisito para utilizar el núcleo local del APK. El trabajo se realizó sin horario fijo y no dispongo de un registro completo de horas para valorizarlo, como explico en la sección 7.2.2. El cuadro no constituye un presupuesto integral: no calculo un total exclusivo a partir de cuotas compartidas ni sumo precios comerciales de recursos que recibí bonificados. Un desembolso nulo tampoco demuestra que su continuidad esté financiada, cuestión retomada en la sección 7.3.2.
 
@@ -104,45 +124,55 @@ Las historias expresan una necesidad y un beneficio esperado desde la perspectiv
 
 Esta separación es coherente con la orientación de Lean UX hacia supuestos, hipótesis, experimentación y aprendizaje a partir de usuarios, desarrollada por Gothelf y Seiden (2013). En Lumapse distingo el contraste exploratorio de necesidades, las decisiones de diseño y la verificación del software. No presento la existencia de esos artefactos como demostración de haber aplicado íntegramente un programa experimental de Lean UX.
 
-### 2.5.1. Fase 1 — La Historia de Usuario como supuesto de diseño
+Los apartados siguientes organizan el razonamiento aplicado en Lumapse, desde el supuesto hasta su implementación. No constituyen fases prescritas de Lean UX ni implican que cada actividad se haya realizado una única vez y en ese orden.
+
+### 2.5.1. Formulación de historias como supuestos de diseño
 
 Las personas, el contexto y las restricciones sirvieron para formular necesidades con la estructura «Como [rol], quiero [acción], para [beneficio]». Organizar apuntes por materia expresa una necesidad; elegir una tabla relacional o limitar la profundidad son decisiones de solución. Esta separación permitió revisar supuestos, como priorizar etiquetas, sin tratar las primeras historias como compromisos inmodificables.
 
-### 2.5.2. Fase 2 — La encuesta como instrumento de validación
+### 2.5.2. Contraste exploratorio de necesidades mediante la encuesta
 
-El relevamiento reunió 121 respuestas y permitió analizar 120 después de aplicar el criterio de exclusión. Su selección fue no probabilística por conveniencia. Los resultados siguientes describen esa muestra y orientan decisiones; no prueban eficacia del prototipo ni representan una estimación inferencial de toda la población. El capítulo 3 desarrolla el instrumento y sus limitaciones.
+El relevamiento reunió 121 respuestas y permitió analizar 120 después de aplicar el criterio de exclusión. Su selección fue no probabilística por conveniencia. La unidad de análisis es la respuesta registrada, sin comprobar identidades únicas. Los resultados siguientes describen esa base y orientan decisiones; no prueban eficacia del prototipo ni representan una estimación inferencial de toda la población. El capítulo 3 desarrolla el instrumento y sus limitaciones.
+
+**Tabla 2-4. Resultados del relevamiento que orientaron decisiones de producto**
 
 | Cuestión examinada | Evidencia declarada, base de 120 respuestas | Implicación y límite |
 |---|---|---|
-| Disponibilidad de conexión | En P6, 98 personas eligieron «A veces», «Raramente» o «Nunca» (81,7 %); en P8, 89 seleccionaron funcionamiento sin internet (74,2 %) | Priorizar operaciones locales y su verificación; no es una medición técnica de la red |
-| Dispositivo preferido | En P9, 87 eligieron celular (72,5 %) | Priorizar el diseño móvil; no decide entre PWA y APK |
-| Organización principal | En P11, 83 prefirieron carpetas por materia (69,2 %) frente a 24 que eligieron etiquetas (20,0 %) | Priorizar materias sin afirmar que las etiquetas carezcan de valor |
-| Protección de la escritura | En P8, 63 seleccionaron la formulación de guardado automático (52,5 %) | Investigar continuidad del trabajo; no demuestra preferencia por guardar notas definitivas sin confirmación |
+| Disponibilidad de conexión | En P6, 98 respuestas fueron «A veces», «Raramente» o «Nunca» (81,7 %); en P8, el funcionamiento sin internet recibió 89 selecciones (74,2 %) | Priorizar operaciones locales y su verificación; no es una medición técnica de la red |
+| Dispositivo preferido | En P9, el celular recibió 87 selecciones (72,5 %) | Priorizar el diseño móvil; no decide entre PWA y APK |
+| Organización principal | En P11, las carpetas por materia recibieron 83 selecciones (69,2 %) y las etiquetas, 24 (20,0 %) | Priorizar materias sin afirmar que las etiquetas carezcan de valor |
+| Protección de la escritura | En P8, la opción de guardado automático recibió 63 selecciones (52,5 %) | Investigar continuidad del trabajo; no demuestra preferencia por guardar notas definitivas sin confirmación |
 
-P8 indicaba un máximo de tres opciones, pero se registraron 371 marcas y 37 respuestas con cuatro a seis selecciones. Sus porcentajes son frecuencias descriptivas con personas como denominador, no un ranking de elección forzada uniforme. La tabla no transforma esas selecciones en requisitos aprobados automáticamente.
+*Nota.* Elaboración propia a partir del relevamiento de mayo de 2026 (Sandoval, 2026b). Cada porcentaje usa como denominador las 120 respuestas analizadas; P8 admite selección múltiple.
 
-La pregunta sobre utilidad combinaba aplicación web, gratuidad, ausencia de cuenta y toma de notas: 97 de 120 participantes la valoraron con cuatro o cinco puntos (80,8 %). No permite aislar el atractivo de un atributo ni demostrar intención de pago, adopción real o aceptación de un APK. La disposición declarada a probar un prototipo tampoco equivale a participación efectiva.
+P8 indicaba un máximo de tres opciones, pero se registraron 371 marcas y 37 respuestas con cuatro a seis selecciones. Sus porcentajes son frecuencias descriptivas sobre las respuestas analizadas, no un ranking de elección forzada uniforme. La tabla no transforma esas selecciones en requisitos aprobados automáticamente.
 
-### 2.5.3. Fase 3 — El pivote fundamentado en datos
+La pregunta sobre utilidad combinaba aplicación web, gratuidad, ausencia de cuenta y toma de notas: 97 de las 120 respuestas la valoraron con cuatro o cinco puntos (80,8 %). No permite aislar el atractivo de un atributo ni demostrar intención de pago, adopción real o aceptación de un APK. La disposición declarada a probar un prototipo tampoco equivale a participación efectiva.
+
+### 2.5.3. Revisión de decisiones a partir de necesidades y restricciones técnicas
 
 La preferencia por materias llevó a revisar el protagonismo inicial de las etiquetas y quedó reflejada en DP-002 y DP-004. La solución incorpora Entrada, Materias y Archivo, con materias y secciones opcionales. La encuesta no evaluó esa nomenclatura, el límite de dos niveles ni el recorrido: son decisiones de diseño, no resultados de P11.
 
-La prioridad móvil y offline orientó también la comparación de alternativas técnicas. Adopté Android con Capacitor y SQLite por el análisis documentado en ADR-005 y ADR-006, considerando persistencia, reutilización de la interfaz y alcance del desarrollo. El cuestionario no comparó motores de base de datos ni canales de instalación: no atribuyo a los estudiantes una elección de SQLite o del formato APK.
+La prioridad móvil y offline orientó también la comparación de alternativas técnicas. Adopté Android con Capacitor para reutilizar la interfaz web existente sin una reescritura completa, y SQLite nativo para separar la persistencia del almacenamiento administrado por el navegador. A cambio, asumí la configuración y el mantenimiento del entorno de compilación Android y una distribución mediante APK cuya aceptación por usuarios nuevos no estaba medida; el navegador quedó como entorno auxiliar, no como canal de producto soportado. ADR-005 y ADR-006 registran ese análisis, desarrollado en el capítulo 4. El cuestionario no comparó motores de base de datos ni canales de instalación: no atribuyo a los estudiantes una elección de SQLite o del formato APK.
 
-Otra revisión relevante fue la de RF-005: la protección del trabajo en curso se concretó como borrador persistente, manteniendo una acción explícita para crear o actualizar la nota definitiva. Esta solución distingue una necesidad de continuidad de una interpretación literal de «guardado automático». La encuesta no demuestra que el mecanismo elegido resulte comprendido por todos los usuarios.
+Otra revisión relevante fue la de RF-005: la protección del trabajo en curso se concretó como borrador persistente, manteniendo una acción explícita para crear o actualizar la nota definitiva. El criterio fue conservar la escritura en curso sin confundirla con una nota confirmada ni sobrescribir silenciosamente la versión guardada durante una edición. Esta solución distingue una necesidad de continuidad de una interpretación literal de «guardado automático». La encuesta no demuestra que el mecanismo elegido resulte comprendido por todos los usuarios.
 
-### 2.5.4. Fase 4 — Materialización en requisitos y código
+### 2.5.4. Materialización en requisitos y código
 
 La trazabilidad relaciona necesidad, decisión, historia, requisito, criterio de aceptación, implementación y evidencia. Una prueba o restricción técnica puede obligar a revisar esa relación, como permite examinar el caso de organización por materias.
+
+**Tabla 2-5. Ejemplo de trazabilidad de la organización por materias y secciones**
 
 | Eslabón | Correspondencia documentada |
 |---|---|
 | Necesidad | Preferencia de P11 por carpetas por materia |
 | Decisiones | DP-002 define la navegación; DP-004 delimita materias y secciones |
 | Historia y requisito | HU-017 reúne creación, asociación y filtrado; RF-014 identifica el filtrado por materia y sección |
-| Criterios de aceptación | Creación de la jerarquía, asociación de notas, filtrado y persistencia |
+| Criterios de aceptación | HU-017: creación hasta dos niveles (CA-01), filtrado (CA-03), asociación de notas (CA-04) y persistencia de la jerarquía (CA-05) |
 | Implementación | Servicio de materias, estado de notas, interfaz de organización y acceso SQLite |
 | Evidencia técnica | Pruebas existentes de validación de profundidad y operaciones de materias, junto con los controles documentados |
+
+*Nota.* Elaboración propia a partir de P11, DP-002/004, HU-017, RF-014 y la implementación; la correspondencia no acredita por sí sola validación de uso.
 
 La prueba de profundidad comprueba una regla del software, no su preferencia entre estudiantes. La auditoría documental detecta referencias incoherentes, pero no verifica facilidad de uso ni cobertura completa de un binario. El diseño corresponde al capítulo 4; la implementación, al 5; las pruebas, al 6.
 
@@ -166,11 +196,15 @@ La revisión distingue evidencia verificada en su alcance, evidencia parcial, me
 
 Tres métricas conservan su estado pendiente y sus umbrales:
 
+**Tabla 2-6. Métricas no funcionales pendientes y límites de su evidencia**
+
 | Requisito | Criterio | Límite actual |
 |---|---|---|
 | RNF-002 | Latencia de crear, editar o eliminar notas ≤ 200 ms | Sin muestras temporales aceptadas; medición diferida a después de la presentación |
 | RNF-004 | Fluidez de desplazamiento ≥ 55 FPS con 500 notas | La importación funcional de ese volumen no acredita la tasa de cuadros; medición diferida |
 | RNF-005 | Primera nota de un usuario nuevo ≤ 10 s | Sin medición específica con participantes nuevos; evaluación posterior al corte, no bloqueante |
+
+*Nota.* Síntesis del catálogo de requisitos no funcionales y de las decisiones de postergación; no presenta nuevas mediciones ni modifica los umbrales.
 
 La aceptación de esas limitaciones no rebaja los criterios ni convierte una opinión favorable en medición. La navegación por teclado mantiene evidencia parcial y las verificaciones acotadas de accesibilidad no se presentan como certificación exhaustiva.
 
