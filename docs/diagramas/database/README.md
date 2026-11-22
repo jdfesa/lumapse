@@ -17,7 +17,7 @@ Esta carpeta documenta el diseño de datos en tres niveles de abstracción. Las 
 | [`03-modelo-logico-relacional.dbml`](./03-modelo-logico-relacional.dbml) | Lógico | Fuente DBML | Sincronizada con el esquema ejecutable |
 | [`03-modelo-logico-relacional.dot`](./03-modelo-logico-relacional.dot) | Lógico y anotaciones físicas | Fuente de la figura Graphviz | Transcripción contrastada con DDL y migraciones RC1 |
 | [`03-modelo-logico-relacional.svg`](./03-modelo-logico-relacional.svg) | Lógico y anotaciones físicas | Imagen vectorial derivada | Figura 4-4 del capítulo fuente |
-| [`04-modelo-fisico-ddl.md`](./04-modelo-fisico-ddl.md) | Físico | Documentación del DDL y migraciones | Referencia técnica |
+| [`04-modelo-fisico-ddl.md`](./04-modelo-fisico-ddl.md) | Físico | DDL consolidado, migraciones y reglas de aplicación | Contrastado con la fuente RC1; no es un script de actualización |
 | [`src/services/sqlite/connection.js`](../../../src/services/sqlite/connection.js) | Físico ejecutable | Fuente de verdad del esquema | Autoridad final ante una divergencia |
 
 La tabla `metadata` pertenece al esquema ejecutable, pero no al dominio académico. En la RC1 conserva propiedades internas y el borrador del editor; se incluye en los niveles lógico y físico, no en el conceptual.
@@ -86,6 +86,19 @@ dot -Kneato -n2 -Tsvg docs/diagramas/database/03-modelo-logico-relacional.dot \
 Los dos verificadores no certifican todas las restricciones: complementar con el contraste de cada fila, PK, FK, `NOT NULL`, `DEFAULT`, `CHECK`, índice y acción referencial contra el esquema y sus migraciones. No modificar el esquema congelado para adaptarlo a la figura. Si cambia la documentación, editar primero DOT y regenerar SVG; no editar el SVG manualmente. Neato con `-n2` conserva las posiciones y los recorridos ortogonales fijados en puntos: comprobar los puertos y sus coordenadas si cambia el tamaño de una tabla. Los símbolos compuestos se generan con `crowodot` junto a las FK y `teeodot` junto a las PK (`dir=both`); la primera forma queda más cerca de la tabla, según la [documentación de flechas de Graphviz](https://graphviz.org/doc/info/arrows.html). No interpretar el sentido FK → PK como una flecha de navegación.
 
 El SVG es monocromo y conserva texto vectorial nativo. El control visual a 160 mm de ancho ocupa aproximadamente 236 mm de alto, con letra mínima de 10,1 puntos; se revisó en un control A4 con márgenes superior e inferior de 15 mm, interior de 30 mm y exterior de 20 mm. Es una referencia de legibilidad, no la maquetación definitiva. La revisión de márgenes, pie y paginación del PDF queda para el cierre del informe. El PNG anterior se retira para no conservar dos ilustraciones vigentes del mismo modelo; sigue recuperable en Git.
+
+## Modelo físico de la RC1
+
+El [documento físico](./04-modelo-fisico-ddl.md) distingue el DDL consolidado de la
+secuencia real de inicialización: cuatro tablas y 26 columnas, siete adiciones de
+compatibilidad condicionadas a `PRAGMA table_info`, y creación idempotente de
+eventos e índices. Las comprobaciones de existencia no reparan definiciones
+arbitrariamente diferentes ni ignoran errores SQL por su mensaje.
+
+El capítulo 4 incorpora el esquema completo en la sección 4.7.2.3, en bloques por
+tabla. La explicación separa restricciones SQL, reglas de los servicios y usos de
+`metadata`, incluido el borrador. El contraste documental no modifica la app,
+no acredita nuevas pruebas nativas ni cierra la revisión del PDF final.
 
 ## Flujo metodológico
 

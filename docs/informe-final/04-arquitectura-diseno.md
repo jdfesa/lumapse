@@ -194,6 +194,79 @@ En la figura, PK señala la clave primaria y FK la columna que referencia una cl
 
 En el dominio, cada sección tiene `(1,1)` materia padre distinta de ella: esa regla y los dos niveles dependen del servicio, no de la FK por sí sola. Los bloques inferiores separan referencias y acciones, restricciones e índices físicos y límites de lectura; la sección 4.7.3 explica sus efectos sin confundirlos con reglas de negocio.
 
+#### 4.7.2.3. Implementación física en SQL
+
+El siguiente DDL —lenguaje de definición de datos— expresa el esquema efectivo de la RC1 una vez completadas la creación y las migraciones. Reúne en cada tabla las columnas incorporadas en etapas distintas. No representa una única cadena ejecutada por la app ni un script para actualizar una instalación existente; el orden físico de las columnas puede variar según su historial. Los nombres, tipos, restricciones e índices corresponden a la implementación, sin agregar garantías que el código no declara.
+
+**Materias y secciones.** Ambas se almacenan en `subjects`; la referencia al padre permite representar la jerarquía. Su límite de dos niveles pertenece al servicio, no a esta sentencia.
+
+```sql
+CREATE TABLE IF NOT EXISTS subjects (
+    id              TEXT PRIMARY KEY,
+    name            TEXT NOT NULL,
+    parentSubjectId TEXT REFERENCES subjects(id) ON DELETE CASCADE,
+    archived        INTEGER DEFAULT 0,
+    color           TEXT,
+    deletedAt       TEXT,
+    createdAt       TEXT NOT NULL
+);
+```
+
+**Notas.** La asociación organizativa es opcional. `pinned` y `archived` conservan marcas independientes; `statusEmoji` registra el estado académico y `deletedAt` permite la eliminación lógica.
+
+```sql
+CREATE TABLE IF NOT EXISTS notes (
+    id          TEXT PRIMARY KEY,
+    title       TEXT,
+    content     TEXT,
+    pinned      INTEGER DEFAULT 0,
+    archived    INTEGER DEFAULT 0,
+    subjectId   TEXT REFERENCES subjects(id) ON DELETE SET NULL,
+    statusEmoji TEXT,
+    deletedAt   TEXT,
+    createdAt   TEXT NOT NULL,
+    updatedAt   TEXT NOT NULL
+);
+```
+
+**Fechas académicas.** El `CHECK` restringe los tipos a los cuatro valores implementados. Los dos índices explícitos no únicos corresponden a la fecha y a la materia asociada; su existencia no acredita un rendimiento medido.
+
+```sql
+CREATE TABLE IF NOT EXISTS academic_events (
+    id        TEXT PRIMARY KEY,
+    type      TEXT NOT NULL
+        CHECK(type IN ('parcial', 'final', 'tp', 'exposicion')),
+    title     TEXT,
+    date      TEXT NOT NULL,
+    subjectId TEXT REFERENCES subjects(id) ON DELETE SET NULL,
+    createdAt TEXT NOT NULL,
+    updatedAt TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_academic_events_date
+    ON academic_events(date);
+
+CREATE INDEX IF NOT EXISTS idx_academic_events_subject
+    ON academic_events(subjectId);
+```
+
+**Estado técnico.** `metadata` conserva pares clave-valor, sin relaciones con las tablas académicas. El marcador de migración histórica y el borrador del editor son usos de esta tabla, no tablas o columnas nuevas.
+
+```sql
+CREATE TABLE IF NOT EXISTS metadata (
+    key   TEXT PRIMARY KEY,
+    value TEXT
+);
+```
+
+*Fuente de los listados SQL: elaboración propia a partir del esquema y las migraciones de la fuente RC1.*
+
+El conjunto declara cuatro PK, tres FK opcionales, ocho `NOT NULL` explícitos, tres valores `DEFAULT 0`, un `CHECK` y dos índices explícitos. No incorpora `NOT NULL` adicional en las PK textuales, tablas `STRICT` ni validaciones SQL de formato UUID o fecha. Tampoco restringe mediante `CHECK` los indicadores a `0` y `1`: esos valores son una convención de la aplicación, no una consecuencia de `DEFAULT 0`.
+
+El arranque aplica una estructura base y luego revisa siete posibles adiciones de columna mediante `PRAGMA table_info`. En una instalación nueva, esa revisión todavía debe agregar `notes.statusEmoji`, `notes.deletedAt` y `subjects.deletedAt`; las restantes columnas de compatibilidad ya están en el DDL base. También conserva la creación idempotente de la tabla de eventos y sus índices. No ejecuta todos los `ALTER` sin comprobación previa ni acepta errores de columna duplicada como control normal. La comprobación de existencia permite omitir una adición ya aplicada, pero no verifica que una columna existente tenga toda la definición esperada ni constituye una reparación de esquemas modificados externamente.
+
+Esta evolución de estructura es distinta de migrar notas históricas de IndexedDB o trasladar el borrador a SQLite. Las primeras utilizan el marcador `indexeddb_migrated`; el segundo reutiliza `metadata` conforme a ADR-012, sin alterar las 26 columnas. El contrato de continuidad se explicó en 4.5; el uso del borrador se precisa en 4.7.4. La correspondencia del DDL con la fuente no sustituye la evidencia de validación por artefacto del capítulo 6.
+
 ### 4.7.3. Integridad y reglas de negocio
 
 Las tres relaciones declaradas comparten a `subjects` como tabla referenciada. Sus acciones de eliminación física se interpretan según la semántica de SQLite, con el control de claves foráneas habilitado en la conexión (SQLite Project, s. f.).
@@ -208,7 +281,7 @@ Enviar una materia a Papelera no ejecuta esas acciones de SQL: asigna `deletedAt
 
 Las fechas académicas no tienen `deletedAt` ni participan de la papelera: su eliminación es física. El conjunto de tipos admitidos está restringido mediante `CHECK`, y existen índices sobre fecha y materia para las consultas de eventos. Estas decisiones describen estructura y finalidad, no un rendimiento medido.
 
-Otras reglas quedan fuera de las claves foráneas: limitar la jerarquía a dos niveles, validar nombres no vacíos y comprobar nombres repetidos dentro del mismo nivel. Las resuelve el servicio de materias; no las atribuyo a restricciones `UNIQUE` inexistentes en el DDL. Los UUID se conservan estables por diseño, de modo que no se definió una cascada de actualización de esos identificadores.
+Otras reglas quedan fuera de las claves foráneas: limitar la jerarquía a dos niveles, validar nombres no vacíos y comprobar nombres repetidos dentro del mismo nivel. Las resuelve el servicio de materias; no las atribuyo a restricciones `UNIQUE` inexistentes en el DDL. Los UUID se conservan estables por diseño, de modo que no se definió una cascada de actualización de esos identificadores. Al omitir `ON UPDATE`, SQLite aplica `NO ACTION`: mantiene la exigencia de integridad, pero no propaga automáticamente un cambio de clave (SQLite Project, s. f.). La estabilidad del identificador es un contrato de aplicación, no una prohibición SQL general de modificarlo.
 
 ### 4.7.4. Organización, archivo y borrador técnico
 
