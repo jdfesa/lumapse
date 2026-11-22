@@ -51,12 +51,21 @@ artefacto y límites de la versión 0.6.0 RC1 y aprobado; sus cambios se recogen
 [capítulo 7](./07-conclusiones.md) está revisado contra los objetivos y la evidencia
 del corte 0.6.0 RC1, con lecciones y trabajo futuro delimitados y aprobado; sus cambios
 se recogen en [PR #53](https://github.com/jdfesa/lumapse/pull/53).
+
 La unidad `08-referencias.md` está revisada y aprobada en
 [PR #54](https://github.com/jdfesa/lumapse/pull/54).
 Los originales de Gómez y Parada permitieron comprobar sus metadatos
 y distinguir la obra publicada del material de cátedra. La correspondencia de
 citas incluye la GPLv3 de 5.7 y la atribución de la guía Kanban a Coleman y Vacanti,
 con corrección mínima de sus dos citas en el capítulo 2.
+
+**Ampliación del capítulo 6 — prueba exploratoria:** la sección 6.4.4 incorpora
+el método, los resultados y los límites de las 22 respuestas a la encuesta cerrada
+el 22 de noviembre de 2026, contrastados con el [análisis y sus datos originales](../prueba-exploratoria/resultados.md).
+Se distinguen 13 respuestas con uso declarado y nueve sin uso, sin verificar
+personas únicas, versión instalada, adopción o RNF-005. La ampliación está
+revisada y aprobada; sus cambios se recogen en [PR #62](https://github.com/jdfesa/lumapse/pull/62).
+No modifica la app, los estados RNF ni las pruebas técnicas anteriores.
 
 **Complementos de proceso y recursos:** las secciones 2.1.4 y 2.4.1 explicitan la
 asistencia de IA y los recursos y desembolsos personales, con continuidad en
