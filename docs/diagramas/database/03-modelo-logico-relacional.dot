@@ -1,4 +1,4 @@
-// Figura documental contrastada con connection.js RC1 (bcefe6a).
+// Figura documental contrastada con connection.js 0.6.0 RC1 (bcefe6a).
 // Regeneración: dot -Kneato -n2 -Tsvg <este archivo> -o 03-modelo-logico-relacional.svg
 // Posiciones en puntos. Los extremos representan cardinalidades SQL, no reglas por rol.
 // FK -> PK: crowodot en la FK (0..N), teeodot en la PK (0..1).
@@ -124,7 +124,7 @@ digraph Logical {
 
 <TR><TD ALIGN="LEFT">ON DELETE corresponde al borrado físico, no a deletedAt (papelera).</TD></TR></TABLE>>];
  header [pos="300,785", label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="0">
-<TR><TD ALIGN="LEFT"><FONT POINT-SIZE="15"><B>MODELO LÓGICO RELACIONAL · RC1</B></FONT></TD></TR>
+<TR><TD ALIGN="LEFT"><FONT POINT-SIZE="15"><B>MODELO LÓGICO RELACIONAL · 0.6.0 RC1</B></FONT></TD></TR>
 <TR><TD ALIGN="LEFT">4 tablas · 26 columnas · Pata de gallo · Esquema SQLite</TD></TR></TABLE>>];
  // Puertos de fila y recorridos ortogonales explícitos; no alterar sin verificar su geometría.
  // Los dos accesos a id terminan en esquinas distintas para no superponer símbolos.

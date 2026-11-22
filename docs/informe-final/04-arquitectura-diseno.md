@@ -162,13 +162,13 @@ Las migraciones comprueban las columnas existentes antes de agregar una nueva. U
 
 Desarrollé el diseño en tres niveles: conceptual, para entidades y relaciones; lógico, para tablas y claves; y físico, para el esquema SQLite y sus migraciones. La revisión de normalización complementa esos niveles. El modelo conceptual utiliza notación Chen con cardinalidades mínimas y máximas y conserva su fuente DOT; el lógico conserva una proyección DBML y una figura vectorial en DOT contrastada con el DDL ejecutable, que determina la estructura efectiva.
 
-La figura 4-3 representa las entidades y asociaciones del dominio en la RC1; la figura 4-4 detalla las tablas y claves de ese mismo corte, con sus restricciones físicas declaradas. La estructura efectiva del corte mantiene las cuatro tablas, 26 columnas y tres claves foráneas del modelo lógico. Mover el borrador a `metadata` cambió el uso de esa tabla, no agregó una entidad o columna.
+La figura 4-3 representa las entidades y asociaciones del dominio en la versión 0.6.0 RC1; la figura 4-4 detalla las tablas y claves de ese mismo corte, con sus restricciones físicas declaradas. La estructura efectiva del corte mantiene las cuatro tablas, 26 columnas y tres claves foráneas del modelo lógico. Mover el borrador a `metadata` cambió el uso de esa tabla, no agregó una entidad o columna.
 
 #### 4.7.2.1. Modelo conceptual
 
 ![Modelo conceptual de Lumapse en notación Chen, con la jerarquía de materias y secciones desplegada por roles](../diagramas/database/01-modelo-conceptual.svg)
 
-*Figura 4-3. Modelo conceptual de Lumapse en notación Chen, con atributos seleccionados y detalle de la jerarquía por roles, correspondiente al dominio de la RC1. Fuente: elaboración propia mediante Graphviz.*
+*Figura 4-3. Modelo conceptual de Lumapse en notación Chen, con atributos seleccionados y detalle de la jerarquía por roles, correspondiente al dominio de la versión 0.6.0 RC1. Fuente: elaboración propia mediante Graphviz.*
 
 La cardinalidad se lee junto a la entidad a la que se aplica, como un par `(mínimo, máximo)` de vínculos en esa relación.
 Así, `(0,1)` significa «cero o uno»; `(0,N)`, «cero o muchos»; y `(1,1)`, «exactamente uno».
@@ -177,7 +177,7 @@ Así, `(0,1)` significa «cero o uno»; `(0,N)`, «cero o muchos»; y `(1,1)`, �
 
 ![Modelo lógico relacional de Lumapse](../diagramas/database/03-modelo-logico-relacional.svg)
 
-*Figura 4-4. Modelo lógico relacional de Lumapse en notación de pata de gallo. Tablas, claves y restricciones físicas declaradas en la RC1. Fuente: elaboración propia mediante Graphviz, contrastada con el esquema SQLite y sus migraciones.*
+*Figura 4-4. Modelo lógico relacional de Lumapse en notación de pata de gallo. Tablas, claves y restricciones físicas declaradas en la versión 0.6.0 RC1. Fuente: elaboración propia mediante Graphviz, contrastada con el esquema SQLite y sus migraciones.*
 
 El modelo lógico incorpora las tres tablas de dominio y `metadata`. Los identificadores de las entidades son UUID almacenados como texto; la clave de `metadata`, en cambio, es el nombre textual de una propiedad. Los indicadores booleanos se representan con enteros y las fechas con texto; la fecha académica usa `YYYY-MM-DD`, diferenciada de las marcas de creación y actualización.
 
@@ -196,7 +196,7 @@ En el dominio, cada sección tiene `(1,1)` materia padre distinta de ella: esa r
 
 #### 4.7.2.3. Implementación física en SQL
 
-El siguiente DDL —lenguaje de definición de datos— expresa el esquema efectivo de la RC1 una vez completadas la creación y las migraciones. Reúne en cada tabla las columnas incorporadas en etapas distintas. No representa una única cadena ejecutada por la app ni un script para actualizar una instalación existente; el orden físico de las columnas puede variar según su historial. Los nombres, tipos, restricciones e índices corresponden a la implementación, sin agregar garantías que el código no declara.
+El siguiente DDL —lenguaje de definición de datos— expresa el esquema efectivo de la versión 0.6.0 RC1 una vez completadas la creación y las migraciones. Reúne en cada tabla las columnas incorporadas en etapas distintas. No representa una única cadena ejecutada por la app ni un script para actualizar una instalación existente; el orden físico de las columnas puede variar según su historial. Los nombres, tipos, restricciones e índices corresponden a la implementación, sin agregar garantías que el código no declara.
 
 **Materias y secciones.** Ambas se almacenan en `subjects`; la referencia al padre permite representar la jerarquía. Su límite de dos niveles pertenece al servicio, no a esta sentencia.
 
@@ -259,7 +259,7 @@ CREATE TABLE IF NOT EXISTS metadata (
 );
 ```
 
-*Fuente de los listados SQL: elaboración propia a partir del esquema y las migraciones de la fuente RC1.*
+*Fuente de los listados SQL: elaboración propia a partir del esquema y las migraciones de la fuente de 0.6.0 RC1.*
 
 El conjunto declara cuatro PK, tres FK opcionales, ocho `NOT NULL` explícitos, tres valores `DEFAULT 0`, un `CHECK` y dos índices explícitos. No incorpora `NOT NULL` adicional en las PK textuales, tablas `STRICT` ni validaciones SQL de formato UUID o fecha. Tampoco restringe mediante `CHECK` los indicadores a `0` y `1`: esos valores son una convención de la aplicación, no una consecuencia de `DEFAULT 0`.
 
@@ -287,7 +287,7 @@ Otras reglas quedan fuera de las claves foráneas: limitar la jerarquía a dos n
 
 La estructura Entrada/Materias/Archivo de DP-002 y DP-004 relaciona navegación y datos sin crear tablas para cada vista. Entrada es la ausencia de asociación; Materias utiliza la jerarquía de `subjects`; Archivo combina el estado de una nota con el de su organización. Al archivar una materia se actualizan la materia y sus secciones, no se reescribe automáticamente la marca de archivo de todas sus notas: el filtrado considera la organización archivada.
 
-En el corte RC1, `metadata` conserva además el único borrador del editor como JSON bajo la clave `lumapse-editor-draft-v1`. Ese documento contiene modo de creación o edición, referencia a la nota cuando corresponde, título, contenido, materia y marcas temporales. Su formato y validación pertenecen al servicio de borradores, no a columnas académicas adicionales.
+En el corte 0.6.0 RC1, `metadata` conserva además el único borrador del editor como JSON bajo la clave `lumapse-editor-draft-v1`. Ese documento contiene modo de creación o edición, referencia a la nota cuando corresponde, título, contenido, materia y marcas temporales. Su formato y validación pertenecen al servicio de borradores, no a columnas académicas adicionales.
 
 Esta separación impide equiparar borrador con una nota más del listado. El respaldo ZIP exporta notas confirmadas, materias/secciones y fechas académicas, incluidos los elementos archivados, pero excluye borradores y papelera. Por lo tanto, disponer de un ZIP no equivale a una copia íntegra de todo el estado local.
 
@@ -307,7 +307,7 @@ Persistir el título expresa ese contrato y permite presentarlo o incluirlo en e
 
 ## 4.8. Patrones de arquitectura y diseño de software
 
-Clasifiqué Lumapse como un **monolito modular cliente, offline-first, con capas pragmáticas y componentes de interfaz agrupados por funcionalidad**. «Monolito» describe una unidad de despliegue; «modular» describe la separación interna. Los servicios no son aplicaciones desplegadas de manera independiente. ADR-008 formaliza esa clasificación, complementada en la RC1 por los contratos de persistencia, borrador y refresco posteriores.
+Clasifiqué Lumapse como un **monolito modular cliente, offline-first, con capas pragmáticas y componentes de interfaz agrupados por funcionalidad**. «Monolito» describe una unidad de despliegue; «modular» describe la separación interna. Los servicios no son aplicaciones desplegadas de manera independiente. ADR-008 formaliza esa clasificación, complementada en la versión 0.6.0 RC1 por los contratos de persistencia, borrador y refresco posteriores.
 
 ### 4.8.1. Responsabilidades y dirección de dependencias
 
@@ -356,4 +356,4 @@ Lumapse no tiene un backend remoto propio: no despliega una API de producto, aut
 
 La capacidad de crear, editar, consultar y organizar sin depender de un servicio remoto es una decisión arquitectónica y de producto, no un patrón de diseño de objetos. La generación del ZIP también es local; si el usuario elige compartirlo con otra aplicación, ese destino puede requerir conectividad y queda fuera de la persistencia interna de Lumapse.
 
-Este límite evita prometer sincronización, backup automático o recuperación remota que no existen. A la vez, almacenar localmente no demuestra por sí solo ausencia de tráfico, cifrado o conservación ante cualquier fallo. La RC1 mantiene la validación parcial declarada en la sección 1.4.4. El diseño explica las responsabilidades y sus límites; el capítulo 6 debe sostener por separado qué propiedades fueron comprobadas, sobre qué artefacto y cuáles permanecen sin demostrar.
+Este límite evita prometer sincronización, backup automático o recuperación remota que no existen. A la vez, almacenar localmente no demuestra por sí solo ausencia de tráfico, cifrado o conservación ante cualquier fallo. La versión 0.6.0 RC1 mantiene la validación parcial declarada en la sección 1.4.4. El diseño explica las responsabilidades y sus límites; el capítulo 6 debe sostener por separado qué propiedades fueron comprobadas, sobre qué artefacto y cuáles permanecen sin demostrar.

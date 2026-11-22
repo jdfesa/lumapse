@@ -3,7 +3,7 @@
 **Fecha:** 2026-10-22<br>
 **Rama:** `chore/presentation-rc1`<br>
 **Base integrada:** `9ab9c006bc38dd59d9e275968aa583a3ba1e56b6` (PR #41)<br>
-**Estado:** `v0.6.0` publicada como Pre-release, RC1 aceptada expresamente con
+**Estado:** `v0.6.0` RC1 publicada como Pre-release, aceptada expresamente con
 validación parcial y desarrollo congelado hasta después de la presentación
 académica oficial. Comprobaciones restantes diferidas, no aprobadas; sólo
 documentación en las próximas sesiones. La identidad vigente figura en
@@ -14,7 +14,7 @@ documentación en las próximas sesiones. La identidad vigente figura en
 Preparar la APK `0.6.0/600`, identificada como **Release Candidate 1**, sin nuevas
 funciones, refactors ni mejoras. RC describe el candidato de presentación y no
 obliga a anunciar `1.0.0` o estabilidad comercial. Se mantiene la versión numérica
-admitida por el tooling; `RC1` forma parte del título previsto.
+admitida por el tooling; el candidato se identifica como `0.6.0 RC1`.
 
 El autor autorizó generar la APK y recuperar la firma existente en almacenamiento
 temporal privado fuera del repositorio. La identidad pública del certificado se
@@ -23,8 +23,8 @@ no se creó ni sustituyó una clave. No se versionan secretos ni sus ubicaciones
 
 La autorización inicial no incluía instalación, desinstalación ni cambios de datos.
 Después, el autor autorizó preparar el teléfono retirando la debug de prueba,
-instalar la APK pública `0.5.0`, crear datos representativos y actualizar a esta
-RC1 sin borrar ni restaurar entre versiones. La retirada inicial de la debug es
+instalar la APK pública `0.5.0`, crear datos representativos y actualizar a esta versión
+0.6.0 RC1 sin borrar ni restaurar entre versiones. La retirada inicial de la debug es
 preparación del banco, no un paso del procedimiento del usuario final.
 Después aceptó PR #42 y autorizó merge a `main` y limpieza de sus ramas solo tras
 comprobar integración. Ante la confusión de Acerca de, autorizó únicamente la
@@ -32,7 +32,7 @@ etiqueta neutral y su recompilación; también aprobó expresamente DOMPurify 3.
 tras la nueva consulta de advisories. Ese cierre no creó tag ni release; la
 aceptación posterior de la validación parcial y publicación se registra al final
 de este documento, sin convertirlas en nuevos resultados manuales por caso.
-Las betas publicadas y la RC1 no se reemplazan. El título publicado es
+Las betas publicadas y la versión 0.6.0 RC1 no se reemplazan. El título publicado es
 `Lumapse v0.6.0 — Release Candidate 1`, tag `v0.6.0`, marcada **Pre-release**.
 
 ## Preparación inicial comprobada
@@ -190,7 +190,7 @@ la base de la app.
 Se inspeccionaron las capturas previas y posteriores. Se retiraron solo las copias
 auxiliares propias del teléfono, fuera de los datos de Lumapse; logs, capturas,
 referencias y comparaciones permanecen privados fuera del repositorio.
-Al terminar esa prueba, la RC1 inicial quedó instalada con los cinco registros de
+Al terminar esa prueba, la versión 0.6.0 RC1 inicial quedó instalada con los cinco registros de
 prueba y el borrador sin guardar ni descartar para la revisión del autor.
 
 El resultado cubre un dispositivo y este conjunto pequeño, no garantiza toda
@@ -272,7 +272,7 @@ la APK y no requieren recompilarla por sí solos.
 
 ## Aceptación del binario y congelación
 
-**Decisión expresa del autor — 2026-10-22:** acepta publicar la RC1 tal como está,
+**Decisión expresa del autor — 2026-10-22:** acepta publicar la versión 0.6.0 RC1 tal como está,
 con las pruebas realizadas y la cobertura restante no demostrada. Ordena no hacer
 más comprobaciones ni cambios de la app hasta después de la presentación
 académica oficial. La [decisión canónica](../../BACKLOG.md#congelación-académica--2026-10-22)
@@ -305,7 +305,7 @@ publicación: no se descargó, ejecutó o volvió a validar la APK en este cierr
   offline, organización/búsqueda, fechas y ZIP sobre este binario exacto; no aprobados.
 - [ ] **Diferido hasta después de la presentación:** tráfico/trackers de RNF-012/013
   sobre este binario exacto; sin transferir resultados debug.
-- [x] Aceptación expresa del autor de la RC1 con validación parcial; límites
+- [x] Aceptación expresa del autor de la versión 0.6.0 RC1 con validación parcial; límites
   PC-02 a PC-08 conservados y RNF-020 en evidencia parcial. No hay nueva aceptación
   manual por caso ni cambio en RNF-002/004/005.
 - [x] Fijar el APK identificado, publicar como Pre-release y congelar su desarrollo.

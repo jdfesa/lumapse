@@ -1,4 +1,4 @@
-// Lumapse — Modelo conceptual RC1 (fuente bcefe6a).
+// Lumapse — Modelo conceptual 0.6.0 RC1 (fuente bcefe6a).
 // Notación Chen con cardinalidades de participación (mín, máx).
 // Panel a: tres tipos de entidad y sus asociaciones de contenido.
 // Panel b: la autorreferencia de Subject se despliega en dos roles.

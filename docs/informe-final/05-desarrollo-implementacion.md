@@ -142,7 +142,7 @@ Si faltan medios para verificar la firma, ésta difiere o Android rechaza la act
 
 Acerca de muestra versión y procedencia de construcción. Los metadatos distinguen servidor de desarrollo, prueba optimizada y canales Android declarados, e incluyen el commit y el estado conocido de las fuentes. No demuestran firma, publicación ni identidad binaria: el hash del APK y su certificado deben registrarse por separado. Tampoco el paso de CI que construye los assets web produce automáticamente el candidato de presentación.
 
-El corte entregable sigue siendo la RC1 identificada en la sección 1.4.4, con aceptación parcial y desarrollo congelado. Describir el script y los metadatos no significa volver a ejecutarlo, recompilar ese artefacto o completar sus pruebas diferidas. La reproducción de una build y la aceptación de un binario son actividades distintas.
+El corte entregable sigue siendo la versión 0.6.0 RC1 identificada en la sección 1.4.4, con aceptación parcial y desarrollo congelado. Describir el script y los metadatos no significa volver a ejecutarlo, recompilar ese artefacto o completar sus pruebas diferidas. La reproducción de una build y la aceptación de un binario son actividades distintas.
 
 ## 5.7. Licenciamiento y continuidad académica
 
@@ -194,4 +194,4 @@ Los controles posteriores agregan sus resultados y un fallo mantiene el resultad
 
 El valor de este mecanismo está en hacer explícitos los criterios comprobables, reducir diferencias accidentales entre ejecuciones y asociar resultados a una revisión concreta. Es un mecanismo de control, no una medida general de madurez ni una prueba de ausencia de errores. Un resultado correcto tampoco garantiza el comportamiento de todas las combinaciones de datos o del puente nativo.
 
-La revisión documental, la ejecución de CI, la comprobación Android y la aceptación del artefacto son niveles distintos. El análisis de resultados del capítulo 6 complementa esta descripción distinguiendo controles del candidato, pruebas históricas de otros debugs y recorridos diferidos de la RC1. Así, la implementación explica qué mecanismos existen y cómo colaboran, sin convertir posibilidades de prueba o controles automatizados en resultados que no fueron obtenidos.
+La revisión documental, la ejecución de CI, la comprobación Android y la aceptación del artefacto son niveles distintos. El análisis de resultados del capítulo 6 complementa esta descripción distinguiendo controles del candidato, pruebas históricas de otros debugs y recorridos diferidos de la versión 0.6.0 RC1. Así, la implementación explica qué mecanismos existen y cómo colaboran, sin convertir posibilidades de prueba o controles automatizados en resultados que no fueron obtenidos.

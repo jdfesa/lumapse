@@ -7,8 +7,8 @@
 ## Contexto
 
 > **Lectura temporal:** la revisión de este ADR conserva la evidencia de la beta
-> `v0.5.0`; no fija las versiones actuales de herramientas. La RC1 publicada es
-> `v0.6.0`, sin cambio de esta decisión base. El runtime exacto pertenece a
+> `v0.5.0`; no fija las versiones actuales de herramientas. La versión `v0.6.0` RC1 está publicada,
+> sin cambio de esta decisión base. El runtime exacto pertenece a
 > [ADR-010](./ADR-010-gate-portable-y-entorno-canonico.md), `.nvmrc` y `package.json`;
 > las dependencias resueltas pertenecen a `package-lock.json`.
 

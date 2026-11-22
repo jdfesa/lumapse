@@ -11,18 +11,18 @@ Esta carpeta documenta el diseño de datos en tres niveles de abstracción. Las 
 
 | Archivo | Nivel | Rol | Estado al corte |
 |---|---|---|---|
-| [`01-modelo-conceptual.dot`](./01-modelo-conceptual.dot) | Conceptual | Fuente Graphviz, notación Chen | Contraste con dominio, SQLite y jerarquía de la RC1; detalle por roles |
+| [`01-modelo-conceptual.dot`](./01-modelo-conceptual.dot) | Conceptual | Fuente Graphviz, notación Chen | Contraste con dominio, SQLite y jerarquía de la versión 0.6.0 RC1; detalle por roles |
 | [`01-modelo-conceptual.svg`](./01-modelo-conceptual.svg) | Conceptual | Imagen vectorial derivada de DOT | Figura 4-3 del capítulo fuente; atributos seleccionados |
 | [`02-normalizacion.md`](./02-normalizacion.md) | Lógico | Justificación de 1FN, 2FN y 3FN | Referencia textual |
 | [`03-modelo-logico-relacional.dbml`](./03-modelo-logico-relacional.dbml) | Lógico | Fuente DBML | Sincronizada con el esquema ejecutable |
-| [`03-modelo-logico-relacional.dot`](./03-modelo-logico-relacional.dot) | Lógico y anotaciones físicas | Fuente de la figura Graphviz | Transcripción contrastada con DDL y migraciones RC1 |
+| [`03-modelo-logico-relacional.dot`](./03-modelo-logico-relacional.dot) | Lógico y anotaciones físicas | Fuente de la figura Graphviz | Transcripción contrastada con DDL y migraciones de 0.6.0 RC1 |
 | [`03-modelo-logico-relacional.svg`](./03-modelo-logico-relacional.svg) | Lógico y anotaciones físicas | Imagen vectorial derivada | Figura 4-4 del capítulo fuente |
-| [`04-modelo-fisico-ddl.md`](./04-modelo-fisico-ddl.md) | Físico | DDL consolidado, migraciones y reglas de aplicación | Contrastado con la fuente RC1; no es un script de actualización |
+| [`04-modelo-fisico-ddl.md`](./04-modelo-fisico-ddl.md) | Físico | DDL consolidado, migraciones y reglas de aplicación | Contrastado con la fuente de 0.6.0 RC1; no es un script de actualización |
 | [`src/services/sqlite/connection.js`](../../../src/services/sqlite/connection.js) | Físico ejecutable | Fuente de verdad del esquema | Autoridad final ante una divergencia |
 
-La tabla `metadata` pertenece al esquema ejecutable, pero no al dominio académico. En la RC1 conserva propiedades internas y el borrador del editor; se incluye en los niveles lógico y físico, no en el conceptual.
+La tabla `metadata` pertenece al esquema ejecutable, pero no al dominio académico. En la versión 0.6.0 RC1 conserva propiedades internas y el borrador del editor; se incluye en los niveles lógico y físico, no en el conceptual.
 
-## Modelo conceptual de la RC1
+## Modelo conceptual de la versión 0.6.0 RC1
 
 ![Modelo conceptual de Lumapse en notación Chen con jerarquía desplegada por roles](./01-modelo-conceptual.svg)
 
@@ -64,13 +64,13 @@ El SVG es monocromo, conserva texto vectorial y no necesita imágenes rasterizad
 
 ## Modelo lógico relacional
 
-![Modelo lógico relacional y restricciones físicas de la RC1](./03-modelo-logico-relacional.svg)
+![Modelo lógico relacional y restricciones físicas de la versión 0.6.0 RC1](./03-modelo-logico-relacional.svg)
 
 **Figura DB-2.** Cuatro tablas, 26 columnas, cuatro claves primarias y tres referencias opcionales. Las líneas en pata de gallo conectan los puertos de las columnas FK con la PK referenciada. Sus extremos muestran cardinalidades mínimas/máximas en ambos sentidos; las referencias inferiores identifican las columnas y las acciones de borrado físico. La autorreferencia de `subjects` distingue los extremos padre (`id`) e hijo (`parentSubjectId`), sin duplicar la tabla ni sugerir que un registro se contiene a sí mismo. Cada FK admite `(0,1)` destinos por fila de origen y cada destino admite `(0,N)` referencias de origen. En la jerarquía se identifica aparte el dominio: una sección tiene `(1,1)` materia padre y una materia admite `(0,N)` secciones; la fila raíz no tiene padre. En la pata de gallo, el símbolo junto a una tabla cuenta sus filas vinculadas a una fila del otro extremo: círculo y barra significan cero o una; círculo y tres ramas, cero o muchas. Las frases «Por A: (mín,máx) B» de las aclaraciones cuentan los B vinculados a cada A. La figura diferencia restricciones SQL y reglas del servicio: la profundidad de la jerarquía y la unicidad de nombres por nivel no son garantías de la FK.
 
 La fuente DOT transcribe los tipos declarados, ocho `NOT NULL` explícitos, tres valores `DEFAULT 0`, el `CHECK` de tipos de evento y los dos índices explícitos no únicos. Las PK generan además índices implícitos de unicidad en estas tablas ordinarias. No se representa `TEXT PRIMARY KEY` como `NOT NULL`: SQLite admite nulos en estas PK al no ser tablas `STRICT` ni `WITHOUT ROWID` y no declarar `NOT NULL`. No se infiere una validación SQL de UUID, fechas o indicadores booleanos. Las acciones FK requieren su control habilitado en la conexión; esta revisión es documental, no una comprobación del motor nativo.
 
-El [DBML](./03-modelo-logico-relacional.dbml) se mantiene como proyección estructural reproducible: su generador no proyecta `CHECK` ni índices y conserva `ON DELETE` como comentario. Sus notas semánticas no son un catálogo completo de usos: `metadata` también guarda el borrador RC1. La autoridad para restricciones es el DDL de `connection.js`, no las notas DBML ni una inferencia visual. El tratamiento de PK y las acciones por omisión se contrastaron con la documentación oficial de [CREATE TABLE](https://sqlite.org/lang_createtable.html) y [claves foráneas de SQLite](https://sqlite.org/foreignkeys.html).
+El [DBML](./03-modelo-logico-relacional.dbml) se mantiene como proyección estructural reproducible: su generador no proyecta `CHECK` ni índices y conserva `ON DELETE` como comentario. Sus notas semánticas no son un catálogo completo de usos: `metadata` también guarda el borrador de 0.6.0 RC1. La autoridad para restricciones es el DDL de `connection.js`, no las notas DBML ni una inferencia visual. El tratamiento de PK y las acciones por omisión se contrastaron con la documentación oficial de [CREATE TABLE](https://sqlite.org/lang_createtable.html) y [claves foráneas de SQLite](https://sqlite.org/foreignkeys.html).
 
 ### Regeneración y contraste
 
@@ -87,7 +87,7 @@ Los dos verificadores no certifican todas las restricciones: complementar con el
 
 El SVG es monocromo y conserva texto vectorial nativo. El control visual a 160 mm de ancho ocupa aproximadamente 236 mm de alto, con letra mínima de 10,1 puntos; se revisó en un control A4 con márgenes superior e inferior de 15 mm, interior de 30 mm y exterior de 20 mm. Es una referencia de legibilidad, no la maquetación definitiva. La revisión de márgenes, pie y paginación del PDF queda para el cierre del informe. El PNG anterior se retira para no conservar dos ilustraciones vigentes del mismo modelo; sigue recuperable en Git.
 
-## Modelo físico de la RC1
+## Modelo físico de la versión 0.6.0 RC1
 
 El [documento físico](./04-modelo-fisico-ddl.md) distingue el DDL consolidado de la
 secuencia real de inicialización: cuatro tablas y 26 columnas, siete adiciones de
@@ -112,7 +112,7 @@ Modelo lógico (DBML parcial + figura DOT → Graphviz → SVG)
 Modelo físico (DDL y migraciones en connection.js)
 ```
 
-Las anotaciones físicas de la figura lógica explicitan la implementación sin confundirla con las reglas del dominio. La comparación documental con la fuente RC1 no constituye una nueva prueba funcional del APK.
+Las anotaciones físicas de la figura lógica explicitan la implementación sin confundirla con las reglas del dominio. La comparación documental con la fuente de 0.6.0 RC1 no constituye una nueva prueba funcional del APK.
 
 ## Criterios de cierre
 
@@ -120,4 +120,4 @@ Las anotaciones físicas de la figura lógica explicitan la implementación sin 
 - Los verificadores de esquema del repositorio finalizan correctamente.
 - Cada imagen utilizada en el informe procede de su fuente editable vigente.
 - Las imágenes representan visualmente el alcance de las fuentes; la legibilidad al tamaño final de informe y diapositivas se valida durante la maquetación.
-- El capítulo fuente identifica la RC1 `0.6.0/600`; las versiones anteriores se conservan sólo como antecedentes o atribución de evidencia histórica. El checkpoint ensamblado no se modifica manualmente.
+- El capítulo fuente identifica la versión `0.6.0/600` RC1; las versiones anteriores se conservan sólo como antecedentes o atribución de evidencia histórica. El checkpoint ensamblado no se modifica manualmente.

@@ -7,7 +7,7 @@
 > App móvil minimalista de captura de notas y gestión del conocimiento personal.  
 > Offline-first · Markdown · SQLite · Sin fricción.
 
-[![Estado del proyecto](https://img.shields.io/badge/estado-RC1%20congelada-a3e635?style=flat-square)](./BACKLOG.md#congelación-académica--2026-10-22)
+[![Estado del proyecto](https://img.shields.io/badge/estado-0.6.0%20RC1%20congelada-a3e635?style=flat-square)](./BACKLOG.md#congelación-académica--2026-10-22)
 [![Hito actual](https://img.shields.io/badge/hito-06%20entrega%20final-3b82f6?style=flat-square)](./BACKLOG.md)
 [![Licencia](https://img.shields.io/badge/licencia-GPLv3-737373?style=flat-square)](./LICENSE)
 [![Conventional Commits](https://img.shields.io/badge/commits-conventional-a3e635?style=flat-square)](https://www.conventionalcommits.org)
@@ -88,7 +88,7 @@ El corte de presentación actual está publicado en GitHub Releases como Pre-rel
 
 Descargar el asset firmado `lumapse-v0.6.0.apk` y su checksum adjunto. No usar artefactos `unsigned`, que sólo se conservan como evidencia técnica local.
 
-La RC1 fue aceptada expresamente con validación parcial y límites documentados;
+La versión 0.6.0 RC1 fue aceptada expresamente con validación parcial y límites documentados;
 no se presenta como estable o libre de errores. [Evidencia del corte](./docs/gestion/candidato-apk-0.6.0.md).
 `v0.5.0` se conserva como segunda beta histórica, sin reemplazar sus assets.
 
@@ -312,8 +312,8 @@ Cerrar el proyecto con documentación coherente, evidencia final y presentación
 - Segunda beta `v0.5.0` publicada con AUD-001 a AUD-007, mejoras táctiles y versionado Android `0.5.0/500`
 - Revisión editorial y congelamiento de la documentación técnica y académica
 - Gráficos de base de datos regenerados y verificados contra el schema real; resta validar su maquetación en PDF y diapositivas
-- RC1 `v0.6.0/600` publicada y desarrollo congelado por decisión del autor, con cobertura parcial explícita; no se repetirán los controles restantes antes de la presentación
-- [Recorte de entrega y deuda postdefensa](./BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa): evidencia de offline, privacidad y uso/accesibilidad registrada por artefacto en la [fuente RNF](./docs/producto/requisitos-no-funcionales.md), sin transferirla automáticamente a la RC1. Matriz final pendiente; CRUD/FPS diferidos, sin afirmar cumplimiento cuantitativo
+- `v0.6.0/600` RC1 publicada y desarrollo congelado por decisión del autor, con cobertura parcial explícita; no se repetirán los controles restantes antes de la presentación
+- [Recorte de entrega y deuda postdefensa](./BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa): evidencia de offline, privacidad y uso/accesibilidad registrada por artefacto en la [fuente RNF](./docs/producto/requisitos-no-funcionales.md), sin transferirla automáticamente a la versión 0.6.0 RC1. Matriz final pendiente; CRUD/FPS diferidos, sin afirmar cumplimiento cuantitativo
 - Manual de usuario 0.6.0 incorporado y publicado; revisión final del manual, informe y defensa pendientes
 - Planificación y tareas pendientes: [`TODO.md`](./TODO.md)
 - Fijar la línea base académica sobre ese artefacto, sin forzar una versión estable o afirmar adopción real

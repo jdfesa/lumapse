@@ -8,7 +8,7 @@
 
 **Proyecto:** Lumapse
 
-**Estado:** Activo sólo para cierre documental y defensa — RC1 `v0.6.0/600` publicada como Pre-release, aceptada con validación parcial; desarrollo y nuevas comprobaciones de app congelados hasta después de la presentación académica oficial. Manual de usuario 0.6.0 incorporado y publicado, pendiente de revisión final; luego informe final y defensa. Matriz RNF y entregables documentales pendientes, sin nuevas mediciones
+**Estado:** Activo sólo para cierre documental y defensa — `v0.6.0/600` RC1 publicada como Pre-release, aceptada con validación parcial; desarrollo y nuevas comprobaciones de app congelados hasta después de la presentación académica oficial. Manual de usuario 0.6.0 incorporado y publicado, pendiente de revisión final; luego informe final y defensa. Matriz RNF y entregables documentales pendientes, sin nuevas mediciones
 
 **Última actualización:** Octubre 2026
 
@@ -118,13 +118,13 @@ ampliado expresamente por el autor, sin aceptar pérdida de datos por ser beta.
 - Actualizar el cheatsheet con métricas finales y respuestas verificables.
 - Preparar una demo de contingencia y evidencia alternativa si falla el dispositivo.
 - Preparar el guion de apertura, notas, organización, búsqueda, fechas y ZIP con la evidencia existente; no convertir el ensayo documental en una instalación o ronda de pruebas del APK durante la congelación.
-- Completar la revisión final del [manual 0.6.0 incorporado y publicado](../manual-de-usuario-0.6.0/README.md); conserva siete capturas y fuentes editables, sin acreditar los recorridos diferidos de la RC1.
+- Completar la revisión final del [manual 0.6.0 incorporado y publicado](../manual-de-usuario-0.6.0/README.md); conserva siete capturas y fuentes editables, sin acreditar los recorridos diferidos de la versión 0.6.0 RC1.
 - Reservar tiempo de estudio del autor y mantener coherencia entre artefacto, informe, manual y demo.
 
 ### 5. Corte y línea base final
 
 - `v0.4.8` permanece como evidencia inmutable de la primera beta; `v0.5.0` congela AUD-001 a AUD-007 y las correcciones táctiles en la segunda beta.
-- Conservar la RC1 `v0.6.0/600` publicada y congelada con cobertura parcial aceptada; [fuente, firma, hash y límites](../gestion/candidato-apk-0.6.0.md#binario-corregido). No se prepara otra APK antes del informe/defensa ni se exige `1.0.0`.
+- Conservar la versión `v0.6.0/600` RC1 publicada y congelada con cobertura parcial aceptada; [fuente, firma, hash y límites](../gestion/candidato-apk-0.6.0.md#binario-corregido). No se prepara otra APK antes del informe/defensa ni se exige `1.0.0`.
 - No reemplazar el asset `v0.5.0`. Un debug privado autorizado se identifica por canal/origen/hash sin bump por prueba; nuevo candidato/entrega requiere versión/code nuevos y permiso específico. [Flujo Android](../flujo-desarrollo-android.md#identificación-de-compilaciones-en-acerca-de).
 - `scripts/release-helper.py` ya sincroniza package/changelog, `versionName` y `versionCode`, distingue artefactos firmados/unsigned y expone `check:version` en el gate.
 - Reconciliar matriz, informe, manual y defensa con el artefacto existente, sin bump, recompilación ni sustitución de assets. Un corte técnico posterior requiere un nuevo acuerdo después de la presentación.

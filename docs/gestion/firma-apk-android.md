@@ -2,7 +2,7 @@
 
 **Hito:** 06 — Entrega Final  
 **Versión publicada vigente:** 0.6.0/600 — Release Candidate 1, Pre-release<br>
-**Estado:** RC1 publicada y aceptada con validación parcial; desarrollo congelado
+**Estado:** 0.6.0 RC1 publicada y aceptada con validación parcial; desarrollo congelado
 hasta después de la presentación académica oficial. Sólo documentación; controles
 restantes diferidos, sin nuevas verificaciones de firma, build o instalación.
 
@@ -100,7 +100,7 @@ apertura, datos, borrador y tema conservados. El ajuste autorizado de etiqueta y
 DOMPurify 3.4.17 produjo el APK de la tabla vigente; también se verificó su
 actualización desde el candidato inicial, con todas las tablas conservadas y
 Acerca de comprobado. No se reatribuye la prueba pública directa al nuevo hash.
-El autor aceptó PR #42 y, posteriormente, la validación parcial de la RC1 para
+El autor aceptó PR #42 y, posteriormente, la validación parcial de la versión 0.6.0 RC1 para
 publicar/congelar. Recorridos restantes y tráfico/trackers quedan diferidos hasta
 después de la presentación, no aprobados. [Decisión](../../BACKLOG.md#congelación-académica--2026-10-22).
 

@@ -223,7 +223,7 @@ a ADR-009 y ADR-012, no se deducen sólo del DDL.
 
 ## 5. Alcance del contraste documental
 
-El contraste con la fuente RC1 cubre tablas, columnas, tipos declarados, PK, FK,
+El contraste con la fuente de 0.6.0 RC1 cubre tablas, columnas, tipos declarados, PK, FK,
 `NOT NULL`, `DEFAULT`, `CHECK`, índices explícitos, acciones referenciales y las
 sentencias de migración. También distingue las reglas de los servicios y el uso
 actual de `metadata`. No modifica el esquema ni genera nueva evidencia funcional.

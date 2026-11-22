@@ -15,7 +15,7 @@ no garantiza la última tecla si el proceso termina antes del commit.
 
 > **Alcance:** Este diagrama se mantiene enfocado en `RF-005` (borradores persistentes). Los flujos de backup/importación ZIP, fechas académicas y Acerca de pertenecen a otros casos de uso del Hito 05 y no forman parte de esta secuencia.
 
-> **Frontera de versión:** Secuencia contrastada con la fuente de la RC1 `v0.6.0`
+> **Frontera de versión:** Secuencia contrastada con la fuente de la versión `v0.6.0` RC1
 > (APK de `bcefe6a`, tag sobre `ac2a747`) y [ADR-012](../adr/ADR-012-borrador-sqlite-y-guardado-atomico.md).
 > No conserva el debounce ni la limpieza separada de `v0.5.0`. Es una revisión
 > documental del código, no una nueva comprobación funcional del APK.

@@ -72,7 +72,7 @@ La evidencia offline posterior es más específica. El registro del **6 de octub
 | OFF-04 | Crear, modificar, consultar y eliminar una fecha auxiliar | PASS; las fechas anteriores se conservaron |
 | OFF-05 | Generar ZIP local, importar y repetir la importación | PASS; auxiliar recuperada y segunda importación sin duplicados |
 
-La ejecución inicial de OFF-05 había fallado porque la exportación local se deshabilitaba sin internet. La corrección separó generación local y disponibilidad de destinos externos; sólo después se repitió el flujo completo. La comparación final conservó las notas originales, materias y fechas, con integridad SQLite correcta. Esto sustenta **RNF-009 en ese alcance**, no garantiza todo destino externo ni transfiere el resultado al asset de `v0.5.0` o a la RC1.
+La ejecución inicial de OFF-05 había fallado porque la exportación local se deshabilitaba sin internet. La corrección separó generación local y disponibilidad de destinos externos; sólo después se repitió el flujo completo. La comparación final conservó las notas originales, materias y fechas, con integridad SQLite correcta. Esto sustenta **RNF-009 en ese alcance**, no garantiza todo destino externo ni transfiere el resultado al asset de `v0.5.0` o a la versión 0.6.0 RC1.
 
 ### 6.3.2. Continuidad del borrador
 
@@ -82,7 +82,7 @@ Tras adoptar SQLite y la confirmación atómica de nota y limpieza, el registro 
 
 Ese intervalo delimita la prueba de interrupción, no una medición de latencia CRUD. La terminación deliberada del proceso tampoco equivale a un apagado físico ni a todos los mecanismos de cierre de Android. El resultado aceptado cubre los casos y el artefacto registrados; **no garantiza conservar la última tecla si el proceso muere antes del commit**. La distinción entre borrador y nota confirmada permanece como se explicó en la sección 5.4.2.
 
-### 6.3.3. Identidad y alcance de las pruebas de la RC1
+### 6.3.3. Identidad y alcance de las pruebas de la versión 0.6.0 RC1
 
 El binario publicado es `lumapse-v0.6.0.apk`, versión **0.6.0**, código **600**, canal **`android-candidate`**, generado desde fuente limpia **`bcefe6a`**. La etiqueta `v0.6.0` apunta a **`ac2a747`**, que incluye la integración posterior; no es el commit incorporado en la APK. Su identificación registrada incluye:
 
@@ -123,7 +123,7 @@ Los perfiles sintéticos de 50 y 500 notas permitieron preparar datos y comproba
 
 ### 6.4.2. Revisiones de interacción y presentación
 
-Las comprobaciones Android de octubre cubrieron dimensiones distintas. La tabla siguiente identifica el origen de los debugs privados, todos sobre Samsung SM-G965F/Android 10; **no son resultados de la RC1 firmada**.
+Las comprobaciones Android de octubre cubrieron dimensiones distintas. La tabla siguiente identifica el origen de los debugs privados, todos sobre Samsung SM-G965F/Android 10; **no son resultados de la versión 0.6.0 RC1 firmada**.
 
 **Tabla 6-5. Evidencia acotada de usabilidad y accesibilidad**
 
@@ -148,7 +148,7 @@ El resultado no significa cero hallazgos. Los informes registraron **seis audito
 
 Los informes definitivos se conservaron aunque el runner terminó con error en la limpieza posterior a recolectarlos; la restauración del estado se completó y comprobó por separado. No considero exitosa toda la ejecución por haber obtenido scores favorables.
 
-La revisión del **22 de octubre** reprodujo un defecto adicional: el hover de «Agregar fecha» podía quedar visible con bajo contraste tras cerrar el diálogo con Escape. Se corrigió y midió en el debug **`e0700f6`**: 8,82:1 en oscuro y 6,29:1 en claro en ese estado. Sus seis snapshots nuevos de 100/100 no reemplazan las cuarenta escenas anteriores ni verifican la RC1. Otros límites de superposición, semántica ARIA y cobertura quedaron clasificados y aceptados para el corte: por ejemplo, los botones de opciones de tarjeta seguían midiendo 28×28 CSS px. No se convirtieron en cumplimiento general de RNF-008, teclado completo, control por voz, TalkBack o WCAG exhaustiva.
+La revisión del **22 de octubre** reprodujo un defecto adicional: el hover de «Agregar fecha» podía quedar visible con bajo contraste tras cerrar el diálogo con Escape. Se corrigió y midió en el debug **`e0700f6`**: 8,82:1 en oscuro y 6,29:1 en claro en ese estado. Sus seis snapshots nuevos de 100/100 no reemplazan las cuarenta escenas anteriores ni verifican la versión 0.6.0 RC1. Otros límites de superposición, semántica ARIA y cobertura quedaron clasificados y aceptados para el corte: por ejemplo, los botones de opciones de tarjeta seguían midiendo 28×28 CSS px. No se convirtieron en cumplimiento general de RNF-008, teclado completo, control por voz, TalkBack o WCAG exhaustiva.
 
 ## 6.5. Seguridad, privacidad y alcance de las auditorías
 
@@ -162,7 +162,7 @@ Las regresiones de sanitización, escape contextual y validación de ZIP aportan
 
 ## 6.6. Síntesis del estado y límites de la entrega
 
-La clasificación de los **26 requisitos no funcionales** mantiene los estados y artefactos de sus registros, sin elevar una aceptación general a prueba exhaustiva de la RC1.
+La clasificación de los **26 requisitos no funcionales** mantiene los estados y artefactos de sus registros, sin elevar una aceptación general a prueba exhaustiva de la versión 0.6.0 RC1.
 
 **Tabla 6-6. Síntesis documental de estados RNF**
 
@@ -176,8 +176,8 @@ La clasificación de los **26 requisitos no funcionales** mantiene los estados y
 
 Entre los verificados, RNF-018 conserva la inspección del Markdown legible dentro del backup, sin habilitar compartir notas individuales. RNF-023 se apoya en la separación modular descrita en el capítulo 4. RNF-026 tiene un inventario de decisiones contrastado en el precorte, complementado por ADR-013; algunos ADR formalizan retrospectivamente una solución y no prueban que el registro precediera a implementarla. Los requisitos obsoletos corresponden a criterios de carga web, Service Worker e instalación PWA reemplazados; los no aplicables se refieren a hosting HTTPS, headers y paridad multinavegador, no al canal APK vigente.
 
-La tabla no expresa «16 de 26 pruebas de la RC1 aprobadas»: combina requisitos, métodos y checkpoints diferentes. No calculo con ella un índice global de calidad. El tamaño del bundle, la cobertura de servicios, una revisión documental y un recorrido nativo miden propiedades distintas y no compensan entre sí la falta de evidencia.
+La tabla no expresa «16 de 26 pruebas de la versión 0.6.0 RC1 aprobadas»: combina requisitos, métodos y checkpoints diferentes. No calculo con ella un índice global de calidad. El tamaño del bundle, la cobertura de servicios, una revisión documental y un recorrido nativo miden propiedades distintas y no compensan entre sí la falta de evidencia.
 
-La **RC1 fue aceptada y publicada con validación parcial**. Están documentados sus controles de fuente e identidad, apertura y actualizaciones con el conjunto pequeño descrito. Los recorridos restantes de núcleo offline, organización/búsqueda, fechas y ZIP, así como tráfico y trackers sobre el binario exacto, quedaron **diferidos, no aprobados**. La actualización directa de `0.5.0` al corregido tampoco se repitió. La decisión del 22 de octubre congeló desarrollo y nuevas comprobaciones de app hasta después de la presentación, sin convertir esas ausencias en defectos confirmados ni en resultados positivos.
+La versión **0.6.0 RC1 fue aceptada y publicada con validación parcial**. Están documentados sus controles de fuente e identidad, apertura y actualizaciones con el conjunto pequeño descrito. Los recorridos restantes de núcleo offline, organización/búsqueda, fechas y ZIP, así como tráfico y trackers sobre el binario exacto, quedaron **diferidos, no aprobados**. La actualización directa de `0.5.0` al corregido tampoco se repitió. La decisión del 22 de octubre congeló desarrollo y nuevas comprobaciones de app hasta después de la presentación, sin convertir esas ausencias en defectos confirmados ni en resultados positivos.
 
 El alcance defendible de la entrega es, por tanto, un prototipo Android identificable, con controles automatizados y evidencia nativa relevante, pero no una versión estable certificada ni una validación exhaustiva de seguridad, accesibilidad, rendimiento o uso real. Esta delimitación permite fundamentar las conclusiones y el trabajo futuro del capítulo 7 con resultados obtenidos, en lugar de promesas de comprobación.

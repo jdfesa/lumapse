@@ -8,7 +8,7 @@ Desarrollé Lumapse de forma iterativa e incremental: construí funcionalidades 
 
 Los hitos funcionaron como puntos académicos de revisión, entrega y establecimiento de líneas base, no como Sprints. El cronograma inicial y las fechas de cierre registran planificación y evolución del proyecto, sin convertir los hitos en iteraciones de duración fija.
 
-Complementé la gestión con artefactos de Design Thinking para organizar la comprensión del contexto, la definición del problema y las alternativas de solución. Las personas, la encuesta, el análisis competitivo y el Lean Canvas aportaron insumos para esas actividades. El prototipo evolucionó hacia las betas y la RC1; esa evolución técnica no demuestra que se haya completado una validación sistemática de uso con el público objetivo.
+Complementé la gestión con artefactos de Design Thinking para organizar la comprensión del contexto, la definición del problema y las alternativas de solución. Las personas, la encuesta, el análisis competitivo y el Lean Canvas aportaron insumos para esas actividades. El prototipo evolucionó hacia las betas y la versión 0.6.0 RC1; esa evolución técnica no demuestra que se haya completado una validación sistemática de uso con el público objetivo.
 
 ### 2.1.1. Justificación frente a Scrum y RUP
 
@@ -156,7 +156,7 @@ El catálogo conserva 28 RF. En el corte documental vigente, 21 figuran implemen
 
 Los RF abarcan notas y borradores, persistencia, Markdown, organización, fechas puntuales, interfaz e identificación y respaldo/importación ZIP. La sección 1.4.2 delimita esas funciones; no incluyen sincronización, agenda completa ni una copia exacta de todo el estado del dispositivo.
 
-Los cuatro RF postergados son conteo de palabras y caracteres (RF-006), compartir o exportar una nota individual (RF-016), bienvenida inicial (RF-022) e indicador global de conexión (RF-024). Service Workers (RF-009) e instalación PWA (RF-021) quedaron obsoletos. En cambio, el ZIP del espacio de trabajo (RF-017 y RF-018) es distinto del flujo individual postergado. Los estados de implementación no certifican todos los recorridos de la RC1 publicada.
+Los cuatro RF postergados son conteo de palabras y caracteres (RF-006), compartir o exportar una nota individual (RF-016), bienvenida inicial (RF-022) e indicador global de conexión (RF-024). Service Workers (RF-009) e instalación PWA (RF-021) quedaron obsoletos. En cambio, el ZIP del espacio de trabajo (RF-017 y RF-018) es distinto del flujo individual postergado. Los estados de implementación no certifican todos los recorridos de la versión 0.6.0 RC1 publicada.
 
 ### 2.6.2. Requisitos No Funcionales
 
@@ -174,6 +174,6 @@ Tres métricas conservan su estado pendiente y sus umbrales:
 
 La aceptación de esas limitaciones no rebaja los criterios ni convierte una opinión favorable en medición. La navegación por teclado mantiene evidencia parcial y las verificaciones acotadas de accesibilidad no se presentan como certificación exhaustiva.
 
-El corte de presentación es la RC1 0.6.0/600, publicada con validación parcial y desarrollo congelado hasta después de la presentación. Las betas y los builds de prueba conservan identidad y cobertura propias; los recorridos restantes de la RC1 siguen diferidos, no aprobados. Publicar el candidato no equivale a cumplimiento global.
+El corte de presentación es la versión 0.6.0/600 RC1, publicada con validación parcial y desarrollo congelado hasta después de la presentación. Las betas y los builds de prueba conservan identidad y cobertura propias; los recorridos restantes de la versión 0.6.0 RC1 siguen diferidos, no aprobados. Publicar el candidato no equivale a cumplimiento global.
 
 En conjunto, este marco permite seguir el razonamiento desde los supuestos iniciales hasta requisitos y decisiones verificables. El capítulo 3 desarrolla la evidencia del relevamiento; los capítulos 4 a 6 explican cómo se tradujo en diseño, implementación y pruebas. La relación entre esas etapas sostiene la evaluación del proyecto, sin sustituir los resultados que cada una debe demostrar.

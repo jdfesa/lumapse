@@ -1,8 +1,8 @@
 # Cheat Sheet de Defensa — Lumapse
-**Última actualización:** 2026-10-26 — RC1 de presentación y métricas históricas separadas
+**Última actualización:** 2026-10-26 — 0.6.0 RC1 de presentación y métricas históricas separadas
 
-> Hito 05 está cerrado y Hito 06 activo sólo para documentación y defensa. La RC1
-> `v0.6.0` está publicada con validación parcial aceptada y desarrollo congelado.
+> Hito 05 está cerrado y Hito 06 activo sólo para documentación y defensa. La versión `v0.6.0` RC1
+> está publicada con validación parcial aceptada y desarrollo congelado.
 > No transferir métricas o pruebas de un corte a otro. El
 > [recorte vigente](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa) mantiene
 > las comprobaciones restantes y CRUD/FPS diferidos, sin nuevas pruebas de app
@@ -87,7 +87,7 @@ del repositorio actual.
 
 | Referencia | Tipo | Fecha | Highlights |
 |---|---|---|---|
-| `v0.6.0` | GitHub pre-release / RC1 | 2026-10-22 | APK de presentación publicado y congelado, validación parcial aceptada y comprobaciones restantes diferidas |
+| `v0.6.0` RC1 | GitHub pre-release | 2026-10-22 | APK de presentación publicado y congelado, validación parcial aceptada y comprobaciones restantes diferidas |
 | `v0.5.0` | GitHub pre-release | 2026-09-05 | Segunda beta firmada; AUD-001 a AUD-007, mejoras táctiles, 1065 tests y hash documentado |
 | `v0.4.8` | GitHub pre-release | 2026-07-01 | APK firmada, hash documentado, quality gate y validación Android inicial |
 | `0.4.0`–`0.4.7` | Cortes documentales | 2026-05-17 a 2026-05-26 | Lotes incrementales de Organización y UX; no tuvieron tags/releases individuales |
@@ -117,9 +117,9 @@ Los meses de Hitos 02 a 06 son etiquetas del calendario académico planificado; 
 - **¿Por qué no mostrás online/offline?** → RF-024 quedó postergado porque el núcleo local no depende de la red y un chip global podría sugerir una sincronización inexistente. El backup sí informa de manera contextual y únicamente dentro de su flujo cuando la conectividad afecta la salida externa.
 - **¿Por qué no hay onboarding o tutorial Markdown?** → DP-006: la beta no registró un bloqueo de descubrimiento que justificara un tutorial obligatorio. Lumapse permite escribir texto plano; Markdown es una mejora, no una barrera de entrada.
 - **¿Export/import está implementado?** → Sí para backups de workspace: `RF-017` exporta un `.zip` legible/restaurable con salida externa y `RF-018` importa ZIPs generados por Lumapse con preview, transacción y duplicados no destructivos. Sigue postergado `RF-016`, que es compartir/exportar una nota individual, y también la importación `.md` de una nota suelta.
-- **¿La APK ya está disponible?** → Sí. El corte de presentación es `lumapse-v0.6.0.apk`, publicado como Pre-release/RC1 con firma original y SHA-256 registrado. Fue aceptado con validación parcial: no se presenta como estable ni se transfieren las pruebas de otros debugs. `v0.5.0` se conserva como segunda beta histórica.
+- **¿La APK ya está disponible?** → Sí. El corte de presentación es `lumapse-v0.6.0.apk`, publicado como 0.6.0 RC1 (Pre-release) con firma original y SHA-256 registrado. Fue aceptado con validación parcial: no se presenta como estable ni se transfieren las pruebas de otros debugs. `v0.5.0` se conserva como segunda beta histórica.
 - **¿Qué ocurrió con `0.4.9`?** → No se publicó. El trabajo posterior a `v0.4.8` se consolidó directamente en la segunda beta `v0.5.0`, con tag, APK y hash propios. `v0.4.8` se conserva como evidencia histórica inmutable.
-- **¿Qué queda antes de defender?** → Revisión final del manual 0.6.0 publicado, matriz RNF por artefacto, adaptación de capítulos, bibliografía, maquetación y demo/contingencia. La APK ya está publicada y congelada; no se recompila ni se completan pruebas de app ahora. CRUD/FPS y los recorridos restantes de la RC1 se declaran diferidos, no aprobados.
+- **¿Qué queda antes de defender?** → Revisión final del manual 0.6.0 publicado, matriz RNF por artefacto, adaptación de capítulos, bibliografía, maquetación y demo/contingencia. La APK ya está publicada y congelada; no se recompila ni se completan pruebas de app ahora. CRUD/FPS y los recorridos restantes de la versión 0.6.0 RC1 se declaran diferidos, no aprobados.
 - **¿Cómo se presentan los límites de la beta?** → Separando lo comprobado por artefacto, lo pendiente, las limitaciones aceptadas y la deuda postdefensa. No se afirma que todos los RNF estén cumplidos, que haya estabilidad comercial o que personas reales ya utilicen la app; el plazo no sustituye evidencia.
 
 ## Fuentes
