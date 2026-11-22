@@ -15,14 +15,14 @@ La tabla 7-1 conserva la correspondencia con los siete objetivos específicos de
 | 1. Relevar y analizar hábitos, dificultades y preferencias | Encuesta con 121 respuestas recolectadas y 120 analizadas; instrumento, procesamiento y bases de cálculo explicitados en el capítulo 3 | Describe una muestra por conveniencia; no representa una prueba de uso ni una estimación inferencial de toda la población |
 | 2. Traducir necesidades y restricciones en requisitos trazables | Requisitos, historias de usuario, criterios de aceptación y decisiones de producto relacionados en el capítulo 2 | Un requisito implementado o una preferencia declarada no acreditan satisfacción ni validación completa de un binario |
 | 3. Diseñar y justificar una arquitectura modular local | Arquitectura Android/Capacitor con SQLite y separación pragmática de responsabilidades, fundamentada en el capítulo 4 y los ADR | Es una solución contextual, no una demostración de superioridad frente a todas las alternativas ni una arquitectura de capas estricta |
-| 4. Implementar creación, edición, lectura, búsqueda y organización | Núcleo de notas en texto plano y Markdown, materias y secciones, búsqueda y controles asociados, descrito en el capítulo 5 | La presencia de las funciones no demuestra por sí sola rapidez, facilidad de uso ni todos los recorridos de la RC1 |
+| 4. Implementar creación, edición, lectura, búsqueda y organización | Núcleo de notas en texto plano y Markdown, materias y secciones, búsqueda y controles asociados, descrito en el capítulo 5 | La presencia de las funciones no demuestra por sí sola rapidez, facilidad de uso ni todos los recorridos de la versión 0.6.0 RC1 |
 | 5. Incorporar continuidad y recuperación | Borrador persistente, guardado explícito, archivo, papelera y respaldo/importación ZIP, con mecanismos y evidencia delimitados en las secciones 5.4 y 6.3 | No garantizan recuperación ante toda interrupción o pérdida del dispositivo; el ZIP excluye borradores y papelera |
-| 6. Distribuir un artefacto identificable y documentar sus verificaciones | RC1 firmada y publicada; fuente, identidad binaria, controles y actualizaciones distinguidos en la sección 6.3.3 | Aceptación con cobertura parcial; las pruebas de otros debugs y las métricas pendientes no se transfieren al APK publicado |
+| 6. Distribuir un artefacto identificable y documentar sus verificaciones | 0.6.0 RC1 firmada y publicada; fuente, identidad binaria, controles y actualizaciones distinguidos en la sección 6.3.3 | Aceptación con cobertura parcial; las pruebas de otros debugs y las métricas pendientes no se transfieren al APK publicado |
 | 7. Mantener evidencia versionada de la evolución | Requisitos, decisiones, hitos, código, pruebas e informe permiten reconstruir cambios y resultados | La trazabilidad permite examinar el proceso; un plan o registro histórico no acredita por sí solo el comportamiento de un artefacto posterior |
 
 La pregunta del problema planteado en la sección 1.2 encuentra así una respuesta de diseño e implementación: relacioné necesidades declaradas con un núcleo local de captura, organización y consulta, y construí mecanismos para conservar trabajo y extraer datos sin depender de una sincronización propia. La encuesta fundamentó prioridades, mientras que la plataforma y la persistencia se eligieron mediante análisis técnico. No atribuyo a las personas participantes una elección de SQLite, del formato APK o de cada comportamiento de la interfaz.
 
-El capítulo 6 establece hasta dónde llega la comprobación. Los casos offline y de continuidad tienen dispositivos y debugs identificados; la RC1 posee controles de fuente e identidad, apertura y actualizaciones acotadas. Permanecen pendientes las métricas de RNF-002, RNF-004 y RNF-005; se conservan la evidencia parcial de teclado y los recorridos diferidos sobre el binario exacto. Por ello, el resultado es un **prototipo Android con alcance y evidencia delimitados**, no una versión estable certificada ni una validación integral de experiencia de uso, accesibilidad, seguridad o rendimiento.
+El capítulo 6 establece hasta dónde llega la comprobación. Los casos offline y de continuidad tienen dispositivos y debugs identificados; la versión 0.6.0 RC1 posee controles de fuente e identidad, apertura y actualizaciones acotadas. Permanecen pendientes las métricas de RNF-002, RNF-004 y RNF-005; se conservan la evidencia parcial de teclado y los recorridos diferidos sobre el binario exacto. Por ello, el resultado es un **prototipo Android con alcance y evidencia delimitados**, no una versión estable certificada ni una validación integral de experiencia de uso, accesibilidad, seguridad o rendimiento.
 
 ## 7.2. Lecciones aprendidas
 
@@ -54,7 +54,7 @@ El diagnóstico del borrador mostró que ver el texto en la interfaz y en `local
 
 Las comprobaciones de accesibilidad enseñaron algo equivalente: una puntuación favorable puede coexistir con hallazgos o comprobaciones manuales pendientes. Aumentar el número de tests, obtener una compilación correcta o superar el umbral de un instrumento no autoriza a extender el resultado más allá de su alcance. Por eso mantuve separados los controles automatizados, los recorridos Android y la aceptación de cada entrega.
 
-La lección es definir qué observación acredita cada afirmación y qué resultado la haría fallar. Identificar fuente, binario, entorno y método evita confundir la evolución de `main` con una APK publicada, o una actualización de datos acotados con todas las migraciones posibles. La aceptación parcial de la RC1 es una decisión de alcance que conserva límites, no una prueba adicional que los elimina.
+La lección es definir qué observación acredita cada afirmación y qué resultado la haría fallar. Identificar fuente, binario, entorno y método evita confundir la evolución de `main` con una APK publicada, o una actualización de datos acotados con todas las migraciones posibles. La aceptación parcial de la versión 0.6.0 RC1 es una decisión de alcance que conserva límites, no una prueba adicional que los elimina.
 
 ### 7.2.5. Mantener trazabilidad sin confundir documentación con validación
 
@@ -66,18 +66,18 @@ La recomendación que extraigo para otros proyectos individuales es registrar lo
 
 ## 7.3. Trabajo futuro y posibles mejoras
 
-Las líneas de continuidad de Lumapse surgen de los límites de validación, la deuda técnica registrada y las capacidades excluidas del corte presentado. El desarrollo quedó congelado el 22 de octubre de 2026 con aceptación parcial de la RC1. Las validaciones y mejoras siguientes corresponden a una etapa posterior a la presentación; no forman parte de los resultados obtenidos ni modifican la cobertura del candidato publicado.
+Las líneas de continuidad de Lumapse surgen de los límites de validación, la deuda técnica registrada y las capacidades excluidas del corte presentado. El desarrollo quedó congelado el 22 de octubre de 2026 con aceptación parcial de la versión 0.6.0 RC1. Las validaciones y mejoras siguientes corresponden a una etapa posterior a la presentación; no forman parte de los resultados obtenidos ni modifican la cobertura del candidato publicado.
 
 ### 7.3.1. Validación del núcleo y de los atributos de calidad
 
 Los límites de evidencia del capítulo 6 orientan las siguientes líneas de evaluación del producto en un binario identificado:
 
-- Completar los recorridos diferidos del núcleo offline, organización/búsqueda, fechas, ZIP y tráfico/trackers sobre la RC1 exacta, sin heredar resultados de debugs anteriores.
+- Completar los recorridos diferidos del núcleo offline, organización/búsqueda, fechas, ZIP y tráfico/trackers sobre la versión 0.6.0 RC1 exacta, sin heredar resultados de debugs anteriores.
 - Establecer un método proporcionado y verificable para RNF-002 y RNF-004, manteniendo sus umbrales de **≤ 200 ms por operación CRUD** y **≥ 55 FPS durante el desplazamiento con al menos 500 notas**. La ausencia actual de métricas no se interpreta como un defecto de rendimiento demostrado ni como cumplimiento.
 - Evaluar el uso con participantes nuevos, incluido RNF-005, cuyo límite de primera nota es **10 segundos o menos** desde la primera apertura, sin instrucciones previas. Las opiniones voluntarias no reemplazan esa medición ni un estudio de uso sostenido.
 - Ampliar la revisión de accesibilidad a dispositivos, estados y tecnologías de asistencia no cubiertos. La evidencia parcial de teclado, sin teclado físico ni recorridos completos de mutación, delimita uno de esos frentes.
 
-Estas evaluaciones permitirían contrastar respuesta interactiva, facilidad de uso y barreras de interacción que la implementación por sí sola no demuestra. Sus resultados tendrían que conservar la versión, el dispositivo, el método y el alcance observados. Las opiniones sobre una beta anterior no prueban el comportamiento de la RC1 ni acreditan adopción real.
+Estas evaluaciones permitirían contrastar respuesta interactiva, facilidad de uso y barreras de interacción que la implementación por sí sola no demuestra. Sus resultados tendrían que conservar la versión, el dispositivo, el método y el alcance observados. Las opiniones sobre una beta anterior no prueban el comportamiento de la versión 0.6.0 RC1 ni acreditan adopción real.
 
 ### 7.3.2. Mantenimiento y protección de los datos
 
@@ -101,6 +101,6 @@ El criterio de evolución no es equiparar Lumapse con una plataforma generalista
 
 Lumapse concreta una respuesta técnica acotada al problema de capturar, organizar y recuperar apuntes sin depender de una conexión permanente. Su aporte comprende el prototipo Android, el análisis que orientó su alcance y la evidencia que permite examinar decisiones y resultados. No demuestra por sí solo una mejora del aprendizaje, superioridad frente a otras herramientas ni adopción real.
 
-La RC1 0.6.0/600 constituye el corte de presentación, con identidad registrada y validación parcial aceptada. Las betas previas conservan su lugar en la evolución, sin sustituir la evidencia del candidato. Cerrar responsablemente este desarrollo no significa vaciar el backlog o anunciar una versión estable: significa identificar lo construido, sostener sus afirmaciones con resultados y reconocer lo que falta comprobar.
+La versión 0.6.0/600 RC1 constituye el corte de presentación, con identidad registrada y validación parcial aceptada. Las betas previas conservan su lugar en la evolución, sin sustituir la evidencia del candidato. Cerrar responsablemente este desarrollo no significa vaciar el backlog o anunciar una versión estable: significa identificar lo construido, sostener sus afirmaciones con resultados y reconocer lo que falta comprobar.
 
 En mi formación, el aprendizaje principal fue relacionar análisis, decisiones técnicas, implementación y verificación sin confundir sus alcances. El trabajo deja fuentes y registros que permiten estudiar el proceso y orientar su continuidad, con resultados y limitaciones identificados. Ese vínculo entre el problema abordado, las decisiones fundamentadas y el software construido constituye el principal aporte formativo del proyecto.

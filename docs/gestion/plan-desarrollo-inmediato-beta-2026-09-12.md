@@ -10,7 +10,7 @@
 
 **Responsable:** autor del proyecto, con asistencia técnica; la aceptación y el merge requieren su autorización.
 
-**Seguimiento vigente:** la [RC1 `v0.6.0/600`](./candidato-apk-0.6.0.md) fue
+**Seguimiento vigente:** la [`v0.6.0/600` RC1](./candidato-apk-0.6.0.md) fue
 publicada el 2026-10-22 con validación parcial aceptada. La
 [congelación académica](../../BACKLOG.md#congelación-académica--2026-10-22)
 supersede las secuencias técnicas pendientes conservadas en este plan: no generar

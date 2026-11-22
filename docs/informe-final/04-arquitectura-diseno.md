@@ -162,13 +162,13 @@ Las migraciones comprueban las columnas existentes antes de agregar una nueva. U
 
 Desarrollé el diseño en tres niveles: conceptual, para entidades y relaciones; lógico, para tablas y claves; y físico, para el esquema SQLite y sus migraciones. La revisión de normalización complementa esos niveles. El modelo conceptual utiliza notación Chen con cardinalidades mínimas y máximas y conserva su fuente DOT; el lógico conserva una proyección DBML y una figura vectorial en DOT contrastada con el DDL ejecutable, que determina la estructura efectiva.
 
-La figura 4-3 representa las entidades y asociaciones del dominio en la RC1; la figura 4-4 detalla las tablas y claves de ese mismo corte, con sus restricciones físicas declaradas. La estructura efectiva del corte mantiene las cuatro tablas, 26 columnas y tres claves foráneas del modelo lógico. Mover el borrador a `metadata` cambió el uso de esa tabla, no agregó una entidad o columna.
+La figura 4-3 representa las entidades y asociaciones del dominio en la versión 0.6.0 RC1; la figura 4-4 detalla las tablas y claves de ese mismo corte, con sus restricciones físicas declaradas. La estructura efectiva del corte mantiene las cuatro tablas, 26 columnas y tres claves foráneas del modelo lógico. Mover el borrador a `metadata` cambió el uso de esa tabla, no agregó una entidad o columna.
 
 #### 4.7.2.1. Modelo conceptual
 
 ![Modelo conceptual de Lumapse en notación Chen, con la jerarquía de materias y secciones desplegada por roles](../diagramas/database/01-modelo-conceptual.svg)
 
-*Figura 4-3. Modelo conceptual de Lumapse en notación Chen, con atributos seleccionados y detalle de la jerarquía por roles, correspondiente al dominio de la RC1. Fuente: elaboración propia mediante Graphviz.*
+*Figura 4-3. Modelo conceptual de Lumapse en notación Chen, con atributos seleccionados y detalle de la jerarquía por roles, correspondiente al dominio de la versión 0.6.0 RC1. Fuente: elaboración propia mediante Graphviz.*
 
 La cardinalidad se lee junto a la entidad a la que se aplica, como un par `(mínimo, máximo)` de vínculos en esa relación.
 Así, `(0,1)` significa «cero o uno»; `(0,N)`, «cero o muchos»; y `(1,1)`, «exactamente uno».
@@ -177,7 +177,7 @@ Así, `(0,1)` significa «cero o uno»; `(0,N)`, «cero o muchos»; y `(1,1)`, �
 
 ![Modelo lógico relacional de Lumapse](../diagramas/database/03-modelo-logico-relacional.svg)
 
-*Figura 4-4. Modelo lógico relacional de Lumapse en notación de pata de gallo. Tablas, claves y restricciones físicas declaradas en la RC1. Fuente: elaboración propia mediante Graphviz, contrastada con el esquema SQLite y sus migraciones.*
+*Figura 4-4. Modelo lógico relacional de Lumapse en notación de pata de gallo. Tablas, claves y restricciones físicas declaradas en la versión 0.6.0 RC1. Fuente: elaboración propia mediante Graphviz, contrastada con el esquema SQLite y sus migraciones.*
 
 El modelo lógico incorpora las tres tablas de dominio y `metadata`. Los identificadores de las entidades son UUID almacenados como texto; la clave de `metadata`, en cambio, es el nombre textual de una propiedad. Los indicadores booleanos se representan con enteros y las fechas con texto; la fecha académica usa `YYYY-MM-DD`, diferenciada de las marcas de creación y actualización.
 
@@ -194,6 +194,79 @@ En la figura, PK señala la clave primaria y FK la columna que referencia una cl
 
 En el dominio, cada sección tiene `(1,1)` materia padre distinta de ella: esa regla y los dos niveles dependen del servicio, no de la FK por sí sola. Los bloques inferiores separan referencias y acciones, restricciones e índices físicos y límites de lectura; la sección 4.7.3 explica sus efectos sin confundirlos con reglas de negocio.
 
+#### 4.7.2.3. Implementación física en SQL
+
+El siguiente DDL —lenguaje de definición de datos— expresa el esquema efectivo de la versión 0.6.0 RC1 una vez completadas la creación y las migraciones. Reúne en cada tabla las columnas incorporadas en etapas distintas. No representa una única cadena ejecutada por la app ni un script para actualizar una instalación existente; el orden físico de las columnas puede variar según su historial. Los nombres, tipos, restricciones e índices corresponden a la implementación, sin agregar garantías que el código no declara.
+
+**Materias y secciones.** Ambas se almacenan en `subjects`; la referencia al padre permite representar la jerarquía. Su límite de dos niveles pertenece al servicio, no a esta sentencia.
+
+```sql
+CREATE TABLE IF NOT EXISTS subjects (
+    id              TEXT PRIMARY KEY,
+    name            TEXT NOT NULL,
+    parentSubjectId TEXT REFERENCES subjects(id) ON DELETE CASCADE,
+    archived        INTEGER DEFAULT 0,
+    color           TEXT,
+    deletedAt       TEXT,
+    createdAt       TEXT NOT NULL
+);
+```
+
+**Notas.** La asociación organizativa es opcional. `pinned` y `archived` conservan marcas independientes; `statusEmoji` registra el estado académico y `deletedAt` permite la eliminación lógica.
+
+```sql
+CREATE TABLE IF NOT EXISTS notes (
+    id          TEXT PRIMARY KEY,
+    title       TEXT,
+    content     TEXT,
+    pinned      INTEGER DEFAULT 0,
+    archived    INTEGER DEFAULT 0,
+    subjectId   TEXT REFERENCES subjects(id) ON DELETE SET NULL,
+    statusEmoji TEXT,
+    deletedAt   TEXT,
+    createdAt   TEXT NOT NULL,
+    updatedAt   TEXT NOT NULL
+);
+```
+
+**Fechas académicas.** El `CHECK` restringe los tipos a los cuatro valores implementados. Los dos índices explícitos no únicos corresponden a la fecha y a la materia asociada; su existencia no acredita un rendimiento medido.
+
+```sql
+CREATE TABLE IF NOT EXISTS academic_events (
+    id        TEXT PRIMARY KEY,
+    type      TEXT NOT NULL
+        CHECK(type IN ('parcial', 'final', 'tp', 'exposicion')),
+    title     TEXT,
+    date      TEXT NOT NULL,
+    subjectId TEXT REFERENCES subjects(id) ON DELETE SET NULL,
+    createdAt TEXT NOT NULL,
+    updatedAt TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_academic_events_date
+    ON academic_events(date);
+
+CREATE INDEX IF NOT EXISTS idx_academic_events_subject
+    ON academic_events(subjectId);
+```
+
+**Estado técnico.** `metadata` conserva pares clave-valor, sin relaciones con las tablas académicas. El marcador de migración histórica y el borrador del editor son usos de esta tabla, no tablas o columnas nuevas.
+
+```sql
+CREATE TABLE IF NOT EXISTS metadata (
+    key   TEXT PRIMARY KEY,
+    value TEXT
+);
+```
+
+*Fuente de los listados SQL: elaboración propia a partir del esquema y las migraciones de la fuente de 0.6.0 RC1.*
+
+El conjunto declara cuatro PK, tres FK opcionales, ocho `NOT NULL` explícitos, tres valores `DEFAULT 0`, un `CHECK` y dos índices explícitos. No incorpora `NOT NULL` adicional en las PK textuales, tablas `STRICT` ni validaciones SQL de formato UUID o fecha. Tampoco restringe mediante `CHECK` los indicadores a `0` y `1`: esos valores son una convención de la aplicación, no una consecuencia de `DEFAULT 0`.
+
+El arranque aplica una estructura base y luego revisa siete posibles adiciones de columna mediante `PRAGMA table_info`. En una instalación nueva, esa revisión todavía debe agregar `notes.statusEmoji`, `notes.deletedAt` y `subjects.deletedAt`; las restantes columnas de compatibilidad ya están en el DDL base. También conserva la creación idempotente de la tabla de eventos y sus índices. No ejecuta todos los `ALTER` sin comprobación previa ni acepta errores de columna duplicada como control normal. La comprobación de existencia permite omitir una adición ya aplicada, pero no verifica que una columna existente tenga toda la definición esperada ni constituye una reparación de esquemas modificados externamente.
+
+Esta evolución de estructura es distinta de migrar notas históricas de IndexedDB o trasladar el borrador a SQLite. Las primeras utilizan el marcador `indexeddb_migrated`; el segundo reutiliza `metadata` conforme a ADR-012, sin alterar las 26 columnas. El contrato de continuidad se explicó en 4.5; el uso del borrador se precisa en 4.7.4. La correspondencia del DDL con la fuente no sustituye la evidencia de validación por artefacto del capítulo 6.
+
 ### 4.7.3. Integridad y reglas de negocio
 
 Las tres relaciones declaradas comparten a `subjects` como tabla referenciada. Sus acciones de eliminación física se interpretan según la semántica de SQLite, con el control de claves foráneas habilitado en la conexión (SQLite Project, s. f.).
@@ -208,13 +281,13 @@ Enviar una materia a Papelera no ejecuta esas acciones de SQL: asigna `deletedAt
 
 Las fechas académicas no tienen `deletedAt` ni participan de la papelera: su eliminación es física. El conjunto de tipos admitidos está restringido mediante `CHECK`, y existen índices sobre fecha y materia para las consultas de eventos. Estas decisiones describen estructura y finalidad, no un rendimiento medido.
 
-Otras reglas quedan fuera de las claves foráneas: limitar la jerarquía a dos niveles, validar nombres no vacíos y comprobar nombres repetidos dentro del mismo nivel. Las resuelve el servicio de materias; no las atribuyo a restricciones `UNIQUE` inexistentes en el DDL. Los UUID se conservan estables por diseño, de modo que no se definió una cascada de actualización de esos identificadores.
+Otras reglas quedan fuera de las claves foráneas: limitar la jerarquía a dos niveles, validar nombres no vacíos y comprobar nombres repetidos dentro del mismo nivel. Las resuelve el servicio de materias; no las atribuyo a restricciones `UNIQUE` inexistentes en el DDL. Los UUID se conservan estables por diseño, de modo que no se definió una cascada de actualización de esos identificadores. Al omitir `ON UPDATE`, SQLite aplica `NO ACTION`: mantiene la exigencia de integridad, pero no propaga automáticamente un cambio de clave (SQLite Project, s. f.). La estabilidad del identificador es un contrato de aplicación, no una prohibición SQL general de modificarlo.
 
 ### 4.7.4. Organización, archivo y borrador técnico
 
 La estructura Entrada/Materias/Archivo de DP-002 y DP-004 relaciona navegación y datos sin crear tablas para cada vista. Entrada es la ausencia de asociación; Materias utiliza la jerarquía de `subjects`; Archivo combina el estado de una nota con el de su organización. Al archivar una materia se actualizan la materia y sus secciones, no se reescribe automáticamente la marca de archivo de todas sus notas: el filtrado considera la organización archivada.
 
-En el corte RC1, `metadata` conserva además el único borrador del editor como JSON bajo la clave `lumapse-editor-draft-v1`. Ese documento contiene modo de creación o edición, referencia a la nota cuando corresponde, título, contenido, materia y marcas temporales. Su formato y validación pertenecen al servicio de borradores, no a columnas académicas adicionales.
+En el corte 0.6.0 RC1, `metadata` conserva además el único borrador del editor como JSON bajo la clave `lumapse-editor-draft-v1`. Ese documento contiene modo de creación o edición, referencia a la nota cuando corresponde, título, contenido, materia y marcas temporales. Su formato y validación pertenecen al servicio de borradores, no a columnas académicas adicionales.
 
 Esta separación impide equiparar borrador con una nota más del listado. El respaldo ZIP exporta notas confirmadas, materias/secciones y fechas académicas, incluidos los elementos archivados, pero excluye borradores y papelera. Por lo tanto, disponer de un ZIP no equivale a una copia íntegra de todo el estado local.
 
@@ -234,7 +307,7 @@ Persistir el título expresa ese contrato y permite presentarlo o incluirlo en e
 
 ## 4.8. Patrones de arquitectura y diseño de software
 
-Clasifiqué Lumapse como un **monolito modular cliente, offline-first, con capas pragmáticas y componentes de interfaz agrupados por funcionalidad**. «Monolito» describe una unidad de despliegue; «modular» describe la separación interna. Los servicios no son aplicaciones desplegadas de manera independiente. ADR-008 formaliza esa clasificación, complementada en la RC1 por los contratos de persistencia, borrador y refresco posteriores.
+Clasifiqué Lumapse como un **monolito modular cliente, offline-first, con capas pragmáticas y componentes de interfaz agrupados por funcionalidad**. «Monolito» describe una unidad de despliegue; «modular» describe la separación interna. Los servicios no son aplicaciones desplegadas de manera independiente. ADR-008 formaliza esa clasificación, complementada en la versión 0.6.0 RC1 por los contratos de persistencia, borrador y refresco posteriores.
 
 ### 4.8.1. Responsabilidades y dirección de dependencias
 
@@ -283,4 +356,4 @@ Lumapse no tiene un backend remoto propio: no despliega una API de producto, aut
 
 La capacidad de crear, editar, consultar y organizar sin depender de un servicio remoto es una decisión arquitectónica y de producto, no un patrón de diseño de objetos. La generación del ZIP también es local; si el usuario elige compartirlo con otra aplicación, ese destino puede requerir conectividad y queda fuera de la persistencia interna de Lumapse.
 
-Este límite evita prometer sincronización, backup automático o recuperación remota que no existen. A la vez, almacenar localmente no demuestra por sí solo ausencia de tráfico, cifrado o conservación ante cualquier fallo. La RC1 mantiene la validación parcial declarada en la sección 1.4.4. El diseño explica las responsabilidades y sus límites; el capítulo 6 debe sostener por separado qué propiedades fueron comprobadas, sobre qué artefacto y cuáles permanecen sin demostrar.
+Este límite evita prometer sincronización, backup automático o recuperación remota que no existen. A la vez, almacenar localmente no demuestra por sí solo ausencia de tráfico, cifrado o conservación ante cualquier fallo. La versión 0.6.0 RC1 mantiene la validación parcial declarada en la sección 1.4.4. El diseño explica las responsabilidades y sus límites; el capítulo 6 debe sostener por separado qué propiedades fueron comprobadas, sobre qué artefacto y cuáles permanecen sin demostrar.

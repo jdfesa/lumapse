@@ -57,7 +57,7 @@ La subcarpeta [`encuesta/`](./encuesta/) contiene los materiales para la distrib
 └─────────────┘   └─────────────┘   └─────────────┘   └─────────────┘   └─────────────┘
 ```
 
-> **Nota:** Prototipar se materializó incrementalmente entre los Hitos 02 y 05. Hito 05 aportó la primera beta `v0.4.8`; Hito 06 publicó `v0.5.0` con cierres de integridad, seguridad, confiabilidad y usabilidad táctil. La RC1 `v0.6.0` está publicada con validación parcial aceptada y [desarrollo congelado](../../BACKLOG.md#congelación-académica--2026-10-22). La evidencia de cada RNF conserva su artefacto y sus límites; no se transfiere automáticamente a la RC1. El feedback voluntario no bloquea el cierre documental y no acredita tiempos ni adopción. El [manual 0.6.0](../manual-de-usuario-0.6.0/README.md) ya está incorporado y publicado; restan su revisión final, matriz RNF, informe y defensa.
+> **Nota:** Prototipar se materializó incrementalmente entre los Hitos 02 y 05. Hito 05 aportó la primera beta `v0.4.8`; Hito 06 publicó `v0.5.0` con cierres de integridad, seguridad, confiabilidad y usabilidad táctil. La versión `v0.6.0` RC1 está publicada con validación parcial aceptada y [desarrollo congelado](../../BACKLOG.md#congelación-académica--2026-10-22). La evidencia de cada RNF conserva su artefacto y sus límites; no se transfiere automáticamente a la versión 0.6.0 RC1. El feedback voluntario no bloquea el cierre documental y no acredita tiempos ni adopción. El [manual 0.6.0](../manual-de-usuario-0.6.0/README.md) ya está incorporado y publicado; restan su revisión final, matriz RNF, informe y defensa.
 
 ---
 

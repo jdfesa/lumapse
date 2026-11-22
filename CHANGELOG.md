@@ -15,9 +15,9 @@ y este proyecto adhiere a [Conventional Commits](https://www.conventionalcommits
 
 ### Changed
 
-- **Coherencia documental de presentación:** README depurado, capturas y mapa de proyecto actualizados; guías, índices, líneas base y defensa reconciliados con la RC1 publicada. Diagramas contrastados estáticamente con el borrador SQLite y el guardado atómico; instrucciones de despliegue y controles alineadas con ADR-010/013. Se preservan estados RNF, evidencia histórica y checkpoint del informe `v0.5.0`, sin regenerarlo ni cambiar la app.
+- **Coherencia documental de presentación:** README depurado, capturas y mapa de proyecto actualizados; guías, índices, líneas base y defensa reconciliados con la versión 0.6.0 RC1 publicada. Diagramas contrastados estáticamente con el borrador SQLite y el guardado atómico; instrucciones de despliegue y controles alineadas con ADR-010/013. Se preservan estados RNF, evidencia histórica y checkpoint del informe `v0.5.0`, sin regenerarlo ni cambiar la app.
 
-- **Congelación académica decidida:** el autor acepta la RC1 publicada con validación parcial y difiere expresamente las comprobaciones restantes hasta después de la presentación oficial. No más código, dependencias, compilaciones o pruebas de la app; próximas sesiones sólo documentales, primero manual y luego informe/defensa. [Decisión y límites](BACKLOG.md#congelación-académica--2026-10-22), sin modificar el APK ni marcar pruebas no ejecutadas como aprobadas.
+- **Congelación académica decidida:** el autor acepta la versión 0.6.0 RC1 publicada con validación parcial y difiere expresamente las comprobaciones restantes hasta después de la presentación oficial. No más código, dependencias, compilaciones o pruebas de la app; próximas sesiones sólo documentales, primero manual y luego informe/defensa. [Decisión y límites](BACKLOG.md#congelación-académica--2026-10-22), sin modificar el APK ni marcar pruebas no ejecutadas como aprobadas.
 
 ## [0.6.0] — 2026-10-22 — Candidato de presentación (RC1)
 

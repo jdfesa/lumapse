@@ -141,7 +141,7 @@ Esta evidencia confirma la viabilidad técnica del pivote para la beta, pero no 
 `v0.5.0` en al menos tres dispositivos está registrada en la
 [checklist Android](../gestion/checklist-validacion-android.md#aceptación-general-de-la-apk-publicada-v050);
 el pendiente descrito arriba pertenece al checkpoint anterior. El corte operativo
-es ahora la [RC1 `v0.6.0`](../gestion/candidato-apk-0.6.0.md), aceptada con cobertura
+es ahora la [`v0.6.0` RC1](../gestion/candidato-apk-0.6.0.md), aceptada con cobertura
 parcial y desarrollo congelado. Nada de esto acredita instalación autónoma con
 usuarios nuevos ni preferencia de canal; no se reescribe la evidencia inicial ni
 se autoriza una nueva prueba durante la congelación.

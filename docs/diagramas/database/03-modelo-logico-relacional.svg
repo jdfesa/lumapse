@@ -187,8 +187,8 @@
 <!-- header -->
 <g id="node6" class="node">
 <title>header</title>
-<text xml:space="preserve" text-anchor="start" x="133.5" y="-788.88" font-family="DejaVu Sans" font-weight="bold" font-size="15.00">MODELO LÓGICO RELACIONAL · RC1</text>
-<text xml:space="preserve" text-anchor="start" x="133.5" y="-770.88" font-family="DejaVu Sans" font-size="12.00">4 tablas · 26 columnas · Pata de gallo · Esquema SQLite</text>
+<text xml:space="preserve" text-anchor="start" x="124.88" y="-788.88" font-family="DejaVu Sans" font-weight="bold" font-size="15.00">MODELO LÓGICO RELACIONAL · 0.6.0 RC1</text>
+<text xml:space="preserve" text-anchor="start" x="124.88" y="-770.88" font-family="DejaVu Sans" font-size="12.00">4 tablas · 26 columnas · Pata de gallo · Esquema SQLite</text>
 </g>
 </g>
 </svg>

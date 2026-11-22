@@ -20,11 +20,11 @@
 [lista por capítulo](#revisión-del-informe-capítulo-por-capítulo).
 
 **Revisión documental previa — completada:** README principal, estructura y
-guías vigentes reconciliados con la RC1 y el manual publicado en
+guías vigentes reconciliados con la versión 0.6.0 RC1 y el manual publicado en
 [PR #45](https://github.com/jdfesa/lumapse/pull/45). No se trasladó esa revisión a
 los capítulos ni se modificaron resultados históricos.
 
-**Decisión de congelación — 2026-10-22:** el autor acepta la RC1 tal como está y
+**Decisión de congelación — 2026-10-22:** el autor acepta la versión 0.6.0 RC1 tal como está y
 su cobertura parcial; se publica sin completar los controles restantes. Núcleo
 offline, organización/búsqueda, fechas, ZIP y tráfico/trackers quedan **diferidos,
 no aprobados**, conforme a la [decisión canónica](BACKLOG.md#congelación-académica--2026-10-22).
@@ -40,7 +40,7 @@ la etiqueta confusa de Acerca de y aplicar DOMPurify 3.4.17. La APK vigente proc
 de `bcefe6a`, con gate/auditorías, firma y etiqueta Android comprobados. Identidad y pendientes se registran en el
 [registro del candidato](docs/gestion/candidato-apk-0.6.0.md).
 Después, el autor autorizó preparar la beta pública `0.5.0` en el teléfono y
-actualizar a la RC1 sin borrar/restaurar desde esa referencia: actualización,
+actualizar a la versión 0.6.0 RC1 sin borrar/restaurar desde esa referencia: actualización,
 apertura y conservación del conjunto de prueba PASS en el APK inicial. La
 actualización posterior al corregido también conservó todas las tablas y el borrador.
 El autor aceptó PR #42, integrado en `ac2a747` con sus ramas eliminadas. La decisión
@@ -198,10 +198,10 @@ de controles como condición de publicación. No abrir otra ronda técnica.
 
 - [x] Repetir `npm run verify`, auditorías completa/productiva y coverage de servicios en la fuente candidata `0.6.0/600`: 1211 tests de app/105 de tooling, auditorías 0/0 y servicios 96,06%; [resultados del corte](docs/gestion/candidato-apk-0.6.0.md#controles-de-la-fuente-candidata), sin atribuir pruebas Android todavía no ejecutadas.
 - [x] Generar el APK autorizado `0.6.0/600` (RC1), corregido desde fuente limpia `bcefe6a` por etiqueta neutral y parche DOMPurify autorizado; gate final de 1214 tests de app/105 tooling y auditorías 0/0. Firma original, manifest no-debuggable, canal, assets, hash y etiqueta Android comprobados. [Identidad vigente y evidencia inicial preservada](docs/gestion/candidato-apk-0.6.0.md#binario-corregido). Publicación posterior registrada abajo.
-- [x] Probar actualización real desde la APK pública `0.5.0/500` a la RC1 exacta: apertura, cinco notas con estados, materia/sección, fecha académica, borrador y tema conservados; [filas/hashes y límites](docs/gestion/candidato-apk-0.6.0.md#actualización-pública-050-a-060--2026-10-22). Sin desinstalar, limpiar, importar ni restaurar desde la referencia pública.
+- [x] Probar actualización real desde la APK pública `0.5.0/500` a la versión 0.6.0 RC1 exacta: apertura, cinco notas con estados, materia/sección, fecha académica, borrador y tema conservados; [filas/hashes y límites](docs/gestion/candidato-apk-0.6.0.md#actualización-pública-050-a-060--2026-10-22). Sin desinstalar, limpiar, importar ni restaurar desde la referencia pública.
 - [x] Verificar actualización del candidato inicial al corregido, con todas las filas y el borrador idénticos, y comprobar Acerca de en el teléfono. El autor acepta PR #42 y autoriza merge/limpieza; no acredita los controles restantes ni publica el APK.
 - [ ] **Diferido hasta después de la presentación:** recorridos restantes del núcleo offline/organización/búsqueda/fechas/ZIP y tráfico/trackers sobre ese APK exacto. No ejecutarlos durante el congelamiento ni marcarlos como aprobados.
-- [x] Aceptación expresa de la RC1 con validación parcial y congelación del desarrollo hasta después de la presentación académica oficial. Sólo documentación; sin nuevos cambios o comprobaciones de app, sin recompilar ni sustituir APK.
+- [x] Aceptación expresa de la versión 0.6.0 RC1 con validación parcial y congelación del desarrollo hasta después de la presentación académica oficial. Sólo documentación; sin nuevos cambios o comprobaciones de app, sin recompilar ni sustituir APK.
 - [x] Publicar `v0.6.0` como Pre-release: `Lumapse v0.6.0 — Release Candidate 1`, con APK y checksum existentes. Publicación comprobada por metadatos de GitHub el 2026-10-22; sin nueva prueba o descarga del binario.
 
 ### Feedback posterior al corte — no bloqueante
@@ -249,12 +249,13 @@ en la matriz, manual, informe y defensa, sin inventar resultados ni reabrir prue
 - [x] **[Capítulo 2 — Marco Metodológico y Modelo de Negocio](docs/informe-final/02-marco-metodologico.md):** aprobado e integrado en [PR #48](https://github.com/jdfesa/lumapse/pull/48); rama eliminada.
 - [x] **[Capítulo 3 — Relevamiento y Análisis de Datos](docs/informe-final/03-relevamiento-datos.md):** aprobado e integrado en [PR #49](https://github.com/jdfesa/lumapse/pull/49).
 - [x] **[Capítulo 4 — Arquitectura y Diseño](docs/informe-final/04-arquitectura-diseno.md):** aprobado e integrado en [PR #50](https://github.com/jdfesa/lumapse/pull/50); rama eliminada.
-- [x] **[Capítulo 5 — Desarrollo e Implementación](docs/informe-final/05-desarrollo-implementacion.md):** revisado contra la fuente RC1 y aprobado; cambios en [PR #51](https://github.com/jdfesa/lumapse/pull/51).
-- [x] **[Capítulo 6 — Pruebas y Validación](docs/informe-final/06-pruebas-validacion.md):** revisado con evidencia atribuida por artefacto y límites de la RC1 y aprobado; cambios en [PR #52](https://github.com/jdfesa/lumapse/pull/52).
-- [x] **[Capítulo 7 — Conclusiones](docs/informe-final/07-conclusiones.md):** revisado contra los objetivos y la evidencia del corte RC1, con lecciones y trabajo futuro delimitados y aprobado; cambios en [PR #53](https://github.com/jdfesa/lumapse/pull/53).
+- [x] **[Capítulo 5 — Desarrollo e Implementación](docs/informe-final/05-desarrollo-implementacion.md):** revisado contra la fuente de 0.6.0 RC1 y aprobado; cambios en [PR #51](https://github.com/jdfesa/lumapse/pull/51).
+- [x] **[Capítulo 6 — Pruebas y Validación](docs/informe-final/06-pruebas-validacion.md):** revisado con evidencia atribuida por artefacto y límites de la versión 0.6.0 RC1 y aprobado; cambios en [PR #52](https://github.com/jdfesa/lumapse/pull/52).
+- [x] **[Capítulo 7 — Conclusiones](docs/informe-final/07-conclusiones.md):** revisado contra los objetivos y la evidencia del corte 0.6.0 RC1, con lecciones y trabajo futuro delimitados y aprobado; cambios en [PR #53](https://github.com/jdfesa/lumapse/pull/53).
 - [x] **[Referencias — archivo 08](docs/informe-final/08-referencias.md):** revisadas y aprobadas en [PR #54](https://github.com/jdfesa/lumapse/pull/54); metadatos de Gómez y Parada contrastados con los originales, material de cátedra distinguido de libros, autoría de la guía Kanban corregida y GPLv3 incorporada.
 - [x] **Complementos de proceso y recursos:** incisos 2.1.4 y 2.4.1 y continuidad en 7.3.2 revisados y aprobados; cambios en [PR #57](https://github.com/jdfesa/lumapse/pull/57), sin modificar la evidencia de pruebas ni el checkpoint ensamblado.
-- [x] **Checkpoint parcial de lectura:** ensamblado el 2026-11-17 con portada RC1 y estado parcial; retirado del árbol vigente al quedar desactualizado. Se conserva en el historial de Git; el trabajo actual utiliza los capítulos fuente y no regenera el informe completo hasta el cierre editorial.
+- [x] **Modelo físico SQL:** DDL, migraciones y reglas contrastados con la fuente de 0.6.0 RC1; incorporados a la sección 4.7.2.3 y al documento técnico, revisados y aprobados en [PR #60](https://github.com/jdfesa/lumapse/pull/60). Sin cambios de app ni nuevas pruebas del APK.
+- [x] **Checkpoint parcial de lectura:** ensamblado el 2026-11-17 con portada 0.6.0 RC1 y estado parcial; retirado del árbol vigente al quedar desactualizado. Se conserva en el historial de Git; el trabajo actual utiliza los capítulos fuente y no regenera el informe completo hasta el cierre editorial.
 - [ ] **Revisión transversal, metadatos y ensamblado final:** pendientes de cierre editorial; el checkpoint parcial no completa esta revisión ni el pendiente de diagramas.
 - [ ] **Maquetación LaTeX/PDF y revisión de presentación:** pendientes del contenido consolidado.
 

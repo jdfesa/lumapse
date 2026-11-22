@@ -3,7 +3,7 @@
 > **Proyecto:** Lumapse  
 > **Referencia:** Gómez, J. (2014), Sección 6. Guía de Estudio PP3 (Ing. Mauricio Parada, 2026).  
 > **Fecha de creación:** 2026-05-15  
-> **Última actualización:** 2026-10-26 — RC1 publicada y congelada; línea base documental final pendiente.
+> **Última actualización:** 2026-10-26 — 0.6.0 RC1 publicada y congelada; línea base documental final pendiente.
 > **Autor:** José David Sandoval
 
 ---
@@ -273,7 +273,7 @@ Una vez establecida una LB, todo cambio en el alcance debe pasar por un proceso 
 | 2026-07-01 | Publicación de beta controlada `v0.4.8` | Alto — congela un artefacto APK firmado y validado para distribución controlada | LB-PROD-v0.4.8 | [Release v0.4.8](https://github.com/jdfesa/lumapse/releases/tag/v0.4.8), [Checklist Android](checklist-validacion-android.md) |
 | 2026-07-15 | Cierre documental de Hito 05 y activación de Hito 06 | Medio — conserva `v0.4.8` como beta operativa y separa los 12 commits posteriores del futuro corte final | LB-PROD-v0.4.8 | [Hito 05](../hitos/hito-05-septiembre.md), [Hito 06](../hitos/hito-06-octubre.md) |
 | 2026-09-05 | Publicación de la segunda beta `v0.5.0` | Alto — congela los cierres AUD-001 a AUD-007, las mejoras táctiles y el tooling de release en un nuevo APK firmado | LB-PROD-v0.5.0 | [Release v0.5.0](https://github.com/jdfesa/lumapse/releases/tag/v0.5.0), [firma](firma-apk-android.md), [Hito 06](../hitos/hito-06-octubre.md) |
-| 2026-10-22 | Publicación de RC1 `v0.6.0` y congelación académica | Artefacto aceptado con cobertura parcial; comprobaciones restantes diferidas, sin anunciar estabilidad ni cerrar los entregables documentales | Corte de presentación `v0.6.0` | [Candidato y evidencia](candidato-apk-0.6.0.md), [decisión del autor](../../BACKLOG.md#congelación-académica--2026-10-22) |
+| 2026-10-22 | Publicación de `v0.6.0` RC1 y congelación académica | Artefacto aceptado con cobertura parcial; comprobaciones restantes diferidas, sin anunciar estabilidad ni cerrar los entregables documentales | Corte de presentación `v0.6.0` | [Candidato y evidencia](candidato-apk-0.6.0.md), [decisión del autor](../../BACKLOG.md#congelación-académica--2026-10-22) |
 
 > **Nota:** El pivote a aplicación Android híbrida fue el cambio más significativo respecto de la LB de
 > requerimientos original. El relevamiento con 120 respuestas válidas respaldó las
@@ -291,7 +291,7 @@ Una vez establecida una LB, todo cambio en el alcance debe pasar por un proceso 
 No se creó una línea base `0.4.9`: la evolución posterior a `v0.4.8` se publicó como `v0.5.0`. El nombre y número de un eventual corte estable se decidirán con evidencia completa, sin modificar ni reutilizar ninguna de las betas publicadas.
 
 El [recorte de entrega](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa) prevé
-cerrar los entregables documentales para finales de octubre de 2026. La RC1 ya está
+cerrar los entregables documentales para finales de octubre de 2026. La versión 0.6.0 RC1 ya está
 publicada y congelada: no se exige otra APK ni `1.0.0`. Su condición de candidato
 y las limitaciones aceptadas deben quedar explícitas; no se da por creada la línea
 base documental final antes de revisar y aceptar esos entregables.

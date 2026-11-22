@@ -6,7 +6,7 @@
 
 Lumapse se implementa como un **monolito modular cliente, offline-first**, construido con módulos ES y TypeScript gradual, empaquetado como aplicación Android mediante Capacitor. La separación es lógica: todos los módulos se entregan como una sola aplicación, pero cada capa tiene responsabilidades y dependencias delimitadas.
 
-> **Frontera de versión:** Vista contrastada con la fuente de la RC1 `v0.6.0`
+> **Frontera de versión:** Vista contrastada con la fuente de la versión `v0.6.0` RC1
 > (APK de `bcefe6a`, tag sobre `ac2a747`), sin ejecutar nuevas pruebas del APK.
 > La coordinación SQLite de ADR-009 sigue vigente; [ADR-010](../adr/ADR-010-gate-portable-y-entorno-canonico.md)
 > fija el gate, [ADR-011](../adr/ADR-011-limite-guardado-y-refresco.md) separa escritura

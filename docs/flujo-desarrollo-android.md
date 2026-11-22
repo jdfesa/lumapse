@@ -1,12 +1,12 @@
 # Flujo de Desarrollo Android — Lumapse
 
 > **Documento:** Guía operativa de desarrollo, compilación y testing en dispositivos Android.  
-> **Última actualización:** 2026-10-26 (coherencia con RC1 y despliegue de ADR-013, sin nuevas pruebas)
+> **Última actualización:** 2026-10-26 (coherencia con 0.6.0 RC1 y despliegue de ADR-013, sin nuevas pruebas)
 > **Autor:** José David Sandoval
 
 ---
 
-> **Límite operativo vigente:** la RC1 `v0.6.0` está publicada y el
+> **Límite operativo vigente:** la versión `v0.6.0` RC1 está publicada y el
 > [desarrollo y nuevas pruebas de app están congelados](../BACKLOG.md#congelación-académica--2026-10-22).
 > Esta guía conserva el procedimiento para trabajo nativo futuro autorizado,
 > no una instrucción para compilar o instalar durante el cierre documental.
@@ -419,7 +419,7 @@ scrcpy --turn-screen-off -K
 | APK debug | `android/app/build/outputs/apk/debug/app-debug.apk` | APK para testing (no se commitea) |
 | Config de Capacitor | `capacitor.config.json` | AppId, webDir y plugins |
 
-La firma y publicación de un artefacto de release siguen un flujo separado, documentado en [`gestion/firma-apk-android.md`](./gestion/firma-apk-android.md). El corte firmado de presentación es la RC1 `v0.6.0/600`, aceptada con cobertura parcial y congelada; no debe confundirse el asset publicado con un APK debug o con un build equivalente usado para preservar datos durante una validación incremental.
+La firma y publicación de un artefacto de release siguen un flujo separado, documentado en [`gestion/firma-apk-android.md`](./gestion/firma-apk-android.md). El corte firmado de presentación es la versión `v0.6.0/600` RC1, aceptada con cobertura parcial y congelada; no debe confundirse el asset publicado con un APK debug o con un build equivalente usado para preservar datos durante una validación incremental.
 
 ---
 

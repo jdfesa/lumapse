@@ -2,11 +2,11 @@
 
 **Hito:** 06 — Entrega Final<br>
 **Objetivo:** registrar evidencia reproducible de cada APK y distinguir la verificación del asset firmado de las pruebas sobre builds equivalentes.<br>
-**Estado:** RC1 `v0.6.0/600` publicada, aceptada con cobertura parcial y desarrollo congelado. Se conservan las aceptaciones históricas de `v0.5.0`, PR #22, offline/RNF-009 y continuidad/RNF-010 en sus artefactos. CRUD/FPS y las comprobaciones restantes de la RC1 están diferidos, no aprobados; no ejecutar nuevas pruebas durante el cierre documental.
+**Estado:** `v0.6.0/600` RC1 publicada, aceptada con cobertura parcial y desarrollo congelado. Se conservan las aceptaciones históricas de `v0.5.0`, PR #22, offline/RNF-009 y continuidad/RNF-010 en sus artefactos. CRUD/FPS y las comprobaciones restantes de la versión 0.6.0 RC1 están diferidos, no aprobados; no ejecutar nuevas pruebas durante el cierre documental.
 
 ---
 
-## RC1 0.6.0 publicada — 2026-10-22
+## 0.6.0 RC1 publicada — 2026-10-22
 
 [Identidad, controles y límites del binario](candidato-apk-0.6.0.md).
 
@@ -16,7 +16,7 @@
   manifest no-debuggable, alineación y assets web comprobados estáticamente.
 - [x] Autorizar la preparación del banco retirando únicamente la debug de prueba,
   instalar la APK pública exacta `0.5.0` y crear datos desde su UI.
-- [x] Actualizar con `adb install -r` a la RC1 inicial `70d98d5d…`, sin desinstalar/limpiar/importar/
+- [x] Actualizar con `adb install -r` a la versión 0.6.0 RC1 inicial `70d98d5d…`, sin desinstalar/limpiar/importar/
   restaurar desde la referencia pública. Samsung SM-G965F/Android 10: misma primera
   instalación/UID, APK instalada con hash esperado, apertura y datos conservados.
   Cinco notas, materia/sección y fecha con filas/hashes idénticos; borrador legado
@@ -34,7 +34,7 @@
   organización/búsqueda, fechas y ZIP sobre este binario exacto; no comprobados.
 - [ ] **Diferido hasta después de la presentación:** tráfico/trackers de
   RNF-012/013 sobre este binario exacto; no transferir resultados de otro APK.
-- [x] El autor acepta expresamente la RC1 con validación parcial y difiere los
+- [x] El autor acepta expresamente la versión 0.6.0 RC1 con validación parcial y difiere los
   controles anteriores sin aprobarlos. [Decisión vigente](../../BACKLOG.md#congelación-académica--2026-10-22).
 - [x] `v0.6.0` publicada como Pre-release, APK `15f8ede5…` y checksum adjuntos;
   se congela el desarrollo, sin más cambios ni comprobaciones de app hasta después
@@ -305,8 +305,8 @@ autoriza su merge.
 ## Corte vigente — v0.5.0
 
 > **Sección histórica:** se conserva el título y su ancla para no romper
-> referencias de esa beta. No identifica el corte operativo actual: la RC1
-> `v0.6.0` y sus límites están registrados al comienzo de esta checklist y en
+> referencias de esa beta. No identifica el corte operativo actual: la versión `v0.6.0` RC1
+> y sus límites están registrados al comienzo de esta checklist y en
 > [el registro del candidato](candidato-apk-0.6.0.md).
 
 ### Identificación y publicación

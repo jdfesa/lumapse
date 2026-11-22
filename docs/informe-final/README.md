@@ -30,7 +30,7 @@ comprobación definitiva y el ensamblado final siguen pendientes del cierre edit
 ## Estado actual
 
 El Hito 05 quedó cerrado con la primera beta `v0.4.8`. El Hito 06 publicó la segunda
-beta `v0.5.0` y la **RC1 `v0.6.0/600`**, aceptada con validación parcial. El
+beta `v0.5.0` y la versión **`v0.6.0/600` RC1**, aceptada con validación parcial. El
 [desarrollo y las nuevas comprobaciones de app están congelados](../../BACKLOG.md#congelación-académica--2026-10-22)
 hasta después de la presentación. El manual 0.6.0 ya está incorporado y publicado,
 con revisión final pendiente. La revisión del informe avanza por unidades,
@@ -43,13 +43,13 @@ también está revisado, aprobado e integrado en
 [PR #49](https://github.com/jdfesa/lumapse/pull/49). El capítulo 4 está aprobado e
 integrado en [PR #50](https://github.com/jdfesa/lumapse/pull/50), con su rama
 eliminada. El [capítulo 5](./05-desarrollo-implementacion.md) está revisado contra
-la fuente RC1 y aprobado; sus cambios se recogen en
+la fuente de 0.6.0 RC1 y aprobado; sus cambios se recogen en
 [PR #51](https://github.com/jdfesa/lumapse/pull/51). El
 [capítulo 6](./06-pruebas-validacion.md) está revisado con evidencia atribuida por
-artefacto y límites de la RC1 y aprobado; sus cambios se recogen en
+artefacto y límites de la versión 0.6.0 RC1 y aprobado; sus cambios se recogen en
 [PR #52](https://github.com/jdfesa/lumapse/pull/52). El
 [capítulo 7](./07-conclusiones.md) está revisado contra los objetivos y la evidencia
-del corte RC1, con lecciones y trabajo futuro delimitados y aprobado; sus cambios
+del corte 0.6.0 RC1, con lecciones y trabajo futuro delimitados y aprobado; sus cambios
 se recogen en [PR #53](https://github.com/jdfesa/lumapse/pull/53).
 La unidad `08-referencias.md` está revisada y aprobada en
 [PR #54](https://github.com/jdfesa/lumapse/pull/54).
@@ -66,7 +66,7 @@ pruebas; el checkpoint parcial del 2026-11-17 los incorporó sin modificar los c
 
 **Checkpoint parcial del 2026-11-17 — antecedente histórico:** reunió los siete
 capítulos y las referencias de ese corte, con índice automático y metadatos de la
-RC1 `v0.6.0/600`. Su portada distinguía el tag `v0.6.0` sobre `ac2a747` de la fuente
+`v0.6.0/600` RC1. Su portada distinguía el tag `v0.6.0` sobre `ac2a747` de la fuente
 del APK, `bcefe6a`, e indicaba su estado parcial. Se retiró del árbol vigente junto
 con la figura conceptual reemplazada para evitar versiones contradictorias durante
 la revisión por capítulos; no se regeneró otro ensamblado.
@@ -81,9 +81,9 @@ El tablero único vigente es [`TODO.md`](../../TODO.md).
 Los pendientes explícitos del Hito 06 son:
 
 - Revisión transversal y congelamiento editorial del contenido antes del ensamblado final; el checkpoint parcial no cierra esta tarea.
-- Inclusión y revisión de vigencia de los diagramas de base de datos y del modelado UML respecto de la RC1 congelada, además de su legibilidad en PDF y diapositivas. La existencia de figuras históricas no completa el [pendiente de diagramas](../../TODO.md#después-del-apk-aceptado-con-límites--cierre-académico-y-defensa).
-- Consolidación documental de la matriz RNF a partir de la [fuente canónica](../producto/requisitos-no-funcionales.md) y los reportes existentes: método, fecha, artefacto, resultado y límites. La evidencia de uso, accesibilidad, offline y tráfico en debugs no verifica automáticamente la RC1. CRUD/FPS siguen pendientes y [diferidos a post-presentación](../../BACKLOG.md#rendimiento-post-presentación); las comprobaciones restantes del APK exacto también se difieren, sin nuevas mediciones para completar el informe.
-- Conciliación final del [corte RC1 identificado](../gestion/candidato-apk-0.6.0.md#binario-corregido), sus controles y aceptación parcial entre informe, manual, matriz y demo. El [recorte vigente](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa) no exige otra APK ni una versión estable: corresponde cerrar esos entregables con la evidencia disponible y los pendientes explícitos.
+- Inclusión y revisión de vigencia de los diagramas de base de datos y del modelado UML respecto de la versión 0.6.0 RC1 congelada, además de su legibilidad en PDF y diapositivas. La existencia de figuras históricas no completa el [pendiente de diagramas](../../TODO.md#después-del-apk-aceptado-con-límites--cierre-académico-y-defensa).
+- Consolidación documental de la matriz RNF a partir de la [fuente canónica](../producto/requisitos-no-funcionales.md) y los reportes existentes: método, fecha, artefacto, resultado y límites. La evidencia de uso, accesibilidad, offline y tráfico en debugs no verifica automáticamente la versión 0.6.0 RC1. CRUD/FPS siguen pendientes y [diferidos a post-presentación](../../BACKLOG.md#rendimiento-post-presentación); las comprobaciones restantes del APK exacto también se difieren, sin nuevas mediciones para completar el informe.
+- Conciliación final del [corte 0.6.0 RC1 identificado](../gestion/candidato-apk-0.6.0.md#binario-corregido), sus controles y aceptación parcial entre informe, manual, matriz y demo. El [recorte vigente](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa) no exige otra APK ni una versión estable: corresponde cerrar esos entregables con la evidencia disponible y los pendientes explícitos.
 
 ### Manual de usuario y consistencia de la entrega
 
@@ -98,7 +98,7 @@ a esa versión, no al APK posterior. No esperar respuestas para cerrar entregabl
 pasaron en el debug `348da88` el 2026-10-06, tras corregir el bloqueo del ZIP local
 sin red. El autor aceptó [PR #31](https://github.com/jdfesa/lumapse/pull/31); el
 resultado corresponde a ese debug y no se transfiere al asset publicado `v0.5.0`
-ni a la RC1 `v0.6.0`. El capítulo 6 conserva esa atribución por artefacto.
+ni a la versión `v0.6.0` RC1. El capítulo 6 conserva esa atribución por artefacto.
 
 El [manual de usuario 0.6.0](../manual-de-usuario-0.6.0/README.md) ya se incorporó
 al repositorio y se [publicó en GitHub Pages](https://jdfesa.github.io/lumapse/manual-de-usuario-lumapse.html).
@@ -123,7 +123,7 @@ revisiones restantes ni modifica los capítulos fuente.
 - [x] Ejecutar los chequeos documentales del checkpoint.
 - [x] Ensamblar el checkpoint con `python3 scripts/assemble-report.py` y revisar el diff generado.
 - [x] Reconciliar metadatos, capítulos y referencias con el tag publicado `v0.5.0`.
-- [x] Regenerar el checkpoint parcial RC1 del 2026-11-17 desde las fuentes vigentes, con fecha, alcance y estado parcial en la portada.
+- [x] Regenerar el checkpoint parcial 0.6.0 RC1 del 2026-11-17 desde las fuentes vigentes, con fecha, alcance y estado parcial en la portada.
 - [ ] Completar la revisión transversal y la conciliación final con la matriz RNF por artefacto, los diagramas y los límites aceptados antes de congelar y ensamblar la entrega.
 - [ ] Congelar contenido antes de iniciar la maquetación LaTeX/PDF.
 
