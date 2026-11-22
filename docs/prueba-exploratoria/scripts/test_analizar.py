@@ -4,6 +4,7 @@ import csv
 import io
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tempfile
@@ -111,6 +112,45 @@ class AnalisisTest(unittest.TestCase):
         ejecucion = subprocess.run([sys.executable, script, "--csv", str(self.ruta), "--salida", str(salida)], capture_output=True)
         self.assertEqual(ejecucion.returncode, 0, ejecucion.stderr)
         self.assertEqual(json.loads(salida.read_text()), analizar(self.ruta))
+
+    def datos_e_informe(self):
+        # Contraste independiente: no llama al analizador ni lee el JSON generado.
+        with CSV_ORIGINAL.open(encoding="utf-8", newline="") as archivo:
+            filas = list(csv.reader(archivo))[1:]
+        return filas, (BASE / "resultados.md").read_text(encoding="utf-8")
+
+    def test_tablas_del_informe_contra_csv(self):
+        filas, informe = self.datos_e_informe()
+        for seccion, indice, etapas, esperado in (
+            ("## 2.", 1, None, 4),
+            ("### P2.", 2, OPCIONES["P1"][2:], 5),
+            ("### P4.", 4, OPCIONES["P1"][2:], 6),
+            ("## 5.", 5, OPCIONES["P1"][:2], 6),
+        ):
+            bloque = informe.split(seccion, 1)[1].split("\n##", 1)[0]
+            tabla = re.findall(r"^\| (.+?) \| (\d+) \| (\d+,\d) \|$", bloque, re.M)
+            seleccion = [f for f in filas if etapas is None or f[1] in etapas]
+            self.assertEqual(len(tabla), esperado)
+            for opcion, numero, porcentaje in tabla:
+                with self.subTest(seccion=seccion, opcion=opcion):
+                    n = sum(f[indice].strip() == opcion for f in seleccion)
+                    self.assertEqual(int(numero), n)
+                    self.assertEqual(porcentaje, "{:.1f}".format(100 * n / len(seleccion)).replace(".", ","))
+
+    def test_transcripcion_p3_del_informe_contra_csv(self):
+        filas, informe = self.datos_e_informe()
+        transcripcion = re.findall(r"^\| (R\d+) \| (.*?) \|$", informe, re.M)
+        esperada = [("R{:02d}".format(i), f[3].strip()) for i, f in enumerate(filas, 1) if f[3].strip()]
+        self.assertEqual(transcripcion, esperada)
+
+    def test_cruce_del_informe_contra_csv(self):
+        filas, informe = self.datos_e_informe()
+        cruce = re.findall(r"^\| (.+?) \| (\d+) \| (\d+) \| (\d+) \|$", informe, re.M)
+        self.assertEqual(len(cruce), 6)
+        for motivo, no_instalo, instalo_sin_uso, total in cruce:
+            self.assertEqual(int(no_instalo), sum(f[1] == OPCIONES["P1"][0] and f[5] == motivo for f in filas))
+            self.assertEqual(int(instalo_sin_uso), sum(f[1] == OPCIONES["P1"][1] and f[5] == motivo for f in filas))
+            self.assertEqual(int(total), sum(f[5] == motivo for f in filas))
 
 
 if __name__ == "__main__":

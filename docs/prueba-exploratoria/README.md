@@ -6,6 +6,10 @@
 
 [Formulario de la prueba exploratoria](https://forms.gle/e4fWoxdcV33D42VS9).
 
+Los [resultados y sus límites](./resultados.md) separan las 13 respuestas con
+uso de las nueve sin uso. El [CSV original](./datos/respuestas_experiencia_2026_11.csv)
+y el [recuento reproducible](./resumen.json) están disponibles en esta misma carpeta.
+
 ## Objetivo e invitación
 
 Dar a conocer Lumapse y recoger utilidad percibida y barreras de instalación o uso.
