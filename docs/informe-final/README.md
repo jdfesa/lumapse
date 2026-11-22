@@ -73,8 +73,9 @@ precisan la unidad de análisis de la encuesta y explican con ejemplos la estima
 y el criterio de las decisiones; las tablas del capítulo 2 tienen identificación y
 procedencia. Las referencias incorporan el apoyo metodológico de Design Thinking
 y Lean Canvas y explicitan el carácter didáctico de la guía del profesor responsable
-de la cátedra, Ing. Mauricio Parada. Estos ajustes están pendientes de revisión;
-no modifican cifras, requisitos, evidencia de pruebas ni la identificación
+de la cátedra, Ing. Mauricio Parada. Los ajustes están revisados y aprobados en
+[PR #65](https://github.com/jdfesa/lumapse/pull/65); no modifican cifras,
+requisitos, evidencia de pruebas ni la identificación
 institucional aprobada, y no cierran el ensamblado o la revisión transversal.
 
 **Ampliación del capítulo 6 — prueba exploratoria:** la sección 6.4.4 incorpora
