@@ -1,0 +1,360 @@
+{
+  "fuente": {
+    "archivo": "respuestas_experiencia_2026_11.csv",
+    "bytes": 3377,
+    "sha256": "60906d994bb513183c7a5de44d94286bd32856a0b208f7e5ffb5534e1ad38ac9",
+    "columnas": 6,
+    "filas_respuestas": 22
+  },
+  "envios": {
+    "primero": "2026-11-10T18:48:34-03:00",
+    "ultimo": "2026-11-20T11:59:31-03:00",
+    "por_fecha_registrada": {
+      "2026-11-10": 2,
+      "2026-11-11": 1,
+      "2026-11-17": 7,
+      "2026-11-18": 5,
+      "2026-11-19": 4,
+      "2026-11-20": 3
+    }
+  },
+  "calidad": {
+    "filas_excluidas": 0,
+    "duplicados_exactos_adicionales": 0,
+    "ramificacion_coherente": true
+  },
+  "bases": {
+    "total": 22,
+    "con_uso": 13,
+    "sin_uso": 9
+  },
+  "preguntas": {
+    "P1": {
+      "base": 22,
+      "opciones": [
+        {
+          "respuesta": "No llegué a instalarla.",
+          "n": 7,
+          "porcentaje": 31.8
+        },
+        {
+          "respuesta": "La instalé, pero no llegué a usarla.",
+          "n": 2,
+          "porcentaje": 9.1
+        },
+        {
+          "respuesta": "La usé y realicé sólo una parte del recorrido sugerido.",
+          "n": 6,
+          "porcentaje": 27.3
+        },
+        {
+          "respuesta": "La usé y realicé el recorrido sugerido.",
+          "n": 7,
+          "porcentaje": 31.8
+        }
+      ],
+      "blancos_fuera_del_recorrido": 0
+    },
+    "P2": {
+      "base": 13,
+      "opciones": [
+        {
+          "respuesta": "Muy fácil.",
+          "n": 4,
+          "porcentaje": 30.8
+        },
+        {
+          "respuesta": "Fácil.",
+          "n": 5,
+          "porcentaje": 38.5
+        },
+        {
+          "respuesta": "Ni fácil ni difícil.",
+          "n": 4,
+          "porcentaje": 30.8
+        },
+        {
+          "respuesta": "Difícil.",
+          "n": 0,
+          "porcentaje": 0.0
+        },
+        {
+          "respuesta": "Muy difícil.",
+          "n": 0,
+          "porcentaje": 0.0
+        }
+      ],
+      "blancos_fuera_del_recorrido": 9
+    },
+    "P4": {
+      "base": 13,
+      "opciones": [
+        {
+          "respuesta": "Ninguna.",
+          "n": 10,
+          "porcentaje": 76.9
+        },
+        {
+          "respuesta": "Crear o guardar notas.",
+          "n": 0,
+          "porcentaje": 0.0
+        },
+        {
+          "respuesta": "Organizar o encontrar mis notas.",
+          "n": 1,
+          "porcentaje": 7.7
+        },
+        {
+          "respuesta": "Usar el calendario o las fechas.",
+          "n": 0,
+          "porcentaje": 0.0
+        },
+        {
+          "respuesta": "Errores o cierres de la app.",
+          "n": 1,
+          "porcentaje": 7.7
+        },
+        {
+          "respuesta": "Otra dificultad.",
+          "n": 1,
+          "porcentaje": 7.7
+        }
+      ],
+      "blancos_fuera_del_recorrido": 9
+    },
+    "P5": {
+      "base": 9,
+      "opciones": [
+        {
+          "respuesta": "Falta de tiempo.",
+          "n": 3,
+          "porcentaje": 33.3
+        },
+        {
+          "respuesta": "Dudas sobre la seguridad o la procedencia de la APK.",
+          "n": 0,
+          "porcentaje": 0.0
+        },
+        {
+          "respuesta": "Dificultades con la descarga o la instalación.",
+          "n": 2,
+          "porcentaje": 22.2
+        },
+        {
+          "respuesta": "Falta de orientación para empezar.",
+          "n": 1,
+          "porcentaje": 11.1
+        },
+        {
+          "respuesta": "Falta de interés en continuar con la prueba.",
+          "n": 0,
+          "porcentaje": 0.0
+        },
+        {
+          "respuesta": "Otro motivo.",
+          "n": 3,
+          "porcentaje": 33.3
+        }
+      ],
+      "blancos_fuera_del_recorrido": 13
+    },
+    "P3": {
+      "base": 13,
+      "blancos_fuera_del_recorrido": 9,
+      "respuestas": [
+        {
+          "id_fila": "R01",
+          "texto_original": "Es practica"
+        },
+        {
+          "id_fila": "R02",
+          "texto_original": "cambiar la fuente y tamaño "
+        },
+        {
+          "id_fila": "R05",
+          "texto_original": "Me resultó útil "
+        },
+        {
+          "id_fila": "R07",
+          "texto_original": "me resultó útil al momento de poder hacer y organizar los apuntes de manera mucho mas fácil además de poder fijarlos o editarlos una vez ya guardado. "
+        },
+        {
+          "id_fila": "R08",
+          "texto_original": "Útil "
+        },
+        {
+          "id_fila": "R09",
+          "texto_original": "Me dió resultados positivos "
+        },
+        {
+          "id_fila": "R10",
+          "texto_original": "Es rapido para tomar apuntes y se puede guardar con un título aparte de los apuntes anotado abajo"
+        },
+        {
+          "id_fila": "R12",
+          "texto_original": "Archivar notas"
+        },
+        {
+          "id_fila": "R13",
+          "texto_original": "Ah la hora de buscar y acomodar mis ideas de forma más prolija y los archivos también "
+        },
+        {
+          "id_fila": "R15",
+          "texto_original": "Es útil para tomar nota de algo que tengas en un día, como parciales, lección oral como recordatorio en resúmen "
+        },
+        {
+          "id_fila": "R17",
+          "texto_original": "Me parece que la idea está buenísima "
+        },
+        {
+          "id_fila": "R19",
+          "texto_original": "Si me resultó útil para organizar las materia "
+        },
+        {
+          "id_fila": "R20",
+          "texto_original": "Nuevo a conocer"
+        }
+      ]
+    }
+  },
+  "cruces": {
+    "P1_P2": [
+      {
+        "etapa": "La usé y realicé sólo una parte del recorrido sugerido.",
+        "base": 6,
+        "opciones": [
+          {
+            "respuesta": "Muy fácil.",
+            "n": 2,
+            "porcentaje": 33.3
+          },
+          {
+            "respuesta": "Fácil.",
+            "n": 2,
+            "porcentaje": 33.3
+          },
+          {
+            "respuesta": "Ni fácil ni difícil.",
+            "n": 2,
+            "porcentaje": 33.3
+          },
+          {
+            "respuesta": "Difícil.",
+            "n": 0,
+            "porcentaje": 0.0
+          },
+          {
+            "respuesta": "Muy difícil.",
+            "n": 0,
+            "porcentaje": 0.0
+          }
+        ]
+      },
+      {
+        "etapa": "La usé y realicé el recorrido sugerido.",
+        "base": 7,
+        "opciones": [
+          {
+            "respuesta": "Muy fácil.",
+            "n": 2,
+            "porcentaje": 28.6
+          },
+          {
+            "respuesta": "Fácil.",
+            "n": 3,
+            "porcentaje": 42.9
+          },
+          {
+            "respuesta": "Ni fácil ni difícil.",
+            "n": 2,
+            "porcentaje": 28.6
+          },
+          {
+            "respuesta": "Difícil.",
+            "n": 0,
+            "porcentaje": 0.0
+          },
+          {
+            "respuesta": "Muy difícil.",
+            "n": 0,
+            "porcentaje": 0.0
+          }
+        ]
+      }
+    ],
+    "P1_P5": [
+      {
+        "etapa": "No llegué a instalarla.",
+        "base": 7,
+        "opciones": [
+          {
+            "respuesta": "Falta de tiempo.",
+            "n": 2,
+            "porcentaje": 28.6
+          },
+          {
+            "respuesta": "Dudas sobre la seguridad o la procedencia de la APK.",
+            "n": 0,
+            "porcentaje": 0.0
+          },
+          {
+            "respuesta": "Dificultades con la descarga o la instalación.",
+            "n": 2,
+            "porcentaje": 28.6
+          },
+          {
+            "respuesta": "Falta de orientación para empezar.",
+            "n": 1,
+            "porcentaje": 14.3
+          },
+          {
+            "respuesta": "Falta de interés en continuar con la prueba.",
+            "n": 0,
+            "porcentaje": 0.0
+          },
+          {
+            "respuesta": "Otro motivo.",
+            "n": 2,
+            "porcentaje": 28.6
+          }
+        ]
+      },
+      {
+        "etapa": "La instalé, pero no llegué a usarla.",
+        "base": 2,
+        "opciones": [
+          {
+            "respuesta": "Falta de tiempo.",
+            "n": 1,
+            "porcentaje": 50.0
+          },
+          {
+            "respuesta": "Dudas sobre la seguridad o la procedencia de la APK.",
+            "n": 0,
+            "porcentaje": 0.0
+          },
+          {
+            "respuesta": "Dificultades con la descarga o la instalación.",
+            "n": 0,
+            "porcentaje": 0.0
+          },
+          {
+            "respuesta": "Falta de orientación para empezar.",
+            "n": 0,
+            "porcentaje": 0.0
+          },
+          {
+            "respuesta": "Falta de interés en continuar con la prueba.",
+            "n": 0,
+            "porcentaje": 0.0
+          },
+          {
+            "respuesta": "Otro motivo.",
+            "n": 1,
+            "porcentaje": 50.0
+          }
+        ]
+      }
+    ]
+  }
+}
