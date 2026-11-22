@@ -5,7 +5,8 @@ Este directorio se trabaja **por secciones**. Los archivos `01-*.md` a `08-*.md`
 La [presentación institucional](./00-presentacion-institucional.md) es la fuente
 de identificación formal del alumno, la institución, la carrera, la cátedra y sus
 autoridades y responsables académicos. Se mantiene separada de los capítulos y
-sin enlaces en su contenido. Su revisión y maquetación definitivas están pendientes.
+sin enlaces en su contenido. La identificación está revisada y aprobada en
+[PR #63](https://github.com/jdfesa/lumapse/pull/63); su maquetación definitiva sigue pendiente.
 El ensamblador actual todavía no lee esta fuente; su integración se resolverá
 al acordar el ensamblado final, sin regenerar ahora el informe completo.
 
