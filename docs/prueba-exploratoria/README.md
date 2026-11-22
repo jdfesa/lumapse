@@ -1,7 +1,7 @@
 # Prueba exploratoria de Lumapse
 
-> **Estado:** encuesta abierta desde el **10 de noviembre de 2026**.
-> **Cierre:** sin fecha definida; se registrará aquí cuando se cierre la encuesta.
+> **Estado:** encuesta cerrada el **22 de noviembre de 2026**, con **22 respuestas**.
+> **Apertura:** 10 de noviembre de 2026. Se conserva el enlace como referencia.
 > Diseño aplicado y aprobado el 9 de noviembre de 2026, con **cinco preguntas y cuatro secciones**.
 
 [Formulario de la prueba exploratoria](https://forms.gle/e4fWoxdcV33D42VS9).
@@ -120,3 +120,28 @@ Sin él no se garantiza una sola respuesta por persona.
   con el enlace.
 - [x] Acceso para responder sin iniciar sesión en Google comprobado por el
   responsable del proyecto.
+- [x] Recepción de nuevas respuestas desactivada y cambio guardado el 2026-11-22;
+  Google Forms mostró el aviso de formulario cerrado y conservó las 22 respuestas.
+
+## Cierre y datos originales
+
+El [CSV crudo](./datos/respuestas_experiencia_2026_11.csv) se exportó el
+**22 de noviembre de 2026**, después de cerrar la recepción, mediante
+«Download responses (.csv)» de Google Forms. La descarga entregó un ZIP con
+`Experiencia con Lumapse.csv`; se extrajo ese archivo y sólo se cambió su nombre
+para identificarlo en el repositorio. No se modificaron sus bytes, marcas
+temporales, textos, espacios finales ni campos vacíos.
+
+- **Contenido:** seis columnas —marca temporal y cinco preguntas— y 22 filas de
+  respuestas, además de la cabecera.
+- **Tamaño:** 3377 bytes, codificación UTF-8.
+- **SHA-256 del CSV:**
+  `60906d994bb513183c7a5de44d94286bd32856a0b208f7e5ffb5534e1ad38ac9`.
+- **Procedencia anónima:** el formulario no recopiló nombres ni correos y el CSV
+  no contiene esas columnas. Conserva las marcas temporales y los textos libres;
+  la ausencia de identificadores directos no garantiza anonimato absoluto ni
+  permite comprobar que cada fila corresponda a una persona distinta.
+
+Los datos originales se mantienen públicos y separados de sus interpretaciones.
+Los blancos deben leerse según el árbol aplicado: no completar una pregunta no
+mostrada no equivale a una valoración negativa ni a una respuesta perdida.
