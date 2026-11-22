@@ -1,8 +1,8 @@
 # Índice General — Informe Final Lumapse
 
-Este directorio contiene las secciones fuente del informe final para la materia Prácticas Profesionalizantes III. Hito 05 conserva el cierre de la primera beta `v0.4.8`; Hito 06 ya publicó `v0.5.0` y continúa activo para revisión editorial, consolidación de evidencias y preparación de la defensa.
+Este índice permite consultar las fuentes del informe final de Prácticas Profesionalizantes III: presentación institucional, capítulos y referencias. El corte de presentación es **Lumapse 0.6.0/600 — Release Candidate 1**, publicado con validación parcial y desarrollo congelado. Las betas `v0.4.8` y `v0.5.0` se conservan como antecedentes, con evidencia atribuida a cada artefacto.
 
-Los archivos se ensamblan iterativamente a partir de la documentación viva del proyecto. El documento completo es un artefacto generado y puede quedar desfasado hasta el próximo punto de control.
+Los archivos siguientes son las fuentes vigentes; no se mantiene actualmente una copia completa ensamblada. Este índice de navegación no sustituye al índice paginado de la entrega impresa, que se generará a partir del contenido consolidado.
 
 > Ver [`README.md`](./README.md) para el flujo de trabajo: las secciones son la fuente de verdad y el informe completo se ensambla solo en puntos de control o al cierre.
 

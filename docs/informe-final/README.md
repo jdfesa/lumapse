@@ -67,6 +67,16 @@ y distinguir la obra publicada del material de cátedra. La correspondencia de
 citas incluye la GPLv3 de 5.7 y la atribución de la guía Kanban a Coleman y Vacanti,
 con corrección mínima de sus dos citas en el capítulo 2.
 
+**Auditoría complementaria de apertura y capítulos 1–2:** el índice describe el
+corte 0.6.0 RC1 y distingue navegación de fuentes de índice impreso. Los capítulos
+precisan la unidad de análisis de la encuesta y explican con ejemplos la estimación
+y el criterio de las decisiones; las tablas del capítulo 2 tienen identificación y
+procedencia. Las referencias incorporan el apoyo metodológico de Design Thinking
+y Lean Canvas y explicitan el carácter didáctico de la guía del profesor responsable
+de la cátedra, Ing. Mauricio Parada. Estos ajustes están pendientes de revisión;
+no modifican cifras, requisitos, evidencia de pruebas ni la identificación
+institucional aprobada, y no cierran el ensamblado o la revisión transversal.
+
 **Ampliación del capítulo 6 — prueba exploratoria:** la sección 6.4.4 incorpora
 el método, los resultados y los límites de las 22 respuestas a la encuesta cerrada
 el 22 de noviembre de 2026, contrastados con el [análisis y sus datos originales](../prueba-exploratoria/resultados.md).
