@@ -8,6 +8,8 @@ La descripción corresponde al diseño presente en la fuente de **Lumapse 0.6.0/
 
 Registré las decisiones significativas mediante *Architecture Decision Records* (ADR), documentos que conservan contexto, alternativas, elección y consecuencias. Su valor es permitir reconstruir razones y costos, no certificar por sí solos que una solución sea correcta. Algunos formalizan retrospectivamente un diseño ya consolidado; no presupongo que la fecha de cada registro demuestre una decisión anterior a su implementación.
 
+**Tabla 4-1. Decisiones arquitectónicas y su relación con el diseño presentado**
+
 | Registros | Decisión y relación con el diseño |
 |---|---|
 | ADR-001 y ADR-004 | Base web sin framework de interfaz, Vite y separación de responsabilidades en el repositorio |
@@ -21,6 +23,8 @@ Registré las decisiones significativas mediante *Architecture Decision Records*
 | ADR-012 | Borrador SQLite y consumo atómico al guardar la nota |
 | ADR-013 | Despliegue de desarrollo sin desinstalación implícita; pertenece a las herramientas, no a una nueva capa del producto |
 
+*Fuente: elaboración propia a partir de ADR-001 a ADR-013.*
+
 El cambio principal fue pasar de una PWA con IndexedDB a una aplicación Android con interfaz web y SQLite. Comparé mantener el canal de navegador, reutilizar la interfaz mediante Capacitor y afrontar una reescritura con otra tecnología móvil. Adopté la segunda alternativa porque conservaba la base existente, permitía acceder a capacidades del dispositivo y situaba la base de datos del producto fuera del almacenamiento administrado por el navegador.
 
 Capacitor proporciona un contenedor y una API de plugins para integrar código web con capacidades nativas (Ionic, s. f.). En Lumapse, la interfaz se ejecuta en una WebView: no se convirtió en una interfaz escrita completamente con componentes nativos de Android. El costo del pivote fue incorporar herramientas y pruebas específicas de Android y dejar de comprometer una entrega utilizable desde cualquier navegador.
@@ -30,6 +34,8 @@ La encuesta respaldó priorizar celular y uso sin conexión; no comparó PWA con
 ## 4.2. Stack tecnológico y compromisos
 
 Seleccioné tecnologías que permitieran sostener una aplicación local con responsabilidades visibles. La ausencia de un framework de interfaz reduce esa dependencia de ejecución, pero traslada al código propio el manejo de componentes, eventos y suscripciones. No presento esa elección como una superioridad de rendimiento demostrada frente a React o Vue.
+
+**Tabla 4-2. Tecnologías y compromisos del corte 0.6.0 RC1**
 
 | Área | Tecnología | Función y compromiso |
 |---|---|---|
@@ -42,6 +48,8 @@ Seleccioné tecnologías que permitieran sostener una aplicación local con resp
 | Contenido y portabilidad | `marked`, DOMPurify y módulos ZIP propios | Procesan Markdown, sanitizan el HTML renderizado y generan o leen el respaldo ZIP; la escritura usa entradas sin compresión y la importación conserva límites propios |
 | Verificación | Vitest, runner de pruebas de Node, scripts y GitHub Actions | Comprueban unidades y reglas automatizables; no sustituyen una prueba del plugin o del APK |
 
+*Fuente: elaboración propia a partir de las dependencias, la configuración y los módulos del corte, con el criterio arquitectónico de ADR-006 y ADR-008.*
+
 La adopción de TypeScript no fue una reescritura de la aplicación. La concentré en contratos de dominio, reglas y servicios con estructuras de datos relevantes, manteniendo módulos JavaScript existentes. Los tipos expresan entradas y resultados, pero no validan por sí solos un archivo importado ni los datos recibidos en ejecución. Por eso la importación conserva comprobaciones de formato, tamaño y relaciones antes de escribir.
 
 Android define el canal presentado. El entorno web se conserva como apoyo para iterar y comprobar lógica compartida, no como PWA soportada ni como evidencia de una entrega para escritorio o iOS. Node y npm pertenecen al entorno de herramientas, no son servidores requeridos para usar la aplicación instalada.
@@ -50,13 +58,19 @@ Android define el canal presentado. El entorno web se conserva como apoyo para i
 
 Organicé el núcleo académico alrededor de tres entidades persistentes. Separé esas entidades del estado temporal de navegación y de los contratos técnicos de borrador y respaldo.
 
+**Tabla 4-3. Entidades académicas y relaciones principales**
+
 | Entidad | Responsabilidad | Relación principal |
 |---|---|---|
 | Nota (`Note`) | Conserva título, contenido Markdown, marcas de fijado y archivo, estado académico y fechas de creación/modificación | Puede no tener materia o pertenecer a una materia o sección |
 | Materia/Sección (`Subject`) | Organiza las notas con nombre, color y estado | Una materia raíz puede contener secciones; cada sección tiene una materia padre |
 | Fecha académica (`AcademicEvent`) | Representa un parcial, final, trabajo práctico o exposición en una fecha local | Puede vincularse a una materia o sección, sin que esa asociación sea obligatoria |
 
+*Fuente: elaboración propia a partir de los contratos de dominio y del esquema SQLite de 0.6.0 RC1.*
+
 Materia y Sección son roles de una misma entidad, no dos tablas independientes. Un `Subject` sin padre representa una materia; uno con padre representa una sección. Según DP-004, la jerarquía admite dos niveles de organización: una sección no contiene subsecciones. La nota no constituye un tercer nivel de carpetas, sino contenido asociado a cualquiera de los dos niveles.
+
+Elegí esa profundidad para ofrecer una organización académica acotada y limitar la navegación en pantallas pequeñas, en lugar de exigir que cada estudiante diseñe un árbol arbitrariamente profundo. Por ejemplo, una materia puede contener la sección «Trabajos prácticos» y recibir también notas directamente. Es una hipótesis de diseño de DP-004, no una demostración de que dos niveles satisfagan todas las necesidades. Representar ambos roles en `Subject` permite que notas y fechas utilicen una sola referencia organizativa, sin duplicar asociaciones para materias y secciones.
 
 Una nota y una fecha académica tienen, cada una, cero o una referencia a `Subject`; un mismo `Subject` puede agrupar muchas de ambas. En notas, `subjectId = NULL` representa Entrada. Así se evita crear una materia ficticia para las capturas aún no clasificadas. La profundidad y la validación de nombres por nivel se resuelven en el servicio de materias, no por la sola existencia de una clave foránea.
 
@@ -90,13 +104,15 @@ flowchart LR
 
 La gestión de notas comprende creación, edición, consulta, búsqueda y eliminación lógica, además de fijado y archivo. La escritura puede ser texto plano o Markdown; los comandos de formato son ayudas opcionales, no una condición para crear una nota. El contenido se renderiza en las tarjetas del listado: la existencia de un componente aislado de previsualización no implica una vista dividida activa en el editor.
 
-La protección del borrador forma parte de crear o editar, pero no confirma automáticamente la nota. Organizar después de capturar y restaurar desde Papelera son decisiones posteriores del usuario. Las fechas académicas son recordatorios visuales puntuales: no incorporan horarios, recurrencias o notificaciones.
+La protección del borrador forma parte de crear o editar, pero no confirma automáticamente la nota. Organizar después de capturar y restaurar desde Papelera son decisiones posteriores del usuario. Las fechas académicas son recordatorios visuales puntuales: no incorporan horarios, recurrencias o notificaciones. Seguí el criterio de DP-007 de aprovechar el calendario de actividad de notas ya existente y asociar fechas a materias, sin ampliar el producto a una agenda completa. Una fecha no necesita una nota para existir.
 
-En portabilidad, exportar genera un ZIP del formato propio e importar permite revisar una propuesta antes de confirmarla. Seleccionar un destino de compartición no es sincronización automática ni asegura que un proveedor externo haya conservado una copia. Compartir o importar una nota Markdown individual queda fuera del alcance presentado, sin confundirse con el respaldo del conjunto.
+En portabilidad, exportar genera un ZIP del formato propio e importar permite revisar una propuesta antes de confirmarla. Esa propuesta distingue elementos omitidos por ID ya existente, renombres por colisión de nombres y reparaciones de relaciones; no es un reemplazo exacto del estado local por el contenido del archivo. Seleccionar un destino de compartición no es sincronización automática ni asegura que un proveedor externo haya conservado una copia. Compartir o importar una nota Markdown individual queda fuera del alcance presentado, sin confundirse con el respaldo del conjunto.
 
 ## 4.5. Secuencia de edición, guardado y recuperación
 
 El flujo de escritura permite explicar una distinción central: **conservar trabajo en curso no equivale a guardar una nota definitiva**. Adopté confirmación explícita con `Guardar` o `Actualizar` y un borrador local independiente, conforme a RF-005. ADR-012 precisa cómo se relacionan ambas persistencias en el corte de presentación.
+
+La elección de SQLite para el borrador respondió a un problema observado, no sólo a uniformidad tecnológica. La prueba de continuidad anterior a RC1 registró que `localStorage` no recuperaba la última modificación tras una terminación abrupta, aun sin demora programada de captura, y que podían reaparecer borradores consumidos o descartados. Las notas definitivas en SQLite no se habían perdido. ADR-012 trasladó el borrador a la conexión existente y vinculó su limpieza al guardado de la nota; la evidencia y los límites de aquella prueba se desarrollan en la sección 6.3.2.
 
 Antes de montar la interfaz, el arranque prepara SQLite e hidrata el borrador. Sólo si falta su fila se considera migrar el borrador anterior desde `localStorage`; una vez confirmado en SQLite, ese almacenamiento anterior deja de ser una alternativa de lectura. Una fila con JSON `null` significa borrador vacío y se distingue de una fila ausente, para no reimportar texto ya consumido o descartado.
 
@@ -162,6 +178,8 @@ Las migraciones comprueban las columnas existentes antes de agregar una nueva. U
 
 Desarrollé el diseño en tres niveles: conceptual, para entidades y relaciones; lógico, para tablas y claves; y físico, para el esquema SQLite y sus migraciones. La revisión de normalización complementa esos niveles. El modelo conceptual utiliza notación Chen con cardinalidades mínimas y máximas y conserva su fuente DOT; el lógico conserva una proyección DBML y una figura vectorial en DOT contrastada con el DDL ejecutable, que determina la estructura efectiva.
 
+La proyección DBML no incluye el `CHECK` ni los índices y conserva las acciones de borrado como comentarios. Por eso no la utilizo como inventario completo de restricciones: las contrasto con el esquema ejecutable y sus migraciones, reproducidos de forma consolidada en 4.7.2.3.
+
 La figura 4-3 representa las entidades y asociaciones del dominio en la versión 0.6.0 RC1; la figura 4-4 detalla las tablas y claves de ese mismo corte, con sus restricciones físicas declaradas. La estructura efectiva del corte mantiene las cuatro tablas, 26 columnas y tres claves foráneas del modelo lógico. Mover el borrador a `metadata` cambió el uso de esa tabla, no agregó una entidad o columna.
 
 #### 4.7.2.1. Modelo conceptual
@@ -179,7 +197,7 @@ Así, `(0,1)` significa «cero o uno»; `(0,N)`, «cero o muchos»; y `(1,1)`, �
 
 *Figura 4-4. Modelo lógico relacional de Lumapse en notación de pata de gallo. Tablas, claves y restricciones físicas declaradas en la versión 0.6.0 RC1. Fuente: elaboración propia mediante Graphviz, contrastada con el esquema SQLite y sus migraciones.*
 
-El modelo lógico incorpora las tres tablas de dominio y `metadata`. Los identificadores de las entidades son UUID almacenados como texto; la clave de `metadata`, en cambio, es el nombre textual de una propiedad. Los indicadores booleanos se representan con enteros y las fechas con texto; la fecha académica usa `YYYY-MM-DD`, diferenciada de las marcas de creación y actualización.
+El modelo lógico incorpora las tres tablas de dominio y `metadata`. Los flujos de creación generan UUID para notas, materias y fechas y los almacenan como texto; la clave de `metadata`, en cambio, es el nombre textual de una propiedad. Esa generación no equivale a una restricción SQL de formato UUID. Los indicadores booleanos se representan con enteros y las fechas con texto; la fecha académica usa `YYYY-MM-DD`, diferenciada de las marcas de creación y actualización.
 
 En la figura, PK señala la clave primaria y FK la columna que referencia una clave de destino. En la pata de gallo, el símbolo junto a una tabla cuenta sus filas vinculadas a una fila del otro extremo:
 
@@ -271,13 +289,19 @@ Esta evolución de estructura es distinta de migrar notas históricas de Indexed
 
 Las tres relaciones declaradas comparten a `subjects` como tabla referenciada. Sus acciones de eliminación física se interpretan según la semántica de SQLite, con el control de claves foráneas habilitado en la conexión (SQLite Project, s. f.).
 
+**Tabla 4-4. Acciones referenciales de borrado físico**
+
 | Referencia | Acción declarada | Efecto del borrado físico del registro referenciado |
 |---|---|---|
 | `subjects.parentSubjectId` → `subjects.id` | `ON DELETE CASCADE` | Elimina las secciones hijas de la materia |
 | `notes.subjectId` → `subjects.id` | `ON DELETE SET NULL` | Conserva la nota sin esa asociación |
 | `academic_events.subjectId` → `subjects.id` | `ON DELETE SET NULL` | Conserva la fecha académica sin esa asociación |
 
+*Fuente: elaboración propia a partir del DDL de 0.6.0 RC1 y de la semántica de claves foráneas de SQLite.*
+
 Enviar una materia a Papelera no ejecuta esas acciones de SQL: asigna `deletedAt` a la materia, sus secciones y las notas afectadas mediante la capa de servicio y una transacción. Las notas eliminadas lógicamente se excluyen de las lecturas del listado activo. La purga definitiva sí elimina registros; si una nota ya estaba marcada para purga, no se afirma que sobreviva por la sola existencia de `SET NULL`.
+
+La recuperación desde Papelera tampoco es indefinida. Durante el arranque, la aplicación intenta purgar notas y materias cuya eliminación lógica supera los 30 días; también permite vaciar la papelera manualmente. No es una tarea que se ejecute exactamente al cumplirse el plazo: depende del arranque y de que la operación termine correctamente. Este límite es especialmente relevante porque el respaldo ZIP no incluye la papelera.
 
 Las fechas académicas no tienen `deletedAt` ni participan de la papelera: su eliminación es física. El conjunto de tipos admitidos está restringido mediante `CHECK`, y existen índices sobre fecha y materia para las consultas de eventos. Estas decisiones describen estructura y finalidad, no un rendimiento medido.
 
@@ -311,6 +335,8 @@ Clasifiqué Lumapse como un **monolito modular cliente, offline-first, con capas
 
 ### 4.8.1. Responsabilidades y dirección de dependencias
 
+**Tabla 4-5. Responsabilidades y dependencias de la aplicación**
+
 | Área | Responsabilidad | Dependencias predominantes |
 |---|---|---|
 | Composición | Preparar persistencia y datos antes del montaje; conectar vistas, estado y feedback | Servicios, store y componentes necesarios para el arranque |
@@ -318,6 +344,8 @@ Clasifiqué Lumapse como un **monolito modular cliente, offline-first, con capas
 | Estado y coordinación | Mantener datos cargados, selecciones y filtros; coordinar operaciones | Servicios y módulos SQLite de acceso a datos |
 | Aplicación y dominio | Validar reglas, expresar contratos y orquestar casos de uso | Funciones de dominio, fuentes de datos y adaptadores |
 | Datos e integración | Ejecutar SQL y traducir capacidades de plataforma | SQLite y plugins de Capacitor, sin dependencia de la presentación |
+
+*Fuente: elaboración propia a partir de ADR-008 y de las dependencias observadas en la fuente de 0.6.0 RC1.*
 
 No existe una cadena obligatoria interfaz → store → servicio → datos. Para notas, el store puede invocar directamente el módulo SQLite; para materias o fechas utiliza servicios con reglas propias. A su vez, una funcionalidad autocontenida como respaldo puede consumir un servicio de aplicación sin pasar por el estado global. Describir estas rutas es más preciso que atribuir una arquitectura de capas estrictamente aisladas.
 
@@ -328,6 +356,8 @@ El arranque prepara la base, hidrata el borrador y carga los datos antes de mont
 ### 4.8.2. Patrones observables y grado de aplicación
 
 El inventario de ADR-008 distingue implementaciones directas, analogías parciales y enfoques de organización. Mantengo esa diferencia para no asignar una etiqueta teórica por la sola existencia de una carpeta o un nombre de archivo.
+
+**Tabla 4-6. Patrones observables y límites de su clasificación**
 
 | Patrón o enfoque | Grado de aplicación | Evidencia y límite |
 |---|---|---|
@@ -342,6 +372,8 @@ El inventario de ADR-008 distingue implementaciones directas, analogías parcial
 | Política funcional | Enfoque funcional | Filtros y reglas de respaldo seleccionan comportamiento mediante funciones, sin una jerarquía de objetos Strategy |
 | Componente | Enfoque de interfaz | Las piezas encapsulan DOM y eventos, sin un ciclo de vida uniforme impuesto por un framework |
 
+*Fuente: elaboración propia a partir del inventario de ADR-008, contrastado con los módulos de composición, store, servicios, adaptadores y editor.*
+
 Estos límites facilitan probar reglas con dependencias controladas, pero no constituyen evidencia de que todas las integraciones nativas estén verificadas. Tampoco una conversión de JavaScript a TypeScript crea un patrón: la clasificación proviene de responsabilidades y dependencias observables.
 
 ### 4.8.3. Relación con MVC y límites de la clasificación
@@ -353,6 +385,8 @@ Tampoco identifico cada módulo ES con el patrón Singleton. Compartir un módul
 ### 4.8.4. Frontera cliente y alcance offline
 
 Lumapse no tiene un backend remoto propio: no despliega una API de producto, autenticación centralizada ni una base de datos en un servidor. Las reglas y SQLite se ejecutan dentro de la unidad cliente Android. Vite es una herramienta de desarrollo, no el backend que necesita la aplicación instalada.
+
+Los recursos de la interfaz —HTML, CSS, JavaScript y fuentes— se empaquetan dentro del APK. Por eso el acceso local a la interfaz no depende de descargarlos en cada apertura ni de un Service Worker de la antigua propuesta PWA. Esta decisión, junto con SQLite local, sustenta el diseño offline de RF-008; su comprobación funcional conserva el alcance por artefacto del capítulo 6.
 
 La capacidad de crear, editar, consultar y organizar sin depender de un servicio remoto es una decisión arquitectónica y de producto, no un patrón de diseño de objetos. La generación del ZIP también es local; si el usuario elige compartirlo con otra aplicación, ese destino puede requerir conectividad y queda fuera de la persistencia interna de Lumapse.
 

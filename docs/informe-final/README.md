@@ -78,6 +78,14 @@ de la cátedra, Ing. Mauricio Parada. Los ajustes están revisados y aprobados e
 requisitos, evidencia de pruebas ni la identificación
 institucional aprobada, y no cierran el ensamblado o la revisión transversal.
 
+**Auditoría complementaria de capítulos 3–4:** se recontaron los datos de mayo y
+se contrastaron las reglas de procesamiento, las decisiones y los diagramas con
+la fuente de 0.6.0 RC1. Las cifras se conservan; los ajustes precisan unidades del
+error nominal, contexto de uso, justificaciones de diseño y límites de Papelera,
+identificadores e importación, con tablas identificadas. La revisión del autor y
+la integración de estos ajustes están pendientes. No se generó nueva evidencia
+funcional ni se cerraron la revisión transversal o la maquetación.
+
 **Ampliación del capítulo 6 — prueba exploratoria:** la sección 6.4.4 incorpora
 el método, los resultados y los límites de las 22 respuestas a la encuesta cerrada
 el 22 de noviembre de 2026, contrastados con el [análisis y sus datos originales](../prueba-exploratoria/resultados.md).
