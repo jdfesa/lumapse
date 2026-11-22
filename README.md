@@ -368,12 +368,16 @@ El historial de commits sigue el estándar **Conventional Commits**.
 
 ## Información Académica
 
-- **Materia:** Prácticas Profesionalizantes III
-- **Alumno:** Sandoval, José David Fernando
-- **Profesor:** Ing. Parada, Mauricio
-- **Tutora:** Prof. Jaquet, Melina Daiana
 - **Institución:** IES 6023 'Dr. Alfredo Loutaif'
+- **Materia:** Prácticas Profesionalizantes III
+- **Alumno:** José David Fernando Sandoval
+- **Rectora:** Prof. Andrea del Valle Gorena
+- **Responsable de la cátedra:** Ing. Mauricio Parada
+- **Tutora:** Prof. Melina Daiana Edith Jaquet
 - **Año:** 2026
+
+La [presentación institucional del informe](./docs/informe-final/00-presentacion-institucional.md)
+conserva la identificación formal del alumno, las autoridades y los responsables académicos.
 
 ---
 

@@ -2,6 +2,13 @@
 
 Este directorio se trabaja **por secciones**. Los archivos `01-*.md` a `08-*.md` son la fuente de verdad del informe final; `report-metadata.json` controla el estado y el corte que aparecen en la portada generada.
 
+La [presentación institucional](./00-presentacion-institucional.md) es la fuente
+de identificación formal del alumno, la institución, la carrera, la cátedra y sus
+autoridades y responsables académicos. Se mantiene separada de los capítulos y
+sin enlaces en su contenido. Su revisión y maquetación definitivas están pendientes.
+El ensamblador actual todavía no lee esta fuente; su integración se resolverá
+al acordar el ensamblado final, sin regenerar ahora el informe completo.
+
 El informe es un documento vivo y queda sujeto a actualizaciones mientras el proyecto avance. Se lo va a consultar de forma recurrente para agregar secciones, corregir inconsistencias, ajustar redacción y completar evidencias antes del cierre académico.
 
 `INFORME-FINAL-COMPLETO.md` es una salida generada, no una fuente de edición. Se regenerará al cerrar la revisión de los capítulos mediante:
