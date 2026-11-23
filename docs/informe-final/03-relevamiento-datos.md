@@ -2,7 +2,7 @@
 
 En este capítulo presento el relevamiento de mayo de 2026 y explico cómo pasé de las respuestas a los hallazgos que orientaron Lumapse. El propósito fue contrastar hábitos, dificultades y preferencias del contexto estudiantil, no demostrar la eficacia de una aplicación terminada. Distingo los datos observados, su interpretación y las decisiones posteriores.
 
-Las tablas son de elaboración propia a partir de las 120 respuestas válidas. En cada caso indico la base de cálculo; los porcentajes se redondean a una cifra decimal. Las diferencias de redondeo y las preguntas de selección múltiple impiden suponer que toda tabla deba sumar exactamente 100 %.
+Las tablas de resultados son de elaboración propia a partir del CSV del relevamiento (Sandoval, 2026b), con 120 respuestas válidas. La ficha técnica resume el diseño y la ejecución; la síntesis final relaciona los resultados con las decisiones de producto. En cada resultado indico la base de cálculo; los porcentajes se redondean a una cifra decimal. Las diferencias de redondeo y las preguntas de selección múltiple impiden suponer que toda tabla deba sumar exactamente 100 %.
 
 ## 3.1. Metodología de Recolección (Población y Muestra)
 
@@ -11,6 +11,8 @@ Las tablas son de elaboración propia a partir de las 120 respuestas válidas. E
 Definí como población objetivo a estudiantes regulares del IES 6023 «Dr. Alfredo Loutaif» durante el ciclo lectivo 2026, excluyendo a quienes asistían únicamente a rendir exámenes. El diseño registra 1.239 estudiantes, tres turnos y siete carreras con matrícula activa como población de referencia. No utilicé una lista nominal para seleccionar participantes al azar.
 
 Distribuí una encuesta autoadministrada en Google Forms mediante grupos de WhatsApp, pósteres con código QR en aulas y colaboración para difundir el enlace. La selección fue no probabilística por conveniencia: dependió del acceso al formulario y de la decisión de responder. Procurar cobertura de distintos turnos no equivale a aplicar cuotas proporcionales ni probabilidades de inclusión conocidas.
+
+**Tabla 3-1. Ficha técnica del relevamiento de mayo de 2026**
 
 | Característica | Registro del estudio |
 |---|---|
@@ -28,7 +30,7 @@ $$
 n^* = \frac{N Z^2 p(1-p)}{e^2(N-1)+Z^2p(1-p)}
 $$
 
-En la fórmula, N es la población de referencia; Z, el valor normal asociado al nivel nominal de confianza; p, la proporción supuesta, y e, el error tolerado en ese escenario. Con N = 1.239, Z = 1,96, p = 0,5 —máxima variabilidad— y e = 0,10, el objetivo nominal redondeado hacia arriba es 90. Para 120 respuestas, el cálculo hipotético arroja aproximadamente 8,5 % al nivel nominal de 95 %. Esos valores suponen selección aleatoria simple: describen el escenario de planificación, no un margen efectivo de este estudio. Superar la meta no corrige el sesgo de selección ni convierte la muestra por conveniencia en probabilística.
+En la fórmula, N es la población de referencia; Z, el valor normal asociado al nivel nominal de confianza; p, la proporción supuesta, y e, el error absoluto tolerado al estimar una proporción en ese escenario. Con N = 1.239, Z = 1,96, p = 0,5 —máxima variabilidad— y e = 0,10 —diez puntos porcentuales—, el cálculo da aproximadamente 89,2 y el objetivo nominal redondeado hacia arriba es 90. Para 120 respuestas, el error hipotético es de aproximadamente 8,5 puntos porcentuales al nivel nominal de confianza del 95 %. Esos valores suponen selección aleatoria simple: describen el escenario de planificación, no un margen efectivo de este estudio. Superar la meta no corrige el sesgo de selección ni convierte la muestra por conveniencia en probabilística.
 
 La recolección se desarrolló entre el 11 y el 13 de mayo de 2026, durante aproximadamente dos días naturales y en horario de Argentina (UTC−03:00). Al alcanzar 121 respuestas, decidí cerrar la encuesta, ya que se había superado la meta operativa de 90.
 
@@ -61,6 +63,8 @@ Los scripts conservados separan limpieza, frecuencias, cruces, clasificación de
 
 Los tres turnos estuvieron presentes, con mayor cantidad de respuestas en tarde y noche. La base es de 120 registros después de las reclasificaciones indicadas.
 
+**Tabla 3-2. Distribución por turno, base 120**
+
 | Turno | Respuestas | Porcentaje |
 |---|---:|---:|
 | Tarde | 56 | 46,7 % |
@@ -68,6 +72,8 @@ Los tres turnos estuvieron presentes, con mayor cantidad de respuestas en tarde 
 | Mañana | 17 | 14,2 % |
 
 Se observaron seis de las siete carreras consignadas en la población de referencia. No hubo una respuesta válida del Profesorado en Física.
+
+**Tabla 3-3. Distribución por carrera, base 120**
 
 | Carrera | Respuestas | Porcentaje |
 |---|---:|---:|
@@ -88,6 +94,8 @@ En P3, 56 respuestas correspondieron a 18–22 años, 35 a 23–27, 23 a 28–35
 
 P4 preguntó por el método principal utilizado en clase, no por todas las herramientas que cada participante pudiera emplear.
 
+**Tabla 3-4. Método principal de toma de notas (P4)**
+
 | Método principal | Respuestas, base 120 | Porcentaje |
 |---|---:|---:|
 | Cuaderno o papel | 106 | 88,3 % |
@@ -99,6 +107,8 @@ P4 preguntó por el método principal utilizado en clase, no por todas las herra
 Los dispositivos digitales suman nueve respuestas (7,5 %). El predominio del papel caracteriza el hábito de partida, pero no indica por qué se lo prefiere ni permite afirmar que nunca se utilicen aplicaciones como recurso secundario. Tampoco identifica un competidor único de Lumapse.
 
 Entre las 115 respuestas a las que aplica P5, 56 declaran dificultad (48,7 %) y 59 no la declaran (51,3 %). P5b utiliza exclusivamente las 56 afirmativas como denominador:
+
+**Tabla 3-5. Dificultades predefinidas entre las respuestas afirmativas de P5 (P5b)**
 
 | Dificultad predefinida | Respuestas que la incluyen, base 56 | Porcentaje |
 |---|---:|---:|
@@ -116,6 +126,8 @@ Cinco respuestas contienen formulaciones libres adicionales. El separador autom�
 
 P6 recoge frecuencia declarada de acceso estable a internet en el instituto:
 
+**Tabla 3-6. Frecuencia declarada de acceso estable a internet (P6)**
+
 | Frecuencia | Respuestas, base 120 | Porcentaje |
 |---|---:|---:|
 | Siempre | 7 | 5,8 % |
@@ -127,6 +139,8 @@ P6 recoge frecuencia declarada de acceso estable a internet en el instituto:
 Las tres últimas categorías suman 98 respuestas (81,7 %). Es una declaración sobre disponibilidad, no una medición de cobertura, velocidad o tiempo de actividad de la red. Orienta priorizar operaciones locales, sin demostrar todavía el funcionamiento offline de una implementación.
 
 P8 registra las siguientes frecuencias:
+
+**Tabla 3-7. Características seleccionadas para una app de notas (P8)**
 
 | Característica | Respuestas que la seleccionan, base 120 | Porcentaje |
 |---|---:|---:|
@@ -145,6 +159,8 @@ Que «no pedir cuenta» tenga menos selecciones no demuestra aceptación de un r
 
 La valoración de la propuesta conjunta de P7 se distribuyó así:
 
+**Tabla 3-8. Utilidad percibida de la propuesta conjunta (P7)**
+
 | Valoración | Respuestas, base 120 | Porcentaje |
 |---|---:|---:|
 | 5 — Muy útil | 61 | 50,8 % |
@@ -162,6 +178,8 @@ En P10 hubo 97 respuestas «Sí» y 23 «Tal vez» a una posible prueba, sin res
 En P9, 87 respuestas eligieron celular (72,5 %), 27 «Cualquiera por igual» (22,5 %), cinco notebook o PC (4,2 %) y una tablet (0,8 %). Celular y «Cualquiera por igual» suman 114 de 120 (95,0 %): es una combinación de preferencias declaradas, no prueba de posesión, compatibilidad o disponibilidad permanente de esos dispositivos.
 
 P11 permite contrastar el supuesto inicial de organización por etiquetas:
+
+**Tabla 3-9. Organización preferida de las notas (P11)**
 
 | Organización preferida | Respuestas, base 120 | Porcentaje |
 |---|---:|---:|
@@ -186,6 +204,8 @@ P12 recibió 41 respuestas no vacías, equivalentes al 34,2 % de la base de 120.
 
 La clasificación conservada busca palabras o fragmentos de palabras en el texto convertido a minúsculas. Cada comentario puede recibir varias etiquetas; si no coincide con ninguna, se asigna a «Otros». El recuento reproducible es:
 
+**Tabla 3-10. Clasificación léxica de los 41 comentarios de P12**
+
 | Etiqueta del clasificador | Comentarios asignados |
 |---|---:|
 | Otros | 10 |
@@ -205,9 +225,13 @@ Esta clasificación permite localizar temas para lectura contextual, pero no sus
 
 Los temas incluyen recursos de planificación docente, esquemas, contenido técnico, imágenes o audio y recuperación. Su aparición amplía las preguntas de producto, sin convertir cada comentario en un requisito obligatorio. Las fechas académicas puntuales implementadas son distintas de una agenda completa; multimedia y otras extensiones conservan su delimitación como trabajo futuro.
 
+Una respuesta también advierte que no siempre se permite usar el celular en clase. Es una restricción de contexto que el funcionamiento offline no resuelve. Su aparición no permite estimar cuántos cursos presentan esa situación, pero impide equiparar preferencia móvil con posibilidad de uso en toda clase.
+
 ## 3.5. Conclusiones del Relevamiento e Impacto en el Producto
 
 El relevamiento aportó evidencia exploratoria donde antes existían principalmente supuestos. La muestra describe un predominio del papel, dificultades de una parte de quienes toman notas, disponibilidad de conexión no permanente y preferencia declarada por celular y materias. Esas observaciones permiten orientar el prototipo, no certificar resultados de uso.
+
+**Tabla 3-11. Relación entre evidencia, decisiones y límites del relevamiento**
 
 | Evidencia | Decisión informada | Lo que la encuesta no demuestra |
 |---|---|---|
@@ -220,4 +244,4 @@ La combinación de necesidades y restricciones técnicas dio lugar a decisiones 
 
 Los principales límites son la selección por conveniencia y autoselección, cobertura incompleta y proporcionalidad no comprobada, formulación conjunta de P7, máximo no asegurado en P8 y clasificación léxica de una pregunta abierta opcional. La exportación tampoco acredita por sí sola unicidad de participantes. Conocer esos límites evita atribuir al tamaño de muestra una precisión o un control que el procedimiento no documenta.
 
-La encuesta evaluó una propuesta inicial, no una sesión de uso de la versión 0.6.0 RC1. No midió tiempos de primera nota, latencia, fluidez, comprensión de la instalación ni adopción sostenida. El capítulo 4 desarrolla las elecciones de diseño; los capítulos 5 y 6 distinguen su implementación y la evidencia de verificación. Esta separación mantiene una historia trazable desde las necesidades declaradas hasta el producto, sin convertir intención en resultado.
+La encuesta evaluó una propuesta inicial, no una sesión de uso de la versión 0.6.0 RC1. No midió tiempos de primera nota, latencia, fluidez, comprensión de la instalación ni adopción sostenida. Es distinta de la encuesta exploratoria posterior al corte, cuya base y resultados se presentan en la sección 6.4.4; no combino ambas recolecciones. El capítulo 4 desarrolla las elecciones de diseño; los capítulos 5 y 6 distinguen su implementación y la evidencia de verificación. Esta separación mantiene una historia trazable desde las necesidades declaradas hasta el producto, sin convertir intención en resultado.
