@@ -1,39 +1,61 @@
 # Informe final — flujo de trabajo
 
-Este directorio se trabaja **por secciones**. Los archivos `01-*.md` a `08-*.md` son la fuente de verdad del informe final; `report-metadata.json` controla el estado y el corte que aparecen en la portada generada.
+Este directorio se trabaja **por secciones**. Los archivos `01-*.md` a `08-*.md` son la fuente de verdad del contenido académico; `report-metadata.json` identifica su estado y corte documental, separados de la portada académica.
 
 La [presentación institucional](./00-presentacion-institucional.md) es la fuente
 de identificación formal del alumno, la institución, la carrera, la cátedra y sus
 autoridades y responsables académicos. Se mantiene separada de los capítulos y
 sin enlaces en su contenido. La identificación está revisada y aprobada en
 [PR #63](https://github.com/jdfesa/lumapse/pull/63); su maquetación definitiva sigue pendiente.
-El ensamblador actual todavía no lee esta fuente; su integración se resolverá
-al acordar el ensamblado final, sin regenerar ahora el informe completo.
+El ensamblador incluye esta fuente íntegra antes del índice, sin sustituirla por
+datos codificados en el script ni duplicar la identificación.
 
 El informe es un documento vivo y queda sujeto a actualizaciones mientras el proyecto avance. Se lo va a consultar de forma recurrente para agregar secciones, corregir inconsistencias, ajustar redacción y completar evidencias antes del cierre académico.
 
-`INFORME-FINAL-COMPLETO.md` es una salida generada, no una fuente de edición. Se regenerará al cerrar la revisión de los capítulos mediante:
+El [informe completo en Markdown](./informe-final-completo.md) reúne presentación
+institucional, índice automático, siete capítulos y referencias, con sus tablas,
+explicaciones y cinco figuras vectoriales. El corte documental es el **2026-11-23**
+y su estado es **completo para revisión, pendiente de aprobación final**. No
+constituye todavía una entrega impresa ni un PDF aprobado.
+
+`informe-final-completo.md` es una salida generada, no una fuente de edición.
+Para regenerarla desde la raíz del repositorio:
 
 ```bash
 python3 scripts/assemble-report.py
+# Comprobar vigencia sin modificar archivos:
+python3 scripts/assemble-report.py --check
 ```
 
-No se edita manualmente el informe completo. El checkpoint parcial del 2026-11-17 se retiró del árbol vigente al quedar desactualizado; permanece recuperable en el historial de Git. La lectura y edición actuales se realizan sobre los capítulos fuente, sin mantener una copia ensamblada hasta el cierre editorial.
+No se edita manualmente el informe completo. Se corrige la fuente correspondiente
+y se regenera en el punto de revisión acordado. El checkpoint parcial del
+2026-11-17 se retiró del árbol vigente al quedar desactualizado y permanece en el
+historial; no se utiliza como fuente de esta salida.
 
-La fecha de ensamblado se calcula en cada ejecución. El estado, alcance funcional y fecha de corte documental se leen de `report-metadata.json`; nunca se recuperan desde una salida generada anterior.
+El estado, alcance funcional y corte se leen de `report-metadata.json`, nunca de
+una salida anterior. Quedan en un comentario inicial, invisible en la lectura
+renderizada, para no convertir la portada en una tabla de seguimiento editorial.
+La generación no depende del día ni del `HEAD`: las mismas fuentes y metadatos
+producen el mismo contenido. `--check` falla si la salida falta o está
+desactualizada; ambos modos comprueban que existan las imágenes Markdown locales.
+
+Para leerlo con sus diagramas, abrir la vista previa de Markdown en un lector con
+soporte de SVG y conservar la estructura del repositorio: las figuras están en
+`docs/diagramas/`. No es necesario regenerarlas ni instalar dependencias para
+ensamblar el documento; el script usa la biblioteca estándar de Python 3.8+.
 
 ## Reglas de trabajo
 
 - Editar siempre el capítulo correspondiente, no el informe completo.
 - Mantener numeración, títulos y enlaces internos coherentes entre capítulos.
 - Antes de ensamblar, ejecutar los chequeos documentales (`npm run check:docs` y `npm run check:traceability`).
-- Si aparece contenido útil solo en `INFORME-FINAL-COMPLETO.md`, primero moverlo al capítulo fuente correspondiente y recién después regenerar.
+- Si aparece contenido útil solo en `informe-final-completo.md`, primero moverlo a su fuente correspondiente y recién después regenerar.
 
 ### Seguimiento por capítulos
 
 El [estado de cada unidad](../../TODO.md#revisión-del-informe-capítulo-por-capítulo)
-se registra en `TODO.md`. Los metadatos conservan el corte del último checkpoint; su
-comprobación definitiva y el ensamblado final siguen pendientes del cierre editorial.
+se registra en `TODO.md`. Los metadatos identifican el documento completo para
+revisión; la aprobación integral y el congelamiento editorial siguen pendientes.
 
 ## Estado actual
 
@@ -117,7 +139,8 @@ capítulos y las referencias de ese corte, con índice automático y metadatos d
 `v0.6.0/600` RC1. Su portada distinguía el tag `v0.6.0` sobre `ac2a747` de la fuente
 del APK, `bcefe6a`, e indicaba su estado parcial. Se retiró del árbol vigente junto
 con la figura conceptual reemplazada para evitar versiones contradictorias durante
-la revisión por capítulos; no se regeneró otro ensamblado.
+la revisión por capítulos. El documento completo actual se genera de nuevo desde
+las fuentes vigentes, no desde ese antecedente.
 
 Ese checkpoint y el anterior de `v0.5.0`, del 2026-09-05, permanecen en el historial
 de Git. Los capítulos son la fuente de verdad y conservan las atribuciones y límites
@@ -128,7 +151,7 @@ El tablero único vigente es [`TODO.md`](../../TODO.md).
 
 Los pendientes explícitos del Hito 06 son:
 
-- Revisión transversal y congelamiento editorial del contenido antes del ensamblado final; el checkpoint parcial no cierra esta tarea.
+- Lectura integral, revisión transversal y aprobación del Markdown completo antes de congelar el contenido; su ensamblado no cierra esta tarea.
 - Inclusión y revisión de vigencia de los diagramas de base de datos y del modelado UML respecto de la versión 0.6.0 RC1 congelada, además de su legibilidad en PDF y diapositivas. La existencia de figuras históricas no completa el [pendiente de diagramas](../../TODO.md#después-del-apk-aceptado-con-límites--cierre-académico-y-defensa).
 - Consolidación documental de la matriz RNF a partir de la [fuente canónica](../producto/requisitos-no-funcionales.md) y los reportes existentes: método, fecha, artefacto, resultado y límites. La evidencia de uso, accesibilidad, offline y tráfico en debugs no verifica automáticamente la versión 0.6.0 RC1. CRUD/FPS siguen pendientes y [diferidos a post-presentación](../../BACKLOG.md#rendimiento-post-presentación); las comprobaciones restantes del APK exacto también se difieren, sin nuevas mediciones para completar el informe.
 - Conciliación final del [corte 0.6.0 RC1 identificado](../gestion/candidato-apk-0.6.0.md#binario-corregido), sus controles y aceptación parcial entre informe, manual, matriz y demo. El [recorte vigente](../../BACKLOG.md#cierre-de-entrega-y-deuda-postdefensa) no exige otra APK ni una versión estable: corresponde cerrar esos entregables con la evidencia disponible y los pendientes explícitos.
@@ -158,7 +181,7 @@ no equivale a probar los recorridos diferidos de la APK.
 La revisión debe explicar los flujos existentes y sus límites: guardado explícito,
 borradores, archivo/papelera y backup ZIP local, que no incluye borradores ni papelera.
 Informe, manual, matriz RNF y demo deben describir el mismo artefacto. La conciliación
-y el congelamiento final siguen pendientes; el ensamblado parcial no completa las
+y el congelamiento final siguen pendientes; el ensamblado para revisión no completa las
 revisiones restantes ni modifica los capítulos fuente.
 
 ### Checklist de ensamblado y cierre
@@ -172,8 +195,9 @@ revisiones restantes ni modifica los capítulos fuente.
 - [x] Ensamblar el checkpoint con `python3 scripts/assemble-report.py` y revisar el diff generado.
 - [x] Reconciliar metadatos, capítulos y referencias con el tag publicado `v0.5.0`.
 - [x] Regenerar el checkpoint parcial 0.6.0 RC1 del 2026-11-17 desde las fuentes vigentes, con fecha, alcance y estado parcial en la portada.
-- [ ] Completar la revisión transversal y la conciliación final con la matriz RNF por artefacto, los diagramas y los límites aceptados antes de congelar y ensamblar la entrega.
-- [ ] Congelar contenido antes de iniciar la maquetación LaTeX/PDF.
+- [x] Ensamblar `informe-final-completo.md` desde la presentación y las fuentes vigentes, con índice, figuras y metadatos actualizados al 2026-11-23; incorporar comprobación de vigencia y regresiones del generador.
+- [ ] Completar la lectura integral, la revisión transversal y la conciliación final con la matriz RNF por artefacto, los diagramas y los límites aceptados antes de aprobar y congelar la entrega.
+- [ ] Aprobar el Markdown completo y congelar su contenido antes de iniciar LaTeX y, posteriormente, PDF.
 
 ## Formato final de entrega
 
@@ -181,7 +205,7 @@ Como último paso, cuando el informe ya esté estructurado, revisado y listo par
 
 La edición diaria seguirá realizándose en Markdown dentro de este directorio. LaTeX no reemplaza a las secciones fuente durante el desarrollo del informe; se reserva como capa final de presentación para maquetar índice, numeración, figuras, tablas, anexos y referencias con formato académico.
 
-La generación final podrá automatizarse mediante un script específico cuando el contenido esté consolidado.
+La generación LaTeX/PDF podrá automatizarse cuando el Markdown completo esté aprobado. El ensamblador actual genera únicamente Markdown.
 
 ### Consideraciones para la conversión a LaTeX
 

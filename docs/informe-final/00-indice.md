@@ -2,7 +2,11 @@
 
 Este índice permite consultar las fuentes del informe final de Prácticas Profesionalizantes III: presentación institucional, capítulos y referencias. El corte de presentación es **Lumapse 0.6.0/600 — Release Candidate 1**, publicado con validación parcial y desarrollo congelado. Las betas `v0.4.8` y `v0.5.0` se conservan como antecedentes, con evidencia atribuida a cada artefacto.
 
-Los archivos siguientes son las fuentes vigentes; no se mantiene actualmente una copia completa ensamblada. Este índice de navegación no sustituye al índice paginado de la entrega impresa, que se generará a partir del contenido consolidado.
+Los archivos siguientes son las fuentes vigentes. Para leerlas como una unidad,
+consultar el [informe completo en Markdown](./informe-final-completo.md), con
+índice automático, tablas y diagramas. Está preparado para revisión integral,
+pendiente de aprobación final. Este índice de navegación no sustituye al índice
+paginado de la entrega impresa, que se generará en una etapa posterior.
 
 > Ver [`README.md`](./README.md) para el flujo de trabajo: las secciones son la fuente de verdad y el informe completo se ensambla solo en puntos de control o al cierre.
 

@@ -267,20 +267,26 @@ Compara el esquema SQLite implementado en código contra el DDL documentado.
 ### 14. `assemble-report.py`
 Ensambla los capítulos del informe final PP3 en un único documento Markdown.
 
+- **Estado: vigente para el ensamblado Markdown acordado.** No genera LaTeX/PDF ni modifica las fuentes académicas; no se ejecuta por rutina dentro del gate.
 - **Problema que resuelve:** El informe final se redacta por capítulos en `docs/informe-final/` para facilitar mantenimiento y revisión incremental, pero la entrega universitaria requiere un documento unificado. Ensamblarlo manualmente es repetitivo y puede introducir índices desactualizados, links inter-capítulo rotos o separadores inconsistentes.
 - **Qué hace:**
   - Ignora `00-indice.md`, porque genera una tabla de contenidos nueva.
+  - Incluye íntegra la presentación `00-presentacion-institucional.md`, con la identificación y las autoridades aprobadas, sin datos institucionales codificados en el generador.
   - Lee en orden las secciones `01-introduccion.md` a `08-referencias.md`.
-  - Genera el encabezado institucional desde `report-metadata.json` y la fecha real de ensamblado. La referencia técnica es un commit auditado explícito, no el `HEAD` mutable del momento; el script no reutiliza metadatos del artefacto anterior.
+  - Conserva estado y corte de `report-metadata.json` en un comentario inicial, no en la portada visible. La referencia técnica es un commit explícito, no el `HEAD` mutable; no utiliza la fecha del reloj ni una salida anterior. Las mismas fuentes generan el mismo contenido.
   - Construye una tabla de contenidos automática desde headings `#`, `##` y `###`.
   - Concatena capítulos con separadores horizontales `---`.
-  - Convierte links inter-capítulo como `04-arquitectura-diseno.md` en anclas internas.
-  - Conserva links relativos externos como `../adr/...`, `../gestion/...` o `../diagramas/...`, porque el archivo final vive en la misma carpeta que los capítulos.
-- **Cuándo usarlo:** Antes de preparar la entrega final, después de modificar cualquier capítulo del informe, antes de exportar el Markdown a PDF/DOCX y cada vez que se quiera revisar el documento completo como una unidad.
-- **Salida generada:** `docs/informe-final/INFORME-FINAL-COMPLETO.md`.
+  - Convierte links inter-capítulo en anclas internas sin alterar imágenes ni ejemplos dentro de bloques de código.
+  - Conserva las tablas, el código, los pies y las rutas de las figuras. Comprueba que las imágenes Markdown sean locales y existan antes de escribir; no las regenera ni certifica su legibilidad impresa.
+  - `--check` compara la salida con las fuentes y falla si falta o está desactualizada, sin escribir archivos.
+- **Cuándo usarlo:** En el punto de ensamblado acordado para leer o revisar el documento completo. La aprobación integral del Markdown es previa a LaTeX y PDF; ensamblar no acredita esa aprobación.
+- **Requisitos y efectos:** Python 3.8+ y biblioteca estándar, sin instalaciones. Sólo escribe `docs/informe-final/informe-final-completo.md`; en modo `--check` no escribe. Conservar `docs/diagramas/` y usar un lector Markdown compatible con SVG para visualizar las figuras.
+- **Regresiones:** `scripts/tests/test_assemble_report.py` comprueba inclusión íntegra y ordenada de las fuentes actuales, figuras, índice, regeneración estable, modo de sólo lectura y fallos por fuentes/metadatos/imágenes ausentes o inválidos; utiliza temporales para las pruebas de escritura, sin ejecutar la app.
 - **Uso:**
   ```bash
   python3 scripts/assemble-report.py
+  python3 scripts/assemble-report.py --check
+  python3 -m unittest discover -s scripts/tests -p test_assemble_report.py -v
   ```
 
 ### 15. `generate-changelog.py`

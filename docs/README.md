@@ -14,6 +14,7 @@ Este directorio reúne la documentación viva de Lumapse. El corte vigente es la
 | Consultar el modelo de datos | [`diagramas/database/`](./diagramas/database/) |
 | Seguir el trabajo pendiente y los hitos | [`../BACKLOG.md`](../BACKLOG.md), [`../TODO.md`](../TODO.md), [`gestion/`](./gestion/) e [`hitos/`](./hitos/) |
 | Redactar el informe académico | capítulos fuente de [`informe-final/`](./informe-final/) |
+| Leer el informe académico completo | [Markdown ensamblado para revisión](./informe-final/informe-final-completo.md), con presentación, índice, capítulos, referencias y figuras |
 | Revisar la evolución por versión | [`../CHANGELOG.md`](../CHANGELOG.md) |
 
 Cuando un documento histórico contradiga una decisión posterior, prevalece el ADR vigente y la documentación de producto actual. Los ADR reemplazados se conservan porque explican la evolución del proyecto; no describen la solución en producción.
@@ -37,7 +38,7 @@ Cuando un documento histórico contradiga una decisión posterior, prevalece el 
 
 Los documentos deben distinguir explícitamente entre:
 
-- **Vigente:** describe el corte `v0.6.0` con sus límites o identifica explícitamente el artefacto histórico de una evidencia. Los capítulos del informe aún requieren adaptación documental; la guía de usuario 0.6.0 está incorporada y pendiente de revisión final. Ninguno se considera un entregable final por deducción.
+- **Vigente:** describe el corte `v0.6.0` con sus límites o identifica explícitamente el artefacto histórico de una evidencia. Los capítulos del informe están revisados por unidades y el Markdown completo está preparado para revisión integral; la guía de usuario 0.6.0 está incorporada y pendiente de revisión final. Ninguno se considera un entregable final por deducción.
 - **Histórico:** registra una hipótesis o decisión reemplazada, sin presentarla como estado actual.
 - **Fuente:** archivo que se edita y del cual se deriva otro artefacto.
 - **Generado:** salida reproducible que no debe corregirse manualmente si existe una fuente.
@@ -51,8 +52,8 @@ Ni un plan aceptado ni una casilla del tablero sustituyen la evidencia. La revis
 de las fuentes se realiza capítulo por capítulo, con un capítulo por rama, según
 el [plan operativo](../TODO.md#revisión-del-informe-capítulo-por-capítulo). El
 [estado editorial del informe](./informe-final/README.md#estado-actual) distingue
-las fuentes revisadas de las pendientes y del ensamblado, que conserva su checkpoint
-hasta un nuevo punto de control acordado. No se reescriben resultados históricos
+las fuentes revisadas del documento completo ensamblado para revisión, todavía
+pendiente de aprobación integral. No se reescriben resultados históricos
 para aparentar cumplimiento del APK nuevo.
 
 ## Estado documental actual
