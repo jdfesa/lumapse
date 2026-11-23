@@ -87,6 +87,16 @@ revisados y aprobados en [PR #66](https://github.com/jdfesa/lumapse/pull/66).
 No se generó nueva evidencia funcional ni se cerraron la revisión transversal o
 la maquetación.
 
+**Figuras de comportamiento y componentes:** el capítulo 4 incorpora SVG
+vectoriales de casos de uso (4-1), guardado explícito (4-2) y dependencias de
+componentes (4-5), con fuentes editables y criterios de selección en el
+[índice de diagramas](../diagramas/README.md#figuras-seleccionadas-para-el-informe).
+Los documentos técnicos corrigen las fronteras de actores, listado/búsqueda,
+reanudación/restauración y errores transaccionales. El dominio y las secuencias
+de detalle permanecen en el repositorio para no duplicar contenido. Las figuras
+de base de datos 4-3 y 4-4 no cambian. Esta unidad queda pendiente de revisión del
+autor; no declara aprobado el PDF final ni cierra la revisión transversal.
+
 **Ampliación del capítulo 6 — prueba exploratoria:** la sección 6.4.4 incorpora
 el método, los resultados y los límites de las 22 respuestas a la encuesta cerrada
 el 22 de noviembre de 2026, contrastados con el [análisis y sus datos originales](../prueba-exploratoria/resultados.md).

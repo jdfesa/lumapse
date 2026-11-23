@@ -1,0 +1,17 @@
+%% Síntesis del camino de éxito. Errores y reanudación se explican por separado.
+sequenceDiagram
+    participant E as Editor
+    participant S as Store
+    participant B as Borrador
+    participant D as SQLite
+
+    Note over E,S: El usuario confirma<br/>Guardar o Actualizar
+    E->>E: Solicita flush<br/>y bloquea controles
+    E->>S: Crear / actualizar<br/>clearDraft: true
+    S->>B: consumeDraft<br/>(escritura de nota)
+    B->>D: Nota + JSON null<br/>en una transacción
+    D-->>B: Commit confirmado
+    B-->>S: Entidad persistida
+    S->>S: [creación] Refresca<br/>materias y conteos
+    S-->>E: Entidad confirmada
+    E->>E: Limpia el editor<br/>y habilita controles

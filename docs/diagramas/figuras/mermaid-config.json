@@ -1,0 +1,40 @@
+{
+  "theme": "base",
+  "fontFamily": "Liberation Sans",
+  "themeVariables": {
+    "fontFamily": "Liberation Sans",
+    "fontSize": "16px",
+    "primaryColor": "#f5f6f7",
+    "primaryTextColor": "#111827",
+    "primaryBorderColor": "#4b5563",
+    "lineColor": "#4b5563",
+    "actorBkg": "#f5f6f7",
+    "actorBorder": "#374151",
+    "actorTextColor": "#111827",
+    "signalColor": "#374151",
+    "signalTextColor": "#111827",
+    "noteBkgColor": "#fafafa",
+    "noteBorderColor": "#6b7280",
+    "noteTextColor": "#111827",
+    "labelBoxBkgColor": "#f5f6f7",
+    "labelBoxBorderColor": "#6b7280",
+    "labelTextColor": "#111827",
+    "loopTextColor": "#111827"
+  },
+  "sequence": {
+    "mirrorActors": false,
+    "useMaxWidth": false,
+    "actorMargin": 26,
+    "diagramMarginX": 8,
+    "diagramMarginY": 10,
+    "width": 100,
+    "height": 40,
+    "boxMargin": 14,
+    "boxTextMargin": 8,
+    "noteMargin": 10,
+    "messageMargin": 26,
+    "wrap": false,
+    "wrapPadding": 5
+  },
+  "themeCSS": ".actor, .note { filter: none !important; } .actor-line { stroke-dasharray: 5 4; stroke-width: 1px; } .messageText { paint-order: stroke fill; stroke: white; stroke-width: 3px; stroke-linejoin: round; }"
+}

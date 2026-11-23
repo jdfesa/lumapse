@@ -1,0 +1,34 @@
+// Síntesis de dependencias del cliente Android RC1. No es un flujo temporal.
+digraph ArquitecturaComponentes {
+  graph [rankdir=TB, bgcolor="white", pad=0.08, margin=0,
+         nodesep=0.35, ranksep=0.38, fontname="Liberation Sans", fontsize=13];
+  node [shape=box, style="rounded,filled", fillcolor="#f5f6f7",
+        fontname="Liberation Sans", fontsize=13, color="#374151",
+        fontcolor="#111827", penwidth=1.1, margin="0.14,0.10", width=2.25];
+  edge [color="#4b5563", penwidth=1.1, arrowsize=0.7];
+
+  subgraph cluster_cliente {
+    label="Lumapse · módulos del cliente";
+    color="#6b7280";
+    margin=16;
+    ui [label="Presentación\nComponentes y navegación"];
+    store [label="Estado y coordinación\nNoteStore"];
+    servicios [label="Servicios de aplicación\ny reglas de dominio"];
+    datos [label="Acceso a datos\nMódulos SQLite"];
+    adaptadores [label="Adaptadores nativos\nRed, archivos y compartición"];
+    { rank=same; store; servicios; }
+    { rank=same; datos; adaptadores; }
+    ui -> store;
+    ui -> servicios;
+    store -> servicios;
+    store -> datos;
+    servicios -> datos;
+    servicios -> adaptadores;
+  }
+
+  sqlite [shape=cylinder, fillcolor="white", label="SQLite local\nDatos persistentes"];
+  plugins [fillcolor="white", label="Plugins de Capacitor\nNetwork · Filesystem · Share"];
+  { rank=same; sqlite; plugins; }
+  datos -> sqlite;
+  adaptadores -> plugins;
+}

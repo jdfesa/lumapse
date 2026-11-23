@@ -80,27 +80,9 @@ El estado de aplicación mantiene en memoria datos cargados, selección, búsque
 
 El actor principal es el estudiante que administra sus notas en el dispositivo. Consultar Acerca de también sirve a la evaluación académica, pero no crea un rol autenticado ni permisos distintos. La figura 4-1 sintetiza las áreas de interacción; no representa módulos internos ni una conexión con un servidor.
 
-```mermaid
-flowchart LR
-    E((Estudiante))
-    subgraph L["Lumapse · cliente Android"]
-        N["Crear, editar y consultar notas"]
-        O["Organizar, archivar y gestionar papelera"]
-        M["Escribir y visualizar Markdown"]
-        F["Gestionar fechas académicas"]
-        B["Exportar e importar respaldo ZIP"]
-        S["Cambiar tema y consultar Acerca de"]
-    end
-    E --- N
-    E --- O
-    E --- M
-    E --- F
-    E --- B
-    E --- S
-    B -. "selección o salida manual" .-> A["Archivos y compartición de Android"]
-```
+![Casos de uso principales del cliente Android Lumapse](../diagramas/figuras/casos-de-uso.svg)
 
-*Figura 4-1. Síntesis de los casos de uso y la frontera de interacción. Fuente: elaboración propia.*
+*Figura 4-1. Casos de uso principales y frontera del cliente Android, agrupados por finalidad. Fuente: elaboración propia.*
 
 La gestión de notas comprende creación, edición, consulta, búsqueda y eliminación lógica, además de fijado y archivo. La escritura puede ser texto plano o Markdown; los comandos de formato son ayudas opcionales, no una condición para crear una nota. El contenido se renderiza en las tarjetas del listado: la existencia de un componente aislado de previsualización no implica una vista dividida activa en el editor.
 
@@ -116,33 +98,9 @@ La elección de SQLite para el borrador respondió a un problema observado, no s
 
 Antes de montar la interfaz, el arranque prepara SQLite e hidrata el borrador. Sólo si falta su fila se considera migrar el borrador anterior desde `localStorage`; una vez confirmado en SQLite, ese almacenamiento anterior deja de ser una alternativa de lectura. Una fila con JSON `null` significa borrador vacío y se distingue de una fila ausente, para no reimportar texto ya consumido o descartado.
 
-Mientras se escribe, la interfaz captura instantáneas de título, contenido y organización sin esperar un intervalo de inactividad. El servicio las envía a la cola SQLite. El retorno satisfactorio de la operación acredita su confirmación, no solamente el envío al puente nativo. La figura 4-2 muestra la trayectoria de éxito del guardado desde el editor.
+Mientras se escribe, la interfaz captura instantáneas de título, contenido y organización sin esperar un intervalo de inactividad. El servicio las envía a la cola SQLite. El retorno satisfactorio de la operación acredita su confirmación, no solamente el envío al puente nativo. La figura 4-2 concentra la trayectoria de éxito del guardado desde el editor; el participante Borrador representa su servicio de persistencia, no una segunda nota definitiva.
 
-```mermaid
-sequenceDiagram
-    actor E as Estudiante
-    participant UI as Editor
-    participant ST as Store
-    participant BO as Servicio de borrador
-    participant DB as SQLite
-    E->>UI: Escribe o cambia la materia
-    UI->>BO: Captura instantánea del borrador
-    BO->>DB: Encola persistencia en metadata
-    DB-->>BO: Confirma la escritura
-    E->>UI: Guardar o Actualizar
-    UI->>UI: Solicita flush y bloquea controles
-    UI->>ST: Crear o actualizar con consumo de borrador
-    ST->>BO: Ejecutar escritura de nota
-    BO->>DB: Transacción: nota y marcador JSON null
-    DB-->>BO: Confirma ambas escrituras
-    BO-->>ST: Devuelve entidad persistida
-    opt Creación de nota
-        ST->>ST: Refresca materias y conteos
-        Note over ST: Si falla la lectura, avisa sin repetir la creación
-    end
-    ST-->>UI: Devuelve entidad confirmada
-    UI->>UI: Limpia campos y habilita controles
-```
+![Guardado explícito con consumo atómico del borrador](../diagramas/figuras/secuencia-guardar-nota.svg)
 
 *Figura 4-2. Guardado explícito con consumo atómico del borrador. Fuente: elaboración propia a partir de los contratos de ADR-011 y ADR-012.*
 
@@ -334,6 +292,16 @@ Persistir el título expresa ese contrato y permite presentarlo o incluirlo en e
 Clasifiqué Lumapse como un **monolito modular cliente, offline-first, con capas pragmáticas y componentes de interfaz agrupados por funcionalidad**. «Monolito» describe una unidad de despliegue; «modular» describe la separación interna. Los servicios no son aplicaciones desplegadas de manera independiente. ADR-008 formaliza esa clasificación, complementada en la versión 0.6.0 RC1 por los contratos de persistencia, borrador y refresco posteriores.
 
 ### 4.8.1. Responsabilidades y dirección de dependencias
+
+La figura 4-5 muestra las dependencias principales del cliente Android. Permite
+seguir dos recorridos que una cadena de capas estricta ocultaría: el acceso del
+store a datos y su delegación en servicios. La presentación también puede llamar
+directamente a un servicio de aplicación, como ocurre con el respaldo. Las
+flechas indican dependencia entre módulos, no un orden temporal de ejecución.
+
+![Dependencias principales de los componentes del cliente Android](../diagramas/figuras/arquitectura-componentes.svg)
+
+*Figura 4-5. Dependencias principales de presentación, estado, servicios, acceso a datos y adaptadores nativos. Fuente: elaboración propia a partir de ADR-008 y de la fuente de 0.6.0 RC1.*
 
 **Tabla 4-5. Responsabilidades y dependencias de la aplicación**
 
