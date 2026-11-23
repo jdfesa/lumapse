@@ -94,8 +94,9 @@ componentes (4-5), con fuentes editables y criterios de selección en el
 Los documentos técnicos corrigen las fronteras de actores, listado/búsqueda,
 reanudación/restauración y errores transaccionales. El dominio y las secuencias
 de detalle permanecen en el repositorio para no duplicar contenido. Las figuras
-de base de datos 4-3 y 4-4 no cambian. Esta unidad queda pendiente de revisión del
-autor; no declara aprobado el PDF final ni cierra la revisión transversal.
+de base de datos 4-3 y 4-4 no cambian. La selección y las correcciones están
+revisadas y aprobadas en [PR #67](https://github.com/jdfesa/lumapse/pull/67);
+la aprobación no declara aprobado el PDF final ni cierra la revisión transversal.
 
 **Ampliación del capítulo 6 — prueba exploratoria:** la sección 6.4.4 incorpora
 el método, los resultados y los límites de las 22 respuestas a la encuesta cerrada
