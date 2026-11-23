@@ -1,14 +1,14 @@
 # Diagrama de Casos de Uso — Lumapse
 
-**Tipo:** Diagrama UML de Comportamiento  
-**Última actualización:** 2026-10-26<br>
+**Tipo:** Casos de uso UML, vista sintética del producto<br>
+**Última actualización:** 2026-11-23<br>
 **Autor:** José David Sandoval
 
 ---
 
 ## Objetivo del diagrama
 
-Representar las funcionalidades principales del sistema desde la perspectiva del usuario, identificando los **actores** que interactúan con la aplicación y los **casos de uso** que Lumapse ofrece en el corte `v0.6.0`. Este diagrama muestra **qué hace el producto**, separando el alcance implementado de las funcionalidades futuras.
+Representar las funcionalidades principales del sistema desde la perspectiva del usuario, identificando los **actores** que interactúan con la aplicación y los **casos de uso** que Lumapse ofrece en el corte `v0.6.0`. La figura muestra **qué hace el producto** durante su uso; las tablas desglosan las capacidades y separan la distribución del APK y las funcionalidades futuras.
 
 > **Nota de evolución:** Desde el pivote a aplicación Android híbrida ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)), se eliminaron los casos de uso relacionados con PWA y Service Worker. En Hito 05 se incorporan borradores persistentes (`RF-005`), backup manual `.zip` (`RF-017`), importación de backups ZIP (`RF-018`), sección Acerca de (`RF-023`), fechas académicas discretas (`RF-027`) y editor enriquecido (`RF-028`). Compartir/exportar una nota individual e importar una nota `.md` quedan explícitamente como post-release.
 
@@ -21,102 +21,27 @@ Representar las funcionalidades principales del sistema desde la perspectiva del
 
 ## Diagrama
 
-```mermaid
-flowchart LR
-    %% Actores
-    EST(("Estudiante"))
-    EVAL(("Docente evaluador"))
-    CAP["Capacitor Runtime"]
-    FS["Sistema de Archivos / Share Sheet"]
+![Casos de uso principales del cliente Android Lumapse](./figuras/casos-de-uso.svg)
 
-    %% Casos de Uso: Gestión de Notas
-    subgraph NOTAS ["Gestión de Notas"]
-        UC01["Crear Nota"]
-        UC02["Editar Nota"]
-        UC03["Eliminar Nota"]
-        UC04["Ver Listado de Notas"]
-        UC05["Buscar Notas"]
-        UC18["Marcar Estado Académico"]
-    end
+La figura agrupa los casos por finalidad para mantener visible la frontera del
+cliente Android. Usa asociaciones sin dirección: no expresa un orden de pasos.
+La fuente editable es [`figuras/casos-de-uso.dot`](./figuras/casos-de-uso.dot);
+la regeneración y la selección para el informe se describen en el
+[índice de diagramas](./README.md#figuras-seleccionadas-para-el-informe).
 
-    %% Casos de Uso: Organización
-    subgraph ORG ["Organización"]
-        UC06["Fijar Nota"]
-        UC07["Archivar Nota"]
-        UC17["Gestionar Materias y Secciones"]
-        UC16["Gestionar Papelera"]
-    end
+| Grupo de la figura | Casos detallados |
+|---|---|
+| Crear y editar notas | UC-01, UC-02, UC-08 y UC-19; UC-14 conserva el borrador dentro de ese flujo |
+| Consultar y buscar notas | UC-04, UC-05 y UC-09 |
+| Organizar contenido | UC-06, UC-07, UC-17 y UC-18 |
+| Gestionar papelera | UC-03 y UC-16 |
+| Gestionar fechas académicas | UC-21 |
+| Exportar e importar respaldo ZIP | UC-12 y UC-20 |
+| Tema e información | UC-15 y UC-22 |
 
-    %% Casos de Uso: Markdown
-    subgraph MD ["Markdown y Escritura"]
-        UC08["Escribir en Markdown"]
-        UC09["Previsualizar Nota"]
-        UC19["Usar Comandos de Formato"]
-    end
-
-    %% Casos de Uso: Fechas Academicas
-    subgraph ACADEMICO ["Fechas Académicas"]
-        UC21["Gestionar Fechas Académicas"]
-    end
-
-    %% Casos de Uso: Datos
-    subgraph DATOS ["Datos y Portabilidad"]
-        UC12["Exportar Backup .zip"]
-        UC20["Importar Backup .zip"]
-    end
-
-    %% Casos de Uso: Sistema
-    subgraph SIS ["Sistema e Información"]
-        UC13["Instalar como APK"]
-        UC14["Conservar Borrador"]
-        UC15["Alternar Modo Oscuro/Claro"]
-        UC22["Consultar Acerca de"]
-    end
-
-    %% Casos de Uso: Post-release
-    subgraph FUTURO ["Post-release"]
-        UC10["Compartir/Exportar Nota .md"]
-        UC11["Importar Nota .md"]
-    end
-
-    %% Relaciones: Estudiante
-    EST --- UC01
-    EST --- UC02
-    EST --- UC03
-    EST --- UC04
-    EST --- UC05
-    EST --- UC06
-    EST --- UC07
-    EST --- UC08
-    EST --- UC09
-    EST --- UC12
-    EST --- UC13
-    EST --- UC15
-    EST --- UC16
-    EST --- UC17
-    EST --- UC18
-    EST --- UC19
-    EST --- UC20
-    EST --- UC21
-    EST -.-> UC10
-    EST -.-> UC11
-
-    %% Relaciones: Evaluador
-    EVAL --- UC22
-
-    %% Relaciones: include / extend
-    UC01 -.->|"«include»"| UC14
-    UC02 -.->|"«include»"| UC14
-    UC19 -.->|"«extend»"| UC08
-    UC03 -.->|"«extend»"| UC16
-
-    %% Relaciones: Sistema
-    CAP --- UC13
-    FS --- UC12
-    FS --- UC20
-    FS -.-> UC10
-    FS -.-> UC11
-```
+La instalación (UC-13) pertenece a la distribución, no a la ejecución del cliente.
+Los casos individuales Markdown UC-10 y UC-11 siguen fuera del alcance vigente;
+no se dibujan como funciones disponibles.
 
 ---
 
@@ -125,9 +50,10 @@ flowchart LR
 | Actor | Tipo | Descripción |
 |---|---|---|
 | **Estudiante** | Principal | Usuario final de la aplicación. Representa a las personas [Lucía](../producto/personas.md#persona-1--lucía-la-estudiante-organizada) y [Martín](../producto/personas.md#persona-2--martín-el-estudiante-práctico). Interactúa directamente con las funcionalidades de captura, organización, búsqueda, backup y consulta académica. |
-| **Docente evaluador** | Principal secundario | Actor académico que consulta información institucional y técnica mínima desde la sección Acerca de, sin depender de documentación externa. |
-| **Capacitor Runtime** | Sistema | Framework que ejecuta la UI web en una WebView, genera el paquete Android y expone plugins nativos para distribuir Lumapse como aplicación instalable ([ADR-005](../adr/ADR-005-pivote-app-nativa.md)). |
+| **Docente evaluador** | Contexto de uso del mismo usuario | Puede consultar Acerca de o usar las mismas funciones que cualquier estudiante. No existe un rol autenticado ni permisos especiales; por eso la figura no lo separa como actor con capacidades exclusivas. |
 | **Sistema de Archivos / Share Sheet** | Sistema | Interfaz del sistema operativo usada por la portabilidad local: exportar backups `.zip`, importar backups generados por Lumapse y, en el futuro, compartir/importar notas individuales. |
+
+Capacitor es infraestructura interna del cliente, no un actor externo de estos casos de uso. El empaquetado y la instalación del APK se explican mediante [ADR-005](../adr/ADR-005-pivote-app-nativa.md) y el flujo de distribución, separados de esta frontera funcional.
 
 ---
 
@@ -137,11 +63,11 @@ flowchart LR
 
 | ID | Caso de Uso | Descripción | RF asociado |
 |---|---|---|---|
-| UC-01 | Crear Nota | El estudiante redacta una nueva nota y confirma su creación con `Guardar`. El título se extrae automáticamente de la primera línea `# ` del Markdown si no se escribe uno explícito. | [RF-001](../producto/requisitos-funcionales.md) |
+| UC-01 | Crear Nota | El estudiante redacta una nueva nota y confirma su creación con `Guardar`. Si no escribe un título explícito, se utiliza la primera línea no vacía del contenido sólo cuando es un H1 (`# `); en otro caso queda `Sin título`. | [RF-001](../producto/requisitos-funcionales.md) |
 | UC-02 | Editar Nota | El estudiante modifica el contenido de una nota existente y confirma los cambios con `Actualizar`. | [RF-002](../producto/requisitos-funcionales.md) |
 | UC-03 | Eliminar Nota | El estudiante elimina una nota con confirmación previa desde el menú contextual. La eliminación es lógica y envía la nota a la papelera. | [RF-003](../producto/requisitos-funcionales.md), [RF-026](../producto/requisitos-funcionales.md) |
-| UC-04 | Ver Listado de Notas | El sistema muestra todas las notas activas en un feed tipo microblog, ordenadas por última modificación. Las notas fijadas aparecen al tope. | [RF-004](../producto/requisitos-funcionales.md) |
-| UC-05 | Buscar Notas | El estudiante filtra notas activas por texto en título y contenido. La búsqueda es global y tolerante a mayúsculas/minúsculas y tildes. | [RF-015](../producto/requisitos-funcionales.md) |
+| UC-04 | Ver Listado de Notas | El sistema muestra las notas de la vista y los filtros actuales: Entrada, materia/secciones, general o Archivo. Ordena por fijado y, dentro de cada grupo, por última modificación; no muestra todas las notas no eliminadas a la vez en cualquier vista. | [RF-004](../producto/requisitos-funcionales.md) |
+| UC-05 | Buscar Notas | El estudiante filtra notas activas por texto en título y contenido. En Entrada, materia y general, la búsqueda abarca las notas no archivadas de todas las materias; en Archivo busca dentro de las archivadas. El filtro de fecha puede acotar los resultados. Tolera mayúsculas/minúsculas y tildes. | [RF-015](../producto/requisitos-funcionales.md) |
 | UC-18 | Marcar Estado Académico | El estudiante asigna a una nota un marcador visual curado de estado académico (`📖`, `❓`, `🔥`, `✅`). | [RF-025](../producto/requisitos-funcionales.md) |
 
 ### Organización
@@ -181,7 +107,7 @@ flowchart LR
 | ID | Caso de Uso | Descripción | RF asociado |
 |---|---|---|---|
 | UC-13 | Instalar como APK | El estudiante instala Lumapse como APK Android híbrida empaquetada mediante Capacitor. | Sin RF funcional independiente; decisión de canal en [ADR-005](../adr/ADR-005-pivote-app-nativa.md) |
-| UC-14 | Conservar Borrador | El sistema conserva localmente el borrador del editor mientras el usuario crea o edita, lo restaura al volver y lo limpia al guardar, actualizar o descartar. | [RF-005](../producto/requisitos-funcionales.md) |
+| UC-14 | Conservar Borrador | El sistema conserva localmente el borrador del editor mientras el usuario crea o edita, lo recupera al reconstruir el editor y lo limpia al guardar, actualizar o descartar. | [RF-005](../producto/requisitos-funcionales.md) |
 | UC-15 | Alternar Modo Oscuro/Claro | El estudiante alterna entre modo oscuro y claro desde el drawer. La preferencia se persiste localmente y puede respetar la configuración del sistema operativo. | [RF-019](../producto/requisitos-funcionales.md) |
 | UC-22 | Consultar Acerca de | El docente evaluador o estudiante consulta versión, autor, licencia, propósito y alcance offline/local de la app. | [RF-023](../producto/requisitos-funcionales.md) |
 
@@ -194,7 +120,11 @@ flowchart LR
 | **«include»** | UC-01 (Crear Nota) | UC-14 (Conservar Borrador) | Mientras se redacta una nota nueva, el sistema protege el trabajo en curso sin crear la nota final hasta que el usuario confirma con `Guardar`. |
 | **«include»** | UC-02 (Editar Nota) | UC-14 (Conservar Borrador) | Mientras se edita una nota existente, el sistema protege los cambios pendientes sin actualizar la nota final hasta que el usuario confirma con `Actualizar`. |
 | **«extend»** | UC-19 (Usar Comandos de Formato) | UC-08 (Escribir en Markdown) | Los comandos enriquecen la escritura, pero no son obligatorios para usar Lumapse: escribir texto plano sigue siendo el flujo base. |
-| **«extend»** | UC-03 (Eliminar Nota) | UC-16 (Gestionar Papelera) | La eliminación envía el elemento a la papelera; la gestión posterior de esa papelera es un flujo opcional. |
+
+Eliminar una nota (UC-03) tiene como resultado su envío a Papelera. Consultar,
+restaurar o vaciar esa papelera (UC-16) son recorridos posteriores independientes:
+no se utiliza `«extend»` para representar esa sucesión temporal. La figura
+sintética no dibuja las relaciones internas de inclusión o extensión de la tabla.
 
 ### ¿Por qué `«include»` y no `«extend»` para conservar borrador?
 

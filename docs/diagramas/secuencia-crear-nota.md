@@ -1,7 +1,7 @@
 # Diagrama de Secuencia — Crear/Editar Nota con Borrador Persistente
 
 **Tipo:** Diagrama UML de Comportamiento (Secuencia)  
-**Última actualización:** 2026-10-26 (revisión estática del corte `v0.6.0`)<br>
+**Última actualización:** 2026-11-23 (revisión estática del corte `v0.6.0`)<br>
 **Autor:** José David Sandoval
 
 ---
@@ -22,7 +22,7 @@ no garantiza la última tecla si el proceso termina antes del commit.
 
 ---
 
-## Diagrama de Secuencia: Abrir editor de nota nueva
+## Diagrama de Secuencia: Arranque y montaje del editor
 
 ```mermaid
 sequenceDiagram
@@ -37,9 +37,10 @@ sequenceDiagram
     Note over MAIN,DRAFT: SQLite preparado, hidrata cache y migra legacy sólo si falta la fila
     DRAFT -->> MAIN: Inicialización confirmada
     MAIN ->> UI: Monta componentes
-    UI ->> RESTORER: Inicializa y solicita restore(state)
+    UI ->> RESTORER: Construye EditorDraftRestorer
     RESTORER ->> DRAFT: loadDraft() desde cache hidratado
     DRAFT -->> RESTORER: borrador existente o null
+    UI ->> RESTORER: restore(state) al recibir el estado
     RESTORER -->> UI: payload de restauración o null
     UI ->> UI: Renderiza editor limpio o aplica el payload
     UI -->> EST: Editor limpio o borrador restaurado
@@ -80,7 +81,7 @@ sequenceDiagram
     participant DB as SQLite
 
     EST ->> UI: Toca "Guardar" o "Actualizar"
-    UI ->> UI: flush() y bloqueo temporal de controles
+    UI ->> UI: Solicita flush() sin await directo y bloquea controles
     UI ->> STORE: createNote / updateNote con clearDraft: true
     STORE ->> DRAFT: consumeDraft(escritura de nota)
     DRAFT ->> DB: Transacción: nota + marcador de borrador vacío
@@ -95,7 +96,27 @@ sequenceDiagram
 
 ---
 
-## Diagrama de Secuencia: Volver a Lumapse con borrador pendiente
+## Diagrama de Secuencia: Reanudar la misma instancia
+
+```mermaid
+sequenceDiagram
+    actor EST as Estudiante
+    participant UI as Editor existente
+    participant CAPTURE as EditorDraftCapture
+
+    EST ->> UI: Pasa a otra app
+    UI ->> CAPTURE: flush() al ocultarse o recibir pagehide
+    Note over UI,CAPTURE: Solicita completar o reintentar el snapshot pendiente
+    EST ->> UI: Vuelve sin que se reconstruya la WebView
+    Note over UI: Continúa con sus campos en memoria, no reinicializa el restaurador
+    UI -->> EST: Texto disponible en la misma instancia
+```
+
+Si el proceso o la WebView se reconstruye, se aplica el arranque anterior y la
+restauración inicial siguiente. No se confunde la vuelta desde otra app con una
+nueva lectura de `metadata`; sólo es recuperable lo ya confirmado en SQLite.
+
+## Diagrama de Secuencia: Restaurar al reconstruir el editor
 
 ```mermaid
 sequenceDiagram
@@ -105,10 +126,11 @@ sequenceDiagram
     participant DRAFT as EditorDraftService
     participant STORE as Estado (Store)
 
-    EST ->> UI: Vuelve desde otra app o abre una vista con editor
-    UI ->> RESTORER: Inicializa y solicita restore(state)
-    RESTORER ->>+ DRAFT: loadDraft()
-    DRAFT -->>- RESTORER: draft
+    EST ->> UI: Reabre Lumapse y se monta un editor nuevo
+    UI ->> RESTORER: Construye EditorDraftRestorer
+    RESTORER ->> DRAFT: loadDraft() desde cache hidratado
+    DRAFT -->> RESTORER: draft
+    UI ->> RESTORER: restore(state), hasta completar una restauración
 
     alt Borrador de nota nueva
         RESTORER -->> UI: payload en modo create
@@ -134,6 +156,16 @@ sequenceDiagram
 
 ---
 
+## Síntesis seleccionada para el informe
+
+![Guardado explícito con consumo atómico del borrador](./figuras/secuencia-guardar-nota.svg)
+
+Esta figura conserva sólo el camino de éxito de la confirmación explícita, sin
+repetir todos los escenarios anteriores. Su fuente es
+[`figuras/secuencia-guardar-nota.mmd`](./figuras/secuencia-guardar-nota.mmd).
+Los errores y la captura mientras se escribe se explican por separado; el
+refresco de materias y conteos sólo se representa en creación.
+
 ## Participantes del sistema
 
 | Participante | Responsabilidad | Ubicación en el código |
@@ -155,7 +187,7 @@ sequenceDiagram
 |---|---|---|
 | Borrador SQLite sin debounce | Captura snapshots en `metadata`; migra legacy sólo si falta la fila y no vuelve a usarlo como fallback. | [ADR-012](../adr/ADR-012-borrador-sqlite-y-guardado-atomico.md) |
 | Guardado final explícito | Respeta la intención del usuario: la nota definitiva solo se crea o actualiza con `Guardar` o `Actualizar`. | — |
-| Consumo atómico | Nota y marcador JSON `null` se confirman juntos; un fallo revierte ambas escrituras. Descartar espera su propio commit antes de limpiar la UI. | [ADR-012](../adr/ADR-012-borrador-sqlite-y-guardado-atomico.md) |
+| Consumo atómico | Nota y marcador JSON `null` se confirman juntos. Ante un fallo de escritura con rollback confirmado, no se aplica ninguna; un resultado incierto de commit/persistencia exige recuperar la conexión. Descartar espera su propio commit antes de limpiar la UI. | [ADR-012](../adr/ADR-012-borrador-sqlite-y-guardado-atomico.md) |
 | Refresco separado en creación | Una lectura secundaria fallida permite recuperar conteos sin volver a crear la nota. | [ADR-011](../adr/ADR-011-limite-guardado-y-refresco.md) |
 | Conversión segura de edición a creación | Si la nota original desaparece, el contenido pendiente se conserva como nota nueva para evitar pérdida de texto. | — |
 
@@ -175,11 +207,25 @@ sequenceDiagram
     UI ->> STORE: Operación con clearDraft: true
     STORE ->> DRAFT: consumeDraft(escritura de nota)
     DRAFT ->> DB: Transacción de nota + limpieza
-    DB -->> DRAFT: Error, rollback de ambas escrituras
-    DRAFT -->> STORE: Rechazo, borrador conservado
-    STORE -->> UI: Error de persistencia
-    UI -->> EST: Conserva campos y habilita reintento, sin mostrar éxito
+    alt Falla una escritura y se confirma el rollback
+        DB -->> DRAFT: No se aplica nota ni limpieza
+        DRAFT -->> STORE: Rechazo, borrador anterior conservado
+        STORE -->> UI: Error de persistencia
+        UI -->> EST: Conserva campos y permite reintentar sin mostrar éxito
+    else Commit, persistencia o rollback con resultado incierto
+        DB -->> DRAFT: Error, coordinador exige recuperar la conexión
+        DRAFT -->> STORE: Rechazo, sin asegurar el estado durable
+        STORE -->> UI: Error de persistencia
+        UI -->> EST: Conserva campos, no muestra éxito
+        Note over STORE,DB: Recuperar la conexión y comprobar el estado antes de repetir la escritura
+    end
 ```
+
+El rechazo no demuestra por sí solo que nada se haya escrito. El coordinador de
+[ADR-009](../adr/ADR-009-propiedad-transaccional-sqlite.md) distingue la fase de
+acción, el commit y la persistencia web; un resultado incierto bloquea las
+operaciones posteriores hasta recuperar la conexión. No se representa un
+rollback universal ni un reintento automático de la mutación.
 
 > **Nota:** El manejo de errores de persistencia se relaciona con [RNF-010](../producto/requisitos-no-funcionales.md). El borrador persistente actúa como red de seguridad hasta que la nota final se guarde correctamente.
 

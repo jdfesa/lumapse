@@ -1,14 +1,14 @@
 # Modelo de Dominio — Lumapse
 
 **Tipo:** Diagrama UML de Estructura (Clases)  
-**Última actualización:** 2026-10-26 (revisión estática del corte `v0.6.0`)<br>
+**Última actualización:** 2026-11-23 (revisión estática del corte `v0.6.0`)<br>
 **Autor:** José David Sandoval
 
 ---
 
 ## Objetivo del diagrama
 
-Modelar las entidades principales, servicios de dominio y límites de persistencia que componen Lumapse en el corte `v0.6.0`. Este diagrama describe el modelo conceptual de la app y su relación con la persistencia local SQLite, sin reemplazar el detalle físico documentado en [`database/04-modelo-fisico-ddl.md`](./database/04-modelo-fisico-ddl.md).
+Distinguir las tres entidades académicas de Lumapse en el corte `v0.6.0` de los contratos técnicos que apoyan la interfaz, el borrador y la portabilidad. Los servicios se documentan como módulos colaboradores, no como entidades ni como clases instanciadas. El detalle físico permanece en [`database/04-modelo-fisico-ddl.md`](./database/04-modelo-fisico-ddl.md).
 
 > **Frontera de versión:** Modelo contrastado con la fuente del corte `v0.6.0`
 > (APK de `bcefe6a`, tag sobre `ac2a747`). [ADR-012](../adr/ADR-012-borrador-sqlite-y-guardado-atomico.md)
@@ -20,164 +20,113 @@ Modelar las entidades principales, servicios de dominio y límites de persistenc
 
 ---
 
-## Diagrama de Clases
+## Entidades académicas
 
 ```mermaid
 classDiagram
-    direction LR
-
+    direction TB
+    class Subject {
+        +EntityId id
+        +String name
+        +EntityId? parentSubjectId
+        +Boolean archived
+        +HexColor? color
+        +ISODateTimeString? deletedAt
+        +ISODateTimeString createdAt
+    }
     class Note {
-        +String id
+        +EntityId id
         +String title
         +String content
         +Boolean pinned
         +Boolean archived
-        +String subjectId
-        +String statusEmoji
-        +DateTime deletedAt
-        +DateTime createdAt
-        +DateTime updatedAt
+        +EntityId? subjectId
+        +String? statusEmoji
+        +ISODateTimeString? deletedAt
+        +ISODateTimeString createdAt
+        +ISODateTimeString updatedAt
     }
-
-    class Subject {
-        +String id
-        +String name
-        +String parentSubjectId
-        +Boolean archived
-        +String color
-        +DateTime deletedAt
-        +DateTime createdAt
-    }
-
     class AcademicEvent {
-        +String id
+        +EntityId id
         +AcademicEventType type
-        +String title
-        +Date date
-        +String subjectId
-        +DateTime createdAt
-        +DateTime updatedAt
+        +String? title
+        +ISODateString date
+        +EntityId? subjectId
+        +ISODateTimeString createdAt
+        +ISODateTimeString updatedAt
     }
+    Subject "0..1" --> "0..*" Subject : padre / secciones
+    Subject "0..1" --> "0..*" Note : organiza
+    Subject "0..1" --> "0..*" AcademicEvent : referencia
+```
 
-    class EditorDraft {
-        +Number version
-        +EditorDraftMode mode
-        +String noteId
-        +String title
-        +String content
-        +String subjectId
-        +DateTime baseUpdatedAt
-        +DateTime savedAt
-    }
+`?` indica que el valor admite `null`; `deletedAt` también puede omitirse en los
+objetos de aplicación. Las fechas del contrato son cadenas ISO, no instancias
+JavaScript de `Date`. `AcademicEventType` admite `parcial`, `final`, `tp` y
+`exposicion`.
 
+En la relación recursiva, una materia raíz no tiene padre y una sección tiene
+exactamente una materia raíz como padre. La cardinalidad general `0..1` recoge
+ambos roles; no autoriza subsecciones. La profundidad de dos niveles y la
+unicidad de nombres por nivel son reglas de `SubjectService`, no consecuencias
+de la cardinalidad o de una FK aislada.
+
+## Contratos técnicos separados del dominio académico
+
+```mermaid
+classDiagram
+    direction TB
     class AppState {
         +Note[] notes
-        +SubjectTree subjects
-        +String activeNoteId
-        +String activeSubjectId
-        +String viewMode
-        +String backupPanel
+        +Boolean notesLoaded
+        +SubjectTree_or_empty subjects
+        +EntityId? activeNoteId
+        +EntityId? activeSubjectId
+        +ViewMode viewMode
+        +BackupPanel backupPanel
         +String searchQuery
-        +Date dateFilter
+        +ISODateString? dateFilter
         +AcademicEvent[] academicEvents
         +AcademicEvent[] upcomingAcademicEvents
         +Number trashCount
     }
-
+    class EditorDraft {
+        +Number version
+        +EditorDraftMode mode
+        +EntityId? noteId
+        +String title
+        +String content
+        +EntityId? subjectId
+        +ISODateTimeString? baseUpdatedAt
+        +ISODateTimeString savedAt
+    }
     class BackupData {
         +Subject[] subjects
         +Note[] notes
         +AcademicEvent[] academicEvents
     }
-
     class BackupManifest {
         +String app
         +Number backupFormatVersion
-        +DateTime createdAt
+        +ISODateTimeString createdAt
         +String filename
         +String exportMode
+        +BackupDataPolicy dataPolicy
         +BackupCounts counts
         +String[] files
     }
-
-    class NoteStore {
-        +loadNotes()
-        +createNote()
-        +updateNote()
-        +deleteNote()
-        +moveNote()
-        +getFilteredNotes()
-    }
-
-    class SubjectService {
-        +createSubject()
-        +updateSubject()
-        +archiveSubject()
-        +deleteSubject()
-        +restoreSubject()
-        +getSubjectTree()
-    }
-
-    class AcademicEventService {
-        +createAcademicEvent()
-        +updateAcademicEvent()
-        +deleteAcademicEvent()
-        +getAcademicEventsByMonth()
-        +getUpcomingAcademicEvents()
-    }
-
-    class BackupService {
-        +createCurrentBackupZip()
-    }
-
-    class BackupImportService {
-        +prepareBackupImport()
-        +confirmBackupImport()
-    }
-
-    class EditorDraftService {
-        +saveDraft()
-        +loadDraft()
-        +clearDraft()
-    }
-
-    class MarkdownService {
-        +renderMarkdown()
-        +hasMarkdownSyntax()
-    }
-
-    class SQLite {
-        +initDatabase()
-        +runTransaction()
-        +persistWeb()
-    }
-
-    Subject "0..1" --> "*" Subject : contiene secciones
-    Subject "0..1" --> "*" Note : agrupa opcionalmente
-    Subject "0..1" --> "*" AcademicEvent : referencia opcional
-
-    AppState "1" --> "*" Note : mantiene
-    AppState "1" --> "*" Subject : mantiene
-    AppState "1" --> "*" AcademicEvent : mantiene
-
-    EditorDraft ..> Note : protege creación/edición
-    BackupData "1" --> "*" Note : exporta/importa
-    BackupData "1" --> "*" Subject : exporta/importa
-    BackupData "1" --> "*" AcademicEvent : exporta/importa
     BackupManifest ..> BackupData : describe
-
-    NoteStore --> SQLite : acceso directo a datos
-    NoteStore --> SubjectService : coordina materias
-    NoteStore --> AcademicEventService : coordina fechas
-    NoteStore --> AppState : actualiza
-    SubjectService --> SQLite : persiste materias
-    AcademicEventService --> SQLite : persiste fechas
-    BackupService ..> BackupData : serializa
-    BackupImportService ..> BackupData : valida y aplica
-    BackupImportService --> SQLite : escribe transaccionalmente
-    EditorDraftService --> SQLite : persiste borrador en metadata
-    MarkdownService ..> Note : renderiza contenido
 ```
+
+Es una vista de atributos seleccionados, no una copia exhaustiva de cada tipo.
+`SubjectTree_or_empty` abrevia `SubjectTree | []`, el contrato de `AppState.subjects`.
+`EditorDraftMode` distingue creación y edición; en edición, `noteId` identifica
+la nota original. Las clases representan estructuras de datos de los contratos,
+no una jerarquía de objetos con herencia o métodos de dominio.
+
+Estos diagramas se conservan como apoyo técnico del repositorio. El capítulo 4
+ya desarrolla las entidades y relaciones mediante su tabla de dominio y el
+modelo conceptual; no se agrega otra lámina que repita ese contenido.
 
 ---
 
@@ -196,8 +145,8 @@ Entidad central de captura. Representa una nota local, escrita como texto plano 
 | `archived` | `Boolean` | Indica si la nota se oculta del feed principal y aparece en Archivo. |
 | `subjectId` | `String \| null` | Materia o sección asociada. `NULL` representa Entrada. |
 | `statusEmoji` | `String \| null` | Marcador académico curado (`📖`, `❓`, `🔥`, `✅`). |
-| `deletedAt` | `DateTime \| null` | Fecha de eliminación lógica; `NULL` significa nota activa. |
-| `createdAt` / `updatedAt` | `DateTime` | Fechas de creación y última modificación. |
+| `deletedAt` | `ISODateTimeString \| null` | Fecha de eliminación lógica; `NULL` significa nota activa. |
+| `createdAt` / `updatedAt` | `ISODateTimeString` | Fechas de creación y última modificación. |
 
 ### Subject (Materia / Sección)
 
@@ -210,8 +159,8 @@ Entidad de organización jerárquica. Una materia raíz puede contener secciones
 | `parentSubjectId` | `String \| null` | `NULL` para materia raíz; UUID del padre para sección. |
 | `archived` | `Boolean` | Indica si la materia queda fuera del árbol principal. |
 | `color` | `String \| null` | Color de identificación visual. |
-| `deletedAt` | `DateTime \| null` | Fecha de eliminación lógica usada por Papelera. |
-| `createdAt` | `DateTime` | Fecha de creación. |
+| `deletedAt` | `ISODateTimeString \| null` | Fecha de eliminación lógica usada por Papelera. |
+| `createdAt` | `ISODateTimeString` | Fecha de creación. |
 
 ### AcademicEvent (Fecha académica)
 
@@ -222,9 +171,9 @@ Recordatorio visual pasivo asociado al calendario/Heatmap. No es una agenda comp
 | `id` | `String` | Identificador UUID v4. |
 | `type` | `AcademicEventType` | `parcial`, `final`, `tp` o `exposicion`. |
 | `title` | `String \| null` | Nota breve opcional. |
-| `date` | `Date` | Fecha obligatoria en formato `YYYY-MM-DD`. |
+| `date` | `ISODateString` | Fecha obligatoria en formato `YYYY-MM-DD`. |
 | `subjectId` | `String \| null` | Materia/sección asociada opcional. |
-| `createdAt` / `updatedAt` | `DateTime` | Fechas de creación y modificación. |
+| `createdAt` / `updatedAt` | `ISODateTimeString` | Fechas de creación y modificación. |
 
 ### EditorDraft (Borrador del editor)
 
@@ -242,8 +191,8 @@ ni se garantiza la última tecla si el proceso termina antes del commit.
 | `noteId` | `String \| null` | Nota original cuando el borrador corresponde a edición. |
 | `title` / `content` | `String` | Texto pendiente. |
 | `subjectId` | `String \| null` | Materia/sección seleccionada en el editor. |
-| `baseUpdatedAt` | `DateTime \| null` | Marca temporal de la nota original para restaurar contexto de edición. |
-| `savedAt` | `DateTime` | Última persistencia local del borrador. |
+| `baseUpdatedAt` | `ISODateTimeString \| null` | Marca temporal de la nota original para restaurar contexto de edición. |
+| `savedAt` | `ISODateTimeString` | Última persistencia local del borrador. |
 
 ### BackupData y BackupManifest
 
@@ -251,12 +200,12 @@ Modelo de portabilidad local del workspace. Un backup incluye datos estructurado
 
 | Entidad | Descripción |
 |---|---|
-| `BackupData` | Agrupa materias, notas y fechas académicas que se exportan/importan. |
-| `BackupManifest` | Describe formato, fecha, nombre de archivo, política de datos, conteos y archivos incluidos. |
+| `BackupData` | Agrupa materias, notas y fechas académicas exportables. Conserva archivados y excluye Papelera; el ZIP no contiene el borrador ni el resto de `metadata`. |
+| `BackupManifest` | Describe formato, fecha, nombre de archivo, `dataPolicy`, conteos y archivos incluidos. La política declara exclusión de eliminados y adjuntos, e inclusión de archivados. |
 
 ---
 
-## Servicios y límites
+## Módulos colaboradores y límites
 
 | Servicio / límite | Responsabilidad | Persistencia |
 |---|---|---|
@@ -271,7 +220,7 @@ Modelo de portabilidad local del workspace. Un backup incluye datos estructurado
 
 ---
 
-## Relaciones principales
+## Relaciones y colaboraciones principales
 
 | Relación | Cardinalidad | Descripción |
 |---|---|---|
@@ -286,47 +235,12 @@ Modelo de portabilidad local del workspace. Un backup incluye datos estructurado
 
 ---
 
-## Esquema SQLite resumido
+## Frontera con el modelo físico
 
-```text
-Database: "lumapse-db" (SQLite via @capacitor-community/sqlite)
-├── subjects
-│   ├── id TEXT PRIMARY KEY
-│   ├── name TEXT NOT NULL
-│   ├── parentSubjectId TEXT REFERENCES subjects(id) ON DELETE CASCADE
-│   ├── archived INTEGER DEFAULT 0
-│   ├── color TEXT
-│   ├── deletedAt TEXT
-│   └── createdAt TEXT NOT NULL
-│
-├── notes
-│   ├── id TEXT PRIMARY KEY
-│   ├── title TEXT
-│   ├── content TEXT
-│   ├── pinned INTEGER DEFAULT 0
-│   ├── archived INTEGER DEFAULT 0
-│   ├── subjectId TEXT REFERENCES subjects(id) ON DELETE SET NULL
-│   ├── statusEmoji TEXT
-│   ├── deletedAt TEXT
-│   ├── createdAt TEXT NOT NULL
-│   └── updatedAt TEXT NOT NULL
-│
-├── academic_events
-│   ├── id TEXT PRIMARY KEY
-│   ├── type TEXT NOT NULL CHECK(type IN ...)
-│   ├── title TEXT
-│   ├── date TEXT NOT NULL
-│   ├── subjectId TEXT REFERENCES subjects(id) ON DELETE SET NULL
-│   ├── createdAt TEXT NOT NULL
-│   └── updatedAt TEXT NOT NULL
-│
-└── metadata
-    ├── key TEXT PRIMARY KEY
-    └── value TEXT
-```
-
-> El detalle físico completo, reglas de negocio, migraciones idempotentes e índices está en [`database/04-modelo-fisico-ddl.md`](./database/04-modelo-fisico-ddl.md). Las fuentes DOT/DBML y sus imágenes exportadas fueron actualizadas y verificadas en la fase documental del 2026-07-15.
+Este documento no duplica el DDL ni las figuras de base de datos. Su detalle de
+tablas, claves, restricciones, índices y migraciones permanece en el
+[modelo físico](./database/04-modelo-fisico-ddl.md).
 
 ---
 
-*Documento de la fase Idear · Análisis y Relevamiento · Lumapse · PP3 · 2026*
+*Modelado de dominio y contratos · Lumapse · PP3 · 2026*

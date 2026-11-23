@@ -1,7 +1,7 @@
 # Arquitectura de Componentes — Lumapse
 
 **Estado:** arquitectura del corte `v0.6.0`, revisada estáticamente<br>
-**Corte documental:** 2026-10-26<br>
+**Corte documental:** 2026-11-23<br>
 **Decisiones asociadas:** [ADR-008 — Arquitectura modular y patrones](../adr/ADR-008-arquitectura-modular-y-patrones.md) y [ADR-009 — Propiedad transaccional SQLite](../adr/ADR-009-propiedad-transaccional-sqlite.md)
 
 Lumapse se implementa como un **monolito modular cliente, offline-first**, construido con módulos ES y TypeScript gradual, empaquetado como aplicación Android mediante Capacitor. La separación es lógica: todos los módulos se entregan como una sola aplicación, pero cada capa tiene responsabilidades y dependencias delimitadas.
@@ -49,6 +49,17 @@ flowchart TB
     Adapters --> NativeAPI
     NativeAPI --> Android
 ```
+
+## Vista seleccionada para el informe
+
+![Dependencias principales entre presentación, estado, servicios y persistencia](./figuras/arquitectura-componentes.svg)
+
+Esta síntesis conserva las dos rutas del store y la llamada directa de la UI a
+servicios. Omite el entorno web de desarrollo y el cableado completo del arranque
+para concentrarse en las dependencias del cliente Android. Las flechas indican
+dependencia; no pasos temporales, procesos remotos ni herencia UML. Su fuente es
+[`figuras/arquitectura-componentes.dot`](./figuras/arquitectura-componentes.dot).
+El diagrama general anterior y las tablas siguientes conservan el detalle técnico.
 
 ## Responsabilidades y dirección de dependencias
 

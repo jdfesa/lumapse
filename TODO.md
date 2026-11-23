@@ -235,6 +235,9 @@ pruebas para completar métricas pendientes.
 - [ ] Emitir la matriz RNF final con requisito, método, comando, dispositivo, fecha, artefacto, resultado, evidencia y limitaciones aceptadas; mantener CRUD/FPS pendientes y diferidos según el backlog.
 - [ ] Incorporar el corte y la evidencia final en los capítulos fuente del informe; revisar coherencia, referencias y diagramas antes de congelar y ensamblar.
 - [ ] **Diagramas obligatorios del informe final:** incluir los diagramas de base de datos y el modelado UML; comprobar y, cuando corresponda, actualizar sus fuentes y figuras para que correspondan a la versión congelada `v0.6.0/600 — RC1` que se presentará.
+  - [x] Preparar y contrastar las figuras vectoriales de casos de uso, guardado explícito y componentes para las secciones 4.4, 4.5 y 4.8.1; corregir las vistas técnicas de detalle sin modificar las figuras de base de datos.
+  - [x] Revisar y aprobar la selección documental y las correcciones de diagramas en [PR #67](https://github.com/jdfesa/lumapse/pull/67); el dominio y las secuencias de detalle se conservan sólo en el repositorio.
+  - [ ] Comprobar la colocación y legibilidad de las figuras dentro del PDF final; la aprobación documental no completa esta revisión.
 - [x] Contrastar los metadatos bibliográficos de Gómez (2014) y Parada (2026) contra los originales de cátedra: obra de Gómez, edición de abril de 2014, y guía didáctica de Parada para PP3, ciclo 2026, identificadas por separado.
 - [x] Revisar y aprobar la sección de referencias preparada con esos originales y con la correspondencia de citas comprobada.
 - [x] **Cronología del relevamiento:** aproximadamente dos días naturales, en horario de Argentina; cierre al alcanzar 121 respuestas, sin afirmar horas exactas de apertura o cierre.

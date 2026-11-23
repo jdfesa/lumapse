@@ -1,0 +1,38 @@
+// Fuente editable de la vista sintética: dot -Tsvg <fuente> -o <salida>.
+// Capacidades del cliente RC1, no orden de ejecución ni funciones futuras.
+digraph CasosDeUso {
+  graph [rankdir=LR, bgcolor="white", pad=0.08, margin=0,
+         nodesep=0.15, ranksep=0.28, fontname="Liberation Sans", fontsize=13];
+  node [fontname="Liberation Sans", fontsize=13, color="#374151",
+        fontcolor="#111827", penwidth=1.1, margin="0.12,0.08"];
+  edge [color="#4b5563", penwidth=1, arrowhead=none];
+
+  estudiante [shape=box, label="«actor»\nEstudiante"];
+  android [shape=box, label="«actor»\nArchivos y compartición\nde Android"];
+
+  subgraph cluster_cliente {
+    label="Lumapse · cliente Android";
+    color="#6b7280";
+    penwidth=1;
+    margin=14;
+    node [shape=ellipse, style=filled, fillcolor="#f5f6f7", width=2.7, height=0.58];
+    { rank=same;
+      crear [label="Crear y editar\nnotas"];
+      consultar [label="Consultar y buscar\nnotas"];
+      organizar [label="Organizar notas,\nmaterias y secciones"];
+      papelera [label="Gestionar\npapelera"];
+      fechas [label="Gestionar\nfechas académicas"];
+      zip [label="Exportar e importar\nrespaldo ZIP"];
+      informacion [label="Cambiar tema y\nconsultar Acerca de"];
+    }
+  }
+
+  estudiante -> crear;
+  estudiante -> consultar;
+  estudiante -> organizar;
+  estudiante -> papelera;
+  estudiante -> fechas;
+  estudiante -> zip;
+  estudiante -> informacion;
+  zip -> android;
+}
