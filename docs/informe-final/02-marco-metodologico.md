@@ -106,12 +106,16 @@ El canvas hace visibles los supuestos; no presento una validación económica in
 
 Distingo los desembolsos personales, los accesos bonificados y el trabajo no valorizado. Utilicé una suscripción personal de ChatGPT de USD 20 mensuales, cuyo inicio sitúo aproximadamente en abril de 2026. La destiné en gran medida a Lumapse y su mantenimiento, pero también a otros proyectos; por ello, la cuota no representa un costo mensual exclusivo de Lumapse.
 
+Durante el primer mes de desarrollo utilicé Antigravity, una herramienta de programación del ecosistema de Google, mediante el acceso al plan Google AI Pro. Su valor de referencia era de aproximadamente USD 20 mensuales, pero recibí una bonificación por un año por mi condición de estudiante y no realicé ese desembolso.
+
+Google AI Pro es un plan de acceso a servicios del ecosistema de Google, no una licencia exclusiva de Antigravity. Distingo así las suscripciones de las herramientas de programación y de los modelos que estas utilizan. La modalidad gratuita de Antigravity tiene mayores restricciones que los planes de pago; la disponibilidad concreta de modelos y las cuotas dependen del plan y de las condiciones de acceso, incluidas las promociones.
+
 **Tabla 2-3. Recursos utilizados y condiciones del desembolso personal**
 
 | Recurso | Desembolso personal | Condición de uso |
 |---|---|---|
-| ChatGPT | USD 20 mensuales | Suscripción compartida con otros proyectos, sin un porcentaje de imputación registrado |
-| Antigravity | USD 0 | Acceso bonificado mediante una promoción estudiantil personal |
+| Suscripción de ChatGPT (OpenAI) | USD 20 mensuales | Suscripción compartida con otros proyectos, sin un porcentaje de imputación registrado |
+| Google AI Pro | USD 0 | Plan bonificado por un año mediante una promoción estudiantil personal; Antigravity utilizado durante el primer mes de desarrollo |
 | Dominio `.tech` | USD 0 | Beneficio personal de GitHub Student Developer Pack, no una compra del proyecto |
 
 *Nota.* Registro propio de recursos y desembolsos declarados; no es una valoración del costo total ni una imputación exclusiva a Lumapse.

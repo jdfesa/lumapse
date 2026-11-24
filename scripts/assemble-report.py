@@ -3,20 +3,24 @@
 Lumapse — Ensamblador de Informe Final
 Ensambla los capítulos de docs/informe-final/ en un Markdown unificado.
 Uso: python3 scripts/assemble-report.py
+     python3 scripts/assemble-report.py --check
 """
 
+import argparse
 import json
 import os
 import re
 import sys
 from datetime import date
 from pathlib import Path
+from urllib.parse import unquote
 
 
 PROJECT_ROOT = Path(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 REPORT_DIR = PROJECT_ROOT / "docs" / "informe-final"
-OUTPUT_PATH = REPORT_DIR / "INFORME-FINAL-COMPLETO.md"
+OUTPUT_PATH = REPORT_DIR / "informe-final-completo.md"
 METADATA_PATH = REPORT_DIR / "report-metadata.json"
+PRESENTATION_PATH = REPORT_DIR / "00-presentacion-institucional.md"
 CHAPTER_FILENAMES = [
     "01-introduccion.md",
     "02-marco-metodologico.md",
@@ -29,8 +33,9 @@ CHAPTER_FILENAMES = [
 ]
 
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*#*\s*$")
-FENCE_RE = re.compile(r"^\s*```")
-MARKDOWN_LINK_RE = re.compile(r"(\[[^\]]+\]\()([^)]+)(\))")
+FENCE_RE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
+MARKDOWN_LINK_RE = re.compile(r"(?<!!)(\[[^\]]+\]\()([^)]+)(\))")
+IMAGE_RE = re.compile(r"!\[[^\]\n]*\]\(([^)\n]+)\)")
 
 
 def relative_path(path):
@@ -43,7 +48,7 @@ def relative_path(path):
 def read_text(path):
     try:
         return path.read_text(encoding="utf-8")
-    except OSError as exc:
+    except (OSError, UnicodeError) as exc:
         raise RuntimeError(
             "No se pudo leer {0}: {1}".format(relative_path(path), exc)
         )
@@ -75,7 +80,13 @@ def read_metadata():
         "technical_ref",
         "technical_commit",
     )
-    missing = [key for key in required if not metadata.get(key)]
+    if not isinstance(metadata, dict):
+        raise RuntimeError("Los metadatos deben ser un objeto JSON.")
+
+    missing = [
+        key for key in required
+        if not isinstance(metadata.get(key), str) or not metadata[key].strip()
+    ]
     if missing:
         raise RuntimeError(
             "Faltan metadatos requeridos en {0}: {1}".format(
@@ -83,7 +94,23 @@ def read_metadata():
             )
         )
 
+    try:
+        cutoff = date.fromisoformat(metadata["document_cutoff_date"])
+    except ValueError as exc:
+        raise RuntimeError("El corte documental debe ser una fecha AAAA-MM-DD válida.") from exc
+    if cutoff.isoformat() != metadata["document_cutoff_date"]:
+        raise RuntimeError("El corte documental debe usar el formato AAAA-MM-DD.")
+    if any("-->" in metadata[key] or "\n" in metadata[key] for key in required):
+        raise RuntimeError("Los metadatos deben contener valores de una sola línea.")
+
     return metadata
+
+
+def read_presentation():
+    content = read_text(PRESENTATION_PATH)
+    if not content.strip():
+        raise RuntimeError("La presentación institucional está vacía.")
+    return content
 
 
 def read_chapters():
@@ -92,6 +119,8 @@ def read_chapters():
     for index, filename in enumerate(CHAPTER_FILENAMES, 1):
         path = REPORT_DIR / filename
         content = read_text(path)
+        if not content.strip():
+            raise RuntimeError("El capítulo {0} está vacío.".format(filename))
         size = len(content.encode("utf-8"))
         print(
             "   [{0}/{1}] {2} ({3} bytes)".format(
@@ -134,26 +163,35 @@ def slugify(text):
 
 def unique_anchor(title, seen):
     base = slugify(title)
+    anchor = base
     count = seen.get(base, 0)
-    seen[base] = count + 1
+    while anchor in seen:
+        anchor = "{0}-{1}".format(base, count)
+        count += 1
+    seen[base] = max(count, 1)
+    seen[anchor] = 1
+    return anchor
 
-    if count == 0:
-        return base
 
-    return "{0}-{1}".format(base, count)
+def iter_unfenced_lines(content):
+    """Omite bloques de código sin confundir cercas de distinto tipo o longitud."""
+    fence = None
+
+    for index, line in enumerate(content.splitlines(keepends=True)):
+        match = FENCE_RE.match(line)
+        if match:
+            marker, rest = match.groups()
+            if fence is None:
+                fence = marker
+            elif marker[0] == fence[0] and len(marker) >= len(fence) and not rest.strip():
+                fence = None
+            continue
+        if fence is None:
+            yield index, line
 
 
 def iter_headings(content):
-    in_fence = False
-
-    for line in content.splitlines():
-        if FENCE_RE.match(line):
-            in_fence = not in_fence
-            continue
-
-        if in_fence:
-            continue
-
+    for _, line in iter_unfenced_lines(content):
         match = HEADING_RE.match(line)
         if not match:
             continue
@@ -163,12 +201,13 @@ def iter_headings(content):
         yield level, title
 
 
-def collect_anchors(chapters):
+def collect_anchors(chapters, presentation):
     seen = {}
     toc_entries = []
     chapter_anchors = {}
 
-    unique_anchor("Informe Final — Lumapse", seen)
+    for _, title in iter_headings(presentation):
+        unique_anchor(title, seen)
     unique_anchor("Tabla de Contenidos", seen)
 
     for chapter in chapters:
@@ -226,7 +265,22 @@ def fix_chapter_links(content, chapter_anchors):
 
         return "{0}#{1}{2}".format(prefix, anchor, suffix)
 
-    return MARKDOWN_LINK_RE.sub(replace_link, content)
+    lines = content.splitlines(keepends=True)
+    for index, line in iter_unfenced_lines(content):
+        lines[index] = MARKDOWN_LINK_RE.sub(replace_link, line)
+    return "".join(lines)
+
+
+def validate_figures(content):
+    """Comprueba las imágenes Markdown locales sin leer fuentes ajenas al informe."""
+    for _, line in iter_unfenced_lines(content):
+        for match in IMAGE_RE.finditer(line):
+            target = match.group(1).split()[0].strip("<>")
+            if re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*:", target) or target.startswith("//"):
+                raise RuntimeError("La figura debe ser local: {0}".format(target))
+            path = REPORT_DIR / unquote(target.split("#", 1)[0])
+            if not path.is_file():
+                raise RuntimeError("No se encontró la figura: {0}".format(target))
 
 
 def generate_toc(toc_entries):
@@ -245,47 +299,42 @@ def generate_toc(toc_entries):
     return "\n".join(lines)
 
 
-def build_header(metadata, assembled_date):
+def build_header(metadata):
+    """Conserva el control editorial en un comentario, no en la portada académica."""
     return "\n".join([
-        "# Informe Final — Lumapse",
-        "",
-        "| Campo | Valor |",
-        "|---|---|",
-        "| Alumno | José David Sandoval |",
-        "| Carrera | Tecnicatura en Análisis de Sistemas y Desarrollo de Software |",
-        '| Institución | IES 6023 "Dr. Alfredo Loutaif" |',
-        "| Materia | Prácticas Profesionalizantes III |",
-        "| Año | 2026 |",
-        "| Estado | {0} |".format(metadata["status"]),
-        "| Alcance funcional | {0} (`{1}` / `{2}`) |".format(
-            metadata["functional_scope"],
-            metadata["functional_tag"],
-            metadata["functional_commit"],
+        "<!--",
+        "Generado por scripts/assemble-report.py. Editar las fuentes, no esta salida.",
+        "Estado: {0}".format(metadata["status"]),
+        "Corte documental: {0}".format(metadata["document_cutoff_date"]),
+        "Alcance funcional: {0}".format(metadata["functional_scope"]),
+        "Tag publicado: {0} / {1}".format(
+            metadata["functional_tag"], metadata["functional_commit"],
         ),
-        "| Fuente técnica auditada | `{0}` @ `{1}` |".format(
-            metadata["technical_ref"],
-            metadata["technical_commit"],
+        "Fuente técnica: {0} @ {1}".format(
+            metadata["technical_ref"], metadata["technical_commit"],
         ),
-        "| Corte documental | {0} |".format(metadata["document_cutoff_date"]),
-        "| Ensamblado automáticamente | {0} |".format(assembled_date),
+        "-->",
     ])
 
 
-def assemble_document(chapters, toc_entries, chapter_anchors, metadata):
+def assemble_document(chapters, toc_entries, chapter_anchors, metadata, presentation):
     fixed_chapters = [
         fix_chapter_links(chapter["content"], chapter_anchors).strip()
         for chapter in chapters
     ]
 
     parts = [
-        build_header(metadata, date.today().isoformat()),
+        build_header(metadata),
+        presentation.strip(),
         "---",
         "## Tabla de Contenidos\n\n{0}".format(generate_toc(toc_entries)),
         "---",
         "\n\n---\n\n".join(fixed_chapters),
     ]
 
-    return "\n\n".join(parts).rstrip() + "\n"
+    content = "\n\n".join(parts).rstrip() + "\n"
+    validate_figures(content)
+    return content
 
 
 def print_header():
@@ -293,34 +342,48 @@ def print_header():
     print("==================================================")
 
 
-def main():
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--check", action="store_true",
+        help="Comprueba que la salida coincide con las fuentes, sin escribir archivos.",
+    )
+    args = parser.parse_args(argv)
     print_header()
 
     try:
-        print("📥 Leyendo capítulos...")
+        print("📥 Leyendo presentación institucional, metadatos y capítulos...")
         metadata = read_metadata()
+        presentation = read_presentation()
         chapters = read_chapters()
 
-        toc_entries, chapter_anchors = collect_anchors(chapters)
+        toc_entries, chapter_anchors = collect_anchors(chapters, presentation)
         print(
             "📝 Generando tabla de contenidos ({0} entradas)...".format(
                 len(toc_entries)
             )
         )
 
-        print("🔗 Corrigiendo links inter-capítulo...")
-        content = assemble_document(chapters, toc_entries, chapter_anchors, metadata)
+        content = assemble_document(
+            chapters, toc_entries, chapter_anchors, metadata, presentation,
+        )
 
-        print("💾 Escribiendo: {0}".format(relative_path(OUTPUT_PATH)))
-        write_text(OUTPUT_PATH, content)
+        if args.check:
+            if read_text(OUTPUT_PATH) != content:
+                raise RuntimeError(
+                    "La salida está desactualizada. Ejecutar python3 scripts/assemble-report.py."
+                )
+            print("✅ La salida coincide con las fuentes; no se modificaron archivos.")
+        else:
+            print("💾 Escribiendo: {0}".format(relative_path(OUTPUT_PATH)))
+            write_text(OUTPUT_PATH, content)
     except RuntimeError as exc:
         print("Error: {0}".format(exc), file=sys.stderr)
         return 1
 
     print("==================================================")
     print(
-        "✅ Informe ensamblado: {0} capítulos, {1:,} bytes".format(
-            len(chapters),
+        "✅ Informe completo: presentación, 7 capítulos y referencias; {0:,} bytes".format(
             len(content.encode("utf-8")),
         )
     )

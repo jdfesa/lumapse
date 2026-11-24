@@ -1,6 +1,6 @@
 {
-  "status": "Checkpoint parcial para revisión — Hito 06 activo; pendiente de cierre editorial",
-  "document_cutoff_date": "2026-11-17",
+  "status": "Documento completo para revisión — pendiente de aprobación final; Hito 06 activo",
+  "document_cutoff_date": "2026-11-23",
   "functional_scope": "v0.6.0/600 — Release Candidate 1, validación parcial",
   "functional_tag": "v0.6.0",
   "functional_commit": "ac2a747",
