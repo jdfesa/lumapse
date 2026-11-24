@@ -18,6 +18,11 @@ explicaciones y cinco figuras vectoriales. El corte documental es el **2026-11-2
 y su estado es **completo para revisión, pendiente de aprobación final**. No
 constituye todavía una entrega impresa ni un PDF aprobado.
 
+El ensamblado Markdown y la precisión sobre suscripciones, herramientas y costos
+de la sección 2.4.1 están revisados y aprobados en
+[PR #68](https://github.com/jdfesa/lumapse/pull/68). Esta aprobación no acredita
+la maquetación ni la legibilidad impresa de las figuras.
+
 `informe-final-completo.md` es una salida generada, no una fuente de edición.
 Para regenerarla desde la raíz del repositorio:
 
